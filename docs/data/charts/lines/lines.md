@@ -109,7 +109,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClickNoSnap.js"}}
+{{"demo": "LineClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onAxisClick` and the others:
@@ -169,7 +169,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
 
 #### Expanding steps
 

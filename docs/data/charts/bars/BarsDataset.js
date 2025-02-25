@@ -9,7 +9,6 @@ const chartSetting = {
       label: 'rainfall (mm)',
     },
   ],
-  width: 500,
   height: 300,
   margin: { left: 30 },
   sx: {

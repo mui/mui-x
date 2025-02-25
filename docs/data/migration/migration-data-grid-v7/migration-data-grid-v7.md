@@ -16,17 +16,57 @@ This is a reference guide for upgrading `@mui/x-data-grid` from v7 to v8.
 In `package.json`, change the version of the Data Grid package to `next`.
 
 ```diff
--"@mui/x-data-grid": "^7.0.0",
+-"@mui/x-data-grid": "^7.x.x",
 +"@mui/x-data-grid": "next",
 
--"@mui/x-data-grid-pro": "^7.0.0",
+-"@mui/x-data-grid-pro": "^7.x.x",
 +"@mui/x-data-grid-pro": "next",
 
--"@mui/x-data-grid-premium": "^7.0.0",
+-"@mui/x-data-grid-premium": "^7.x.x",
 +"@mui/x-data-grid-premium": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/data-grid/preset-safe` targeting only Data Grid or `v8.0.0/preset-safe` to target the other packages as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+<!-- #default-branch-switch -->
+
+```bash
+# Data Grid specific
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path>
+
+# Target the other packages as well
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v800) for more details.
+:::
+
+Breaking changes that are handled by this codemod are prefixed with a ✅ emoji.
+
+If you have already applied the `v8.0.0/data-grid/preset-safe` (or `v8.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
+
+All other changes must be handled manually.
+
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<DataGrid {...dataGridProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
 
 ## Breaking changes
 
@@ -57,7 +97,7 @@ You have to import it from `@mui/x-license` instead:
 
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
-- The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
@@ -102,7 +142,7 @@ You have to import it from `@mui/x-license` instead:
 
 ### Changes to the public API
 
-- The `rowPositionsDebounceMs` prop was removed.
+- ✅ The `rowPositionsDebounceMs` prop was removed.
 - The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
@@ -117,7 +157,7 @@ You have to import it from `@mui/x-license` instead:
   +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
 
-- The feature row spanning is now stable.
+- ✅ The feature row spanning is now stable.
 
   ```diff
    <DataGrid
@@ -148,6 +188,23 @@ You have to import it from `@mui/x-license` instead:
   -  slots={{
   -    toolbar: GridToolbar,
   -  }}
+   />
+  ```
+
+- The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
+
+  ```diff
+   <DataGrid
+  -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
+  -    if (params.filterModel) {
+  -      // do something
+  -    }
+  -  }}
+  +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
+  +    if (error instanceof GridGetRowsError && error.params.filterModel) {
+  +      // do something
+  +    }
+  +  }}
    />
   ```
 
@@ -211,7 +268,7 @@ You have to import it from `@mui/x-license` instead:
 
 ### Other exports
 
-- `ariaV8` experimental flag is removed. It's now the default behavior.
+- ✅ `ariaV8` experimental flag is removed. It's now the default behavior.
 - Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering

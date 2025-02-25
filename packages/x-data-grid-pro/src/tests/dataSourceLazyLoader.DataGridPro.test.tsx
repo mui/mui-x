@@ -105,8 +105,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
 
     setProps({
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+      sortModel: [{ field: 'id', sort: 'asc' }],
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
 
     await waitFor(() => {
