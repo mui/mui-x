@@ -46,9 +46,8 @@ const chartParams = {
   ],
   hideLegend: true,
   dataset,
-  width: 600,
   height: 400,
-  margin: { left: 60 },
+  margin: { left: 40 },
   sx: {
     [`.${axisClasses.left} .${axisClasses.label}`]: {
       transform: 'translate(-20px, 0)',

@@ -13,7 +13,7 @@ export default function BasicComposition() {
 
   const sizingProps = isResponsive ? {} : { width: 500, height: 300 };
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', overflow: 'auto' }}>
       <FormControlLabel
         checked={isResponsive}
         control={
@@ -23,8 +23,7 @@ export default function BasicComposition() {
         labelPlacement="end"
       />
 
-      <Paper sx={{ width: '100%', height: 300 }} elevation={3}>
-        {/* @ts-ignore */}
+      <Paper sx={{ margin: 1, height: 300 }} elevation={3}>
         <ChartContainer
           series={[
             {
