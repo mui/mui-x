@@ -60,7 +60,7 @@ const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
-      width: 55,
+      width: 60,
     },
   ],
   series: [{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }],

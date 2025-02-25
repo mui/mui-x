@@ -4,7 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
-  yAxis: [{ label: 'rainfall (mm)', width: 55 }],
+  yAxis: [{ label: 'rainfall (mm)', width: 60 }],
   height: 300,
 };
 

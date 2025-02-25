@@ -3,7 +3,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 const otherSetting = {
   height: 300,
-  yAxis: [{ label: 'rainfall (mm)', width: 55 }],
+  yAxis: [{ label: 'rainfall (mm)', width: 60 }],
   grid: { horizontal: true },
 };
 

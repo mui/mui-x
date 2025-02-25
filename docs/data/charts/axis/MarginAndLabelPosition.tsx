@@ -49,7 +49,7 @@ export default function MarginAndLabelPosition() {
           {
             valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
-            width: fixMargin ? 80 : undefined,
+            width: fixMargin ? 85 : undefined,
           },
         ]}
       />

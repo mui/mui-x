@@ -6,7 +6,7 @@ const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
-      width: 55,
+      width: 60,
     },
   ],
   height: 300,
