@@ -23,7 +23,7 @@ export function css<T extends Record<string, CSSObject>>(prefix: string, styles:
 
 /* These are used to track insertion order so it stays stable across HMR updates. */
 const indexById = {} as Record<string, number>;
-const blobs = [] as string[];
+const blobs = [] as { lastLineNumber: number, content: string }[];
 
 function cssDevMode<T extends Record<string, CSSObject>>(prefix: string, styles: T): CSSMeta<T> {
   let output = '';
@@ -38,10 +38,28 @@ function cssDevMode<T extends Record<string, CSSObject>>(prefix: string, styles:
     }
   }
 
-  const id = prefix;
+  const description = new Error().stack?.split('\n')[3].replace(/.*?:/, '').slice(0, -2) ?? '';
+  const [filepath, lineNumberString] = description.split(':')
+  const lineNumber = parseInt(lineNumberString, 10);
+
+  const id = filepath;
   const index = indexById[id] ?? blobs.length;
   indexById[id] = index;
-  blobs[index] = output;
+
+  if (index >= blobs.length) {
+    blobs[index] = {
+      lastLineNumber: -1,
+      content: output,
+    };
+  }
+  const blob = blobs[index];
+
+  if (lineNumber > blob.lastLineNumber) {
+    blob.content += output;
+  } else {
+    blob.content = output;
+  }
+  blob.lastLineNumber = lineNumber;
 
   injectCSS();
 
@@ -68,7 +86,7 @@ function injectCSS() {
   }
 
   const style = setup();
-  style.innerHTML = blobs.join('\n');
+  style.innerHTML = blobs.map(b => b.content).join('\n');
 }
 
 function setup() {
