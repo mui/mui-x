@@ -19,7 +19,7 @@ function generateId(length: number): string {
 }
 
 async function getMachineId(): Promise<string> {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || process.env.NODE_ENV === 'test') {
     return '';
   }
 
