@@ -1,6 +1,6 @@
 <DataGridPremium
   columns={columns}
-  unstable_dataSource={dataSource}
+  dataSource={dataSource}
   treeData
   apiRef={apiRef}
   initialState={{

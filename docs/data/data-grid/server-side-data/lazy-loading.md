@@ -2,13 +2,13 @@
 title: React Data Grid - Server-side lazy loading
 ---
 
-# Data Grid - Server-side lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Data Grid - Server-side lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Learn how to implement lazy-loading rows with a server-side data source.</p>
 
 Lazy loading changes the way pagination works by removing page controls and loading data dynamically (in a single list) as the user scrolls through the grid.
 
-You can enable it with the `unstable_lazyLoading` prop paired with the `unstable_dataSource` prop.
+You can enable it with the `lazyLoading` prop paired with the `dataSource` prop.
 
 Initially, data for the first page is fetched and displayed in the grid.
 The value of the total row count determines when the next page's data is loaded:
@@ -53,7 +53,7 @@ Open the Info section of your browser console to see the requests being made and
 As a user scrolls through the Grid, the rendering context changes and the Grid tries to fill in any missing rows by making a new server request.
 It also throttles new data fetches to avoid making unnecessary requests.
 The default throttle time is 500 milliseconds.
-Use the `unstable_lazyLoadingRequestThrottleMs` prop to set a custom time, as shown below:
+Use the `lazyLoadingRequestThrottleMs` prop to set a custom time, as shown below:
 
 {{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
 
@@ -98,13 +98,13 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, you would be able to use the `unstable_lazyLoading` flag in use cases that also involve tree data and/or row grouping.
+With this feature, you would be able to use the `lazyLoading` flag in use cases that also involve tree data and/or row grouping.
 
 ## Error handling
 
-To handle errors, use the `unstable_onDataSourceError()` prop as described in [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling).
+To handle errors, use the `onDataSourceError()` prop as described in [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
-You can pass the second parameter of type `GridGetRowsParams` to the `getRows()` method of the [`unstable_dataSource`](/x/api/data-grid/grid-api/#grid-api-prop-unstable_dataSource) to retry the request.
+You can pass the second parameter of type `GridGetRowsParams` to the `getRows()` method of the [`dataSource`](/x/api/data-grid/grid-api/#grid-api-prop-dataSource) to retry the request.
 If successful, the Data Grid uses `rows` and `rowCount` data to determine if the rows should be appended at the end of the grid or if the skeleton rows should be replaced.
 
 The following demo gives an example how to use `GridGetRowsParams` to retry a failed request.
