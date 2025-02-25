@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
@@ -26,7 +25,6 @@ export interface FunnelChartProps
       'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     FunnelChartSlotExtension {
   /**
