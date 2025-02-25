@@ -289,7 +289,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   };
 
   /* If there's an axis title, the tick labels have less space to render  */
-  const tickLabelsMaxHeight = (label ? labelRefPoint.y : axisHeight) - tickSize;
+  const tickLabelsMaxHeight = axisHeight - labelHeight - tickSize;
   console.log({ tickLabelsMaxHeight });
 
   const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
