@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, keyframes } from '@mui/system';
 
 export interface GridShadowScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -31,7 +32,6 @@ const ShadowScrollArea = styled('div', {
     height: '4px',
     animation: `${reveal} linear both`,
     animationTimeline: '--scroll-timeline',
-
     // Custom property toggle trick:
     // - Detects if the element is scrollable
     // - https://css-tricks.com/the-css-custom-property-toggle-trick/
@@ -55,7 +55,17 @@ const ShadowScrollArea = styled('div', {
 /**
  * Adds scroll shadows above and below content in a scrollable container.
  */
-export function GridShadowScrollArea(props: GridShadowScrollAreaProps) {
+function GridShadowScrollArea(props: GridShadowScrollAreaProps) {
   const { children, ...rest } = props;
   return <ShadowScrollArea {...rest}>{children}</ShadowScrollArea>;
 }
+
+GridShadowScrollArea.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { GridShadowScrollArea };

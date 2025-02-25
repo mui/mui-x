@@ -108,6 +108,7 @@ GridRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  sidePanel: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
