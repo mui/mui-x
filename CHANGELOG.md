@@ -5,9 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.27.1
 
-_Feb 24, 2025_
+_Feb 25, 2025_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 🌍 Add Bangla (bn-BD) locale on the Data Grid and Date Pickers
@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 Special thanks go out to the community contributors who have helped make this release possible:
 @nusr.
 Following are all team members who have contributed to this release:
-@bernardobelchior, @MBilalShafi.
+@bernardobelchior, @MBilalShafi, @KenanYusuf.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
