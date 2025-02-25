@@ -5,6 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { getStringSize } from '@mui/x-charts/internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
@@ -79,6 +80,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelInterval,
     sx,
     offset,
+    width: axisWidth,
   } = defaultizedProps;
 
   const isRtl = useRtl();
@@ -102,11 +104,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const positionSign = position === 'right' ? 1 : -1;
 
   const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
-
-  const labelRefPoint = {
-    x: positionSign * (tickFontSize + tickSize + 10),
-    y: top + height / 2,
-  };
 
   const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
@@ -167,6 +164,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   ) {
     return null;
   }
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: positionSign * (axisWidth - labelHeight),
+    y: top + height / 2,
+  };
 
   return (
     <YAxisRoot

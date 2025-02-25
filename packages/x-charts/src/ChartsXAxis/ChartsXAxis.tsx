@@ -230,12 +230,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (axisHeight - labelHeight),
-  };
-
   const domain = xScale.domain();
   const ordinalAxis = isBandScale(xScale);
   // Skip axis rendering if no data is available
@@ -249,6 +243,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   ) {
     return null;
   }
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
+
   return (
     <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}

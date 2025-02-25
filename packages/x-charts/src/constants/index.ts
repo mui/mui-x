@@ -10,4 +10,4 @@ export const DEFAULT_AXIS_SIZE_WIDTH = 30;
 export const DEFAULT_AXIS_SIZE_HEIGHT = 25;
 
 // How many pixels to add to the default axis size if that axis has a label
-export const AXIS_LABEL_DEFAULT_HEIGHT = 15;
+export const AXIS_LABEL_DEFAULT_HEIGHT = 20;

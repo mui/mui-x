@@ -49,7 +49,10 @@ export function defaultizeAxis(
       axisName === 'x'
         ? DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0)
         : 0;
-    const width = axisName === 'y' ? DEFAULT_AXIS_SIZE_WIDTH : 0;
+    const width =
+      axisName === 'y'
+        ? DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0)
+        : 0;
 
     const sharedConfig = {
       id: `defaultized-${axisName}-axis-${index}`,

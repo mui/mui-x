@@ -1,16 +1,10 @@
 import * as React from 'react';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const otherSetting = {
   height: 300,
-  yAxis: [{ label: 'rainfall (mm)' }],
+  yAxis: [{ label: 'rainfall (mm)', width: 55 }],
   grid: { horizontal: true },
-  sx: {
-    [`& .${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
 };
 
 const dataset = [
