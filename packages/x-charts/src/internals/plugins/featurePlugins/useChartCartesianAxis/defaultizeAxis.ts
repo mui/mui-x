@@ -4,6 +4,7 @@ import {
   DEFAULT_Y_AXIS_KEY,
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
+  AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
 import { AxisConfig, ScaleName } from '../../../../models';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
@@ -44,7 +45,10 @@ export function defaultizeAxis(
     const position = axisConfig.position ?? 'none';
     const dimension = axisName === 'x' ? 'height' : 'width';
 
-    const height = axisName === 'x' ? DEFAULT_AXIS_SIZE_HEIGHT : 0;
+    const height =
+      axisName === 'x'
+        ? DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0)
+        : 0;
     const width = axisName === 'y' ? DEFAULT_AXIS_SIZE_WIDTH : 0;
 
     const sharedConfig = {

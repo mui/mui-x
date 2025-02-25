@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { DEFAULT_AXIS_SIZE_HEIGHT } from '../constants';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -118,6 +120,7 @@ const defaultProps = {
   disableTicks: false,
   tickSize: 6,
   tickLabelMinGap: 4,
+  height: DEFAULT_AXIS_SIZE_HEIGHT,
 } as const;
 
 /**
@@ -160,6 +163,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     sx,
     offset,
+    height: axisHeight,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -210,16 +214,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (tickSize + 22),
-  };
-
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1.25,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
@@ -228,6 +229,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
 
   const domain = xScale.domain();
   const ordinalAxis = isBandScale(xScale);

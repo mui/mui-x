@@ -13,7 +13,10 @@ export const AxisRoot = styled('g', {
     fill: (theme.vars || theme).palette.text.primary,
   },
   [`& .${axisClasses.label}`]: {
+    /* The label is measured using only its style prop, so applying properties that change its size will cause the
+     * measurements to be off. As such, it is recommended to apply those properties through the `labelStyle` prop. */
     ...theme.typography.body1,
+    lineHeight: 1.25,
     fill: (theme.vars || theme).palette.text.primary,
   },
 
