@@ -45,8 +45,8 @@ export default function ServerSideDataGridTTL() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGrid
         columns={columns}
-        unstable_dataSource={dataSource}
-        unstable_dataSourceCache={lowTTLCache}
+        dataSource={dataSource}
+        dataSourceCache={lowTTLCache}
         pagination
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}
