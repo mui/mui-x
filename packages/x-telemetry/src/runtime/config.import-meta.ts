@@ -1,4 +1,4 @@
-const importMetaEnv: Record<string, string> | undefined =
-  typeof (import.meta as any)?.env === 'object' ? (import.meta as any).env : undefined;
+// @ts-ignore
+const importMetaEnv: Record<string, string> | undefined = import.meta.env
 
 export { importMetaEnv };
