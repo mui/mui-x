@@ -18,11 +18,12 @@ import { seriesConfig as funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
+import { CategoryAxis } from './categoryAxis.types';
 
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel'>,
-      'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset'
+      'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset' | 'yAxis' | 'xAxis'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -32,6 +33,7 @@ export interface FunnelChartProps
    * An array of [[FunnelSeriesType]] objects.
    */
   series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
+  categoryAxis?: CategoryAxis;
   /**
    * If `true`, the legend is not rendered.
    * @default false

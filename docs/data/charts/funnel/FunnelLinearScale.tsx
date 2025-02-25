@@ -8,7 +8,7 @@ export default function FunnelLinearScale() {
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <FunnelChart
         series={[populationByEducationLevelPercentageSeriesLabeled]}
-        yAxis={[{ scaleType: 'linear' }]}
+        categoryAxis={{ scaleType: 'linear' }}
         {...funnelProps}
       />
     </Box>
