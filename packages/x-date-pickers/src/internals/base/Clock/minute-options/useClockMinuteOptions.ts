@@ -5,11 +5,14 @@ import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
+import { useClockOptionList } from '../utils/useClockOptionList';
 
 export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
   const { children, getItems } = parameters;
   const utils = useUtils();
   const rootContext = useClockRootContext();
+
+  useClockOptionList({ section: 'minute' });
 
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
@@ -57,7 +60,6 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
   const context: ClockOptionListContext = React.useMemo(
     () => ({
       canOptionBeTabbed: () => true,
-      isOptionInvalid: () => false,
       isOptionSelected,
       section: 'minute',
       format: utils.formats.minutes,

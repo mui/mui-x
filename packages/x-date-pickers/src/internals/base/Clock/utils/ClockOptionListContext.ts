@@ -10,12 +10,6 @@ export interface ClockOptionListContext {
    */
   canOptionBeTabbed: (option: PickerValidDate) => boolean;
   /**
-   * Determine if the given option is invalid.
-   * @param {PickerValidDate} option The option to check.
-   * @returns {boolean} Whether the option is invalid.
-   */
-  isOptionInvalid: (option: PickerValidDate) => boolean;
-  /**
    * Determine if the given option is selected.
    * @param {PickerValidDate} option The option to check.
    * @returns  {boolean} Whether the option is selected.
@@ -24,7 +18,7 @@ export interface ClockOptionListContext {
   /**
    * The section handled by the component.
    */
-  section: ClockSection | 'unknown';
+  section: ClockSection;
   /**
    * The format to use for the options.
    */

@@ -1,1 +1,1 @@
-export type ClockSection = 'hour' | 'minute' | 'second';
+export type ClockSection = 'full-time' | 'hour' | 'minute' | 'second';

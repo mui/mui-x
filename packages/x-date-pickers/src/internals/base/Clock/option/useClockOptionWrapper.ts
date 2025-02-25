@@ -18,8 +18,11 @@ export function useClockOptionWrapper(
   const isOptionSelected = optionListContext.isOptionSelected;
   const isSelected = React.useMemo(() => isOptionSelected(value), [isOptionSelected, value]);
 
-  const isOptionInvalid = optionListContext.isOptionInvalid;
-  const isInvalid = React.useMemo(() => isOptionInvalid(value), [value, isOptionInvalid]);
+  const isOptionInvalid = rootContext.isOptionInvalid;
+  const isInvalid = React.useMemo(
+    () => isOptionInvalid(value, optionListContext.section),
+    [value, isOptionInvalid, optionListContext.section],
+  );
 
   const isDisabled = React.useMemo(() => {
     if (rootContext.disabled) {

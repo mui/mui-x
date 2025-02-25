@@ -4,6 +4,7 @@ import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
 import { BaseCalendarSection } from '../utils/types';
 import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavigation';
+import { useRegisterSection } from '../../hooks/useRegisterSection';
 
 export interface BaseCalendarRootContext {
   /**
@@ -75,11 +76,13 @@ export interface BaseCalendarRootContext {
    */
   registerDayGridCell: (refs: useBaseCalendarDayGridNavigation.CellRefs) => () => void;
   /**
-   * Register a section to be able to know if a date cell is visible or not.
-   * @param {useBaseCalendarRoot.RegisterSectionParameters} parameters The type and value of the section.
+   * Register a section.
+   * @param {useRegisterSection.RegisterSectionParameters<BaseCalendarSection>} parameters The type and value of the section.
    * @returns {() => void} A cleanup function to unregister the section.
    */
-  registerSection: (parameters: useBaseCalendarRoot.RegisterSectionParameters) => () => void;
+  registerSection: (
+    parameters: useRegisterSection.RegisterSectionParameters<BaseCalendarSection>,
+  ) => () => void;
 }
 
 export const BaseCalendarRootContext = React.createContext<BaseCalendarRootContext | undefined>(

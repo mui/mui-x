@@ -21,6 +21,7 @@ import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 import { BaseCalendarSection } from '../utils/types';
 import { BaseCalendarRootVisibleDateContext } from './BaseCalendarRootVisibleDateContext';
 import { useValidation } from '../../../../../validation';
+import { useRegisterSection } from '../../hooks/useRegisterSection';
 
 export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
@@ -60,6 +61,7 @@ export function useBaseCalendarRoot<
 
   const utils = useUtils();
   const adapter = useLocalizationContext();
+  const { sectionsRef, registerSection } = useRegisterSection<BaseCalendarSection>();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: '(Range)CalendarRoot',
@@ -87,31 +89,15 @@ export function useBaseCalendarRoot<
     [referenceDateProp, timezone],
   );
 
-  const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
-    day: {},
-    month: {},
-    year: {},
-  });
-  const registerSection = useEventCallback(
-    (section: useBaseCalendarRoot.RegisterSectionParameters) => {
-      const id = Math.random();
-      sectionsRef.current[section.type][id] = section.value;
-      return () => {
-        delete sectionsRef.current[section.type][id];
-      };
-    },
-  );
-
   const isDateCellVisible = (date: PickerValidDate) => {
-    if (Object.values(sectionsRef.current.day).length > 0) {
-      return Object.values(sectionsRef.current.day).every(
-        (month) => !utils.isSameMonth(date, month),
-      );
+    const daySections = sectionsRef.current.day ?? [];
+    const monthSections = sectionsRef.current.month ?? [];
+
+    if (Object.values(daySections).length > 0) {
+      return Object.values(daySections).every((month) => !utils.isSameMonth(date, month));
     }
-    if (Object.values(sectionsRef.current.month).length > 0) {
-      return Object.values(sectionsRef.current.month).every(
-        (year) => !utils.isSameYear(date, year),
-      );
+    if (Object.values(monthSections).length > 0) {
+      return Object.values(monthSections).every((year) => !utils.isSameYear(date, year));
     }
     return true;
   };

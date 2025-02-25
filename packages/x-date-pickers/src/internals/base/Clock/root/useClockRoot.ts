@@ -19,6 +19,8 @@ import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { getTodayDate } from '../../../utils/date-utils';
+import { useRegisterSection } from '../../utils/hooks/useRegisterSection';
+import { useIsOptionInvalid } from '../utils/useIsOptionInvalid';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
   const {
@@ -44,6 +46,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
 
   const manager = useTimeManager();
   const utils = useUtils();
+  const { registerSection, sectionsRef } = useRegisterSection<ClockSection>();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'Clock',
@@ -82,6 +85,8 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [referenceDateProp, timezone],
   );
+
+  const isOptionInvalid = useIsOptionInvalid({ validationProps, timezone, sectionsRef });
 
   const resolvedChildren = React.useMemo(() => {
     if (!React.isValidElement(children) && typeof children === 'function') {
@@ -126,8 +131,20 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       value,
       setValue,
       referenceDate: value ?? referenceDate,
+      registerSection,
+      isOptionInvalid,
     }),
-    [timezone, disabled, readOnly, validationProps, value, setValue, referenceDate],
+    [
+      timezone,
+      disabled,
+      readOnly,
+      validationProps,
+      value,
+      setValue,
+      referenceDate,
+      registerSection,
+      isOptionInvalid,
+    ],
   );
 
   return React.useMemo(
@@ -175,7 +192,7 @@ export namespace useClockRoot {
     /**
      * The section handled by the UI that triggered the change.
      */
-    section: ClockSection | 'unknown';
+    section: ClockSection;
     /**
      * The validation error associated to the new value.
      */

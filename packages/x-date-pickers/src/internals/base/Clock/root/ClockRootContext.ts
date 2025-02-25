@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateTimeProps } from '../../../../validation';
 import { ClockSection } from '../utils/types';
+import { useRegisterSection } from '../../utils/hooks/useRegisterSection';
 
 export interface ClockRootContext {
   /**
@@ -28,13 +29,28 @@ export interface ClockRootContext {
    * Update the currently selected value.
    * @param {PickerValidDate} value The value to select.
    * @param {object} options The options to select the date.
-   * @param {ClockSection | "unknown"} options.section The section handled by the UI that triggered the change.
+   * @param {ClockSection} options.section The section handled by the UI that triggered the change.
    */
-  setValue: (value: PickerValidDate, options: { section: ClockSection | 'unknown' }) => void;
+  setValue: (value: PickerValidDate, options: { section: ClockSection }) => void;
   /**
    * The reference date used to generate the option's value.
    */
   referenceDate: PickerValidDate;
+  /**
+   * Register a section.
+   * @param {useRegisterSection.RegisterSectionParameters<ClockSection>} parameters The type and value of the section.
+   * @returns {() => void} A cleanup function to unregister the section.
+   */
+  registerSection: (
+    parameters: useRegisterSection.RegisterSectionParameters<ClockSection>,
+  ) => () => void;
+  /**
+   * Determine if the given option is invalid.
+   * @param {PickerValidDate} option The option to check.
+   * @param {ClockSection} section The section of the option.
+   * @returns {boolean} Whether the option is invalid.
+   */
+  isOptionInvalid: (option: PickerValidDate, section: ClockSection) => boolean;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);
