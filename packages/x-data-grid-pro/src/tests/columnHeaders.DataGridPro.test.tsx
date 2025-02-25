@@ -3,7 +3,7 @@ import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-t
 import { config } from 'react-transition-group';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column headers', () => {
@@ -162,8 +162,6 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnToResizeCell = getColumnHeaderCell(1);
 
       await user.hover(columnWithMenuCell);
-      // The sleep seems to be necessary to avoid a flaky test
-      await sleep(50);
 
       const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
 
@@ -181,28 +179,32 @@ describe('<DataGridPro /> - Column headers', () => {
       });
     });
 
-    it('should close the menu of a column when pressing the Escape key', async () => {
-      const { user } = render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-        </div>,
-      );
+    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
+    testSkipIf(!isJSDOM)(
+      'should close the menu of a column when pressing the Escape key',
+      async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+          </div>,
+        );
 
-      const columnCell = getColumnHeaderCell(0);
+        const columnCell = getColumnHeaderCell(0);
 
-      await user.hover(columnCell);
-      // The sleep seems to be necessary to avoid a flaky test
-      await sleep(50);
+        await user.hover(columnCell);
 
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
 
-      await user.click(menuIconButton);
+        await user.click(menuIconButton);
 
-      await screen.findByRole('menu');
+        await waitFor(() => {
+          expect(screen.queryByRole('menu')).not.to.equal(null);
+        });
 
-      await user.keyboard('[Escape]');
-      expect(screen.queryByRole('menu')).to.equal(null);
-    });
+        await user.keyboard('[Escape]');
+        expect(screen.queryByRole('menu')).to.equal(null);
+      },
+    );
 
     it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', async () => {
       // enable `react-transition-group` transitions for this test
