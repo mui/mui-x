@@ -72,7 +72,6 @@ const lineChartsParams = {
       showMark: false,
     },
   ],
-  width: 600,
   height: 400,
 };
 
