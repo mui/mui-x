@@ -177,7 +177,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
+    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
     user.click(columnsBtn);
 
     await waitFor(() => {
@@ -212,7 +212,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
+    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
     user.click(columnsBtn);
 
     await waitFor(() => {
@@ -247,7 +247,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
+    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
     user.click(columnsBtn);
 
     await waitFor(() => {
