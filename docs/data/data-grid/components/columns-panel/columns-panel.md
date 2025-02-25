@@ -13,7 +13,7 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the `ColumnsPanelTrigger` is the only part of the Columns Panel component available.
+Currently, the Columns Panel Trigger is the only part of the Columns Panel component available.
 Future versions of the Columns Panel component will make it possible to compose each of its parts to create a custom columns panel.
 
 In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
@@ -35,9 +35,9 @@ import { ColumnsPanelTrigger } from '@mui/x-data-grid';
 <ColumnsPanelTrigger />;
 ```
 
-### ColumnsPanelTrigger
+### Columns Panel Trigger
 
-`ColumnsPanelTrigger` is a button that opens/closes the columns panel.
+`<ColumnsPanelTrigger />` is a button that opens and closes the columns panel.
 It renders the `baseButton` slot.
 
 ## Custom elements

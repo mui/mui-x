@@ -8,7 +8,7 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Quick Filter
 
-<p class="description">A search field that lets users to filter data in the Data Grid.</p>
+<p class="description">Provide users with a search field to filter data in the Data Grid.</p>
 
 ## Basic usage
 
@@ -27,19 +27,19 @@ import { QuickFilter, QuickFilterControl, QuickFilterClear } from '@mui/x-data-g
 </QuickFilter>;
 ```
 
-### QuickFilter
+### Quick Filter
 
-`QuickFilter` is the top level component that provides context to child components.
+`<QuickFilter />` is the top level component that provides context to child components.
 It does not render any DOM elements.
 
-### QuickFilterControl
+### Quick Filter Control
 
-`QuickFilterControl` takes user input and filters row data.
+`<QuickFilterControl />` takes user input and filters row data.
 It renders the `baseTextField` slot.
 
-### QuickFilterClear
+### Quick Filter Clear
 
-`QuickFilterClear` is a button that resets the filter value.
+`<QuickFilterClear />` is a button that resets the filter value.
 It renders the `baseIconButton` slot.
 
 ## Custom elements

@@ -13,7 +13,7 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the `FilterPanelTrigger` is the only part of the Filter Panel component available.
+Currently, the Filter Panel Trigger is the only part of the Filter Panel component available.
 Future versions of the Filter Panel component will make it possible to compose each of its parts to create a custom filter panel.
 
 In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
@@ -36,9 +36,9 @@ import { FilterPanelTrigger } from '@mui/x-data-grid';
 <FilterPanelTrigger />;
 ```
 
-### FilterPanelTrigger
+### Filter Panel Trigger
 
-`FilterPanelTrigger` is a button that opens/closes the filter panel.
+`<FilterPanelTrigger />` is a button that opens and closes the filter panel.
 It renders the `baseButton` slot.
 
 ## Custom elements

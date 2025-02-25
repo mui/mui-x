@@ -1,5 +1,5 @@
 {
-  "componentDescription": "A button that opens/closes the filter panel.\nIt renders the `baseButton` slot.",
+  "componentDescription": "A button that opens and closes the filter panel.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
     "action": {
       "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."

@@ -16,7 +16,7 @@ export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
 };
 
 /**
- * A button that can be used to perform actions from the toolbar.
+ * A button for performing actions from the toolbar.
  * It renders the `baseIconButton` slot.
  *
  * Demos:

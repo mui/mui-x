@@ -30,12 +30,12 @@ import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
 
 ### Toolbar
 
-`Toolbar` is the top level component that provides context to child components.
+The Toolbar is the top level component that provides context to child components.
 It renders a styled `<div />` element.
 
-### ToolbarButton
+### Toolbar Button
 
-`ToolbarButton` is a button that can be used to perform actions from the toolbar.
+`<ToolbarButton />` is a button for performing actions from the toolbar.
 It renders the `baseIconButton` slot.
 
 ## Recipes

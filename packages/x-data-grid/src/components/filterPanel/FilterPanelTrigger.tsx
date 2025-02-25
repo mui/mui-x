@@ -36,7 +36,7 @@ export type FilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 };
 
 /**
- * A button that opens/closes the filter panel.
+ * A button that opens and closes the filter panel.
  * It renders the `baseButton` slot.
  *
  * Demos:

@@ -8,7 +8,7 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Export
 
-<p class="description">Components to trigger exports of the Data Grid.</p>
+<p class="description">Let users export the Data Grid for Excel, CSV, or printing.</p>
 
 ## Basic usage
 
@@ -26,19 +26,19 @@ import { ExportPrint, ExportCsv, ExportExcel } from '@mui/x-data-grid';
 <ExportExcel />
 ```
 
-### ExportPrint
+### Export Print
 
-`ExportPrint` is a button that triggers a print export.
+`<ExportPrint />` is a button that triggers a print export.
 It renders the `baseButton` slot.
 
-### ExportCsv
+### Export CSV
 
-`ExportCsv` is a button that triggers a CSV export.
+`<ExportCsv />` is a button that triggers a CSV export.
 It renders the `baseButton` slot.
 
-### ExportExcel
+### Export Excel
 
-`ExportExcel` is a button that triggers an Excel export.
+`<ExportExcel />` is a button that triggers an Excel export.
 It renders the `baseButton` slot.
 
 ## Recipes

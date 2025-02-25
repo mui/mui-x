@@ -1,5 +1,5 @@
 {
-  "componentDescription": "A button that can be used to perform actions from the toolbar.\nIt renders the `baseIconButton` slot.",
+  "componentDescription": "A button for performing actions from the toolbar.\nIt renders the `baseIconButton` slot.",
   "propDescriptions": {
     "action": {
       "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."

@@ -31,7 +31,7 @@ export type ColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classN
 };
 
 /**
- * A button that opens/closes the columns panel.
+ * A button that opens and closes the columns panel.
  * It renders the `baseButton` slot.
  *
  * Demos:
