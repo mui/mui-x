@@ -11,6 +11,7 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid 
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
+import { isJSDOM } from './utils/skipIf';
 
 // Core's setupVitest is causing issues with the test setup
 // import '@mui/internal-test-utils/setupVitest';
@@ -45,16 +46,9 @@ afterEach(() => {
   config.disabled = false;
 });
 
-// checking if an element is hidden is quite expensive
-// this is only done in CI as a fail safe. It can still explicitly be checked
-// in the test files which helps documenting what is part of the DOM but hidden
-// from assistive technology
-const defaultHidden = !process.env.CI;
-
 configure({
   // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
-  computedStyleSupportsPseudoElements: false,
-  defaultHidden,
+  computedStyleSupportsPseudoElements: !isJSDOM,
 });
 
 if (!globalThis.before) {
