@@ -1,4 +1,4 @@
-import { DeviceUUID } from 'device-uuid';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import telemetryContext from '../context';
 import type { TelemetryContextType } from '../context';
 import {
@@ -19,9 +19,15 @@ function generateId(length: number): string {
   return result;
 }
 
-function getMachineId(): string {
-  const deviceUUID = new DeviceUUID();
-  return deviceUUID.get();
+async function getMachineId(): Promise<string> {
+  if (typeof navigator === 'undefined') {
+    return '';
+  }
+
+  const fpPromise = FingerprintJS.load();
+  const fp = await fpPromise;
+  const result = await fp.get();
+  return result.visitorId;
 }
 
 function getAnonymousId(): string {
@@ -58,14 +64,17 @@ function getSessionId(): string {
   return generateId(32);
 }
 
-function getTelemetryContext(): TelemetryContextType {
+async function getTelemetryContext(): Promise<TelemetryContextType> {
   // Initialize the context if it hasn't been initialized yet
   // (e.g. postinstall not run)
   if (!telemetryContext.config.isInitialized) {
     telemetryContext.traits.anonymousId = getAnonymousId();
     telemetryContext.traits.sessionId = getSessionId();
-    telemetryContext.traits.machineId = getMachineId();
     telemetryContext.config.isInitialized = true;
+  }
+
+  if (!telemetryContext.traits.machineId) {
+    telemetryContext.traits.machineId = await getMachineId();
   }
 
   return telemetryContext;

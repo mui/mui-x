@@ -32,7 +32,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
     }
 
     const { default: getTelemetryContext } = await import('./get-context');
-    const telemetryContext = getTelemetryContext();
+    const telemetryContext = await getTelemetryContext();
     if (!event || !shouldSendTelemetry(telemetryContext)) {
       return;
     }
@@ -65,7 +65,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       sendMuiXTelemetryRetries,
     );
   } catch (_) {
-    // Ignore for now
+    console.log('[mui-x-telemetry] error', _);
   }
 }
 

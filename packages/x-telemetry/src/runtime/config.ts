@@ -178,6 +178,7 @@ export function getTelemetryEnvConfig(skipCache: boolean = false): TelemetryEnvC
     };
   }
 
+  console.log('getTelemetryEnvConfig()', JSON.stringify(cachedEnv, null, 2));
   return cachedEnv;
 }
 
