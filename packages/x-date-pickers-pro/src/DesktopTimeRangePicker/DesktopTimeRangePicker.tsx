@@ -37,7 +37,6 @@ const rendererInterceptor = function RendererInterceptor(
   const { openTo, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
-    focusedView: null,
     sx: [
       {
         [`&.${multiSectionDigitalClockClasses.root}`]: {

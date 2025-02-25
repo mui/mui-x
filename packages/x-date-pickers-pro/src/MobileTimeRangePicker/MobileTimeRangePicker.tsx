@@ -38,7 +38,6 @@ const rendererInterceptor = function rendererInterceptor(
   const { viewRenderers, popperView, rendererProps } = props;
   const finalProps = {
     ...rendererProps,
-    focusedView: null,
     sx: [
       {
         width: DIALOG_WIDTH,
