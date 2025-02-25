@@ -17,11 +17,11 @@ export function useClockOption(parameters: useClockOption.Parameters) {
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'option',
-        children: utils.format(value, 'hours24h'),
+        children: utils.formatByString(value, ctx.format),
         onClick,
       });
     },
-    [utils, value, onClick],
+    [utils, value, onClick, ctx.format],
   );
 
   return React.useMemo(() => ({ getOptionsProps }), [getOptionsProps]);
@@ -34,6 +34,11 @@ export namespace useClockOption {
      */
     value: PickerValidDate;
     /**
+     * The format used to display the option.
+     * @default Defined by the option list component wrapping the option.
+     */
+    format?: string;
+    /**
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
      */
     ctx: Context;
@@ -45,5 +50,6 @@ export namespace useClockOption {
     isInvalid: boolean;
     isTabbable: boolean;
     selectOption: (value: PickerValidDate) => void;
+    format: string;
   }
 }

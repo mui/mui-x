@@ -16,9 +16,19 @@ export interface ClockOptionListContext {
    */
   isOptionInvalid: (option: PickerValidDate) => boolean;
   /**
+   * Determine if the given option is selected.
+   * @param {PickerValidDate} option The option to check.
+   * @returns  {boolean} Whether the option is selected.
+   */
+  isOptionSelected: (option: PickerValidDate) => boolean;
+  /**
    * The section handled by the component.
    */
   section: ClockSection | 'unknown';
+  /**
+   * The format to use for the options.
+   */
+  format: string;
 }
 
 export const ClockOptionListContext = React.createContext<ClockOptionListContext | undefined>(

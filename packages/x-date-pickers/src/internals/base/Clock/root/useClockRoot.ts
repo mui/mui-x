@@ -118,8 +118,16 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   });
 
   const context: ClockRootContext = React.useMemo(
-    () => ({ timezone, disabled, readOnly, validationProps, value, setValue }),
-    [timezone, disabled, readOnly, validationProps, value, setValue],
+    () => ({
+      timezone,
+      disabled,
+      readOnly,
+      validationProps,
+      value,
+      setValue,
+      referenceDate: value ?? referenceDate,
+    }),
+    [timezone, disabled, readOnly, validationProps, value, setValue, referenceDate],
   );
 
   return React.useMemo(

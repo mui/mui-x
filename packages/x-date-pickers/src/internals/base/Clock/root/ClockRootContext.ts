@@ -31,6 +31,10 @@ export interface ClockRootContext {
    * @param {ClockSection | "unknown"} options.section The section handled by the UI that triggered the change.
    */
   setValue: (value: PickerValidDate, options: { section: ClockSection | 'unknown' }) => void;
+  /**
+   * The reference date used to generate the option's value.
+   */
+  referenceDate: PickerValidDate;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);

@@ -11,22 +11,30 @@ export default function BasicClockDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div>
-        <Clock.Root value={value} onValueChange={setValue} className={styles.Root}>
-          <Clock.MinuteOptions className={styles.OptionList}>
-            {({ items }) =>
-              items.map((item) => (
-                <Clock.Option
-                  key={item.toString()}
-                  value={item}
-                  className={styles.Option}
-                />
-              ))
-            }
-          </Clock.MinuteOptions>
-        </Clock.Root>
-        {value == null ? 'null' : value.toString()}
-      </div>
+      <Clock.Root value={value} onValueChange={setValue} className={styles.Root}>
+        <Clock.HourOptions className={styles.OptionList}>
+          {({ items }) =>
+            items.map((item) => (
+              <Clock.Option
+                key={item.toString()}
+                value={item}
+                className={styles.Option}
+              />
+            ))
+          }
+        </Clock.HourOptions>
+        <Clock.MinuteOptions className={styles.OptionList}>
+          {({ items }) =>
+            items.map((item) => (
+              <Clock.Option
+                key={item.toString()}
+                value={item}
+                className={styles.Option}
+              />
+            ))
+          }
+        </Clock.MinuteOptions>
+      </Clock.Root>
     </LocalizationProvider>
   );
 }

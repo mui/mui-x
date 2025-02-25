@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useUtils } from '../../../hooks/useUtils';
 import { PickerValidDate } from '../../../../models';
 import { useClockOption } from './useClockOption';
 import { useClockRootContext } from '../root/ClockRootContext';
@@ -14,14 +13,10 @@ export function useClockOptionWrapper(
   const rootContext = useClockRootContext();
   const optionListContext = useClockOptionListContext();
   const ref = React.useRef<HTMLButtonElement>(null);
-  const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, ref);
 
-  // TODO: Fix the equality check
-  const isSelected = React.useMemo(
-    () => rootContext.value != null && utils.isSameHour(rootContext.value, value),
-    [rootContext.value, value, utils],
-  );
+  const isOptionSelected = optionListContext.isOptionSelected;
+  const isSelected = React.useMemo(() => isOptionSelected(value), [isOptionSelected, value]);
 
   const isOptionInvalid = optionListContext.isOptionInvalid;
   const isInvalid = React.useMemo(() => isOptionInvalid(value), [value, isOptionInvalid]);
@@ -52,8 +47,9 @@ export function useClockOptionWrapper(
       isInvalid,
       isTabbable,
       selectOption,
+      format: optionListContext.format,
     }),
-    [isSelected, isDisabled, isInvalid, isTabbable, selectOption],
+    [isSelected, isDisabled, isInvalid, isTabbable, selectOption, optionListContext.format],
   );
 
   return {

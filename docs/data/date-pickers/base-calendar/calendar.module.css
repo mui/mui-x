@@ -11,7 +11,18 @@
   --cell-outside-month-color: #cbd5e1;
   --cell-disabled-color: #64748b;
   --cell-current-border-color: #9ca3af;
+}
 
+:global(.mode-dark) .Root {
+  --button-hover-bg-color: #075985;
+  --days-grid-separator-bg-color: #4b5563;
+  --cell-selected-bg-color: #0369a1;
+  --cell-inside-selection-bg-color: #0c4a6e;
+  --cell-outside-month-color: #334155;
+  --cell-disabled-color: #64748b;
+}
+
+.Root {
   border: 1px solid var(--root-border-color);
   border-radius: 8px;
   width: 276px;
@@ -359,13 +370,4 @@
   background-color: var(--days-grid-separator-bg-color);
   margin: 0 6px;
   flex: 0 0 1px;
-}
-
-:global(.mode-dark) .Root {
-  --button-hover-bg-color: #075985;
-  --days-grid-separator-bg-color: #4b5563;
-  --cell-selected-bg-color: #0369a1;
-  --cell-inside-selection-bg-color: #0c4a6e;
-  --cell-outside-month-color: #334155;
-  --cell-disabled-color: #64748b;
 }

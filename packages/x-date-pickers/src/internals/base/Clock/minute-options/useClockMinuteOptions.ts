@@ -9,17 +9,19 @@ import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
   const { children, getItems } = parameters;
   const utils = useUtils();
-  const clockRootContext = useClockRootContext();
+  const rootContext = useClockRootContext();
 
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
-      return Array.from({ length: 24 }, (_, index) => utils.setHours(utils.date(), index));
+      return Array.from({ length: 60 }, (_, index) =>
+        utils.setMinutes(rootContext.referenceDate, index),
+      );
     };
 
     if (getItems) {
       return getItems({
-        minTime: clockRootContext.validationProps.minTime,
-        maxTime: clockRootContext.validationProps.maxTime,
+        minTime: rootContext.validationProps.minTime,
+        maxTime: rootContext.validationProps.maxTime,
         getDefaultItems,
       });
     }
@@ -28,8 +30,9 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
   }, [
     utils,
     getItems,
-    clockRootContext.validationProps.minTime,
-    clockRootContext.validationProps.maxTime,
+    rootContext.validationProps.minTime,
+    rootContext.validationProps.maxTime,
+    rootContext.referenceDate,
   ]);
 
   const resolvedChildren = React.useMemo(() => {
@@ -40,13 +43,26 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
     return children;
   }, [children, items]);
 
+  const isOptionSelected = React.useCallback(
+    (option: PickerValidDate) => {
+      return (
+        rootContext.value != null &&
+        utils.isSameHour(option, rootContext.value) &&
+        utils.getMinutes(option) === utils.getMinutes(rootContext.value)
+      );
+    },
+    [rootContext.value, utils],
+  );
+
   const context: ClockOptionListContext = React.useMemo(
     () => ({
       canOptionBeTabbed: () => true,
       isOptionInvalid: () => false,
+      isOptionSelected,
       section: 'minute',
+      format: utils.formats.minutes,
     }),
-    [],
+    [utils, isOptionSelected],
   );
 
   const getOptionsProps = React.useCallback(

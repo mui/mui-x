@@ -15,7 +15,14 @@ const InnerClockOption = React.forwardRef(function InnerClockOption(
     ctx,
   });
 
-  const state: ClockOption.State = React.useMemo(() => ({}), []);
+  const state: ClockOption.State = React.useMemo(
+    () => ({
+      selected: ctx.isSelected,
+      disabled: ctx.isDisabled,
+      invalid: ctx.isInvalid,
+    }),
+    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid],
+  );
 
   const { renderElement } = useComponentRenderer({
     propGetter: getOptionsProps,
@@ -41,7 +48,20 @@ const ClockOption = React.forwardRef(function ClockOption(
 });
 
 export namespace ClockOption {
-  export interface State {}
+  export interface State {
+    /**
+     * Whether the option is selected.
+     */
+    selected: boolean;
+    /**
+     * Whether the option is disabled.
+     */
+    disabled: boolean;
+    /**
+     * Whether the option is invalid.
+     */
+    invalid: boolean;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
