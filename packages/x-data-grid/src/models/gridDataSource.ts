@@ -55,12 +55,10 @@ export interface GridDataSource {
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
   /**
    * This method will be called when the user updates a row.
-   * @param {GridRowModel} id The row to update.
-   * @param {GridRowModel} updatedRow The updated row.
-   * @param {GridRowModel} previousRow The previous row.
+   * @param {GridUpdateRowParams} params The parameters required to update the row.
    * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache.
    */
-  updateRow?(id: GridRowId, updatedRow: GridRowModel, previousRow: GridRowModel): Promise<any>;
+  updateRow?(params: GridUpdateRowParams): Promise<any>;
 }
 
 export interface GridDataSourceCache {

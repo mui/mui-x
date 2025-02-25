@@ -82,7 +82,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
     DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
+   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -136,6 +136,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -145,22 +146,22 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   keepColumnPositionIfDraggedOutside: boolean;
   /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
-   */
-  unstable_listView: boolean;
-  /**
-   * Used together with `unstable_dataSource` to enable lazy loading.
+   * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
    * @default false
    */
-  unstable_lazyLoading: boolean;
+  lazyLoading: boolean;
   /**
    * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
    * @default 500
    */
-  unstable_lazyLoadingRequestThrottleMs: number;
+  lazyLoadingRequestThrottleMs: number;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: boolean;
 }
 interface DataGridProRegularProps<R extends GridValidRowModel> {
   /**
@@ -177,11 +178,7 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
       DataGridPropsWithoutDefaultValue<R>,
-      | 'initialState'
-      | 'componentsProps'
-      | 'slotProps'
-      | 'unstable_dataSource'
-      | 'unstable_onDataSourceError'
+      'initialState' | 'componentsProps' | 'slotProps' | 'dataSource' | 'onDataSourceError'
     >,
     DataGridProRegularProps<R>,
     DataGridProSharedPropsWithoutDefaultValue {
@@ -205,6 +202,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -256,6 +254,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
@@ -273,12 +272,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The data source of the Data Grid Pro.
    */
-  unstable_dataSource?: GridDataSource;
+  dataSource?: GridDataSource;
   /**
    * Callback fired when a data source request fails.
-   * @param {GridDataSourceError} error The data source error object.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  unstable_onDataSourceError?: (
-    error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError,
-  ) => void;
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }

@@ -29,6 +29,12 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "dataSource": {
+      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "density": {
       "type": {
         "name": "enum",
@@ -287,6 +293,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
+      }
+    },
     "onDensityChange": {
       "type": { "name": "func" },
       "signature": {
@@ -477,19 +490,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    },
-    "unstable_dataSource": {
-      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
-    },
-    "unstable_dataSourceCache": {
-      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
-    },
-    "unstable_onDataSourceError": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(error: GridDataSourceError) => void",
-        "describedArgs": ["error"]
-      }
     },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },

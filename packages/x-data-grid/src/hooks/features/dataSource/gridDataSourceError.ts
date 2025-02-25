@@ -1,4 +1,4 @@
-import { GridGetRowsParams, GridUpdateRowParams } from '../../../models/gridDataSource';
+import type { GridGetRowsParams, GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export class GridGetRowsError<T extends GridGetRowsParams = GridGetRowsParams> extends Error {
   /**

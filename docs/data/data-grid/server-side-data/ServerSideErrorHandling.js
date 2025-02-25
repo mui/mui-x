@@ -65,8 +65,8 @@ export default function ServerSideErrorHandling() {
           rowCount: getRowsResponse.rowCount,
         };
       },
-      updateRow: async (id, update) => {
-        const syncedRow = await editRow(id, update);
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
         return syncedRow;
       },
     }),
@@ -96,7 +96,7 @@ export default function ServerSideErrorHandling() {
         <Button
           onClick={() => {
             setError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -114,15 +114,15 @@ export default function ServerSideErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGrid
           {...props}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(dataSourceError) => {
+          dataSource={dataSource}
+          onDataSourceError={(dataSourceError) => {
             if (dataSourceError instanceof GridGetRowsError) {
               setError(dataSourceError.message);
               return;
             }
             setSnackbar({ children: dataSourceError.message, severity: 'error' });
           }}
-          unstable_dataSourceCache={null}
+          dataSourceCache={null}
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}

@@ -93,7 +93,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
+   * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   aggregationFunctions:
     | Record<string, GridAggregationFunction>
@@ -129,7 +129,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
     DataGridProPropsWithoutDefaultValue<R>,
-    'initialState' | 'apiRef' | 'unstable_dataSource' | 'unstable_onDataSourceError'
+    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
   > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -203,12 +203,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Data source object.
    */
-  unstable_dataSource?: GridDataSource;
+  dataSource?: GridDataSource;
   /**
    * Callback fired when a data source request fails.
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  unstable_onDataSourceError?: (
-    error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError,
-  ) => void;
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }

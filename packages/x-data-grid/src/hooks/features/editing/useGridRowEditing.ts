@@ -61,8 +61,8 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
-    | 'unstable_dataSource'
-    | 'unstable_onDataSourceError'
+    | 'dataSource'
+    | 'onDataSourceError'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -537,14 +537,14 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
-      if (props.unstable_dataSource?.updateRow) {
+      if (props.dataSource?.updateRow) {
         const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
           prevRowModesModel.current[id].mode = GridRowModes.Edit;
           // Revert the mode in the rowModesModel prop back to "edit"
           updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
 
-          if (typeof props.unstable_onDataSourceError === 'function') {
-            props.unstable_onDataSourceError(
+          if (typeof props.onDataSourceError === 'function') {
+            props.onDataSourceError(
               new GridUpdateRowError({
                 message: errorThrown?.message,
                 params: updateParams,
@@ -564,7 +564,9 @@ export const useGridRowEditing = (
         };
 
         try {
-          Promise.resolve(props.unstable_dataSource.updateRow(id, rowUpdate, row))
+          Promise.resolve(
+            props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
+          )
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               if (finalRowUpdate !== row) {

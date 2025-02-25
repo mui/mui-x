@@ -63,7 +63,7 @@ export default function ServerSideDataGridAggregation() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         pagination
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}

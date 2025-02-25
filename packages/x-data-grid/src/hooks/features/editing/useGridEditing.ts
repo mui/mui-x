@@ -26,11 +26,7 @@ export const useGridEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'isCellEditable'
-    | 'editMode'
-    | 'processRowUpdate'
-    | 'unstable_dataSource'
-    | 'unstable_onDataSourceError'
+    'isCellEditable' | 'editMode' | 'processRowUpdate' | 'dataSource' | 'onDataSourceError'
   >,
 ) => {
   useGridCellEditing(apiRef, props);

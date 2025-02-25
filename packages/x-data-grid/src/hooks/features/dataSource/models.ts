@@ -20,7 +20,7 @@ export interface GridDataSourceApi {
   /**
    * The data source API.
    */
-  unstable_dataSource: GridDataSourceApiBase;
+  dataSource: GridDataSourceApiBase;
 }
 
 export interface GridDataSourcePrivateApi {

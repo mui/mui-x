@@ -28,8 +28,8 @@ export default function ServerSideEditing() {
           rowCount: getRowsResponse.rowCount,
         };
       },
-      updateRow: async (rowId, updatedRow) => {
-        const syncedRow = await editRow(rowId, updatedRow);
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
         return syncedRow;
       },
     }),
@@ -51,7 +51,7 @@ export default function ServerSideEditing() {
     <div style={{ width: '100%' }}>
       <Button
         onClick={() => {
-          apiRef.current?.unstable_dataSource.cache.clear();
+          apiRef.current?.dataSource.cache.clear();
         }}
       >
         Clear cache
@@ -60,7 +60,7 @@ export default function ServerSideEditing() {
         <DataGridPro
           apiRef={apiRef}
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           pagination
           initialState={initialState}
           pageSizeOptions={[10, 20, 50]}
