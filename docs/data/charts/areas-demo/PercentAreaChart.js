@@ -21,7 +21,6 @@ const getPercents = (array) =>
 export default function PercentAreaChart() {
   return (
     <LineChart
-      width={500}
       height={300}
       series={[
         {

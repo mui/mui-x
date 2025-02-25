@@ -16,7 +16,6 @@ const xLabels = [
 export default function CustomLineMarks() {
   return (
     <LineChart
-      width={500}
       height={300}
       series={[
         {
