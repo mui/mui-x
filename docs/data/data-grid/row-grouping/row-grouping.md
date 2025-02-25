@@ -241,7 +241,7 @@ If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault` prop which is a callback receiving the node as an argument.
+If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault()` prop which is a callback receiving the node as an argument.
 When defined, this callback will always have priority over the `defaultGroupingExpansionDepth` prop.
 
 ```tsx
@@ -252,12 +252,12 @@ isGroupExpandedByDefault={
 
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
+Use the `setRowChildrenExpansion()` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.dataSource.fetchRows()` instead.
+The `apiRef.current.setRowChildrenExpansion()` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.dataSource.fetchRows()` instead.
 :::
 
 ### Customize grouping cell indent

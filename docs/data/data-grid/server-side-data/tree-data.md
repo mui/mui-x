@@ -2,7 +2,7 @@
 title: React Data Grid - Server-side tree data
 ---
 
-# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Tree data lazy-loading with server-side data source.</p>
 
@@ -59,7 +59,7 @@ It also caches the data by default.
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The data source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
@@ -69,7 +69,7 @@ Open the Info section of your browser console to see the requests being made and
 
 For each row group expansion, the data source is called to fetch the children.
 If an error occurs during the fetch, the grid will display an error message in the row group cell.
-`onDataSourceError` is also triggered with the error object containing the params as mentioned in the [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling) section.
+`onDataSourceError()` is also triggered with the error object containing the params as mentioned in the [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling) section.
 
 The demo below shows a toast apart from the default error message in the grouping cell.
 Cache has been disabled in this demo for simplicity.
@@ -79,7 +79,7 @@ Cache has been disabled in this demo for simplicity.
 ## Group expansion
 
 The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section.
-The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
+The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` in a waterfall manner.
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.
 
