@@ -23,7 +23,7 @@ export default function BasicComposition() {
         labelPlacement="end"
       />
 
-      <Paper sx={{ width: '95%', height: 300 }} elevation={3}>
+      <Paper sx={{ margin: 1, height: 300 }} elevation={3}>
         <ChartContainer
           series={[
             {
