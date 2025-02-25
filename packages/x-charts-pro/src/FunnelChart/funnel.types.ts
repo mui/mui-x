@@ -10,7 +10,7 @@ import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 
 export type FunnelItemId = string | number;
 
-export type FunnelCurveType = Extract<CurveType, 'linear' | 'step' | 'bumpY' | 'bumpX'>;
+export type FunnelCurveType = Extract<CurveType, 'linear' | 'step'> | 'bump';
 
 export type FunnelValueType = {
   /**

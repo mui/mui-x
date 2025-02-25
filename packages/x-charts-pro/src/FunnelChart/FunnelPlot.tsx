@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { CurveType } from '@mui/x-charts/models';
 import { useTheme } from '@mui/material/styles';
-import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints, FunnelCurveType } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
@@ -27,9 +26,15 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const getFunnelCurve = (curve: CurveType | undefined, isHorizontal: boolean): CurveFactory => {
+const getFunnelCurve = (
+  curve: FunnelCurveType | undefined,
+  isHorizontal: boolean,
+): CurveFactory => {
   if (curve === 'step') {
     return isHorizontal ? funnelHorizontalStepCurve : funnelVerticalStepCurve;
+  }
+  if (curve === 'bump') {
+    return isHorizontal ? getCurveFactory('bumpX') : getCurveFactory('bumpY');
   }
 
   return getCurveFactory(curve ?? 'linear');
