@@ -6,7 +6,6 @@ import {
   DataGridPremiumProps,
   GridColDef,
   GridPivotModel,
-  GridToolbar,
   unstable_useGridPivoting,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
