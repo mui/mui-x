@@ -204,7 +204,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm vitest --project "jsdom/<< parameters.package >>"
+          command: pnpm vitest --logHeapUsage --project "jsdom/<< parameters.package >>"
       # - run:
       #     name: Check coverage generated
       #     command: |

@@ -117,7 +117,9 @@ describe('<ScatterChart />', () => {
       { target: marks[4] },
     ]);
     cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    await waitFor(() => {
+      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    });
   });
 
   testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
