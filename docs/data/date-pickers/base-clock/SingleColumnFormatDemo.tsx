@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import styles from './clock.module.css';
 
-export default function SingleColumnDemo() {
+export default function SingleColumnFormatDemo() {
   return (
     <NoSsr>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -25,6 +25,7 @@ export default function SingleColumnDemo() {
                 <Clock.Option
                   key={item.toString()}
                   value={item}
+                  format="hh:mm:ss"
                   className={styles.Option}
                 />
               ))

@@ -18,7 +18,6 @@ export default function SingleColumnDemo() {
         >
           <Clock.Options
             precision="minute"
-            step={15}
             className={clsx(styles.OptionList, styles.MultiSectionOptionList)}
           >
             {({ items }) =>

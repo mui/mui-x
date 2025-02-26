@@ -7,7 +7,7 @@ import { AmPmProps } from '../../../models/props/time';
 import { ClockPrecision } from '../utils/types';
 
 export function useClockOptions(parameters: useClockOptions.Parameters) {
-  const { children, getItems, step = 1, precision, ampm } = parameters;
+  const { children, getItems, precision, step = precision === 'minute' ? 5 : 1, ampm } = parameters;
   const utils = useUtils();
 
   const format = React.useMemo(() => {
@@ -18,11 +18,7 @@ export function useClockOptions(parameters: useClockOptions.Parameters) {
       return hourFormat;
     }
 
-    if (precision === 'minute') {
-      return `${hourFormat}:${formats.minutes}`;
-    }
-
-    return `${hourFormat}:${formats.minutes}:${formats.seconds}`;
+    return `${hourFormat}:${formats.minutes}`;
   }, [precision, utils, ampm]);
 
   const { resolvedChildren, context, scrollerRef } = useClockOptionList({
@@ -53,7 +49,7 @@ export namespace useClockOptions {
     /**
      * The step between two consecutive items.
      * The unit is determined by the `precision` prop.
-     * @default 1
+     * @default 5 if the `precision` is `minute` (to help with performances), 1 otherwise
      */
     step?: number;
   }

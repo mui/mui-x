@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import styles from './clock.module.css';
 
-export default function SingleColumnDemo() {
+export default function SingleColumnStepDemo() {
   return (
     <NoSsr>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -18,6 +18,7 @@ export default function SingleColumnDemo() {
         >
           <Clock.Options
             precision="minute"
+            step={30}
             className={clsx(styles.OptionList, styles.MultiSectionOptionList)}
           >
             {({ items }) =>

@@ -36,13 +36,7 @@ WIP
 
 {{"demo": "HourWithMeridiemMinuteSecondDemo.js", "defaultCodeOpen": false}}
 
-## Single column layout
-
-{{"demo": "SingleColumnDemo.js", "defaultCodeOpen": false}}
-
-## Custom step
-
-### Seconds
+### Custom seconds step
 
 ```tsx
 <Clock.SecondOptions step={5}>{/** Options */}</Clock.SecondOptions>
@@ -50,10 +44,32 @@ WIP
 
 {{"demo": "StepSecondOptions.js", "defaultCodeOpen": false}}
 
-### Minutes
+### Custom minutes step
 
 ```tsx
 <Clock.MinuteOptions step={5}>{/** Options */}</Clock.MinuteOptions>
 ```
 
 {{"demo": "StepMinuteOptions.js", "defaultCodeOpen": false}}
+
+## Single column layout
+
+### Basic example
+
+{{"demo": "SingleColumnDemo.js", "defaultCodeOpen": false}}
+
+### Custom step
+
+```tsx
+<Clock.Options precision="minute" step={30}>{/** Options */}</Clock.MinuteOptions>
+```
+
+{{"demo": "SingleColumnStepDemo.js", "defaultCodeOpen": false}}
+
+### Custom format
+
+```tsx
+<Clock.Option format="hh:mm:ss" />
+```
+
+{{"demo": "SingleColumnFormatDemo.js", "defaultCodeOpen": false}}
