@@ -38,10 +38,10 @@ export interface ClockRootContext {
   /**
    * Determine if the given option is invalid.
    * @param {PickerValidDate} option The option to check.
-   * @param {ClockSection} section The section of the option.
+   * @param {ClockPrecision} precision The precision of the option.
    * @returns {boolean} Whether the option is invalid.
    */
-  isOptionInvalid: (option: PickerValidDate, section: ClockSection) => boolean;
+  isOptionInvalid: (option: PickerValidDate, precision: ClockSection) => boolean;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);

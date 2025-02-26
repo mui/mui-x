@@ -9,6 +9,7 @@ import {
   startOfMinute,
   endOfMinute,
 } from '../../utils/future-adapter-methods';
+import { ClockPrecision } from '../utils/types';
 
 // TODO: Add prop?
 const disableIgnoringDatePartForTimeValidation = false;
@@ -20,7 +21,7 @@ export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
   const utils = useUtils();
 
   return React.useCallback(
-    (time: PickerValidDate, precision: 'hour' | 'minute' | 'second') => {
+    (time: PickerValidDate, precision: ClockPrecision) => {
       if (validationProps?.shouldDisableTime?.(time, convertPrecisionToLegacyView(precision))) {
         return true;
       }
@@ -83,7 +84,7 @@ export namespace useIsOptionInvalid {
 }
 
 // TODO: Rename the view in the validation props and remove this function
-function convertPrecisionToLegacyView(precision: 'hour' | 'minute' | 'second'): TimeView {
+function convertPrecisionToLegacyView(precision: ClockPrecision): TimeView {
   switch (precision) {
     case 'hour':
       return 'hours';

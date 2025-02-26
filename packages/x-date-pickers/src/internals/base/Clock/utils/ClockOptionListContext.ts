@@ -20,6 +20,10 @@ export interface ClockOptionListContext {
    */
   section: ClockSection;
   /**
+   * The precision of the component.
+   */
+  precision: ClockSection;
+  /**
    * The format to use for the options if none is provided.
    */
   defaultFormat: string;

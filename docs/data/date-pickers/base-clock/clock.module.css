@@ -21,6 +21,10 @@
   overflow-y: auto;
 }
 
+.MultiSectionOptionList {
+  width: 128px;
+}
+
 .Option {
   position: relative;
   user-select: none;
