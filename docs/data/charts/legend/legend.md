@@ -81,7 +81,7 @@ Passing a component to `labelMarkType` affects not only the legend but other pla
 
 Customizing the mark shape of a pie chart depending on the series is slightly different. You can find how to do it in [this example](/x/react-charts/pie-demo/#pie-chart-with-custom-mark-in-legend-and-tooltip).
 
-Please note that using HTML elements for `labelMarkType` may make the legend incompatible with [gradients and patterns](/x/react-charts/styling/#gradients-and-patterns).
+To ensure compatibility with [gradients and patterns](/x/react-charts/styling/#gradients-and-patterns), consider using SVG instead of HTML in the `labelMarkType`.
 
 ### Scrollable legend
 
