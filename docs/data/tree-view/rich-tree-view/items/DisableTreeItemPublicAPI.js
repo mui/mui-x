@@ -3,21 +3,30 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemContent } from '@mui/x-tree-view/TreeItem';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 function CustomContent({ children, toggleItemDisabled, disabled, ...props }) {
   return (
-    <Stack direction="row" justifyContent="space-between" spacing={4} flexGrow={1}>
+    <TreeItemContent {...props}>
       {children}
 
-      <IconButton size="small" onClick={toggleItemDisabled}>
-        {disabled ? <LockOutlinedIcon /> : <LockOpenOutlinedIcon />}
+      <IconButton
+        size="small"
+        onClick={(event) => {
+          event?.stopPropagation();
+          toggleItemDisabled();
+        }}
+      >
+        {disabled ? (
+          <LockOutlinedIcon fontSize="small" />
+        ) : (
+          <LockOpenOutlinedIcon fontSize="small" />
+        )}
       </IconButton>
-    </Stack>
+    </TreeItemContent>
   );
 }
 
