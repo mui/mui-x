@@ -54,6 +54,7 @@ describe('<DateRangeCalendar />', () => {
       {
         timeout: 20000,
       },
+      // @ts-expect-error mocha types are incorrect
       async () => {
         const onChange = spy();
 
