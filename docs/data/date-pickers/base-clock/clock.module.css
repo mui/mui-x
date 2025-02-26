@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   height: 300px;
-  width: 64px;
+  width: 72px;
   overflow-y: auto;
 }
 

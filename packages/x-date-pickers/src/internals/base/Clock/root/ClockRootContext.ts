@@ -37,14 +37,6 @@ export interface ClockRootContext {
    */
   referenceDate: PickerValidDate;
   /**
-   * Register a section.
-   * @param {useRegisterSection.RegisterSectionParameters<ClockSection>} parameters The type and value of the section.
-   * @returns {() => void} A cleanup function to unregister the section.
-   */
-  registerSection: (
-    parameters: useRegisterSection.RegisterSectionParameters<ClockSection>,
-  ) => () => void;
-  /**
    * Determine if the given option is invalid.
    * @param {PickerValidDate} option The option to check.
    * @param {ClockSection} section The section of the option.

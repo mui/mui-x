@@ -42,7 +42,11 @@ const ClockOption = React.forwardRef(function ClockOption(
   props: ClockOption.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ref, ctx } = useClockOptionWrapper({ value: props.value, forwardedRef });
+  const { ref, ctx } = useClockOptionWrapper({
+    value: props.value,
+    format: props.format,
+    forwardedRef,
+  });
 
   return <MemoizedInnerClockOption ref={ref} {...props} ctx={ctx} />;
 });

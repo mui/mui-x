@@ -7,14 +7,14 @@ import { useClockRootContext } from '../root/ClockRootContext';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 import { useClockOptionList } from '../utils/useClockOptionList';
 
-export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
+export function useClockSecondOptions(parameters: useClockSecondOptions.Parameters) {
   const { children, getItems } = parameters;
   const utils = useUtils();
   const rootContext = useClockRootContext();
 
   const getDefaultItems = React.useCallback(() => {
     return Array.from({ length: 60 }, (_, index) =>
-      utils.setMinutes(rootContext.referenceDate, index),
+      utils.setSeconds(rootContext.referenceDate, index),
     );
   }, [utils, rootContext.referenceDate]);
 
@@ -29,7 +29,8 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
       return (
         rootContext.value != null &&
         utils.isSameHour(option, rootContext.value) &&
-        utils.getMinutes(option) === utils.getMinutes(rootContext.value)
+        utils.getMinutes(option) === utils.getMinutes(rootContext.value) &&
+        utils.getSeconds(option) === utils.getSeconds(rootContext.value)
       );
     },
     [rootContext.value, utils],
@@ -39,8 +40,8 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
     () => ({
       canOptionBeTabbed: () => true,
       isOptionSelected,
-      section: 'minute',
-      defaultFormat: utils.formats.minutes,
+      section: 'second',
+      defaultFormat: utils.formats.seconds,
     }),
     [utils, isOptionSelected],
   );
@@ -55,7 +56,7 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
   return React.useMemo(() => ({ getOptionsProps, context }), [getOptionsProps, context]);
 }
 
-export namespace useClockMinuteOptions {
+export namespace useClockSecondOptions {
   export interface Parameters {
     /**
      * Generate the list of items to render.

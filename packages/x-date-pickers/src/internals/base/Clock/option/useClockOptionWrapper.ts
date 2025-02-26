@@ -9,7 +9,7 @@ import { useClockOptionListContext } from '../utils/ClockOptionListContext';
 export function useClockOptionWrapper(
   parameters: useClockOptionWrapper.Parameters,
 ): useClockOptionWrapper.ReturnValue {
-  const { forwardedRef, value } = parameters;
+  const { forwardedRef, value, format } = parameters;
   const rootContext = useClockRootContext();
   const optionListContext = useClockOptionListContext();
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -50,9 +50,17 @@ export function useClockOptionWrapper(
       isInvalid,
       isTabbable,
       selectOption,
-      format: optionListContext.format,
+      format: format ?? optionListContext.defaultFormat,
     }),
-    [isSelected, isDisabled, isInvalid, isTabbable, selectOption, optionListContext.format],
+    [
+      isSelected,
+      isDisabled,
+      isInvalid,
+      isTabbable,
+      selectOption,
+      format,
+      optionListContext.defaultFormat,
+    ],
   );
 
   return {
@@ -62,7 +70,7 @@ export function useClockOptionWrapper(
 }
 
 export namespace useClockOptionWrapper {
-  export interface Parameters extends Pick<useClockOption.Parameters, 'value'> {
+  export interface Parameters extends Pick<useClockOption.Parameters, 'value' | 'format'> {
     /**
      * The ref forwarded by the parent component.
      */

@@ -20,9 +20,9 @@ export interface ClockOptionListContext {
    */
   section: ClockSection;
   /**
-   * The format to use for the options.
+   * The format to use for the options if none is provided.
    */
-  format: string;
+  defaultFormat: string;
 }
 
 export const ClockOptionListContext = React.createContext<ClockOptionListContext | undefined>(

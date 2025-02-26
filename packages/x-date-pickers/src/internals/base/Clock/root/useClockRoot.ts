@@ -19,8 +19,7 @@ import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { getTodayDate } from '../../../utils/date-utils';
-import { useRegisterSection } from '../../utils/hooks/useRegisterSection';
-import { useIsOptionInvalid } from '../utils/useIsOptionInvalid';
+import { useIsOptionInvalid } from './useIsOptionInvalid';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
   const {
@@ -46,7 +45,6 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
 
   const manager = useTimeManager();
   const utils = useUtils();
-  const { registerSection, sectionsRef } = useRegisterSection<ClockSection>();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'Clock',
@@ -86,7 +84,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
-  const isOptionInvalid = useIsOptionInvalid({ validationProps, timezone, sectionsRef });
+  const isOptionInvalid = useIsOptionInvalid({ validationProps, timezone });
 
   const resolvedChildren = React.useMemo(() => {
     if (!React.isValidElement(children) && typeof children === 'function') {
@@ -131,7 +129,6 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       value,
       setValue,
       referenceDate: value ?? referenceDate,
-      registerSection,
       isOptionInvalid,
     }),
     [
@@ -142,7 +139,6 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       value,
       setValue,
       referenceDate,
-      registerSection,
       isOptionInvalid,
     ],
   );
