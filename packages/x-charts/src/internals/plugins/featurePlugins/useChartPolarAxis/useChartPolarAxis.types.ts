@@ -42,7 +42,10 @@ export interface UseChartPolarAxisParameters {
    * An array of [[AxisConfig]] objects.
    */
   radiusAxis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
-  dataset?: DatasetType;
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset?: Readonly<DatasetType>;
 }
 
 export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters & {};

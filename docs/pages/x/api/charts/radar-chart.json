@@ -13,7 +13,7 @@
     },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
     "divisionNumber": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
@@ -28,8 +28,8 @@
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onHighlightChange": {

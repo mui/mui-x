@@ -6,6 +6,7 @@ import { ChartContainerProps } from '../../ChartContainer';
 import { RadarSeriesType } from '../../models/seriesType/radar';
 import { AxisConfig, ChartsRadiusAxisProps, ChartsRotationAxisProps } from '../../models/axis';
 import { ChartDataProvider } from '../../ChartDataProvider';
+import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import {
   useChartPolarAxis,
   UseChartPolarAxisSignature,
@@ -97,7 +98,10 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     [series],
   );
 
-  const defaultizedMargin = React.useMemo(() => ({ ...DEFAULT_MARGINS, ...margin }), [margin]);
+  const defaultizedMargin = React.useMemo(
+    () => defaultizeMargin(margin, DEFAULT_MARGINS),
+    [margin],
+  );
 
   return (
     <ChartDataProvider<'radar', RadarPluginSignatures>
@@ -132,7 +136,7 @@ RadarDataProvider.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
@@ -156,14 +160,18 @@ RadarDataProvider.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The callback fired when the highlighted item changes.
    *

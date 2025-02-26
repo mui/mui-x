@@ -6,7 +6,7 @@ import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   inAxis: MakeOptional<AxisConfig<TScale, any, ChartsAxisProps>, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'rotation' | 'radius',
 ): (AxisConfig<TScale, any, ChartsAxisProps> | AxisConfig<'linear', any, ChartsAxisProps>)[] {
   const DEFAULT_AXIS_KEY =

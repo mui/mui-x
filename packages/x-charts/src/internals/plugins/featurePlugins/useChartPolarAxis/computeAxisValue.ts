@@ -57,7 +57,7 @@ function getRange(
   return [0, Math.min(drawingArea.height, drawingArea.width) / 2];
 }
 
-const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
+const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
 
 function createDateFormatter(
   axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
@@ -114,7 +114,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis;
+    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const range = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
@@ -131,6 +131,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
 
       completeAxis[axis.id] = {
+        offset: 0,
         categoryGapRatio,
         barGapRatio,
         ...axis,
@@ -153,6 +154,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
     if (isPointScaleConfig(axis)) {
       completeAxis[axis.id] = {
+        offset: 0,
         ...axis,
         data,
         scale: scalePoint(axis.data!, range),
@@ -196,6 +198,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
+      offset: 0,
       ...axis,
       data,
       scaleType: scaleType as any,
