@@ -29,7 +29,7 @@ import {
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridColumnFieldsSelector,
@@ -64,6 +64,7 @@ export const useGridRowEditing = (
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
+  const prevRowValuesLookup = React.useRef<Record<GridRowId, GridValidRowModel>>({}).current;
   const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
@@ -420,6 +421,7 @@ export const useGridRowEditing = (
     (params) => {
       const { id, fieldToFocus, deleteValue, initialValue } = params;
 
+      const row = apiRef.current.getRow(id);
       const columnFields = gridColumnFieldsSelector(apiRef);
 
       const newProps = columnFields.reduce<Record<string, GridEditCellProps>>((acc, field) => {
@@ -447,6 +449,7 @@ export const useGridRowEditing = (
         return acc;
       }, {});
 
+      prevRowValuesLookup[id] = row;
       updateOrDeleteRowState(id, newProps);
 
       if (fieldToFocus) {
@@ -463,7 +466,7 @@ export const useGridRowEditing = (
           Promise.resolve(
             column.preProcessEditCellProps!({
               id,
-              row: apiRef.current.getRow(id),
+              row,
               props: newProps[field],
               hasChanged: newValue !== value,
             }),
@@ -505,6 +508,7 @@ export const useGridRowEditing = (
         }
         updateOrDeleteRowState(id, null);
         updateRowInRowModesModel(id, null);
+        delete prevRowValuesLookup[id];
       };
 
       if (ignoreModifications) {
@@ -513,7 +517,7 @@ export const useGridRowEditing = (
       }
 
       const editingState = gridEditRowsStateSelector(apiRef);
-      const row = apiRef.current.getRow(id)!;
+      const row = prevRowValuesLookup[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
         (fieldProps) => fieldProps.isProcessingProps,
@@ -531,13 +535,16 @@ export const useGridRowEditing = (
         return;
       }
 
-      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
+      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(row.id);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
-          prevRowModesModel.current[id].mode = GridRowModes.Edit;
-          // Revert the mode in the rowModesModel prop back to "edit"
-          updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
+          // The row might have been deleted
+          if (prevRowModesModel.current[id]) {
+            prevRowModesModel.current[id].mode = GridRowModes.Edit;
+            // Revert the mode in the rowModesModel prop back to "edit"
+            updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
+          }
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
@@ -701,7 +708,7 @@ export const useGridRowEditing = (
         return apiRef.current.getRow(id)!;
       }
 
-      let rowUpdate = { ...row };
+      let rowUpdate = { id, ...row };
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
