@@ -7,7 +7,7 @@ export default function GridPivotingCommodities() {
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10_000,
+    rowLength: 1_000,
     editable: true,
   });
 
@@ -33,6 +33,7 @@ export default function GridPivotingCommodities() {
           onPivotModeChange={setIsPivotMode}
           loading={loading}
           columnGroupHeaderHeight={36}
+          experimentalFeatures={{ pivoting: true }}
         />
       </div>
     </div>

@@ -145,6 +145,7 @@ export default function GridPivotingFinancial() {
           onPivotPanelOpenChange={setPivotPanelOpen}
           cellSelection
           columnGroupHeaderHeight={36}
+          experimentalFeatures={{ pivoting: true }}
         />
       </div>
     </div>

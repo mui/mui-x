@@ -37,19 +37,31 @@ import {
   gridPivotModeSelector,
   gridPivotPanelOpenSelector,
 } from './gridPivotingSelectors';
+import { isPivotingEnabled as isPivotingEnabledFn } from './utils';
+
+const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 
 export const pivotingStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    'pivotMode' | 'pivotModel' | 'pivotPanelOpen' | 'initialState'
+    | 'pivotMode'
+    | 'pivotModel'
+    | 'pivotPanelOpen'
+    | 'initialState'
+    | 'experimentalFeatures'
+    | 'disablePivoting'
   >
 > = (state, props) => {
+  if (!isPivotingEnabledFn(props)) {
+    return state;
+  }
+
   return {
     ...state,
     pivoting: {
       // TODO: support initialState
       pivotMode: props.pivotMode || false,
-      pivotModel: props.pivotModel || { rows: [], columns: [], values: [] },
+      pivotModel: props.pivotModel || emptyPivotModel,
       pivotPanelOpen: props.pivotPanelOpen || false,
     },
   };
@@ -257,6 +269,8 @@ export const useGridPivoting = (
     | 'onPivotModelChange'
     | 'pivotPanelOpen'
     | 'onPivotPanelOpenChange'
+    | 'experimentalFeatures'
+    | 'disablePivoting'
   >,
 ) => {
   const isPivot = useGridSelector(apiRef, gridPivotModeSelector);
@@ -264,6 +278,8 @@ export const useGridPivoting = (
   const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
     undefined,
   );
+
+  const isPivotingEnabled = isPivotingEnabledFn(props);
 
   apiRef.current.registerControlState({
     stateId: 'pivotModel',
@@ -366,6 +382,9 @@ export const useGridPivoting = (
   );
 
   useEnhancedEffect(() => {
+    if (!isPivotingEnabled) {
+      return;
+    }
     if (isPivot) {
       nonPivotDataRef.current = getInitialData();
       apiRef.current.setState((state) => {
@@ -396,6 +415,9 @@ export const useGridPivoting = (
 
   const setPivotModel = React.useCallback<GridPivotingApi['setPivotModel']>(
     (callback) => {
+      if (!isPivotingEnabled) {
+        return;
+      }
       apiRef.current.setState((state) => {
         const newPivotModel =
           typeof callback === 'function' ? callback(state.pivoting?.pivotModel) : callback;
@@ -413,11 +435,14 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState],
+    [apiRef, computePivotingState, isPivotingEnabled],
   );
 
   const setPivotMode = React.useCallback<GridPivotingApi['setPivotMode']>(
     (callback) => {
+      if (!isPivotingEnabled) {
+        return;
+      }
       apiRef.current.setState((state) => {
         const newPivotMode =
           typeof callback === 'function' ? callback(state.pivoting?.pivotMode) : callback;
@@ -444,11 +469,14 @@ export const useGridPivoting = (
         return newState;
       });
     },
-    [apiRef, computePivotingState, getInitialData],
+    [apiRef, computePivotingState, getInitialData, isPivotingEnabled],
   );
 
   const setPivotPanelOpen = React.useCallback<GridPivotingApi['setPivotPanelOpen']>(
     (callback) => {
+      if (!isPivotingEnabled) {
+        return;
+      }
       apiRef.current.setState((state) => ({
         ...state,
         pivoting: {
@@ -458,7 +486,7 @@ export const useGridPivoting = (
         },
       }));
     },
-    [apiRef],
+    [apiRef, isPivotingEnabled],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotMode, setPivotPanelOpen }, 'public');

@@ -32,7 +32,9 @@ import {
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  pivoting?: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
@@ -125,6 +127,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

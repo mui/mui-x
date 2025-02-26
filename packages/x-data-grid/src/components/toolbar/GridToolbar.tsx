@@ -38,9 +38,8 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     ...other
   } = props as typeof props & { excelOptions: any };
   const rootProps = useGridRootProps();
-  // TODO: add experimental feature flag
   // @ts-ignore
-  const hasPivotParams = true;
+  const isPivotingEnabled = rootProps.experimentalFeatures?.pivoting && !rootProps.disablePivoting;
 
   if (
     rootProps.disableColumnFilter &&
@@ -55,7 +54,7 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     <GridToolbarContainer {...other} ref={ref}>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
-      {hasPivotParams && <GridToolbarPivotButton />}
+      {isPivotingEnabled && <GridToolbarPivotButton />}
       <GridToolbarDensitySelector />
       <GridToolbarExport
         csvOptions={csvOptions}

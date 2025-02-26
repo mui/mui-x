@@ -37,6 +37,7 @@ export default function GridPivotingCommodities() {
           onPivotModeChange={setIsPivotMode}
           loading={loading}
           columnGroupHeaderHeight={36}
+          experimentalFeatures={{ pivoting: true }}
         />
       </div>
     </div>
