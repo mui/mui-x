@@ -10,7 +10,19 @@ packageName: '@mui/x-date-pickers'
 
 ## Anatomy
 
-TODO
+```tsx
+<Clock.Root>
+  <Clock.HourOptions>
+    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
+  </Clock.HourOptions>
+  <Clock.MinuteOptions>
+    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
+  </Clock.MinuteOptions>
+  <Clock.SecondOptions>
+    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
+  </Clock.SecondOptions>
+</Clock.Root>
+```
 
 ## Basic example
 

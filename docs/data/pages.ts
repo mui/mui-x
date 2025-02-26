@@ -269,6 +269,11 @@ const pages: MuiPage[] = [
         subheader: 'Base components',
         children: [
           { pathname: '/x/react-date-pickers/base-calendar', title: 'Calendar' },
+          {
+            pathname: '/x/react-date-pickers/base-range-calendar',
+            title: 'Range Calendar',
+            plan: 'pro',
+          },
           { pathname: '/x/react-date-pickers/base-clock', title: 'Clock' },
         ],
       },

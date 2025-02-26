@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Separator } from '@base-ui-components/react/separator';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,14 +10,14 @@ import {
   RangeCalendar,
   useRangeCalendarContext,
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
-import styles from './calendar.module.css';
+import styles from '../base-calendar/calendar.module.css';
 
 /**
  * Fake server request to fetch the booked dates for the visible range.
  * @param {Dayjs} month The month to fetch the booked dates for.
  * @returns {Promise<Dayjs[]>} The booked dates for the visible range.
  */
-async function fetchBookedDates(month: Dayjs) {
+async function fetchBookedDates(month) {
   const BOOKED_NIGHTS = [
     dayjs().add(3, 'day'),
     dayjs().add(8, 'day'),
@@ -48,7 +48,7 @@ async function fetchBookedDates(month: Dayjs) {
     dayjs().add(100, 'day'),
   ];
 
-  return new Promise<Set<string>>((resolve) => {
+  return new Promise((resolve) => {
     setTimeout(
       () => {
         const startOfVisibleRange = month.startOf('month').startOf('week');
@@ -66,7 +66,7 @@ async function fetchBookedDates(month: Dayjs) {
   });
 }
 
-function useBookedDates(visibleDate: Dayjs) {
+function useBookedDates(visibleDate) {
   return useQuery({
     queryKey: ['bookedDates', visibleDate.format('MM YYYY')],
     queryFn: () => fetchBookedDates(visibleDate),
@@ -102,7 +102,7 @@ function Header() {
   );
 }
 
-function DayGrid(props: { offset: 0 | 1 }) {
+function DayGrid(props) {
   const { offset } = props;
   const { visibleDate } = useRangeCalendarContext();
   const bookedDates = useBookedDates(visibleDate);
@@ -152,7 +152,7 @@ function BookingCalendar() {
   const bookedDates = useBookedDates(visibleDate);
 
   const shouldDisableDate = React.useCallback(
-    (date: Dayjs) => {
+    (date) => {
       return bookedDates.data?.has(date.format('YYYY-MM-DD')) ?? false;
     },
     [bookedDates.data],

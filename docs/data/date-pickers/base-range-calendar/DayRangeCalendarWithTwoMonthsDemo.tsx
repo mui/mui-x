@@ -9,7 +9,7 @@ import {
   RangeCalendar,
   useRangeCalendarContext,
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
-import styles from './calendar.module.css';
+import styles from '../base-calendar/calendar.module.css';
 
 function Header() {
   const { visibleDate } = useRangeCalendarContext();

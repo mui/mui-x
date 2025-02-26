@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
 import { RangeCalendar } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
-import styles from './calendar.module.css';
+import styles from '../base-calendar/calendar.module.css';
 
 export default function MonthRangeCalendarDemo() {
   return (

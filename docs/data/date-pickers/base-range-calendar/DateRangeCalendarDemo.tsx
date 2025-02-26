@@ -7,9 +7,12 @@ import {
   RangeCalendar,
   useRangeCalendarContext,
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
-import styles from './calendar.module.css';
+import styles from '../base-calendar/calendar.module.css';
 
-function Header(props) {
+function Header(props: {
+  activeSection: 'day' | 'month' | 'year';
+  onActiveSectionChange: (newActiveSection: 'day' | 'month' | 'year') => void;
+}) {
   const { activeSection, onActiveSectionChange } = props;
   const { visibleDate } = useRangeCalendarContext();
 
@@ -71,11 +74,13 @@ function Header(props) {
 }
 
 export default function DateRangeCalendarDemo() {
-  const [activeSection, setActiveSection] = React.useState('day');
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
+    'day',
+  );
   const [hasNavigated, setHasNavigated] = React.useState(false);
 
   const handleActiveSectionChange = React.useCallback(
-    (newActiveSection) => {
+    (newActiveSection: 'day' | 'month' | 'year') => {
       setActiveSection(newActiveSection);
       setHasNavigated(true);
     },
