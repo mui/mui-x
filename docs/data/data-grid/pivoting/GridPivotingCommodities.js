@@ -29,8 +29,8 @@ export default function GridPivotingCommodities() {
           showToolbar
           pivotModel={pivotModel}
           onPivotModelChange={setPivotModel}
-          pivotMode={isPivotMode}
-          onPivotModeChange={setIsPivotMode}
+          pivotEnabled={isPivotMode}
+          onPivotEnabledChange={setIsPivotMode}
           loading={loading}
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}

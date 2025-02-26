@@ -101,6 +101,7 @@
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
     },
+    "disablePivoting": { "description": "If <code>true</code>, the pivoting feature is disabled." },
     "disableRowGrouping": { "description": "If <code>true</code>, the row grouping is disabled." },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."

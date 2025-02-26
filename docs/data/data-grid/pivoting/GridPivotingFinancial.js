@@ -139,8 +139,8 @@ export default function GridPivotingFinancial() {
           showToolbar
           pivotModel={pivotModel}
           onPivotModelChange={setPivotModel}
-          pivotMode={pivotMode}
-          onPivotModeChange={setPivotMode}
+          pivotEnabled={pivotMode}
+          onPivotEnabledChange={setPivotMode}
           pivotPanelOpen={pivotPanelOpen}
           onPivotPanelOpenChange={setPivotPanelOpen}
           cellSelection

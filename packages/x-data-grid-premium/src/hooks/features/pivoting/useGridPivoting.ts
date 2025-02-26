@@ -30,11 +30,12 @@ import { isGroupingColumn } from '../rowGrouping';
 import type {
   GridPivotingApi,
   GridPivotingPropsOverrides,
+  GridPivotingState,
   GridPivotModel,
 } from './gridPivotingInterfaces';
 import {
   gridPivotModelSelector,
-  gridPivotModeSelector,
+  gridPivotEnabledSelector,
   gridPivotPanelOpenSelector,
 } from './gridPivotingSelectors';
 import { isPivotingEnabled as isPivotingEnabledFn } from './utils';
@@ -44,7 +45,7 @@ const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 export const pivotingStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    | 'pivotMode'
+    | 'pivotEnabled'
     | 'pivotModel'
     | 'pivotPanelOpen'
     | 'initialState'
@@ -56,20 +57,20 @@ export const pivotingStateInitializer: GridStateInitializer<
     return {
       ...state,
       pivoting: {
-        pivotMode: false,
-        pivotModel: emptyPivotModel,
-        pivotPanelOpen: false,
-      },
+        enabled: false,
+        model: emptyPivotModel,
+        panelOpen: false,
+      } as GridPivotingState,
     };
   }
 
   return {
     ...state,
     pivoting: {
-      pivotMode: props.pivotMode ?? props.initialState?.pivoting?.mode ?? false,
-      pivotModel: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
-      pivotPanelOpen: props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false,
-    },
+      enabled: props.pivotEnabled ?? props.initialState?.pivoting?.enabled ?? false,
+      model: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
+      panelOpen: props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false,
+    } as GridPivotingState,
   };
 };
 
@@ -269,8 +270,8 @@ export const useGridPivoting = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'pivotMode'
-    | 'onPivotModeChange'
+    | 'pivotEnabled'
+    | 'onPivotEnabledChange'
     | 'pivotModel'
     | 'onPivotModelChange'
     | 'pivotPanelOpen'
@@ -279,7 +280,7 @@ export const useGridPivoting = (
     | 'disablePivoting'
   >,
 ) => {
-  const isPivot = useGridSelector(apiRef, gridPivotModeSelector);
+  const isPivot = useGridSelector(apiRef, gridPivotEnabledSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
     undefined,
@@ -297,9 +298,9 @@ export const useGridPivoting = (
 
   apiRef.current.registerControlState({
     stateId: 'pivotMode',
-    propModel: props.pivotMode,
-    propOnChange: props.onPivotModeChange,
-    stateSelector: gridPivotModeSelector,
+    propModel: props.pivotEnabled,
+    propOnChange: props.onPivotEnabledChange,
+    stateSelector: gridPivotEnabledSelector,
     changeEvent: 'pivotModeChange',
   });
 
@@ -363,8 +364,8 @@ export const useGridPivoting = (
   }, [apiRef]);
 
   const computePivotingState = React.useCallback(
-    ({ pivotMode, pivotModel }: { pivotMode: boolean; pivotModel: GridPivotModel }) => {
-      if (isMounted && !isLoading && pivotMode && pivotModel) {
+    ({ enabled, model: pivotModel }: Pick<GridPivotingState, 'enabled' | 'model'>) => {
+      if (isMounted && !isLoading && enabled && pivotModel) {
         // if (apiRef.current && (prevProps.isPivot === false || !nonPivotDataRef.current)) {
         // eslint-disable-next-line no-constant-condition
 
@@ -426,14 +427,14 @@ export const useGridPivoting = (
       }
       apiRef.current.setState((state) => {
         const newPivotModel =
-          typeof callback === 'function' ? callback(state.pivoting?.pivotModel) : callback;
-        const newPivotingState = {
+          typeof callback === 'function' ? callback(state.pivoting?.model) : callback;
+        const newPivotingState: GridPivotingState = {
           ...state.pivoting,
           ...computePivotingState({
             ...state.pivoting,
-            pivotModel: newPivotModel,
+            model: newPivotModel,
           }),
-          pivotModel: newPivotModel,
+          model: newPivotModel,
         };
         return {
           ...state,
@@ -444,14 +445,14 @@ export const useGridPivoting = (
     [apiRef, computePivotingState, isPivotingEnabled],
   );
 
-  const setPivotMode = React.useCallback<GridPivotingApi['setPivotMode']>(
+  const setPivotEnabled = React.useCallback<GridPivotingApi['setPivotEnabled']>(
     (callback) => {
       if (!isPivotingEnabled) {
         return;
       }
       apiRef.current.setState((state) => {
         const newPivotMode =
-          typeof callback === 'function' ? callback(state.pivoting?.pivotMode) : callback;
+          typeof callback === 'function' ? callback(state.pivoting?.enabled) : callback;
 
         if (newPivotMode) {
           nonPivotDataRef.current = getInitialData();
@@ -459,13 +460,13 @@ export const useGridPivoting = (
           nonPivotDataRef.current = undefined;
         }
 
-        const newPivotingState = {
+        const newPivotingState: GridPivotingState = {
           ...state.pivoting,
           ...computePivotingState({
             ...state.pivoting,
-            pivotMode: newPivotMode,
+            enabled: newPivotMode,
           }),
-          pivotMode: newPivotMode,
+          enabled: newPivotMode,
         };
 
         const newState = {
@@ -487,15 +488,15 @@ export const useGridPivoting = (
         ...state,
         pivoting: {
           ...state.pivoting,
-          pivotPanelOpen:
-            typeof callback === 'function' ? callback(state.pivoting?.pivotPanelOpen) : callback,
+          panelOpen:
+            typeof callback === 'function' ? callback(state.pivoting?.panelOpen) : callback,
         },
       }));
     },
     [apiRef, isPivotingEnabled],
   );
 
-  useGridApiMethod(apiRef, { setPivotModel, setPivotMode, setPivotPanelOpen }, 'public');
+  useGridApiMethod(apiRef, { setPivotModel, setPivotEnabled, setPivotPanelOpen }, 'public');
 
   useEnhancedEffect(() => {
     if (props.pivotModel !== undefined) {
@@ -504,10 +505,10 @@ export const useGridPivoting = (
   }, [apiRef, props.pivotModel]);
 
   useEnhancedEffect(() => {
-    if (props.pivotMode !== undefined) {
-      apiRef.current.setPivotMode(props.pivotMode);
+    if (props.pivotEnabled !== undefined) {
+      apiRef.current.setPivotEnabled(props.pivotEnabled);
     }
-  }, [apiRef, props.pivotMode]);
+  }, [apiRef, props.pivotEnabled]);
 
   useEnhancedEffect(() => {
     if (props.pivotPanelOpen !== undefined) {

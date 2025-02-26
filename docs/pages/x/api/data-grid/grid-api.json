@@ -365,7 +365,7 @@
       "required": true,
       "isProPlan": true
     },
-    "setPivotMode": {
+    "setPivotEnabled": {
       "type": { "description": "(mode: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
       "required": true,
       "isPremiumPlan": true

@@ -215,8 +215,8 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
 
   pivotModel?: GridPivotModel;
   onPivotModelChange?: React.Dispatch<React.SetStateAction<GridPivotModel>>;
-  pivotMode?: boolean;
-  onPivotModeChange?: (isPivot: boolean) => void;
+  pivotEnabled?: boolean;
+  onPivotEnabledChange?: (isPivot: boolean) => void;
   pivotPanelOpen?: boolean;
   onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
   /**

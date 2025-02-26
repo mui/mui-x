@@ -18,7 +18,7 @@ import type {
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
-import { gridPivotModeSelector } from '../pivoting/gridPivotingSelectors';
+import { gridPivotEnabledSelector } from '../pivoting/gridPivotingSelectors';
 
 type WrappableColumnProperty =
   | 'valueGetter'
@@ -103,7 +103,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   getCellAggregationResult,
   apiRef,
 }) => {
-  const pivotMode = gridPivotModeSelector(apiRef);
+  const pivotEnabled = gridPivotEnabledSelector(apiRef);
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
     if (cellAggregationResult != null) {
@@ -112,14 +112,14 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
           return <GridFooterCell {...params} />;
         }
 
-        if (pivotMode && cellAggregationResult.value === 0) {
+        if (pivotEnabled && cellAggregationResult.value === 0) {
           return null;
         }
 
         return params.formattedValue;
       }
 
-      if (pivotMode && cellAggregationResult.value === 0) {
+      if (pivotEnabled && cellAggregationResult.value === 0) {
         return null;
       }
 

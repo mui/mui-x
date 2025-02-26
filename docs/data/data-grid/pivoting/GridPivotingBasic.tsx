@@ -52,6 +52,7 @@ export default function GridPivotingBasic() {
           pivoting: {
             model: pivotModel,
             panelOpen: true,
+            enabled: true,
           },
         }}
         columnGroupHeaderHeight={36}

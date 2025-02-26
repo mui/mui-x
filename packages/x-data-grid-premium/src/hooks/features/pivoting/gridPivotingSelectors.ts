@@ -6,12 +6,12 @@ const gridPivotingStateSelector = createRootSelector((state: GridStatePremium) =
 
 export const gridPivotModelSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => pivoting?.pivotModel,
+  (pivoting) => pivoting?.model,
 );
 
-export const gridPivotModeSelector = createSelector(
+export const gridPivotEnabledSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => pivoting?.pivotMode,
+  (pivoting) => pivoting?.enabled,
 );
 
 const emptyColumns: GridColDef[] = [];
@@ -23,10 +23,10 @@ export const gridPivotInitialColumnsSelector = createSelector(
 
 export const gridPivotPropsOverridesSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => (pivoting?.pivotMode ? pivoting.propsOverrides : undefined),
+  (pivoting) => (pivoting?.enabled ? pivoting.propsOverrides : undefined),
 );
 
 export const gridPivotPanelOpenSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => pivoting?.pivotPanelOpen,
+  (pivoting) => pivoting?.panelOpen,
 );

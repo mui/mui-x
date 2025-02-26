@@ -8,7 +8,7 @@ import { GridSidebarSearchButton } from '../GridSidebarSearchButton';
 import { GridSidebarSearchField } from '../GridSidebarSearchField';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { gridPivotModeSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
+import { gridPivotEnabledSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 
 export interface GridSidebarColumnPanelHeaderProps {
   searchState: {
@@ -55,7 +55,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
     onSearchStateChange((state) => ({ ...state, enabled: true }));
   };
 
-  const pivotMode = useGridSelector(apiRef, gridPivotModeSelector);
+  const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
 
   return (
     <GridSidebarHeader>
@@ -80,9 +80,9 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
 
       <Subheader>
         <rootProps.slots.baseSwitch
-          checked={pivotMode}
+          checked={pivotEnabled}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            apiRef.current.setPivotMode(event.target.checked)
+            apiRef.current.setPivotEnabled(event.target.checked)
           }
           size="small"
           label={apiRef.current.getLocaleText('pivotToggleLabel')}

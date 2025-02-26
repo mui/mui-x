@@ -4,20 +4,20 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
 // TODO: use selector
-const getPivotMode = (state: any) => state.pivoting?.pivotMode;
+const getPivotEnabled = (apiRef: any): boolean => apiRef.current.state.pivoting?.enabled;
 
 export function GridToolbarPivotButton() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const pivotMode = useGridSelector(apiRef, getPivotMode);
+  const pivotEnabled = useGridSelector(apiRef, getPivotEnabled);
 
   return (
     <rootProps.slots.baseButton
       size="small"
       startIcon={
         <rootProps.slots.baseBadge
-          badgeContent={pivotMode ? 1 : 0}
+          badgeContent={pivotEnabled ? 1 : 0}
           color="primary"
           variant="dot"
           {...rootProps.slotProps?.baseBadge}

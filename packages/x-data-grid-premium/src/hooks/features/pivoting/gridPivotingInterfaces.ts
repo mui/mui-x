@@ -12,16 +12,16 @@ export type GridPivotingPropsOverrides = {
 };
 
 export interface GridPivotingState {
-  pivotModel: GridPivotModel;
-  pivotMode: boolean;
-  pivotPanelOpen: boolean;
+  model: GridPivotModel;
+  enabled: boolean;
+  panelOpen: boolean;
   propsOverrides: GridPivotingPropsOverrides | undefined;
   initialColumns: GridColDef[] | undefined;
 }
 
 export interface GridPivotingInitialState {
   model?: GridPivotModel;
-  mode?: boolean;
+  enabled?: boolean;
   panelOpen?: boolean;
 }
 
@@ -40,6 +40,6 @@ export interface GridPivotModel {
 
 export interface GridPivotingApi {
   setPivotModel: (model: GridPivotModel | ((prev: GridPivotModel) => GridPivotModel)) => void;
-  setPivotMode: (mode: boolean | ((prev: boolean) => boolean)) => void;
+  setPivotEnabled: (mode: boolean | ((prev: boolean) => boolean)) => void;
   setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 }

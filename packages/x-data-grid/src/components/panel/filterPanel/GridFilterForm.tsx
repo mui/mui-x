@@ -205,11 +205,11 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 const collator = new Intl.Collator();
 
 // TODO: use selectors
-const getPivotMode = (state: any) => {
-  return state.pivoting?.pivotMode ?? false;
+const getPivotEnabled = (apiRef: any): boolean => {
+  return apiRef.current.state.pivoting?.enabled ?? false;
 };
-const getInitialColumns = (state: any) => {
-  return state.pivoting?.initialColumns ?? [];
+const getInitialColumns = (apiRef: any): GridColDef[] => {
+  return apiRef.current.state.pivoting?.initialColumns ?? [];
 };
 
 const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
@@ -258,7 +258,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const isPivotMode = useGridSelector(apiRef, getPivotMode);
+    const pivotEnabled = useGridSelector(apiRef, getPivotEnabled);
     const initialColumns = useGridSelector(apiRef, getInitialColumns);
 
     const { filteredColumns, selectedField } = React.useMemo(() => {
@@ -275,12 +275,11 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         };
       }
 
-      if (isPivotMode) {
+      if (pivotEnabled) {
         return {
           filteredColumns: filterableColumns.filter(
             (column) =>
-              initialColumns?.find((col: GridStateColDef) => col.field === column.field) !==
-              undefined,
+              initialColumns?.find((col: GridColDef) => col.field === column.field) !== undefined,
           ),
           selectedField: itemField,
         };
@@ -309,7 +308,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     }, [
       item.field,
       columnLookup,
-      isPivotMode,
+      pivotEnabled,
       filterColumns,
       filterableColumns,
       filterModel?.items,

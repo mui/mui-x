@@ -336,6 +336,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleRowSelection: PropTypes.bool,
   /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: PropTypes.bool,
+  /**
    * If `true`, the row grouping is disabled.
    * @default false
    */
@@ -366,6 +371,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    pivoting: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -807,7 +813,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,
-  onPivotModeChange: PropTypes.func,
+  onPivotEnabledChange: PropTypes.func,
   onPivotModelChange: PropTypes.func,
   onPivotPanelOpenChange: PropTypes.func,
   /**
@@ -965,7 +971,7 @@ DataGridPremiumRaw.propTypes = {
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
-  pivotMode: PropTypes.bool,
+  pivotEnabled: PropTypes.bool,
   pivotModel: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.object).isRequired,
     rows: PropTypes.arrayOf(

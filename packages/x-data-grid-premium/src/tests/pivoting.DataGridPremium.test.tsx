@@ -254,7 +254,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       <Test
         initialState={{
           pivoting: {
-            mode: true,
+            enabled: true,
             model: {
               rows: [{ field: 'ticker' }],
               columns: [{ field: 'year' }],
@@ -295,7 +295,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
           rows={rows}
           initialState={{
             pivoting: {
-              mode: true,
+              enabled: true,
               model: {
                 rows: [{ field: 'ticker' }],
                 columns: [{ field: 'year' }],

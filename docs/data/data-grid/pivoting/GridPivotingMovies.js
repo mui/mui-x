@@ -35,7 +35,7 @@ export default function GridPivotingMovies() {
           columns={data.columns}
           initialState={{
             pivoting: {
-              mode: false,
+              enabled: false,
               model: pivotModel,
               panelOpen: true,
             },
