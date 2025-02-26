@@ -4,7 +4,7 @@ import { config } from 'react-transition-group';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column headers', () => {
   const { render } = createRenderer();
@@ -53,7 +53,7 @@ describe('<DataGridPro /> - Column headers', () => {
     expect(columnHeaders.scrollLeft).to.equal(0);
   });
 
-  describe('GridColumnHeaderMenu', () => {
+  describeSkipIf(!isJSDOM)('GridColumnHeaderMenu', () => {
     it('should close the menu when the window is scrolled', async () => {
       const { user } = render(
         <div style={{ width: 300, height: 200 }}>
@@ -179,138 +179,101 @@ describe('<DataGridPro /> - Column headers', () => {
       });
     });
 
-    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
-    testSkipIf(!isJSDOM)(
-      'should close the menu of a column when pressing the Escape key',
-      async () => {
-        const { user } = render(
-          <div style={{ width: 300, height: 500 }}>
-            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-          </div>,
-        );
+    it('should close the menu of a column when pressing the Escape key', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
 
-        const columnCell = getColumnHeaderCell(0);
+      const columnCell = getColumnHeaderCell(0);
 
-        await user.hover(columnCell);
+      await user.hover(columnCell);
 
-        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
 
-        await user.click(menuIconButton);
+      await user.click(menuIconButton);
 
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).not.to.equal(null);
-        });
-
-        await user.keyboard('[Escape]');
-        expect(screen.queryByRole('menu')).to.equal(null);
-      },
-    );
-
-    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
-    testSkipIf(!isJSDOM)(
-      'should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended',
-      async () => {
-        // enable `react-transition-group` transitions for this test
-        config.disabled = false;
-
-        const { user } = render(
-          <div style={{ width: 300, height: 500 }}>
-            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-          </div>,
-        );
-        const columnCell = getColumnHeaderCell(0);
-        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-
-        await user.click(menuIconButton);
-        expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      await waitFor(() => {
         expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
 
-        await user.keyboard('[Escape]');
+      await user.keyboard('[Escape]');
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
 
-        // JSDOM is instantaneous, but the browser needs time to transition
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).to.equal(null);
-        });
-        expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
-      },
-    );
+    it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', async () => {
+      // enable `react-transition-group` transitions for this test
+      config.disabled = false;
 
-    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
-    testSkipIf(!isJSDOM)(
-      'should close the menu of a column when pressing the Escape key',
-      async () => {
-        const { user } = render(
+      const { user } = render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+
+      await user.click(menuIconButton);
+      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+
+      await user.keyboard('[Escape]');
+
+      // JSDOM is instantaneous, but the browser needs time to transition
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+    });
+
+    it('should restore focus to the column header when dismissing the menu by selecting any item', async () => {
+      function Test(props: Partial<DataGridProProps>) {
+        return (
           <div style={{ width: 300, height: 500 }}>
-            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-          </div>,
+            <DataGridPro
+              {...baselineProps}
+              columns={[{ field: 'brand' }]}
+              initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
+              {...props}
+            />
+          </div>
         );
+      }
+      const { user } = render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      await user.click(menuIconButton);
 
-        await user.click(await screen.findByLabelText('Menu'));
+      const menu = await screen.findByRole('menu');
+      const descMenuitem = screen.getByRole('menuitem', { name: /sort by desc/i });
+      expect(menu).toHaveFocus();
 
-        await screen.findByRole('menu');
+      await user.keyboard('[ArrowDown]');
+      expect(descMenuitem).toHaveFocus();
+      await user.keyboard('[Enter]');
+      expect(columnCell).toHaveFocus();
+    });
 
-        await user.keyboard('[Escape]');
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).to.equal(null);
-        });
-      },
-    );
+    it('should restore focus to the column header when dismissing the menu without selecting any item', async () => {
+      function Test(props: Partial<DataGridProProps>) {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
+          </div>
+        );
+      }
+      const { user } = render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      await user.click(menuIconButton);
 
-    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
-    testSkipIf(!isJSDOM)(
-      'should restore focus to the column header when dismissing the menu by selecting any item',
-      async () => {
-        function Test(props: Partial<DataGridProProps>) {
-          return (
-            <div style={{ width: 300, height: 500 }}>
-              <DataGridPro
-                {...baselineProps}
-                columns={[{ field: 'brand' }]}
-                initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
-                {...props}
-              />
-            </div>
-          );
-        }
-        const { user } = render(<Test />);
-        const columnCell = getColumnHeaderCell(0);
-        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-        await user.click(menuIconButton);
+      const menu = await screen.findByRole('menu');
+      expect(menu).toHaveFocus();
+      await user.keyboard('[Escape]');
 
-        const menu = await screen.findByRole('menu');
-        const descMenuitem = screen.getByRole('menuitem', { name: /sort by desc/i });
-        expect(menu).toHaveFocus();
-
-        await user.keyboard('[ArrowDown]');
-        expect(descMenuitem).toHaveFocus();
-        await user.keyboard('[Enter]');
-        expect(columnCell).toHaveFocus();
-      },
-    );
-
-    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
-    testSkipIf(!isJSDOM)(
-      'should restore focus to the column header when dismissing the menu without selecting any item',
-      async () => {
-        function Test(props: Partial<DataGridProProps>) {
-          return (
-            <div style={{ width: 300, height: 500 }}>
-              <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
-            </div>
-          );
-        }
-        const { user } = render(<Test />);
-        const columnCell = getColumnHeaderCell(0);
-        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-        await user.click(menuIconButton);
-
-        const menu = await screen.findByRole('menu');
-        expect(menu).toHaveFocus();
-        await user.keyboard('[Escape]');
-
-        expect(menu).not.toHaveFocus();
-        expect(columnCell).toHaveFocus();
-      },
-    );
+      expect(menu).not.toHaveFocus();
+      expect(columnCell).toHaveFocus();
+    });
   });
 });
