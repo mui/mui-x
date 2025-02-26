@@ -144,7 +144,6 @@ export const useDataGridPremiumComponent = (
    */
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
-  useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(aggregationStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
@@ -152,6 +151,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);

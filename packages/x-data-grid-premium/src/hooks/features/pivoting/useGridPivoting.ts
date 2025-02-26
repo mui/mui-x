@@ -4,8 +4,10 @@ import {
   GridColumnGroup,
   GridColumnGroupingModel,
   GridColumnNode,
+  GridColumnsState,
   GridRowModel,
-  gridColumnDefinitionsSelector,
+  gridColumnFieldsSelector,
+  gridColumnLookupSelector,
   gridDataRowIdsSelector,
   gridRowsLoadingSelector,
   gridRowsLookupSelector,
@@ -38,7 +40,7 @@ import {
   gridPivotEnabledSelector,
   gridPivotPanelOpenSelector,
 } from './gridPivotingSelectors';
-import { isPivotingEnabled as isPivotingEnabledFn } from './utils';
+import { getInitialColumns, isPivotingEnabled as isPivotingEnabledFn } from './utils';
 
 const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 
@@ -64,12 +66,19 @@ export const pivotingStateInitializer: GridStateInitializer<
     };
   }
 
+  const initialColumns = getInitialColumns(
+    // Cast to GridColumnsState to reverse the DeepPartial applied to the state by GridStateInitializer
+    (state.columns?.orderedFields as GridColumnsState['orderedFields']) ?? [],
+    (state.columns?.lookup as GridColumnsState['lookup']) ?? {},
+  );
+
   return {
     ...state,
     pivoting: {
       enabled: props.pivotEnabled ?? props.initialState?.pivoting?.enabled ?? false,
       model: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
       panelOpen: props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false,
+      initialColumns,
     } as GridPivotingState,
   };
 };
@@ -332,35 +341,12 @@ export const useGridPivoting = (
     const rowIds = gridDataRowIdsSelector(apiRef);
     const rowsLookup = gridRowsLookupSelector(apiRef);
     const rows = rowIds.map((id) => rowsLookup[id]);
-    const columns = gridColumnDefinitionsSelector(apiRef);
 
-    const initialColumns: GridColDef[] = [];
-    for (let i = 0; i < columns.length; i += 1) {
-      const column = columns[i];
-      const field = column.field;
-      if (!isGroupingColumn(field)) {
-        initialColumns.push(column);
-
-        if (column.type === 'date') {
-          initialColumns.push({
-            field: `${field}-year`,
-            headerName: `${column.headerName} (Year)`,
-            type: 'number',
-            valueGetter: (value, row) => new Date(row[field]).getFullYear(),
-          });
-
-          initialColumns.push({
-            field: `${field}-quarter`,
-            headerName: `${column.headerName} (Quarter)`,
-            valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
-          });
-        }
-      }
-    }
+    const columnFields = gridColumnFieldsSelector(apiRef);
+    const columnsLookup = gridColumnLookupSelector(apiRef);
+    const initialColumns = getInitialColumns(columnFields, columnsLookup);
 
     return { rows, columns: initialColumns };
-
-    // nonPivotDataRef.current = { rows, columns: initialColumns };
   }, [apiRef]);
 
   const computePivotingState = React.useCallback(
