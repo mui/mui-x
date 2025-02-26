@@ -135,15 +135,33 @@ const Heatmap = React.forwardRef(function Heatmap(
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'band' as const,
         categoryGapRatio: 0,
-        data: [],
+        data:
+          series?.[0]?.data && series[0].data.length > 0
+            ? Array.from(
+                { length: Math.max(...series[0].data.map(([xIndex]) => xIndex)) },
+                (_, index) => index + 1,
+              )
+            : [],
         ...axis,
       })),
-    [xAxis],
+    [series, xAxis],
   );
 
   const defaultizedYAxis = React.useMemo(
-    () => yAxis.map((axis) => ({ scaleType: 'band' as const, categoryGapRatio: 0, ...axis })),
-    [yAxis],
+    () =>
+      (yAxis && yAxis.length > 0 ? yAxis : [{}]).map((axis) => ({
+        scaleType: 'band' as const,
+        categoryGapRatio: 0,
+        data:
+          series?.[0]?.data && series[0].data.length > 0
+            ? Array.from(
+                { length: Math.max(...series[0].data.map(([_, yIndex]) => yIndex)) },
+                (_, index) => index + 1,
+              )
+            : [],
+        ...axis,
+      })),
+    [series, yAxis],
   );
 
   const defaultizedZAxis = React.useMemo(
