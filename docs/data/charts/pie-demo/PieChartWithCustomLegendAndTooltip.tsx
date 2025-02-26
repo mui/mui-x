@@ -23,7 +23,7 @@ function SVGStar({ color, ...props }: ChartsLabelCustomMarkProps) {
   );
 }
 
-export default function PieChartWithCustomLegendTooltip() {
+export default function PieChartWithCustomLegendAndTooltip() {
   return (
     <PieChart
       series={[

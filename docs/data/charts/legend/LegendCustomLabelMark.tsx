@@ -18,12 +18,12 @@ export default function LegendCustomLabelMark() {
   return (
     <BarChart
       series={[
-        { id: 0, data: [10], label: 'Series A', labelMarkType: HTMLCircle },
-        { id: 1, data: [15], label: 'Series B', labelMarkType: 'line' },
-        { id: 2, data: [20], label: 'Series C' },
-        { id: 3, data: [10], label: 'Series D', labelMarkType: SVGDiamond },
+        { id: 0, data: [10, 15], label: 'Series A', labelMarkType: HTMLCircle },
+        { id: 1, data: [15, 20], label: 'Series B', labelMarkType: 'line' },
+        { id: 2, data: [20, 25], label: 'Series C' },
+        { id: 3, data: [10, 15], label: 'Series D', labelMarkType: SVGDiamond },
       ]}
-      xAxis={[{ scaleType: 'band', data: ['Category'] }]}
+      xAxis={[{ scaleType: 'band', data: ['Category 1', 'Category 2'] }]}
       height={200}
     />
   );
