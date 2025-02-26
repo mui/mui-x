@@ -17,11 +17,14 @@ export function useClockOption(parameters: useClockOption.Parameters) {
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'option',
+        'aria-selected': ctx.isSelected,
         children: utils.formatByString(value, ctx.format),
+        disabled: ctx.isDisabled,
+        tabIndex: ctx.isTabbable ? 0 : -1,
         onClick,
       });
     },
-    [utils, value, onClick, ctx.format],
+    [utils, value, onClick, ctx.format, ctx.isTabbable, ctx.isDisabled, ctx.isSelected],
   );
 
   return React.useMemo(() => ({ getOptionsProps }), [getOptionsProps]);

@@ -1,13 +1,35 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
+import { useUtils } from '../../../hooks/useUtils';
+import { ClockSection } from './types';
+import { ClockOptionListContext } from './ClockOptionListContext';
 
 export function useClockOptionList(parameters: useClockOptionList.Parameters) {
-  const { children, getItems, getDefaultItems } = parameters;
+  const {
+    children,
+    getItems,
+    helpers: { getNextItem, getStartOfRange, getEndOfRange, areOptionsEqual, format, section },
+  } = parameters;
 
+  const utils = useUtils();
   const rootContext = useClockRootContext();
 
   const items = React.useMemo(() => {
+    const getDefaultItems = () => {
+      const start = getStartOfRange(rootContext.referenceDate);
+      const end = getEndOfRange(rootContext.referenceDate);
+      let current = start;
+      const tempItems: PickerValidDate[] = [];
+
+      while (!utils.isAfter(current, end)) {
+        tempItems.push(current);
+        current = getNextItem(current);
+      }
+
+      return tempItems;
+    };
+
     if (getItems) {
       return getItems({
         minTime: rootContext.validationProps.minTime,
@@ -18,8 +40,12 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
 
     return getDefaultItems();
   }, [
+    utils,
     getItems,
-    getDefaultItems,
+    getStartOfRange,
+    getEndOfRange,
+    getNextItem,
+    rootContext.referenceDate,
     rootContext.validationProps.minTime,
     rootContext.validationProps.maxTime,
   ]);
@@ -32,7 +58,44 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     return children;
   }, [children, items]);
 
-  return { resolvedChildren };
+  const canOptionBeTabbed = React.useMemo(() => {
+    let tabbableOptions: PickerValidDate[];
+    const selectedOptions =
+      rootContext.value == null
+        ? []
+        : items.filter((item) => areOptionsEqual(item, rootContext.value!));
+    if (selectedOptions.length > 0) {
+      tabbableOptions = selectedOptions;
+    } else {
+      tabbableOptions = items.slice(0, 1);
+    }
+
+    const formattedTabbableOptions = new Set(
+      tabbableOptions.map((option) => utils.formatByString(option, format)),
+    );
+
+    return (option: PickerValidDate) =>
+      formattedTabbableOptions.has(utils.formatByString(option, format));
+  }, [rootContext.value, items, areOptionsEqual, format, utils]);
+
+  const isOptionSelected = React.useCallback(
+    (option: PickerValidDate) => {
+      return rootContext.value != null && areOptionsEqual(option, rootContext.value);
+    },
+    [rootContext.value, areOptionsEqual],
+  );
+
+  const context: ClockOptionListContext = React.useMemo(
+    () => ({
+      section,
+      canOptionBeTabbed,
+      isOptionSelected,
+      defaultFormat: format,
+    }),
+    [isOptionSelected, canOptionBeTabbed, section, format],
+  );
+
+  return { resolvedChildren, context };
 }
 
 export namespace useClockOptionList {
@@ -51,7 +114,18 @@ export namespace useClockOptionList {
   }
 
   export interface Parameters extends PublicParameters {
-    getDefaultItems: () => PickerValidDate[];
+    helpers: {
+      section: ClockSection;
+      /**
+       * Format to format the option to a unique string in the option list.
+       * Does not take the format prop into account to make sure we have a unique string.
+       */
+      format: string;
+      getStartOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
+      getEndOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
+      getNextItem: (date: PickerValidDate) => PickerValidDate;
+      areOptionsEqual: (value: PickerValidDate, comparing: PickerValidDate) => boolean;
+    };
   }
 
   export interface ChildrenParameters {

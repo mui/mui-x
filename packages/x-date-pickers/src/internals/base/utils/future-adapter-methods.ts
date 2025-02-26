@@ -15,3 +15,23 @@ export function startOfMinute(utils: MuiPickersAdapter, value: PickerValidDate) 
 export function endOfMinute(utils: MuiPickersAdapter, value: PickerValidDate) {
   return utils.setSeconds(value, 59);
 }
+
+export function isSameMinute(
+  utils: MuiPickersAdapter,
+  value: PickerValidDate,
+  comparing: PickerValidDate,
+) {
+  return (
+    utils.isSameHour(value, comparing) && utils.getMinutes(value) === utils.getMinutes(comparing)
+  );
+}
+
+export function isSameSecond(
+  utils: MuiPickersAdapter,
+  value: PickerValidDate,
+  comparing: PickerValidDate,
+) {
+  return (
+    isSameMinute(utils, value, comparing) && utils.getSeconds(value) === utils.getSeconds(comparing)
+  );
+}

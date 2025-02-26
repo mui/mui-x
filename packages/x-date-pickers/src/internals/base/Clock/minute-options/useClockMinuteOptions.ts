@@ -3,52 +3,30 @@ import { useUtils } from '../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { PickerValidDate } from '../../../../models';
-import { useClockRootContext } from '../root/ClockRootContext';
-import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 import { useClockOptionList } from '../utils/useClockOptionList';
-import { endOfHour, startOfHour } from '../../utils/future-adapter-methods';
-import { getOptionListDefaultItems } from '../utils/time';
+import { endOfHour, isSameMinute, startOfHour } from '../../utils/future-adapter-methods';
 
 export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
   const { children, getItems, step = 1 } = parameters;
   const utils = useUtils();
-  const rootContext = useClockRootContext();
 
-  const getDefaultItems = React.useCallback(() => {
-    return getOptionListDefaultItems({
-      utils,
-      start: startOfHour(utils, rootContext.referenceDate),
-      end: endOfHour(utils, rootContext.referenceDate),
-      getNextItem: (date) => utils.addMinutes(date, step),
-    });
-  }, [utils, rootContext.referenceDate, step]);
-
-  const { resolvedChildren } = useClockOptionList({
-    getDefaultItems,
-    getItems,
-    children,
-  });
-
-  const isOptionSelected = React.useCallback(
-    (option: PickerValidDate) => {
-      return (
-        rootContext.value != null &&
-        utils.isSameHour(option, rootContext.value) &&
-        utils.getMinutes(option) === utils.getMinutes(rootContext.value)
-      );
-    },
-    [rootContext.value, utils],
-  );
-
-  const context: ClockOptionListContext = React.useMemo(
+  const helpers = React.useMemo<useClockOptionList.Parameters['helpers']>(
     () => ({
-      canOptionBeTabbed: () => true,
-      isOptionSelected,
       section: 'minute',
-      defaultFormat: utils.formats.minutes,
+      format: utils.formats.minutes,
+      getNextItem: (date) => utils.addMinutes(date, step),
+      getStartOfRange: (value) => startOfHour(utils, value),
+      getEndOfRange: (value) => endOfHour(utils, value),
+      areOptionsEqual: (value, comparing) => isSameMinute(utils, value, comparing),
     }),
-    [utils, isOptionSelected],
+    [utils, step],
   );
+
+  const { resolvedChildren, context } = useClockOptionList({
+    children,
+    getItems,
+    helpers,
+  });
 
   const getOptionsProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {

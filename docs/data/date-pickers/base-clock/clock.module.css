@@ -1,9 +1,12 @@
 .Root {
   --option-selected-bg-color: #7dd3fc;
+  --option-hover-bg-color: #e0f2fe;
+  --option-focus-border-color: #0ea5e9;
 }
 
 :global(.mode-dark) .Root {
   --option-selected-bg-color: #0369a1;
+  --option-hover-bg-color: #075985;
 }
 
 .Root {
@@ -31,5 +34,13 @@
 
   &[data-selected] {
     background-color: var(--option-selected-bg-color);
+  }
+
+  &:hover {
+    background-color: var(--option-hover-bg-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--option-focus-border-color);
   }
 }
