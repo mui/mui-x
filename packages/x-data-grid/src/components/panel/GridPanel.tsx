@@ -110,7 +110,6 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       clickAwayMouseEvent="onPointerUp"
       clickAwayTouchEvent={false}
       focusTrap
-      focusTrapEnabled
       {...other}
       {...rootProps.slotProps?.basePopper}
       ref={ref}
