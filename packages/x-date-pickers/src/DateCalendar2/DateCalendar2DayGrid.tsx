@@ -62,7 +62,9 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
   const { classes, displayWeekNumber, fixedWeekNumber } = useDateCalendar2PrivateContext();
   const utils = useUtils();
 
-  const children = React.useCallback<Exclude<Calendar.DayGridBody.Props['children'], undefined>>(
+  const children = React.useCallback<
+    Exclude<Calendar.DayGridBody.Props['children'], undefined | React.ReactNode>
+  >(
     ({ weeks }) =>
       weeks.map((week) => (
         <Calendar.DayGridRow
