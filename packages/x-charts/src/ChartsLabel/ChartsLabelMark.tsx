@@ -44,6 +44,7 @@ const Root = styled('div', {
     height: 14,
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
+      height: 'unset',
       display: 'flex',
       alignItems: 'center',
       [`.${labelMarkClasses.mask}`]: {
