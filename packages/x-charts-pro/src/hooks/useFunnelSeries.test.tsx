@@ -2,7 +2,7 @@ import { renderHook } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
-import { FunnelChart, FunnelSeriesType } from '../FunnelChart';
+import { Unstable_FunnelChart as FunnelChart, FunnelSeriesType } from '../FunnelChart';
 
 const mockSeries: FunnelSeriesType[] = [
   {

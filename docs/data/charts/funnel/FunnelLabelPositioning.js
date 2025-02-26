@@ -1,6 +1,5 @@
-// @ts-check
 import * as React from 'react';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 

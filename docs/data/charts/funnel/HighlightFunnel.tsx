@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { HighlightScope } from '@mui/x-charts/context';
 import { populationByEducationLevelPercentageSeriesLabeled } from './populationByEducationLevel';
 
