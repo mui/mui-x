@@ -22,7 +22,7 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -106,11 +106,10 @@ function getDefaultDataForAxis(series: HeatmapProps['series'], dimension: number
     return [];
   }
 
-  const uniqueValues = new Set();
-
-  series[0].data.forEach((dataPoint) => uniqueValues.add(dataPoint[dimension]));
-
-  return Array.from(uniqueValues.values());
+  return Array.from(
+    { length: Math.max(...series[0].data.map((dataPoint) => dataPoint[dimension])) + 1 },
+    (_, index) => index,
+  );
 }
 const getDefaultDataForXAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 0);
 const getDefaultDataForYAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 1);
@@ -145,23 +144,22 @@ const Heatmap = React.forwardRef(function Heatmap(
 
   const defaultizedXAxis = React.useMemo(
     () =>
-      (xAxis && xAxis.length > 0 ? xAxis : [{}]).map((axis) => ({
-        id: DEFAULT_X_AXIS_KEY,
+      (xAxis && xAxis.length > 0 ? xAxis : [{ id: DEFAULT_X_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
         categoryGapRatio: 0,
-        data: axis.data ? undefined : getDefaultDataForXAxis(series),
         ...axis,
+        data: axis.data ?? getDefaultDataForXAxis(series),
       })),
     [series, xAxis],
   );
 
   const defaultizedYAxis = React.useMemo(
     () =>
-      (yAxis && yAxis.length > 0 ? yAxis : [{}]).map((axis) => ({
+      (yAxis && yAxis.length > 0 ? yAxis : [{ id: DEFAULT_Y_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
         categoryGapRatio: 0,
-        data: axis.data ? undefined : getDefaultDataForYAxis(series),
         ...axis,
+        data: axis.data ?? getDefaultDataForYAxis(series),
       })),
     [series, yAxis],
   );

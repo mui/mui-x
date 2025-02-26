@@ -44,20 +44,34 @@ describe('<Heatmap /> - License', () => {
       render(<Heatmap series={series} width={100} height={100} xAxis={[]} yAxis={[]} />);
 
       const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
-      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['-1', '1']);
+      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);
 
       const yAxisTickLabels = screen.getAllByTestId('ChartsYAxisTickLabel');
-      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['3', '5']);
+      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+      ]);
     });
 
     it('should render default axes when axes are an array of an empty object and series contain data', () => {
       render(<Heatmap series={series} width={100} height={100} xAxis={[{}]} yAxis={[{}]} />);
 
       const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
-      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['-1', '1']);
+      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);
 
       const yAxisTickLabels = screen.getAllByTestId('ChartsYAxisTickLabel');
-      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['3', '5']);
+      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+      ]);
     });
   });
 });
