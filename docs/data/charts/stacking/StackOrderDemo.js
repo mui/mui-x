@@ -104,9 +104,8 @@ export default function StackOrderDemo() {
           </MenuItem>
         ))}
       </TextField>
-      <Box sx={{ overflow: 'auto', py: 2 }}>
+      <Box sx={{ py: 2 }}>
         <BarChart
-          width={700}
           height={300}
           xAxis={[
             {

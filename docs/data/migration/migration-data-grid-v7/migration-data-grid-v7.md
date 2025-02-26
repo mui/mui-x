@@ -166,6 +166,28 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
+- The data source feature and its related props are now stable.
+
+  ```diff
+   <DataGridPro
+  -  unstable_dataSource={dataSource}
+  -  unstable_dataSourceCache={cache}
+  -  unstable_lazyLoading
+  -  unstable_lazyLoadingRequestThrottleMs={100}
+  +  dataSource={dataSource}
+  +  dataSourceCache={cache}
+  +  lazyLoading
+  +  lazyLoadingRequestThrottleMs={100}
+   />
+  ```
+
+- The data source API is now stable.
+
+  ```diff
+  - apiRef.current.unstable_dataSource.getRows()
+  + apiRef.current.dataSource.getRows()
+  ```
+
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
 
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
@@ -177,6 +199,7 @@ You have to import it from `@mui/x-license` instead:
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
+- `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
 - The `showToolbar` prop is now required to display the toolbar.
 
@@ -315,7 +338,3 @@ You have to import it from `@mui/x-license` instead:
 <!-- ### Editing
 
 TBD
-
-### Changes to slots
-
-TBD -->

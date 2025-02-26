@@ -420,6 +420,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   classes?: Partial<GridClasses>;
   /**
+   * The data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache?: GridDataSourceCache | null;
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
@@ -502,6 +510,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -836,19 +849,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
-  /**
-   * The data source object.
-   */
-  unstable_dataSource?: GridDataSource;
-  /**
-   * Data source cache object.
-   */
-  unstable_dataSourceCache?: GridDataSourceCache | null;
-  /**
-   * Callback fired when a data source request fails.
-   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
-   */
-  unstable_onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {

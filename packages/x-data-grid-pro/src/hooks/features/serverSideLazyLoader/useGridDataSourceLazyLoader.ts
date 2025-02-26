@@ -53,9 +53,9 @@ export const useGridDataSourceLazyLoader = (
     DataGridProProcessedProps,
     | 'pagination'
     | 'paginationMode'
-    | 'unstable_dataSource'
-    | 'unstable_lazyLoading'
-    | 'unstable_lazyLoadingRequestThrottleMs'
+    | 'dataSource'
+    | 'lazyLoading'
+    | 'lazyLoadingRequestThrottleMs'
     | 'scrollEndThreshold'
   >,
 ): void => {
@@ -63,9 +63,9 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.unstable_dataSource && props.unstable_lazyLoading ? () => true : () => false,
+      props.dataSource && props.lazyLoading ? () => true : () => false,
     );
-  }, [privateApiRef, props.unstable_lazyLoading, props.unstable_dataSource]);
+  }, [privateApiRef, props.lazyLoading, props.dataSource]);
 
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);
@@ -76,7 +76,7 @@ export const useGridDataSourceLazyLoader = (
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
-      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
+      privateApiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
     },
     [privateApiRef],
   );
@@ -104,7 +104,7 @@ export const useGridDataSourceLazyLoader = (
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
-    privateApiRef.current.unstable_dataSource.cache.clear();
+    privateApiRef.current.dataSource.cache.clear();
     rowsStale.current = true;
     previousLastRowIndex.current = 0;
     const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -362,8 +362,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, props.unstable_lazyLoadingRequestThrottleMs),
-    [props.unstable_lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
+    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
   React.useEffect(() => {
     return () => {

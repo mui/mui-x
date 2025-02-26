@@ -96,8 +96,8 @@ export default function ServerSideTreeDataCustomCache() {
       <div style={{ height: 400 }}>
         <DataGridPro
           {...props}
-          unstable_dataSource={dataSource}
-          unstable_dataSourceCache={cache}
+          dataSource={dataSource}
+          dataSourceCache={cache}
           treeData
           apiRef={apiRef}
           pagination
