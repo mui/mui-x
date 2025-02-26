@@ -566,8 +566,7 @@ describe('<DataGrid /> - Row selection', () => {
 
         await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        virtualScroller.scrollTop = 250; // Scroll 5 rows
-        await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+        await act(() => virtualScroller.scrollTo({ top: 250 }));
         expect(virtualScroller.scrollTop).to.equal(250);
       },
     );
