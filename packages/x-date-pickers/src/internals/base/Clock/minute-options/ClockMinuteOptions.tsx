@@ -9,9 +9,11 @@ const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
   props: ClockMinuteOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, ...otherProps } = props;
+  const { className, render, children, getItems, step, ...otherProps } = props;
   const { getOptionsProps, context } = useClockMinuteOptions({
     children,
+    getItems,
+    step,
   });
 
   const state: ClockMinuteOptions.State = React.useMemo(() => ({}), []);

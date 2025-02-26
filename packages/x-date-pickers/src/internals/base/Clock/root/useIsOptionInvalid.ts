@@ -3,6 +3,12 @@ import { createIsAfterIgnoreDatePart } from '../../../utils/time-utils';
 import { PickersTimezone, PickerValidDate, TimeView } from '../../../../models';
 import { useUtils } from '../../../hooks/useUtils';
 import { ValidateTimeProps } from '../../../../validation';
+import {
+  startOfHour,
+  endOfHour,
+  startOfMinute,
+  endOfMinute,
+} from '../../utils/future-adapter-methods';
 
 // TODO: Add prop?
 const disableIgnoringDatePartForTimeValidation = false;
@@ -46,23 +52,17 @@ export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
       };
 
       switch (precision) {
-        // TODO: Add utils.startOfHour and utils.endOfHour
         case 'hour': {
-          return !containsValidTime([
-            utils.setSeconds(utils.setMinutes(time, 0), 0),
-            utils.setSeconds(utils.setMinutes(time, 59), 59),
-          ]);
+          return !containsValidTime([startOfHour(utils, time), endOfHour(utils, time)]);
         }
 
-        // TODO: Add utils.startOfMinute and utils.endOfMinute
         case 'minute': {
           return (
             utils.getMinutes(time) % (validationProps.minutesStep ?? 1) !== 0 ||
-            !containsValidTime([utils.setSeconds(time, 0), utils.setSeconds(time, 59)])
+            !containsValidTime([startOfMinute(utils, time), endOfMinute(utils, time)])
           );
         }
 
-        // TODO: Support milliseconds
         case 'second': {
           return !containsValidTime([time, time]);
         }

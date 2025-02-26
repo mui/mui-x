@@ -6,17 +6,22 @@ import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 import { useClockOptionList } from '../utils/useClockOptionList';
+import { endOfHour, startOfHour } from '../../utils/future-adapter-methods';
+import { getOptionListDefaultItems } from '../utils/time';
 
 export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
-  const { children, getItems } = parameters;
+  const { children, getItems, step = 1 } = parameters;
   const utils = useUtils();
   const rootContext = useClockRootContext();
 
   const getDefaultItems = React.useCallback(() => {
-    return Array.from({ length: 60 }, (_, index) =>
-      utils.setMinutes(rootContext.referenceDate, index),
-    );
-  }, [utils, rootContext.referenceDate]);
+    return getOptionListDefaultItems({
+      utils,
+      start: startOfHour(utils, rootContext.referenceDate),
+      end: endOfHour(utils, rootContext.referenceDate),
+      getNextItem: (date) => utils.addMinutes(date, step),
+    });
+  }, [utils, rootContext.referenceDate, step]);
 
   const { resolvedChildren } = useClockOptionList({
     getDefaultItems,
@@ -56,18 +61,12 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
 }
 
 export namespace useClockMinuteOptions {
-  export interface Parameters {
+  export interface Parameters extends useClockOptionList.PublicParameters {
     /**
-     * Generate the list of items to render.
-     * @param {GetItemsParameters} parameters The current parameters of the list.
-     * @returns {PickerValidDate[]} The list of items.
+     * The step in minutes between two consecutive items.
+     * @default 1
      */
-    getItems?: (parameters: GetItemsParameters) => PickerValidDate[];
-    /**
-     * The children of the component.
-     * If a function is provided, it will be called with the public context as its parameter.
-     */
-    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
+    step?: number;
   }
 
   export interface ChildrenParameters {

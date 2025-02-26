@@ -6,6 +6,7 @@ import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 import { useClockOptionList } from '../utils/useClockOptionList';
+import { getOptionListDefaultItems } from '../utils/time';
 
 export function useClockHourOptions(parameters: useClockHourOptions.Parameters) {
   const { children, getItems } = parameters;
@@ -13,9 +14,12 @@ export function useClockHourOptions(parameters: useClockHourOptions.Parameters) 
   const rootContext = useClockRootContext();
 
   const getDefaultItems = React.useCallback(() => {
-    return Array.from({ length: 24 }, (_, index) =>
-      utils.setHours(rootContext.referenceDate, index),
-    );
+    return getOptionListDefaultItems({
+      utils,
+      start: utils.startOfDay(rootContext.referenceDate),
+      end: utils.endOfDay(rootContext.referenceDate),
+      getNextItem: (date) => utils.addHours(date, 1),
+    });
   }, [utils, rootContext.referenceDate]);
 
   const { resolvedChildren } = useClockOptionList({

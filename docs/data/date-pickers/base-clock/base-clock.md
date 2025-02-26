@@ -24,6 +24,32 @@ packageName: '@mui/x-date-pickers'
 </Clock.Root>
 ```
 
-## Basic example
+## Hour / minute / second
 
-{{"demo": "BasicClockDemo.js", "defaultCodeOpen": false}}
+### Without meridiem
+
+{{"demo": "HourMinuteSecondDemo.js", "defaultCodeOpen": false}}
+
+### With meridiem
+
+WIP
+
+{{"demo": "HourWithMeridiemMinuteSecondDemo.js", "defaultCodeOpen": false}}
+
+## Custom step
+
+### Seconds
+
+```tsx
+<Clock.SecondOptions step={5}>{/** Options */}</Clock.SecondOptions>
+```
+
+{{"demo": "StepSecondOptions.js", "defaultCodeOpen": false}}
+
+### Minutes
+
+```tsx
+<Clock.MinuteOptions step={5}>{/** Options */}</Clock.MinuteOptions>
+```
+
+{{"demo": "StepMinuteOptions.js", "defaultCodeOpen": false}}
