@@ -27,9 +27,6 @@ import * as config from '../config';
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
-// eslint-disable-next-line no-console
-console.log('[debug] telemetry env', process.env.NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED);
-
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 

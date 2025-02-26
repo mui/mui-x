@@ -48,6 +48,7 @@ export function useLicenseVerifier(
       licenseKey,
       packageName,
     });
+
     const fullPackageName = `@mui/${packageName}`;
 
     sendMuiXTelemetryEvent(
