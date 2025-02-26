@@ -1,5 +1,4 @@
 import * as React from 'react';
-import '@fontsource/geist-sans';
 import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
@@ -233,7 +232,7 @@ const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
       },
     },
     typography: {
-      fontFamily: ['"Geist", "sans-serif"'].join(','),
+      fontFamily: ['"Inter", "sans-serif"'].join(','),
       fontSize: 13,
       button: {
         textTransform: 'none',

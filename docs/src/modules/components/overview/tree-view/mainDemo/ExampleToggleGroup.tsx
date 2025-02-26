@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -36,11 +37,13 @@ export default function ExampleToggleGroup({ selected, onToggleChange }: Example
         size="small"
         onChange={(_event, value) => onToggleChange(value)}
       >
-        <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1 }}>
+        <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1, gap: 1 }}>
           <img src="/static/x/overview/figma.svg" height={24} alt="figma logo" />
+          Figma example
         </ToggleButton>
-        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1 }}>
+        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1, gap: 1 }}>
           <img src="/static/x/overview/github_dark.svg" height={18} alt="GitHub logo" />
+          GitHub example
         </ToggleButton>
         {/* <ToggleButton value="vscode" title="VS Code" sx={{ flexGrow: 1 }}>
         <img src="/static/x/overview/vscode.svg" height={18} alt="vscode logo" />
