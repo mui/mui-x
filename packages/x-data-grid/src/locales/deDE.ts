@@ -6,8 +6,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Keine Spalten',
+  noColumnsOverlayManageColumns: 'Spalten verwalten',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -116,7 +116,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Größer als oder gleich',
   'headerFilterOperator<': 'Kleiner als',
   'headerFilterOperator<=': 'Kleiner als oder gleich',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Filter löschen',
 
   // Filter values text
   filterValueAny: 'Beliebig',

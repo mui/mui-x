@@ -3,7 +3,6 @@ import {
   DataGrid,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
 } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
@@ -91,7 +90,7 @@ export default function ServerSideErrorHandling() {
         <Button
           onClick={() => {
             setError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -109,16 +108,14 @@ export default function ServerSideErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGrid
           {...props}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(dataSourceError) =>
-            setError(dataSourceError.message)
-          }
-          unstable_dataSourceCache={null}
+          dataSource={dataSource}
+          onDataSourceError={(dataSourceError) => setError(dataSourceError.message)}
+          dataSourceCache={null}
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
         {error && <ErrorOverlay error={error} />}
       </div>

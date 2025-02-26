@@ -76,8 +76,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         <DataGridPro
           apiRef={apiRef}
           columns={mockServer.columns}
-          unstable_dataSource={dataSource}
-          unstable_lazyLoading
+          dataSource={dataSource}
+          lazyLoading
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           disableVirtualization
           {...props}
@@ -105,8 +105,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
 
     setProps({
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+      sortModel: [{ field: 'id', sort: 'asc' }],
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
 
     await waitFor(() => {

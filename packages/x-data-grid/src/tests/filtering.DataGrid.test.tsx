@@ -8,7 +8,6 @@ import {
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
-  GridToolbar,
   GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -1442,6 +1441,7 @@ describe('<DataGrid /> - Filter', () => {
             },
           ]}
           slots={{ toolbar: GridToolbarFilterButton }}
+          showToolbar
         />,
       );
 
@@ -1514,6 +1514,7 @@ describe('<DataGrid /> - Filter', () => {
               },
             ]}
             slots={{ toolbar: GridToolbarFilterButton }}
+            showToolbar
           />
         </div>,
       );
@@ -1556,9 +1557,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
           />
         </div>
       );

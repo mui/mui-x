@@ -82,7 +82,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
         <Reset />
         <DataGridPremium
           apiRef={apiRef}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           columns={columns}
           disableVirtualization
           aggregationFunctions={{

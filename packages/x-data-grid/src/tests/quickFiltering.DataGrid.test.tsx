@@ -8,7 +8,6 @@ import {
   GetApplyQuickFilterFn,
   GridFilterModel,
   GridLogicOperator,
-  GridToolbar,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
@@ -42,7 +41,7 @@ describe('<DataGrid /> - Quick filter', () => {
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           {...baselineProps}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter

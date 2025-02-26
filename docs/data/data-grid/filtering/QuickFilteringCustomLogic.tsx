@@ -74,6 +74,7 @@ export default function QuickFilteringCustomLogic() {
         loading={loading}
         columns={columns}
         slots={{ toolbar: QuickSearchToolbar }}
+        showToolbar
       />
     </Box>
   );

@@ -18,7 +18,6 @@ const xLabels = [
 export default function MixedBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', stack: 'stack1' },

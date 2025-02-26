@@ -12,7 +12,6 @@ import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridToolbar,
   DataGridProps,
   GridColDef,
   gridClasses,
@@ -963,13 +962,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     it('should replace the density selector button label text to "Size"', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            localeText={{ toolbarDensity: 'Size' }}
-          />
+          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
         </div>,
       );
 
@@ -991,13 +984,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       function TestCase(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar {...props} />
           </div>
         );
       }

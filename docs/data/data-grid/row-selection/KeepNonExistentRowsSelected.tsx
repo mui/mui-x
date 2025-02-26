@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function KeepNonExistentRowsSelected() {
@@ -16,9 +16,7 @@ export default function KeepNonExistentRowsSelected() {
         checkboxSelection
         disableRowSelectionOnClick
         keepNonExistentRowsSelected
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        showToolbar
         slotProps={{
           toolbar: {
             showQuickFilter: true,
