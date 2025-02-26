@@ -73,11 +73,9 @@ describe('Telemetry: getTelemetryConfig', () => {
 
   it('debug should be enabled if env MUI_X_TELEMETRY_DEBUG is set to `1`', () => {
     sinon.stub(process, 'env').value({ MUI_X_TELEMETRY_DEBUG: '1' });
-    process.stdout.write(`${JSON.stringify(getTelemetryEnvConfig(true), null, 2)}\n`);
     expect(getTelemetryEnvConfig(true).DEBUG).equal(true);
 
     sinon.stub(process, 'env').value({ MUI_X_TELEMETRY_DEBUG: '0' });
-    process.stdout.write(`${JSON.stringify(getTelemetryEnvConfig(true), null, 2)}\n`);
     expect(getTelemetryEnvConfig(true).DEBUG).equal(false);
   });
 });

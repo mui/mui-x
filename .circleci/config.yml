@@ -73,6 +73,7 @@ packages-jsdom: &packages-jsdom
     - 'x-tree-view'
     - 'x-tree-view-pro'
     - 'x-license'
+    - 'x-telemetry'
     - 'x-codemod'
     - 'x-internals'
     - '*'
@@ -90,6 +91,7 @@ packages-browser: &packages-browser
     - 'x-tree-view'
     - 'x-tree-view-pro'
     - 'x-license'
+    - 'x-telemetry'
     - '*'
 
 test-react-18-context: &test-react-18-context
