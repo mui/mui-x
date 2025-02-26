@@ -53,16 +53,22 @@ export const pivotingStateInitializer: GridStateInitializer<
   >
 > = (state, props) => {
   if (!isPivotingEnabledFn(props)) {
-    return state;
+    return {
+      ...state,
+      pivoting: {
+        pivotMode: false,
+        pivotModel: emptyPivotModel,
+        pivotPanelOpen: false,
+      },
+    };
   }
 
   return {
     ...state,
     pivoting: {
-      // TODO: support initialState
-      pivotMode: props.pivotMode || false,
-      pivotModel: props.pivotModel || emptyPivotModel,
-      pivotPanelOpen: props.pivotPanelOpen || false,
+      pivotMode: props.pivotMode ?? props.initialState?.pivoting?.mode ?? false,
+      pivotModel: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
+      pivotPanelOpen: props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false,
     },
   };
 };

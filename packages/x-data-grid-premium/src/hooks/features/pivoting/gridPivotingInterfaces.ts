@@ -19,6 +19,12 @@ export interface GridPivotingState {
   initialColumns: GridColDef[] | undefined;
 }
 
+export interface GridPivotingInitialState {
+  model?: GridPivotModel;
+  mode?: boolean;
+  panelOpen?: boolean;
+}
+
 export interface GridPivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
   rows: {

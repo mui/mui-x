@@ -9,7 +9,10 @@ import type {
   GridAggregationInitialState,
   GridCellSelectionModel,
 } from '../hooks';
-import type { GridPivotingState } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotingInitialState,
+  GridPivotingState,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
 /**
  * The state of Data Grid Premium.
  */
@@ -27,5 +30,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
   aggregation?: GridAggregationInitialState;
   cellSelection?: GridCellSelectionModel;
-  pivoting?: GridPivotingState;
+  pivoting?: GridPivotingInitialState;
 }

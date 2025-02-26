@@ -1,15 +1,25 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  useGridApiRef,
   GridColDef,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-export default function GridPivotingMovies() {
-  const apiRef = useGridApiRef();
+const pivotModel: GridPivotModel = {
+  rows: [{ field: 'company' }],
+  columns: [
+    { field: 'year', sort: 'desc' },
+    { field: 'cinematicUniverse', sort: 'asc' },
+    { field: 'director', sort: 'asc' },
+  ],
+  values: [
+    { field: 'gross', aggFunc: 'sum' },
+    { field: 'imdbRating', aggFunc: 'avg' },
+  ],
+};
 
+export default function GridPivotingMovies() {
   const movieData = useMovieData();
   const data = React.useMemo(() => {
     return {
@@ -20,21 +30,6 @@ export default function GridPivotingMovies() {
       ] as GridColDef[],
     };
   }, [movieData]);
-  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
-    rows: [{ field: 'company' }],
-    columns: [
-      { field: 'year', sort: 'desc' },
-      { field: 'cinematicUniverse', sort: 'asc' },
-      { field: 'director', sort: 'asc' },
-    ],
-    values: [
-      { field: 'gross', aggFunc: 'sum' },
-      { field: 'imdbRating', aggFunc: 'avg' },
-    ],
-  });
-
-  const [isPivotMode, setIsPivotMode] = React.useState(false);
-  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(true);
 
   return (
     <div style={{ width: '100%' }}>
@@ -42,13 +37,13 @@ export default function GridPivotingMovies() {
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
-          pivotModel={pivotModel}
-          onPivotModelChange={setPivotModel}
-          pivotMode={isPivotMode}
-          onPivotModeChange={setIsPivotMode}
-          pivotPanelOpen={pivotSettingsOpen}
-          onPivotPanelOpenChange={setPivotSettingsOpen}
-          apiRef={apiRef}
+          initialState={{
+            pivoting: {
+              mode: false,
+              model: pivotModel,
+              panelOpen: true,
+            },
+          }}
           showToolbar
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
