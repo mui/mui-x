@@ -19,8 +19,9 @@ function CustomDigitalClockItem(
 ) {
   const { rangePosition, selectedValue, formattedValue, itemValue, ...other } =
     props;
-  if (selectedValue[0] && rangePosition === 'end') {
-    const timeDifference = itemValue.diff(selectedValue[0], ['minutes']);
+  const selectedStartTime = selectedValue[0];
+  if (selectedStartTime && selectedStartTime.isValid && rangePosition === 'end') {
+    const timeDifference = itemValue.diff(selectedStartTime, ['minutes']);
     const timeDifferenceLabel =
       timeDifference.minutes < 60
         ? timeDifference.toHuman()

@@ -165,7 +165,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
             width={sectionWidth}
             onClick={() => onViewChange('hours')}
             selected={view === 'hours'}
-            value={value ? formatHours(value) : toolbarPlaceholder}
+            value={utils.isValid(value) ? formatHours(value) : toolbarPlaceholder}
           />
           <TimeRangePickerToolbarSeparator variant="h5" value=":" className={separatorClasses} />
           <PickersToolbarButton
@@ -173,7 +173,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
             width={sectionWidth}
             onClick={() => onViewChange('minutes')}
             selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
-            value={value ? utils.format(value, 'minutes') : toolbarPlaceholder}
+            value={utils.isValid(value) ? utils.format(value, 'minutes') : toolbarPlaceholder}
             disabled={!views.includes('minutes')}
           />
         </React.Fragment>
