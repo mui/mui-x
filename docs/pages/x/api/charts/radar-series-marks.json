@@ -8,7 +8,7 @@
   ],
   "classes": [],
   "muiName": "MuiRadarSeriesMarks",
-  "filename": "/packages/x-charts/src/RadarChart/RadarSeries/RadarSeriesMarks.tsx",
+  "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesMarks.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
   "cssComponent": false

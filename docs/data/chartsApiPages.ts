@@ -221,6 +221,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarSeriesMarks',
   },
   {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
+  },
+  {
     pathname: '/x/api/charts/scatter',
     title: 'Scatter',
   },

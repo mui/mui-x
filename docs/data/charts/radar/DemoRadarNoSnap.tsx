@@ -10,13 +10,13 @@ export default function DemoRadarNoSnap() {
       data={{
         startAngle: {
           knob: 'number',
-          defaultValue: 0,
+          defaultValue: 30,
           min: -180,
           max: 180,
         },
         divisionNumber: {
           knob: 'number',
-          defaultValue: 5,
+          defaultValue: 10,
           min: 0,
           max: 20,
         },
