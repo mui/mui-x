@@ -26,32 +26,25 @@ describe('<DesktopDateRangePicker />', () => {
     clockConfig: new Date(2018, 0, 10),
   });
 
-  it(
-    'should scroll current month to the active selection when focusing appropriate field (multi input field)',
-    {
-      timeout: 30000,
-    },
-    // @ts-expect-error mocha types are incorrect
-    () => {
-      render(
-        <DesktopDateRangePicker
-          reduceAnimations
-          defaultValue={[adapterToUse.date('2019-05-19'), adapterToUse.date('2019-10-30')]}
-          slots={{ field: MultiInputDateRangeField }}
-        />,
-      );
+  it('should scroll current month to the active selection when focusing appropriate field (multi input field)', () => {
+    render(
+      <DesktopDateRangePicker
+        reduceAnimations
+        defaultValue={[adapterToUse.date('2019-05-19'), adapterToUse.date('2019-10-30')]}
+        slots={{ field: MultiInputDateRangeField }}
+      />,
+    );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
-      expect(screen.getByText('May 2019')).toBeVisible();
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
+    expect(screen.getByText('May 2019')).toBeVisible();
 
-      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
-      expect(screen.getByText('October 2019')).toBeVisible();
+    openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
+    expect(screen.getByText('October 2019')).toBeVisible();
 
-      // scroll back
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
-      expect(screen.getByText('May 2019')).toBeVisible();
-    },
-  );
+    // scroll back
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
+    expect(screen.getByText('May 2019')).toBeVisible();
+  });
 
   it(`should not crash when opening picker with invalid date value`, () => {
     render(

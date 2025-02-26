@@ -204,8 +204,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     it(
       'should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false',
       {
-        // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
-        timeout: 15000,
+        // retry this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
         retry: 3,
       },
       // @ts-expect-error mocha types are incorrect

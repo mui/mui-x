@@ -49,47 +49,40 @@ describe('<DateRangeCalendar />', () => {
   }));
 
   describe('Selection', () => {
-    it(
-      'should select the range from the next month',
-      {
-        timeout: 20000,
-      },
-      // @ts-expect-error mocha types are incorrect
-      async () => {
-        const onChange = spy();
+    it('should select the range from the next month', async () => {
+      const onChange = spy();
 
-        const { user } = render(
-          <DateRangeCalendar
-            onChange={onChange}
-            defaultValue={[adapterToUse.date('2019-01-01'), null]}
-          />,
-        );
+      const { user } = render(
+        <DateRangeCalendar
+          onChange={onChange}
+          defaultValue={[adapterToUse.date('2019-01-01'), null]}
+        />,
+      );
 
-        await user.click(getPickerDay('1', 'January 2019'));
+      await user.click(getPickerDay('1', 'January 2019'));
 
-        const [visibleButton] = screen.getAllByRole('button', {
-          hidden: false,
-          name: 'Next month',
-        });
-        await user.click(visibleButton);
+      const [visibleButton] = screen.getAllByRole('button', {
+        hidden: false,
+        name: 'Next month',
+      });
+      await user.click(visibleButton);
 
-        await waitFor(() => {
-          getPickerDay('19', 'March 2019');
-        });
+      await waitFor(() => {
+        getPickerDay('19', 'March 2019');
+      });
 
-        await user.click(getPickerDay('19', 'March 2019'));
+      await user.click(getPickerDay('19', 'March 2019'));
 
-        expect(onChange.callCount).to.equal(2);
+      expect(onChange.callCount).to.equal(2);
 
-        const rangeOn1stCall = onChange.firstCall.firstArg;
-        expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
-        expect(rangeOn1stCall[1]).to.equal(null);
+      const rangeOn1stCall = onChange.firstCall.firstArg;
+      expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
+      expect(rangeOn1stCall[1]).to.equal(null);
 
-        const rangeOn2ndCall = onChange.lastCall.firstArg;
-        expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
-        expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
-      },
-    );
+      const rangeOn2ndCall = onChange.lastCall.firstArg;
+      expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
+      expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
+    });
 
     it('should continue start selection if selected "end" date is before start', () => {
       const onChange = spy();
