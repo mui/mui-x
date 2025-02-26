@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateTimeProps } from '../../../../validation';
 import { ClockSection } from '../utils/types';
-import { useRegisterSection } from '../../utils/hooks/useRegisterSection';
 
 export interface ClockRootContext {
   /**

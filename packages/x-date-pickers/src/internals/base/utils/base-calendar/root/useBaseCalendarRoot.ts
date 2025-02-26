@@ -21,7 +21,6 @@ import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 import { BaseCalendarSection } from '../utils/types';
 import { BaseCalendarRootVisibleDateContext } from './BaseCalendarRootVisibleDateContext';
 import { useValidation } from '../../../../../validation';
-import { useRegisterSection } from '../../hooks/useRegisterSection';
 
 export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
@@ -61,7 +60,6 @@ export function useBaseCalendarRoot<
 
   const utils = useUtils();
   const adapter = useLocalizationContext();
-  const { sectionsRef, registerSection } = useRegisterSection<BaseCalendarSection>();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: '(Range)CalendarRoot',
@@ -87,6 +85,23 @@ export function useBaseCalendarRoot<
     // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [referenceDateProp, timezone],
+  );
+
+  const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
+    day: [],
+    month: [],
+    year: [],
+  });
+
+  const registerSection = useEventCallback(
+    (section: useBaseCalendarRoot.RegisterSectionParameters) => {
+      const id = Math.random();
+
+      sectionsRef.current[section.type]![id] = section.value;
+      return () => {
+        delete sectionsRef.current[section.type][id];
+      };
+    },
   );
 
   const isDateCellVisible = (date: PickerValidDate) => {

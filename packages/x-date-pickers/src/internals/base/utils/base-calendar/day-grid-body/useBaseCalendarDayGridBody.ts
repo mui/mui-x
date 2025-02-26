@@ -5,8 +5,9 @@ import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarDayGridBodyContext } from './BaseCalendarDayGridBodyContext';
-import { useCellList } from '../utils/useCellList';
+import { useRegisterSection } from '../utils/useRegisterSection';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
+import { useScrollableList } from '../../useScrollableList';
 
 export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBody.Parameters) {
   const { fixedWeekNumber, focusOnMount, children, offset = 0, freezeMonth = false } = parameters;
@@ -30,8 +31,8 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
 
   const month = freezeMonth ? lastNonFrozenMonthRef.current : rawMonth;
 
-  const { scrollerRef } = useCellList({
-    focusOnMount,
+  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useRegisterSection({
     section: 'day',
     value: month,
   });
@@ -118,7 +119,7 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
 }
 
 export namespace useBaseCalendarDayGridBody {
-  export interface Parameters extends useCellList.PublicParameters {
+  export interface Parameters extends useScrollableList.Parameters {
     /**
      * The children of the component.
      * If a function is provided, it will be called with the weeks weeks to render as its parameter.

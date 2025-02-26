@@ -3,8 +3,9 @@ import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarYearCollectionContext } from './BaseCalendarYearCollectionContext';
-import { useCellList } from './useCellList';
+import { useRegisterSection } from './useRegisterSection';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
+import { useScrollableList } from '../../useScrollableList';
 
 export function useYearCells(parameters: useYearCells.Parameters): useYearCells.ReturnValue {
   const { getItems, focusOnMount, children } = parameters;
@@ -36,8 +37,8 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
     baseRootContext.dateValidationProps.maxDate,
   ]);
 
-  const { scrollerRef } = useCellList({
-    focusOnMount,
+  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useRegisterSection({
     section: 'year',
     value: baseRootVisibleDateContext.visibleDate,
   });
@@ -86,7 +87,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
 }
 
 export namespace useYearCells {
-  export interface Parameters extends useCellList.PublicParameters {
+  export interface Parameters extends useScrollableList.Parameters {
     /**
      * Generate the list of items to render.
      * @param {GetItemsParameters} parameters The current parameters of the list.
@@ -124,7 +125,7 @@ export namespace useYearCells {
     getDefaultItems: () => PickerValidDate[];
   }
 
-  export interface ReturnValue extends useCellList.ReturnValue {
+  export interface ReturnValue extends useScrollableList.ReturnValue {
     yearsListOrGridContext: BaseCalendarYearCollectionContext;
     resolvedChildren: React.ReactNode;
   }

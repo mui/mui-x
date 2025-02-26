@@ -4,16 +4,19 @@ import { useClockRootContext } from '../root/ClockRootContext';
 import { useUtils } from '../../../hooks/useUtils';
 import { ClockSection } from './types';
 import { ClockOptionListContext } from './ClockOptionListContext';
+import { useScrollableList } from '../../utils/useScrollableList';
 
 export function useClockOptionList(parameters: useClockOptionList.Parameters) {
   const {
     children,
     getItems,
+    focusOnMount,
     helpers: { getNextItem, getStartOfRange, getEndOfRange, areOptionsEqual, format, section },
   } = parameters;
 
   const utils = useUtils();
   const rootContext = useClockRootContext();
+  const { scrollerRef } = useScrollableList({ focusOnMount });
 
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
@@ -95,11 +98,11 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     [isOptionSelected, canOptionBeTabbed, section, format],
   );
 
-  return { resolvedChildren, context };
+  return { resolvedChildren, context, scrollerRef };
 }
 
 export namespace useClockOptionList {
-  export interface PublicParameters {
+  export interface PublicParameters extends useScrollableList.Parameters {
     /**
      * The children of the component.
      * If a function is provided, it will be called with the public context as its parameter.

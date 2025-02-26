@@ -22,7 +22,7 @@ export function useClockSecondOptions(parameters: useClockSecondOptions.Paramete
     [utils, step],
   );
 
-  const { resolvedChildren, context } = useClockOptionList({
+  const { resolvedChildren, context, scrollerRef } = useClockOptionList({
     children,
     getItems,
     helpers,
@@ -35,7 +35,10 @@ export function useClockSecondOptions(parameters: useClockSecondOptions.Paramete
     [resolvedChildren],
   );
 
-  return React.useMemo(() => ({ getOptionsProps, context }), [getOptionsProps, context]);
+  return React.useMemo(
+    () => ({ getOptionsProps, context, scrollerRef }),
+    [getOptionsProps, context, scrollerRef],
+  );
 }
 
 export namespace useClockSecondOptions {

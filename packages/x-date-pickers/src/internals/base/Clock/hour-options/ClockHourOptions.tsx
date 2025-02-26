@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockHourOptions } from './useClockHourOptions';
@@ -9,17 +10,20 @@ const ClockHourOptions = React.forwardRef(function ClockHourOptions(
   props: ClockHourOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, ...otherProps } = props;
-  const { getOptionsProps, context } = useClockHourOptions({
+  const { className, render, children, getItems, focusOnMount, ...otherProps } = props;
+  const { getOptionsProps, context, scrollerRef } = useClockHourOptions({
     children,
+    getItems,
+    focusOnMount,
   });
 
   const state: ClockHourOptions.State = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getOptionsProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,

@@ -5,8 +5,9 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { getFirstEnabledYear, getLastEnabledYear } from './date';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarMonthCollectionContext } from './BaseCalendarMonthCollectionContext';
-import { useCellList } from './useCellList';
+import { useRegisterSection } from './useRegisterSection';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
+import { useScrollableList } from '../../useScrollableList';
 
 export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCells.ReturnValue {
   const { getItems, focusOnMount, children } = parameters;
@@ -32,7 +33,11 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
     return getDefaultItems();
   }, [utils, getItems, currentYear]);
 
-  const { scrollerRef } = useCellList({ focusOnMount, section: 'month', value: currentYear });
+  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useRegisterSection({
+    section: 'month',
+    value: currentYear,
+  });
 
   const canCellBeTabbed = React.useMemo(() => {
     let tabbableCells: PickerValidDate[];
@@ -121,7 +126,7 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
 }
 
 export namespace useMonthCells {
-  export interface Parameters extends useCellList.PublicParameters {
+  export interface Parameters extends useScrollableList.Parameters {
     /**
      * Generate the list of items to render.
      * @param {GetItemsParameters} parameters The current parameters of the list.
@@ -154,7 +159,7 @@ export namespace useMonthCells {
     getDefaultItems: () => PickerValidDate[];
   }
 
-  export interface ReturnValue extends useCellList.ReturnValue {
+  export interface ReturnValue extends useScrollableList.ReturnValue {
     monthsListOrGridContext: BaseCalendarMonthCollectionContext;
     changePage: (direction: 'next' | 'previous') => void;
     resolvedChildren: React.ReactNode;
