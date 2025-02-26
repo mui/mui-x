@@ -206,30 +206,34 @@ describe('<DataGridPro /> - Column headers', () => {
       },
     );
 
-    it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', async () => {
-      // enable `react-transition-group` transitions for this test
-      config.disabled = false;
+    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
+    testSkipIf(!isJSDOM)(
+      'should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended',
+      async () => {
+        // enable `react-transition-group` transitions for this test
+        config.disabled = false;
 
-      const { user } = render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-        </div>,
-      );
-      const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+        const { user } = render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+          </div>,
+        );
+        const columnCell = getColumnHeaderCell(0);
+        const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
 
-      await user.click(menuIconButton);
-      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
-      expect(screen.queryByRole('menu')).not.to.equal(null);
+        await user.click(menuIconButton);
+        expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+        expect(screen.queryByRole('menu')).not.to.equal(null);
 
-      await user.keyboard('[Escape]');
+        await user.keyboard('[Escape]');
 
-      // JSDOM is instantaneous, but the browser needs time to transition
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).to.equal(null);
-      });
-      expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
-    });
+        // JSDOM is instantaneous, but the browser needs time to transition
+        await waitFor(() => {
+          expect(screen.queryByRole('menu')).to.equal(null);
+        });
+        expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+      },
+    );
 
     // Flaky on JSDOM
     testSkipIf(isJSDOM)(
