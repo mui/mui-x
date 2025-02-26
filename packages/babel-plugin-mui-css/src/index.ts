@@ -49,10 +49,7 @@ export default function transformCSS({ types: t }: BabelT) {
       cssContent = cssMinified as any;
     }
 
-    const outputPath = joinPath(
-      process.env.MUI_CSS_OUTPUT_DIR ?? '',
-      state.cssOutput,
-    )
+    const outputPath = joinPath(process.env.MUI_CSS_OUTPUT_DIR ?? '', state.cssOutput);
 
     mkdirp.sync(dirname(outputPath));
     writeFileSync(outputPath, cssContent);
