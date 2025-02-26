@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
@@ -85,7 +85,9 @@ describe('<ScatterChart />', () => {
     ]);
 
     cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    await waitFor(() => {
+      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    });
   });
 
   testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {

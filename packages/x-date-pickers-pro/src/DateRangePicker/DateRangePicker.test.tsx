@@ -20,13 +20,14 @@ describe('<DateRangePicker />', () => {
   it('should not use the mobile picker by default with accessible DOM structure', () => {
     renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
-    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
+    // Not sure why hidden is needed here
+    expect(screen.queryByRole('dialog', { hidden: true })).to.have.class(pickerPopperClasses.root);
   });
 
   it('should not use the mobile picker by default with non-accessible DOM structure', () => {
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
-    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
+    expect(screen.queryByRole('dialog', { hidden: true })).to.have.class(pickerPopperClasses.root);
   });
 
   it('should use the mobile picker when `useMediaQuery` returns `false` with accessible DOM structure', () => {
@@ -36,7 +37,9 @@ describe('<DateRangePicker />', () => {
     // Test with accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
-    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
+    expect(screen.queryByRole('dialog', { hidden: true })).not.to.have.class(
+      pickerPopperClasses.root,
+    );
 
     window.matchMedia = originalMatchMedia;
   });
@@ -48,7 +51,9 @@ describe('<DateRangePicker />', () => {
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
-    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
+    expect(screen.queryByRole('dialog', { hidden: true })).not.to.have.class(
+      pickerPopperClasses.root,
+    );
 
     window.matchMedia = originalMatchMedia;
   });
