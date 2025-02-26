@@ -40,17 +40,13 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Available components
 
-:::warning
-NOT READY
-:::
-
-The component is available in four variants:
+The component is available in three variants:
 
 - The `DesktopTimeRangePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileTimeRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the views inside a modal and and a field for keyboard editing.
 
 - The `TimeRangePicker` component which renders `DesktopTimeRangePicker` or `MobileTimeRangePicker` depending on the device it runs on.
 
@@ -66,9 +62,13 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` props:
 
 {{"demo": "FormPropsTimeRangePickers.js"}}
+
+:::success
+The `name` prop is not available when using the Time Range Picker with the Multi Input Time Range Field.
+:::
 
 ## Customization
 
@@ -79,7 +79,7 @@ You can pass the `MultiInputTimeRangeField` component to the Time Range Picker t
 {{"demo": "MultiInputTimeRangePicker.js"}}
 
 :::info
-For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker) page.
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Change end time label

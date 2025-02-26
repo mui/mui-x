@@ -1,1 +1,1 @@
-<TimeRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
+<TimeRangePicker />
