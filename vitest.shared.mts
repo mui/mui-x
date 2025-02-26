@@ -63,6 +63,7 @@ export default defineConfig({
       minWorkers: 1,
       maxWorkers: 2,
       testTimeout: 15000,
+      fileParallelism: false,
       poolOptions: {
         forks: {
           // singleFork: true,
