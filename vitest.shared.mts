@@ -20,6 +20,7 @@ export default defineConfig({
         { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
         { lib: 'x-internals' },
         { lib: 'x-license' },
+        { lib: 'x-telemetry' },
       ].flatMap((v) => {
         return [
           {
@@ -54,6 +55,8 @@ export default defineConfig({
     // Required for some tests that contain early returns.
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
+    // Disable isolation to speed up the tests.
+    isolate: false,
     browser: {
       provider: 'playwright',
       headless: true,
@@ -63,8 +66,6 @@ export default defineConfig({
       minWorkers: 1,
       maxWorkers: 2,
       testTimeout: 15000,
-      // In CI we disable isolation to speed up the tests.
-      isolate: false,
       poolOptions: {
         forks: {
           // singleFork: true,
