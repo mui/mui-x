@@ -100,7 +100,9 @@ apiRef.current.updateItemLabel(
 
 ## Editing lazy loaded children
 
-In order to register changes for item labels on your server or update them in the cache use the `onItemLabelChange` callback function.
+To store the updated item labels on your server use the `onItemLabelChange` callback function.
+
+Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually.
 
 ```tsx
 const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {

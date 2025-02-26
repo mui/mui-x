@@ -56,6 +56,8 @@ The `DataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To
 
 ## Lazy loading and label editing
 
-In order to register changes for item labels on your server or update them in the cache use the `onItemLabelChange` callback function. The demo below shows you how to update the cache once a label is changed so the changes are reflected in the tree.
+To store the updated item labels on your server use the `onItemLabelChange` callback function.
+
+Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually. The demo below shows you how to update the cache once a label is changed so the changes are reflected in the tree.
 
 {{"demo": "LazyLoadingAndLabelEditing.js"}}
