@@ -1,19 +1,26 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesCommonProps } from './RadarSeries.types';
-
-interface RadarSeriesMarksProps extends RadarSeriesCommonProps {}
+import { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 
 function RadarSeriesMarks(props: RadarSeriesMarksProps) {
+  const { seriesId, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId, points, color }) => (
-        <g key={seriesId}>
+      {seriesCoordinates?.map(({ seriesId: id, points, color }) => (
+        <g key={id}>
           {points.map((point, index) => (
-            <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
+            <circle
+              key={index}
+              cx={point.x}
+              cy={point.y}
+              r={5}
+              fill={color}
+              stroke={color}
+              {...other}
+            />
           ))}
         </g>
       ))}

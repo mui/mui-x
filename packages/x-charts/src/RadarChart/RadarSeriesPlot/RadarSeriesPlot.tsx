@@ -1,29 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesCommonProps } from './RadarSeries.types';
+import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import { getAreaPath } from './getAreaPath';
 
-interface RadarSeriesAreaProps extends RadarSeriesCommonProps {}
-
-function RadarSeriesArea(props: RadarSeriesAreaProps) {
+function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId, points, color }) => (
-        <path
-          key={seriesId}
-          d={`M ${points.map((p) => `${p.x} ${p.y}`).join('L')} Z`}
-          fill={color}
-          stroke={color}
-          fillOpacity={0.4}
-        />
+        <g key={seriesId}>
+          {
+            <path
+              key={seriesId}
+              d={getAreaPath(points)}
+              fill={color}
+              stroke={color}
+              fillOpacity={0.4}
+            />
+          }
+          {points.map((point, index) => (
+            <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
+          ))}
+        </g>
       ))}
     </React.Fragment>
   );
 }
 
-RadarSeriesArea.propTypes = {
+RadarSeriesPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -35,4 +41,4 @@ RadarSeriesArea.propTypes = {
   seriesId: PropTypes.string,
 } as any;
 
-export { RadarSeriesArea };
+export { RadarSeriesPlot };

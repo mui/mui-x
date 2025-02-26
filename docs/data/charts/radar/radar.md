@@ -68,4 +68,8 @@ For composition, use the `RadarDataProvider` to provide `series` and `radar` pro
 Providing components for radar composition is still a work in progress.
 If you miss some element or explanation, please open an issue describing what you want to achieve, and what is missing.
 
+In this example, we uses `RadarSeriesArea` and `RadarSeriesMarks` to modify the order of the elements:
+all the marks are on top of all the path.
+And we apply different properties based on the series id.
+
 {{"demo": "CompositionExample.js" }}

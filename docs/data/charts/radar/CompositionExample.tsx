@@ -2,8 +2,8 @@ import * as React from 'react';
 import {
   Unstable_RadarDataProvider as RadarDataProvider,
   RadarGrid,
-  RadarSeriesArea,
   RadarSeriesMarks,
+  RadarSeriesArea,
 } from '@mui/x-charts/RadarChart';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
@@ -29,8 +29,9 @@ export default function CompositionExample() {
     >
       <ChartsSurface>
         <RadarGrid divisionNumber={3} />
-        <RadarSeriesArea />
-        <RadarSeriesMarks seriesId="usa-id" />
+        <RadarSeriesArea fillOpacity={0.7} strokeWidth={3} seriesId="australia-id" />
+        <RadarSeriesArea fill="transparent" strokeWidth={3} seriesId="usa-id" />
+        <RadarSeriesMarks />
       </ChartsSurface>
     </RadarDataProvider>
   );

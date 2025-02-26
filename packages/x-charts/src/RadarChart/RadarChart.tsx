@@ -9,8 +9,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea } from './RadarSeries/RadarSeriesArea';
-import { RadarSeriesMarks } from './RadarSeries/RadarSeriesMarks';
+import { RadarSeriesPlot } from './RadarSeriesPlot';
 
 export interface RadarChartSlots {}
 export interface RadarChartSlotProps {}
@@ -56,8 +55,7 @@ const RadarChart = React.forwardRef(function RadarChart(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
-          <RadarSeriesArea />
-          <RadarSeriesMarks />
+          <RadarSeriesPlot />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
