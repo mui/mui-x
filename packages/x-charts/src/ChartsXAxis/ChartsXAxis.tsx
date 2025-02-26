@@ -220,7 +220,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.body1,
-        lineHeight: 1.25,
+        lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',

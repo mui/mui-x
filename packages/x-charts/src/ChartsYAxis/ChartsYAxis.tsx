@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, styled } from '@mui/material/styles';
+import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { getStringSize } from '@mui/x-charts/internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
@@ -83,6 +83,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     width: axisWidth,
   } = defaultizedProps;
 
+  const theme = useTheme();
   const isRtl = useRtl();
 
   const classes = useUtilityClasses(defaultizedProps);
@@ -116,6 +117,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        ...theme.typography.caption,
         fontSize: tickFontSize,
         textAnchor: revertAnchor ? 'start' : 'end',
         dominantBaseline: 'central',
@@ -131,6 +133,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1,
         fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
