@@ -64,7 +64,7 @@ export const useGridRowEditing = (
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
-  const prevRowValuesLookup = React.useRef<Record<GridRowId, GridValidRowModel>>({}).current;
+  const prevRowValuesLookup = React.useRef<Record<GridRowId, GridValidRowModel>>({});
   const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
@@ -449,7 +449,7 @@ export const useGridRowEditing = (
         return acc;
       }, {});
 
-      prevRowValuesLookup[id] = row;
+      prevRowValuesLookup.current[id] = row;
       updateOrDeleteRowState(id, newProps);
 
       if (fieldToFocus) {
@@ -508,7 +508,7 @@ export const useGridRowEditing = (
         }
         updateOrDeleteRowState(id, null);
         updateRowInRowModesModel(id, null);
-        delete prevRowValuesLookup[id];
+        delete prevRowValuesLookup.current[id];
       };
 
       if (ignoreModifications) {
@@ -517,7 +517,7 @@ export const useGridRowEditing = (
       }
 
       const editingState = gridEditRowsStateSelector(apiRef);
-      const row = prevRowValuesLookup[id];
+      const row = prevRowValuesLookup.current[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
         (fieldProps) => fieldProps.isProcessingProps,
@@ -708,7 +708,7 @@ export const useGridRowEditing = (
         return apiRef.current.getRow(id)!;
       }
 
-      let rowUpdate = { ...prevRowValuesLookup[id], ...row };
+      let rowUpdate = { ...prevRowValuesLookup.current[id], ...row };
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
