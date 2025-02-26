@@ -868,7 +868,7 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       // In Chrome non-headless and Edge this test is flaky
-      testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
+      testSkipIf(!isJSDOM || !userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
         {
           // Retry the test because it is flaky
