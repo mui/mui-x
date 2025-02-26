@@ -616,6 +616,10 @@ describe('<DataGridPro /> - Row editing', () => {
         act(() => apiRef.current?.stopRowEditMode({ id: testRow.id }));
         await act(() => Promise.resolve());
         // deleted row data is still passed to `processRowUpdate` as `oldRow` parameter
+        expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
+          ...defaultData.rows[0],
+          currencyPair: testValue,
+        });
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(testRow);
         // all rows are there after `processRowUpdate` returns deleted row data
         expect(apiRef.current?.getRowsCount()).to.equal(allRows.length);
