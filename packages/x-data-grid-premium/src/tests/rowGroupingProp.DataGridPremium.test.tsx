@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, screen, act, reactMajor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, reactMajor, waitFor } from '@mui/internal-test-utils';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
@@ -347,7 +347,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
-    it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
+    it('should disable the row grouping when `prop.disableRowGrouping = true`', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -374,7 +374,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
       act(() => apiRef.current?.hideColumnMenu());
 
-      expect(screen.queryByRole('menu')).to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
 
       act(() => apiRef.current?.showColumnMenu('category2'));
 
