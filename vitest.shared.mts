@@ -63,7 +63,8 @@ export default defineConfig({
       minWorkers: 1,
       maxWorkers: 2,
       testTimeout: 15000,
-      fileParallelism: false,
+      // In CI we disable isolation to speed up the tests.
+      isolate: false,
       poolOptions: {
         forks: {
           // singleFork: true,
