@@ -120,7 +120,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
-        plan: 'pro',
         children: [
           {
             pathname: '/x/react-data-grid/server-side-data',
