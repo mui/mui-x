@@ -71,6 +71,16 @@ For the `pie` series, the `labelMarkType` property is available for each of the 
 
 {{"demo": "LegendMarkType.js", "hideToolbar": true, "bg": "playground"}}
 
+#### Custom shapes
+
+For more advanced use cases, you can also provide a component to the `labelMarkType` property of each series to fully customize the mark.
+
+{{"demo": "LegendCustomLabelMark.js" }}
+
+Passing a component to `labelMarkType` affects not only the legend but other places where the label mark is shown, such as tooltips.
+
+Customizing the mark shape of a pie chart depending on the series is slightly different. You can find how to do it in [this example](/x/react-charts/pie-demo/#pie-chart-with-custom-mark-in-legend-and-tooltip).
+
 ### Scrollable legend
 
 The legend can be made scrollable by setting the `overflowY` for vertical legends or `overflowX` for horizontal legends.

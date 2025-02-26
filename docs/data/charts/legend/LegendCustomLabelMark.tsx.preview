@@ -1,0 +1,10 @@
+<BarChart
+  series={[
+    { id: 0, data: [10], label: 'Series A', labelMarkType: HTMLCircle },
+    { id: 1, data: [15], label: 'Series B', labelMarkType: 'line' },
+    { id: 2, data: [20], label: 'Series C' },
+    { id: 3, data: [10], label: 'Series D', labelMarkType: SVGDiamond },
+  ]}
+  xAxis={[{ scaleType: 'band', data: ['Category'] }]}
+  height={200}
+/>
