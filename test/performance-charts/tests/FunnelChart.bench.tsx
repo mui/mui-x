@@ -2,7 +2,7 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { options } from '../utils/options';
 
 describe('FunnelChart', () => {
