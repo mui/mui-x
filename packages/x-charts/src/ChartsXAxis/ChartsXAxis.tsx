@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
-import { DEFAULT_AXIS_SIZE_HEIGHT } from '../constants';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
@@ -120,7 +119,6 @@ const defaultProps = {
   disableTicks: false,
   tickSize: 6,
   tickLabelMinGap: 4,
-  height: DEFAULT_AXIS_SIZE_HEIGHT,
 } as const;
 
 /**
