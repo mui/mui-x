@@ -13,12 +13,6 @@ export interface UseTreeViewExpansionPublicAPI {
    * @param {boolean} isExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
   setItemExpansion: (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => void;
-  /**
-   * Get the expansion status of a given item.
-   * @param {string} itemId The id of the item.
-   * @returns {boolean} `true` if the item is expandable, `false` otherwise.
-   */
-  isItemExpandable: (itemId: string) => boolean;
 }
 
 export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {

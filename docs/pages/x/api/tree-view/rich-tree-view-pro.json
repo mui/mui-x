@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, isItemExpandable: func, selectItem: func, setItemExpansion: func, toggleDisabledItem: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, toggleDisabledItem: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {

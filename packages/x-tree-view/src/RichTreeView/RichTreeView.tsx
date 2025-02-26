@@ -110,7 +110,6 @@ RichTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      isItemExpandable: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       toggleDisabledItem: PropTypes.func.isRequired,
