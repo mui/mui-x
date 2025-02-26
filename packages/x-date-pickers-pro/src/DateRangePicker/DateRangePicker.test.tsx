@@ -18,17 +18,15 @@ describe('<DateRangePicker />', () => {
   });
 
   it('should not use the mobile picker by default with accessible DOM structure', async () => {
-    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
-    await user.keyboard('[Escape]');
   });
 
   it('should not use the mobile picker by default with non-accessible DOM structure', async () => {
-    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+    renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
-    await user.keyboard('[Escape]');
   });
 
   it('should use the mobile picker when `useMediaQuery` returns `false` with accessible DOM structure', async () => {
@@ -36,10 +34,9 @@ describe('<DateRangePicker />', () => {
     window.matchMedia = stubMatchMedia(false);
 
     // Test with accessible DOM structure
-    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
-    await user.keyboard('[Escape]');
 
     window.matchMedia = originalMatchMedia;
   });
@@ -49,10 +46,9 @@ describe('<DateRangePicker />', () => {
     window.matchMedia = stubMatchMedia(false);
 
     // Test with non-accessible DOM structure
-    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+    renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
-    await user.keyboard('[Escape]');
 
     window.matchMedia = originalMatchMedia;
   });
