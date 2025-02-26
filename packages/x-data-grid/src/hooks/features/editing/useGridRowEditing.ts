@@ -708,7 +708,7 @@ export const useGridRowEditing = (
         return apiRef.current.getRow(id)!;
       }
 
-      let rowUpdate = { id, ...row };
+      let rowUpdate = { ...prevRowValuesLookup[id], ...row };
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
