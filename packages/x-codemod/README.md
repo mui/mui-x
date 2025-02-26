@@ -279,6 +279,36 @@ Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have 
   } from '@mui/x-charts-pro/hooks';
 ```
 
+#### `rename-sparkline-colors-to-color`
+
+Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its first element.
+
+```diff
+ <SparkLineChart
+-  colors={['red']}
++  color={'red'}
+ />
+```
+
+If `colors` is a function, it will be wrapped in another function that returns its first element.
+
+```diff
+ <SparkLineChart
+-  colors={fn}
++  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
+ />
+```
+
+If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
+
+```diff
+ <SparkLineChart
+-  colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++  /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++  color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+ />
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
@@ -294,6 +324,8 @@ npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+- [`remove-props`](#remove-props)
+- [`rename-props`](#rename-props)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -313,6 +345,49 @@ Remove feature flags for stabilized `experimentalFeatures`.
 npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
+#### `remove-props`
+
+Remove props that are no longer supported.
+
+The list includes these props:
+
+- `indeterminateCheckboxAction`
+- `rowPositionsDebounceMs`
+
+```diff
+ <DataGrid
+-  indeterminateCheckboxAction="deselect"
+-  rowPositionsDebounceMs={100}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+```
+
+#### `rename-props`
+
+Rename props to the new ones.
+
+The list includes these props:
+
+- `unstable_rowSpanning` to `rowSpanning`
+
+```diff
+ <DataGrid
+-  unstable_rowSpanning
++  rowSpanning
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
+```
+
 ### Pickers codemods
 
 #### `preset-safe` for Pickers v8.0.0
@@ -328,7 +403,7 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
-- [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+- [`rename-type-imports`](#rename-type-imports)
 
 #### `rename-adapter-date-fns-imports`
 
@@ -360,13 +435,25 @@ The list includes these transformers
 npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
 ```
 
-#### `rename-and-move-field-value-type`
+#### `rename-type-imports`
 
-Renames `FieldValueType` to `PickerValueType`.
+Renames:
+
+- `usePickersTranslations` to `usePickerTranslations`
+- `usePickersContext` to `usePickerContext`
+- `FieldValueType` to `PickerValueType`
+- `RangeFieldSection` to `FieldRangeSection`
+- `PickerShortcutChangeImportance` to `PickerChangeImportance`
 
 ```diff
+-import { usePickersTranslations, usePickersContext } from '@mui/x-date-pickers/hooks';
++import { usePickerTranslations, usePickerContext } from '@mui/x-date-pickers/hooks';
 -import { FieldValueType } from '@mui/x-date-pickers';
 +import { PickerValueType } from '@mui/x-date-pickers';
+-import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
++import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+-import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
++import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 
  interface MyComponentProps {
 -  valueType: FieldValueType;
@@ -379,7 +466,7 @@ Renames `FieldValueType` to `PickerValueType`.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
+npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

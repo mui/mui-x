@@ -33,7 +33,7 @@ export default function ExcelExportWithWebWorker() {
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10000,
+    rowLength: 50_000,
     editable: true,
   });
 
@@ -50,6 +50,7 @@ export default function ExcelExportWithWebWorker() {
         rowHeight={38}
         checkboxSelection
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         onExcelExportStateChange={(newState) =>
           setInProgress(newState === 'pending')
         }

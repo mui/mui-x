@@ -7,8 +7,8 @@ import { useSelector } from '../internals/store/useSelector';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
-import { useLineSeries } from '../hooks/useSeries';
 import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
@@ -47,7 +47,7 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 

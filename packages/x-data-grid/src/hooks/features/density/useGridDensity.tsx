@@ -32,7 +32,7 @@ export const useGridDensity = (
   });
 
   const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
-    const currentDensity = gridDensitySelector(apiRef.current.state);
+    const currentDensity = gridDensitySelector(apiRef);
     if (currentDensity === newDensity) {
       return;
     }
@@ -53,7 +53,7 @@ export const useGridDensity = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const exportedDensity = gridDensitySelector(apiRef.current.state);
+      const exportedDensity = gridDensitySelector(apiRef);
 
       const shouldExportRowCount =
         // Always export if the `exportOnlyDirtyModels` property is not activated
@@ -79,7 +79,7 @@ export const useGridDensity = (
     (params, context) => {
       const restoredDensity = context.stateToRestore?.density
         ? context.stateToRestore.density
-        : gridDensitySelector(apiRef.current.state);
+        : gridDensitySelector(apiRef);
       apiRef.current.setState((state) => ({
         ...state,
         density: restoredDensity,

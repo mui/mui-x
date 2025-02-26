@@ -21,6 +21,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -42,7 +43,7 @@ export interface PieChartProps
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
    */
-  series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
+  series: Readonly<MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[]>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -99,7 +100,7 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = defaultizeMargin(marginProps, defaultMargin);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
@@ -196,14 +197,18 @@ PieChart.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The callback fired when the highlighted item changes.
    *

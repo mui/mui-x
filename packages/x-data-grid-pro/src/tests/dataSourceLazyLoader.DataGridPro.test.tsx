@@ -76,8 +76,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         <DataGridPro
           apiRef={apiRef}
           columns={mockServer.columns}
-          unstable_dataSource={dataSource}
-          unstable_lazyLoading
+          dataSource={dataSource}
+          lazyLoading
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           disableVirtualization
           {...props}
@@ -105,8 +105,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
 
     setProps({
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+      sortModel: [{ field: 'id', sort: 'asc' }],
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
 
     await waitFor(() => {
@@ -141,7 +141,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
     });
 
-    it('should keep the scroll position when sorting is applied', async () => {
+    it('should reset the scroll position when sorting is applied', async () => {
       render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -169,7 +169,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const afterSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(afterSortSearchParams.get('end')).to.equal(beforeSortSearchParams.get('end'));
+      expect(afterSortSearchParams.get('end')).to.equal('9');
     });
 
     it('should reset the scroll position when filter is applied', async () => {

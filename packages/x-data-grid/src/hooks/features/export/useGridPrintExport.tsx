@@ -137,7 +137,7 @@ export const useGridPrintExport = (
         return;
       }
 
-      const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+      const rowsMeta = gridRowsMetaSelector(apiRef);
 
       const gridRootElement = apiRef.current.rootElementRef.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;

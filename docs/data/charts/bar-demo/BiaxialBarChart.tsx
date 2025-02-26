@@ -17,7 +17,6 @@ const xLabels = [
 export default function BiaxialBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         {
@@ -36,8 +35,7 @@ export default function BiaxialBarChart() {
         },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
-      yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId' }]}
-      rightAxis="rightAxisId"
+      yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId', position: 'right' }]}
     />
   );
 }

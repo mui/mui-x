@@ -2,6 +2,19 @@ import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
+export default function ScatterDataset() {
+  return (
+    <ScatterChart
+      dataset={dataset}
+      series={[
+        { datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' },
+        { datasetKeys: { id: 'version', x: 'b1', y: 'b2' }, label: 'Series B' },
+      ]}
+      {...chartSetting}
+    />
+  );
+}
+
 const dataset = [
   {
     version: 'data-0',
@@ -86,20 +99,6 @@ const chartSetting = {
       transform: 'translate(-20px, 0)',
     },
   },
-  width: 500,
   height: 300,
-  margin: { left: 60 },
+  margin: { left: 40 },
 };
-
-export default function ScatterDataset() {
-  return (
-    <ScatterChart
-      dataset={dataset}
-      series={[
-        { datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' },
-        { datasetKeys: { id: 'version', x: 'b1', y: 'b2' }, label: 'Series B' },
-      ]}
-      {...chartSetting}
-    />
-  );
-}

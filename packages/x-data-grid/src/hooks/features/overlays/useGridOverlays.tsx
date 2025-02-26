@@ -8,6 +8,7 @@ import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
 import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
 import type { GridOverlayType } from '../../../components/base/GridOverlays';
+import { gridVisibleColumnDefinitionsSelector } from '..';
 
 /**
  * Uses the grid state to determine which overlay to display.
@@ -20,14 +21,20 @@ export const useGridOverlays = () => {
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const noRows = totalRowCount === 0 && pinnedRowsCount === 0;
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && noRows;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
+  const showNoColumnsOverlay = !loading && visibleColumns.length === 0;
 
   let overlayType: GridOverlayType = null;
   let loadingOverlayVariant: GridLoadingOverlayVariant | null = null;
+
+  if (showNoColumnsOverlay) {
+    overlayType = 'noColumnsOverlay';
+  }
 
   if (showNoRowsOverlay) {
     overlayType = 'noRowsOverlay';

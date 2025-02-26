@@ -36,7 +36,14 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
       // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: () => '',
+      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
+        // TODO: Use ampm prop?
+        const ampm = utils.is12HourCycleInCurrentLocale();
+        const formattedValue = utils.isValid(value[0])
+          ? utils.format(value[0], ampm ? 'fullTime12h' : 'fullTime24h')
+          : null;
+        return localeText.openTimePickerDialogue(formattedValue);
+      },
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
   );

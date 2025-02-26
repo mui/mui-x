@@ -48,7 +48,7 @@ export default function ExpandingStep() {
           select
           label="curve"
           value={curve}
-          sx={{ minWidth: 200, mb: 2 }}
+          sx={{ minWidth: 100, mb: 2 }}
           onChange={(event) => setCurve(event.target.value)}
         >
           {stepCurves.map((curveType) => (
@@ -86,7 +86,7 @@ export default function ExpandingStep() {
           },
         ]}
         height={200}
-        margin={{ top: 10, bottom: 20 }}
+        margin={{ top: 10, bottom: 10 }}
         skipAnimation
       >
         <ChartsAxisHighlight x="band" />

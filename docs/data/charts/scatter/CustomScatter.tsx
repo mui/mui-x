@@ -23,14 +23,14 @@ const series = [
 ];
 
 function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) {
-  const scatter = useScatterSeries();
+  const scatter = useScatterSeries(seriesId);
   const xScale = useXScale();
   const yScale = useYScale();
 
-  if (!scatter || !scatter.series[seriesId]) {
+  if (!scatter) {
     return null;
   }
-  const { color, data } = scatter.series[seriesId];
+  const { color, data } = scatter;
 
   if (!data) {
     return null;
@@ -50,7 +50,7 @@ function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) 
 
 export default function CustomScatter() {
   return (
-    <ScatterChart series={series} width={500} height={300}>
+    <ScatterChart series={series} height={300}>
       <LinkPoints seriesId="s1" />
       <LinkPoints seriesId="s2" close />
     </ScatterChart>

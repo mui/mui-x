@@ -76,6 +76,7 @@ export default function CsvGetRowsToExport() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,

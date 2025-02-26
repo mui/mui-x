@@ -6,6 +6,8 @@ const isISGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Engar raðir',
   noResultsOverlayLabel: 'Engar niðurstöður',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Þéttleiki',

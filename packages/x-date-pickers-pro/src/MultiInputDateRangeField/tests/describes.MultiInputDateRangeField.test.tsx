@@ -24,6 +24,7 @@ describe('<MultiInputDateRangeField />', () => {
     render,
     clock,
     componentFamily: 'field',
+    fieldType: 'multi-input',
     views: ['year', 'month', 'day'],
     setValue: (value, { setEndDate } = {}) => {
       setValueOnFieldInput(adapterToUse.format(value, 'keyboardDate'), setEndDate ? 1 : 0);

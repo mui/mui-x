@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
+import { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
-  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>
+  Omit<AutocompleteProps<string, true, false, true>, 'options'>
 > & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
@@ -14,8 +14,9 @@ export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
   const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
 
-  const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
+  const [options, setOptions] = React.useState<string[]>([]);
+  const [filterValueState, setFilterValueState] = React.useState(item.value || []);
 
   const rootProps = useGridRootProps();
 
@@ -42,49 +43,37 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     [applyValue, item, type],
   );
 
+  const handleInputChange = React.useCallback(
+    (event: React.SyntheticEvent, value: string) => {
+      if (value === '') {
+        setOptions([]);
+      } else {
+        setOptions([value]);
+      }
+    },
+    [setOptions],
+  );
+
+  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+    AutocompleteProps<string, true, false, true>
+  >;
+
   return (
-    <Autocomplete<string, true, false, true>
+    <BaseAutocomplete
       multiple
       freeSolo
-      options={[]}
-      filterOptions={(options, params) => {
-        const { inputValue } = params;
-        return inputValue == null || inputValue === '' ? [] : [inputValue];
-      }}
+      options={options}
       id={id}
       value={filterValueState}
-      onChange={handleChange as any}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
-          const { key, ...tagProps } = getTagProps({ index });
-          return (
-            <rootProps.slots.baseChip
-              key={key}
-              variant="outlined"
-              size="small"
-              label={option}
-              {...tagProps}
-            />
-          );
-        })
-      }
-      renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
-        return (
-          <rootProps.slots.baseTextField
-            {...rest}
-            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-            inputRef={focusElementRef}
-            type={type || 'text'}
-            slotProps={{
-              input: InputProps,
-              inputLabel: InputLabelProps,
-              htmlInput: inputProps,
-            }}
-            {...rootProps.slotProps?.baseTextField}
-          />
-        );
+      onChange={handleChange}
+      onInputChange={handleInputChange}
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+      slotProps={{
+        textField: {
+          type: type || 'text',
+          inputRef: focusElementRef,
+        },
       }}
       {...slotProps?.root}
     />

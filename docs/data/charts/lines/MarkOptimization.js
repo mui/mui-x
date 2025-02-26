@@ -11,7 +11,6 @@ export default function MarkOptimization() {
           showMark: ({ index }) => index % 2 === 0,
         },
       ]}
-      width={500}
       height={300}
     />
   );

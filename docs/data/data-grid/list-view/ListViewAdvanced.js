@@ -276,6 +276,7 @@ export default function ListViewAdvanced(props) {
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
               showQuickFilter: true,

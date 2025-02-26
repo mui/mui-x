@@ -150,11 +150,6 @@ module.exports = {
         ),
       },
     ],
-    // TODO remove rule from here once it's merged in `@mui/monorepo/.eslintrc`
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: '^_' },
-    ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
@@ -304,6 +299,12 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/x-telemetry/**/*{.tsx,.ts,.js}'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
@@ -316,6 +317,7 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+    ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
 
     ...addReactCompilerRule(chartsPackages, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
     ...addReactCompilerRule(dataGridPackages, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),

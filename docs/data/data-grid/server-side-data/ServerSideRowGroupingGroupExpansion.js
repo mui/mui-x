@@ -50,7 +50,7 @@ export default function ServerSideRowGroupingGroupExpansion() {
     <div style={{ width: '100%' }}>
       <Button
         onClick={() => {
-          apiRef.current?.unstable_dataSource.cache.clear();
+          apiRef.current?.dataSource.cache.clear();
         }}
       >
         Clear cache
@@ -59,7 +59,7 @@ export default function ServerSideRowGroupingGroupExpansion() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
           defaultGroupingExpansionDepth={-1}
