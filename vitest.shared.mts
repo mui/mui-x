@@ -65,7 +65,7 @@ export default defineConfig({
     ...(process.env.CI && {
       minWorkers: 1,
       maxWorkers: 2,
-      testTimeout: 30000,
+      testTimeout: 20000,
       poolOptions: {
         forks: {
           // singleFork: true,
