@@ -14,7 +14,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import Stack from '@mui/material/Stack';
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
@@ -336,7 +336,6 @@ type GitHubTreeViewProps = {
 
 export default function GitHubTreeView({ selectedItem, setSelectedItem }: GitHubTreeViewProps) {
   const currentTheme = useTheme();
-  const apiRef = useTreeViewApiRef();
 
   const customTheme = createTheme(getTheme(currentTheme.palette.mode));
 
@@ -345,7 +344,6 @@ export default function GitHubTreeView({ selectedItem, setSelectedItem }: GitHub
       <RichTreeView
         items={ITEMS}
         defaultExpandedItems={['1', '2', '3', '2.1', '2.2', '2.3', '3.1']}
-        apiRef={apiRef}
         selectedItems={selectedItem}
         onSelectedItemsChange={(_, itemId) => {
           setSelectedItem(itemId);
