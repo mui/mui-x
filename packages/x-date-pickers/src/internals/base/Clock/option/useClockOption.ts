@@ -17,6 +17,7 @@ export function useClockOption(parameters: useClockOption.Parameters) {
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'option',
+        // TODO: Add aria-disabled / aria-readonly
         'aria-selected': ctx.isSelected,
         children: utils.formatByString(value, ctx.format),
         disabled: ctx.isDisabled,

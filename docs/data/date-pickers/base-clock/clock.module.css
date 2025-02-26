@@ -32,12 +32,12 @@
   padding: 0;
   min-height: 32px;
 
-  &[data-selected] {
-    background-color: var(--option-selected-bg-color);
-  }
-
   &:hover {
     background-color: var(--option-hover-bg-color);
+  }
+
+  &[data-selected] {
+    background-color: var(--option-selected-bg-color);
   }
 
   &:focus-visible {
