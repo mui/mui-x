@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import {
-  DataGridPremium,
-  DataGridPremiumProps,
-  GridColDef,
-  GridPivotModel,
-  unstable_useGridPivoting,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, DataGridPremiumProps, GridColDef } from '@mui/x-data-grid-premium';
 import { getRowValues } from 'test/utils/helperFn';
 import useTimeout from '@mui/utils/useTimeout';
 
@@ -127,41 +120,17 @@ const COLUMNS: GridColDef[] = [
 describe('<DataGridPremium /> - Pivoting', () => {
   const { render } = createRenderer();
 
-  function Test(
-    props: {
-      initialPivotModel: GridPivotModel;
-      initialIsPivotMode?: boolean;
-    } & Partial<DataGridPremiumProps>,
-  ) {
-    const apiRef = useGridApiRef();
-
-    const { initialPivotModel, initialIsPivotMode, ...other } = props;
-
-    const [pivotModel, setPivotModel] = React.useState<GridPivotModel>(initialPivotModel);
-
-    const [isPivotMode, setIsPivotMode] = React.useState(initialIsPivotMode ?? false);
-
-    const pivotParams = unstable_useGridPivoting({
-      apiRef,
-      pivotModel,
-      onPivotModelChange: setPivotModel,
-      pivotMode: isPivotMode,
-      onPivotModeChange: setIsPivotMode,
-    });
-
+  function Test(props: Partial<DataGridPremiumProps>) {
     return (
-      <div style={{ width: '100%' }}>
-        <div style={{ height: 600, width: '100%' }}>
-          <DataGridPremium
-            rows={ROWS}
-            columns={COLUMNS}
-            apiRef={apiRef}
-            showToolbar
-            pivotParams={pivotParams}
-            cellSelection
-            {...other}
-          />
-        </div>
+      <div style={{ height: 600, width: '100%' }}>
+        <DataGridPremium
+          rows={ROWS}
+          columns={COLUMNS}
+          showToolbar
+          cellSelection
+          {...props}
+          experimentalFeatures={{ pivoting: true }}
+        />
       </div>
     );
   }
@@ -169,10 +138,14 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it('should pivot the data without pivot columns', async () => {
     const { user } = render(
       <Test
-        initialPivotModel={{
-          rows: [{ field: 'ticker' }],
-          columns: [],
-          values: [{ field: 'volume', aggFunc: 'sum' }],
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
         }}
       />,
     );
@@ -201,13 +174,17 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it('should pivot the data with 2 pivot values', async () => {
     const { user } = render(
       <Test
-        initialPivotModel={{
-          rows: [{ field: 'ticker' }],
-          columns: [],
-          values: [
-            { field: 'volume', aggFunc: 'sum' },
-            { field: 'price', aggFunc: 'avg' },
-          ],
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [
+                { field: 'volume', aggFunc: 'sum' },
+                { field: 'price', aggFunc: 'avg' },
+              ],
+            },
+          },
         }}
       />,
     );
@@ -236,13 +213,17 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it('should pivot the data with a pivot column and 2 pivot values', async () => {
     const { user } = render(
       <Test
-        initialPivotModel={{
-          rows: [{ field: 'ticker' }],
-          columns: [{ field: 'year' }],
-          values: [
-            { field: 'price', aggFunc: 'avg' },
-            { field: 'volume', aggFunc: 'sum' },
-          ],
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'year' }],
+              values: [
+                { field: 'price', aggFunc: 'avg' },
+                { field: 'volume', aggFunc: 'sum' },
+              ],
+            },
+          },
         }}
       />,
     );
@@ -271,14 +252,18 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it('should render in pivot mode when mounted with pivoting enabled', async () => {
     render(
       <Test
-        initialIsPivotMode
-        initialPivotModel={{
-          rows: [{ field: 'ticker' }],
-          columns: [{ field: 'year' }],
-          values: [
-            { field: 'price', aggFunc: 'avg' },
-            { field: 'volume', aggFunc: 'sum' },
-          ],
+        initialState={{
+          pivoting: {
+            mode: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'year' }],
+              values: [
+                { field: 'price', aggFunc: 'avg' },
+                { field: 'volume', aggFunc: 'sum' },
+              ],
+            },
+          },
         }}
       />,
     );
@@ -308,14 +293,18 @@ describe('<DataGridPremium /> - Pivoting', () => {
         <Test
           loading={loading}
           rows={rows}
-          initialIsPivotMode
-          initialPivotModel={{
-            rows: [{ field: 'ticker' }],
-            columns: [{ field: 'year' }],
-            values: [
-              { field: 'price', aggFunc: 'avg' },
-              { field: 'volume', aggFunc: 'sum' },
-            ],
+          initialState={{
+            pivoting: {
+              mode: true,
+              model: {
+                rows: [{ field: 'ticker' }],
+                columns: [{ field: 'year' }],
+                values: [
+                  { field: 'price', aggFunc: 'avg' },
+                  { field: 'volume', aggFunc: 'sum' },
+                ],
+              },
+            },
           }}
         />
       );
