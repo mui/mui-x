@@ -52,6 +52,7 @@ export namespace useScrollableList {
   export interface Parameters {
     /**
      * If `true`, the first tabbable children inside this component will be focused on mount.
+     * Warning: If several components are rendered at the same time with focusOnMount={true}, the result might be unpredictable.
      * @default false
      */
     focusOnMount?: boolean;
