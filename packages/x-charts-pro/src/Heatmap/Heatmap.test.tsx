@@ -23,4 +23,10 @@ describe('<Heatmap /> - License', () => {
 
     expect(await screen.findAllByText('MUI X Missing license key')).not.to.equal(null);
   });
+
+  it('should render "No data to display" when axes are empty arrays', () => {
+    render(<Heatmap series={[]} width={100} height={100} xAxis={[]} yAxis={[]} />);
+
+    expect(screen.getByText('No data to display')).toBeVisible();
+  });
 });

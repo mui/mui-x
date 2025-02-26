@@ -22,6 +22,7 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
+import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -129,7 +130,14 @@ const Heatmap = React.forwardRef(function Heatmap(
   const clipPathId = `${id}-clip-path`;
 
   const defaultizedXAxis = React.useMemo(
-    () => xAxis.map((axis) => ({ scaleType: 'band' as const, categoryGapRatio: 0, ...axis })),
+    () =>
+      (xAxis && xAxis.length > 0 ? xAxis : [{}]).map((axis) => ({
+        id: DEFAULT_X_AXIS_KEY,
+        scaleType: 'band' as const,
+        categoryGapRatio: 0,
+        data: [],
+        ...axis,
+      })),
     [xAxis],
   );
 
