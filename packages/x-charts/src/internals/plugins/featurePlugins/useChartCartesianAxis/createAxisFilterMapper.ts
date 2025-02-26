@@ -1,9 +1,8 @@
-import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import { isDefined } from '../../../isDefined';
-import { AxisId } from '../../../../models/axis';
+import { AxisId, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../../../models/axis';
 import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
-import { AxisConfig, ScaleName } from '../../../../models';
+import { AxisConfig } from '../../../../models';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
@@ -18,15 +17,34 @@ type CreateAxisFilterMapperParams = {
   direction: 'x' | 'y';
 };
 
-export const createAxisFilterMapper =
-  ({
-    zoomMap,
-    zoomOptions,
-    seriesConfig,
-    formattedSeries,
-    direction,
-  }: CreateAxisFilterMapperParams) =>
-  (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ExtremumFilter | null => {
+export function createAxisFilterMapper(params: {
+  zoomMap: Map<AxisId, ZoomData>;
+  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
+  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
+  formattedSeries: ProcessedSeries;
+  direction: 'x';
+}): (
+  axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
+  axisIndex: number,
+) => ExtremumFilter | null;
+export function createAxisFilterMapper(params: {
+  zoomMap: Map<AxisId, ZoomData>;
+  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
+  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
+  formattedSeries: ProcessedSeries;
+  direction: 'y';
+}): (
+  axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
+  axisIndex: number,
+) => ExtremumFilter | null;
+export function createAxisFilterMapper({
+  zoomMap,
+  zoomOptions,
+  seriesConfig,
+  formattedSeries,
+  direction,
+}: CreateAxisFilterMapperParams) {
+  return (axis: AxisConfig, axisIndex: number): ExtremumFilter | null => {
     const zoomOption = zoomOptions[axis.id];
     if (!zoomOption || zoomOption.filterMode !== 'discard') {
       return null;
@@ -77,6 +95,7 @@ export const createAxisFilterMapper =
       return val >= minVal && val <= maxVal;
     };
   };
+}
 
 export const createGetAxisFilters =
   (filters: ZoomAxisFilters): GetZoomAxisFilters =>

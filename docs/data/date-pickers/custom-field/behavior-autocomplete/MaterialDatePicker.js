@@ -13,7 +13,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 function AutocompleteField(props) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const { timezone, value, setValue } = usePickerContext();
-  const { focused, options = [], ...other } = forwardedProps;
+  const { options = [], ...other } = forwardedProps;
   const pickerContext = usePickerContext();
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
@@ -43,6 +43,7 @@ function AutocompleteField(props) {
           <TextField
             {...params}
             error={hasValidationError}
+            focused={pickerContext.open}
             label={pickerContext.label}
             name={pickerContext.name}
             InputProps={{

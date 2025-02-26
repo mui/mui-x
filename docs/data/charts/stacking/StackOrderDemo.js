@@ -104,9 +104,8 @@ export default function StackOrderDemo() {
           </MenuItem>
         ))}
       </TextField>
-      <Box sx={{ overflow: 'auto', py: 2 }}>
+      <Box sx={{ py: 2 }}>
         <BarChart
-          width={700}
           height={300}
           xAxis={[
             {
@@ -119,11 +118,11 @@ export default function StackOrderDemo() {
               labelStyle: {
                 transform: 'translateY(15px)',
               },
+              height: 50,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}
           series={modifiedSeries}
-          margin={{ bottom: 70 }}
         />
       </Box>
     </Box>

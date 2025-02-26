@@ -10,6 +10,7 @@ import type {
   ScaleThreshold,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
+import { MakeRequired } from '@mui/x-internals/types';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -133,18 +134,60 @@ export interface ChartsAxisProps extends TickParams {
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
-  /**
-   * Position of the axis.
-   */
-  position?: 'left' | 'right';
+  axis?: 'y';
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
+  axis?: 'x';
   /**
-   * Position of the axis.
+   * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
+   * @default 4
    */
-  position?: 'top' | 'bottom';
+  tickLabelMinGap?: number;
 }
+
+type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
+  ? {
+      /**
+       * Position of the axis.
+       *
+       * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+       *
+       * Set to 'none' to hide the axis.
+       *
+       * The first axis in the list will always have a default position.
+       */
+      position?: 'top' | 'bottom' | 'none';
+      /**
+       * The height of the axis.
+       * @default 30
+       */
+      height?: number;
+    }
+  : AxisProps extends ChartsYAxisProps
+    ? {
+        /**
+         * Position of the axis.
+         *
+         * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+         *
+         * Set to 'none' to hide the axis.
+         *
+         * The first axis in the list will always have a default position.
+         */
+        position?: 'left' | 'right' | 'none';
+        /**
+         * The width of the axis.
+         * @default 30
+         */
+        width?: number;
+      }
+    : {
+        position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
+        height?: number;
+        width?: number;
+      };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   /**
@@ -296,7 +339,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
 > = {
   /**
    * Id used to identify the axis.
@@ -339,6 +382,13 @@ export type AxisConfig<
    */
   reverse?: boolean;
   /**
+   * The offset of the axis in pixels. It can be used to move the axis from its default position.
+   * X-axis: A top axis will move up, and a bottom axis will move down.
+   * Y-axis: A left axis will move left, and a right axis will move right.
+   * @default 0
+   */
+  offset?: number;
+  /**
    * Defines the axis scale domain based on the min/max values of series linked to it.
    * - 'nice': Rounds the domain at human friendly values.
    * - 'strict': Set the domain to the min/max value provided. No extras space is added.
@@ -347,6 +397,7 @@ export type AxisConfig<
   domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
 } & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisSideConfig<AxisProps> &
   TickParams &
   AxisConfigExtension;
 
@@ -355,9 +406,10 @@ export interface AxisConfigExtension {}
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = MakeRequired<Omit<AxisConfig<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
+  AxisSideConfig<AxisProps> &
   AxisScaleComputedConfig[S] & {
     /**
      * An indication of the expected number of ticks.

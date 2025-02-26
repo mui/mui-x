@@ -65,7 +65,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
       <DataGridPremium
         apiRef={apiRef}
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         initialState={initialStateUpdated}
         aggregationFunctions={aggregationFunctions}
       />

@@ -2,14 +2,14 @@
   xAxis={[
     {
       ...xAxisCommon,
-      id: 'bottomAxis',
       scaleType: 'point',
       tickInterval: (time) => time.getHours() === 0,
+      position: 'bottom',
     },
     {
       ...xAxisCommon,
-      id: 'topAxis',
       scaleType: 'point',
+      position: 'top',
     },
   ]}
   {...config}

@@ -321,6 +321,7 @@
   { "name": "UseTimeManagerParameters", "kind": "Interface" },
   { "name": "UseTimeManagerReturnValue", "kind": "TypeAlias" },
   { "name": "useValidation", "kind": "Function" },
+  { "name": "UseValidationReturnValue", "kind": "Interface" },
   { "name": "validateDate", "kind": "Variable" },
   { "name": "ValidateDateProps", "kind": "Interface" },
   { "name": "validateDateTime", "kind": "Variable" },

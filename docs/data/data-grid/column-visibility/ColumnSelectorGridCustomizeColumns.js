@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridToolbar,
   useKeepGroupedColumnsHidden,
   useGridApiRef,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
@@ -41,9 +40,7 @@ export default function ColumnSelectorGridCustomizeColumns() {
         apiRef={apiRef}
         {...data}
         initialState={initialState}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        showToolbar
         slotProps={{
           columnsManagement: {
             getTogglableColumns,

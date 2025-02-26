@@ -10,4 +10,4 @@ export type { ValidateDateTimeProps } from './validateDateTime';
 export { extractValidationProps } from './extractValidationProps';
 
 export { useValidation } from './useValidation';
-export type { Validator } from './useValidation';
+export type { Validator, UseValidationReturnValue } from './useValidation';

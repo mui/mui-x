@@ -129,6 +129,7 @@ export default function ListView() {
         slots={{
           toolbar: Toolbar,
         }}
+        showToolbar
         slotProps={{
           toolbar: {
             view,

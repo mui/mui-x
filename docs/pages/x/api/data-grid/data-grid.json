@@ -29,6 +29,12 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "dataSource": {
+      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "density": {
       "type": {
         "name": "enum",
@@ -287,6 +293,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
+      }
+    },
     "onDensityChange": {
       "type": { "name": "func" },
       "signature": {
@@ -442,8 +455,8 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+        "name": "shape",
+        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSpacingType": {
@@ -454,6 +467,7 @@
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sortingMode": {
@@ -476,19 +490,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    },
-    "unstable_dataSource": {
-      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
-    },
-    "unstable_dataSourceCache": {
-      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
-    },
-    "unstable_onDataSourceError": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(error: Error, params: GridGetRowsParams) => void",
-        "describedArgs": ["error", "params"]
-      }
     },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
@@ -563,7 +564,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered inside the Header component.",
-      "default": "null",
+      "default": "GridToolbar",
       "class": null
     },
     {
@@ -675,12 +676,6 @@
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -720,12 +715,6 @@
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
-      "class": null
-    },
-    {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
       "class": null
     },
     {
@@ -1319,6 +1308,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGrid-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGrid-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1334,6 +1329,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGrid-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGrid-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {
