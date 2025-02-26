@@ -101,6 +101,20 @@ const defaultColorMap = interpolateRgbBasis([
 
 const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
 
+function getDefaultDataForAxis(series: HeatmapProps['series'], dimension: number) {
+  if (series?.[0]?.data === undefined || series[0].data.length === 0) {
+    return [];
+  }
+
+  const uniqueValues = new Set();
+
+  series[0].data.forEach((dataPoint) => uniqueValues.add(dataPoint[dimension]));
+
+  return Array.from(uniqueValues.values());
+}
+const getDefaultDataForXAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 0);
+const getDefaultDataForYAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 1);
+
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
   ref: React.Ref<SVGSVGElement>,
@@ -135,13 +149,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'band' as const,
         categoryGapRatio: 0,
-        data:
-          series?.[0]?.data && series[0].data.length > 0
-            ? Array.from(
-                { length: Math.max(...series[0].data.map(([xIndex]) => xIndex)) },
-                (_, index) => index + 1,
-              )
-            : [],
+        data: axis.data ? undefined : getDefaultDataForXAxis(series),
         ...axis,
       })),
     [series, xAxis],
@@ -152,13 +160,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       (yAxis && yAxis.length > 0 ? yAxis : [{}]).map((axis) => ({
         scaleType: 'band' as const,
         categoryGapRatio: 0,
-        data:
-          series?.[0]?.data && series[0].data.length > 0
-            ? Array.from(
-                { length: Math.max(...series[0].data.map(([_, yIndex]) => yIndex)) },
-                (_, index) => index + 1,
-              )
-            : [],
+        data: axis.data ? undefined : getDefaultDataForYAxis(series),
         ...axis,
       })),
     [series, yAxis],

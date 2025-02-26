@@ -208,6 +208,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsYAxisTickLabel"
                 text={formattedValue.toString()}
                 {...axisTickLabelProps}
               />
