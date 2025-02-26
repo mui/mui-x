@@ -1,15 +1,18 @@
-import * as React from 'react'
+import * as React from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemContent, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeItem,UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
+import {
+  useTreeItem,
+  UseTreeItemContentSlotOwnProps,
+} from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 interface CustomContentProps extends UseTreeItemContentSlotOwnProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
   toggleItemDisabled: () => void;
   disabled: boolean;
 }
@@ -21,21 +24,22 @@ function CustomContent({
   ...props
 }: CustomContentProps) {
   return (
-    
-    <TreeItemContent
-      {...props}
-    >
+    <TreeItemContent {...props}>
       {children}
-   
-        <IconButton
-          size="small"
-          onClick={(event)=>{
-            event?.stopPropagation()
-            toggleItemDisabled()}}
-        >
-          {disabled ? <LockOutlinedIcon fontSize='small' /> : <LockOpenOutlinedIcon fontSize='small'/>}
-        </IconButton>
-      
+
+      <IconButton
+        size="small"
+        onClick={(event) => {
+          event?.stopPropagation();
+          toggleItemDisabled();
+        }}
+      >
+        {disabled ? (
+          <LockOutlinedIcon fontSize="small" />
+        ) : (
+          <LockOpenOutlinedIcon fontSize="small" />
+        )}
+      </IconButton>
     </TreeItemContent>
   );
 }
@@ -46,7 +50,8 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 ) {
   const { publicAPI, status } = useTreeItem(props);
 
-  const toggleItemDisabled = ()=> publicAPI.toggleDisabledItem(props.itemId, !status.disabled);
+  const toggleItemDisabled = () =>
+    publicAPI.toggleDisabledItem(props.itemId, !status.disabled);
 
   return (
     <TreeItem
@@ -56,7 +61,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         content: CustomContent,
       }}
       slotProps={{
-        content: { toggleItemDisabled, disabled:status.disabled } as CustomContentProps,
+        content: {
+          toggleItemDisabled,
+          disabled: status.disabled,
+        } as CustomContentProps,
       }}
     />
   );
@@ -71,5 +79,5 @@ export default function DisableTreeItemPublicAPI() {
         slots={{ item: CustomTreeItem }}
       />
     </Box>
-  )
+  );
 }

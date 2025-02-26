@@ -44,7 +44,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
         content: CustomContent,
       }}
       slotProps={{
-        content: { toggleItemDisabled, disabled: status.disabled },
+        content: {
+          toggleItemDisabled,
+          disabled: status.disabled,
+        },
       }}
     />
   );
