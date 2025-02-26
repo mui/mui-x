@@ -24,10 +24,6 @@ packageName: '@mui/x-date-pickers'
 </Clock.Root>
 ```
 
-## Single column layout
-
-{{"demo": "SingleColumnDemo.js", "defaultCodeOpen": false}}
-
 ## Multi column layout
 
 ### Hours without meridiem
@@ -39,6 +35,10 @@ packageName: '@mui/x-date-pickers'
 WIP
 
 {{"demo": "HourWithMeridiemMinuteSecondDemo.js", "defaultCodeOpen": false}}
+
+## Single column layout
+
+{{"demo": "SingleColumnDemo.js", "defaultCodeOpen": false}}
 
 ## Custom step
 
