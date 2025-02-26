@@ -2,8 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import { useChartPolarAxis } from './useChartPolarAxis';
 
 describe('useChartPolarAxis', () => {
   const { render } = createRenderer();
@@ -22,14 +24,15 @@ describe('useChartPolarAxis', () => {
 
     expect(() =>
       render(
-        <BarChart
-          xAxis={[
+        <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
+          rotationAxis={[
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
           ]}
-          series={[{ data: [1, 2, 3] }]}
+          series={[{ type: 'radar', data: [1, 2, 3] }]}
           height={100}
           width={100}
+          plugins={[useChartPolarAxis]}
         />,
       ),
     ).toErrorDev(expectedError);
@@ -38,7 +41,7 @@ describe('useChartPolarAxis', () => {
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
   testSkipIf(!isJSDOM)(
-    'should throw an error when axis have duplicate ids across different directions (x,y)',
+    'should throw an error when axis have duplicate ids across different directions (radius, rotation)',
     () => {
       const expectedError = [
         'MUI X: The following axis ids are duplicated: qwerty.',
@@ -47,12 +50,13 @@ describe('useChartPolarAxis', () => {
 
       expect(() =>
         render(
-          <BarChart
-            xAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
-            yAxis={[{ id: 'qwerty' }]}
-            series={[{ data: [1, 2, 3] }]}
+          <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
+            rotationAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
+            radiusAxis={[{ id: 'qwerty' }]}
+            series={[{ type: 'radar', data: [1, 2, 3] }]}
             height={100}
             width={100}
+            plugins={[useChartPolarAxis]}
           />,
         ),
       ).toErrorDev(expectedError);
