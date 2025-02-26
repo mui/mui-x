@@ -19,9 +19,9 @@ With the pivoting feature, users would be able to turn a column into a row, tran
 
 ## Simple examples
 
-<!-- {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}} -->
+{{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
 
-<!-- {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}} -->
+{{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Commodities
 

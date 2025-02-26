@@ -1,7 +1,13 @@
 <DataGridPremium
   rows={initialRows}
   columns={initialColumns}
-  pivotParams={pivotParams}
-  apiRef={apiRef}
   columnGroupHeaderHeight={36}
+  initialState={{
+    pivoting: {
+      model: pivotModel,
+      panelOpen: true,
+    },
+  }}
+  showToolbar
+  experimentalFeatures={{ pivoting: true }}
 />
