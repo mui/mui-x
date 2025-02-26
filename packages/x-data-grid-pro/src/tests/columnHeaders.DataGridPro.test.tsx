@@ -235,8 +235,8 @@ describe('<DataGridPro /> - Column headers', () => {
       },
     );
 
-    // Flaky on JSDOM
-    testSkipIf(isJSDOM)(
+    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
+    testSkipIf(!isJSDOM)(
       'should close the menu of a column when pressing the Escape key',
       async () => {
         const { user } = render(
@@ -247,13 +247,7 @@ describe('<DataGridPro /> - Column headers', () => {
 
         await user.click(await screen.findByLabelText('Menu'));
 
-        await screen.findByRole(
-          'menu',
-          {},
-          {
-            timeout: 1000,
-          },
-        );
+        await screen.findByRole('menu');
 
         await user.keyboard('[Escape]');
         await waitFor(() => {
@@ -262,8 +256,8 @@ describe('<DataGridPro /> - Column headers', () => {
       },
     );
 
-    // Flaky on JSDOM
-    testSkipIf(isJSDOM)(
+    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
+    testSkipIf(!isJSDOM)(
       'should restore focus to the column header when dismissing the menu by selecting any item',
       async () => {
         function Test(props: Partial<DataGridProProps>) {
@@ -294,8 +288,8 @@ describe('<DataGridPro /> - Column headers', () => {
       },
     );
 
-    // Flaky on JSDOM
-    testSkipIf(isJSDOM)(
+    // Flaky on Browser. It seems that the tests affect each other. Issue only appears when CI=true
+    testSkipIf(!isJSDOM)(
       'should restore focus to the column header when dismissing the menu without selecting any item',
       async () => {
         function Test(props: Partial<DataGridProProps>) {
