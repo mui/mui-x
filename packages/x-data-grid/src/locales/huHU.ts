@@ -6,8 +6,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nincsenek sorok',
   noResultsOverlayLabel: 'Nincs találat.',
-  noColumnsOverlayLabel: 'Nincsenek oszlopok',
-  noColumnsOverlayManageColumns: 'Oszlopok kezelése',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
@@ -103,7 +101,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
   'headerFilterOperator<': 'Kisebb mint',
   'headerFilterOperator<=': 'Kisebb vagy egyenlő',
-  headerFilterClear: 'Szűrő ürítése',
 
   // Filter values text
   filterValueAny: 'bármilyen',
