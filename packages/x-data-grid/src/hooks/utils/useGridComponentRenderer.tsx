@@ -2,13 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 
-export type ComponentRenderFn<Props, State> = (
-  props: Props,
-  state: State,
-) => React.ReactElement<unknown>;
-
 export type RenderProp<Props, State = {}> =
-  | ComponentRenderFn<Props, State>
+  | ((props: Props, state: State) => React.ReactElement<unknown>)
   | React.ReactElement<Props>;
 
 /**

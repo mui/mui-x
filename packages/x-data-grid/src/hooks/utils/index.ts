@@ -10,4 +10,4 @@ export * from './useGridNativeEventListener';
 export * from './useFirstRender';
 export * from './useOnMount';
 export * from './useRunOnce';
-export { RenderProp, ComponentRenderFn } from './useGridComponentRenderer';
+export type { RenderProp } from './useGridComponentRenderer';
