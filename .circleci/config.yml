@@ -192,7 +192,7 @@ jobs:
             fi
   test_unit:
     <<: *default-job
-    resource_class: medium+
+    resource_class: medium
     parameters:
       <<: *default-parameters
       package:
@@ -223,7 +223,7 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.50.1-noble
-    resource_class: medium+
+    resource_class: medium
     parameters:
       <<: *default-parameters
       package:
