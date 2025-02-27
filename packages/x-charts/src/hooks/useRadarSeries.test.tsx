@@ -32,7 +32,7 @@ const options: any = {
 };
 
 describe('useRadarSeriesContext', () => {
-  it('should return all line series when no seriesIds are provided', () => {
+  it('should return all radar series when no seriesIds are provided', () => {
     const { result } = renderHook(() => useRadarSeriesContext(), options);
     expect(result.current?.seriesOrder).to.deep.equal(['1', '2']);
     expect(Object.keys(result.current?.series ?? {})).to.deep.equal(['1', '2']);
@@ -41,17 +41,17 @@ describe('useRadarSeriesContext', () => {
 
 // eslint-disable-next-line mocha/max-top-level-suites
 describe('useRadarSeries', () => {
-  it('should return the specific line series when a single seriesId is provided', () => {
+  it('should return the specific radar series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useRadarSeries('1'), options);
     expect(result.current?.id).to.deep.equal(mockSeries[0].id);
   });
 
-  it('should return all line series when no seriesId is provided', () => {
+  it('should return all radar series when no seriesId is provided', () => {
     const { result } = renderHook(() => useRadarSeries(), options);
     expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, mockSeries[1].id]);
   });
 
-  it('should return the specific line series when multiple seriesIds are provided', () => {
+  it('should return the specific radar series when multiple seriesIds are provided', () => {
     const { result } = renderHook(() => useRadarSeries(['2', '1']), options);
     expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[1].id, mockSeries[0].id]);
   });
@@ -59,7 +59,7 @@ describe('useRadarSeries', () => {
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
       `MUI X: The following ids provided to "useRadarSeries" could not be found: "3".`,
-      `Make sure that they exist and their series are using the "line" series type.`,
+      `Make sure that they exist and their series are using the "radar" series type.`,
     ].join('\n');
 
     expect(() => renderHook(() => useRadarSeries(['1', '3']), options)).toWarnDev(message);
