@@ -515,7 +515,6 @@
   { "name": "gridSortedRowIdsSelector", "kind": "Variable" },
   { "name": "GridSortingInitialState", "kind": "Interface" },
   { "name": "GridSortingState", "kind": "Interface" },
-  { "name": "GridSortItem", "kind": "Interface" },
   { "name": "GridSortModel", "kind": "TypeAlias" },
   { "name": "gridSortModelSelector", "kind": "Variable" },
   { "name": "GridState", "kind": "TypeAlias" },

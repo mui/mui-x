@@ -199,6 +199,7 @@ You have to import it from `@mui/x-license` instead:
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
+- `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
 - The `showToolbar` prop is now required to display the toolbar.
 
@@ -337,7 +338,3 @@ You have to import it from `@mui/x-license` instead:
 <!-- ### Editing
 
 TBD
-
-### Changes to slots
-
-TBD -->

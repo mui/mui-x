@@ -23,4 +23,55 @@ describe('<Heatmap /> - License', () => {
 
     expect(await screen.findAllByText('MUI X Missing license key')).not.to.equal(null);
   });
+
+  it('should render "No data to display" when axes are empty arrays', () => {
+    render(<Heatmap series={[]} width={100} height={100} xAxis={[]} yAxis={[]} />);
+
+    expect(screen.getByText('No data to display')).toBeVisible();
+  });
+
+  describe('axis defaults', () => {
+    const series = [
+      {
+        data: [
+          [0, 3, 7],
+          [1, 5, 8],
+        ],
+      },
+    ] as const;
+
+    it('should render default axes when axes are empty arrays and series contain data', () => {
+      render(<Heatmap series={series} width={100} height={100} xAxis={[]} yAxis={[]} />);
+
+      const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
+      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);
+
+      const yAxisTickLabels = screen.getAllByTestId('ChartsYAxisTickLabel');
+      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+      ]);
+    });
+
+    it('should render default axes when axes are an array of an empty object and series contain data', () => {
+      render(<Heatmap series={series} width={100} height={100} xAxis={[{}]} yAxis={[{}]} />);
+
+      const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
+      expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);
+
+      const yAxisTickLabels = screen.getAllByTestId('ChartsYAxisTickLabel');
+      expect(yAxisTickLabels.map((t) => t.textContent)).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+      ]);
+    });
+  });
 });

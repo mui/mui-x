@@ -187,7 +187,6 @@ export type PopperProps = {
   clickAwayMouseEvent?: false | ClickAwayMouseEventHandler;
   flip?: boolean;
   focusTrap?: boolean;
-  focusTrapEnabled?: boolean;
   onExited?: (node: HTMLElement | null) => void;
   onClickAway?: (event: MouseEvent | TouchEvent) => void;
   onDidShow?: () => void;
