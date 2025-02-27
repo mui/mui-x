@@ -5,6 +5,7 @@ import { PickerValidDate } from '../../../../models';
 import { useClockOption } from './useClockOption';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { useClockOptionListContext } from '../utils/ClockOptionListContext';
+import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
 
 export function useClockOptionWrapper(
   parameters: useClockOptionWrapper.Parameters,
@@ -12,8 +13,8 @@ export function useClockOptionWrapper(
   const { forwardedRef, value, format } = parameters;
   const rootContext = useClockRootContext();
   const optionListContext = useClockOptionListContext();
-  const ref = React.useRef<HTMLButtonElement>(null);
-  const mergedRef = useForkRef(forwardedRef, ref);
+  const { ref: listItemRef } = useCompositeListItem();
+  const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isOptionSelected = optionListContext.isOptionSelected;
   const isSelected = React.useMemo(() => isOptionSelected(value), [isOptionSelected, value]);

@@ -5,17 +5,19 @@ import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockMinuteOptions } from './useClockMinuteOptions';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
+import { CompositeList } from '../../composite/list/CompositeList';
 
 const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
   props: ClockMinuteOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, getItems, step, focusOnMount, ...otherProps } = props;
-  const { getOptionsProps, context, scrollerRef } = useClockMinuteOptions({
+  const { className, render, children, getItems, step, focusOnMount, loop, ...otherProps } = props;
+  const { getOptionsProps, context, scrollerRef, optionsRef } = useClockMinuteOptions({
     children,
     getItems,
     step,
     focusOnMount,
+    loop,
   });
 
   const state: ClockMinuteOptions.State = React.useMemo(() => ({}), []);
@@ -32,7 +34,7 @@ const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
 
   return (
     <ClockOptionListContext.Provider value={context}>
-      {renderElement()}
+      <CompositeList elementsRef={optionsRef}>{renderElement()}</CompositeList>
     </ClockOptionListContext.Provider>
   );
 });

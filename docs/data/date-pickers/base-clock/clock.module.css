@@ -11,7 +11,7 @@
 }
 
 .Root {
-  display: flex;
+  display: inline-flex;
   border: 1px solid var(--root-border-color);
   border-radius: 8px;
   overflow: hidden;

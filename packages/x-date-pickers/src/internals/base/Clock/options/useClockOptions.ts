@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { useClockOptionList } from '../utils/useClockOptionList';
 import { useUtils } from '../../../hooks/useUtils';
 import { AmPmProps } from '../../../models/props/time';
@@ -21,7 +19,7 @@ export function useClockOptions(parameters: useClockOptions.Parameters) {
     return `${hourFormat}:${formats.minutes}`;
   }, [precision, utils, ampm]);
 
-  const { resolvedChildren, context, scrollerRef } = useClockOptionList({
+  return useClockOptionList({
     section: 'full-time',
     precision,
     children,
@@ -29,18 +27,6 @@ export function useClockOptions(parameters: useClockOptions.Parameters) {
     step,
     format,
   });
-
-  const getOptionsProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, { role: 'listbox', children: resolvedChildren });
-    },
-    [resolvedChildren],
-  );
-
-  return React.useMemo(
-    () => ({ getOptionsProps, context, scrollerRef }),
-    [getOptionsProps, context, scrollerRef],
-  );
 }
 
 export namespace useClockOptions {

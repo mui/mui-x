@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { useUtils } from '../../../hooks/useUtils';
@@ -13,13 +14,26 @@ import {
   isSameMinute,
   isSameSecond,
 } from '../../utils/future-adapter-methods';
+import { navigateInList } from './keyboardNavigation';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
 
 export function useClockOptionList(parameters: useClockOptionList.Parameters) {
-  const { children, getItems, focusOnMount, precision, section, step, format } = parameters;
+  const {
+    children,
+    getItems,
+    focusOnMount,
+    precision,
+    section,
+    step,
+    format,
+    loop = false,
+  } = parameters;
 
   const utils = useUtils();
   const rootContext = useClockRootContext();
   const { scrollerRef } = useScrollableList({ focusOnMount });
+  const optionsRef = React.useRef<(HTMLElement | null)[]>([]);
 
   const { getFirstOption, getEndOfRange } = React.useMemo<{
     getFirstOption: (referenceTime: PickerValidDate) => PickerValidDate;
@@ -170,6 +184,14 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     [rootContext.value, areOptionsEqual],
   );
 
+  const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    navigateInList({
+      options: optionsRef.current,
+      event,
+      loop,
+    });
+  });
+
   const context: ClockOptionListContext = React.useMemo(
     () => ({
       section,
@@ -181,7 +203,21 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     [isOptionSelected, canOptionBeTabbed, section, precision, format],
   );
 
-  return { resolvedChildren, context, scrollerRef };
+  const getOptionsProps = React.useCallback(
+    (externalProps: GenericHTMLProps) => {
+      return mergeReactProps(externalProps, {
+        role: 'listbox',
+        children: resolvedChildren,
+        onKeyDown,
+      });
+    },
+    [resolvedChildren, onKeyDown],
+  );
+
+  return React.useMemo(
+    () => ({ context, scrollerRef, optionsRef, getOptionsProps }),
+    [context, scrollerRef, optionsRef, getOptionsProps],
+  );
 }
 
 export namespace useClockOptionList {
@@ -197,6 +233,12 @@ export namespace useClockOptionList {
      * @returns {PickerValidDate[]} The list of items.
      */
     getItems?: (parameters: GetItemsParameters) => PickerValidDate[];
+    /**
+     * Whether to loop keyboard focus back to the first item
+     * when the end of the list is reached while using the arrow keys.
+     * @default true
+     */
+    loop?: boolean;
   }
 
   export interface Parameters extends PublicParameters {
