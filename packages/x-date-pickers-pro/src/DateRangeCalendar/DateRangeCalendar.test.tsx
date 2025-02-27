@@ -22,7 +22,7 @@ import {
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { testSkipIf } from 'test/utils/skipIf';
-import { createClock } from 'test/utils/createFakeClock';
+import { vi } from 'vitest';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -37,7 +37,16 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 
 describe('<DateRangeCalendar />', () => {
   const { render } = createPickerRenderer();
-  createClock(new Date(2018, 0, 10));
+
+  beforeEach(() => {
+    vi.useFakeTimers({
+      now: new Date(2018, 0, 10),
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   describeConformance(<DateRangeCalendar />, () => ({
     classes,

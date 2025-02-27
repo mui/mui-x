@@ -8,8 +8,8 @@ import {
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
 } from 'test/utils/pickers';
+import { vi } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
-import { createClock } from '../../createFakeClock';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
@@ -222,7 +222,15 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
-      createClock(new Date(2020, 0, 1));
+      beforeEach(() => {
+        vi.useFakeTimers({
+          now: new Date(2020, 0, 1),
+        });
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();

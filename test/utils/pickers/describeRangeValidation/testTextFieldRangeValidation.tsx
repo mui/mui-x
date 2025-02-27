@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
-import { createClock } from '../../createFakeClock';
 
 const testInvalidStatus = (
   expectedAnswer: boolean[],
@@ -190,7 +190,15 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     });
 
     describe('with fake timer', () => {
-      createClock(new Date(2018, 0, 1));
+      beforeEach(() => {
+        vi.useFakeTimers({
+          now: new Date(2018, 0, 1),
+        });
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
       it('should apply disablePast', () => {
         const onErrorMock = spy();

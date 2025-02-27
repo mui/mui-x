@@ -4,8 +4,8 @@ import { spy } from 'sinon';
 import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 import { DescribeValidationTestSuite } from './describeValidation.types';
-import { createClock } from '../../createFakeClock';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
@@ -139,7 +139,16 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     describeSkipIf(!withDate)('with fake timers', () => {
-      createClock(new Date(2018, 0, 1));
+      beforeEach(() => {
+        vi.useFakeTimers({
+          now: new Date(2018, 0, 1),
+        });
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
       it('should apply disablePast', () => {
         let now;
         function WithFakeTimer(props: any) {
