@@ -9,17 +9,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 27, 2025_
 
-We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔧 End of alpha and all its breaking changes 🎉
 - 📊 Decouple `margin` and `axis-size`. A new API that enable multiple axis (#16418) @JCQuintas
 - 🗺️ Added Bangla (bn-BD) locale
-- 🗺️ Improve Russian (ru-RU) locale on the Data Grid
+- 🗺️ Improve Russian (ru-RU) and Hungarian (hu-HU) locale on the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@lhilgert9, @officialkidmax, @denpiligrim, @pcorpet.
+@denpiligrim, @lhilgert9, @noherczeg, @officialkidmax, @pcorpet.
 Following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -88,6 +88,50 @@ Following are all team members who have contributed to this release:
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
 - The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
 - The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
+
+- The data source feature and its related props are now stable.
+
+  ```diff
+   <DataGridPro
+  -  unstable_dataSource={dataSource}
+  -  unstable_dataSourceCache={cache}
+  -  unstable_lazyLoading
+  -  unstable_lazyLoadingRequestThrottleMs={100}
+  +  dataSource={dataSource}
+  +  dataSourceCache={cache}
+  +  lazyLoading
+  +  lazyLoadingRequestThrottleMs={100}
+   />
+  ```
+
+- The data source API is now stable.
+
+  ```diff
+  - apiRef.current.unstable_dataSource.getRows()
+  + apiRef.current.dataSource.getRows()
+  ```
+
+- The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
+
+  ```diff
+   <DataGrid
+  -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
+  -    if (params.filterModel) {
+  -      // do something
+  -    }
+  -  }}
+  +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
+  +    if (error instanceof GridGetRowsError && error.params.filterModel) {
+  +      // do something
+  +    }
+  +  }}
+   />
+  ```
+
+- Fix the type of the GridSortModel to allow readonly arrays.
+
+- `GridSortItem` interface is not exported anymore.
+
 - The `showToolbar` prop is now required to display the toolbar.
 
   It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
@@ -103,21 +147,26 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.0.0-beta.0`
 
+- [DataGrid] Add `showToolbar` prop to enable default toolbar (#16687) @KenanYusuf
 - [DataGrid] Column Visibility: Update "Reset" button behavior (#16626) @MBilalShafi
 - [DataGrid] Column management design updates (#16630) @KenanYusuf
+- [DataGrid] Fix `showColumnVerticalBorder` prop (#16715) @KenanYusuf
 - [DataGrid] Fix scrollbar overlapping cells on mount (#16639) @KenanYusuf
 - [DataGrid] Fix: base Select menuprops onClose (#16643) @romgrk
-- [DataGrid] Use readonly array for GridSortModel (#16627) @pcorpet
-- [DataGrid] Replace `sx` prop usage with `styled()` components (#16665) @KenanYusuf
+- [DataGrid] Make `GridSortItem` internal (#16732) @arminmeh
+- [DataGrid] Make data source stable (#16710) @MBilalShafi
 - [DataGrid] Reshape row selection model (#15651) @cherniavskii
+- [DataGrid] Replace `sx` prop usage with `styled()` components (#16665) @KenanYusuf
 - [DataGrid] Refactor: create base Autocomplete (#16390) @romgrk
 - [DataGrid] Refactor: remove base form control (#16634) @romgrk
 - [DataGrid] Refactor: remove base input label & adornment (#16646) @romgrk
 - [DataGrid] Refactor: remove material containers (#16633) @romgrk
 - [DataGrid] Refactor: theme to CSS variables (#16588) @romgrk
-- [DataGrid] Add `showToolbar` prop to enable default toolbar (#16687) @KenanYusuf
-- [DataGrid] Fix `showColumnVerticalBorder` prop (#16726) @KenanYusuf
+- [DataGrid] Update the signature of the `onDataSourceError()` callback (#16718) @MBilalShafi
+- [DataGrid] Use readonly array for the `GridSortModel` (#16627) @pcorpet
+- [DataGrid] Fix the popper focus trap (#16736) @romgrk
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
+- [l10n] Improve Hungarian (hu-HU) locale (#16578) @noherczeg
 - [l10n] Improve Russian (ru-RU) locale (#16591) @denpiligrim
 
 #### `@mui/x-data-grid-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -200,18 +249,21 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 
 #### `@mui/x-charts@8.0.0-beta.0`
 
+- [charts] Accept component in `labelMarkType` (#16739) @bernardobelchior
 - [charts] Add `minTickLabelGap` to x-axis (#16548) @bernardobelchior
 - [charts] Add unit test for pie chart with empty series (#16663) @bernardobelchior
 - [charts] Decouple `margin` and `axis-size` (#16418) @JCQuintas
+- [charts] Display slider tooltip on demos (#16723) @JCQuintas
 - [charts] Fix default label measurement being off (#16635) @bernardobelchior
 - [charts] Fix typo in error message (#16641) @JCQuintas
 - [charts] Improve axis size docs (#16673) @JCQuintas
 - [charts] Improve performance of rendering ticks in x-axis (#16536) @bernardobelchior
 - [charts] Make `defaultizeAxis` function type-safe (#16642) @JCQuintas
 - [charts] Make `series.data` readonly (#16645) @JCQuintas
+- [charts] Migrate `ChartsUsageDemo` to TSX and removed NoSnap (#16686) @JCQuintas
+- [charts] Prevent `position='none'` axes from rendering (#16727) @JCQuintas
 - [charts] Make array inputs readonly (#16632) @JCQuintas
 - [charts] Remove state initialization hack (#16520) @alexfauquette
-- [charts] Fix scroll overflow on mobile (#16675) @oliviertassinari
 
 #### `@mui/x-charts-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -231,14 +283,20 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
 
 ### `@mui/x-codemod@8.0.0-beta.0`
 
+- [codemod] Add a few Data Grid codemods (#16711) @MBilalShafi
 - [codemod] Improve Pickers renaming codemod (#16685) @LukasTy
 
 ### Docs
 
+- [docs] Fix charts with on bar and line pages (#16712) @alexfauquette
 - [docs] Fix migration guide introduction for charts (#16679) @alexfauquette
+- [docs] Fix remaining charts demos on mobile (#16728) @alexfauquette
+- [docs] Fix scroll overflow on mobile (#16675) @oliviertassinari
+- [docs] Improve Pickers migration page (#16682) @LukasTy
+- [docs] Update small Pickers doc inconsistencies (#16724) @LukasTy
 - [code-infra] Native Node.js ESM (#16603) @Janpot
 - [test] Revert timeout increase for possibly slow tests (#16651) @LukasTy
-- [docs] Improve Pickers migration page (#16682) @LukasTy
+- [x-license] Introduce usage telemetry (#13530) @hasdfa
 
 ## 8.0.0-alpha.12
 
