@@ -131,7 +131,7 @@
     "languageTag": "hu-HU",
     "importName": "huHU",
     "localeName": "Hungarian",
-    "missingKeysCount": 7,
+    "missingKeysCount": 0,
     "totalKeysCount": 123,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/huHU.ts"
   },
