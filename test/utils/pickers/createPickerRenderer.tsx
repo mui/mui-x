@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
-import { createClock } from '../createFakeClock';
 
 interface CreatePickerRendererOptions extends Omit<CreateRendererOptions, 'clock'> {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
@@ -22,7 +21,6 @@ export function createPickerRenderer({
   const { render: clientRender } = createRenderer({
     ...createRendererOptions,
   });
-  const fakeClock = clockConfig ? createClock(clockConfig, clockOptions) : undefined;
 
   let adapterLocale = [
     'date-fns',
@@ -51,7 +49,6 @@ export function createPickerRenderer({
   }
 
   return {
-    clock: fakeClock,
     render(node: React.ReactElement<any>, options?: Omit<RenderOptions, 'wrapper'>) {
       return clientRender(node, { ...options, wrapper: Wrapper });
     },
