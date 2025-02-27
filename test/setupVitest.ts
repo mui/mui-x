@@ -1,4 +1,4 @@
-import { beforeAll, vi, afterAll } from 'vitest';
+import { beforeAll, afterAll } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
@@ -16,9 +16,6 @@ import { isJSDOM } from './utils/skipIf';
 
 // Core's setupVitest is causing issues with the test setup
 // import '@mui/internal-test-utils/setupVitest';
-
-// @ts-ignore
-globalThis.vi = vi;
 
 // Enable missing act warnings: https://github.com/reactwg/react-18/discussions/102
 (globalThis as any).jest = null;
