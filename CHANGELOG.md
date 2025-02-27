@@ -27,7 +27,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Fix `showColumnVerticalBorder` prop (#16726) @KenanYusuf
 - [DataGrid] Make server-side data navigation consistent (#16735) @MBilalShafi
-- [DataGrid] Use readonly array for GridSortModel (#16731) @pcorpet
+- [DataGrid] Use readonly array for `GridSortModel` (#16731) @pcorpet
 - [l10n] Improve Hungarian (hu-HU) locale (#16746) @noherczeg
 - [l10n] Improve Russian (ru-RU) locale (#16725) @denpiligrim
 
