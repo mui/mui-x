@@ -16,15 +16,14 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
+    const body = documentBody ?? document.body;
+
     const script = document.createElement('script');
     script.src = 'https://unpkg.com/@tailwindcss/browser@4';
-    script.onload = () => {
-      setIsLoaded(true);
-    };
-    const body = documentBody ?? document.body;
-    body.appendChild(script);
 
-    return () => {
+    let mounted = true;
+    const cleanup = () => {
+      mounted = false;
       script.remove();
 
       const head = body?.ownerDocument?.head;
@@ -41,6 +40,17 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
         }
       });
     };
+
+    script.onload = () => {
+      if (!mounted) {
+        cleanup();
+        return;
+      }
+      setIsLoaded(true);
+    };
+    body.appendChild(script);
+
+    return cleanup;
   }, [documentBody]);
 
   return isLoaded ? (
