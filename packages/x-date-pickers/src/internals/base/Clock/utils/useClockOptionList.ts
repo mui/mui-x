@@ -12,9 +12,6 @@ import {
   isSameMeridiem,
   isSameMinute,
   isSameSecond,
-  startOfHour,
-  startOfMeridiem,
-  startOfMinute,
 } from '../../utils/future-adapter-methods';
 
 export function useClockOptionList(parameters: useClockOptionList.Parameters) {
@@ -24,40 +21,46 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
   const rootContext = useClockRootContext();
   const { scrollerRef } = useScrollableList({ focusOnMount });
 
-  const { getStartOfRange, getEndOfRange } = React.useMemo<{
-    getStartOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
+  const { getFirstOption, getEndOfRange } = React.useMemo<{
+    getFirstOption: (referenceTime: PickerValidDate) => PickerValidDate;
     getEndOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
   }>(() => {
     switch (section) {
       case 'meridiem': {
         return {
-          getStartOfRange: utils.startOfDay,
+          getFirstOption: (value) => {
+            const currentHour = utils.getHours(value);
+            return currentHour > 11 ? utils.setHours(value, currentHour - 12) : value;
+          },
           getEndOfRange: utils.endOfDay,
         };
       }
       case 'hour24':
         return {
-          getStartOfRange: utils.startOfDay,
+          getFirstOption: (value) => utils.setHours(value, 0),
           getEndOfRange: utils.endOfDay,
         };
       case 'hour12':
         return {
-          getStartOfRange: (value) => startOfMeridiem(utils, value),
+          getFirstOption: (value) => utils.setHours(value, utils.getHours(value) > 11 ? 12 : 0),
           getEndOfRange: (value) => endOfMeridiem(utils, value),
         };
       case 'minute':
         return {
-          getStartOfRange: (value) => startOfHour(utils, value),
+          getFirstOption: (value) => utils.setMinutes(value, 0),
           getEndOfRange: (value) => endOfHour(utils, value),
         };
       case 'second':
         return {
-          getStartOfRange: (value) => startOfMinute(utils, value),
+          getFirstOption: (value) => utils.setSeconds(value, 0),
           getEndOfRange: (value) => endOfMinute(utils, value),
         };
       case 'full-time': {
         return {
-          getStartOfRange: utils.startOfDay,
+          getFirstOption: (value) => {
+            // TODO: Check if this is correct
+            return utils.startOfDay(value);
+          },
           getEndOfRange: utils.endOfDay,
         };
       }
@@ -99,12 +102,12 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
 
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
-      const start = getStartOfRange(rootContext.referenceDate);
-      const end = getEndOfRange(rootContext.referenceDate);
-      let current = start;
+      const firstOption = getFirstOption(rootContext.referenceDate);
+      const boundary = getEndOfRange(rootContext.referenceDate);
+      let current = firstOption;
       const tempItems: PickerValidDate[] = [];
 
-      while (!utils.isAfter(current, end)) {
+      while (!utils.isAfter(current, boundary)) {
         tempItems.push(current);
         current = getNextItem(current);
       }
@@ -124,7 +127,7 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
   }, [
     utils,
     getItems,
-    getStartOfRange,
+    getFirstOption,
     getEndOfRange,
     getNextItem,
     rootContext.referenceDate,

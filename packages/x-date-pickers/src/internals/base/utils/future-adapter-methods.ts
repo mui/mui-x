@@ -18,12 +18,12 @@ export function endOfMinute(utils: MuiPickersAdapter, value: PickerValidDate) {
 
 export function startOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate) {
   const newHour = utils.getHours(value) > 11 ? 12 : 0;
-  return startOfMinute(utils, utils.setHours(value, newHour));
+  return startOfHour(utils, utils.setHours(value, newHour));
 }
 
 export function endOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate) {
   const newHour = utils.getHours(value) > 11 ? 23 : 11;
-  return endOfMinute(utils, utils.setHours(value, newHour));
+  return endOfHour(utils, utils.setHours(value, newHour));
 }
 
 export function isSameMinute(

@@ -14,7 +14,7 @@ export function useClockHour12Options(parameters: useClockHour12Options.Paramete
     children,
     getItems,
     step: 1, // TODO: Add step prop?
-    format: utils.formats.hours24h,
+    format: utils.formats.hours12h,
   });
 
   const getOptionsProps = React.useCallback(
