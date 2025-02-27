@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import dayjs from 'dayjs';
 import NoSsr from '@mui/material/NoSsr';
 // eslint-disable-next-line no-restricted-imports
@@ -16,10 +15,7 @@ export default function SingleColumnDemo() {
           defaultValue={dayjs('2022-04-17T15:30:00')}
           className={styles.Root}
         >
-          <Clock.Options
-            precision="minute"
-            className={clsx(styles.OptionList, styles.MultiSectionOptionList)}
-          >
+          <Clock.Options precision="minute" render={<OptionList data-wide />}>
             {({ items }) =>
               items.map((item) => (
                 <Clock.Option
@@ -33,5 +29,15 @@ export default function SingleColumnDemo() {
         </Clock.Root>
       </LocalizationProvider>
     </NoSsr>
+  );
+}
+
+function OptionList(props) {
+  const { children, ...other } = props;
+
+  return (
+    <div className={styles.OptionListWrapper} {...other}>
+      <div className={styles.OptionListContent}>{children}</div>
+    </div>
   );
 }

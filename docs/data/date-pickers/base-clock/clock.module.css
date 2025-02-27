@@ -1,4 +1,5 @@
 .Root {
+  --root-border-color: #78716c;
   --option-selected-bg-color: #7dd3fc;
   --option-hover-bg-color: #e0f2fe;
   --option-focus-border-color: #0ea5e9;
@@ -11,18 +12,47 @@
 
 .Root {
   display: flex;
+  border: 1px solid var(--root-border-color);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.OptionList {
+/* https://css-tricks.com/scrollbars-on-hover/ */
+.OptionListWrapper {
+  float: left;
+
+  &[data-wide] .OptionListContent {
+    width: 128px;
+  }
+}
+
+.OptionListContent {
+  /* display: flex;
+  flex-direction: column;
+  overflow-y: auto; */
+
   display: flex;
   flex-direction: column;
   height: 300px;
-  width: 72px;
-  overflow-y: auto;
-}
+  width: 60px;
+  overflow-y: scroll;
+  mask-image:
+    linear-gradient(to top, transparent, black),
+    linear-gradient(to left, transparent 17px, black 17px);
+  mask-size: 100% 20000px;
+  mask-position: left bottom;
+  -webkit-mask-image:
+    linear-gradient(to top, transparent, black),
+    linear-gradient(to left, transparent 17px, black 17px);
+  -webkit-mask-size: 100% 20000px;
+  -webkit-mask-position: left bottom;
+  transition:
+    mask-position 0.3s,
+    -webkit-mask-position 0.3s;
 
-.MultiSectionOptionList {
-  width: 128px;
+  &:hover {
+    -webkit-mask-position: left top;
+  }
 }
 
 .Option {

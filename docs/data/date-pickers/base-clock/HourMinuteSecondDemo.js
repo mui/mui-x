@@ -13,7 +13,7 @@ export default function HourMinuteSecondDemo() {
         defaultValue={dayjs('2022-04-17T15:30:00')}
         className={styles.Root}
       >
-        <Clock.Hour24Options className={styles.OptionList}>
+        <Clock.Hour24Options render={<OptionList />}>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option
@@ -24,7 +24,7 @@ export default function HourMinuteSecondDemo() {
             ))
           }
         </Clock.Hour24Options>
-        <Clock.MinuteOptions className={styles.OptionList}>
+        <Clock.MinuteOptions render={<OptionList />}>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option
@@ -35,7 +35,7 @@ export default function HourMinuteSecondDemo() {
             ))
           }
         </Clock.MinuteOptions>
-        <Clock.SecondOptions className={styles.OptionList}>
+        <Clock.SecondOptions render={<OptionList />}>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option
@@ -48,5 +48,15 @@ export default function HourMinuteSecondDemo() {
         </Clock.SecondOptions>
       </Clock.Root>
     </LocalizationProvider>
+  );
+}
+
+function OptionList(props) {
+  const { children, ...other } = props;
+
+  return (
+    <div className={styles.OptionListWrapper} {...other}>
+      <div className={styles.OptionListContent}>{children}</div>
+    </div>
   );
 }
