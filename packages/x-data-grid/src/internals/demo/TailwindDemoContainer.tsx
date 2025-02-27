@@ -17,7 +17,7 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
 
   React.useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.tailwindcss.com';
+    script.src = 'https://unpkg.com/@tailwindcss/browser@4';
     script.onload = () => {
       setIsLoaded(true);
     };
