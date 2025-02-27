@@ -201,89 +201,81 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-    it(
-      'should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false',
-      {
-        // retry this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
-        retry: 3,
-      },
-      // @ts-expect-error mocha types are incorrect
-      async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', async () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
 
-        const { selectSection, pressKey, user } = renderWithProps(
-          {
-            enableAccessibleFieldDOMStructure: true,
-            onChange,
-            onAccept,
-            onClose,
-            defaultValue: values[0],
-            open: true,
-            closeOnSelect: false,
-          },
-          { componentFamily },
+      const { selectSection, pressKey, user } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
+
+      // Change the value
+      let newValue = await setNewValue(values[0], user, {
+        isOpened: true,
+        selectSection,
+        pressKey,
+      });
+      const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
+      expect(onChange.callCount).to.equal(initialChangeCount);
+      if (isRangeType) {
+        newValue = await setNewValue(newValue, user, {
+          isOpened: true,
+          setEndDate: true,
+          selectSection,
+          pressKey,
+        });
+        (newValue as PickerRangeValue).forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+      }
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the value
+      let newValueBis = await setNewValue(newValue, user, {
+        isOpened: true,
+        selectSection,
+        pressKey,
+      });
+      if (isRangeType) {
+        expect(onChange.callCount).to.equal(
+          initialChangeCount +
+            getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
+            (pickerParams.type === 'date-time-range' ? 1 : 0),
         );
-
-        // Change the value
-        let newValue = await setNewValue(values[0], user, {
+        newValueBis = await setNewValue(newValueBis, user, {
           isOpened: true,
+          setEndDate: true,
           selectSection,
           pressKey,
         });
-        const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
-        expect(onChange.callCount).to.equal(initialChangeCount);
-        if (isRangeType) {
-          newValue = await setNewValue(newValue, user, {
-            isOpened: true,
-            setEndDate: true,
-            selectSection,
-            pressKey,
-          });
-          (newValue as PickerRangeValue).forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
-          });
-        } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
-        }
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(0);
-
-        // Change the value
-        let newValueBis = await setNewValue(newValue, user, {
-          isOpened: true,
-          selectSection,
-          pressKey,
+        (newValueBis as PickerRangeValue).forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
-        if (isRangeType) {
-          expect(onChange.callCount).to.equal(
-            initialChangeCount +
-              getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
-              (pickerParams.type === 'date-time-range' ? 1 : 0),
-          );
-          newValueBis = await setNewValue(newValueBis, user, {
-            isOpened: true,
-            setEndDate: true,
-            selectSection,
-            pressKey,
-          });
-          (newValueBis as PickerRangeValue).forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
-          });
-        } else {
-          expect(onChange.callCount).to.equal(
-            initialChangeCount +
-              getExpectedOnChangeCount(componentFamily, pickerParams) -
-              // meridiem does not change this time in case of multi section digital clock
-              (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
-          );
-          expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
-        }
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(0);
-      },
-    );
+      } else {
+        expect(onChange.callCount).to.equal(
+          initialChangeCount +
+            getExpectedOnChangeCount(componentFamily, pickerParams) -
+            // meridiem does not change this time in case of multi section digital clock
+            (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
+        );
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
+      }
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
 
     it('should call onClose and onAccept with the live value when pressing Escape', async () => {
       const onChange = spy();
