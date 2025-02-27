@@ -105,16 +105,14 @@ export const consumeSlots = <
     }
 
     // Component can be wrapped in React.forwardRef or just a function that accepts (props, ref).
-    // If it is a plain function which accepts two arguments, we need to wrap it in React.forwardRef.
-    const OutComponent = (
-      Component.length >= 2 ? React.forwardRef(Component) : Component
-    ) as React.FunctionComponent<Props>;
+    // If it is a plain function which accepts two arguments, we don't need to pass a ref because the component doesn't expect it
+    const shouldPassRef = Component.length >= 2;
 
     if (process.env.NODE_ENV !== 'production') {
-      OutComponent.displayName = `${name}.slots.${slotPropName}`;
+      Component.displayName = `${name}.slots.${slotPropName}`;
     }
 
-    return <OutComponent {...outProps} ref={ref} />;
+    return <Component {...outProps} ref={shouldPassRef ? ref : undefined} />;
   }
 
   return React.forwardRef<Ref, Props>(ConsumeSlotsInternal);

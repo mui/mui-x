@@ -55,10 +55,7 @@ const ScatterMarker = consumeSlots(
     // Currently required to make the prop types work
     classesResolver: (_: ScatterMarkerProps & ScatterMarkerSlotExtension) => ({}),
   },
-  React.forwardRef(function ScatterMarker(
-    props: ScatterMarkerProps,
-    ref: React.Ref<SVGCircleElement>,
-  ) {
+  function ScatterMarker(props: ScatterMarkerProps) {
     const { seriesId, isFaded, isHighlighted, x, y, color, size, dataIndex, ...other } = props;
 
     return (
@@ -69,11 +66,11 @@ const ScatterMarker = consumeSlots(
         transform={`translate(${x}, ${y})`}
         fill={color}
         opacity={isFaded ? 0.3 : 1}
-        ref={ref}
+        cursor={other.onClick ? 'pointer' : 'unset'}
         {...other}
       />
     );
-  }),
+  },
 );
 
 ScatterMarker.propTypes = {
