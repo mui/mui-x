@@ -9,16 +9,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 27, 2025_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌍 Improve Hungarian (hu-HU) locale on the Data Grid
-- 🌍 Improve Russian (ru-RU) locale on the Data Grid
+- 🌍 Improve Hungarian (hu-HU) and Russian (ru-RU) locales on the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @pcorpet, @noherczeg, @denpiligrim.
 Following are all team members who have contributed to this release:
-@MBilalShafi, @arminmeh, @KenanYusuf.
+@MBilalShafi, @KenanYusuf.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
