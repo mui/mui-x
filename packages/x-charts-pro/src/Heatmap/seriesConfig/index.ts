@@ -12,5 +12,5 @@ export const seriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   tooltipGetter,
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
-  getSeriesWithDefaultValues
+  getSeriesWithDefaultValues,
 };
