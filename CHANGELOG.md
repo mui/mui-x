@@ -7,16 +7,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-beta.0
 
-_Feb 24, 2025_
+_Feb 27, 2025_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔧 End of alpha and all its breaking changes 🎉
 - 📊 Decouple `margin` and `axis-size`. A new API that enable multiple axis (#16418) @JCQuintas
 - 🗺️ Added Bangla (bn-BD) locale
+- 🗺️ Improve Russian (ru-RU) locale on the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@lhilgert9, @officialkidmax.
+@lhilgert9, @officialkidmax, @denpiligrim, @pcorpet.
 Following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
 
@@ -106,6 +107,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Column management design updates (#16630) @KenanYusuf
 - [DataGrid] Fix scrollbar overlapping cells on mount (#16639) @KenanYusuf
 - [DataGrid] Fix: base Select menuprops onClose (#16643) @romgrk
+- [DataGrid] Use readonly array for GridSortModel (#16627) @pcorpet
 - [DataGrid] Replace `sx` prop usage with `styled()` components (#16665) @KenanYusuf
 - [DataGrid] Reshape row selection model (#15651) @cherniavskii
 - [DataGrid] Refactor: create base Autocomplete (#16390) @romgrk
@@ -114,7 +116,9 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Refactor: remove material containers (#16633) @romgrk
 - [DataGrid] Refactor: theme to CSS variables (#16588) @romgrk
 - [DataGrid] Add `showToolbar` prop to enable default toolbar (#16687) @KenanYusuf
+- [DataGrid] Fix `showColumnVerticalBorder` prop (#16726) @KenanYusuf
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
+- [l10n] Improve Russian (ru-RU) locale (#16591) @denpiligrim
 
 #### `@mui/x-data-grid-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
