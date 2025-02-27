@@ -6,8 +6,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nincsenek sorok',
   noResultsOverlayLabel: 'Nincs találat.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Nincsenek oszlopok',
+  noColumnsOverlayManageColumns: 'Oszlopok kezelése',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
@@ -58,7 +58,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nincsenek oszlopok',
   columnsManagementShowHideAllText: 'Összes',
   columnsManagementReset: 'Visszavon',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Törlés',
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
@@ -74,9 +74,9 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'tartalmazza:',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'nem tartalmazza',
   filterOperatorEquals: 'egyenlő ezzel:',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nem egyenlő',
   filterOperatorStartsWith: 'ezzel kezdődik:',
   filterOperatorEndsWith: 'ezzel végződik:',
   filterOperatorIs: 'a következő:',
@@ -97,13 +97,13 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Tartalmazza:',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Nem tartalmazza',
   headerFilterOperatorEquals: 'Egyenlő ezzel:',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nem egyenlő',
   headerFilterOperatorStartsWith: 'Ezzel kezdődik:',
   headerFilterOperatorEndsWith: 'Ezzel végződik:',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
+  headerFilterOperatorIs: 'Megegyezik',
+  headerFilterOperatorNot: 'Nem egyezik meg',
   headerFilterOperatorAfter: 'Ezutáni:',
   headerFilterOperatorOnOrAfter: 'Ekkori vagy ezutáni:',
   headerFilterOperatorBefore: 'Ezelőtti:',
@@ -117,7 +117,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
   'headerFilterOperator<': 'Kisebb mint',
   'headerFilterOperator<=': 'Kisebb vagy egyenlő',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Szűrő ürítése',
 
   // Filter values text
   filterValueAny: 'bármilyen',

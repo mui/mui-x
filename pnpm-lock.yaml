@@ -1422,6 +1422,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      '@mui/x-telemetry':
+        specifier: workspace:*
+        version: link:../x-telemetry/build
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.2
@@ -1432,6 +1435,41 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+    publishDirectory: build
+
+  packages/x-telemetry:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.26.9
+        version: 7.26.9
+      '@fingerprintjs/fingerprintjs':
+        specifier: ^4.6.0
+        version: 4.6.0
+      '@mui/utils':
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+      ci-info:
+        specifier: ^4.0.0
+        version: 4.1.0
+      conf:
+        specifier: ^5.0.0
+        version: 5.0.0
+      is-docker:
+        specifier: ^2.2.1
+        version: 2.2.1
+      node-machine-id:
+        specifier: ^1.1.12
+        version: 1.1.12
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^2.0.2
+        version: 2.0.2(@babel/core@7.26.9)(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@types/device-uuid':
+        specifier: ^1.0.3
+        version: 1.0.3
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -2926,6 +2964,9 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
+  '@fingerprintjs/fingerprintjs@4.6.0':
+    resolution: {integrity: sha512-g2z4lF2saGxVT+AQSmJhPSwW/hBn8vnFJMW6UYOMl9ipJT7re0RZbr2+lB2eCZj/lJ89wWc21FMA14v9iOKroQ==}
+
   '@floating-ui/core@1.6.8':
     resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
 
@@ -4183,6 +4224,9 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
+  '@types/device-uuid@1.0.3':
+    resolution: {integrity: sha512-z1FXOPDVE85XSjOFtTYXPm4Hyvi1ByjkndfdwU3cBNYGKfYhL4WN6qwYfvMSUNz8j7QGeO+mLJYMfgiyRywzhg==}
+
   '@types/doctrine@0.0.9':
     resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
 
@@ -5343,6 +5387,10 @@ packages:
     resolution: {integrity: sha512-H9MWcoPsYddwbOGM6difjVwVZHl63nwMEwDJG/L7VGtuaJhb12h2caPG2tVPWs7emuYix252iGfqOyrz1GczTQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  conf@5.0.0:
+    resolution: {integrity: sha512-lRNyt+iRD4plYaOSVTxu1zPWpaH0EOxgFIR1l3mpC/DGZ7XzhoGFMKmbl54LAgXcSu6knqWgOwdINkqm58N85A==}
+    engines: {node: '>=8'}
 
   confusing-browser-globals@1.0.11:
     resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
@@ -7356,6 +7404,9 @@ packages:
 
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
+
+  json-schema-typed@7.0.3:
+    resolution: {integrity: sha512-7DE8mpG+/fVw+dTpjbxnx47TaMnDfOI1jwft9g1VybltZCduyRQPJPvc+zzKY9WPHxhPWczyFuYa6I8Mw4iU5A==}
 
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -11883,6 +11934,10 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
+  '@fingerprintjs/fingerprintjs@4.6.0':
+    dependencies:
+      tslib: 2.8.1
+
   '@floating-ui/core@1.6.8':
     dependencies:
       '@floating-ui/utils': 0.2.8
@@ -13372,6 +13427,8 @@ snapshots:
     dependencies:
       '@types/ms': 0.7.34
 
+  '@types/device-uuid@1.0.3': {}
+
   '@types/doctrine@0.0.9': {}
 
   '@types/eslint-scope@3.7.7':
@@ -14735,6 +14792,16 @@ snapshots:
       supports-color: 8.1.1
       tree-kill: 1.2.2
       yargs: 17.7.2
+
+  conf@5.0.0:
+    dependencies:
+      ajv: 6.12.6
+      dot-prop: 5.3.0
+      env-paths: 2.2.1
+      json-schema-typed: 7.0.3
+      make-dir: 3.1.0
+      pkg-up: 3.1.0
+      write-file-atomic: 3.0.3
 
   confusing-browser-globals@1.0.11: {}
 
@@ -17137,6 +17204,8 @@ snapshots:
   json-schema-traverse@0.4.1: {}
 
   json-schema-traverse@1.0.0: {}
+
+  json-schema-typed@7.0.3: {}
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 
