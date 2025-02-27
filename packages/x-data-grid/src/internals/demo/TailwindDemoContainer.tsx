@@ -21,11 +21,26 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
     script.onload = () => {
       setIsLoaded(true);
     };
-    if (documentBody) {
-      documentBody.appendChild(script);
-    } else {
-      document.body.appendChild(script);
-    }
+    const body = documentBody ?? document.body;
+    body.appendChild(script);
+
+    return () => {
+      script.remove();
+
+      const head = body?.ownerDocument?.head;
+      if (!head) {
+        return;
+      }
+
+      const styles = head.querySelectorAll('style:not([data-emotion])');
+      styles.forEach((style) => {
+        const styleText = style.textContent?.substring(0, 100);
+        const isTailwindStylesheet = styleText?.includes('tailwind');
+        if (isTailwindStylesheet) {
+          style.remove();
+        }
+      });
+    };
   }, [documentBody]);
 
   return isLoaded ? (
