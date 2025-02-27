@@ -171,4 +171,10 @@ describe('<ScatterChart />', () => {
     const labelY = await screen.findByText('600');
     expect(labelY).toBeVisible();
   });
+
+  it('should render "No data to display" when axes are empty arrays', () => {
+    render(<ScatterChart series={[]} width={100} height={100} xAxis={[]} yAxis={[]} />);
+
+    expect(screen.getByText('No data to display')).toBeVisible();
+  });
 });

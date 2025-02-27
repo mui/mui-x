@@ -30,7 +30,7 @@ export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
 export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
   const { type } = props;
   const slots = {
-    root: ['root', type],
+    root: typeof type === 'function' ? ['root'] : ['root', type],
     mask: ['mask'],
     fill: ['fill'],
   };
