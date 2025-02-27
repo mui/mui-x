@@ -7,6 +7,7 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridFilterModel } from '../../models';
+import { isDeepEqual } from '../../utils/utils';
 
 export type QuickFilterProps = {
   children: React.ReactNode;
@@ -58,8 +59,24 @@ function QuickFilter(props: QuickFilterProps) {
   const apiRef = useGridApiContext();
   const controlRef = React.useRef<HTMLInputElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const initialValue = useGridSelector(apiRef, gridQuickFilterValuesSelector);
-  const [value, setValue] = React.useState(formatter(initialValue ?? []));
+  const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
+  const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
+
+  const prevQuickFilterValuesRef = React.useRef(quickFilterValues);
+
+  React.useEffect(() => {
+    if (!isDeepEqual(prevQuickFilterValuesRef.current, quickFilterValues)) {
+      // The model of quick filter value has been updated
+      prevQuickFilterValuesRef.current = quickFilterValues;
+
+      // Update the input value if needed to match the new model
+      setValue((prevSearchValue) =>
+        isDeepEqual(parser(prevSearchValue), quickFilterValues)
+          ? prevSearchValue
+          : formatter(quickFilterValues ?? []),
+      );
+    }
+  }, [quickFilterValues, formatter, parser]);
 
   const setQuickFilterValueDebounced = React.useMemo(
     () =>
@@ -68,6 +85,7 @@ function QuickFilter(props: QuickFilterProps) {
       }, debounceMs),
     [apiRef, debounceMs, parser],
   );
+  React.useEffect(() => setQuickFilterValueDebounced.clear, [setQuickFilterValueDebounced]);
 
   const handleValueChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
