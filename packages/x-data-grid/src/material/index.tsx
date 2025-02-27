@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
@@ -24,6 +25,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
+import MUIPagination from '@mui/material/TablePagination';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -153,6 +155,30 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   );
 });
 
+const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
+  function BasePagination(props, ref) {
+    const { onRowsPerPageChange, disabled, ...rest } = props;
+    const computedProps = React.useMemo(() => {
+      return {
+        backIconButtonProps: { disabled: true },
+        nextIconButtonProps: { disabled: true },
+      };
+    }, [disabled]);
+
+    return (
+      <MUIPagination
+        onRowsPerPageChange={useEventCallback(
+          (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+            onRowsPerPageChange?.(Number(event.target.value));
+          },
+        )}
+        {...computedProps}
+        {...rest}
+      />
+    );
+  },
+);
+
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
@@ -208,6 +234,7 @@ const baseSlots: GridBaseSlots = {
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseTooltip: MUITooltip,
+  basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,

@@ -179,6 +179,26 @@ type ClickAwayMouseEventHandler =
   | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
+export type PaginationProps = {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  rowsPerPageOptions?: readonly (number | { value: number; label: string })[];
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => void;
+  onRowsPerPageChange?: (rowsPerPage: number) => void;
+
+  disabled?: boolean;
+
+  getItemAriaLabel?: (type: 'first' | 'last' | 'next' | 'previous') => string;
+  labelRowsPerPage?: string;
+  labelDisplayedRows?: (info: {
+    from: number;
+    to: number;
+    count: number;
+    page: number;
+  }) => React.ReactNode | undefined;
+};
+
 export type PopperProps = {
   open: boolean;
   children?: React.ReactNode;

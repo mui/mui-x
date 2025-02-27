@@ -38,6 +38,7 @@ import type {
   LinearProgressProps,
   MenuListProps,
   MenuItemProps,
+  PaginationProps,
   PopperProps,
   SelectProps,
   SelectOptionProps,
@@ -65,6 +66,7 @@ export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
+export interface BasePaginationPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
@@ -107,6 +109,7 @@ interface BaseSlotProps {
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
+  basePagination: PaginationProps & BasePaginationPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInput: InputProps & BaseInputPropsOverrides;
