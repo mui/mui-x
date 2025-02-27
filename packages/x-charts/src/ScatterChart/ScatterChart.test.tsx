@@ -76,16 +76,19 @@ describe('<ScatterChart />', () => {
       { target: svg, coords: { clientX: 10, clientY: 10 } },
     ]);
 
-    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    let cells: NodeListOf<HTMLElement> = [] as any;
+    await waitFor(() => {
+      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    });
 
     await user.pointer([
       // Set tooltip position voronoi value
       { target: svg, coords: { clientX: 40, clientY: 60 } },
     ]);
 
-    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
     await waitFor(() => {
+      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
     });
   });
@@ -109,15 +112,18 @@ describe('<ScatterChart />', () => {
       { target: marks[0] },
     ]);
 
-    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    let cells: NodeListOf<HTMLElement> = [] as any;
+    await waitFor(() => {
+      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    });
 
     await user.pointer([
       // Only to set the tooltip position
       { target: marks[4] },
     ]);
-    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
     await waitFor(() => {
+      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
     });
   });
