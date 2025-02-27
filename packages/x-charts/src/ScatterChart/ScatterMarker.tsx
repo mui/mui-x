@@ -45,7 +45,8 @@ export interface ScatterMarkerProps {
 }
 
 /**
- * TODO: Document
+ * The marker that is rendered for each data point in the scatter chart.
+ * By default, it is a circle.
  */
 const ScatterMarker = consumeSlots(
   'MuiScatterMarker',
