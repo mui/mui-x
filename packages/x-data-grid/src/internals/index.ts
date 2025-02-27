@@ -154,6 +154,7 @@ export {
   useGridListView,
   listViewStateInitializer,
 } from '../hooks/features/listView/useGridListView';
+export { useGridComponentRenderer } from '../hooks/utils/useGridComponentRenderer';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';

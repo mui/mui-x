@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useGridComponentRenderer, RenderProp, GridSlotProps } from '@mui/x-data-grid';
+import { GridSlotProps, RenderProp } from '@mui/x-data-grid';
+import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
