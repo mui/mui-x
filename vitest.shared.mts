@@ -66,7 +66,7 @@ export default defineConfig({
       minWorkers: 1,
       maxWorkers: 2,
       testTimeout: 30000,
-      pool: 'vmThreads',
+      pool: 'threads',
       poolOptions: {
         forks: {
           // singleFork: true,
