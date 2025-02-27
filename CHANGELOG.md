@@ -264,6 +264,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 - [charts] Prevent `position='none'` axes from rendering (#16727) @JCQuintas
 - [charts] Make array inputs readonly (#16632) @JCQuintas
 - [charts] Remove state initialization hack (#16520) @alexfauquette
+- [charts] Remove redundant default axis (#16734) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
