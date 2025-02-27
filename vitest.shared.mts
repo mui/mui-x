@@ -55,23 +55,24 @@ export default defineConfig({
     // Required for some tests that contain early returns.
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
-    // Disable isolation to speed up the tests.
-    isolate: false,
     browser: {
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
     },
+    // Disable isolation to speed up the tests.
+    isolate: false,
+    fileParallelism: false,
     ...(process.env.CI && {
       minWorkers: 1,
       maxWorkers: 2,
       testTimeout: 50000,
       poolOptions: {
         forks: {
-          // singleFork: true,
+          singleFork: true,
         },
         threads: {
-          // singleThread: true,
+          singleThread: true,
         },
       },
     }),
