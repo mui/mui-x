@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
-import { vi } from 'vitest';
+import { useFakeTimers } from 'sinon';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
@@ -101,14 +101,17 @@ describe('findClosestEnabledDate', () => {
   });
 
   describe('fake clock', () => {
+    let clock: ReturnType<typeof useFakeTimers> | null = null;
+
     beforeEach(() => {
-      vi.useFakeTimers({
+      clock = useFakeTimers({
         now: new Date('2000-01-02'),
       });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      clock?.restore();
+      clock = null;
     });
 
     it('should return now with given time part if disablePast and now is valid', () => {
@@ -175,14 +178,17 @@ describe('findClosestEnabledDate', () => {
   });
 
   describe('fake clock hours', () => {
+    let clock: ReturnType<typeof useFakeTimers> | null = null;
+
     beforeEach(() => {
-      vi.useFakeTimers({
+      clock = useFakeTimers({
         now: new Date('2000-01-01T11:12:13.123Z'),
       });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      clock?.restore();
+      clock = null;
     });
 
     it('should keep the time of the `date` when `disablePast`', () => {

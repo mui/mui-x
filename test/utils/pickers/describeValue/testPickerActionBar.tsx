@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -8,7 +8,6 @@ import {
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
 } from 'test/utils/pickers';
-import { vi } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
@@ -222,14 +221,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
+      let clock: ReturnType<typeof useFakeTimers> | null = null;
+
       beforeEach(() => {
-        vi.useFakeTimers({
+        clock = useFakeTimers({
           now: new Date(2020, 0, 1),
         });
       });
 
       afterEach(() => {
-        vi.useRealTimers();
+        clock?.restore();
+        clock = null;
       });
 
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {

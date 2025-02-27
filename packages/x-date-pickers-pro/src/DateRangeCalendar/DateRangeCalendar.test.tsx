@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import {
   screen,
@@ -22,7 +22,6 @@ import {
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { testSkipIf } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -38,14 +37,17 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 describe('<DateRangeCalendar />', () => {
   const { render } = createPickerRenderer();
 
+  let clock: ReturnType<typeof useFakeTimers> | null = null;
+
   beforeEach(() => {
-    vi.useFakeTimers({
+    clock = useFakeTimers({
       now: new Date(2018, 0, 10),
     });
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    clock?.restore();
+    clock = null;
   });
 
   describeConformance(<DateRangeCalendar />, () => ({

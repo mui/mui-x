@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -190,14 +189,16 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     });
 
     describe('with fake timer', () => {
+      let clock: ReturnType<typeof useFakeTimers> | null = null;
       beforeEach(() => {
-        vi.useFakeTimers({
+        clock = useFakeTimers({
           now: new Date(2018, 0, 1),
         });
       });
 
       afterEach(() => {
-        vi.useRealTimers();
+        clock?.restore();
+        clock = null;
       });
 
       it('should apply disablePast', () => {
