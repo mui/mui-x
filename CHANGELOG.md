@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.27.2
+
+<!-- generated comparing v7.27.1..v7.x -->
+
+_Feb 27, 2025_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Hungarian (hu-HU) locale on the Data Grid
+- 🌍 Improve Russian (ru-RU) locale on the Data Grid
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@pcorpet, @noherczeg, @denpiligrim.
+Following are all team members who have contributed to this release:
+@MBilalShafi, @arminmeh, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.27.2`
+
+- [DataGrid] Fix `showColumnVerticalBorder` prop (#16726) @KenanYusuf
+- [DataGrid] Make server-side data navigation consistent (#16735) @MBilalShafi
+- [DataGrid] Use readonly array for GridSortModel (#16731) @pcorpet
+- [l10n] Improve Hungarian (hu-HU) locale (#16746) @noherczeg
+- [l10n] Improve Russian (ru-RU) locale (#16725) @denpiligrim
+
+#### `@mui/x-data-grid-pro@v7.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.27.2`.
+
+#### `@mui/x-data-grid-premium@v7.27.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.27.2`.
+
 ## 7.27.1
 
 _Feb 25, 2025_
