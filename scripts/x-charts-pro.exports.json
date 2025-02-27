@@ -87,6 +87,7 @@
   { "name": "ChartsItemTooltipContent", "kind": "Function" },
   { "name": "ChartsItemTooltipContentProps", "kind": "Interface" },
   { "name": "ChartsLabelClasses", "kind": "Interface" },
+  { "name": "ChartsLabelCustomMarkProps", "kind": "Interface" },
   { "name": "ChartsLabelGradientClasses", "kind": "Interface" },
   { "name": "ChartsLabelMarkClasses", "kind": "Interface" },
   { "name": "ChartsLabelMarkProps", "kind": "Interface" },
