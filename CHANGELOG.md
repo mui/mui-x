@@ -5,13 +5,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.0.0-beta.0
+## 8.0.0-alpha.13
 
 _Feb 27, 2025_
 
 We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔧 End of alpha and all its breaking changes 🎉
 - 📊 Decouple `margin` and `axis-size`. A new API to support multiple axes (#16418) @JCQuintas
 - 🗺️ Added Bangla (bn-BD) locale
 - 🗺️ Improve Russian (ru-RU) and Hungarian (hu-HU) locale on the Data Grid
@@ -145,7 +144,7 @@ Following are all team members who have contributed to this release:
    />
   ```
 
-#### `@mui/x-data-grid@8.0.0-beta.0`
+#### `@mui/x-data-grid@8.0.0-alpha.13`
 
 - [DataGrid] Add `showToolbar` prop to enable default toolbar (#16687) @KenanYusuf
 - [DataGrid] Column Visibility: Update "Reset" button behavior (#16626) @MBilalShafi
@@ -169,15 +168,15 @@ Following are all team members who have contributed to this release:
 - [l10n] Improve Hungarian (hu-HU) locale (#16578) @noherczeg
 - [l10n] Improve Russian (ru-RU) locale (#16591) @denpiligrim
 
-#### `@mui/x-data-grid-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.0.0-alpha.13` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.0.0-beta.0`, plus:
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.13`, plus:
 
 - [DataGridPro] Remove `LicenseInfo` reexports (#16671) @cherniavskii
 
-#### `@mui/x-data-grid-premium@8.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.0.0-alpha.13` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.13`, plus:
 
 - [DataGridPremium] Use `valueGetter` to get row group keys (#16016) @cherniavskii
 
@@ -187,7 +186,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 
 - The `<DateRangePicker />` now uses a `dialog` instead of a `tooltip` to render their view when used with a single input range field.
 
-#### `@mui/x-date-pickers@8.0.0-beta.0`
+#### `@mui/x-date-pickers@8.0.0-alpha.13`
 
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
 - [pickers] Clean the typing of the slots on the range pickers (#16670) @flaviendelangle
@@ -195,9 +194,9 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 - [pickers] Make the single input field the default field on range pickers (#16656) @flaviendelangle
 - [pickers] Move the opening logic to the range fields (#16175) @flaviendelangle
 
-#### `@mui/x-date-pickers-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.13` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.13`.
 
 ### Charts
 
@@ -247,7 +246,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 
 - Add `minTickLabelGap` to x-axis, which allows users to define the minimum gap, in pixels, between two tick labels. The default value is 4px. Make sure to check your charts as the spacing between tick labels might have changed.
 
-#### `@mui/x-charts@8.0.0-beta.0`
+#### `@mui/x-charts@8.0.0-alpha.13`
 
 - [charts] Accept component in `labelMarkType` (#16739) @bernardobelchior
 - [charts] Add `minTickLabelGap` to x-axis (#16548) @bernardobelchior
@@ -266,23 +265,23 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 - [charts] Remove state initialization hack (#16520) @alexfauquette
 - [charts] Remove redundant default axis (#16734) @bernardobelchior
 
-#### `@mui/x-charts-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.0.0-alpha.13` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.0.0-beta.0`, plus:
+Same changes as in `@mui/x-charts@8.0.0-alpha.13`, plus:
 
 - [charts-pro] Add back zoom control (#16550) @alexfauquette
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.0.0-beta.0`
+#### `@mui/x-tree-view@8.0.0-alpha.13`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.0.0-alpha.13` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.13`.
 
-### `@mui/x-codemod@8.0.0-beta.0`
+### `@mui/x-codemod@8.0.0-alpha.13`
 
 - [codemod] Add a few Data Grid codemods (#16711) @MBilalShafi
 - [codemod] Improve Pickers renaming codemod (#16685) @LukasTy
