@@ -23,6 +23,7 @@ const config = {
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
   beforeEach(() => {
     if (window?.document?.body?.style) {
       window.document.body.style.margin = '0';
