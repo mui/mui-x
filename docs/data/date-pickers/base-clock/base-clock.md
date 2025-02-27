@@ -12,15 +12,21 @@ packageName: '@mui/x-date-pickers'
 
 ```tsx
 <Clock.Root>
-  <Clock.HourOptions>
+  <Clock.Hour12Options>
     {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.HourOptions>
+  </Clock.Hour12Options>
+  <Clock.Hour24Options>
+    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
+  </Clock.Hour24Options>
   <Clock.MinuteOptions>
     {({ options }) => options.map((option) => <Clock.Option value={option} />)}
   </Clock.MinuteOptions>
   <Clock.SecondOptions>
     {({ options }) => options.map((option) => <Clock.Option value={option} />)}
   </Clock.SecondOptions>
+  <Clock.MeridiemOptions>
+    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
+  </Clock.MeridiemOptions>
 </Clock.Root>
 ```
 
