@@ -22,7 +22,7 @@ function Button(props: React.HTMLAttributes<HTMLButtonElement>) {
       type="button"
       {...props}
       className={clsx(
-        'flex h-9 items-center justify-center rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-2.5 text-sm font-bold text-neutral-700 dark:text-neutral-200 whitespace-nowrap select-none hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-600 active:bg-neutral-100 dark:active:bg-neutral-700',
+        'flex h-9 items-center justify-center rounded border border-neutral-200 cursor-pointer dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-2.5 text-sm font-bold text-neutral-700 dark:text-neutral-200 whitespace-nowrap select-none hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-600 active:bg-neutral-100 dark:active:bg-neutral-700',
         props.className,
       )}
     />
@@ -43,7 +43,7 @@ function TextInput(props: React.HTMLAttributes<HTMLInputElement>) {
 
 function CustomToolbar() {
   return (
-    <Toolbar className="flex gap-2 p-2 border-b border-neutral-200 dark:border-neutral-700">
+    <Toolbar className="gap-2! p-2!">
       <ColumnsPanelTrigger
         render={<ToolbarButton render={<Button>Columns</Button>} />}
       />
@@ -62,7 +62,7 @@ function CustomToolbar() {
           <QuickFilterClear
             render={
               <Button aria-label="Clear" className="rounded-l-none">
-                <CancelIcon className="text-xl" />
+                <CancelIcon fontSize="small" />
               </Button>
             }
           />
