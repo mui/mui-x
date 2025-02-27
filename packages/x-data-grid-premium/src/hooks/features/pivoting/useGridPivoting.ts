@@ -353,8 +353,6 @@ export const useGridPivoting = (
     ({ enabled, model: pivotModel }: Pick<GridPivotingState, 'enabled' | 'model'>) => {
       if (isMounted && !isLoading && enabled && pivotModel) {
         // if (apiRef.current && (prevProps.isPivot === false || !nonPivotDataRef.current)) {
-        // eslint-disable-next-line no-constant-condition
-
         const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: [] };
 
         return {
