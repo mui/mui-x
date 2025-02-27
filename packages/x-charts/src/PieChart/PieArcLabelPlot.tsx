@@ -206,7 +206,10 @@ PieArcLabelPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
