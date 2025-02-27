@@ -12,11 +12,11 @@ _Feb 27, 2025_
 We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔧 End of alpha and all its breaking changes 🎉
-- 📊 Decouple `margin` and `axis-size`. A new API that enable multiple axis (#16418) @JCQuintas
+- 📊 Decouple `margin` and `axis-size`. A new API to support multiple axes (#16418) @JCQuintas
 - 🗺️ Added Bangla (bn-BD) locale
 - 🗺️ Improve Russian (ru-RU) and Hungarian (hu-HU) locale on the Data Grid
 
-Special thanks go out to the community contributors who have helped make this release possible:
+Special thanks go out to the community members for their contributions:
 @denpiligrim, @lhilgert9, @noherczeg, @officialkidmax, @pcorpet.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
@@ -29,7 +29,7 @@ Following are all team members who have contributed to this release:
 
 - The `slots.baseFormControl` component was removed.
 
-- The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
+- The "Reset" button in the column visibility panel now resets to the initial column visibility model. Previously it was reset to the model that was active at the time the panel was opened. The reset behavior follows these rules:
 
   1. If an initial `columnVisibilityModel` is provided, it resets to that model.
   2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
@@ -128,7 +128,7 @@ Following are all team members who have contributed to this release:
    />
   ```
 
-- Fix the type of the GridSortModel to allow readonly arrays.
+- Fix the type of the `GridSortModel` to allow readonly arrays.
 
 - `GridSortItem` interface is not exported anymore.
 
