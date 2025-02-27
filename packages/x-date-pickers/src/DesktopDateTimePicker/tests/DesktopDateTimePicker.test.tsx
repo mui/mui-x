@@ -6,7 +6,7 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {

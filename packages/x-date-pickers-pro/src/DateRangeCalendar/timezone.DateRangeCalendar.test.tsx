@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
 import { DateRangeCalendar } from './DateRangeCalendar';
@@ -8,7 +8,7 @@ import { DateRangeCalendar } from './DateRangeCalendar';
 describe('<DateRangeCalendar /> - Timezone', () => {
   describeAdapters('Timezone prop', DateRangeCalendar, ({ adapter, render }) => {
     describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
-      it('should correctly render month days when timezone changes', () => {
+      it('should correctly render month days when timezone changes', async () => {
         function DateCalendarWithControlledTimezone() {
           const [timezone, setTimezone] = React.useState('Europe/Paris');
           return (

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   adapterToUse,
@@ -12,7 +12,7 @@ import {
 import { hasTouchSupport, testSkipIf } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   it('should render date and time by default', () => {
     render(
@@ -83,13 +83,13 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
       const defaultValue = adapterToUse.date('2018-01-01');
 
-      render(
+      const { user } = render(
         <MobileDateTimePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -105,16 +105,14 @@ describe('<MobileDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the year view
-      fireEvent.click(screen.getByLabelText(/switch to year view/));
-      fireEvent.click(screen.getByText('2010', { selector: 'button' }));
+      await user.click(screen.getByLabelText(/switch to year view/));
+      await user.click(screen.getByText('2010', { selector: 'button' }));
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
-      clock.runToLast();
-
       // Change the date
-      fireEvent.click(screen.getByRole('gridcell', { name: '15' }));
+      await user.click(screen.getByRole('gridcell', { name: '15', hidden: false }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 

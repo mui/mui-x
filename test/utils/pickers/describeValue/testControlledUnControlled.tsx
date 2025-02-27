@@ -24,7 +24,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     emptyValue,
     assertRenderedValue,
     setNewValue,
-    clock,
     ...pickerParams
   } = options;
 
@@ -58,17 +57,17 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(emptyValue);
     });
 
-    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
+    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
       const onChange = spy();
 
-      const v7Response = renderWithProps({
+      const { selectSection, pressKey, user } = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: values[0],
         onChange,
       });
-      const newValue = setNewValue(values[0], {
-        selectSection: v7Response.selectSection,
-        pressKey: v7Response.pressKey,
+      const newValue = await setNewValue(values[0], user, {
+        selectSection,
+        pressKey,
       });
 
       assertRenderedValue(newValue);
@@ -83,7 +82,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       // }
     });
 
-    it('should call onChange when updating a value defined with `props.value`', () => {
+    it('should call onChange when updating a value defined with `props.value`', async () => {
       const onChange = spy();
 
       const useControlledElement = (props) => {
@@ -98,13 +97,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return { value, onChange: handleChange };
       };
 
-      const v7Response = renderWithProps(
+      const { selectSection, pressKey, user } = renderWithProps(
         { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
         { hook: useControlledElement },
       );
-      const newValue = setNewValue(values[0], {
-        selectSection: v7Response.selectSection,
-        pressKey: v7Response.pressKey,
+      const newValue = await setNewValue(values[0], user, {
+        selectSection,
+        pressKey,
       });
 
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));

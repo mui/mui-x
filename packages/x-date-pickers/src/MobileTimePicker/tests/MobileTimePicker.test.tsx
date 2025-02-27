@@ -12,7 +12,7 @@ import {
 import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('picker state', () => {
     it('should fire a change event when meridiem changes', () => {

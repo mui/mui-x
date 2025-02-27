@@ -35,9 +35,8 @@ export function expectPickerChangeHandlerValue(
   expectedValue: any,
 ) {
   if (['date-range', 'date-time-range'].includes(type)) {
-    spyCallback.lastCall.firstArg.forEach((value, index) => {
-      expect(value).to.deep.equal(expectedValue[index]);
-    });
+    const firstArg = spyCallback.lastCall.firstArg as any[];
+    expect(firstArg).to.deep.equal(expectedValue);
   } else {
     expect(spyCallback.lastCall.firstArg).to.deep.equal(expectedValue);
   }

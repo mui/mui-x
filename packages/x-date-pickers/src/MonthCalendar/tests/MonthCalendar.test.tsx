@@ -6,7 +6,7 @@ import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<MonthCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render } = createPickerRenderer({ clockConfig: new Date(2019, 0, 1) });
 
   it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();

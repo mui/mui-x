@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -63,7 +64,9 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
+          }
         />,
       );
 
@@ -91,7 +94,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
+        shouldDisableDate: (date: any) =>
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -105,7 +109,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: any) =>
             position === 'end' ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10')) : false
           }
         />,
@@ -132,7 +136,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: any) =>
           position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
@@ -147,7 +151,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: any) =>
             position === 'start'
               ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
@@ -175,7 +179,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], fieldType);
 
       setProps({
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: any) =>
           position === 'start'
             ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
@@ -185,48 +189,60 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], fieldType);
     });
 
-    it('should apply disablePast', () => {
-      const onErrorMock = spy();
-      let now;
-      function WithFakeTimer(props) {
-        now = adapterToUse.date();
-        return <ElementToTest value={[now, now]} {...props} />;
-      }
-
-      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
-
-      let past: null | typeof now = null;
-      if (withDate) {
-        past = adapterToUse.addDays(now, -1);
-      } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
-        past = adapterToUse.addHours(now, -1);
-      }
-
-      if (past === null) {
-        return;
-      }
-
-      setProps({
-        value: [past, now],
+    describe('with fake timer', () => {
+      beforeEach(() => {
+        vi.useFakeTimers({
+          now: new Date(2018, 0, 1),
+        });
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
-      testInvalidStatus([true, false], fieldType);
-
-      setProps({
-        value: [past, past],
+      afterEach(() => {
+        vi.useRealTimers();
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
-      testInvalidStatus([true, true], fieldType);
+      it('should apply disablePast', () => {
+        const onErrorMock = spy();
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={[now, now]} {...props} />;
+        }
+
+        const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
+
+        let past: null | typeof now = null;
+        if (withDate) {
+          past = adapterToUse.addDays(now, -1);
+        } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
+          past = adapterToUse.addHours(now, -1);
+        }
+
+        if (past === null) {
+          return;
+        }
+
+        setProps({
+          value: [past, now],
+        });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        testInvalidStatus([true, false], fieldType);
+
+        setProps({
+          value: [past, past],
+        });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        testInvalidStatus([true, true], fieldType);
+      });
     });
 
     it('should apply disableFuture', () => {
       const onErrorMock = spy();
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
