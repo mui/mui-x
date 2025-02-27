@@ -62,11 +62,12 @@ export default defineConfig({
     },
     // Disable isolation to speed up the tests.
     isolate: false,
-    fileParallelism: false,
     ...(process.env.CI && {
-      minWorkers: 1,
-      maxWorkers: 2,
+      // Important to avoid timeouts on CI.
+      fileParallelism: false,
+      // Increase the timeout for the tests due to slow CI machines.
       testTimeout: 50000,
+      // Reduce the number of workers to avoid CI timeouts.
       poolOptions: {
         forks: {
           singleFork: true,
