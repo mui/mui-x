@@ -11,6 +11,7 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid 
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
+import failOnConsole from 'vitest-fail-on-console';
 import { isJSDOM } from './utils/skipIf';
 
 // Core's setupVitest is causing issues with the test setup
@@ -50,6 +51,8 @@ configure({
   // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
   computedStyleSupportsPseudoElements: !isJSDOM,
 });
+
+failOnConsole();
 
 if (!globalThis.before) {
   (globalThis as any).before = beforeAll;
