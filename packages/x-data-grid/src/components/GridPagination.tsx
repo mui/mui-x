@@ -6,7 +6,6 @@ import {
   TablePaginationProps,
   LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
-import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../models/gridSlotsComponent';
 import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils/assert';
@@ -56,22 +55,7 @@ const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count,
   return `${from}–${to} of ${count !== -1 ? count : estimateLabel}`;
 };
 
-// A mutable version of a readonly array.
-
-type MutableArray<A> = A extends readonly (infer T)[] ? T[] : never;
-
-interface GridPaginationOwnProps {
-  component?: React.ElementType;
-}
-
-const GridPagination = forwardRef<
-  unknown,
-  Partial<
-    // See https://github.com/mui/material-ui/issues/40427
-    Omit<TablePaginationProps, 'component'>
-  > &
-    GridPaginationOwnProps
->(function GridPagination(props, ref) {
+function GridPagination() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
@@ -155,21 +139,16 @@ const GridPagination = forwardRef<
       as={rootProps.slots.basePagination}
       count={rowCount}
       page={computedPage}
-      // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
-      // for x-data-grid is past the fix.
-      // Note that Material UI will not mutate the array, so this is safe.
       rowsPerPageOptions={pageSizeOptions}
       rowsPerPage={paginationModel.pageSize}
       onPageChange={handlePageChange}
-      onRowsPerPageChange={handlePageSizeChange}
+      onRowsPerPageChange={handlePageSizeChange as any}
       disabled={disabled}
       {...locales}
       labelDisplayedRows={wrappedLabelDisplayedRows}
-      {...props}
-      ref={ref}
     />
   );
-});
+}
 
 GridPagination.propTypes = {
   // ----------------------------- Warning --------------------------------

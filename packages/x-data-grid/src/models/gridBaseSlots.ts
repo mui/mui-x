@@ -190,7 +190,7 @@ export type PaginationProps = {
   disabled?: boolean;
 
   getItemAriaLabel?: (type: 'first' | 'last' | 'next' | 'previous') => string;
-  labelRowsPerPage?: string;
+  labelRowsPerPage?: React.ReactNode;
   labelDisplayedRows?: (info: {
     from: number;
     to: number;
