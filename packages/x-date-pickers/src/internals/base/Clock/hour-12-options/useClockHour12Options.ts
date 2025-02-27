@@ -4,12 +4,12 @@ import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { useClockOptionList } from '../utils/useClockOptionList';
 import { useUtils } from '../../../hooks/useUtils';
 
-export function useClockHourOptions(parameters: useClockHourOptions.Parameters) {
+export function useClockHour12Options(parameters: useClockHour12Options.Parameters) {
   const { children, getItems } = parameters;
   const utils = useUtils();
 
   const { resolvedChildren, context, scrollerRef } = useClockOptionList({
-    section: 'hour',
+    section: 'hour12',
     precision: 'hour',
     children,
     getItems,
@@ -30,6 +30,6 @@ export function useClockHourOptions(parameters: useClockHourOptions.Parameters) 
   );
 }
 
-export namespace useClockHourOptions {
+export namespace useClockHour12Options {
   export interface Parameters extends useClockOptionList.PublicParameters {}
 }

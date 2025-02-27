@@ -7,10 +7,13 @@ import { ClockOptionListContext } from './ClockOptionListContext';
 import { useScrollableList } from '../../utils/useScrollableList';
 import {
   endOfHour,
+  endOfMeridiem,
   endOfMinute,
+  isSameMeridiem,
   isSameMinute,
   isSameSecond,
   startOfHour,
+  startOfMeridiem,
   startOfMinute,
 } from '../../utils/future-adapter-methods';
 
@@ -26,10 +29,21 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     getEndOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
   }>(() => {
     switch (section) {
-      case 'hour':
+      case 'meridiem': {
         return {
           getStartOfRange: utils.startOfDay,
           getEndOfRange: utils.endOfDay,
+        };
+      }
+      case 'hour24':
+        return {
+          getStartOfRange: utils.startOfDay,
+          getEndOfRange: utils.endOfDay,
+        };
+      case 'hour12':
+        return {
+          getStartOfRange: (value) => startOfMeridiem(utils, value),
+          getEndOfRange: (value) => endOfMeridiem(utils, value),
         };
       case 'minute':
         return {
@@ -57,6 +71,12 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     areOptionsEqual: (value: PickerValidDate, comparing: PickerValidDate) => boolean;
   }>(() => {
     switch (precision) {
+      case 'meridiem': {
+        return {
+          getNextItem: (date) => utils.addHours(date, 12),
+          areOptionsEqual: (value, comparing) => isSameMeridiem(utils, value, comparing),
+        };
+      }
       case 'hour':
         return {
           getNextItem: (date) => utils.addHours(date, step),

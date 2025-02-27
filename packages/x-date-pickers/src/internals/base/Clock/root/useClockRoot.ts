@@ -115,8 +115,8 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     const context: useClockRoot.ValueChangeHandlerContext = {
       section: options.section,
       validationError: getValidationErrorForNewValue(newValue),
+      changeImportance: 'accept',
     };
-    console.log('NEW VALUE', newValue, options);
     handleValueChange(newValue, context);
   });
 

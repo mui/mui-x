@@ -13,7 +13,7 @@ export default function StepMinuteOptions() {
         defaultValue={dayjs('2022-04-17T15:30:00')}
         className={styles.Root}
       >
-        <Clock.HourOptions className={styles.OptionList}>
+        <Clock.Hour24Options className={styles.OptionList}>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option
@@ -23,7 +23,7 @@ export default function StepMinuteOptions() {
               />
             ))
           }
-        </Clock.HourOptions>
+        </Clock.Hour24Options>
         <Clock.MinuteOptions step={5} className={styles.OptionList}>
           {({ items }) =>
             items.map((item) => (

@@ -8,6 +8,8 @@ import {
   endOfHour,
   startOfMinute,
   endOfMinute,
+  startOfMeridiem,
+  endOfMeridiem,
 } from '../../utils/future-adapter-methods';
 import { ClockPrecision } from '../utils/types';
 
@@ -53,6 +55,10 @@ export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
       };
 
       switch (precision) {
+        case 'meridiem': {
+          return !containsValidTime([startOfMeridiem(utils, time), endOfMeridiem(utils, time)]);
+        }
+
         case 'hour': {
           return !containsValidTime([startOfHour(utils, time), endOfHour(utils, time)]);
         }

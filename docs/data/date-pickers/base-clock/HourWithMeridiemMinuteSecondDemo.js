@@ -13,7 +13,7 @@ export default function HourWithMeridiemMinuteSecondDemo() {
         defaultValue={dayjs('2022-04-17T15:30:00')}
         className={styles.Root}
       >
-        <Clock.HourOptions className={styles.OptionList}>
+        <Clock.Hour12Options className={styles.OptionList}>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option
@@ -23,7 +23,7 @@ export default function HourWithMeridiemMinuteSecondDemo() {
               />
             ))
           }
-        </Clock.HourOptions>
+        </Clock.Hour12Options>
         <Clock.MinuteOptions className={styles.OptionList}>
           {({ items }) =>
             items.map((item) => (

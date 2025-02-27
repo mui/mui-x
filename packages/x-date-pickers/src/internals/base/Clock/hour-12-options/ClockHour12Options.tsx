@@ -3,21 +3,21 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useClockHourOptions } from './useClockHourOptions';
+import { useClockHour12Options } from './useClockHour12Options';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 
-const ClockHourOptions = React.forwardRef(function ClockHourOptions(
-  props: ClockHourOptions.Props,
+const ClockHour12Options = React.forwardRef(function ClockHour12Options(
+  props: ClockHour12Options.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, getItems, focusOnMount, ...otherProps } = props;
-  const { getOptionsProps, context, scrollerRef } = useClockHourOptions({
+  const { getOptionsProps, context, scrollerRef } = useClockHour12Options({
     children,
     getItems,
     focusOnMount,
   });
 
-  const state: ClockHourOptions.State = React.useMemo(() => ({}), []);
+  const state: ClockHour12Options.State = React.useMemo(() => ({}), []);
   const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
@@ -36,12 +36,12 @@ const ClockHourOptions = React.forwardRef(function ClockHourOptions(
   );
 });
 
-export namespace ClockHourOptions {
+export namespace ClockHour12Options {
   export interface State {}
 
   export interface Props
-    extends useClockHourOptions.Parameters,
+    extends useClockHour12Options.Parameters,
       Omit<BaseUIComponentProps<'div', State>, 'children'> {}
 }
 
-export { ClockHourOptions };
+export { ClockHour12Options };

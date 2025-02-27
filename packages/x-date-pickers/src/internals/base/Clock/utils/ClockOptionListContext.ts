@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { ClockSection } from './types';
+import { ClockPrecision, ClockSection } from './types';
 
 export interface ClockOptionListContext {
   /**
@@ -22,7 +22,7 @@ export interface ClockOptionListContext {
   /**
    * The precision of the component.
    */
-  precision: ClockSection;
+  precision: ClockPrecision;
   /**
    * The format to use for the options if none is provided.
    */

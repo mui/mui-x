@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateTimeProps } from '../../../../validation';
-import { ClockSection } from '../utils/types';
+import { ClockPrecision, ClockSection } from '../utils/types';
 
 export interface ClockRootContext {
   /**
@@ -41,7 +41,7 @@ export interface ClockRootContext {
    * @param {ClockPrecision} precision The precision of the option.
    * @returns {boolean} Whether the option is invalid.
    */
-  isOptionInvalid: (option: PickerValidDate, precision: ClockSection) => boolean;
+  isOptionInvalid: (option: PickerValidDate, precision: ClockPrecision) => boolean;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);
