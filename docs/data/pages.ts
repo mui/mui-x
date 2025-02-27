@@ -271,6 +271,7 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           { pathname: '/x/react-date-pickers/base-clock', title: 'Clock' },
+          { pathname: '/x/react-date-pickers/base-recipes', title: 'Recipes' },
         ],
       },
       {
