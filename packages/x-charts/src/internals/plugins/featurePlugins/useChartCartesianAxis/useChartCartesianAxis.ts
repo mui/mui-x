@@ -7,7 +7,7 @@ import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { defaultizeAxis } from './defaultizeAxis';
+import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
@@ -62,8 +62,8 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       ...prev,
       cartesianAxis: {
         ...prev.cartesianAxis,
-        x: defaultizeAxis(xAxis, dataset, 'x'),
-        y: defaultizeAxis(yAxis, dataset, 'y'),
+        x: defaultizeXAxis(xAxis, dataset),
+        y: defaultizeYAxis(yAxis, dataset),
       },
     }));
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
@@ -244,8 +244,8 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
     ...params,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
-    defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
   };
 };
 
