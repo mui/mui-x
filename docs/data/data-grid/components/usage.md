@@ -67,16 +67,26 @@ Some components also provide internal state that can be used to conditionally ap
 
 ### render
 
-The `render` prop can be used to override the element rendered by each grid component:
+The `render` prop can be used to override the element rendered by each grid component. You can provide children in two ways:
 
 ```tsx
-<FilterPanelTrigger render={<MyCustomButton />} />
+// Method 1: Children inside the rendered component
+<FilterPanelTrigger render={<MyCustomButton>Filters</MyCustomButton>} />
+
+// Method 2: Children of FilterPanelTrigger
+<FilterPanelTrigger render={<MyCustomButton />}>Filters</FilterPanelTrigger>
 ```
+
+Both methods above will produce the same result, as `<FilterPanelTrigger />` automatically passes its children to the rendered component.
 
 A function can also be passed to the `render` prop to control which props are forwarded to the custom element:
 
 ```tsx
-<FilterPanelTrigger render={(props) => <MyCustomButton onClick={props.onClick} />} />
+<FilterPanelTrigger
+  render={(props) => (
+    <MyCustomButton onClick={props.onClick}>Filters</MyCustomButton>
+  )}
+/>
 ```
 
 Some components also provide internal state that can be used to control what is returned by the `render` function:
