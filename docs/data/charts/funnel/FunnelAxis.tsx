@@ -9,12 +9,10 @@ export default function FunnelAxis() {
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <FunnelChart
         series={[populationByEducationLevelPercentageSeriesLabeled]}
-        yAxis={[
-          {
-            data: ['First', 'Second', 'Third', 'Fourth', 'Fifth'],
-            position: 'left',
-          },
-        ]}
+        categoryAxis={{
+          categories: ['First', 'Second', 'Third', 'Fourth', 'Fifth'],
+          position: 'left',
+        }}
         {...funnelProps}
       >
         <ChartsYAxis disableLine disableTicks />

@@ -7,9 +7,97 @@ import useId from '@mui/utils/useId';
 import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { ChartsWrapperProps, defaultizeMargin } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
+import { warnOnce } from '@mui/x-internals/warning';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
+
+function getCategoryAxisConfig(
+  categoryAxis: FunnelChartProps['categoryAxis'],
+  series: FunnelChartProps['series'],
+  isHorizontal: boolean,
+  direction: 'y',
+): AxisConfig<ScaleName, any, ChartsYAxisProps>;
+function getCategoryAxisConfig(
+  categoryAxis: FunnelChartProps['categoryAxis'],
+  series: FunnelChartProps['series'],
+  isHorizontal: boolean,
+  direction: 'x',
+): AxisConfig<ScaleName, any, ChartsXAxisProps>;
+function getCategoryAxisConfig(
+  categoryAxis: FunnelChartProps['categoryAxis'],
+  series: FunnelChartProps['series'],
+  isHorizontal: boolean,
+  direction: 'x' | 'y',
+): AxisConfig<ScaleName, any, any> {
+  const maxSeriesLength = Math.max(...series.map((s) => (s.data ?? []).length), 0);
+  const maxSeriesValue = Array.from({ length: maxSeriesLength }, (_, index) =>
+    series.reduce((a, s) => a + (s.data?.[index]?.value ?? 0), 0),
+  );
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      ((categoryAxis?.position === 'left' || categoryAxis?.position === 'right') && isHorizontal) ||
+      ((categoryAxis?.position === 'top' || categoryAxis?.position === 'bottom') && !isHorizontal)
+    ) {
+      warnOnce(
+        [
+          `MUI X: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
+          `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
+        ],
+        'warning',
+      );
+    }
+  }
+
+  const side = isHorizontal ? 'bottom' : 'left';
+  const categoryValues = {
+    id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
+    ...categoryAxis,
+    ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
+    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
+  } as const;
+
+  // If the scaleType is not defined or is 'band', our job is simple.
+  if (!categoryAxis?.scaleType || categoryAxis.scaleType === 'band') {
+    return {
+      scaleType: 'band',
+      categoryGapRatio: 0,
+      // Use the categories as the domain if they are defined.
+      data: categoryAxis?.categories
+        ? categoryAxis.categories
+        : // Otherwise we just need random data to create the band scale.
+          Array.from({ length: maxSeriesLength }, (_, index) => index),
+      tickLabelPlacement: 'middle',
+      ...categoryValues,
+    } as const;
+  }
+
+  // If the scaleType is other than 'band', we have to do some magic.
+  // First we need to calculate the tick values additively and in reverse order.
+  const tickValues = [
+    ...maxSeriesValue
+      .toReversed()
+      .map((_, i, arr) => arr.slice(0, i).reduce((a, value) => a + value, 0)),
+    // We add the total value of the series as the last tick value
+    maxSeriesValue.reduce((a, value) => a + value, 0),
+  ];
+
+  return {
+    scaleType: categoryAxis.scaleType,
+    domainLimit: 'strict',
+    tickLabelPlacement: 'middle',
+    tickInterval: tickValues,
+    // No need to show the first tick label
+    tickLabelInterval: (_: any, i: number) => i !== 0,
+    // We trick the valueFormatter to show the category values.
+    // By using the index of the tickValues array we can get the category value.
+    valueFormatter: (value) =>
+      `${categoryAxis.categories?.toReversed()[tickValues.findIndex((v) => v === value) - 1]}`,
+    ...categoryValues,
+  } as const;
+}
 
 /**
  * A helper function that extracts FunnelChartProps from the input props
@@ -20,8 +108,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
  */
 export const useFunnelChartProps = (props: FunnelChartProps) => {
   const {
-    xAxis,
-    yAxis,
+    categoryAxis,
     series,
     width,
     height,
@@ -47,21 +134,21 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const defaultBandAxisConfig = {
-    scaleType: 'band',
-    categoryGapRatio: 0,
-    data: Array.from(
-      { length: Math.max(...series.map((s) => (s.data ?? []).length), 0) },
-      (_, index) => index,
-    ),
-  } as const;
+  const isHorizontal = series.some((s) => s.layout === 'horizontal');
 
-  const defaultLinearAxisConfig = {
+  const valueAxisConfig = {
+    id: isHorizontal ? DEFAULT_Y_AXIS_KEY : DEFAULT_X_AXIS_KEY,
     scaleType: 'linear',
     domainLimit: 'strict',
+    position: 'none',
   } as const;
 
-  const isHorizontal = series.some((s) => s.layout === 'horizontal');
+  const xAxis = isHorizontal
+    ? getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'x')
+    : valueAxisConfig;
+  const yAxis = isHorizontal
+    ? valueAxisConfig
+    : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
   const chartContainerProps: ChartContainerProProps<'funnel'> = {
     ...rest,
@@ -74,20 +161,8 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     height,
     margin,
     colors,
-    xAxis: (xAxis ?? [{}]).map((axis) => ({
-      id: DEFAULT_X_AXIS_KEY,
-      position: 'none',
-      ...(axis?.scaleType === 'band' || isHorizontal ? defaultBandAxisConfig : {}),
-      ...(axis?.scaleType && axis?.scaleType !== 'band' ? defaultLinearAxisConfig : {}),
-      ...axis,
-    })),
-    yAxis: (yAxis ?? [{}]).map((axis) => ({
-      id: DEFAULT_Y_AXIS_KEY,
-      position: 'none',
-      ...(axis?.scaleType === 'band' || !isHorizontal ? defaultBandAxisConfig : {}),
-      ...(axis?.scaleType && axis?.scaleType !== 'band' ? defaultLinearAxisConfig : {}),
-      ...axis,
-    })),
+    xAxis: [xAxis],
+    yAxis: [yAxis],
     sx,
     highlightedItem,
     onHighlightChange,
