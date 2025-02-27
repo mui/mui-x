@@ -60,40 +60,6 @@ default-context: &default-context
   context:
     - org-global
 
-packages-jsdom: &packages-jsdom
-  package:
-    - 'x-data-grid'
-    - 'x-data-grid-pro'
-    - 'x-data-grid-premium'
-    - 'x-date-pickers'
-    - 'x-date-pickers-pro'
-    - 'x-charts'
-    - 'x-charts-pro'
-    - 'x-charts-vendor'
-    - 'x-tree-view'
-    - 'x-tree-view-pro'
-    - 'x-license'
-    - 'x-telemetry'
-    - 'x-codemod'
-    - 'x-internals'
-    - '*'
-
-packages-browser: &packages-browser
-  package:
-    - 'x-data-grid'
-    - 'x-data-grid-pro'
-    - 'x-data-grid-premium'
-    - 'x-date-pickers'
-    - 'x-date-pickers-pro'
-    - 'x-charts'
-    - 'x-charts-pro'
-    - 'x-charts-vendor'
-    - 'x-tree-view'
-    - 'x-tree-view-pro'
-    - 'x-license'
-    - 'x-telemetry'
-    - '*'
-
 test-react-18-context: &test-react-18-context
   <<: *default-context
   react-version: ^18.0.0
@@ -193,18 +159,13 @@ jobs:
   test_unit:
     <<: *default-job
     resource_class: medium
-    parameters:
-      <<: *default-parameters
-      package:
-        description: The package to test
-        type: string
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm vitest --project "jsdom/<< parameters.package >>"
+          command: pnpm vitest --project "jsdom/*"
       # - run:
       #     name: Check coverage generated
       #     command: |
@@ -224,11 +185,6 @@ jobs:
     docker:
       - image: mcr.microsoft.com/playwright:v1.50.1-noble
     resource_class: medium
-    parameters:
-      <<: *default-parameters
-      package:
-        description: The package to test
-        type: string
     steps:
       - checkout
       - install_js:
@@ -236,7 +192,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test Browser
-          command: pnpm vitest --project "browser/<< parameters.package >>"
+          command: pnpm vitest --project "browser/*"
 
   test_lint:
     <<: *default-job
@@ -393,16 +349,10 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-          matrix:
-            parameters:
-              <<: *packages-jsdom
       - test_browser:
           <<: *default-context
           requires:
             - checkout
-          matrix:
-            parameters:
-              <<: *packages-browser
       - test_lint:
           <<: *default-context
           requires:
@@ -450,16 +400,10 @@ workflows:
           <<: *default-context
           name: test_unit_additional
           react-version: << pipeline.parameters.with-react-version >>
-          matrix:
-            parameters:
-              <<: *packages-jsdom
       - test_browser:
           <<: *default-context
           name: test_browser_additional
           react-version: << pipeline.parameters.with-react-version >>
-          matrix:
-            parameters:
-              <<: *packages-browser
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
@@ -483,15 +427,9 @@ workflows:
       - test_unit:
           <<: *test-react-18-context
           name: test_unit_react_18
-          matrix:
-            parameters:
-              <<: *packages-jsdom
       - test_browser:
           <<: *test-react-18-context
           name: test_browser_react_18
-          matrix:
-            parameters:
-              <<: *packages-browser
       - test_regressions:
           <<: *test-react-18-context
           name: test_regressions_react_18
