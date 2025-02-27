@@ -72,7 +72,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         writeText = spy(navigator.clipboard, 'writeText');
 
         const cell = getCell(0, 0);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
@@ -95,7 +95,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
@@ -126,7 +126,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Ctrl' });
@@ -157,7 +157,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Ctrl' });
@@ -213,7 +213,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test />);
 
         const cell = getCell(0, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
@@ -253,7 +253,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         expect(cell).not.to.have.text(clipboardData);
 
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
         paste(cell, clipboardData);
 
@@ -265,7 +265,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         // go to the next page
         setProps({ paginationModel: { pageSize: 2, page: 1 } });
 
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
         paste(cell, clipboardData);
 
@@ -279,7 +279,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test rowLength={5} colLength={5} />);
 
         const cell = getCell(0, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
@@ -316,7 +316,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test rowLength={5} colLength={5} />);
 
         const cell = getCell(0, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
@@ -362,7 +362,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         );
 
         const cell = getCell(1, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         const clipboardData = [
@@ -393,7 +393,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         const clipboardData = ['p01', 'p02', 'p03'].join('\t');
@@ -410,7 +410,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         const clipboardData = [
@@ -432,7 +432,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         paste(cell, 'pasted');
@@ -487,7 +487,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
       const cell = getCell(1, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, 'Nike');
@@ -505,7 +505,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test />);
 
         const cell = getCell(0, 1);
-        cell.focus();
+        await act(() => cell.focus());
         await user.click(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
@@ -550,7 +550,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Component />);
 
       const cell = getCell(1, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, '0');
@@ -599,7 +599,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Component />);
 
       const cell = getCell(1, 2);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, 'John Doe');
@@ -641,7 +641,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Component />);
 
       const cell = getCell(1, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, 'john doe');
@@ -680,7 +680,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Component />);
 
       const cell = getCell(1, 0);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
@@ -703,7 +703,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Test processRowUpdate={processRowUpdateSpy} />);
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
@@ -749,7 +749,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, '12');
@@ -774,7 +774,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, '12');
@@ -801,7 +801,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, '12');
@@ -830,7 +830,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       paste(cell, '12');
@@ -862,7 +862,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       );
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
@@ -915,7 +915,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         cell: HTMLElement,
         userEvent: ReturnType<typeof render>['user'],
       ) {
-        cell.focus();
+        await act(() => cell.focus());
         await userEvent.click(cell);
         paste(cell, clipboardData);
       }
@@ -1132,7 +1132,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       );
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
@@ -1162,7 +1162,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(<Test rowLength={5} colLength={5} />);
 
       const cell = getCell(0, 1);
-      cell.focus();
+      await act(() => cell.focus());
       await user.click(cell);
 
       let clipboardData = ['01', '11'].join('\n');
