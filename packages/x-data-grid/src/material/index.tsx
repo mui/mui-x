@@ -167,6 +167,7 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
 
     return (
       <MUIPagination
+        component="div"
         onRowsPerPageChange={useEventCallback(
           (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
             onRowsPerPageChange?.(Number(event.target.value));
