@@ -53,5 +53,5 @@ function mergeSx(sx1: SxProps, sx2: SxProps) {
   if (!sx1 || !sx2) {
     return sx1 || sx2;
   }
-  return [...(Array.isArray(sx1) ? sx1 : [sx1]), ...(Array.isArray(sx2) ? sx2 : [sx2])];
+  return (Array.isArray(sx1) ? sx1 : [sx1]).concat(Array.isArray(sx2) ? sx2 : [sx2]);
 }
