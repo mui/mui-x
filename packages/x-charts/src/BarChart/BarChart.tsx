@@ -173,12 +173,6 @@ BarChart.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
-  /**
-   * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default xAxisIds[0] The id of the first provided axis
-   */
-  bottomAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -231,12 +225,6 @@ BarChart.propTypes = {
    */
   layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
-   * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default yAxisIds[0] The id of the first provided axis
-   */
-  leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -244,14 +232,18 @@ BarChart.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
@@ -271,12 +263,6 @@ BarChart.propTypes = {
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
-  /**
-   * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default null
-   */
-  rightAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeriesType]] objects.
@@ -305,12 +291,6 @@ BarChart.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default null
-   */
-  topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
@@ -321,6 +301,7 @@ BarChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
+      axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -355,13 +336,15 @@ BarChart.propTypes = {
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
+      height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'top']),
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'none', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -378,6 +361,7 @@ BarChart.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelMinGap: PropTypes.number,
       tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
@@ -395,6 +379,7 @@ BarChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
+      axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -435,7 +420,8 @@ BarChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['left', 'right']),
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['left', 'none', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -460,6 +446,7 @@ BarChart.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      width: PropTypes.number,
     }),
   ),
 } as any;

@@ -9,8 +9,13 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v7 to v8.
-The change between v7 and v8 is mostly here to match the version with other MUI X packages.
-No big breaking changes are expected.
+This new major brings improvements (and breaking changes) by fixing some API inconsistencies and updating the way to customize charts.
+
+With the v8 you can now:
+
+- Have access to the charts internal outside of the SVG by using the `ChartDataProvider` (see the [new composition docs](/x/react-charts/composition/#structural-components)).
+- Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
+- Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
 ## Start using the new release
 
@@ -137,6 +142,24 @@ Renames `LegendPosition` to `Position`.
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
+## Renaming tooltip slots and props
+
+The slots `popper`, `axisContent`, and `itemContent` have been replaced by the `tooltip` slot, which is now the single entry point to customize the tooltip.
+
+For consistency, the `tooltip` props have been replaced by the `slotProps.tooltip`.
+
+```diff
+ <LineChart
+-   tooltip={{ trigger: 'item' }}
++   slotProps={{ tooltip: { trigger: 'item' }}}
+ />
+```
+
+Some helpers are provided to create your custom tooltip:
+
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Removing ResponsiveChartContainer ✅
 
@@ -284,3 +307,56 @@ npx @mui/x-codemod@latest v8.0.0/charts/rename-sparkline-colors-to-color <path>
 ```
 
 For more complex cases, you may need to adjust the code manually. To aid you in finding these cases, the codemod adds a comment prefixed by `mui-x-codemod`, which you can search for in your codebase.
+
+## Replace `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` props by `position` in the axis config
+
+The following props have been removed `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+
+To modify the axis placement, use the new `position` property in the axis config.
+It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
+
+If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
+
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+
+```diff
+ <LineChart
+   yAxis={[
+     {
+       scaleType: 'linear',
++      position: 'right',
+     },
+   ]}
+   series={[{ data: [1, 10, 30, 50, 70, 90, 100], label: 'linear' }]}
+   height={400}
+-  rightAxis={{}}
+ />
+```
+
+## Remove `position` prop from `ChartsXAxis` and `ChartsYAxis`
+
+The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` components. Configure it directly in the axis config.
+
+```diff
+ <ChartContainer
+   yAxis={[
+     {
+       id: 'my-axis',
++      position: 'right',
+     },
+   ]}
+ >
+-  <ChartsYAxis axisId="my-axis" position="right" />
++  <ChartsYAxis axisId="my-axis" />
+ </ChartContainer>
+```
+
+## Rework spacing between tick labels
+
+The spacing between tick labels has been reworked to be more predictable.
+
+Before, the minimum spacing between tick labels depended on the width of the labels.
+Now, the minimum spacing is consistent and is set by a new `minTickLabelGap` property.
+
+A consequence of this improved spacing is that tick labels may render differently than before.
+It is, therefore, recommended that you verify that your charts have the desired appearance after upgrading.

@@ -45,7 +45,7 @@ export type ChartDataProviderProProps<
  * >
  *   <ChartsSurface>
  *      <BarPlot />
- *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *      <ChartsXAxis axisId="x-axis" />
  *   </ChartsSurface>
  *   {'Custom Legend Component'}
  * </ChartDataProviderPro>
@@ -98,7 +98,8 @@ ChartDataProviderPro.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.any,
   /**

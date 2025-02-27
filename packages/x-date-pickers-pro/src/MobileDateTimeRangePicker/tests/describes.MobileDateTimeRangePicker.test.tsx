@@ -10,8 +10,10 @@ import {
   describeRangeValidation,
   getFieldSectionsContainer,
   openPicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
+import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 describe('<MobileDateTimeRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -20,7 +22,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
 
   describePicker(MobileDateTimeRangePicker, {
     render,
-    fieldType: 'multi-input',
+    fieldType: 'single-input',
     variant: 'mobile',
   });
 
@@ -30,6 +32,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'mobile',
+    fieldType: 'single-input',
   }));
 
   describeConformance(<MobileDateTimeRangePicker />, () => ({
@@ -54,6 +57,10 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'multi-input',
+    defaultProps: {
+      slots: { field: MultiInputDateTimeRangeField },
+    },
     clock,
     values: [
       // initial start and end dates
@@ -89,6 +96,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         openPicker({
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
+          fieldType: 'multi-input',
         });
       }
       let newValue: PickerNonNullableRangeValue;
@@ -157,6 +165,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'single-input',
     clock,
     values: [
       // initial start and end dates
@@ -168,30 +177,32 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const expectedPlaceholder = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      const fieldRoot = getFieldInputRoot(0);
 
-      const startSectionsContainer = getFieldSectionsContainer(0);
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(
             expectedValues[0],
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
 
-      const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(
             expectedValues[1],
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+
+      const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
+          fieldType: 'single-input',
         });
       }
 

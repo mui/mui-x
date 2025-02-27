@@ -1,4 +1,5 @@
-import { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
@@ -26,6 +27,7 @@ export interface GridRowSelectionApi {
   /**
    * Returns an array of the selected rows.
    * @returns {Map<GridRowId, GridRowModel>} A `Map` with the selected rows.
+   * @deprecated Use `gridRowSelectionIdsSelector`, `gridRowSelectionCountSelector`, or `gridRowSelectionManagerSelector` instead.
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
@@ -33,7 +35,7 @@ export interface GridRowSelectionApi {
    * Any row already selected will be unselected.
    * @param {readonly GridRowId[]} rowIds The row ids to select.
    */
-  setRowSelectionModel: (rowIds: readonly GridRowId[]) => void;
+  setRowSelectionModel: (rowIds: GridRowSelectionModel) => void;
 }
 
 export interface GridRowMultiSelectionApi {

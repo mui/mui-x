@@ -37,8 +37,8 @@ function ServerSideLazyLoadingInfinite() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPro
         {...props}
-        unstable_dataSource={dataSource}
-        unstable_lazyLoading
+        dataSource={dataSource}
+        lazyLoading
         paginationModel={{ page: 0, pageSize: 15 }}
       />
     </div>

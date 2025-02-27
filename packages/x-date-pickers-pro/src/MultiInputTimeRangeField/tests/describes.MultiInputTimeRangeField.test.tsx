@@ -25,6 +25,7 @@ describe('<MultiInputTimeRangeField />', () => {
     clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
+    fieldType: 'multi-input',
     setValue: (value, { setEndDate } = {}) => {
       setValueOnFieldInput(
         adapterToUse.format(

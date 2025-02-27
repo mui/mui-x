@@ -1,16 +1,16 @@
 import * as React from 'react';
-import {
+import type {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
 } from '../../internals/plugins/models';
-import { ChartStore } from '../../internals/plugins/utils/ChartStore';
-import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
-import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
-import { UseChartBaseProps } from '../../internals/store/useCharts.types';
-import { ChartSeriesType } from '../../models/seriesType/config';
+import type { ChartStore } from '../../internals/plugins/utils/ChartStore';
+import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import type { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
+import type { ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],

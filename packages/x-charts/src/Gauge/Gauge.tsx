@@ -91,14 +91,18 @@ Gauge.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The radius between circle center and the end of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.

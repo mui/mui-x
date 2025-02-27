@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -16,7 +16,7 @@ export default function DisableActionButtonsDataGridPro() {
       <DataGridPro
         {...data}
         loading={loading}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             disableAddFilterButton: true,

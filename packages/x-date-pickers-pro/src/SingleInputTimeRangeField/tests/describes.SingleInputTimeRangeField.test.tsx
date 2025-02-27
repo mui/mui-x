@@ -20,6 +20,6 @@ describe('<SingleInputTimeRangeField /> - Describes', () => {
     clock,
     componentFamily: 'field',
     views: ['hours', 'minutes', 'seconds'],
-    isSingleInput: true,
+    fieldType: 'single-input',
   }));
 });
