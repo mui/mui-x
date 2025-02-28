@@ -63,7 +63,7 @@ export const ColumnHeaderMenuButton = React.memo((props: ColumnHeaderMenuButtonP
         id={columnMenuButtonId}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.columnMenuIcon fontSize="small" />
+        <rootProps.slots.columnMenuIcon fontSize="inherit" />
       </rootProps.slots.baseIconButton>
     </rootProps.slots.baseTooltip>
   );

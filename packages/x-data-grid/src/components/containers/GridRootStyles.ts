@@ -13,12 +13,10 @@ export type OwnerState = DataGridProcessedProps;
 
 const columnHeaderStyles = {
   [`& .${c.sortButton}`]: {
-    position: 'relative',
-    width: 'auto',
     visibility: 'visible',
+    width: 'auto',
   },
   [`& .${c.menuButton}`]: {
-    position: 'relative',
     width: 'auto',
     visibility: 'visible',
   },
@@ -131,8 +129,8 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${c.iconSeparator}`]: styles.iconSeparator },
     { [`& .${c.menuButton}`]: styles.menuButton },
-    { [`& .${c['menuButton--menuOpen']}`]: styles.menuOpen },
     { [`& .${c.menuList}`]: styles.menuList },
+    { [`& .${c['menuButton--menuOpen']}`]: styles['menuButton--menuOpen'] },
     { [`& .${c.overlayWrapperInner}`]: styles.overlayWrapperInner },
     { [`& .${c.pinnedRows}`]: styles.pinnedRows },
     { [`& .${c['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
@@ -275,7 +273,6 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         [`& .${c.menuButton}`]: {
-          position: 'absolute',
           width: '0 !important',
           visibility: 'hidden !important',
         },
@@ -360,10 +357,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
+    [`& .${c['columnHeader--sorted']} .${c.sortButton}, & .${c['columnHeader--filtered']} .${c.sortButton}`]:
+      {
+        visibility: 'visible',
+        width: 'auto',
+      },
     [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
-      position: 'absolute', // prevents the sort button taking up space
-      width: 0,
-      visibility: 'hidden',
       opacity: 0,
       transition: vars.transition(['opacity'], {
         duration: vars.transitions.duration.short,
@@ -372,6 +371,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
+      gap: vars.spacing(0.25),
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
@@ -381,16 +381,14 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
-      marginRight: vars.spacing(0.25),
-    },
-    [`& .${c['columnHeader--alignRight']} .${c.columnHeaderTitleContainerContent}`]: {
-      marginLeft: vars.spacing(0.25),
-      marginRight: 0,
     },
     [`& .${c['columnHeader--filledGroup']} .${c.columnHeaderTitleContainer}`]: {
       borderBottomWidth: '1px',
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
+    },
+    [`& .${c.sortButton}, & .${c.filterButton}`]: {
+      fontSize: 'inherit',
     },
     [`& .${c['columnHeader--sortable']}`]: {
       cursor: 'pointer',
@@ -486,15 +484,14 @@ export const GridRootStyles = styled('div', {
       }),
     },
     [`& .${c.menuButton}`]: {
-      position: 'absolute', // prevents the menu button taking up space
       width: 0,
       visibility: 'hidden',
+      fontSize: 20,
       marginRight: -5,
       display: 'flex',
       alignItems: 'center',
     },
     [`.${c['menuButton--menuOpen']}`]: {
-      position: 'relative',
       visibility: 'visible',
       width: 'auto',
     },
