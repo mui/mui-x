@@ -160,8 +160,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         } else if (process.env.NODE_ENV !== 'production') {
           warnOnce(
             [
-              'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
-              'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+              'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
+              'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
               'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
             ],
             'error',
@@ -250,6 +250,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   };
 
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
+    ...api.private,
     fetchRowChildren,
     resetDataSourceState,
   };
