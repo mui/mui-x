@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import {
   DefaultizedScatterSeriesType,
@@ -119,10 +121,13 @@ function Scatter(props: ScatterProps) {
     instance,
   ]);
 
+  const { Component, defaultProps } = useResolveScatterMarkerSlot(props);
+
   return (
     <g>
       {cleanData.map((dataPoint) => (
-        <ScatterMarker
+        <Component
+          {...defaultProps}
           key={dataPoint.id ?? dataPoint.dataIndex}
           dataIndex={dataPoint.dataIndex}
           seriesId={series.id}
@@ -148,6 +153,25 @@ function Scatter(props: ScatterProps) {
       ))}
     </g>
   );
+}
+
+function useResolveScatterMarkerSlot(props: ScatterProps) {
+  const themedProps = useThemeProps({
+    props: {},
+    // eslint-disable-next-line material-ui/mui-name-matches-component-name
+    name: 'MuiScatterMarker',
+  });
+
+  const Component = props.slots?.marker ?? themedProps.slots.marker ?? ScatterMarker;
+  const componentProps = props.slotProps?.marker ?? themedProps.slotProps.marker;
+
+  const { ownerState, ...defaultProps } = useSlotProps({
+    elementType: Component,
+    externalSlotProps: componentProps,
+    ownerState: {},
+  });
+
+  return { Component, defaultProps };
 }
 
 Scatter.propTypes = {

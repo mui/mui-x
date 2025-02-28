@@ -1,8 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SeriesId } from '../models/seriesType/common';
-import { consumeSlots } from '../internals/consumeSlots';
-import { ScatterMarkerSlotExtension } from './ScatterMarker.types';
 
 export interface ScatterMarkerProps {
   /**
@@ -48,30 +46,23 @@ export interface ScatterMarkerProps {
  * The marker that is rendered for each data point in the scatter chart.
  * By default, it is a circle.
  */
-const ScatterMarker = consumeSlots(
-  'MuiScatterMarker',
-  'marker',
-  {
-    // Currently required to make the prop types work
-    classesResolver: (_: ScatterMarkerProps & ScatterMarkerSlotExtension) => ({}),
-  },
-  function ScatterMarker(props: ScatterMarkerProps) {
-    const { seriesId, isFaded, isHighlighted, x, y, color, size, dataIndex, ...other } = props;
 
-    return (
-      <circle
-        cx={0}
-        cy={0}
-        r={(isHighlighted ? 1.2 : 1) * size}
-        transform={`translate(${x}, ${y})`}
-        fill={color}
-        opacity={isFaded ? 0.3 : 1}
-        cursor={other.onClick ? 'pointer' : 'unset'}
-        {...other}
-      />
-    );
-  },
-);
+function ScatterMarker(props: ScatterMarkerProps) {
+  const { seriesId, isFaded, isHighlighted, x, y, color, size, dataIndex, ...other } = props;
+
+  return (
+    <circle
+      cx={0}
+      cy={0}
+      r={(isHighlighted ? 1.2 : 1) * size}
+      transform={`translate(${x}, ${y})`}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
+      cursor={other.onClick ? 'pointer' : 'unset'}
+      {...other}
+    />
+  );
+}
 
 ScatterMarker.propTypes = {
   // ----------------------------- Warning --------------------------------
