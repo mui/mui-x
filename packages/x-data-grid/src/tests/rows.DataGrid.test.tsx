@@ -960,6 +960,8 @@ describe('<DataGrid /> - Rows', () => {
             return scrollTop < prevScrollTop;
           });
 
+          console.log('scrollPositions', scrollPositions);
+
           expect(hasScrollJump).to.equal(
             false,
             `Scroll jumped, scrollPositions: ${scrollPositions}`,
