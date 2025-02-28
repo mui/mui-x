@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ScatterMarker
 ---
 
 # Charts - Scatter
@@ -108,6 +108,8 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 ### CSS 🚧
 
 ### Shape 🚧
+
+{{"demo": "ScatterCustomShape.js"}}
 
 ### Size
 
