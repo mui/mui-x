@@ -13,7 +13,14 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -39,7 +46,7 @@ function createDragOverEvent(target: ChildNode) {
 }
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -505,10 +512,8 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
 
     describe('with fake timers', () => {
-      clock.withFakeTimers();
-
-      it('should not render menu items if the column has `pinnable` equals to false', () => {
-        render(
+      it('should not render menu items if the column has `pinnable` equals to false', async () => {
+        const { user } = render(
           <TestCase
             columns={[
               { field: 'brand', pinnable: true },
@@ -519,16 +524,17 @@ describe('<DataGridPro /> - Column pinning', () => {
         );
 
         const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
-        fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
+        await user.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
-        fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+        await user.keyboard('[Escape]');
 
-        clock.runToLast();
         // Ensure that the first menu was closed
-        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        await waitFor(() => {
+          expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        });
 
         const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
-        fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
+        await user.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
       });
     });

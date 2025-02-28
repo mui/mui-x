@@ -31,7 +31,10 @@ const testMonthSwitcherAreDisable = (areDisable: [boolean, boolean]) => {
   }
 };
 
-export function testDayViewRangeValidation(ElementToTest, getOptions) {
+export function testDayViewRangeValidation(
+  ElementToTest: React.FunctionComponent<any>,
+  getOptions: any,
+) {
   const { componentFamily, views, variant = 'desktop' } = getOptions();
   describeSkipIf(!views.includes('day') || componentFamily === 'field')(
     'validation in day view:',
@@ -52,7 +55,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         render(
           <ElementToTest
             {...defaultProps}
-            shouldDisableDate={(date) =>
+            shouldDisableDate={(date: any) =>
               adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
             }
           />,
@@ -63,10 +66,10 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       });
 
       it('should apply disablePast', () => {
-        const { render, clock } = getOptions();
+        const { render } = getOptions();
 
         let now;
-        function WithFakeTimer(props) {
+        function WithFakeTimer(props: any) {
           now = adapterToUse.date();
           const { referenceDate, ...otherProps } = props;
           return <ElementToTest value={[now, null]} {...otherProps} />;
@@ -89,7 +92,6 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
         if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
           setProps({ value: [yesterday, null] });
-          clock.runToLast();
         }
         testDisabledDate(
           adapterToUse.format(yesterday, 'dayOfMonth'),
@@ -99,11 +101,10 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       });
 
       it('should apply disableFuture', () => {
-        const { render, clock } = getOptions();
+        const { render } = getOptions();
 
-        let now;
-        function WithFakeTimer(props) {
-          now = adapterToUse.date();
+        const now = adapterToUse.date();
+        function WithFakeTimer(props: any) {
           const { referenceDate, ...otherProps } = props;
           return <ElementToTest value={[now, null]} {...otherProps} />;
         }
@@ -125,8 +126,8 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
         if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
           setProps({ value: [yesterday, null] });
-          clock.runToLast();
         }
+
         testDisabledDate(
           adapterToUse.format(yesterday, 'dayOfMonth'),
           [false, true],

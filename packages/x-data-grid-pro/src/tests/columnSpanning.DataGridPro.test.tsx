@@ -8,7 +8,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column spanning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [

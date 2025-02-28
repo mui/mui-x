@@ -25,7 +25,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const options = getOptions();
-  const { defaultProps, render, clock, componentFamily } = options;
+  const { defaultProps, render, componentFamily } = options;
 
   function WrappedElementToTest(
     props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
@@ -37,7 +37,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
 
   let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
-    const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
+    const interactions = buildFieldInteractions({ render, Component: ElementToTest });
 
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });

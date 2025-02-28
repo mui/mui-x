@@ -12,7 +12,7 @@ import {
 
 // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
 describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -96,7 +96,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight);
 
       fireEvent.click(screen.getByText('Density'));
-      clock.tick(100);
       fireEvent.click(screen.getByText('Compact'));
 
       // Not updated because of the controlled prop
@@ -104,7 +103,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
 
       // Explicitly update the prop
       setProps({ density: 'compact' });
-      clock.tick(200);
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
@@ -135,7 +133,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       );
 
       fireEvent.click(screen.getByText('Density'));
-      clock.tick(100);
       fireEvent.click(screen.getByText('Compact'));
 
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
