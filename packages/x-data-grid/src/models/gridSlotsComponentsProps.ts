@@ -6,7 +6,6 @@ import type { LinearProgressProps as MUILinearProgressProps } from '@mui/materia
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
-import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -38,6 +37,7 @@ import type {
   LinearProgressProps,
   MenuListProps,
   MenuItemProps,
+  PaginationProps,
   PopperProps,
   SelectProps,
   SelectOptionProps,
@@ -65,6 +65,7 @@ export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
+export interface BasePaginationPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
@@ -107,6 +108,7 @@ interface BaseSlotProps {
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
+  basePagination: PaginationProps & BasePaginationPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInput: InputProps & BaseInputPropsOverrides;
@@ -143,7 +145,7 @@ interface ElementSlotProps {
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
   noColumnsOverlay: GridOverlayProps & NoColumnsOverlayPropsOverrides;
-  pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;
+  pagination: PaginationPropsOverrides;
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
   row: GridRowProps & RowPropsOverrides;
