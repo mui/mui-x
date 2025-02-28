@@ -40,8 +40,8 @@
     "lru-cache": "^11.0.2"
   },
   "devDependencies": {
-    "@mui/icons-material": "^5.16.14",
-    "@mui/material": "^5.16.14",
+    "@mui/icons-material": "7.0.0-beta.2",
+    "@mui/material": "7.0.0-beta.2",
     "@types/chance": "^1.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
