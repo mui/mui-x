@@ -134,7 +134,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         if (itemMetaLookup[itemId]) {
           itemMetaLookup[itemId] = {
             ...itemMetaLookup[itemId],
-            disabled: shouldBeDisabled || !itemMetaLookup[itemId].disabled,
+            disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
           };
           return {
             ...prevState,
