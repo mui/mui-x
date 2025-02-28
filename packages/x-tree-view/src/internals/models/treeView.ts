@@ -18,12 +18,6 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export interface TreeViewModel<TValue> {
-  name: string;
-  value: TValue;
-  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
-}
-
 export type TreeViewInstance<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
