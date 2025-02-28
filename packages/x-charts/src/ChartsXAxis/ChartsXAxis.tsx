@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { ellipsize } from '../internals/ellipsize';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -107,6 +109,32 @@ function getVisibleLabels(
   );
 }
 
+function shortenLabels(
+  visibleLabels: Set<TickItemType>,
+  axisWidth: number,
+  maxHeight: number,
+  { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
+) {
+  const shortenedLabels = new Map<TickItemType, string>();
+
+  for (const item of visibleLabels) {
+    if (item.formattedValue) {
+      console.log({ item, maxHeight, width: axisWidth - item.offset });
+      shortenedLabels.set(
+        item,
+        ellipsize(item.formattedValue.toString(), {
+          width: axisWidth - item.offset + 100,
+          height: maxHeight,
+          angle: tickLabelStyle?.angle ?? 0,
+          measureText: (text) => getStringSize(text, tickLabelStyle),
+        }),
+      );
+    }
+  }
+
+  return shortenedLabels;
+}
+
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
@@ -160,6 +188,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     sx,
     offset,
+    height: axisHeight,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -183,6 +212,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
+        lineHeight: 1.25,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...tickLabelStyle,
@@ -210,16 +240,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (tickSize + 22),
-  };
-
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1.25,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
@@ -227,6 +254,20 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       },
     } as Partial<ChartsTextProps>,
     ownerState: {},
+  });
+
+  const labelHeight = label === undefined ? 0 : getStringSize(label, axisLabelProps.style).height;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
+
+  /* If there's an axis title, the tick labels have less space to render  */
+  const tickLabelsMaxHeight = axisHeight - labelHeight - tickSize;
+  console.log({ tickLabelsMaxHeight, label, axisHeight, labelHeight });
+
+  const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
+    tickLabelStyle: axisTickLabelProps.style,
   });
 
   const domain = xScale.domain();
@@ -253,11 +294,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       )}
 
       {xTicks.map((item, index) => {
-        const { formattedValue, offset: tickOffset, labelOffset } = item;
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const formattedValue = shortenedLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 
         return (
@@ -280,7 +322,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 y={yTickLabel}
                 data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                text={formattedValue}
               />
             )}
           </g>

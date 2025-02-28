@@ -8,6 +8,7 @@ export const DEFAULT_MARGINS = {
 };
 export const DEFAULT_AXIS_SIZE_WIDTH = 30;
 export const DEFAULT_AXIS_SIZE_HEIGHT = 25;
+export const DEFAULT_AXIS_LABEL_HEIGHT = 15;
 export const EMPTY_SIDES = {
   top: 0,
   bottom: 0,
