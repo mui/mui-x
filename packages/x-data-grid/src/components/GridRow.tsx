@@ -283,7 +283,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
 
-  if (typeof rootProps.getRowClassName === 'function') {
+  if (typeof rootProps.getRowClassName === 'function' && !!apiRef.current.getRow(rowId)) {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
     const rowParams: GridRowClassNameParams = {
       ...apiRef.current.getRowParams(rowId),
