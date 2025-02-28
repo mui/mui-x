@@ -34,6 +34,13 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
+  /**
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} params The params of the method.
+   * @param {TreeViewItemId } params.itemId The id of the item to get the children of.
+   * @param {boolean } params.shouldBeDisabled true if the item should be disabled.
+   */
+  setIsItemDisabled: (params: { itemId: TreeViewItemId; shouldBeDisabled?: boolean }) => void;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>

@@ -121,6 +121,7 @@ RichTreeViewPro.propTypes = {
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
