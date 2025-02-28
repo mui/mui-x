@@ -6,7 +6,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export interface ColumnHeaderMenuIconProps {
+export interface ColumnHeaderMenuButtonProps {
   colDef: GridStateColDef;
   columnMenuId: string;
   columnMenuButtonId: string;
@@ -14,7 +14,7 @@ export interface ColumnHeaderMenuIconProps {
   iconButtonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-type OwnerState = ColumnHeaderMenuIconProps & {
+type OwnerState = ColumnHeaderMenuButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -22,14 +22,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, open } = ownerState;
 
   const slots = {
-    root: ['menuIcon', open && 'menuOpen'],
-    button: ['menuIconButton'],
+    button: ['menuButton', open && 'menuButton--menuOpen'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
+export const ColumnHeaderMenuButton = React.memo((props: ColumnHeaderMenuButtonProps) => {
   const { colDef, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -46,28 +45,26 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   );
 
   return (
-    <div className={classes.root}>
-      <rootProps.slots.baseTooltip
-        title={apiRef.current.getLocaleText('columnMenuLabel')}
-        enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+    <rootProps.slots.baseTooltip
+      title={apiRef.current.getLocaleText('columnMenuLabel')}
+      enterDelay={1000}
+      {...rootProps.slotProps?.baseTooltip}
+    >
+      <rootProps.slots.baseIconButton
+        ref={iconButtonRef}
+        tabIndex={-1}
+        className={classes.button}
+        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+        size="small"
+        onClick={handleMenuIconClick}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? columnMenuId : undefined}
+        id={columnMenuButtonId}
+        {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.baseIconButton
-          ref={iconButtonRef}
-          tabIndex={-1}
-          className={classes.button}
-          aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
-          size="small"
-          onClick={handleMenuIconClick}
-          aria-haspopup="menu"
-          aria-expanded={open}
-          aria-controls={open ? columnMenuId : undefined}
-          id={columnMenuButtonId}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          <rootProps.slots.columnMenuIcon fontSize="inherit" />
-        </rootProps.slots.baseIconButton>
-      </rootProps.slots.baseTooltip>
-    </div>
+        <rootProps.slots.columnMenuIcon fontSize="small" />
+      </rootProps.slots.baseIconButton>
+    </rootProps.slots.baseTooltip>
   );
 });

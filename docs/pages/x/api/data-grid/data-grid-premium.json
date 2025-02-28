@@ -708,15 +708,15 @@
       "class": null
     },
     {
-      "name": "columnHeaderFilterIconButton",
-      "description": "Filter icon component rendered in each column header.",
-      "default": "GridColumnHeaderFilterIconButton",
+      "name": "columnHeaderFilterButton",
+      "description": "Filter button component rendered in each column header.",
+      "default": "GridColumnHeaderFilterButton",
       "class": null
     },
     {
-      "name": "columnHeaderSortIcon",
-      "description": "Sort icon component rendered in each column header.",
-      "default": "GridColumnHeaderSortIcon",
+      "name": "columnHeaderSortButton",
+      "description": "Sort button component rendered in each column header.",
+      "default": "GridColumnHeaderSortButton",
       "class": null
     },
     {
@@ -1616,6 +1616,12 @@
       "isGlobal": false
     },
     {
+      "key": "filterButton",
+      "className": "MuiDataGridPremium-filterButton",
+      "description": "Styles applied to the filter button element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1652,12 +1658,6 @@
       "isGlobal": false
     },
     {
-      "key": "filterIcon",
-      "className": "MuiDataGridPremium-filterIcon",
-      "description": "Styles applied to the filter icon element.",
-      "isGlobal": false
-    },
-    {
       "key": "footerCell",
       "className": "MuiDataGridPremium-footerCell",
       "description": "Styles applied to the root element of the cell inside a footer row.",
@@ -1688,12 +1688,6 @@
       "isGlobal": false
     },
     {
-      "key": "iconButtonContainer",
-      "className": "MuiDataGridPremium-iconButtonContainer",
-      "description": "Styles applied to the column header icon's container.",
-      "isGlobal": false
-    },
-    {
       "key": "iconSeparator",
       "className": "MuiDataGridPremium-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
@@ -1718,27 +1712,21 @@
       "isGlobal": false
     },
     {
-      "key": "menuIcon",
-      "className": "MuiDataGridPremium-menuIcon",
-      "description": "Styles applied to the menu icon element.",
+      "key": "menuButton",
+      "className": "MuiDataGridPremium-menuButton",
+      "description": "Styles applied to the menu button element.",
       "isGlobal": false
     },
     {
-      "key": "menuIconButton",
-      "className": "MuiDataGridPremium-menuIconButton",
-      "description": "Styles applied to the menu icon button element.",
+      "key": "menuButton--menuOpen",
+      "className": "MuiDataGridPremium-menuButton--menuOpen",
+      "description": "Styles applied to the menu button element when the menu is open.",
       "isGlobal": false
     },
     {
       "key": "menuList",
       "className": "MuiDataGridPremium-menuList",
       "description": "Styles applied to the menu list element.",
-      "isGlobal": false
-    },
-    {
-      "key": "menuOpen",
-      "className": "MuiDataGridPremium-menuOpen",
-      "description": "Styles applied to the menu icon element if the menu is open.",
       "isGlobal": false
     },
     {
@@ -1958,9 +1946,9 @@
       "isGlobal": false
     },
     {
-      "key": "sortIcon",
-      "className": "MuiDataGridPremium-sortIcon",
-      "description": "Styles applied to the sort icon element.",
+      "key": "sortButton",
+      "className": "MuiDataGridPremium-sortButton",
+      "description": "Styles applied to the sort button element.",
       "isGlobal": false
     },
     {

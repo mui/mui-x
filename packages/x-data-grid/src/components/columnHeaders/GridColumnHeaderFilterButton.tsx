@@ -11,16 +11,15 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
-export interface ColumnHeaderFilterIconButtonProps {
+export interface ColumnHeaderFilterButtonProps {
   field: string;
   counter?: number;
   onClick?: (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-type OwnerState = ColumnHeaderFilterIconButtonProps & {
+type OwnerState = ColumnHeaderFilterButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -28,20 +27,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    icon: ['filterIcon'],
+    button: ['filterButton'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridColumnHeaderFilterIconButtonWrapped(props: ColumnHeaderFilterIconButtonProps) {
+function GridColumnHeaderFilterButtonWrapped(props: ColumnHeaderFilterButtonProps) {
   if (!props.counter) {
     return null;
   }
-  return <GridColumnHeaderFilterIconButton {...props} />;
+  return <GridColumnHeaderFilterButton {...props} />;
 }
 
-GridColumnHeaderFilterIconButtonWrapped.propTypes = {
+GridColumnHeaderFilterButtonWrapped.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -51,7 +50,7 @@ GridColumnHeaderFilterIconButtonWrapped.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
+function GridColumnHeaderFilterButton(props: ColumnHeaderFilterButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -95,9 +94,10 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       aria-haspopup="menu"
       aria-expanded={isOpen}
       aria-controls={isOpen ? panelId : undefined}
+      className={classes.button}
       {...rootProps.slotProps?.baseIconButton}
     >
-      <rootProps.slots.columnFilteredIcon className={classes.icon} fontSize="small" />
+      <rootProps.slots.columnFilteredIcon fontSize="small" />
     </rootProps.slots.baseIconButton>
   );
 
@@ -111,7 +111,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}
     >
-      <GridIconButtonContainer>
+      <React.Fragment>
         {counter > 1 && (
           <rootProps.slots.baseBadge badgeContent={counter} color="default">
             {iconButton}
@@ -119,12 +119,12 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
         )}
 
         {counter === 1 && iconButton}
-      </GridIconButtonContainer>
+      </React.Fragment>
     </rootProps.slots.baseTooltip>
   );
 }
 
-GridColumnHeaderFilterIconButton.propTypes = {
+GridColumnHeaderFilterButton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -134,4 +134,4 @@ GridColumnHeaderFilterIconButton.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnHeaderFilterIconButtonWrapped as GridColumnHeaderFilterIconButton };
+export { GridColumnHeaderFilterButtonWrapped as GridColumnHeaderFilterButton };

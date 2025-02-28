@@ -105,7 +105,7 @@ describe('<DataGrid /> - Slots', () => {
       expect(getRow(0)).to.have.attr('data-name', 'foobar');
     });
 
-    it('should pass the props from slotProps.columnHeaderFilterIconButton to the column header filter icon', () => {
+    it('should pass the props from slotProps.columnHeaderFilterButton to the column header filter button', () => {
       const onClick = spy();
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -116,7 +116,7 @@ describe('<DataGrid /> - Slots', () => {
               items: [{ field: 'brand', operator: 'contains', value: 'a' }],
             }}
             disableVirtualization
-            slotProps={{ columnHeaderFilterIconButton: { onClick } }}
+            slotProps={{ columnHeaderFilterButton: { onClick } }}
           />
         </div>,
       );

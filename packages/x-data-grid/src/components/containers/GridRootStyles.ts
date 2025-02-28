@@ -12,11 +12,13 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 export type OwnerState = DataGridProcessedProps;
 
 const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
+  [`& .${c.sortButton}`]: {
+    position: 'relative',
     width: 'auto',
+    visibility: 'visible',
   },
-  [`& .${c.menuIcon}`]: {
+  [`& .${c.menuButton}`]: {
+    position: 'relative',
     width: 'auto',
     visibility: 'visible',
   },
@@ -117,7 +119,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     { [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'] },
     { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
-    { [`& .${c.filterIcon}`]: styles.filterIcon },
+    { [`& .${c.filterButton}`]: styles.filterButton },
     { [`& .${c['filler--borderBottom']}`]: styles['filler--borderBottom'] },
     { [`& .${c['filler--pinnedLeft']}`]: styles['filler--pinnedLeft'] },
     { [`& .${c['filler--pinnedRight']}`]: styles['filler--pinnedRight'] },
@@ -128,10 +130,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.groupingCriteriaCellToggle}`]: styles.groupingCriteriaCellToggle },
     { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${c.iconSeparator}`]: styles.iconSeparator },
-    { [`& .${c.menuIcon}`]: styles.menuIcon },
-    { [`& .${c.menuIconButton}`]: styles.menuIconButton },
+    { [`& .${c.menuButton}`]: styles.menuButton },
+    { [`& .${c['menuButton--menuOpen']}`]: styles.menuOpen },
     { [`& .${c.menuList}`]: styles.menuList },
-    { [`& .${c.menuOpen}`]: styles.menuOpen },
     { [`& .${c.overlayWrapperInner}`]: styles.overlayWrapperInner },
     { [`& .${c.pinnedRows}`]: styles.pinnedRows },
     { [`& .${c['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
@@ -158,7 +159,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
     { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
     { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
-    { [`& .${c.sortIcon}`]: styles.sortIcon },
+    { [`& .${c.sortButton}`]: styles.sortButton },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     {
       [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
@@ -273,7 +274,8 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
       },
       '@media (hover: hover)': {
-        [`& .${c.menuIcon}`]: {
+        [`& .${c.menuButton}`]: {
+          position: 'absolute',
           width: '0 !important',
           visibility: 'hidden !important',
         },
@@ -358,12 +360,10 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
-    [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
+      position: 'absolute', // prevents the sort button taking up space
+      width: 0,
+      visibility: 'hidden',
       opacity: 0,
       transition: vars.transition(['opacity'], {
         duration: vars.transitions.duration.short,
@@ -372,7 +372,6 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
-      gap: vars.spacing(0.25),
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
@@ -382,14 +381,16 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
+      marginRight: vars.spacing(0.25),
+    },
+    [`& .${c['columnHeader--alignRight']} .${c.columnHeaderTitleContainerContent}`]: {
+      marginLeft: vars.spacing(0.25),
+      marginRight: 0,
     },
     [`& .${c['columnHeader--filledGroup']} .${c.columnHeaderTitleContainer}`]: {
       borderBottomWidth: '1px',
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
-    },
-    [`& .${c.sortIcon}, & .${c.filterIcon}`]: {
-      fontSize: 'inherit',
     },
     [`& .${c['columnHeader--sortable']}`]: {
       cursor: 'pointer',
@@ -401,10 +402,10 @@ export const GridRootStyles = styled('div', {
       {
         flexDirection: 'row-reverse',
       },
-    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
+    [`& .${c['columnHeader--alignCenter']} .${c.menuButton}`]: {
       marginLeft: 'auto',
     },
-    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+    [`& .${c['columnHeader--alignRight']} .${c.menuButton}`]: {
       marginRight: 'auto',
       marginLeft: -5,
     },
@@ -433,7 +434,7 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton}`]: {
         opacity: 0.5,
       },
     },
@@ -484,15 +485,16 @@ export const GridRootStyles = styled('div', {
         duration: vars.transitions.duration.short,
       }),
     },
-    [`& .${c.menuIcon}`]: {
+    [`& .${c.menuButton}`]: {
+      position: 'absolute', // prevents the menu button taking up space
       width: 0,
       visibility: 'hidden',
-      fontSize: 20,
       marginRight: -5,
       display: 'flex',
       alignItems: 'center',
     },
-    [`.${c.menuOpen}`]: {
+    [`.${c['menuButton--menuOpen']}`]: {
+      position: 'relative',
       visibility: 'visible',
       width: 'auto',
     },
@@ -694,6 +696,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
+      alignItems: 'center',
       width: '100%',
       height: '100%',
     },

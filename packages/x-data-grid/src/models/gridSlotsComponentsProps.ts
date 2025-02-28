@@ -8,7 +8,7 @@ import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconBu
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
-import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
+import type { ColumnHeaderFilterButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
 import type { GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
 import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanel';
@@ -24,7 +24,7 @@ import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
-import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+import type { GridColumnHeaderSortButtonProps } from '../components/columnHeaders/GridColumnHeaderSortButton';
 import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
 import type {
   AutocompleteProps,
@@ -74,8 +74,8 @@ export interface BaseChipPropsOverrides {}
 
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
-export interface ColumnHeaderFilterIconButtonPropsOverrides {}
-export interface ColumnHeaderSortIconPropsOverrides {}
+export interface ColumnHeaderFilterButtonPropsOverrides {}
+export interface ColumnHeaderSortButtonPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
@@ -129,9 +129,8 @@ interface ElementSlotProps {
   bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
-  columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
-    ColumnHeaderFilterIconButtonPropsOverrides;
-  columnHeaderSortIcon: GridColumnHeaderSortIconProps & ColumnHeaderSortIconPropsOverrides;
+  columnHeaderFilterButton: ColumnHeaderFilterButtonProps & ColumnHeaderFilterButtonPropsOverrides;
+  columnHeaderSortButton: GridColumnHeaderSortButtonProps & ColumnHeaderSortButtonPropsOverrides;
   columnMenu: GridColumnMenuProps & ColumnMenuPropsOverrides;
   columnsPanel: GridColumnsPanelProps & ColumnsPanelPropsOverrides;
   columnsManagement: GridColumnsManagementProps & ColumnsManagementPropsOverrides;
