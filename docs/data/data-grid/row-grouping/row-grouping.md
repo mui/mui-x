@@ -19,7 +19,8 @@ For row grouping on the server side, see [server-side row grouping](/x/react-dat
 
 ## Initializing row grouping
 
-To initialize row grouping, provide the model to the `initialState` prop:
+To initialize row grouping, provide a model to the `initialState` prop.
+The model's parameters must correspond to the columns to be checked for repeating values.
 
 ```ts
 <DataGridPremium
@@ -31,14 +32,13 @@ To initialize row grouping, provide the model to the `initialState` prop:
 />
 ```
 
-The basic parameters are the columns you want to check for repeating values.
-This example groups all the movies matching the same company name, followed by a second group matching the director's name.
+This example groups all movies matching the same company name, followed by a second group matching the director's name.
 
 {{"demo": "RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Controlled row grouping
 
-If you need to control the state of the criteria used for grouping, use the `rowGroupingModel` prop.
+Use the `rowGroupingModel` prop to control the state of the criteria used for grouping.
 You can use the `onRowGroupingModelChange` prop to listen to changes to the grouping criteria and update the prop accordingly.
 
 {{"demo": "RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -47,8 +47,8 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the Data Grid will display a single column holding all grouping columns.
-If you have multiple grouping criteria, this column name will be set to "Group."
+By default, the Data Grid displays a single column holding all grouping columns.
+If you have multiple grouping criteria, this column name will be set to **Group**.
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -60,15 +60,16 @@ To display a column for each grouping criterion, set the `rowGroupingColumnMode`
 
 ### Custom grouping column
 
-To customize the rendering of the grouping column, use the `groupingColDef` prop.
-You can override the **headerName** or any property of the `GridColDef` interface, except the `field`, the `type`, and the properties related to inline edition.
+Use the `groupingColDef` prop to customize the rendering of the grouping column.
+You can override the header name and any other property of the `GridColDef` interface, with the exceptions of the `field`, the `type`, and the properties related to inline edition.
 
 {{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
-By default, when using the object format, the properties will be applied to all Grouping columns. This means that if you have `rowGroupingColumnMode` set to `multiple`, all the columns will share the same `groupingColDef` properties.
+By default, when using the object format, the properties are applied to all grouping columns.
+This means that if `rowGroupingColumnMode` is set to `multiple`, all the columns will share the same `groupingColDef` properties.
 
-If you wish to override properties of specific grouping columns or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef`, instead of an object with its config.
-The callback is called for each grouping column, and it receives the respective column's "fields" as parameter.
+To override properties for specific grouping columns, or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef` instead of an object with its config.
+The callback is called for each grouping column, and it receives the respective column's fields as parameters.
 
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -97,30 +98,29 @@ const ratingColDef: GridColDef = {
 
 {{"demo": "RowGroupingCustomCellDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Show values for the leaves
+### Show values for leaves
 
-By default, the grouped rows display no value on their grouping columns' cells. Those cells are called "leaves."
-
-If you want to display some value, you can provide a `leafField` property to the `groupingColDef`.
+By default, grouped rows display no value in their grouping column cells—these cells are called **leaves**.
+To display a value in a leaf, provide the `leafField` property to the `groupingColDef`.
 
 {{"demo": "RowGroupingLeafWithValue.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Hide the descendant count
+### Hide descendant count
 
 Use the `hideDescendantCount` property of the `groupingColDef` to hide the number of descendants of a grouping row.
 
 {{"demo": "RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Hide the grouped columns
+### Hide grouped columns
 
-By default, the columns used to group the rows remains visible.
-For instance if you group by `"director"`, you have two columns titled **Director**:
+By default, the columns used to group rows remain visible.
+For instance, when grouping based on a column called `"director"`, there are actually two columns with the title **Director**:
 
-- The grouped column (the column from which you grouped the rows)
-- The grouping column on which you can toggle the groups
+1. The _grouped_ column – the column from which the rows are grouped
+2. The _grouping_ column – the column with which you can toggle the groups
 
-To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
-The hook automatically hides the columns when added to the model, and displays them when removed from it.
+You can use the `useKeepGroupedColumnsHidden` utility hook to hide the grouped columns.
+This hook automatically hides the columns when added to the model, and displays them when removed.
 
 :::warning
 This hook is not compatible with the deprecated column property `hide`.
@@ -129,7 +129,7 @@ You can manage column visibility with `columnVisibilityModel`, `initialState`, o
 To do so, pass them to the hook parameters.
 :::
 
-Below are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden` hook.
 You can mix the two examples to support both at the same time.
 
 ```tsx
@@ -182,34 +182,34 @@ return (
 
 ### For all columns
 
-You can disable row grouping by setting the `disableRowGrouping` prop to true.
-
-It will disable all the features related to the row grouping, even if a model is provided.
+To disable row grouping for all columns, set the `disableRowGrouping` prop to `true`.
+This disables all features related to row grouping, even if a model is provided.
 
 {{"demo": "RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### For specific columns
 
-In case you need to disable grouping on specific column(s), set the `groupable` property on the respective column definition (`GridColDef`) to `false`.
-In the example below, the `director` column cannot be grouped. In all examples, the `title` and `gross` columns cannot be grouped.
+To disable grouping on a given column, set the `groupable` property on its respective column definition (`GridColDef`) to `false`.
+In the example below, the `director` column cannot be grouped.
+In all examples, the `title` and `gross` columns cannot be grouped.
 
 {{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Grouping non-groupable columns
 
-To apply row grouping programmatically on non-groupable columns (columns with `groupable: false` in the [column definition](/x/api/data-grid/grid-col-def/)), you can provide row grouping model in one of the following ways:
+To apply row grouping programmatically on non-groupable columns (columns with `groupable: false` in the [column definition](/x/api/data-grid/grid-col-def/)), you can provide the row grouping model in one of three ways:
 
-1. Pass `rowGrouping.model` to the `initialState` prop. This will [initialize the grouping](/x/react-data-grid/row-grouping/#initialize-the-row-grouping) with the provided model.
-2. Provide the `rowGroupingModel` prop. This will [control the grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
-3. Call the API method `setRowGroupingModel`. This will set the aggregation with the provided model.
+1. Pass `rowGrouping.model` to the `initialState` prop. This [initializes grouping](/x/react-data-grid/row-grouping/#initialize-the-row-grouping) with the provided model.
+2. Provide the `rowGroupingModel` prop. This [controls grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
+3. Call the API method `setRowGroupingModel`. This sets the aggregation with the provided model.
 
-In the following example, the column `company` is not groupable from the UI but the `rowGroupingModel` prop is passed to generate a read-only row group.
+In the following example, the `company` column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
 
 {{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Complex grouping values
 
-The grouping value has to be either a `string`, a `number`, `null`, or `undefined`.
+The grouping value must be either a string, a number, `null`, or `undefined`.
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
