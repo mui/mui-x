@@ -159,6 +159,9 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
   function BasePagination(props, ref) {
     const { onRowsPerPageChange, disabled, ...rest } = props;
     const computedProps = React.useMemo(() => {
+      if (!disabled) {
+        return undefined;
+      }
       return {
         backIconButtonProps: { disabled: true },
         nextIconButtonProps: { disabled: true },
@@ -175,6 +178,7 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
         )}
         {...computedProps}
         {...rest}
+        ref={ref}
       />
     );
   },
