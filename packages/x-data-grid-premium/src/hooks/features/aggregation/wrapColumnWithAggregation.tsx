@@ -18,6 +18,7 @@ import type {
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
+import { gridPivotEnabledSelector } from '../pivoting/gridPivotingSelectors';
 
 type WrappableColumnProperty =
   | 'valueGetter'
@@ -100,7 +101,9 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   value: renderCell,
   aggregationRule,
   getCellAggregationResult,
+  apiRef,
 }) => {
+  const pivotEnabled = gridPivotEnabledSelector(apiRef);
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
     if (cellAggregationResult != null) {
@@ -109,7 +112,15 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
           return <GridFooterCell {...params} />;
         }
 
+        if (pivotEnabled && cellAggregationResult.value === 0) {
+          return null;
+        }
+
         return params.formattedValue;
+      }
+
+      if (pivotEnabled && cellAggregationResult.value === 0) {
+        return null;
       }
 
       const aggregationMeta: GridAggregationCellMeta = {
@@ -172,6 +183,10 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
+    // TODO: investigate why colDef is undefined
+    if (!params.colDef) {
+      return null;
+    }
     return (
       <GridAggregationHeader
         {...params}

@@ -55,6 +55,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     const text = pastedText.replace(/\r?\n$/, '');
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
+  disablePivoting: false,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;

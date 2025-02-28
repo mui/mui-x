@@ -21,6 +21,11 @@ export const GridExpandMoreIcon = createSvgIcon(
   'ExpandMore',
 );
 
+export const GridExpandLessIcon = createSvgIcon(
+  <path d="m12 8.295-6 6 1.41 1.41 4.59-4.58 4.59 4.58 1.41-1.41-6-6Z" />,
+  'ExpandLess',
+);
+
 export const GridFilterListIcon = createSvgIcon(
   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />,
   'FilterList',
@@ -122,7 +127,7 @@ export const GridViewColumnIcon = createSvgIcon(
 );
 
 export const GridClearIcon = createSvgIcon(
-  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />,
+  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z" />,
   'Clear',
 );
 
@@ -134,4 +139,9 @@ export const GridDeleteIcon = createSvgIcon(
 export const GridDeleteForeverIcon = createSvgIcon(
   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" />,
   'Delete',
+);
+
+export const GridPivotIcon = createSvgIcon(
+  <path d="M10 8h11V5c0-1.1-.9-2-2-2h-9zM3 8h5V3H5c-1.1 0-2 .9-2 2zm2 13h3V10H3v9c0 1.1.9 2 2 2m8 1-4-4 4-4zm1-9 4-4 4 4zm.58 6H13v-2h1.58c1.33 0 2.42-1.08 2.42-2.42V13h2v1.58c0 2.44-1.98 4.42-4.42 4.42" />,
+  'Pivot',
 );

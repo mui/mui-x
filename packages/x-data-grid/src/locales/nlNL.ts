@@ -51,6 +51,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Zoeken',
   columnsManagementNoColumns: 'Geen kolommen',
@@ -195,6 +198,38 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'grootte',
+
+  // Pivot
+  // pivotSettings: 'Pivot settings',
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+
+  // Sidebar
+  // sidebarExpandSection: name => `Expand ${name}`,
+  // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

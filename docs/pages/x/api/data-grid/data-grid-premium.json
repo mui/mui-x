@@ -79,6 +79,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disablePivoting": { "type": { "name": "bool" }, "default": "false" },
     "disableRowGrouping": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
@@ -88,7 +89,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ pivoting?: bool, warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -924,6 +928,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -1140,6 +1150,12 @@
       "class": null
     },
     {
+      "name": "pivotIcon",
+      "description": "Icon displayed in the pivot menu.",
+      "default": "GridPivotIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
@@ -1179,6 +1195,60 @@
       "name": "toolbarPromptRecordIcon",
       "description": "Icon used for the button that starts/stops recording the prompt",
       "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "pivotSearchIcon",
+      "description": "Icon used for the search icon in the sidebar search field",
+      "default": "GridSearchIcon",
+      "class": null
+    },
+    {
+      "name": "pivotSearchClearIcon",
+      "description": "Icon used for the clear button in the sidebar search field",
+      "default": "GridClearIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuAddIcon",
+      "description": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveUpIcon",
+      "description": "Icon displayed in the pivot menu for moving a field up.",
+      "default": "GridExpandLessIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveDownIcon",
+      "description": "Icon displayed in the pivot menu for moving a field down.",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToTopIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the top.",
+      "default": "GridMoveToTopIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToBottomIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the bottom.",
+      "default": "GridMoveToBottomIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuCheckIcon",
+      "description": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuRemoveIcon",
+      "description": "Icon displayed in the pivot menu for removing a field from the pivot.",
+      "default": "GridDeleteIcon",
       "class": null
     }
   ],
@@ -1712,6 +1782,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGridPremium-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGridPremium-menu",
       "description": "Styles applied to the menu element.",
@@ -1805,6 +1881,18 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGridPremium-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField",
+      "className": "MuiDataGridPremium-pivotField",
+      "description": "Styles applied to the pivot field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField--sorted",
+      "className": "MuiDataGridPremium-pivotField--sorted",
+      "description": "Styles applied to the pivot field when sorted.",
       "isGlobal": false
     },
     {
@@ -2045,6 +2133,12 @@
       "key": "withBorderColor",
       "className": "MuiDataGridPremium-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",
+      "isGlobal": false
+    },
+    {
+      "key": "withSidePanel",
+      "className": "MuiDataGridPremium-withSidePanel",
+      "description": "",
       "isGlobal": false
     },
     {

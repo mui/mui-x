@@ -24,6 +24,7 @@ const keys = {
   colors: {
     border: {
       base: '--DataGrid-t-colors-border-base',
+      muted: '--DataGrid-t-colors-border-muted',
     },
     foreground: {
       base: '--DataGrid-t-colors-foreground-base',
@@ -83,6 +84,13 @@ const keys = {
       fontWeight: '--DataGrid-t-typography-small-font-weight',
       letterSpacing: '--DataGrid-t-typography-small-letter-spacing',
       lineHeight: '--DataGrid-t-typography-small-line-height',
+    },
+    large: {
+      fontFamily: '--DataGrid-t-typography-large-font-family',
+      fontSize: '--DataGrid-t-typography-large-font-size',
+      fontWeight: '--DataGrid-t-typography-large-font-weight',
+      letterSpacing: '--DataGrid-t-typography-large-letter-spacing',
+      lineHeight: '--DataGrid-t-typography-large-line-height',
     },
   },
   transitions: {
