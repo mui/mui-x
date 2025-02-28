@@ -222,7 +222,14 @@ const childrenIds = apiRef.current.getItemOrderedChildrenIds(
 Use the `setIsItemDisabled` API method to imperatively toggle the items's disabled state.
 
 ```ts
-publicAPI.setIsItemDisabled(itemId, true);
+publicAPI.setIsItemDisabled({
+  // The id of the item to disable or enable
+  itemId,
+  // If `true` the item will be disabled
+  // If `false` the item will be enabled
+  // If not defined, the item's new disable status will be the opposite of its current one
+  shouldBeDisabled: true,
+});
 ```
 
 {{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}
