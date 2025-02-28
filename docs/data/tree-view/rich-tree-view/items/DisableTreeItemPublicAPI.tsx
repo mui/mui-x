@@ -51,7 +51,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   const { publicAPI, status } = useTreeItem(props);
 
   const toggleItemDisabled = () =>
-    publicAPI.toggleDisabledItem(props.itemId, !status.disabled);
+    publicAPI.setIsItemDisabled(props.itemId, !status.disabled);
 
   return (
     <TreeItem

@@ -219,10 +219,10 @@ const childrenIds = apiRef.current.getItemOrderedChildrenIds(
 
 ### Imperatively disable an item
 
-Use the `getItemOrderedChildrenIds` API method to get an item's children by its ID.
+Use the `setIsItemDisabled` API method to imperatively toggle the items's disabled state.
 
 ```ts
-publicAPI.toggleDisabledItem(itemId, true);
+publicAPI.setIsItemDisabled(itemId, true);
 ```
 
 {{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}

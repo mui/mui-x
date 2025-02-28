@@ -39,7 +39,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @param {TreeViewItemId } itemId The id of the item to get the children of.
    * @param {boolean } disabled true if the item should be disabled.
    */
-  toggleDisabledItem: (itemId: TreeViewItemId, disabled: boolean) => void;
+  setIsItemDisabled: (itemId: TreeViewItemId, disabled: boolean) => void;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>
