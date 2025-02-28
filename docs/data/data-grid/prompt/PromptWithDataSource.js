@@ -72,7 +72,7 @@ export default function PromptWithDataSource() {
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         pagination
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}
