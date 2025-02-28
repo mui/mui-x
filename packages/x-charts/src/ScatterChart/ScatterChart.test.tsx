@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
@@ -77,20 +77,19 @@ describe('<ScatterChart />', () => {
     ]);
 
     let cells: NodeListOf<HTMLElement> = [] as any;
-    await waitFor(() => {
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
-    });
+
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
 
     await user.pointer([
       // Set tooltip position voronoi value
       { target: svg, coords: { clientX: 40, clientY: 60 } },
     ]);
 
-    await waitFor(() => {
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
-    });
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
@@ -113,19 +112,19 @@ describe('<ScatterChart />', () => {
     ]);
 
     let cells: NodeListOf<HTMLElement> = [] as any;
-    await waitFor(() => {
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
-    });
+
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
 
     await user.pointer([
       // Only to set the tooltip position
       { target: marks[4] },
     ]);
-    await waitFor(() => {
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
-    });
+
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
