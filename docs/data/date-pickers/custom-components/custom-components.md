@@ -223,6 +223,26 @@ You can pass custom components to replace the icons, as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
 
+## Paper
+
+The `desktopPaper` and `mobilePaper` slots allow you to customize the paper component used to wrap the view content.
+
+### Component props
+
+You can pass props to the paper slots as shown below:
+
+{{"demo": "PaperComponentProps.js", "defaultCodeOpen": false}}
+
+### Component
+
+You can pass a custom component to the paper slots, as shown below:
+
+{{"demo": "PaperComponent.js", "defaultCodeOpen": false}}
+
+:::warning
+The component passed to the `desktopPaper` slot should support receiving a `ref`.
+:::
+
 ## Shortcuts
 
 You can add shortcuts to every Picker component.
