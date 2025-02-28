@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridExpandedSortedRowEntriesSelector,
@@ -7,7 +11,7 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
-import { GridValidRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 
@@ -15,7 +19,9 @@ const ALL_RESULTS_PAGE_VALUE = -1;
  * @category Pagination
  * @ignore - do not document.
  */
-export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
+export const gridPaginationSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pagination,
+);
 
 /**
  * @category Pagination
@@ -213,10 +219,10 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
       return {
         rows: paginationRows,
         range: paginationRowRange,
-        rowToIndexMap: paginationRows.reduce((lookup, row, index) => {
-          lookup.set(row.model, index);
+        rowIdToIndexMap: paginationRows.reduce((lookup, row, index) => {
+          lookup.set(row.id, index);
           return lookup;
-        }, new Map<GridValidRowModel, number>()),
+        }, new Map<GridRowId, number>()),
       };
     }
 
@@ -229,10 +235,10 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
               firstRowIndex: 0,
               lastRowIndex: expandedSortedRowEntries.length - 1,
             },
-      rowToIndexMap: expandedSortedRowEntries.reduce((lookup, row, index) => {
-        lookup.set(row.model, index);
+      rowIdToIndexMap: expandedSortedRowEntries.reduce((lookup, row, index) => {
+        lookup.set(row.id, index);
         return lookup;
-      }, new Map<GridValidRowModel, number>()),
+      }, new Map<GridRowId, number>()),
     };
   },
 );

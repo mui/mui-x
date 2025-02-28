@@ -1,30 +1,32 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type {} from '../typeOverloads';
-import { Watermark } from '@mui/x-license/Watermark';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
-import { ChartDataProvider, ChartDataProviderProps } from '@mui/x-charts/context';
-import { ChartSeriesType } from '@mui/x-charts/internals';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataProviderPro';
 
-export interface ChartContainerProProps<TSeries extends ChartSeriesType = ChartSeriesType>
-  extends ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
-    ChartsSurfaceProps {}
+export type ChartContainerProProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
 
-const releaseInfo = getReleaseInfo();
+type ChartContainerProComponent = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProProps<TSeries, TSignatures> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ * This is a combination of both the `ChartDataProviderPro` and `ChartsSurface` components.
  *
  * Demos:
  *
- * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ * - [Composition](https://mui.com/x/api/charts/composition/)
  *
  * API:
  *
@@ -37,30 +39,27 @@ const releaseInfo = getReleaseInfo();
  *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
  * >
  *    <BarPlot />
- *    <ChartsXAxis position="bottom" axisId="x-axis" />
+ *    <ChartsXAxis axisId="x-axis" />
  * </ChartContainerPro>
  * ```
  */
 const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   TSeries extends ChartSeriesType = ChartSeriesType,
->(props: ChartContainerProProps<TSeries>, ref: React.Ref<SVGSVGElement>) {
-  const { chartDataProviderProProps, children, chartsSurfaceProps } =
-    useChartContainerProProps<TSeries>(props, ref);
-
-  useLicenseVerifier('x-charts-pro', releaseInfo);
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartContainerProProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
-    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProProps}>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
-}) as <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartContainerProProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
-) => React.JSX.Element;
+}) as unknown as ChartContainerProComponent;
 
-// @ts-ignore
-
+// @ts-expect-error the type coercion breaks the prop types
 ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -94,11 +93,12 @@ ChartContainerPro.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

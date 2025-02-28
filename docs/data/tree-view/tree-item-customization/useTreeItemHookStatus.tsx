@@ -147,9 +147,6 @@ export default function useTreeItemHookStatus() {
           slots={{ item: CustomTreeItem }}
           isItemDisabled={(item) => Boolean(item?.disabled)}
           isItemEditable={(item) => Boolean(item?.editable)}
-          experimentalFeatures={{
-            labelEditing: true,
-          }}
         />
       </Box>
       <StatusLegend />

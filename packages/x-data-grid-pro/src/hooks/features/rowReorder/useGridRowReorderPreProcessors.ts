@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, GridColDef } from '@mui/x-data-grid';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
@@ -22,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowReorderPreProcessors = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };

@@ -5,8 +5,7 @@ import type {
   DatasetType,
 } from '../../../../models/seriesType/config';
 import type { SeriesId } from '../../../../models/seriesType/common';
-import { StackingGroupsType } from '../../../stackSeries';
-import type { LegendItemParams } from '../../../../ChartsLegend';
+import type { StackingGroupsType } from '../../../stackSeries';
 
 export type SeriesProcessorParams<TSeriesType extends ChartSeriesType> = {
   series: Record<SeriesId, ChartsSeriesConfig[TSeriesType]['seriesInput']>;
@@ -24,9 +23,5 @@ export type SeriesProcessorResult<TSeriesType extends ChartSeriesType> = {
 
 export type SeriesProcessor<TSeriesType extends ChartSeriesType> = (
   params: SeriesProcessorParams<TSeriesType>,
-  dataset?: DatasetType,
+  dataset?: Readonly<DatasetType>,
 ) => SeriesProcessorResult<TSeriesType>;
-
-export type LegendGetter<T extends ChartSeriesType> = (
-  series: SeriesProcessorResult<T>,
-) => LegendItemParams[];

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.0.0-alpha.8",
+  "version": "8.0.0-alpha.13",
   "description": "The Pro plan edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -30,7 +30,7 @@
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -39,8 +39,8 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0",
-    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@babel/runtime": "^7.26.9",
+    "@mui/utils": "^5.16.6 || ^6.0.0 || ^7.0.0-alpha",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -53,8 +53,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },

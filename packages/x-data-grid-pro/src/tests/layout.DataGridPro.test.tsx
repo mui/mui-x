@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
@@ -78,7 +79,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
@@ -129,7 +130,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         width: '198px', // because of the 2px border
       });
 
-      act(() => apiRef!.current.setColumnVisibility('age', true));
+      act(() => apiRef.current?.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border

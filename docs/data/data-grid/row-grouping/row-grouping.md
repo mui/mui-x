@@ -239,7 +239,7 @@ If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault` prop which is a callback receiving the node as an argument.
+If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault()` prop which is a callback receiving the node as an argument.
 When defined, this callback will always have priority over the `defaultGroupingExpansionDepth` prop.
 
 ```tsx
@@ -250,12 +250,12 @@ isGroupExpandedByDefault={
 
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
+Use the `setRowChildrenExpansion()` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.unstable_dataSource.fetchRows` instead.
+The `apiRef.current.setRowChildrenExpansion()` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.dataSource.fetchRows()` instead.
 :::
 
 ### Customize grouping cell indent
@@ -385,14 +385,11 @@ The `apiRef.current.getRowGroupChildren` method is not compatible with the [serv
 ## Row group panel 🚧
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/5235) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
+With the row group panel, users would be able to control which columns are used for grouping by dragging them inside the panel.
 
 ## Full example
 

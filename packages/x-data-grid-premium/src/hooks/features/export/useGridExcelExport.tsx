@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiMethod,
   useGridLogger,
@@ -27,6 +28,7 @@ import {
   serializeRowUnsafe,
 } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
+import type { SerializedRow } from './serializer/utils';
 
 /**
  * @requires useGridColumns (state)
@@ -36,7 +38,7 @@ import { GridExcelExportMenuItem } from '../../../components';
  * @requires useGridParamsApi (method)
  */
 export const useGridExcelExport = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProps,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
@@ -142,11 +144,14 @@ export const useGridExcelExport = (
       const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
 
       apiRef.current.resetColSpan();
-      const serializedRows = exportedRowIds.map((id) =>
-        serializeRowUnsafe(id, exportedColumns, apiRef, valueOptionsData, {
+      const serializedRows: SerializedRow[] = [];
+      for (let i = 0; i < exportedRowIds.length; i += 1) {
+        const id = exportedRowIds[i];
+        const serializedRow = serializeRowUnsafe(id, exportedColumns, apiRef, valueOptionsData, {
           escapeFormulas: options.escapeFormulas ?? true,
-        }),
-      );
+        });
+        serializedRows.push(serializedRow);
+      }
       apiRef.current.resetColSpan();
 
       const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
@@ -155,6 +160,8 @@ export const useGridExcelExport = (
       }, {});
 
       const message: ExcelExportInitEvent = {
+        // workers share the pub-sub channel namespace. Use this property to filter out messages.
+        namespace: 'mui-x-data-grid-export',
         serializedColumns,
         serializedRows,
         valueOptionsData,

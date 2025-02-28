@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -53,7 +54,7 @@ function scrollIntoView(dimensions: {
  * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
 ): void => {
   const isRtl = useRtl();
@@ -64,10 +65,10 @@ export const useGridScroll = (
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = props.unstable_listView
-        ? [gridListColumnSelector(apiRef.current.state)!]
+        ? [gridListColumnSelector(apiRef)!]
         : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
@@ -106,7 +107,7 @@ export const useGridScroll = (
         });
       }
       if (params.rowIndex !== undefined) {
-        const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+        const rowsMeta = gridRowsMetaSelector(apiRef);
         const page = gridPageSelector(apiRef);
         const pageSize = gridPageSizeSelector(apiRef);
 

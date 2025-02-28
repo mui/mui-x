@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
@@ -82,9 +83,10 @@ export const cleanFieldResponse = <
   };
 };
 
-const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
+export const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
   slots: {},
   slotProps: {},
+  inputRef: undefined,
 });
 
 /**
@@ -204,6 +206,8 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     },
     ownerState,
   });
+
+  textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
   if (!textFieldProps.InputProps) {
     textFieldProps.InputProps = {};
@@ -382,11 +386,12 @@ interface FieldInputAdornmentOwnerState extends FieldOwnerState {
 }
 
 interface PickerFieldUIContextValue {
+  inputRef: React.Ref<HTMLInputElement> | undefined;
   slots: PickerFieldUISlotsFromContext;
   slotProps: PickerFieldUISlotPropsFromContext;
 }
 
-function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwnerState>(
+export function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwnerState>(
   slotPropsA: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
   slotPropsB: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
 ) {
@@ -415,6 +420,7 @@ export function useFieldTextFieldProps<
 >(parameters: UseFieldTextFieldPropsParameters) {
   const { ref, externalForwardedProps, slotProps } = parameters;
   const pickerFieldUIContext = React.useContext(PickerFieldUIContext);
+  const pickerContext = useNullablePickerContext();
   const ownerState = useFieldOwnerState(externalForwardedProps);
 
   const { InputProps, inputProps, ...otherExternalForwardedProps } = externalForwardedProps;
@@ -428,6 +434,11 @@ export function useFieldTextFieldProps<
     externalForwardedProps: otherExternalForwardedProps,
     additionalProps: {
       ref,
+      sx: pickerContext?.rootSx,
+      label: pickerContext?.label,
+      name: pickerContext?.name,
+      className: pickerContext?.rootClassName,
+      inputRef: pickerFieldUIContext.inputRef,
     },
     ownerState,
   }) as any as TProps;
@@ -454,10 +465,11 @@ interface UseFieldTextFieldPropsParameters {
 }
 
 export function PickerFieldUIContextProvider(props: PickerFieldUIContextProviderProps) {
-  const { slots = {}, slotProps = {}, children } = props;
+  const { slots = {}, slotProps = {}, inputRef, children } = props;
 
   const contextValue = React.useMemo<PickerFieldUIContextValue>(
     () => ({
+      inputRef,
       slots: {
         openPickerButton: slots.openPickerButton,
         openPickerIcon: slots.openPickerIcon,
@@ -476,6 +488,7 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
       },
     }),
     [
+      inputRef,
       slots.openPickerButton,
       slots.openPickerIcon,
       slots.textField,
@@ -498,6 +511,7 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
 
 interface PickerFieldUIContextProviderProps {
   children: React.ReactNode;
+  inputRef: React.Ref<HTMLInputElement> | undefined;
   slots: PickerFieldUISlotsFromContext | undefined;
   slotProps: PickerFieldUISlotPropsFromContext | undefined;
 }

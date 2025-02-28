@@ -3,13 +3,12 @@ import {
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
-import { BaseSingleInputFieldProps, PickerValue, TimeViewWithMeridiem } from '../internals/models';
+import { BaseSingleInputFieldProps, TimeViewWithMeridiem } from '../internals/models';
 import {
   MobileTimePickerProps,
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import { TimeValidationError } from '../models';
 import { ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots extends DesktopTimePickerSlots, MobileTimePickerSlots {}
@@ -42,6 +41,4 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 /**
  * Props the field can receive when used inside a time picker (<TimePicker />, <DesktopTimePicker /> or <MobileTimePicker /> component).
  */
-export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  ValidateTimeProps &
-    BaseSingleInputFieldProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>;
+export type TimePickerFieldProps = ValidateTimeProps & BaseSingleInputFieldProps;

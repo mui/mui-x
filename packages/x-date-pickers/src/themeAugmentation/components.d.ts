@@ -78,9 +78,9 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];
   };
-  MuiPickersPopper?: {
-    defaultProps?: ComponentsProps['MuiPickersPopper'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersPopper'];
+  MuiPickerPopper?: {
+    defaultProps?: ComponentsProps['MuiPickerPopper'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerPopper'];
   };
   MuiPickersSlideTransition?: {
     defaultProps?: ComponentsProps['MuiPickersSlideTransition'];

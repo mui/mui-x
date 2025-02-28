@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -8,9 +9,10 @@ import {
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
+  createZoomLookup,
+  selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
-import { defaultizeZoom } from './defaultizeZoom';
 import {
   getDiff,
   getHorizontalCenterRatio,
@@ -21,7 +23,6 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
-import { selectorChartZoomOptionsLookup } from './useChartProZoom.selectors';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
@@ -38,16 +39,59 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
+  const { zoomData: paramsZoomData, onZoomChange } = params;
+
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
 
-  // Add events
-  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const eventPrevDiff = React.useRef<number>(0);
-  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
+  // Manage controlled state
 
+  useEnhancedEffect(() => {
+    if (paramsZoomData === undefined) {
+      return undefined;
+    }
+    store.update((prevState) => {
+      if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
+        console.error(
+          [
+            `MUI X: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        );
+      }
+
+      return {
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          isInteracting: true,
+          zoomData: paramsZoomData,
+        },
+      };
+    });
+
+    const timeout = setTimeout(() => {
+      store.update((prevState) => {
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            isInteracting: false,
+          },
+        };
+      });
+    }, 166);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [store, paramsZoomData]);
+
+  // Add instance methods
   const setIsInteracting = React.useCallback(
     (isInteracting: boolean) => {
       store.update((prev) => ({ ...prev, zoom: { ...prev.zoom, isInteracting } }));
@@ -59,8 +103,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       store.update((prevState) => {
         const newZoomData =
-          typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
-        params.onZoomChange?.(newZoomData);
+          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+        onZoomChange?.(newZoomData);
+
+        if (prevState.zoom.isControlled) {
+          return prevState;
+        }
 
         return {
           ...prevState,
@@ -72,16 +120,27 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       });
     },
 
-    [params, store],
+    [onZoomChange, store],
   );
+
+  // Add events
+  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
+  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
+  const eventPrevDiff = React.useRef<number>(0);
+  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
     () => Object.values(optionsLookup).some((v) => v.panning) || false,
     [optionsLookup],
   );
+
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
+  const touchStartRef = React.useRef<{
+    x: number;
+    y: number;
+    zoomData: readonly ZoomData[];
+  } | null>(null);
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isPanEnabled) {
@@ -368,43 +427,33 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
+  zoomData: true,
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
-  const optionsLookup = {
-    ...params.defaultizedXAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      const { zoom, id: axisId } = v;
-      const defaultizedZoom = defaultizeZoom(zoom, axisId, 'x');
-      if (defaultizedZoom) {
-        acc[axisId] = defaultizedZoom;
-      }
-      return acc;
-    }, {}),
-    ...params.defaultizedYAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      const { zoom, id: axisId } = v;
-      const defaultizedZoom = defaultizeZoom(zoom, axisId, 'y');
-      if (defaultizedZoom) {
-        acc[axisId] = defaultizedZoom;
-      }
-      return acc;
-    }, {}),
-  };
-
   return {
     ...params,
-    optionsLookup,
   };
 };
 
 useChartProZoom.getInitialState = (params) => {
+  const { initialZoom, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
+
+  const optionsLookup = {
+    ...createZoomLookup('x')(defaultizedXAxis),
+    ...createZoomLookup('y')(defaultizedYAxis),
+  };
   return {
     zoom: {
-      optionsLookup: params.optionsLookup,
       zoomData:
-        params.initialZoom === undefined
-          ? initializeZoomData(params.optionsLookup)
-          : params.initialZoom,
+        // eslint-disable-next-line no-nested-ternary
+        zoomData !== undefined
+          ? zoomData
+          : initialZoom !== undefined
+            ? initialZoom
+            : initializeZoomData(optionsLookup),
       isInteracting: false,
+      isControlled: zoomData !== undefined,
     },
   };
 };

@@ -1,8 +1,6 @@
 import {
-  AxisId,
   UseChartSeriesSignature,
   ChartPluginSignature,
-  DefaultizedZoomOptions,
   UseChartCartesianAxisSignature,
   UseChartCartesianAxisDefaultizedParameters,
   ZoomData,
@@ -11,30 +9,26 @@ import {
 export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
-  initialZoom?: ZoomData[];
+  initialZoom?: readonly ZoomData[];
   /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
-  onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  onZoomChange?: (zoomData: ZoomData[]) => void;
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData?: readonly ZoomData[];
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
-  UseChartCartesianAxisDefaultizedParameters & {
-    /**
-     * The zoom options for each axis.
-     */
-    optionsLookup: Record<AxisId, DefaultizedZoomOptions>;
-  };
+  UseChartCartesianAxisDefaultizedParameters;
 
 export interface UseChartProZoomState {
   zoom: {
-    /**
-     * The zoom options for each axis.
-     */
-    optionsLookup: Record<AxisId, DefaultizedZoomOptions>;
     /**
      * Whether the user is currently interacting with the chart.
      * This is useful to disable animations while the user is interacting.
@@ -43,7 +37,11 @@ export interface UseChartProZoomState {
     /**
      * Mapping of axis id to the zoom data.
      */
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
+    /**
+     * Internal information to know if the user control the state or not.
+     */
+    isControlled: boolean;
   };
 }
 

@@ -92,6 +92,7 @@ export default function PromptWithExamples() {
         slots={{
           toolbar: ToolbarWithPromptInput,
         }}
+        showToolbar
       />
     </div>
   );

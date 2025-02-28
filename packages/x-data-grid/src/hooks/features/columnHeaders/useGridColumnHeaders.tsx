@@ -9,7 +9,13 @@ import type { GridColumnsRenderContext } from '../../../models/params/gridScroll
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { gridDimensionsSelector } from '../dimensions';
+import {
+  gridColumnsTotalWidthSelector,
+  gridGroupHeaderHeightSelector,
+  gridHasFillerSelector,
+  gridHeaderHeightSelector,
+  gridVerticalScrollbarWidthSelector,
+} from '../dimensions/gridDimensionsSelectors';
 import { gridRenderContextColumnsSelector } from '../virtualization';
 import { computeOffsetLeft } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
@@ -99,20 +105,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
-  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
-
-  React.useEffect(() => {
-    if (apiRef.current.columnHeadersContainerRef.current) {
-      apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-    }
-  }, [apiRef]);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const headerHeight = useGridSelector(apiRef, gridHeaderHeightSelector);
+  const groupHeaderHeight = useGridSelector(apiRef, gridGroupHeaderHeightSelector);
+  const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),
@@ -227,13 +230,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;
       const open = columnMenuState.open && columnMenuState.field === colDef.field;
       const pinnedPosition = params?.position;
-      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         colDef.computedWidth,
         columnIndex,
         columnPositions,
-        dimensions.columnsTotalWidth,
+        columnsTotalWidth,
         scrollbarWidth,
       );
 
@@ -256,7 +259,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         pinnedPosition,
         indexInSection,
         sectionLength,
-        rootProps.showCellVerticalBorder,
+        rootProps.showColumnVerticalBorder,
         gridHasFiller,
       );
 
@@ -268,7 +271,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           filterItemsCounter={
             filterColumnLookup[colDef.field] && filterColumnLookup[colDef.field].length
           }
-          headerHeight={dimensions.headerHeight}
+          headerHeight={headerHeight}
           isDragging={colDef.field === dragCol}
           colDef={colDef}
           colIndex={columnIndex}
@@ -297,6 +300,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
         className={gridClasses['row--borderBottom']}
+        style={{ height: headerHeight }}
       >
         {leftRenderContext &&
           getColumnHeaders(
@@ -402,13 +406,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       };
 
       const pinnedPosition = params.position;
-      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         headerInfo.width,
         columnIndex,
         columnPositions,
-        dimensions.columnsTotalWidth,
+        columnsTotalWidth,
         scrollbarWidth,
       );
 
@@ -430,7 +433,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           depth={depth}
           isLastColumn={index === visibleColumnGroupHeader.length - 1}
           maxDepth={headerGroupingMaxDepth}
-          height={dimensions.groupHeaderHeight}
+          height={groupHeaderHeight}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
@@ -440,7 +443,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             pinnedPosition,
             indexInSection,
             visibleColumnGroupHeader.length,
-            rootProps.showCellVerticalBorder,
+            rootProps.showColumnVerticalBorder,
             gridHasFiller,
           )}
         />
@@ -464,6 +467,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depth + 1}
           ownerState={rootProps}
+          style={{ height: groupHeaderHeight }}
         >
           {leftRenderContext &&
             getColumnGroupHeaders({

@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridColumnGroup, GridCsvExportOptions, GridRowId } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
@@ -142,7 +143,7 @@ interface BuildCSVOptions {
     >
   >;
   ignoreValueFormatter: boolean;
-  apiRef: React.RefObject<GridApiCommunity>;
+  apiRef: RefObject<GridApiCommunity>;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {

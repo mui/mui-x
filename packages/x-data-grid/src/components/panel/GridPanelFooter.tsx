@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -23,12 +24,12 @@ const GridPanelFooterRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelFooter',
   overridesResolver: (props, styles) => styles.panelFooter,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(1),
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(1),
   display: 'flex',
   justifyContent: 'space-between',
-  borderTop: `1px solid ${theme.palette.divider}`,
-}));
+  borderTop: `1px solid ${vars.colors.border.base}`,
+});
 
 function GridPanelFooter(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;

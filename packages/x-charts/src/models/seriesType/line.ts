@@ -7,16 +7,7 @@ import {
   SeriesId,
   StackableSeriesType,
 } from './common';
-
-export type CurveType =
-  | 'catmullRom'
-  | 'linear'
-  | 'monotoneX'
-  | 'monotoneY'
-  | 'natural'
-  | 'step'
-  | 'stepBefore'
-  | 'stepAfter';
+import { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -49,7 +40,7 @@ export interface LineSeriesType
   /**
    * Data associated to the line.
    */
-  data?: (number | null)[];
+  data?: readonly (number | null)[];
   /**
    * The key used to retrieve data from the dataset.
    */
@@ -67,11 +58,22 @@ export interface LineSeriesType
    */
   curve?: CurveType;
   /**
+   * If `true`, step curve starts and end at the first and last point.
+   * By default the line is extended to fill the space before and after.
+   */
+  strictStepCurve?: boolean;
+  /**
    * Define which items of the series should display a mark.
    * If can be a boolean that applies to all items.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
   showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  /**
+   * The shape of the mark elements.
+   * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
+   * @default 'circle'
+   */
+  shape?: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
   /**
    * Do not render the line highlight item if set to `true`.
    * @default false

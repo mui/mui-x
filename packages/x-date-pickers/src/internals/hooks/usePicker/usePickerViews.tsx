@@ -57,11 +57,6 @@ export interface UsePickerViewsBaseProps<
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps>;
   /**
-   * If `true`, disable heavy animations.
-   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
-   */
-  reduceAnimations?: boolean;
-  /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
@@ -88,7 +83,7 @@ export interface UsePickerViewParams<
   props: TExternalProps;
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
   autoFocusView: boolean;
-  fieldRef?: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
+  viewContainerRole: 'dialog' | 'tooltip' | null;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
@@ -114,7 +109,6 @@ export interface PickerRendererInterceptorProps<
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   renderCurrentView: () => React.ReactNode;
-  shouldRestoreFocus: () => boolean;
   provider: UsePickerViewsProviderParams<TView>;
 }
 
@@ -130,13 +124,49 @@ export interface UsePickerViewsActionsContextValue<TView extends DateOrTimeViewW
 export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem>
   extends UsePickerViewsActionsContextValue<TView> {
   /**
-   * Available views.
+   * The views that the picker must render.
+   * It is equal to the picker `views` prop if defined.
+   * Otherwise, a default set of views is provided based on the component you are using:
+   * - Date Pickers: ['year', 'day']
+   * - Time Pickers: ['hours', 'minutes']
+   * - Date Time Pickers: ['year', 'day', 'hours', 'minutes']
+   * - Date Range Pickers: ['day']
+   * - Date Time Range Pickers: ['day', 'hours', 'minutes']
    */
   views: readonly TView[];
   /**
-   * View currently rendered.
+   * The view currently rendered.
    */
   view: TView | null;
+  /**
+   * The view showed when first opening the picker.
+   */
+  initialView: TView | null;
+}
+
+export interface UsePickerViewsPrivateContextValue {
+  /**
+   * Whether one of the view has an UI (it has a view renderer associated).
+   */
+  hasUIView: boolean;
+  /**
+   * Check whether the current view has an UI.
+   * @returns {boolean} Whether the current view has an UI.
+   */
+  doesTheCurrentViewHasAnUI: () => boolean;
+  /**
+   * The aria role associated with the view container.
+   * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
+   * It is equal to "dialog" when the view is rendered inside a `@mui/material/Popper` and the focus is trapped inside the view.
+   * It is equal to "tooltip" when the view is rendered inside a `@mui/material/Popper` and the focus remains inside the field.
+   * It is always equal to null if the picker does not have a field (static pickers).
+   * It is always equal to null if the component you are accessing the context from is not wrapped by a picker.
+   */
+  viewContainerRole: 'dialog' | 'tooltip' | null;
+}
+
+export interface UsePickerViewsFieldPrivateContextValue {
+  fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
@@ -144,6 +174,8 @@ export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMe
   views: readonly TView[];
   contextValue: UsePickerViewsContextValue<TView>;
   actionsContextValue: UsePickerViewsActionsContextValue<TView>;
+  privateContextValue: UsePickerViewsPrivateContextValue;
+  fieldPrivateContextValue: UsePickerViewsFieldPrivateContextValue;
 }
 
 /**
@@ -160,12 +192,13 @@ export const usePickerViews = <
   props,
   propsFromPickerValue,
   autoFocusView,
+  viewContainerRole,
   rendererInterceptor: RendererInterceptor,
-  fieldRef,
 }: UsePickerViewParams<TValue, TView, TExternalProps>): UsePickerViewsResponse<TView> => {
   const { onChange, value, open, setOpen } = propsFromPickerValue;
   const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
+  const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
     useViews({
@@ -212,7 +245,7 @@ export const usePickerViews = <
   );
 
   const currentViewMode = viewModeLookup[view];
-  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
+  const doesTheCurrentViewHasAnUI = useEventCallback(() => currentViewMode === 'UI');
 
   const [popperView, setPopperView] = React.useState<TView | null>(
     currentViewMode === 'UI' ? view : null,
@@ -266,13 +299,25 @@ export const usePickerViews = <
     [setView],
   );
 
+  const initialViewRef = React.useRef<TView | null>(openTo ?? null);
   const contextValue = React.useMemo<UsePickerViewsContextValue<TView>>(
     () => ({
       ...actionsContextValue,
       views,
       view: popperView,
+      initialView: initialViewRef.current,
     }),
     [actionsContextValue, views, popperView],
+  );
+
+  const privateContextValue = React.useMemo<UsePickerViewsPrivateContextValue>(
+    () => ({ hasUIView, doesTheCurrentViewHasAnUI, viewContainerRole }),
+    [hasUIView, doesTheCurrentViewHasAnUI, viewContainerRole],
+  );
+
+  const fieldPrivateContextValue = React.useMemo<UsePickerViewsFieldPrivateContextValue>(
+    () => ({ fieldRef }),
+    [],
   );
 
   const providerParams: UsePickerViewsProviderParams<TView> = {
@@ -280,10 +325,11 @@ export const usePickerViews = <
     views,
     contextValue,
     actionsContextValue,
+    privateContextValue,
+    fieldPrivateContextValue,
   };
 
   return {
-    shouldRestoreFocus,
     provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {
@@ -303,10 +349,14 @@ export const usePickerViews = <
         onChange: setValueAndGoToNextView,
         view: popperView,
         onViewChange: setView,
-        focusedView,
-        onFocusedViewChange: setFocusedView,
         showViewSwitcher: timeViewsCount > 1,
         timeViewsCount,
+        ...(viewContainerRole === 'tooltip'
+          ? { focusedView: null, onFocusedViewChange: () => {} }
+          : {
+              focusedView,
+              onFocusedViewChange: setFocusedView,
+            }),
       };
 
       if (RendererInterceptor) {

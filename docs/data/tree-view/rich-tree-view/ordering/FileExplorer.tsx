@@ -280,7 +280,6 @@ export default function FileExplorer() {
       defaultExpandedItems={['1', '1.1']}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
-      experimentalFeatures={{ itemsReordering: true }}
       itemsReordering
       canMoveItemToNewPosition={(params) => {
         return (

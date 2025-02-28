@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   useGridApiRef,
   DataGridPremium,
   GridApi,
-  GridToolbar,
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [
@@ -54,11 +54,11 @@ describe('<DataGridPremium /> - Export Excel', () => {
   describe('export interface', () => {
     it('should generate a file', async () => {
       render(<TestCaseExcelExport />);
-      expect(await act(() => apiRef.current.getDataAsExcel())).not.to.equal(null);
+      expect(await act(() => apiRef.current?.getDataAsExcel())).not.to.equal(null);
     });
 
     it('should display export option', async () => {
-      const { user } = render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
+      const { user } = render(<TestCaseExcelExport showToolbar />);
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -99,7 +99,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -143,7 +143,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('option');
@@ -183,7 +183,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -221,9 +221,9 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      let workbook: Excel.Workbook | null = null;
+      let workbook: Excel.Workbook | null | undefined = null;
       await act(async () => {
-        workbook = await apiRef.current.getDataAsExcel();
+        workbook = await apiRef.current?.getDataAsExcel();
       });
       const worksheet = workbook!.worksheets[0];
 
@@ -277,7 +277,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel({
+      const workbook = await apiRef.current?.getDataAsExcel({
         allColumns: true,
       });
       const worksheet = workbook!.worksheets[0];
@@ -325,7 +325,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       // line 1: | group1 | group23 |
@@ -382,7 +382,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('name');
@@ -408,14 +408,14 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
     it('should not call getDataAsExcel', async () => {
       render(<TestCaseExcelExport />);
-      const getDataAsExcelSpy = spyApi(apiRef.current, 'getDataAsExcel');
-      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      const getDataAsExcelSpy = spyApi(apiRef.current!, 'getDataAsExcel');
+      await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
       expect(getDataAsExcelSpy.calledOnce).to.equal(false);
     });
 
     it('should post a message to the web worker with the serialized columns', async () => {
       render(<TestCaseExcelExport />);
-      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
       expect(workerMock.postMessage.lastCall.args[0].serializedColumns).to.deep.equal([
         { key: 'id', headerText: 'id', style: {}, width: 100 / 7.5 },
         { key: 'brand', headerText: 'Brand', style: {}, width: 100 / 7.5 },
@@ -424,7 +424,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
     it('should post a message to the web worker with the serialized rows', async () => {
       render(<TestCaseExcelExport />);
-      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
       expect(workerMock.postMessage.lastCall.args[0].serializedRows).to.deep.equal([
         {
           dataValidation: {},

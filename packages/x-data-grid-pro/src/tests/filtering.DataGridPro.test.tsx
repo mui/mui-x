@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   getDefaultGridFilterModel,
   GridApi,
@@ -15,14 +16,19 @@ import {
   DataGridPro,
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
-  GridToolbar,
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
   GridColDef,
   getGridStringOperators,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnValues,
+  getSelectInput,
+  grid,
+  includeRowSelection,
+} from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
@@ -30,7 +36,7 @@ const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebou
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -82,7 +88,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(<TestCase getRowId={(row) => row.brand} />);
 
       act(() =>
-        apiRef.current.upsertFilterItems([
+        apiRef.current?.upsertFilterItems([
           {
             field: 'brand',
             value: 'i',
@@ -105,7 +111,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(<TestCase getRowId={(row) => row.brand} />);
 
       act(() =>
-        apiRef.current.upsertFilterItems([
+        apiRef.current?.upsertFilterItems([
           {
             field: 'brand',
             value: 'i',
@@ -122,7 +128,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       act(() =>
-        apiRef.current.upsertFilterItems([
+        apiRef.current?.upsertFilterItems([
           {
             field: 'brand',
             value: '',
@@ -163,7 +169,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -192,7 +198,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             getColumnForNewFilter,
@@ -218,7 +224,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -308,21 +314,21 @@ describe('<DataGridPro /> - Filter', () => {
         brand: 'Hugo',
       },
     ];
-    act(() => apiRef.current.setRows(newRows));
+    act(() => apiRef.current?.setRows(newRows));
     expect(getColumnValues(0)).to.deep.equal(['Asics']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
     render(<TestCase filterModel={filterModel} />);
-    act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-    act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
+    act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+    act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Patagonia' }]));
     expect(getColumnValues(0)).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
   });
 
   it('should allow apiRef to setFilterModel', () => {
     render(<TestCase />);
     act(() =>
-      apiRef.current.setFilterModel({
+      apiRef.current?.setFilterModel({
         items: [
           {
             field: 'brand',
@@ -374,7 +380,7 @@ describe('<DataGridPro /> - Filter', () => {
         },
       ],
     };
-    act(() => apiRef.current.setFilterModel(newModel));
+    act(() => apiRef.current?.setFilterModel(newModel));
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
@@ -389,14 +395,14 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    expect(apiRef.current?.state.filter.filterModel.items).to.have.length(0);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     const removeButton = screen.getByRole('button', { name: /Remove all/i });
     fireEvent.click(addButton);
     fireEvent.click(addButton);
-    expect(apiRef.current.state.filter.filterModel.items).to.have.length(3);
+    expect(apiRef.current?.state.filter.filterModel.items).to.have.length(3);
     fireEvent.click(removeButton);
-    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    expect(apiRef.current?.state.filter.filterModel.items).to.have.length(0);
     // clicking on `remove all` should close the panel when no filters
     fireEvent.click(removeButton);
     clock.tick(100);
@@ -595,7 +601,7 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    apiRef.current.subscribeEvent('filterModelChange', listener);
+    apiRef.current?.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
     fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(listener.callCount).to.equal(1);
@@ -616,7 +622,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
+    expect(apiRef.current?.state.rowSelection).to.deep.equal(includeRowSelection([1]));
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
@@ -719,9 +725,9 @@ describe('<DataGridPro /> - Filter', () => {
       grid('root')!.scrollIntoView();
       const initialScrollPosition = window.scrollY;
       expect(initialScrollPosition).not.to.equal(0);
-      act(() => apiRef.current.hidePreferences());
+      act(() => apiRef.current?.hidePreferences());
       clock.tick(100);
-      act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
+      act(() => apiRef.current?.showPreferences(GridPreferencePanelsValue.filters));
       expect(window.scrollY).to.equal(initialScrollPosition);
     },
   );
@@ -846,7 +852,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+      expect(apiRef.current?.state.filter.filterModel.items).to.have.length(0);
     });
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
@@ -911,14 +917,14 @@ describe('<DataGridPro /> - Filter', () => {
 
   // It's not re-rendering the filter panel correctly
   testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
-    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const { rerender } = render(<TestCase showToolbar />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
 
     let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const oldId = filterForm!.dataset.id;
 
-    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    rerender(<TestCase showToolbar rows={[{ id: 0, brand: 'ADIDAS' }]} />);
     filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const newId = filterForm!.dataset.id;
     expect(oldId).to.equal(newId);
@@ -1260,6 +1266,33 @@ describe('<DataGridPro /> - Filter', () => {
       await user.keyboard('2');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
       expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
+    });
+
+    it('should allow to navigate to the header filter cell when there are no rows', async () => {
+      clock.restore();
+      const { user } = render(
+        <TestCase
+          headerFilters
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'abc',
+                  },
+                ],
+              },
+            },
+          }}
+        />,
+      );
+      const headerCell = getColumnHeaderCell(0, 0);
+      const filterCell = getColumnHeaderCell(0, 1);
+      await user.click(headerCell);
+      await user.keyboard('{ArrowDown}');
+      expect(filterCell).toHaveFocus();
     });
   });
 

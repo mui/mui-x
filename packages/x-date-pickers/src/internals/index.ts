@@ -9,11 +9,15 @@ export {
   PickerFieldUIContextProvider,
   cleanFieldResponse,
   useFieldTextFieldProps,
+  PickerFieldUIContext,
+  mergeSlotProps,
 } from './components/PickerFieldUI';
 export type {
   ExportedPickerFieldUIProps,
   PickerFieldUISlots,
   PickerFieldUISlotProps,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
 export type { PickerContextValue } from './components/PickerProvider';
@@ -22,8 +26,11 @@ export type {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
 } from './components/PickersModalDialog';
-export { PickersPopper } from './components/PickersPopper';
-export type { PickersPopperSlots, PickersPopperSlotProps } from './components/PickersPopper';
+export { PickerPopper } from './components/PickerPopper/PickerPopper';
+export type {
+  PickerPopperSlots,
+  PickerPopperSlotProps,
+} from './components/PickerPopper/PickerPopper';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
@@ -51,12 +58,6 @@ export type {
   PickersArrowSwitcherClassKey,
   PickersArrowSwitcherClasses,
 } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
-export type { PickerPopperProps } from './components/PickersPopper';
-export { pickersPopperClasses } from './components/pickersPopperClasses';
-export type {
-  PickersPopperClassKey,
-  PickersPopperClasses,
-} from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
@@ -76,10 +77,11 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  PickerFieldPrivateContextValue,
 } from './hooks/useField';
 export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
+export { useNullableFieldPrivateContext } from './hooks/useNullableFieldPrivateContext';
+export { useNullablePickerContext } from './hooks/useNullablePickerContext';
 export { usePicker } from './hooks/usePicker';
 export type {
   UsePickerParams,
@@ -164,9 +166,10 @@ export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
+  mergeSx,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
+export { useReduceAnimations } from './hooks/useReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';

@@ -183,8 +183,9 @@ const PiecewiseColorLegend = consumeThemeProps(
       return null;
     }
     const valueFormatter = (v: number | Date) =>
-      (axisItem as AxisDefaultized).valueFormatter?.(v, { location: 'legend' }) ??
-      v.toLocaleString();
+      (axisItem as AxisDefaultized).valueFormatter?.(v, {
+        location: 'legend',
+      }) ?? v.toLocaleString();
 
     const formattedLabels = colorMap.thresholds.map(valueFormatter);
 

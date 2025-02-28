@@ -79,6 +79,14 @@
     "import { ChartsTooltip } from '@mui/x-charts';",
     "import { ChartsTooltip } from '@mui/x-charts-pro';"
   ],
+  "slots": [
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "axisValueCell",

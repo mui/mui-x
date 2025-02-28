@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridVisibleRowsSelector } from '../features/pagination/gridPaginationSelector';
 import type { GridApiCommon } from '../../models';
 import { useGridSelector } from '.';
 
 export const getVisibleRows = <Api extends GridApiCommon>(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   // TODO: remove after getVisibleRows implementations have been updated
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   props?: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
@@ -22,7 +22,7 @@ export const getVisibleRows = <Api extends GridApiCommon>(
  */
 
 export const useGridVisibleRows = <Api extends GridApiCommon>(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   // TODO: remove after useGridVisibleRows implementations have been updated
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   props?: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,

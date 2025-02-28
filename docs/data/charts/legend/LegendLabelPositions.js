@@ -5,7 +5,7 @@ import {
   piecewiseColorDefaultLabelFormatter,
   PiecewiseColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartDataProvider } from '@mui/x-charts/context';
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsAxesGradients } from '@mui/x-charts/internals';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

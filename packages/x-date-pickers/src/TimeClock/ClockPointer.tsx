@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -83,7 +84,7 @@ const ClockPointerThumb = styled('div', {
   boxSizing: 'content-box',
   variants: [
     {
-      props: { isBetweenTwoClockValues: false },
+      props: { isClockPointerBetweenTwoValues: false },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
       },

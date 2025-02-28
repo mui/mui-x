@@ -9,6 +9,7 @@ import {
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
+import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -24,11 +25,13 @@ export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -47,6 +50,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -56,7 +60,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         {...props.slotProps?.root}
         ref={ref}
       >
-        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
@@ -69,7 +73,7 @@ DataGridPremiumRaw.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
+   * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   aggregationFunctions: PropTypes.object,
   /**
@@ -87,7 +91,7 @@ DataGridPremiumRaw.propTypes = {
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.
@@ -186,6 +190,24 @@ DataGridPremiumRaw.propTypes = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * Data source object.
+   */
+  dataSource: PropTypes.shape({
+    getAggregatedValue: PropTypes.func,
+    getChildrenCount: PropTypes.func,
+    getGroupKey: PropTypes.func,
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
@@ -396,6 +418,8 @@ DataGridPremiumRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -503,6 +527,18 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * Used together with `dataSource` to enable lazy loading.
+   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
+   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
+   * @default false
+   */
+  lazyLoading: PropTypes.bool,
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  lazyLoadingRequestThrottleMs: PropTypes.number,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -680,6 +716,11 @@ DataGridPremiumRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
+  /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
    */
@@ -700,6 +741,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows: PropTypes.func,
   /**
@@ -827,6 +869,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -955,11 +998,10 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.
@@ -981,6 +1023,7 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
+   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
@@ -999,7 +1042,7 @@ DataGridPremiumRaw.propTypes = {
   scrollbarSize: PropTypes.number,
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
+   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
@@ -1013,6 +1056,11 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * Overridable components props dynamically passed to the component at rendering.
    */
@@ -1068,30 +1116,6 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  unstable_dataSource: PropTypes.shape({
-    getAggregatedValue: PropTypes.func,
-    getChildrenCount: PropTypes.func,
-    getGroupKey: PropTypes.func,
-    getRows: PropTypes.func.isRequired,
-    updateRow: PropTypes.func,
-  }),
-  unstable_dataSourceCache: PropTypes.shape({
-    clear: PropTypes.func.isRequired,
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-  }),
-  /**
-   * Used together with `unstable_dataSource` to enable lazy loading.
-   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
-   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
-   * @default false
-   */
-  unstable_lazyLoading: PropTypes.bool,
-  /**
-   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
-   * @default 500
-   */
-  unstable_lazyLoadingRequestThrottleMs: PropTypes.number,
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
@@ -1107,7 +1131,6 @@ DataGridPremiumRaw.propTypes = {
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: PropTypes.bool,
-  unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
@@ -1126,8 +1149,8 @@ interface DataGridPremiumComponent {
 }
 
 /**
- * Demos:
- * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)

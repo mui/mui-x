@@ -21,7 +21,7 @@ export default function ThrottledRowsGrid() {
 
   React.useEffect(() => {
     const subscription = interval(10).subscribe(() => {
-      apiRef.current.updateRows([
+      apiRef.current?.updateRows([
         {
           id: randomInt(1, 4),
           username: randomUserName(),

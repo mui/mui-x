@@ -261,7 +261,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
@@ -276,4 +276,11 @@ function ApiRefProMethods() {
   });
 
   return null;
+}
+
+function ImmutableProps() {
+  const rows = [] as const;
+  const columns = [] as const;
+  const initialState = { sorting: { sortModel: [{ field: 'id', sort: 'asc' }] } } as const;
+  return <DataGrid rows={rows} columns={columns} initialState={initialState} />;
 }

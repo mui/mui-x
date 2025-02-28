@@ -1,8 +1,7 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
-import { warnOnce } from '@mui/x-internals/warning';
-import type { GridCoreApi } from '../models/api/gridCoreApi';
 import { argsEqual } from '../hooks/utils/useGridSelector';
+import { weakMapMemoize as customWeakMapMemoize } from './weakMapMemoize';
 
 type CacheKey = { id: number };
 
@@ -12,6 +11,7 @@ const reselectCreateSelector = createSelectorCreator({
     maxSize: 1,
     equalityCheck: Object.is,
   },
+  argsMemoize: customWeakMapMemoize,
 });
 
 type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
@@ -19,16 +19,11 @@ type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
 };
 
 export interface OutputSelector<State, Args, Result> {
-  (
-    apiRef: React.RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
-    args?: Args,
-  ): Result;
-  (state: State, args?: Args, instanceId?: GridCoreApi['instanceId']): Result;
-  acceptsApiRef: boolean;
+  (apiRef: RefObject<{ state: State } | null>, args?: Args): Result;
 }
 
 type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
-  ? F extends { state: infer F2 }
+  ? F extends RefObject<{ state: infer F2 } | null>
     ? F2
     : F
   : never;
@@ -62,12 +57,6 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, A
 
 const cache = new WeakMap<CacheKey, Map<any[], any>>();
 
-function checkIsAPIRef(value: any) {
-  return 'current' in value && 'instanceId' in value.current;
-}
-
-const DEFAULT_INSTANCE_ID = { id: 'default' };
-
 export const createSelector = ((
   a: Function,
   b: Function,
@@ -86,92 +75,66 @@ export const createSelector = ((
 
   // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
-    selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
-      const isAPIRef = checkIsAPIRef(stateOrApiRef);
-      const instanceId =
-        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
-      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, args, instanceId);
-      const vb = b(state, args, instanceId);
-      const vc = c(state, args, instanceId);
-      const vd = d(state, args, instanceId);
-      const ve = e(state, args, instanceId);
+    selector = (apiRef: RefObject<any>, args: any) => {
+      const va = a(apiRef, args);
+      const vb = b(apiRef, args);
+      const vc = c(apiRef, args);
+      const vd = d(apiRef, args);
+      const ve = e(apiRef, args);
       return f(va, vb, vc, vd, ve, args);
     };
     // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
-    selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
-      const isAPIRef = checkIsAPIRef(stateOrApiRef);
-      const instanceId =
-        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
-      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, args, instanceId);
-      const vb = b(state, args, instanceId);
-      const vc = c(state, args, instanceId);
-      const vd = d(state, args, instanceId);
+    selector = (apiRef: RefObject<any>, args: any) => {
+      const va = a(apiRef, args);
+      const vb = b(apiRef, args);
+      const vc = c(apiRef, args);
+      const vd = d(apiRef, args);
       return e(va, vb, vc, vd, args);
     };
   } else if (a && b && c && d) {
-    selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
-      const isAPIRef = checkIsAPIRef(stateOrApiRef);
-      const instanceId =
-        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
-      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, args, instanceId);
-      const vb = b(state, args, instanceId);
-      const vc = c(state, args, instanceId);
+    selector = (apiRef: RefObject<any>, args: any) => {
+      const va = a(apiRef, args);
+      const vb = b(apiRef, args);
+      const vc = c(apiRef, args);
       return d(va, vb, vc, args);
     };
   } else if (a && b && c) {
-    selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
-      const isAPIRef = checkIsAPIRef(stateOrApiRef);
-      const instanceId =
-        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
-      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, args, instanceId);
-      const vb = b(state, args, instanceId);
+    selector = (apiRef: RefObject<any>, args: any) => {
+      const va = a(apiRef, args);
+      const vb = b(apiRef, args);
       return c(va, vb, args);
     };
   } else if (a && b) {
-    selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
-      const isAPIRef = checkIsAPIRef(stateOrApiRef);
-      const instanceId =
-        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
-      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, args, instanceId);
+    selector = (apiRef: RefObject<any>, args: any) => {
+      const va = a(apiRef, args);
       return b(va, args);
     };
   } else {
     throw new Error('Missing arguments');
   }
 
-  // We use this property to detect if the selector was created with createSelector
-  // or it's only a simple function the receives the state and returns part of it.
-  selector.acceptsApiRef = true;
-
   return selector;
 }) as unknown as CreateSelectorFunction;
 
+/**
+ * Used to create the root selector for a feature. It assumes that the state is already initialized
+ * and strips from the types the possibility of `apiRef` being `null`.
+ * Users are warned about this in our documentation https://mui.com/x/react-data-grid/state/#direct-selector-access
+ */
+export const createRootSelector =
+  <State, Args, Result>(
+    fn: (state: State, args: Args) => Result,
+  ): OutputSelector<State, Args, Result> =>
+  (apiRef: RefObject<{ state: State } | null>, args?: Args) =>
+    fn(apiRef.current!.state, args!);
+
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (stateOrApiRef: any, selectorArgs: any, instanceId?: any) => {
-    const isAPIRef = checkIsAPIRef(stateOrApiRef);
-    const cacheKey = isAPIRef
-      ? stateOrApiRef.current.instanceId
-      : (instanceId ?? DEFAULT_INSTANCE_ID);
-    const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-
-    if (process.env.NODE_ENV !== 'production') {
-      if (cacheKey.id === 'default') {
-        warnOnce([
-          'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
-          'To fix, call it with `apiRef`, for example `mySelector(apiRef)`, or pass the instance ID explicitly, for example `mySelector(state, args, apiRef.current.instanceId)`.',
-        ]);
-      }
-    }
-
+  const selector = (apiRef: RefObject<any>, selectorArgs: any) => {
+    const cacheKey = apiRef.current.instanceId;
     const cacheArgsInit = cache.get(cacheKey);
     const cacheArgs = cacheArgsInit ?? new Map();
-    const cacheFn = cacheArgs?.get(args);
+    const cacheFn = cacheArgs.get(args);
 
     if (cacheArgs && cacheFn) {
       if (!argsEqual(cacheFn.selectorArgs, selectorArgs)) {
@@ -182,11 +145,9 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
         const fn: GridCreateSelectorFunction = reselectCreateSelector(...reselectArgs);
         fn.selectorArgs = selectorArgs;
         cacheArgs.set(args, fn);
-        return fn(state, selectorArgs, cacheKey);
+        return fn(apiRef, selectorArgs);
       }
-      // We pass the cache key because the called selector might have as
-      // dependency another selector created with this `createSelector`.
-      return cacheFn(state, selectorArgs, cacheKey);
+      return cacheFn(apiRef, selectorArgs);
     }
 
     const reselectArgs =
@@ -202,12 +163,8 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
     }
     cacheArgs.set(args, fn);
 
-    return fn(state, selectorArgs, cacheKey);
+    return fn(apiRef, selectorArgs);
   };
-
-  // We use this property to detect if the selector was created with createSelector
-  // or it's only a simple function the receives the state and returns part of it.
-  selector.acceptsApiRef = true;
 
   return selector;
 };

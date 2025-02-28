@@ -14,7 +14,6 @@ import {
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -36,98 +35,88 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 
 interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProps {}
 
-type BrowserSingleInputDateRangeFieldComponent = ((
-  props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: FieldType };
+function BrowserSingleInputDateRangeField(
+  props: BrowserSingleInputDateRangeFieldProps,
+) {
+  const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
 
-const BrowserSingleInputDateRangeField = React.forwardRef(
-  (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
+  const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
 
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
+    // Should be passed to the PickersSectionList component
+    elements,
+    sectionListRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
 
-      // Should be passed to the PickersSectionList component
-      elements,
-      sectionListRef,
-      contentEditable,
-      onFocus,
-      onBlur,
-      tabIndex,
-      onInput,
-      onPaste,
-      onKeyDown,
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
 
-      // Can be passed to a hidden <input /> element
-      onChange,
-      value,
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
 
-      // Can be passed to the button that clears the value
-      onClear,
-      clearable,
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    focused,
+    error,
 
-      // Can be used to render a custom label
-      label,
+    // The rest can be passed to the root element
+    ...other
+  } = fieldResponse;
 
-      // Can be used to style the component
-      areAllSectionsEmpty,
-      disabled,
-      readOnly,
-      focused,
-      error,
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
-      // The rest can be passed to the root element
-      ...other
-    } = fieldResponse;
-
-    const pickerContext = usePickerContext();
-    const handleRef = useForkRef(pickerContext.triggerRef, ref);
-
-    return (
-      <BrowserFieldRoot
-        ref={handleRef}
-        {...other}
-        style={{
-          minWidth: 300,
-        }}
-      >
-        <BrowserFieldContent>
-          <PickersSectionList
-            elements={elements}
-            sectionListRef={sectionListRef}
-            contentEditable={contentEditable}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            tabIndex={tabIndex}
-            onInput={onInput}
-            onPaste={onPaste}
-            onKeyDown={onKeyDown}
-          />
-        </BrowserFieldContent>
-        <InputAdornment position="end">
-          <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
-            <DateRangeIcon />
-          </IconButton>
-        </InputAdornment>
-      </BrowserFieldRoot>
-    );
-  },
-) as BrowserSingleInputDateRangeFieldComponent;
+  return (
+    <BrowserFieldRoot
+      {...other}
+      ref={handleRef}
+      style={{
+        minWidth: 300,
+      }}
+    >
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionListRef={sectionListRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
+        />
+      </BrowserFieldContent>
+      <InputAdornment position="end">
+        <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
+          <DateRangeIcon />
+        </IconButton>
+      </InputAdornment>
+    </BrowserFieldRoot>
+  );
+}
 
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
-const BrowserSingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps, ref: React.Ref<HTMLDivElement>) => {
-    return (
-      <DateRangePicker
-        ref={ref}
-        {...props}
-        slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
-      />
-    );
-  },
-);
+function BrowserSingleInputDateRangePicker(props: DateRangePickerProps) {
+  return (
+    <DateRangePicker
+      {...props}
+      slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
+    />
+  );
+}
 
 export default function BrowserV7SingleInputRangeField() {
   return (

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   useGridApiRef,
@@ -9,7 +10,7 @@ import {
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
-import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
@@ -17,7 +18,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test({
     rowLength = 4,
@@ -188,7 +189,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         render(<Test />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
@@ -201,7 +202,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         render(<Test editMode="row" />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('rowEditStart', listener);
+        apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
@@ -391,7 +392,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     describe('row selection', () => {
       it('should paste into each selected row if single row of data is pasted', async () => {
-        render(<Test rowSelectionModel={[0, 1, 2]} />);
+        render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();
@@ -408,7 +409,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       it('should paste into selected rows if multiple rows of data are pasted', async () => {
-        render(<Test rowSelectionModel={[0, 1, 2]} />);
+        render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();
@@ -430,7 +431,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       it('should ignore row selection when single cell value is pasted', async () => {
-        render(<Test rowSelectionModel={[0, 1, 2]} />);
+        render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();

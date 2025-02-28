@@ -1,10 +1,5 @@
 export { usePicker } from './usePicker';
-export type {
-  UsePickerProps,
-  UsePickerBaseProps,
-  UsePickerParams,
-  UsePickerResponse,
-} from './usePicker.types';
+export type { UsePickerProps, UsePickerBaseProps, UsePickerParams } from './usePicker.types';
 
 export type {
   PickerValueManager,

@@ -71,9 +71,9 @@ const GridToolbarExportContainer = forwardRef<
           aria-haspopup="menu"
           aria-controls={open ? exportMenuId : undefined}
           id={exportButtonId}
-          onClick={handleMenuOpen}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          onClick={handleMenuOpen}
           ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarExport')}

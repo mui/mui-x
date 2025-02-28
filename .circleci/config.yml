@@ -80,6 +80,10 @@ commands:
         description: The version of React to use.
 
     steps:
+      - run:
+          name: Set npm registry public signing keys
+          command: |
+            echo "export COREPACK_INTEGRITY_KEYS='$(curl https://registry.npmjs.org/-/npm/v1/keys | jq -c '{npm: .keys}')'" >> $BASH_ENV
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -223,12 +227,6 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: Sync RSC "use client" directives
-          command: pnpm rsc:build
-      - run:
-          name: '`pnpm rsc:build` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
           name: '`pnpm docs:link-check` changes committed?'
           command: |
             pnpm docs:link-check
@@ -247,8 +245,7 @@ jobs:
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
-            pnpm --filter @mui/x-date-pickers* prebuild
-            pnpm --filter @mui/x-date-pickers* build:types
+            pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
             if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
             then
                 exit 1
@@ -259,7 +256,7 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
     steps:
       - checkout
       - install_js:
@@ -291,7 +288,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
     steps:
       - checkout
       - install_js:
@@ -303,7 +300,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
     steps:
       - checkout
       - install_js:
@@ -316,7 +313,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
     steps:
       - checkout
       - install_js:

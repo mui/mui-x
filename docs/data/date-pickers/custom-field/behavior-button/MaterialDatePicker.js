@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,9 +13,9 @@ import {
 
 function ButtonDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, label, focused, name, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
   const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
@@ -30,13 +31,15 @@ function ButtonDateField(props) {
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={pickerContext.triggerRef}
+      ref={handleRef}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }

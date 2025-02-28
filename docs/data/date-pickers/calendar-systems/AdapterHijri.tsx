@@ -28,7 +28,6 @@ const cacheRtl = createCache({
 
 function ButtonDateTimeField(props: DateTimePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, label, focused, name, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
@@ -46,13 +45,15 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
       ref={pickerContext.triggerRef}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }

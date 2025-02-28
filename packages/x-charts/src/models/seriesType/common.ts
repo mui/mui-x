@@ -1,5 +1,5 @@
 import type { ChartsLabelMarkProps } from '../../ChartsLabel';
-import type { HighlightScope } from '../../context';
+import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
@@ -34,8 +34,6 @@ export type CommonSeriesType<TValue> = {
    * Defines the mark type for the series.
    *
    * There is a default mark type for each series type.
-   *
-   * It allows custom values which will be passed to the mark component if it was customized.
    */
   labelMarkType?: ChartsLabelMarkProps['type'];
 };

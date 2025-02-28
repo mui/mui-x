@@ -232,7 +232,7 @@
     {
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
+      "default": "PickerPopperPaper",
       "class": null
     },
     {
@@ -348,8 +348,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

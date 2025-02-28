@@ -34,15 +34,10 @@ const legendPlacement: Partial<ScatterChartProps> = {
     legend: {
       position: {
         vertical: 'middle',
-        horizontal: 'right',
+        horizontal: 'end',
       },
       direction: 'vertical',
     },
-  },
-  margin: {
-    top: 20,
-    right: 20,
-    left: 30,
   },
 };
 const series = [

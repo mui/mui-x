@@ -174,7 +174,7 @@ export default function DetailPanelExpandOnRowClick() {
 
   const onRowClick = React.useCallback(
     (params) => {
-      apiRef.current.toggleDetailPanel(params.id);
+      apiRef.current?.toggleDetailPanel(params.id);
     },
     [apiRef],
   );

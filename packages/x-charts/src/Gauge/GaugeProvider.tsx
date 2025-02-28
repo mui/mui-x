@@ -1,4 +1,5 @@
 // @ignore - do not document.
+'use client';
 import * as React from 'react';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getArcRatios, getAvailableRadius } from './utils';

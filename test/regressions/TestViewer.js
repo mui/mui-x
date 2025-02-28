@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useFakeTimers } from 'sinon';
 
 const StyledBox = styled('div', {
@@ -110,7 +110,7 @@ LoadFont.propTypes = {
 };
 
 function TestViewer(props) {
-  const { children, isDataGridTest } = props;
+  const { children, isDataGridTest, path } = props;
 
   return (
     <React.Fragment>
@@ -141,7 +141,9 @@ function TestViewer(props) {
         }}
       />
       <MockTime isDataGridTest={isDataGridTest}>
-        <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
+        <LoadFont isDataGridTest={isDataGridTest} data-testpath={path}>
+          {children}
+        </LoadFont>
       </MockTime>
     </React.Fragment>
   );
@@ -150,6 +152,7 @@ function TestViewer(props) {
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
   isDataGridTest: PropTypes.bool.isRequired,
+  path: PropTypes.string.isRequired,
 };
 
 export default TestViewer;

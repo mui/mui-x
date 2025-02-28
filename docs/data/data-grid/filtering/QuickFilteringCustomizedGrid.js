@@ -59,6 +59,7 @@ export default function QuickFilteringCustomizedGrid() {
           },
         }}
         slots={{ toolbar: QuickSearchToolbar }}
+        showToolbar
       />
     </Box>
   );

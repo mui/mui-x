@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import { GridPipeProcessorGroup } from './gridPipeProcessingApi';
@@ -7,7 +8,7 @@ export const useGridRegisterPipeApplier = <
   PrivateApi extends GridPrivateApiCommon,
   G extends GridPipeProcessorGroup,
 >(
-  apiRef: React.RefObject<PrivateApi>,
+  apiRef: RefObject<PrivateApi>,
   group: G,
   callback: () => void,
 ) => {

@@ -71,7 +71,7 @@ export default function ListViewAdvanced(props: Props) {
 
   const handleDelete = React.useCallback(
     (ids: GridRowId[]) => {
-      apiRef.current.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+      apiRef.current?.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
     },
     [apiRef],
   );
@@ -83,7 +83,7 @@ export default function ListViewAdvanced(props: Props) {
       value: string,
     ) => {
       const updatedAt = new Date().toISOString();
-      apiRef.current.updateRows([{ id, [field]: value, updatedAt }]);
+      apiRef.current?.updateRows([{ id, [field]: value, updatedAt }]);
     },
     [apiRef],
   );
@@ -121,13 +121,13 @@ export default function ListViewAdvanced(props: Props) {
 
       // Add temporary row
       setLoading(true);
-      apiRef.current.updateRows([row]);
+      apiRef.current?.updateRows([row]);
 
       // Simulate server response time
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-        apiRef.current.updateRows([uploadedRow]);
+        apiRef.current?.updateRows([uploadedRow]);
         setOverlayState({ overlay: 'actions', params: { row } });
         setLoading(false);
       }, timeout);
@@ -300,6 +300,7 @@ export default function ListViewAdvanced(props: Props) {
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
               showQuickFilter: true,

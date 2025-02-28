@@ -43,13 +43,13 @@ export default function ReadOnlySortingGrid() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', 'asc')}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'asc')}>
         Ascending
       </Button>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', 'desc')}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'desc')}>
         Descending
       </Button>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', null)}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', null)}>
         None
       </Button>
       <Box sx={{ height: 400 }}>

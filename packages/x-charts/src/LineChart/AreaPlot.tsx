@@ -11,10 +11,11 @@ import {
   AreaElementSlots,
 } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
+import { getCurveFactory } from '../internals/getCurve';
+import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
@@ -48,7 +49,7 @@ const AreaPlotRoot = styled('g', {
 });
 
 const useAggregatedData = () => {
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const getGradientId = useChartGradientIdBuilder();
@@ -75,9 +76,12 @@ const useAggregatedData = () => {
             data,
             connectNulls,
             baseline,
+            curve,
+            strictStepCurve,
           } = series[seriesId];
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+          const xScale = xAxis[xAxisId].scale;
+          const xPosition = getValueToPositionMapper(xScale);
           const yScale = yAxis[yAxisId].scale;
           const xData = xAxis[xAxisId].data;
 
@@ -103,12 +107,49 @@ const useAggregatedData = () => {
             }
           }
 
+          const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
+
+          const formattedData: {
+            x: any;
+            y: [number, number];
+            nullData: boolean;
+            isExtension?: boolean;
+          }[] =
+            xData?.flatMap((x, index) => {
+              const nullData = data[index] == null;
+              if (shouldExpand) {
+                const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+                if (!nullData && (index === 0 || data[index - 1] == null)) {
+                  rep.unshift({
+                    x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                    y: stackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
+                  rep.push({
+                    x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                    y: stackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                return rep;
+              }
+              return { x, y: stackedData[index], nullData };
+            }) ?? [];
+
+          const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+
           const areaPath = d3Area<{
             x: any;
             y: [number, number];
+            nullData: boolean;
+            isExtension?: boolean;
           }>()
-            .x((d) => xScale(d.x))
-            .defined((_, i) => connectNulls || data[i] != null)
+            .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
+            .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
             .y0((d) => {
               if (typeof baseline === 'number') {
                 return yScale(baseline)!;
@@ -128,13 +169,7 @@ const useAggregatedData = () => {
             })
             .y1((d) => d.y && yScale(d.y[1])!);
 
-          const curve = getCurveFactory(series[seriesId].curve);
-          const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-          const d3Data = connectNulls
-            ? formattedData.filter((_, i) => data[i] != null)
-            : formattedData;
-
-          const d = areaPath.curve(curve)(d3Data) || '';
+          const d = areaPath.curve(getCurveFactory(curve))(d3Data) || '';
           return {
             ...series[seriesId],
             gradientId,

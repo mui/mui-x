@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import resolveProps from '@mui/utils/resolveProps';
 import {
   GridColumnLookup,
@@ -308,12 +308,14 @@ export const createColumnsState = ({
   initialState,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
+  updateInitialVisibilityModel = false,
 }: {
   columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
-  apiRef: React.RefObject<GridApiCommunity>;
+  updateInitialVisibilityModel?: boolean;
+  apiRef: RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
@@ -325,13 +327,17 @@ export const createColumnsState = ({
       orderedFields: [],
       lookup: {},
       columnVisibilityModel,
+      initialColumnVisibilityModel: columnVisibilityModel,
     };
   } else {
-    const currentState = gridColumnsStateSelector(apiRef.current.state);
+    const currentState = gridColumnsStateSelector(apiRef);
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      initialColumnVisibilityModel: updateInitialVisibilityModel
+        ? columnVisibilityModel
+        : currentState.initialColumnVisibilityModel,
     };
   }
 
@@ -415,7 +421,7 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows,
 }: {
   firstColumnToRender: number;
-  apiRef: React.RefObject<GridApiCommon>;
+  apiRef: RefObject<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
   visibleRows: GridRowEntry[];
@@ -439,7 +445,7 @@ export function getFirstNonSpannedColumnToRender({
 }
 
 export function getTotalHeaderHeight(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'

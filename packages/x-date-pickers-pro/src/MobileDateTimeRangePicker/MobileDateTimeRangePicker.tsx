@@ -34,7 +34,7 @@ import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
-import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
@@ -149,8 +149,10 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
+    // force current calendar position, since we only have one calendar
+    currentMonthCalendarPosition: 1,
     slots: {
-      field: MultiInputDateTimeRangeField,
+      field: SingleInputDateTimeRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -158,7 +160,6 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: false,
@@ -176,6 +177,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -299,12 +301,10 @@ MobileDateTimeRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -353,7 +353,6 @@ MobileDateTimeRangePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

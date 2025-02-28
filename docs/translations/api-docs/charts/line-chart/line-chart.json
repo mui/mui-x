@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -18,26 +15,20 @@
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
     },
-    "experimentalMarkRendering": {
-      "description": "If <code>true</code> marks will render <code>&lt;circle /&gt;</code> instead of <code>&lt;path /&gt;</code> and drop theme override for faster rendering."
-    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onAreaClick": { "description": "Callback fired when an area element is clicked." },
     "onAxisClick": {
@@ -53,18 +44,12 @@
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
     },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },

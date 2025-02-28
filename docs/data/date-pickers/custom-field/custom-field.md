@@ -22,37 +22,6 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
-
-{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
-
-### Customize the `start` and `end` fields differently [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
-
-{{"demo": "MultiInputFieldTextFieldProps.js"}}
-
-### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can pass the single input fields to the range picker to use it for keyboard editing:
-
-{{"demo": "SingleInputDateRangePicker.js"}}
-
-If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
-Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
-
-{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
-
-You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
-
-{{"demo": "SingleInputDateRangePickerWithAdornment.js"}}
-
-:::info
-This adornment is purely decorative, the focus remains on the field when the picker is opened.
-:::
-
 ### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
@@ -62,9 +31,38 @@ You can use the `dateSeparator` prop to change the separator rendered between th
 ### Change the format density
 
 You can control the field format spacing using the `formatDensity` prop.
-Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-` and `.` character.
 
 {{"demo": "FieldFormatDensity.js"}}
+
+## Multi input range field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+### Usage inside a range picker
+
+You can pass the multi input fields to the range picker to use it for keyboard editing:
+
+{{"demo": "MultiInputDateRangePicker.js"}}
+
+If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'multi-input'`.
+Otherwise, the picker will throw an error because it won't know how to adapt to this custom field:
+
+{{"demo": "MultiInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
+
+### Customize the `start` and `end` fields differently
+
+You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
+
+{{"demo": "MultiInputFieldTextFieldProps.js"}}
+
+### Customize the separator
+
+You can use the `separator` slot to pass custom props to the `Typography` rendered between the two Text Fields:
+
+{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
+
+:::success
+When used inside a picker, the `separator` slot is not available directly and must be accessed using `slotProps.field.slotProps.separator`.
+:::
 
 ## With Material UI
 
@@ -173,7 +171,7 @@ Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pi
 Each Picker component exposes an interface describing the props it passes to its field.
 You can import it from the same endpoint as the Picker component and use it to type the props of your field:
 
-```tsx
+```ts
 import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 
@@ -200,7 +198,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 
 You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
 
-```ts
+```js
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const {
@@ -256,12 +254,36 @@ const parsedFormat = useParsedFormat();
 const parsedFormat = useParsedFormat({ format: 'MM/DD/YYYY' });
 ```
 
+### Props forwarded by the picker
+
+The picker can receive some commonly used props that should be forwarded to the field DOM elements:
+
+```jsx
+<DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
+```
+
+If you are using any of those props in one of your picker, make sure to retrieve them in your field using the `usePickerContext` hook:
+
+```jsx
+const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();
+
+return (
+  <TextField
+    label={label}
+    name={name}
+    className={rootClassName}
+    sx={rootSx}
+    ref={rootRef}
+  />
+);
+```
+
 ### Spread props to the DOM
 
 The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
 You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
 
-```tsx
+```jsx
 const { internalProps, forwardedProps } = useSplitFieldProps(
   // The props received by the field component
   props,
@@ -269,44 +291,22 @@ const { internalProps, forwardedProps } = useSplitFieldProps(
   'date',
 );
 
-return (
-  <TextField {...forwardedProps} value={inputValue} onChange={handleChange}>
-)
+return <TextField {...forwardedProps}>;
 ```
-
-:::success
-The `forwardedProps` contains the `sx` which is specific to MUI.
-You can omit it if the component your are forwarding the props to does not support this concept:
-
-```jsx
-const { sx, ...other } = props;
-const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
-
-return (
-  <input {...forwardedProps} value={inputValue} onChange={handleChange}>
-)
-```
-
-:::
 
 ### Pass the field to the Picker
 
 You can pass your custom field to your Picker using the `field` slot:
 
-```tsx
+```jsx
 function DatePickerWithCustomField() {
-  return (
-    <DatePicker slots={{ field: CustomDateField }}>
-  )
+  return <DatePicker slots={{ field: CustomDateField }}>;
 }
 
 // Also works with the other variants of the component
 function DesktopDatePickerWithCustomField() {
-  return (
-    <DesktopDatePicker slots={{ field: CustomDateField }}>
-  )
+  return <DesktopDatePicker slots={{ field: CustomDateField }}>
 }
-
 ```
 
 ### Full custom example

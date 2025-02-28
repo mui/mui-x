@@ -18,7 +18,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const DateRangeIcon = createSvgIcon(
@@ -28,7 +27,7 @@ const DateRangeIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
+function JoySingleInputDateRangeField(props) {
   const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
@@ -39,7 +38,6 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     clearable,
     disabled,
     id,
-    label,
     inputRef,
     ...other
   } = fieldResponse;
@@ -50,37 +48,36 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     <FormControl
       disabled={disabled}
       id={id}
-      ref={ref}
+      ref={pickerContext.rootRef}
       style={{
         minWidth: 300,
       }}
     >
-      <FormLabel>{label}</FormLabel>
+      <FormLabel>{pickerContext.label}</FormLabel>
       <Input
-        ref={pickerContext.triggerRef}
         disabled={disabled}
         endDecorator={<DateRangeIcon size="md" />}
         slotProps={{
           input: { ref: inputRef },
         }}
         {...other}
+        ref={pickerContext.triggerRef}
       />
     </FormControl>
   );
-});
+}
 
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
-const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
+function JoySingleInputDateRangePicker(props) {
   return (
     <DateRangePicker
       {...props}
-      ref={ref}
       enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

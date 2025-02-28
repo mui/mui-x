@@ -50,7 +50,7 @@ export default function ColumnSizingPersistWidthOrder() {
 }
 
 const useColumnsState = (
-  apiRef: React.RefObject<GridApiPro>,
+  apiRef: React.RefObject<GridApiPro | null>,
   columns: GridColDef[],
 ) => {
   const [widths, setWidths] = React.useState<Record<GridColDef['field'], number>>(

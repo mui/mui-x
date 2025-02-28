@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -12,7 +13,7 @@ import {
   GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -29,19 +30,27 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 // Needs layout
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
+  const fetchRowsSpy = spy();
 
-  let apiRef: React.RefObject<GridApi>;
-  let fetchRowsSpy: SinonSpy;
+  let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
+  function Reset() {
+    React.useLayoutEffect(() => {
+      fetchRowsSpy.resetHistory();
+    }, []);
+    return null;
+  }
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
-    fetchRowsSpy = spy(mockServer, 'fetchRows');
-    const { fetchRows, columns } = mockServer;
+    const { columns } = mockServer;
 
-    const dataSource: GridDataSource = React.useMemo(
-      () => ({
+    const { fetchRows } = mockServer;
+
+    const dataSource: GridDataSource = React.useMemo(() => {
+      return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             paginationModel: JSON.stringify(params.paginationModel),
@@ -50,9 +59,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
             groupKeys: JSON.stringify(params.groupKeys),
           });
 
-          const getRowsResponse = await fetchRows(
-            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          );
+          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
+          fetchRowsSpy(url);
+          const getRowsResponse = await fetchRows(url);
 
           return {
             rows: getRowsResponse.rows,
@@ -61,16 +70,20 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         },
         getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
         getChildrenCount: (row) => row.descendantCount,
-      }),
-      [fetchRows],
-    );
+      };
+    }, [fetchRows]);
+
+    if (!mockServer.isReady) {
+      return null;
+    }
 
     return (
       <div style={{ width: 300, height: 300 }}>
+        <Reset />
         <DataGridPro
           apiRef={apiRef}
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           pagination
           treeData
@@ -125,9 +138,13 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should fetch nested data when clicking on a dropdown', async () => {
     const { user } = render(<TestDataSource />);
 
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
     const cell11 = getCell(0, 0);
@@ -143,17 +160,22 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   });
 
-  it('should fetch nested data when calling API method `unstable_dataSource.fetchRows`', async () => {
+  it('should fetch nested data when calling API method `dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
+
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
 
     await waitFor(() => {
-      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
     const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
-    apiRef.current.unstable_dataSource.fetchRows(firstChildId);
+    apiRef.current?.dataSource.fetchRows(firstChildId);
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -169,17 +191,21 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(apiRef.current.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
+      expect(apiRef.current!.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
     });
 
     // All the group nodes belonging to the grid root group should be there for fetching
     (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children.forEach(
       (child) => {
-        const node = apiRef.current.state.rows.tree[child];
-        if (node.type === 'group') {
-          expect(apiRef.current.state.rows.groupsToFetch).to.include(child);
+        const node = apiRef.current?.state.rows.tree[child];
+        if (node?.type === 'group') {
+          expect(apiRef.current?.state.rows.groupsToFetch).to.include(child);
         }
       },
     );

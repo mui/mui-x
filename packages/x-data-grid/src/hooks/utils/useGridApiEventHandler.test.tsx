@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
 import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
-import { createUseGridApiEventHandler } from './useGridApiEventHandler';
+import { useGridApiEventHandler, internal_registryContainer } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 
@@ -18,9 +18,8 @@ describe('useGridApiEventHandler', () => {
     testSkipIf(
       !isJSDOM || typeof FinalizationRegistry === 'undefined' || typeof global.gc === 'undefined',
     )('should unsubscribe event listeners registered by uncommitted components', async () => {
-      const useGridApiEventHandler = createUseGridApiEventHandler({
-        registry: new FinalizationRegistryBasedCleanupTracking(),
-      });
+      internal_registryContainer.current = new FinalizationRegistryBasedCleanupTracking();
+
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },
@@ -53,9 +52,8 @@ describe('useGridApiEventHandler', () => {
 
   describe('Timer-based implementation', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async () => {
-      const useGridApiEventHandler = createUseGridApiEventHandler({
-        registry: new TimerBasedCleanupTracking(50),
-      });
+      internal_registryContainer.current = new TimerBasedCleanupTracking(50);
+
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },

@@ -16,7 +16,6 @@ const xLabels = [
 export default function SimpleBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId' },

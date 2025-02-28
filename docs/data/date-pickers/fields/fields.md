@@ -56,13 +56,6 @@ You need to make sure the input is focused before imperatively updating the sele
 
 {{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
 
-#### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-For multi input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
-Otherwise, the section(s) might be selected on the wrong input.
-
-{{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
-
 #### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
@@ -74,6 +67,13 @@ Please only use it if needed.
 :::
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
+
+#### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+For multi input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
+Otherwise, the section(s) might be selected on the wrong input.
+
+{{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
 
 ### Clearable behavior
 

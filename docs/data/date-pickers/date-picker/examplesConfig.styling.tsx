@@ -272,7 +272,7 @@ export const datePickerExamples: PickersSubcomponentType = {
     slots: ['root'],
     moreInformation: <TextFieldMoreInfo />,
   },
-  PickersPopper: {
+  PickerPopper: {
     examples: {
       customTheme: {
         type: 'success',

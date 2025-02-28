@@ -59,11 +59,11 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   };
 
   const { renderPicker } = useStaticPicker<TimeView, typeof props>({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
     validator: validateTime,
-    ref,
   });
 
   return renderPicker();

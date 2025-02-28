@@ -52,6 +52,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartDataProvider',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider-pro',
+    title: 'ChartDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -80,10 +85,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
-    pathname: '/x/api/charts/charts-on-axis-click-handler',
-    title: 'ChartsOnAxisClickHandler',
-  },
-  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -102,10 +103,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-tooltip-container',
     title: 'ChartsTooltipContainer',
-  },
-  {
-    pathname: '/x/api/charts/charts-voronoi-handler',
-    title: 'ChartsVoronoiHandler',
   },
   {
     pathname: '/x/api/charts/charts-x-axis',

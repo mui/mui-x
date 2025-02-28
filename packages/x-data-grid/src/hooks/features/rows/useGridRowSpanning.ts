@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
@@ -14,6 +15,8 @@ import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gr
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { runIf } from '../../../utils/utils';
+import { gridPageSizeSelector } from '../pagination';
+import { gridDataRowIdsSelector } from './gridRowsSelector';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -43,7 +46,7 @@ const skippedFields = new Set([
 const DEFAULT_ROWS_TO_PROCESS = 20;
 
 const computeRowSpanningState = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   colDefs: GridColDef[],
   visibleRows: GridRowEntry<GridValidRowModel>[],
   range: RowRange,
@@ -158,6 +161,30 @@ const computeRowSpanningState = (
   return { spannedCells, hiddenCells, hiddenCellOriginMap, processedRange };
 };
 
+const getInitialRangeToProcess = (
+  props: Pick<DataGridProcessedProps, 'pagination'>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
+) => {
+  const rowCount = gridDataRowIdsSelector(apiRef).length;
+
+  if (props.pagination) {
+    const pageSize = gridPageSizeSelector(apiRef);
+    let paginationLastRowIndex = DEFAULT_ROWS_TO_PROCESS;
+    if (pageSize > 0) {
+      paginationLastRowIndex = pageSize - 1;
+    }
+    return {
+      firstRowIndex: 0,
+      lastRowIndex: Math.min(paginationLastRowIndex, rowCount),
+    };
+  }
+
+  return {
+    firstRowIndex: 0,
+    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, rowCount),
+  };
+};
+
 /**
  * @requires columnsStateInitializer (method) - should be initialized before
  * @requires rowsStateInitializer (method) - should be initialized before
@@ -191,10 +218,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
       rowSpanning: EMPTY_STATE,
     };
   }
-  const rangeToProcess = {
-    firstRowIndex: 0,
-    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
-  };
+  const rangeToProcess = getInitialRangeToProcess(props, apiRef);
   const rows = rowIds.map((id) => ({
     id,
     model: dataRowIdToModelLookup[id!],
@@ -221,18 +245,12 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
 };
 
 export const useGridRowSpanning = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const processedRange = useLazyRef<RowRange, void>(() => {
-    return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
-      ? {
-          firstRowIndex: 0,
-          lastRowIndex: Math.min(
-            DEFAULT_ROWS_TO_PROCESS,
-            Math.max(apiRef.current.state.rows.dataRowIds.length, 0),
-          ),
-        }
+    return apiRef.current.state.rowSpanning !== EMPTY_STATE
+      ? getInitialRangeToProcess(props, apiRef)
       : EMPTY_RANGE;
   });
 

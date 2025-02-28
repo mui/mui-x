@@ -1,3 +1,6 @@
-export * from './HighlightedProvider';
-export { ChartDataProvider } from './ChartDataProvider';
-export type { ChartDataProviderProps } from './ChartDataProvider';
+export type {
+  HighlightScope,
+  FadeOptions,
+  HighlightItemData,
+  HighlightOptions,
+} from '../internals/plugins/featurePlugins/useChartHighlight';

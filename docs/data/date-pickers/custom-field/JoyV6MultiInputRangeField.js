@@ -17,7 +17,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
@@ -25,104 +25,97 @@ import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mu
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+function JoyField(props) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    triggerRef,
     disabled,
     id,
     label,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     slotProps,
     inputRef,
     ...other
   } = props;
 
   return (
-    <FormControl disabled={disabled} id={id} ref={ref}>
+    <FormControl disabled={disabled} id={id}>
       <FormLabel>{label}</FormLabel>
       <Input
-        ref={ref}
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
         slotProps={{
           ...slotProps,
-          root: { ...slotProps?.root, ref: containerRef },
           input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
+        ref={triggerRef}
       />
     </FormControl>
   );
-});
+}
 
-const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
+function JoyMultiInputDateRangeField(props) {
   const manager = useDateRangeManager({
     enableAccessibleFieldDOMStructure: false,
   });
+  const pickerContext = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { slotProps, ownerState, ...otherForwardedProps } = forwardedProps;
+  const { slotProps, ...otherForwardedProps } = forwardedProps;
 
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'Start' },
     ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'End' },
     ownerState: { position: 'end' },
   });
 
   const fieldResponse = useMultiInputRangeField({
     manager,
     internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
-    startForwardedProps: startTextFieldProps,
-    endForwardedProps: endTextFieldProps,
+    rootProps: {
+      ref: pickerContext.rootRef,
+      spacing: 2,
+      overflow: 'auto',
+      direction: 'row',
+      alignItems: 'center',
+      ...otherForwardedProps,
+    },
+    startTextFieldProps,
+    endTextFieldProps,
   });
 
   return (
-    <Stack
-      ref={ref}
-      spacing={2}
-      overflow="auto"
-      direction="row"
-      alignItems="center"
-      {...otherForwardedProps}
-    >
-      <JoyField {...fieldResponse.startDate} />
+    <Stack {...fieldResponse.root}>
+      <JoyField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>
-      <JoyField {...fieldResponse.endDate} />
+      <JoyField {...fieldResponse.endTextField} />
     </Stack>
   );
-});
+}
 
-const JoyDateRangePicker = React.forwardRef((props, ref) => {
+JoyMultiInputDateRangeField.fieldType = 'multi-input';
+
+function JoyDateRangePicker(props) {
   return (
     <DateRangePicker
-      ref={ref}
       {...props}
       enableAccessibleFieldDOMStructure={false}
       slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

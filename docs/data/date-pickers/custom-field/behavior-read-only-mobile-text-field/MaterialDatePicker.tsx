@@ -45,7 +45,13 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
         sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
       }}
       error={hasValidationError}
+      focused={pickerContext.open}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
+      name={pickerContext.name}
+      label={pickerContext.label}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      ref={pickerContext.rootRef}
     />
   );
 }

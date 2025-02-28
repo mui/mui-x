@@ -14,7 +14,10 @@ import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 import { GridSlotsComponent } from '../../models';
 
 export type GridOverlayType =
-  | keyof Pick<GridSlotsComponent, 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'>
+  | keyof Pick<
+      GridSlotsComponent,
+      'noColumnsOverlay' | 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'
+    >
   | null;
 
 interface GridOverlaysProps {
@@ -113,5 +116,10 @@ GridOverlayWrapper.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   loadingOverlayVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
-  overlayType: PropTypes.oneOf(['loadingOverlay', 'noResultsOverlay', 'noRowsOverlay']),
+  overlayType: PropTypes.oneOf([
+    'loadingOverlay',
+    'noResultsOverlay',
+    'noRowsOverlay',
+    'noColumnsOverlay',
+  ]),
 } as any;

@@ -2,10 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import { warnOnce } from '@mui/x-internals/warning';
 import { animated, useSpring } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -13,10 +12,6 @@ import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
-    /**
-     * The shape of the marker.
-     */
-    shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -50,19 +45,9 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
-    shape,
     ...other
   } = props;
 
-  if (shape !== 'circle') {
-    warnOnce(
-      [
-        `MUI X: The mark element of your line chart have shape "${shape}" which is not supported when using \`experimentalRendering=true\`.`,
-        'Only "circle" are supported with `experimentalRendering`.',
-      ].join('\n'),
-      'error',
-    );
-  }
   const theme = useTheme();
   const getInteractionItemProps = useInteractionItemProps();
   const { isFaded, isHighlighted } = useItemHighlighted({
