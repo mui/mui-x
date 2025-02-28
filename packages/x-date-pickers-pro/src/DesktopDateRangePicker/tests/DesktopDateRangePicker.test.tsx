@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
+import { screen, fireEvent, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -466,7 +466,9 @@ describe('<DesktopDateRangePicker />', () => {
 
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        await waitFor(() => {
+          expect(onClose.callCount).to.equal(1);
+        });
       },
     );
 
