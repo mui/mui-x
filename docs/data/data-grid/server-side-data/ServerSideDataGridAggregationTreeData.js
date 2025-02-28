@@ -50,7 +50,7 @@ export default function ServerSideDataGridAggregationTreeData() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         treeData
         apiRef={apiRef}
         initialState={{

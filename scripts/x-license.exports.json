@@ -8,6 +8,7 @@
   { "name": "LicenseStatus", "kind": "TypeAlias" },
   { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
   { "name": "MuiLicenseInfo", "kind": "Interface" },
+  { "name": "muiXTelemetrySettings", "kind": "Variable" },
   { "name": "PlanScope", "kind": "TypeAlias" },
   { "name": "showExpiredAnnualGraceLicenseKeyError", "kind": "Function" },
   { "name": "showExpiredAnnualLicenseKeyError", "kind": "Function" },

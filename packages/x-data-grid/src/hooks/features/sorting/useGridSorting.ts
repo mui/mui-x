@@ -188,7 +188,7 @@ export const useGridSorting = (
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem[];
+      let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
         sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {

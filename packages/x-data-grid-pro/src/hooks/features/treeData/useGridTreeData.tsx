@@ -8,7 +8,7 @@ import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';
 
 export const useGridTreeData = (
   apiRef: RefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'unstable_dataSource'>,
+  props: Pick<DataGridProProcessedProps, 'dataSource'>,
 ) => {
   /**
    * EVENTS
@@ -25,15 +25,15 @@ export const useGridTreeData = (
           return;
         }
 
-        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
-          apiRef.current.unstable_dataSource.fetchRows(params.id);
+        if (props.dataSource && !params.rowNode.childrenExpanded) {
+          apiRef.current.dataSource.fetchRows(params.id);
           return;
         }
 
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.unstable_dataSource],
+    [apiRef, props.dataSource],
   );
 
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);

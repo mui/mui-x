@@ -61,7 +61,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
       <div style={{ height: 450, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
           showToolbar

@@ -234,7 +234,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
-  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+  // - The position is set to 'none'.
+  if (
+    (ordinalAxis && domain.length === 0) ||
+    (!ordinalAxis && domain.some(isInfinity)) ||
+    position === 'none'
+  ) {
     return null;
   }
   return (
@@ -273,6 +278,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
                 text={formattedValue.toString()}
               />
