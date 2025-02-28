@@ -2,7 +2,7 @@ import { createPickerRenderer, describeRangeValidation } from 'test/utils/picker
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker /> - Describe Validation', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0) });
 
   describeRangeValidation(DesktopDateTimeRangePicker, () => ({
     render,
