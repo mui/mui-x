@@ -26,7 +26,7 @@ export type ChartDataProviderProps<
  *
  * Demos:
  *
- * - [Composition](https://mui.com/x/api/charts/composition/)
+ * - [Composition](https://mui.com/x/react-charts/composition/)
  *
  * API:
  *

@@ -255,7 +255,7 @@ async function main() {
           if (code === 0) {
             resolve();
           } else {
-            reject(code);
+            reject(new Error(`ffmpeg exited with code ${code}`));
           }
         });
       });
@@ -292,5 +292,5 @@ main().catch((error) => {
   // error during setup.
   // Throwing lets mocha hang.
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });
