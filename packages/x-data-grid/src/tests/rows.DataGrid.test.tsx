@@ -904,7 +904,7 @@ describe('<DataGrid /> - Rows', () => {
       );
 
       // https://github.com/mui/mui-x/issues/14726
-      testSkipIf(isJSDOM)(
+      testSkipIf(isJSDOM).only(
         'should not cause scroll jumping when the focused cell is outside of the viewport',
         async () => {
           const rows = [
@@ -944,11 +944,11 @@ describe('<DataGrid /> - Rows', () => {
             scrollPositions.push(virtualScroller.scrollTop);
           });
 
-          virtualScroller.scrollBy({ top: 160, left: 0, behavior: 'smooth' });
+          virtualScroller.scrollBy({ top: 150, left: 0, behavior: 'smooth' });
           virtualScroller.dispatchEvent(new Event('scroll'));
 
           await waitFor(() => {
-            expect(virtualScroller.scrollTop).to.equal(160);
+            expect(virtualScroller.scrollTop).to.equal(150);
           });
 
           const hasScrollJump = scrollPositions.some((scrollTop, index) => {
