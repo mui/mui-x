@@ -13,13 +13,13 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
-export interface ColumnHeaderFilterButtonProps {
+export interface GridColumnHeaderFilterButtonProps {
   field: string;
   counter?: number;
   onClick?: (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-type OwnerState = ColumnHeaderFilterButtonProps & {
+type OwnerState = GridColumnHeaderFilterButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -33,7 +33,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridColumnHeaderFilterButtonWrapped(props: ColumnHeaderFilterButtonProps) {
+function GridColumnHeaderFilterButtonWrapped(props: GridColumnHeaderFilterButtonProps) {
   if (!props.counter) {
     return null;
   }
@@ -50,7 +50,7 @@ GridColumnHeaderFilterButtonWrapped.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-function GridColumnHeaderFilterButton(props: ColumnHeaderFilterButtonProps) {
+function GridColumnHeaderFilterButton(props: GridColumnHeaderFilterButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

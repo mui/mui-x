@@ -8,7 +8,7 @@ import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconBu
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
-import type { ColumnHeaderFilterButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterButton';
+import type { GridColumnHeaderFilterButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
 import type { GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
 import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanel';
@@ -129,7 +129,8 @@ interface ElementSlotProps {
   bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
-  columnHeaderFilterButton: ColumnHeaderFilterButtonProps & ColumnHeaderFilterButtonPropsOverrides;
+  columnHeaderFilterButton: GridColumnHeaderFilterButtonProps &
+    ColumnHeaderFilterButtonPropsOverrides;
   columnHeaderSortButton: GridColumnHeaderSortButtonProps & ColumnHeaderSortButtonPropsOverrides;
   columnMenu: GridColumnMenuProps & ColumnMenuPropsOverrides;
   columnsPanel: GridColumnsPanelProps & ColumnsPanelPropsOverrides;
