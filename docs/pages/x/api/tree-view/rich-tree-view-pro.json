@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -28,7 +28,9 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ lazyLoading?: bool }" }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
@@ -191,6 +193,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view-pro/src/RichTreeViewPro/RichTreeViewPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy Loading Children</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }
