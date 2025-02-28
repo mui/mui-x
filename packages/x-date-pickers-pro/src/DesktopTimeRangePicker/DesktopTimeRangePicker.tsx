@@ -9,6 +9,8 @@ import {
   PickerRangeValue,
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
+  mergeSx,
+  MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import {
@@ -16,11 +18,11 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
-import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
@@ -40,7 +42,17 @@ const rendererInterceptor = function RendererInterceptor(
     sx: [
       {
         [`&.${multiSectionDigitalClockClasses.root}`]: {
-          borderBottom: 0,
+          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+            flex: 1,
+          },
+          [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+            width: 'auto',
+            // avoid layout shift when hovering over a section with default width
+            minWidth: MULTI_SECTION_CLOCK_SECTION_WIDTH,
+          },
+        },
+        [`&.${digitalClockClasses.root} .${digitalClockClasses.item}`]: {
+          justifyContent: 'center',
         },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
@@ -51,12 +63,7 @@ const rendererInterceptor = function RendererInterceptor(
   };
   const viewRenderer = viewRenderers[popperView];
   return (
-    <TimeRangePickerTimeWrapper
-      {...finalProps}
-      view={popperView}
-      viewRenderer={viewRenderer}
-      sx={[{ gridColumn: '1 / 3' }, ...finalProps.sx]}
-    />
+    <TimeRangePickerTimeWrapper {...finalProps} view={popperView} viewRenderer={viewRenderer} />
   );
 };
 
@@ -78,15 +85,15 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopTimeRangePicker');
 
-  const renderTimeRangeView = defaultizedProps.shouldRenderTimeInASingleColumn
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: PickerViewRendererLookup<any, TimeViewWithMeridiem, any> = {
-    hours: renderTimeRangeView,
-    minutes: renderTimeRangeView,
-    seconds: renderTimeRangeView,
-    meridiem: renderTimeRangeView,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 
@@ -104,7 +111,6 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
       field: SingleInputTimeRangeField,
-      layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -120,6 +126,16 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
       toolbar: {
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
+      },
+      layout: {
+        ...defaultizedProps.slotProps?.layout,
+        sx: mergeSx(defaultizedProps.slotProps?.layout?.sx, {
+          // Allow content wrapper to take full width when shortcuts are not present
+          [`&:not(:has(.${pickersLayoutClasses.shortcuts})) .${pickersLayoutClasses.contentWrapper}`]:
+            {
+              gridColumn: '1 /4',
+            },
+        }),
       },
     },
   };
