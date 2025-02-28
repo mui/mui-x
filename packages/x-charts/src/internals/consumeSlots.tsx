@@ -104,15 +104,11 @@ export const consumeSlots = <
       delete (outProps as unknown as Props)[prop];
     }
 
-    // Component can be wrapped in React.forwardRef or just a function that accepts (props, ref).
-    // If it is a plain function which accepts two arguments, we don't need to pass a ref because the component doesn't expect it
-    const shouldPassRef = Component.length >= 2;
-
     if (process.env.NODE_ENV !== 'production') {
       Component.displayName = `${name}.slots.${slotPropName}`;
     }
 
-    return <Component {...outProps} ref={shouldPassRef ? ref : undefined} />;
+    return <Component {...outProps} ref={ref} />;
   }
 
   return React.forwardRef<Ref, Props>(ConsumeSlotsInternal);
