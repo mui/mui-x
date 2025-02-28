@@ -191,9 +191,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
     describe('with fake timer', () => {
       beforeEach(() => {
-        vi.useFakeTimers({
-          now: new Date(2018, 0, 1),
-        });
+        vi.setSystemTime(new Date(2018, 0, 1));
       });
 
       afterEach(() => {

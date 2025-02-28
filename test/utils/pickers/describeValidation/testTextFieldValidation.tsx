@@ -140,9 +140,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
     describeSkipIf(!withDate)('with fake timers', () => {
       beforeEach(() => {
-        vi.useFakeTimers({
-          now: new Date(2018, 0, 1),
-        });
+        vi.setSystemTime(new Date(2018, 0, 1));
       });
 
       afterEach(() => {

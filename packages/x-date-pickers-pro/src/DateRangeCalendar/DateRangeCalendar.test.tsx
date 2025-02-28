@@ -39,9 +39,7 @@ describe('<DateRangeCalendar />', () => {
   const { render } = createPickerRenderer();
 
   beforeEach(() => {
-    vi.useFakeTimers({
-      now: new Date(2018, 0, 10),
-    });
+    vi.setSystemTime(new Date(2018, 0, 10));
   });
 
   afterEach(() => {
