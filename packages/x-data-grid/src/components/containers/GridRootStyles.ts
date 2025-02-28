@@ -13,12 +13,19 @@ export type OwnerState = DataGridProcessedProps;
 
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
+    position: 'relative',
     visibility: 'visible',
     width: 'auto',
   },
   [`& .${c.menuIcon}`]: {
+    position: 'relative',
     width: 'auto',
     visibility: 'visible',
+    marginRight: -5,
+  },
+  [`&.${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+    marginRight: 'auto',
+    marginLeft: -5,
   },
 };
 
@@ -274,8 +281,9 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {
-          width: '0 !important',
-          visibility: 'hidden !important',
+          position: 'absolute',
+          width: '0',
+          visibility: 'hidden',
         },
       },
       [`& .${c.cell}`]: {
@@ -360,14 +368,20 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
+        position: 'relative',
         visibility: 'visible',
         width: 'auto',
       },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
-      opacity: 0,
-      transition: vars.transition(['opacity'], {
-        duration: vars.transitions.duration.short,
-      }),
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.iconButtonContainer}`]: {
+      position: 'absolute',
+      width: '0',
+      visibility: 'hidden',
+      [`& .${c.sortIcon}`]: {
+        opacity: 0,
+        transition: vars.transition(['opacity'], {
+          duration: vars.transitions.duration.short,
+        }),
+      },
     },
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
@@ -403,10 +417,6 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
       marginLeft: 'auto',
-    },
-    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
-      marginRight: 'auto',
-      marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: hoverBackground,
@@ -488,11 +498,11 @@ export const GridRootStyles = styled('div', {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
-      marginRight: -5,
       display: 'flex',
       alignItems: 'center',
     },
     [`.${c.menuOpen}`]: {
+      position: 'relative',
       visibility: 'visible',
       width: 'auto',
     },
