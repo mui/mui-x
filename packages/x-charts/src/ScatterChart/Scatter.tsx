@@ -139,6 +139,7 @@ function Scatter(props: ScatterProps) {
           y={dataPoint.y}
           onClick={
             onItemClick &&
+            // @ts-ignore
             ((event) =>
               onItemClick(event, {
                 type: 'scatter',
@@ -162,8 +163,10 @@ function useResolveScatterMarkerSlot(props: ScatterProps) {
     name: 'MuiScatterMarker',
   });
 
-  const Component = props.slots?.marker ?? themedProps.slots.marker ?? ScatterMarker;
-  const componentProps = props.slotProps?.marker ?? themedProps.slotProps.marker;
+  // @ts-ignore
+  const Component = props.slots?.marker ?? themedProps?.slots?.marker ?? ScatterMarker;
+  // @ts-ignore
+  const componentProps = props.slotProps?.marker ?? themedProps?.slotProps?.marker;
 
   const { ownerState, ...defaultProps } = useSlotProps({
     elementType: Component,
