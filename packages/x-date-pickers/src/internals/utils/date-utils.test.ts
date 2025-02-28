@@ -174,7 +174,7 @@ describe('findClosestEnabledDate', () => {
 
   describe('fake clock hours', () => {
     beforeEach(() => {
-      vi.setSystemTime(new Date('2000-01-01T11:12:13.123Z'));
+      vi.setSystemTime(new Date('2000-01-02T11:12:13.123Z'));
     });
 
     afterEach(() => {
