@@ -34,3 +34,4 @@ export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
+export * from './FunnelChart';
