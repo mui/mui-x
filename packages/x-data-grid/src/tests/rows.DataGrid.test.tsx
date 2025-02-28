@@ -944,11 +944,11 @@ describe('<DataGrid /> - Rows', () => {
             scrollPositions.push(virtualScroller.scrollTop);
           });
 
-          virtualScroller.scrollBy({ top: 150, left: 0, behavior: 'smooth' });
+          virtualScroller.scrollBy({ top: 160, left: 0, behavior: 'smooth' });
           virtualScroller.dispatchEvent(new Event('scroll'));
 
           await waitFor(() => {
-            expect(virtualScroller.scrollTop).to.equal(150);
+            expect(virtualScroller.scrollTop).to.equal(160);
           });
 
           const hasScrollJump = scrollPositions.some((scrollTop, index) => {
