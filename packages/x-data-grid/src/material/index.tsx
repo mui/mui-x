@@ -25,7 +25,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
-import MUIPagination from '@mui/material/TablePagination';
+import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -155,6 +155,21 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   );
 });
 
+const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+  [`& .${tablePaginationClasses.selectLabel}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  [`& .${tablePaginationClasses.input}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
+    },
+  },
+}));
+
 const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
   function BasePagination(props, ref) {
     const { onRowsPerPageChange, disabled, ...rest } = props;
@@ -169,8 +184,7 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
     }, [disabled]);
 
     return (
-      <MUIPagination
-        component="div"
+      <StyledPagination
         onRowsPerPageChange={useEventCallback(
           (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
             onRowsPerPageChange?.(Number(event.target.value));

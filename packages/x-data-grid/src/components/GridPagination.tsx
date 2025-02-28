@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import {
-  tablePaginationClasses,
-  TablePaginationProps,
-  LabelDisplayedRowsArgs,
-} from '@mui/material/TablePagination';
 import type { GridSlotProps } from '../models/gridSlotsComponent';
-import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils/assert';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -18,21 +12,12 @@ import {
   gridPageCountSelector,
 } from '../hooks/features/pagination/gridPaginationSelector';
 
+type PaginationProps = GridSlotProps['basePagination'];
+type LabelDisplayedRowsArgs = Parameters<NonNullable<PaginationProps['labelDisplayedRows']>>[0];
+
 const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>)({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
-  [`& .${tablePaginationClasses.selectLabel}`]: {
-    display: 'none',
-    [vars.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  [`& .${tablePaginationClasses.input}`]: {
-    display: 'none',
-    [vars.breakpoints.up('sm')]: {
-      display: 'inline-flex',
-    },
-  },
 });
 
 export type WrappedLabelDisplayedRows = (
@@ -42,7 +27,7 @@ export type WrappedLabelDisplayedRows = (
 const wrapLabelDisplayedRows = (
   labelDisplayedRows: WrappedLabelDisplayedRows,
   estimated?: number,
-): TablePaginationProps['labelDisplayedRows'] => {
+) => {
   return ({ from, to, count, page }: LabelDisplayedRowsArgs) =>
     labelDisplayedRows({ from, to, count, page, estimated });
 };
@@ -82,7 +67,7 @@ function GridPagination() {
     [apiRef],
   );
 
-  const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
+  const handlePageChange = React.useCallback<PaginationProps['onPageChange']>(
     (_, page) => {
       apiRef.current.setPage(page);
     },

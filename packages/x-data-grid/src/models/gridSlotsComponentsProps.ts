@@ -6,7 +6,6 @@ import type { LinearProgressProps as MUILinearProgressProps } from '@mui/materia
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
-import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -146,7 +145,7 @@ interface ElementSlotProps {
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
   noColumnsOverlay: GridOverlayProps & NoColumnsOverlayPropsOverrides;
-  pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;
+  pagination: PaginationPropsOverrides;
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
   row: GridRowProps & RowPropsOverrides;
