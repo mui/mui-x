@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
-interface CreatePickerRendererOptions extends Omit<CreateRendererOptions, 'clock'> {
+interface CreatePickerRendererOptions
+  extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: { code: string } | any;
   adapterName?: AdapterName;
@@ -15,11 +17,20 @@ export function createPickerRenderer({
   adapterName,
   instance,
   clockConfig,
-  clockOptions,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
   const { render: clientRender } = createRenderer({
     ...createRendererOptions,
+  });
+  beforeEach(() => {
+    if (clockConfig) {
+      vi.setSystemTime(clockConfig);
+    }
+  });
+  afterEach(() => {
+    if (clockConfig) {
+      vi.useRealTimers();
+    }
   });
 
   let adapterLocale = [
