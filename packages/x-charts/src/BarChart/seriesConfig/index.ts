@@ -4,6 +4,7 @@ import seriesProcessor from './seriesProcessor';
 import legendGetter from './legend';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
+import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 
 export const seriesConfig: ChartSeriesTypeConfig<'bar'> = {
   seriesProcessor,
@@ -12,4 +13,5 @@ export const seriesConfig: ChartSeriesTypeConfig<'bar'> = {
   tooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
+  getSeriesWithDefaultValues,
 };
