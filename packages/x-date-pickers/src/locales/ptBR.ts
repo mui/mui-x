@@ -41,6 +41,7 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selecione data e hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

@@ -42,6 +42,7 @@ const beBYPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Абраць дату і час',
   timePickerToolbarTitle: 'Абраць час',
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
