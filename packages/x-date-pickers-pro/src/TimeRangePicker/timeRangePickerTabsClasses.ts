@@ -17,6 +17,6 @@ export function getTimeRangePickerTabsUtilityClass(slot: string) {
 }
 
 export const timeRangePickerTabsClasses: TimeRangePickerTabsClasses = generateUtilityClasses(
-  'MuiTimeRagePickerTabs',
+  'MuiTimeRangePickerTabs',
   ['root', 'tab'],
 );
