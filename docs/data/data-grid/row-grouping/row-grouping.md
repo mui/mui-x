@@ -4,15 +4,17 @@ title: Data Grid - Row grouping
 
 # Data Grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Group your rows according to some column values.</p>
+<p class="description">Group rows together based on column values in the Data Grid.</p>
 
-For when you need to group rows based on repeated column values, and/or custom functions.
-In the following example, movies are grouped based on their production `company`:
+The Data Grid Premium provides a row grouping feature which makes it possible to create subsets of rows based on repeated column values or custom functions.
+
+For example, in the demo below, movies are grouped based on their respective values in the production company column:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-If you are looking for row grouping on the server-side, see [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+This document covers client-side implementation.
+For row grouping on the server side, see [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
 :::
 
 ## Initializing row grouping
