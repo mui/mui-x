@@ -11,7 +11,7 @@ export const ChartsTooltipPaper = styled('div', {
 })(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: (theme.vars || theme).shape?.borderRadius,
   border: `solid ${(theme.vars || theme).palette.divider} 1px`,
 }));
 
