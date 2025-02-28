@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 28, 2025_
 
-We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Decouple `margin` and `axis-size`. A new API to support multiple axes (#16418) @JCQuintas
 - 🗺️ Added Bangla (bn-BD) locale
@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 Special thanks go out to the community members for their contributions:
 @denpiligrim, @lhilgert9, @noherczeg, @officialkidmax, @pcorpet.
 Following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @MBilalShafi, @oliviertassinari, @romgrk.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -253,7 +253,10 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.13`.
 - [charts] Add unit test for pie chart with empty series (#16663) @bernardobelchior
 - [charts] Decouple `margin` and `axis-size` (#16418) @JCQuintas
 - [charts] Display slider tooltip on demos (#16723) @JCQuintas
+- [charts] Fix composition docs link (#16761) @bernardobelchior
 - [charts] Fix default label measurement being off (#16635) @bernardobelchior
+- [charts] Fix is highlighted memoization (#16592) @alexfauquette
+- [charts] Fix missing `theme.shape` error in the tooltip (#16748) @alexfauquette
 - [charts] Fix typo in error message (#16641) @JCQuintas
 - [charts] Improve axis size docs (#16673) @JCQuintas
 - [charts] Improve performance of rendering ticks in x-axis (#16536) @bernardobelchior
@@ -294,7 +297,10 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.13`.
 - [docs] Fix scroll overflow on mobile (#16675) @oliviertassinari
 - [docs] Improve Pickers migration page (#16682) @LukasTy
 - [docs] Update small Pickers doc inconsistencies (#16724) @LukasTy
+- [code-infra] Charts changes for `vitest` (#16755) @JCQuintas
+- [code-infra] General packages changes for `vitest` (#16757) @JCQuintas
 - [code-infra] Native Node.js ESM (#16603) @Janpot
+- [infra] Update contributor acknowledgment wording (#16751) @michelengelen
 - [test] Revert timeout increase for possibly slow tests (#16651) @LukasTy
 - [x-license] Introduce usage telemetry (#13530) @hasdfa
 
