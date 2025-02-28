@@ -14,7 +14,7 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { PickerValue } from '../internals/models';
 
 type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
