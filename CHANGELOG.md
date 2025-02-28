@@ -151,12 +151,12 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Column management design updates (#16630) @KenanYusuf
 - [DataGrid] Fix `showColumnVerticalBorder` prop (#16715) @KenanYusuf
 - [DataGrid] Fix scrollbar overlapping cells on mount (#16639) @KenanYusuf
-- [DataGrid] Fix: base Select menuprops onClose (#16643) @romgrk
+- [DataGrid] Fix: base `Select` menuprops `onClose()` (#16643) @romgrk
 - [DataGrid] Make `GridSortItem` internal (#16732) @arminmeh
 - [DataGrid] Make data source stable (#16710) @MBilalShafi
 - [DataGrid] Reshape row selection model (#15651) @cherniavskii
 - [DataGrid] Replace `sx` prop usage with `styled()` components (#16665) @KenanYusuf
-- [DataGrid] Refactor: create base Autocomplete (#16390) @romgrk
+- [DataGrid] Refactor: create base `Autocomplete` (#16390) @romgrk
 - [DataGrid] Refactor: remove base form control (#16634) @romgrk
 - [DataGrid] Refactor: remove base input label & adornment (#16646) @romgrk
 - [DataGrid] Refactor: remove material containers (#16633) @romgrk
