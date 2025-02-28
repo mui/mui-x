@@ -1,0 +1,6 @@
+<DataGridPremium
+  {...data}
+  loading={loading}
+  slots={{ toolbar: CustomToolbar }}
+  showToolbar
+/>
