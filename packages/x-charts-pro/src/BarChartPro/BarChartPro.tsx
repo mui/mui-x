@@ -277,6 +277,177 @@ BarChartPro.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
+   * The configuration of the radial-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  radiusAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+      fill: PropTypes.string,
+      height: PropTypes.number,
+      hideTooltip: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      label: PropTypes.string,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      maxRadius: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      minRadius: PropTypes.number,
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'none', 'top']),
+      reverse: PropTypes.bool,
+      scaleType: PropTypes.oneOf(['linear']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+      tickSize: PropTypes.number,
+      valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
+    }),
+  ),
+  /**
+   * The configuration of the rotation-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  rotationAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+      endAngle: PropTypes.number,
+      fill: PropTypes.string,
+      height: PropTypes.number,
+      hideTooltip: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      label: PropTypes.string,
+      labelStyle: PropTypes.object,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'none', 'top']),
+      reverse: PropTypes.bool,
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      startAngle: PropTypes.number,
+      stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
+      tickInterval: PropTypes.oneOfType([
+        PropTypes.oneOf(['auto']),
+        PropTypes.array,
+        PropTypes.func,
+      ]),
+      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+      tickLabelStyle: PropTypes.object,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
+      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+      tickSize: PropTypes.number,
+      valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
+    }),
+  ),
+  /**
    * The series to display in the bar chart.
    * An array of [[BarSeriesType]] objects.
    */
