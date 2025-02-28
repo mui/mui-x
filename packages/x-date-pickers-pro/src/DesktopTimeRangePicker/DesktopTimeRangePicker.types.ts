@@ -1,5 +1,4 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { TimeView } from '@mui/x-date-pickers/models';
 import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlots,
@@ -25,10 +24,6 @@ export interface DesktopTimeRangePickerProps<
 > extends BaseTimeRangePickerProps,
     DesktopRangeOnlyPickerProps,
     DesktopOnlyTimePickerProps {
-  /**
-   * Available views.
-   */
-  views?: readonly TimeView[];
   /**
    * Overridable component slots.
    * @default {}
