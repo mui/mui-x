@@ -20,22 +20,25 @@ const MONOREPO_ALIASES = {
   '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
 };
 
-const WORKSPACE_ALIASES = {
-  '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
-  '@mui/x-data-grid-generator': path.resolve(
-    WORKSPACE_ROOT,
-    './packages/x-data-grid-generator/src',
-  ),
-  '@mui/x-data-grid-pro': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-pro/src'),
-  '@mui/x-data-grid-premium': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-premium/src'),
-  '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers/src'),
-  '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro/src'),
-  '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts/src'),
-  '@mui/x-charts-pro': path.resolve(WORKSPACE_ROOT, './packages/x-charts-pro/src'),
-  '@mui/x-charts-vendor': path.resolve(WORKSPACE_ROOT, './packages/x-charts-vendor'),
-  '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
-  '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
-  '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
+const getWorkspaceAliases = (mode: 'production' | 'development') => {
+  const folder = mode === 'production' ? 'build' : 'src';
+  return {
+    '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid', folder),
+    '@mui/x-data-grid-generator': path.resolve(
+      WORKSPACE_ROOT,
+      './packages/x-data-grid-generator', folder,
+    ),
+    '@mui/x-data-grid-pro': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-pro', folder),
+    '@mui/x-data-grid-premium': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-premium', folder),
+    '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers', folder),
+    '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro', folder),
+    '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts', folder),
+    '@mui/x-charts-pro': path.resolve(WORKSPACE_ROOT, './packages/x-charts-pro', folder),
+    '@mui/x-charts-vendor': path.resolve(WORKSPACE_ROOT, './packages/x-charts-vendor'),
+    '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view', folder),
+    '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro', folder),
+    '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license', folder),
+  }
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -102,7 +105,7 @@ export default withDocsInfra({
         alias: {
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
-          ...WORKSPACE_ALIASES,
+          ...getWorkspaceAliases(config.mode),
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
