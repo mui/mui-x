@@ -117,17 +117,15 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   skeletonCell: React.JSXElementConstructor<GridSlotProps['skeletonCell']>;
   /**
-   * Filter icon component rendered in each column header.
-   * @default GridColumnHeaderFilterIconButton
+   * Filter button component rendered in each column header.
+   * @default GridColumnHeaderFilterButton
    */
-  columnHeaderFilterIconButton: React.JSXElementConstructor<
-    GridSlotProps['columnHeaderFilterIconButton']
-  >;
+  columnHeaderFilterButton: React.JSXElementConstructor<GridSlotProps['columnHeaderFilterButton']>;
   /**
-   * Sort icon component rendered in each column header.
-   * @default GridColumnHeaderSortIcon
+   * Sort button component rendered in each column header.
+   * @default GridColumnHeaderSortButton
    */
-  columnHeaderSortIcon: React.JSXElementConstructor<GridSlotProps['columnHeaderSortIcon']>;
+  columnHeaderSortButton: React.JSXElementConstructor<GridSlotProps['columnHeaderSortButton']>;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu

@@ -374,17 +374,13 @@ export interface GridClasses {
    */
   editInputCell: string;
   /**
-   * Styles applied to the filter icon element.
+   * Styles applied to the filter button element.
    */
-  filterIcon: string;
+  filterButton: string;
   /**
    * Styles applied to the footer container element.
    */
   footerContainer: string;
-  /**
-   * Styles applied to the column header icon's container.
-   */
-  iconButtonContainer: string;
   /**
    * Styles applied to the column header separator icon element.
    */
@@ -411,17 +407,13 @@ export interface GridClasses {
    */
   menu: string;
   /**
-   * Styles applied to the menu icon element.
+   * Styles applied to the menu button element.
    */
-  menuIcon: string;
+  menuButton: string;
   /**
-   * Styles applied to the menu icon button element.
+   * Styles applied to the menu button element when the menu is open.
    */
-  menuIconButton: string;
-  /**
-   * Styles applied to the menu icon element if the menu is open.
-   */
-  menuOpen: string;
+  'menuButton--menuOpen': string;
   /**
    * Styles applied to the menu list element.
    */
@@ -596,9 +588,9 @@ export interface GridClasses {
    */
   selectedRowCount: string;
   /**
-   * Styles applied to the sort icon element.
+   * Styles applied to the sort button element.
    */
-  sortIcon: string;
+  sortButton: string;
   /**
    * Styles applied to the shadow scroll area element.
    * @ignore - do not document.
@@ -792,18 +784,16 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
-  'filterIcon',
+  'filterButton',
   'footerContainer',
   'headerFilterRow',
-  'iconButtonContainer',
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
   'main--hiddenContent',
   'menu',
-  'menuIcon',
-  'menuIconButton',
-  'menuOpen',
+  'menuButton',
+  'menuButton--menuOpen',
   'menuList',
   'overlay',
   'overlayWrapper',
@@ -841,7 +831,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
-  'sortIcon',
+  'sortButton',
   'shadowScrollArea',
   'toolbarContainer',
   'toolbarFilterList',

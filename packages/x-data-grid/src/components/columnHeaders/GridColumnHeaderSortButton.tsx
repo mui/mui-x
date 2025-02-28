@@ -7,9 +7,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridIconButtonContainer } from './GridIconButtonContainer';
 
-export interface GridColumnHeaderSortIconProps {
+export interface GridColumnHeaderSortButtonProps {
   field: string;
   direction: GridSortDirection;
   index: number | undefined;
@@ -17,7 +16,7 @@ export interface GridColumnHeaderSortIconProps {
   disabled?: boolean;
 }
 
-type OwnerState = GridColumnHeaderSortIconProps & {
+type OwnerState = GridColumnHeaderSortButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -25,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    icon: ['sortIcon'],
+    button: ['sortButton'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -34,7 +33,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 function getIcon(
   icons: GridSlotsComponent,
   direction: GridSortDirection,
-  className: string,
   sortingOrder: readonly GridSortDirection[],
 ) {
   let Icon;
@@ -47,17 +45,17 @@ function getIcon(
     Icon = icons.columnUnsortedIcon;
     iconProps.sortingOrder = sortingOrder;
   }
-  return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;
+  return Icon ? <Icon fontSize="small" {...iconProps} /> : null;
 }
 
-function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
+function GridColumnHeaderSortButtonRaw(props: GridColumnHeaderSortButtonProps) {
   const { direction, index, sortingOrder, disabled, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.slots, direction, classes.icon, sortingOrder);
+  const iconElement = getIcon(rootProps.slots, direction, sortingOrder);
   if (!iconElement) {
     return null;
   }
@@ -69,6 +67,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       disabled={disabled}
+      className={classes.button}
       {...rootProps.slotProps?.baseIconButton}
       {...other}
     >
@@ -77,7 +76,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   );
 
   return (
-    <GridIconButtonContainer>
+    <React.Fragment>
       {index != null && (
         <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
           {iconButton}
@@ -85,13 +84,13 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       )}
 
       {index == null && iconButton}
-    </GridIconButtonContainer>
+    </React.Fragment>
   );
 }
 
-const GridColumnHeaderSortIcon = React.memo(GridColumnHeaderSortIconRaw);
+const GridColumnHeaderSortButton = React.memo(GridColumnHeaderSortButtonRaw);
 
-GridColumnHeaderSortIconRaw.propTypes = {
+GridColumnHeaderSortButtonRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -103,4 +102,4 @@ GridColumnHeaderSortIconRaw.propTypes = {
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
 
-export { GridColumnHeaderSortIcon };
+export { GridColumnHeaderSortButton };
