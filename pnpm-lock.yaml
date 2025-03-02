@@ -231,8 +231,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0(eslint-plugin-import@2.31.0)(eslint@8.57.1)
       eslint-config-prettier:
-        specifier: ^10.0.1
-        version: 10.0.1(eslint@8.57.1)
+        specifier: ^10.0.2
+        version: 10.0.2(eslint@8.57.1)
       eslint-import-resolver-webpack:
         specifier: ^0.13.10
         version: 0.13.10(eslint-plugin-import@2.31.0)(webpack@5.98.0)
@@ -256,7 +256,7 @@ importers:
         version: 10.5.0(eslint@8.57.1)
       eslint-plugin-prettier:
         specifier: ^5.2.3
-        version: 5.2.3(@types/eslint@8.56.12)(eslint-config-prettier@10.0.1(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.2)
+        version: 5.2.3(@types/eslint@8.56.12)(eslint-config-prettier@10.0.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.2)
       eslint-plugin-react:
         specifier: ^7.37.4
         version: 7.37.4(eslint@8.57.1)
@@ -6077,8 +6077,8 @@ packages:
       eslint-plugin-react: ^7.28.0
       eslint-plugin-react-hooks: ^4.3.0
 
-  eslint-config-prettier@10.0.1:
-    resolution: {integrity: sha512-lZBts941cyJyeaooiKxAtzoPHTN+GbQTJFAIdQbRhA4/8whaAraEh47Whw/ZFfrjNSnlAxqfm9i0XVAEkULjCw==}
+  eslint-config-prettier@10.0.2:
+    resolution: {integrity: sha512-1105/17ZIMjmCOJOPNfVdbXafLCLj3hPmkmB7dLgt7XsQ/zkxSuDerE/xgO3RxoHysR1N1whmquY0lSn2O0VLg==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -6716,6 +6716,7 @@ packages:
   gm@1.25.0:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
+    deprecated: The gm module has been sunset. Please migrate to an alternative. https://github.com/aheckmann/gm?tab=readme-ov-file#2025-02-24-this-project-is-not-maintained
 
   google-auth-library@9.15.1:
     resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
@@ -15605,7 +15606,7 @@ snapshots:
       object.assign: 4.1.7
       object.entries: 1.1.8
 
-  eslint-config-prettier@10.0.1(eslint@8.57.1):
+  eslint-config-prettier@10.0.2(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
 
@@ -15725,7 +15726,7 @@ snapshots:
       globals: 13.24.0
       rambda: 7.5.0
 
-  eslint-plugin-prettier@5.2.3(@types/eslint@8.56.12)(eslint-config-prettier@10.0.1(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.2):
+  eslint-plugin-prettier@5.2.3(@types/eslint@8.56.12)(eslint-config-prettier@10.0.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.2):
     dependencies:
       eslint: 8.57.1
       prettier: 3.5.2
@@ -15733,7 +15734,7 @@ snapshots:
       synckit: 0.9.2
     optionalDependencies:
       '@types/eslint': 8.56.12
-      eslint-config-prettier: 10.0.1(eslint@8.57.1)
+      eslint-config-prettier: 10.0.2(eslint@8.57.1)
 
   eslint-plugin-react-compiler@19.0.0-beta-e552027-20250112(eslint@8.57.1):
     dependencies:
