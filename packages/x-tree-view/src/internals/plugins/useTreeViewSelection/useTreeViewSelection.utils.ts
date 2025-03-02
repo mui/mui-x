@@ -7,31 +7,6 @@ import {
   selectorItemParentId,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
 
-/**
- * Transform the `selectedItems` model to be an array if it was a string or null.
- * @param {string[] | string | null} model The raw model.
- * @returns {string[]} The converted model.
- */
-export const convertSelectedItemsToArray = (model: string[] | string | null): string[] => {
-  if (Array.isArray(model)) {
-    return model;
-  }
-
-  if (model != null) {
-    return [model];
-  }
-
-  return [];
-};
-
-export const createSelectedItemsMap = (selectedItems: string | string[] | null) => {
-  const selectedItemsMap = new Map<TreeViewItemId, true>();
-  convertSelectedItemsToArray(selectedItems).forEach((id) => {
-    selectedItemsMap.set(id, true);
-  });
-  return selectedItemsMap;
-};
-
 export const getLookupFromArray = (array: string[]) => {
   const lookup: { [itemId: string]: true } = {};
   array.forEach((itemId) => {
@@ -49,11 +24,14 @@ export const getAddedAndRemovedItems = ({
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) => {
-  const newModelLookup = createSelectedItemsMap(newModel);
+  const newModelMap = new Map<TreeViewItemId, true>();
+  newModel.forEach((id) => {
+    newModelMap.set(id, true);
+  });
 
   return {
     added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),
-    removed: oldModel.filter((itemId) => !newModelLookup.has(itemId)),
+    removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
   };
 };
 
