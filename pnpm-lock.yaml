@@ -1443,8 +1443,8 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@fingerprintjs/fingerprintjs':
-        specifier: ^4.6.0
-        version: 4.6.0
+        specifier: ^4.6.1
+        version: 4.6.1
       '@mui/utils':
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
@@ -2961,8 +2961,8 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
-  '@fingerprintjs/fingerprintjs@4.6.0':
-    resolution: {integrity: sha512-g2z4lF2saGxVT+AQSmJhPSwW/hBn8vnFJMW6UYOMl9ipJT7re0RZbr2+lB2eCZj/lJ89wWc21FMA14v9iOKroQ==}
+  '@fingerprintjs/fingerprintjs@4.6.1':
+    resolution: {integrity: sha512-62TPnX6fXXMlxS7SOR3DJWEOKab7rCALwSWkuKWYMRrnsZ/jD9Ju4CUyy9VWDUYuhQ2ZW1RGLwOZJXTXR6K1pg==}
 
   '@floating-ui/core@1.6.8':
     resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
@@ -6716,6 +6716,7 @@ packages:
   gm@1.25.0:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
+    deprecated: The gm module has been sunset. Please migrate to an alternative. https://github.com/aheckmann/gm?tab=readme-ov-file#2025-02-24-this-project-is-not-maintained
 
   google-auth-library@9.15.1:
     resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
@@ -11928,7 +11929,7 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@fingerprintjs/fingerprintjs@4.6.0':
+  '@fingerprintjs/fingerprintjs@4.6.1':
     dependencies:
       tslib: 2.8.1
 
