@@ -1449,7 +1449,7 @@ importers:
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
       ci-info:
-        specifier: ^4.0.0
+        specifier: ^4.1.0
         version: 4.1.0
       conf:
         specifier: ^5.0.0
@@ -6716,6 +6716,7 @@ packages:
   gm@1.25.0:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
+    deprecated: The gm module has been sunset. Please migrate to an alternative. https://github.com/aheckmann/gm?tab=readme-ov-file#2025-02-24-this-project-is-not-maintained
 
   google-auth-library@9.15.1:
     resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
