@@ -10,6 +10,7 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -33,6 +34,11 @@ export interface FunnelChartProps
    * An array of [[FunnelSeriesType]] objects.
    */
   series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
+  /**
+   * The configuration of the category axis.
+   *
+   * @default { position: 'none' }
+   */
   categoryAxis?: CategoryAxis;
   /**
    * If `true`, the legend is not rendered.
@@ -63,6 +69,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     overlayProps,
     legendProps,
     clipPathGroupProps,
+    chartsAxisProps,
     clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
@@ -86,6 +93,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
+          <ChartsAxis {...chartsAxisProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
@@ -113,6 +121,22 @@ FunnelChart.propTypes = {
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
+  }),
+  /**
+   * The configuration of the category axis.
+   *
+   * @default { position: 'none' }
+   */
+  categoryAxis: PropTypes.shape({
+    categories: PropTypes.arrayOf(PropTypes.string),
+    disableLine: PropTypes.bool,
+    disableTicks: PropTypes.bool,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+    scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+    size: PropTypes.number,
+    tickLabelStyle: PropTypes.object,
+    tickSize: PropTypes.number,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -231,185 +255,6 @@ FunnelChart.propTypes = {
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axis: PropTypes.oneOf(['x']),
-      classes: PropTypes.object,
-      colorMap: PropTypes.oneOfType([
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
-          color: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.func,
-          ]).isRequired,
-          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          type: PropTypes.oneOf(['continuous']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          thresholds: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
-          ).isRequired,
-          type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-      ]),
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
-      height: PropTypes.number,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      offset: PropTypes.number,
-      position: PropTypes.oneOf(['bottom', 'none', 'top']),
-      reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      sx: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-        PropTypes.func,
-        PropTypes.object,
-      ]),
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelMinGap: PropTypes.number,
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-      zoom: PropTypes.oneOfType([
-        PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
-          maxEnd: PropTypes.number,
-          maxSpan: PropTypes.number,
-          minSpan: PropTypes.number,
-          minStart: PropTypes.number,
-          panning: PropTypes.bool,
-          step: PropTypes.number,
-        }),
-        PropTypes.bool,
-      ]),
-    }),
-  ),
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axis: PropTypes.oneOf(['y']),
-      classes: PropTypes.object,
-      colorMap: PropTypes.oneOfType([
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
-          color: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.func,
-          ]).isRequired,
-          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          type: PropTypes.oneOf(['continuous']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          thresholds: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
-          ).isRequired,
-          type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-      ]),
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      offset: PropTypes.number,
-      position: PropTypes.oneOf(['left', 'none', 'right']),
-      reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      sx: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-        PropTypes.func,
-        PropTypes.object,
-      ]),
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-      width: PropTypes.number,
-      zoom: PropTypes.oneOfType([
-        PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
-          maxEnd: PropTypes.number,
-          maxSpan: PropTypes.number,
-          minSpan: PropTypes.number,
-          minStart: PropTypes.number,
-          panning: PropTypes.bool,
-          step: PropTypes.number,
-        }),
-        PropTypes.bool,
-      ]),
-    }),
-  ),
   /**
    * The list of zoom data related to each axis.
    */

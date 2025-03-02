@@ -16,12 +16,12 @@ export default function FunnelLabelPositioning() {
           },
           vertical: {
             knob: 'select',
-            defaultValue: 'top',
+            defaultValue: 'bottom',
             options: ['top', 'middle', 'bottom'],
           },
           textAnchor: {
             knob: 'select',
-            defaultValue: 'end',
+            defaultValue: 'start',
             options: ['start', 'middle', 'end'],
           },
           dominantBaseline: {
@@ -39,13 +39,13 @@ export default function FunnelLabelPositioning() {
           },
           offsetX: {
             knob: 'slider',
-            defaultValue: 10,
+            defaultValue: -10,
             min: -50,
             max: 50,
           },
           offsetY: {
             knob: 'slider',
-            defaultValue: -15,
+            defaultValue: 10,
             min: -50,
             max: 50,
           },
@@ -82,7 +82,6 @@ export default function FunnelLabelPositioning() {
                     },
               },
             ]}
-            xAxis={[{ min: -300, max: 300 }]}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -106,7 +105,6 @@ export default function FunnelLabelPositioning() {
 
 <FunnelChart
   // Space to display the labels
-  xAxis={[{ min: -300, max: 300 }]}
   series={[
     {
       sectionLabel: {

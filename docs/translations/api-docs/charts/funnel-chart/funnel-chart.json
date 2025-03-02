@@ -5,6 +5,7 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
+    "categoryAxis": { "description": "The configuration of the category axis." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
@@ -54,12 +55,6 @@
     "slots": { "description": "Overridable component slots." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "zoomData": { "description": "The list of zoom data related to each axis." }
   },

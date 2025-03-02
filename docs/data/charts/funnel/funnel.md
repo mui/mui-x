@@ -86,17 +86,20 @@ To fade elements which are not hovered, set the `highlightScope.fade` property.
 
 {{"demo": "HighlightFunnel.js"}}
 
-## Scaled sections
+## Category axis
+
+The funnel chart uses a category axis as the default axis.
+This axis always follows the orientation of the chart.
+
+The funnel chart does not display an axis by default.
+To display a category axis, pass a `position` and a list of `categories` to the `categoryAxis` props.
+
+{{"demo": "FunnelCategoryAxis.js"}}
+
+### Scaled sections
 
 By default, the sections have the same size because they use the `band` scale type.
 A linear scale, is also available, and will scale the the sections based on their value.
-To do so, set the `scaleType` property to `linear`.
+To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}
-
-## Display axis
-
-The funnel chart does not display an axis by default.
-To display an axis, pass the `ChartsXAxis` or `ChartsYAxis` components as a child of the `FunnelChart` component.
-
-{{"demo": "FunnelAxis.js"}}

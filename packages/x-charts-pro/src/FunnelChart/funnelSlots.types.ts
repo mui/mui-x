@@ -9,13 +9,15 @@ export interface FunnelChartSlots
     FunnelPlotSlots,
     ChartsLegendSlots,
     ChartsTooltipSlots,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots,
+    ChartsAxisSlots {}
 export interface FunnelChartSlotProps
   extends ChartsAxisSlotProps,
     FunnelPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsTooltipSlotProps,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps,
+    ChartsAxisSlotProps {}
 
 export interface FunnelChartSlotExtension {
   /**
