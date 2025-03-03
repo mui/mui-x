@@ -85,7 +85,7 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change the label of an item
 
-Use the `updateItemLabel()` API method to change the expansion of an item.
+Use the `updateItemLabel()` API method to imperatively update the label of an item.
 
 ```ts
 apiRef.current.updateItemLabel(
