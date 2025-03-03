@@ -126,24 +126,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => selectorItemModel(store.value, itemId),
     [store],
   );
-  const toggleDisabledItem = useEventCallback((itemId: string, disabled: boolean) => {
-    if (itemId) {
-      store.update((prevState) => {
-        const itemMetaLookup = { ...prevState.items.itemMetaLookup };
-        if (itemMetaLookup[itemId]) {
-          itemMetaLookup[itemId] = { ...itemMetaLookup[itemId], disabled };
-          return {
-            ...prevState,
-            items: {
-              ...prevState.items,
-              itemMetaLookup,
-            },
-          };
-        }
-        return prevState;
-      });
-    }
-  });
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
@@ -249,7 +231,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemDOMElement,
       getItemTree,
       getItemOrderedChildrenIds,
-      toggleDisabledItem,
     },
     instance: {
       getItemDOMElement,
