@@ -115,10 +115,7 @@ export default function StackOrderDemo() {
                 dominantBaseline: 'hanging',
                 textAnchor: 'start',
               },
-              labelStyle: {
-                transform: 'translateY(15px)',
-              },
-              height: 50,
+              height: 60,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}
