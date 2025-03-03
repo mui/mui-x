@@ -16,34 +16,40 @@ export function doesTextFitInRect(text: string, config: EllipsizeConfig) {
   const angledWidth = textSize.width * Math.cos(angle) + textSize.height * Math.sin(angle);
   const angledHeight = textSize.width * Math.sin(angle) + textSize.height * Math.cos(angle);
 
-  console.log({ text, textSize, config, angledWidth, angledHeight });
-
   return angledWidth <= width && angledHeight <= height;
 }
 
+/** This function finds the best place to clip the text to add an ellipsis. */
 export function ellipsize(text: string, config: EllipsizeConfig) {
   if (doesTextFitInRect(text, config)) {
-    console.log('fit', { text, config, result: text });
     return text;
   }
 
   let ellipsizedText = text;
-  while (ellipsizedText.length > 1) {
-    ellipsizedText = shortenText(ellipsizedText);
+  let step = 1;
+  let by = 1 / 2;
+  let newLength = text.length;
+  let lastLength = text.length;
 
-    if (doesTextFitInRect(ellipsizedText + ELLIPSIS, config)) {
-      console.log({ text, config, result: ellipsizedText + ELLIPSIS });
-      return ellipsizedText + ELLIPSIS;
+  do {
+    lastLength = newLength;
+    newLength = Math.floor(text.length * by);
+
+    ellipsizedText = text.slice(0, newLength).trim();
+    const fits = doesTextFitInRect(ellipsizedText + ELLIPSIS, config);
+    step += 1;
+
+    if (fits) {
+      by += 1 / 2 ** step;
+    } else {
+      by -= 1 / 2 ** step;
     }
-  }
+  } while (newLength !== lastLength);
 
-  console.log({ text, config, result: '' });
-  return '';
+  return ellipsizedText.length === 0 ? '' : ellipsizedText + ELLIPSIS;
 }
 
-const WHITE_SPACE = /\s/;
-
-export function shortenText(text: string) {
+export function shortenText(text: string, by: number) {
   // If text has less than two characters, we can't shorten it, so just return an empty string.
   if (text.length <= 1) {
     return '';
@@ -55,16 +61,10 @@ export function shortenText(text: string) {
     return text.split('\n').slice(0, -1).join('\n');
   }
 
-  const halfLength = Math.floor(text.length / 2);
-
-  const firstWhiteSpaceAfterMidpoint = WHITE_SPACE.exec(text.slice(halfLength))?.index;
-
-  if (firstWhiteSpaceAfterMidpoint !== undefined) {
-    return text.slice(0, halfLength + firstWhiteSpaceAfterMidpoint).trim();
-  }
+  const newLength = Math.floor(text.length * by);
 
   // FIXME: This breaks for unicode characters. Check if we can use Intl.Segmenter.
-  return text.slice(0, halfLength).trim();
+  return text.slice(0, newLength).trim();
 }
 
 /** Converts degrees to radians. */
