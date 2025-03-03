@@ -4,31 +4,31 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
-import LanguageIcon from '@mui/icons-material/Language';
-import InfoCard from './InfoCard';
+import MovingIcon from '@mui/icons-material/Moving';
+import InfoCard from '../InfoCard';
 
 const featuredItems = [
   {
-    title: 'Highly customizable',
+    title: 'Customizable and  flexible',
     description:
-      'Start with our meticulous Material Design implementation, or go fully custom with your own design system.',
+      'Easily adapt the look and feel and behavior to fit any brand, no matter your use case.',
     icon: <FormatPaintIcon fontSize="small" color="primary" />,
   },
   {
-    title: 'Accessibility',
+    title: 'Inclusive by design',
     description:
-      'We are committed to meeting or exceeding global standards for accessibility, and we provide thorough guidance on best practices in our documentation.',
+      'Built to meet accessibility standards, ensuring a seamless experience for every user.',
     icon: <AccessibilityNewIcon fontSize="small" color="primary" />,
   },
   {
-    title: 'Internationalization',
+    title: 'Performant and scalable',
     description:
-      'Serve the needs of users all around the world with built-in support for multiple time zones, languages, and date formats.',
-    icon: <LanguageIcon fontSize="small" color="primary" />,
+      'Leverage features like virtualization and lazy loading to deliver lightning-fast performance at any scale.',
+    icon: <MovingIcon fontSize="small" color="primary" />,
   },
 ];
 
-export default function FeatureHighlight() {
+export default function TreeViewFeaturesHighlight() {
   return (
     <React.Fragment>
       <Divider />
@@ -36,7 +36,7 @@ export default function FeatureHighlight() {
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
-            Using MUI X Date Pickers
+            Using MUI X Tree View
           </Typography>
           <Typography
             variant="h4"
@@ -46,12 +46,12 @@ export default function FeatureHighlight() {
             textAlign="center"
             // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
-            First-class developer experience
+            Create stunning tree structures
           </Typography>
           {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
-            MUI X Date and Time Pickers are designed to be delightful and intuitive for developers
-            and users alike.
+            A high-performance, customizable React component with the best possible developer
+            experience.
           </Typography>
         </Stack>
         <Stack
