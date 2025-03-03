@@ -78,8 +78,8 @@ export default function ReverseExample() {
             },
           ]}
           yAxis={[
-            { id: 'leftAxis', reverse: reverseLeft },
-            { id: 'rightAxis', reverse: reverseRight, position: 'right' },
+            { id: 'leftAxis', reverse: reverseLeft, width: 50 },
+            { id: 'rightAxis', reverse: reverseRight, position: 'right', width: 50 },
           ]}
           dataset={dataset}
           height={400}

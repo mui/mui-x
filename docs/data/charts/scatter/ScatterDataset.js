@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function ScatterDataset() {
   return (
@@ -92,13 +91,8 @@ const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
+      width: 60,
     },
   ],
-  sx: {
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translate(-20px, 0)',
-    },
-  },
   height: 300,
-  margin: { left: 40 },
 };
