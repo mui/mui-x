@@ -271,7 +271,7 @@ If you need to access the tree item model inside the render, you can use the new
 If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
 :::
 
-### Rename `publicAPI.selectItem`
+### Rename `publicAPI.selectItem()`
 
 The `selectItem` method has been renamed `setItemSelection`:
 
@@ -284,7 +284,7 @@ The `selectItem` method has been renamed `setItemSelection`:
  }
 ```
 
-## Change `pubicAPI.setItemExpansion` signature
+## Change `pubicAPI.setItemExpansion()` signature
 
 The `setItemExpansion` method now receives a single object instead of a list of parameters:
 

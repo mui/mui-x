@@ -149,7 +149,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
@@ -211,7 +211,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
           }
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         }
 
@@ -225,7 +225,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           return;
         }
         if (canToggleItemExpansion(itemId) && selectorIsItemExpanded(store.value, itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else {
           const parent = selectorItemParentId(store.value, itemId);

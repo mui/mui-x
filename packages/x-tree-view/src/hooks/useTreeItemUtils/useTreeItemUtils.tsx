@@ -121,7 +121,7 @@ export const useTreeItemUtils = <
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
-      instance.toggleItemExpansion(event, itemId);
+      instance.setItemExpansion({ event, itemId });
     }
   };
 
