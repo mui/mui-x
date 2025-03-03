@@ -1,4 +1,4 @@
-import { defaultizeColorPerSeries, GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
+import { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'heatmap'> = (
   seriesData,
@@ -7,7 +7,8 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'heatmap'> = (
 ) => {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    ...defaultizeColorPerSeries<'heatmap'>(seriesData, seriesIndex, colors),
+    color: colors[seriesIndex % colors.length],
+    ...seriesData,
   };
 };
 

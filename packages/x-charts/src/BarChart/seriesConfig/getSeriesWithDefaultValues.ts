@@ -1,4 +1,3 @@
-import { defaultizeColorPerSeries } from '../../internals/defaultizeColorPerSeries';
 import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'bar'> = (
@@ -8,7 +7,8 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'bar'> = (
 ) => {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    ...defaultizeColorPerSeries<'bar'>(seriesData, seriesIndex, colors),
+    color: colors[seriesIndex % colors.length],
+    ...seriesData,
   };
 };
 
