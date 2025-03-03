@@ -37,6 +37,7 @@ export * from '../ScatterChart/ScatterChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';
+export * from './defaultizeColorPerSeries';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
