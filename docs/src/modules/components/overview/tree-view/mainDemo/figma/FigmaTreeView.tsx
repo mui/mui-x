@@ -131,7 +131,16 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             alignItems="center"
             flexGrow={1}
             justifyContent="flex-start"
-            sx={item.itemType === 'component' ? { color: 'primary.dark' } : {}}
+            sx={
+              item.itemType === 'component'
+                ? (theme) => ({
+                    color: 'primary.dark',
+                    ...theme.applyStyles('dark', {
+                      color: 'primary.light',
+                    }),
+                  })
+                : {}
+            }
           >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
@@ -152,7 +161,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <IconButton
               size="small"
               onClick={() => {
-                publicAPI.toggleDisabledItem(itemId, !status.disabled);
+                publicAPI.setIsItemDisabled({ itemId });
               }}
             >
               {status.disabled ? (
