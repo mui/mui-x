@@ -1,3 +1,5 @@
+import { sliceUntil } from './sliceUntil';
+
 const ELLIPSIS = '…';
 
 interface EllipsizeConfig {
@@ -38,8 +40,7 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
     lastLength = newLength;
     newLength = Math.floor(text.length * by);
 
-    // FIXME: This breaks for unicode characters. Check if we can use Intl.Segmenter.
-    ellipsizedText = text.slice(0, newLength).trim();
+    ellipsizedText = sliceUntil(text, newLength).trim();
     const fits = doesTextFitInRect(ellipsizedText + ELLIPSIS, config);
     step += 1;
 
@@ -52,50 +53,6 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
   } while (newLength !== lastLength);
 
   return longestFittingText ? longestFittingText + ELLIPSIS : '';
-}
-
-const segmenter =
-  'Intl' in window && 'Segmenter' in Intl
-    ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
-    : null;
-export function segmentAt(text: string, index: number) {
-  if (!segmenter) {
-    return text.slice(0, index);
-  }
-
-  const segments = segmenter.segment(text);
-
-  const { index: indexLimit } = segments.containing(index);
-
-  let newText = '';
-
-  for (const segment of segments) {
-    if (segment.index >= indexLimit) {
-      break;
-    }
-
-    newText += segment.segment;
-  }
-
-  return newText;
-}
-
-export function shortenText(text: string, by: number) {
-  // If text has less than two characters, we can't shorten it, so just return an empty string.
-  if (text.length <= 1) {
-    return '';
-  }
-
-  const isMultiline = text.includes('\n');
-
-  if (isMultiline) {
-    return text.split('\n').slice(0, -1).join('\n');
-  }
-
-  const newLength = Math.floor(text.length * by);
-
-  // FIXME: This breaks for unicode characters. Check if we can use Intl.Segmenter.
-  return text.slice(0, newLength).trim();
 }
 
 /** Converts degrees to radians. */

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { degToRad, ellipsize, segmentAt, shortenText } from './ellipsize';
+import { degToRad, ellipsize } from './ellipsize';
 
 describe('ellipsizeText', () => {
   it('does nothing if text fits', () => {
@@ -60,47 +60,5 @@ describe('ellipsizeText', () => {
         measureText: (text) => ({ width: text.length * 10, height: 20 }),
       }),
     ).to.be.equal('');
-  });
-});
-
-describe('shortenText', () => {
-  it('shortens one line text properly', () => {
-    const cases = [
-      // [input, expected]
-      ['Hello  World', 'Hello'],
-      ['Hello World  again', 'Hello World'],
-      ['Huge_string_without_spaces_to_test_overflow', 'Huge_string_without_s'],
-      ['', ''],
-      ['a', ''],
-    ];
-
-    const inputs = cases.map(([input]) => shortenText(input));
-    const expected = cases.map(([_, result]) => result);
-
-    expect(inputs).to.be.deep.equal(expected);
-  });
-
-  it('splits unicode characters properly', () => {
-    // 5 latin characters + 7 emoji => 12 graphemes.
-    // Result should have 6 graphemes.
-    expect(shortenText('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️')).to.be.equal('emoji👱🏽‍♀️');
-  });
-
-  it('shortens multi line text properly', () => {});
-});
-
-describe('segmentAt', () => {
-  it('segments ASCII properly', () => {
-    expect(segmentAt('Hello World', 5)).to.equal('Hello');
-    expect(segmentAt('Hello World', 6)).to.equal('Hello ');
-    expect(segmentAt('Hello World', 7)).to.equal('Hello W');
-    expect(segmentAt('Hello World', 9)).to.equal('Hello Wor');
-  });
-
-  it('segments unicode characters properly', () => {
-    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 5)).to.equal('emoji');
-    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 6)).to.equal('emoji');
-    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 11)).to.equal('emoji');
-    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 12)).to.equal('emoji👱🏽‍♀️');
   });
 });
