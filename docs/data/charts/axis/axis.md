@@ -231,6 +231,8 @@ In the following demo, the size of the x- and y-axes is modified to increase the
 
 {{"demo": "MarginAndLabelPosition.js"}}
 
+{{"demo": "XAxisTickLabelOverflow.js"}}
+
 ### Rendering
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
