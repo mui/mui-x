@@ -55,7 +55,9 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
 }
 
 const segmenter =
-  'Segmenter' in Intl ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+  'Intl' in window && 'Segmenter' in Intl
+    ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+    : null;
 export function segmentAt(text: string, index: number) {
   if (!segmenter) {
     return text.slice(0, index);
@@ -69,11 +71,13 @@ export function segmentAt(text: string, index: number) {
 
   for (const segment of segments) {
     if (segment.index >= indexLimit) {
-      return newText;
+      break;
     }
 
     newText += segment.segment;
   }
+
+  return newText;
 }
 
 export function shortenText(text: string, by: number) {
