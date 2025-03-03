@@ -39,6 +39,7 @@ export default function BasicComposition() {
               data: ['A', 'B', 'C', 'D', 'E'],
               scaleType: 'band',
               id: 'x-axis-id',
+              height: 45,
             },
           ]}
           {...sizingProps}

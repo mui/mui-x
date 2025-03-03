@@ -8,7 +8,6 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import alphabetStock from '../dataset/GOOGL.json';
 
 const series = [
@@ -51,15 +50,17 @@ export default function Combining() {
               data: alphabetStock.map((day) => new Date(day.date)),
               scaleType: 'band',
               valueFormatter: (value) => value.toLocaleDateString(),
+              height: 40,
             },
           ]}
           yAxis={[
-            { id: 'price', scaleType: 'linear', position: 'left' },
+            { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
             {
               id: 'volume',
               scaleType: 'linear',
               position: 'right',
               valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
+              width: 50,
             },
           ]}
         >
@@ -68,7 +69,7 @@ export default function Combining() {
           <LinePlot />
           <LineHighlightPlot />
           <ChartsXAxis
-            label="date"
+            label="Date"
             axisId="date"
             tickInterval={(value, index) => {
               return index % 30 === 0;
@@ -81,21 +82,11 @@ export default function Combining() {
             label="Price (USD)"
             axisId="price"
             tickLabelStyle={{ fontSize: 10 }}
-            sx={{
-              [`& .${axisClasses.label}`]: {
-                transform: 'translateX(-5px)',
-              },
-            }}
           />
           <ChartsYAxis
             label="Volume"
             axisId="volume"
             tickLabelStyle={{ fontSize: 10 }}
-            sx={{
-              [`& .${axisClasses.label}`]: {
-                transform: 'translateX(5px)',
-              },
-            }}
           />
           <ChartsTooltip />
         </ChartContainer>

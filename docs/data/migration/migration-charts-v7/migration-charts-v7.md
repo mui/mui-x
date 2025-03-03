@@ -360,3 +360,15 @@ Now, the minimum spacing is consistent and is set by a new `minTickLabelGap` pro
 
 A consequence of this improved spacing is that tick labels may render differently than before.
 It is, therefore, recommended that you verify that your charts have the desired appearance after upgrading.
+
+## Styling and position changes for axes labels of cartesian charts
+
+Cartesian axes now have a size: `height` for x-axes and `width` for y-axes.
+In order to provide the most space for tick labels, the label of a cartesian axis will now be positioned as close to its outermost bound as possible.
+
+This means that 20px-tall label of a 50px-tall x-axis will leave 30px of space for ticks and tick labels.
+
+Accurately measuring the height taken by the axis label requires its `labelStyle` prop to apply all styles that affect the height of the label, such as `fontSize`, `lineHeight`, etc.
+To achieve that goal, we changed some of the default styles applied to the axis labels that might impact how axis labels look if you are customizing them.
+
+As such, it is recommended that you verify that your charts have the desired appearance and position after upgrading.
