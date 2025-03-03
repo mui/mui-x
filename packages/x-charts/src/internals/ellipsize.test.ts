@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { degToRad, ellipsize, shortenText } from './ellipsize';
+import { degToRad, ellipsize, segmentAt, shortenText } from './ellipsize';
 
 describe('ellipsizeText', () => {
   it('does nothing if text fits', () => {
@@ -87,4 +87,20 @@ describe('shortenText', () => {
   });
 
   it('shortens multi line text properly', () => {});
+});
+
+describe('segmentAt', () => {
+  it('segments ASCII properly', () => {
+    expect(segmentAt('Hello World', 5)).to.equal('Hello');
+    expect(segmentAt('Hello World', 6)).to.equal('Hello ');
+    expect(segmentAt('Hello World', 7)).to.equal('Hello W');
+    expect(segmentAt('Hello World', 9)).to.equal('Hello Wor');
+  });
+
+  it('segments unicode characters properly', () => {
+    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 5)).to.equal('emoji');
+    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 6)).to.equal('emoji');
+    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 11)).to.equal('emoji');
+    expect(segmentAt('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️', 12)).to.equal('emoji👱🏽‍♀️');
+  });
 });

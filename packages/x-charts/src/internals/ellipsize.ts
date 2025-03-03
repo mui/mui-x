@@ -54,6 +54,28 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
   return longestFittingText ? longestFittingText + ELLIPSIS : '';
 }
 
+const segmenter =
+  'Segmenter' in Intl ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+export function segmentAt(text: string, index: number) {
+  if (!segmenter) {
+    return text.slice(0, index);
+  }
+
+  const segments = segmenter.segment(text);
+
+  const { index: indexLimit } = segments.containing(index);
+
+  let newText = '';
+
+  for (const segment of segments) {
+    if (segment.index >= indexLimit) {
+      return newText;
+    }
+
+    newText += segment.segment;
+  }
+}
+
 export function shortenText(text: string, by: number) {
   // If text has less than two characters, we can't shorten it, so just return an empty string.
   if (text.length <= 1) {
