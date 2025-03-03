@@ -124,7 +124,6 @@ RichTreeViewPro.propTypes = {
       selectItem: PropTypes.func.isRequired,
       setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
-      toggleDisabledItem: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
