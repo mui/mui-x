@@ -8,7 +8,7 @@ import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
-import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
+import { ColumnHeaderMenuButton } from './ColumnHeaderMenuButton';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -209,7 +209,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }, []);
 
   const columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && (
-    <ColumnHeaderMenuIcon
+    <ColumnHeaderMenuButton
       colDef={colDef}
       columnMenuId={columnMenuId!}
       columnMenuButtonId={columnMenuButtonId!}
@@ -232,7 +232,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
-  const showSortIcon =
+  const showSortButton =
     (colDef.sortable || sortDirection != null) &&
     !colDef.hideSortIcons &&
     !rootProps.disableColumnSorting;
@@ -240,21 +240,21 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && (
-        <rootProps.slots.columnHeaderFilterIconButton
+        <rootProps.slots.columnHeaderFilterButton
           field={colDef.field}
           counter={filterItemsCounter}
-          {...rootProps.slotProps?.columnHeaderFilterIconButton}
+          {...rootProps.slotProps?.columnHeaderFilterButton}
         />
       )}
 
-      {showSortIcon && (
-        <rootProps.slots.columnHeaderSortIcon
+      {showSortButton && (
+        <rootProps.slots.columnHeaderSortButton
           field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
-          {...rootProps.slotProps?.columnHeaderSortIcon}
+          {...rootProps.slotProps?.columnHeaderSortButton}
         />
       )}
     </React.Fragment>

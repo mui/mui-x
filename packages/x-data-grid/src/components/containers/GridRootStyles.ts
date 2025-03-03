@@ -12,11 +12,11 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 export type OwnerState = DataGridProcessedProps;
 
 const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
+  [`& .${c.sortButton}`]: {
     visibility: 'visible',
     width: 'auto',
   },
-  [`& .${c.menuIcon}`]: {
+  [`& .${c.menuButton}`]: {
     width: 'auto',
     visibility: 'visible',
   },
@@ -117,7 +117,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     { [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'] },
     { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
-    { [`& .${c.filterIcon}`]: styles.filterIcon },
+    { [`& .${c.filterButton}`]: styles.filterButton },
     { [`& .${c['filler--borderBottom']}`]: styles['filler--borderBottom'] },
     { [`& .${c['filler--pinnedLeft']}`]: styles['filler--pinnedLeft'] },
     { [`& .${c['filler--pinnedRight']}`]: styles['filler--pinnedRight'] },
@@ -128,10 +128,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.groupingCriteriaCellToggle}`]: styles.groupingCriteriaCellToggle },
     { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${c.iconSeparator}`]: styles.iconSeparator },
-    { [`& .${c.menuIcon}`]: styles.menuIcon },
-    { [`& .${c.menuIconButton}`]: styles.menuIconButton },
+    { [`& .${c.menuButton}`]: styles.menuButton },
     { [`& .${c.menuList}`]: styles.menuList },
-    { [`& .${c.menuOpen}`]: styles.menuOpen },
+    { [`& .${c['menuButton--menuOpen']}`]: styles['menuButton--menuOpen'] },
     { [`& .${c.overlayWrapperInner}`]: styles.overlayWrapperInner },
     { [`& .${c.pinnedRows}`]: styles.pinnedRows },
     { [`& .${c['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
@@ -158,7 +157,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
     { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
     { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
-    { [`& .${c.sortIcon}`]: styles.sortIcon },
+    { [`& .${c.sortButton}`]: styles.sortButton },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     {
       [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
@@ -273,7 +272,7 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
       },
       '@media (hover: hover)': {
-        [`& .${c.menuIcon}`]: {
+        [`& .${c.menuButton}`]: {
           width: '0 !important',
           visibility: 'hidden !important',
         },
@@ -358,12 +357,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
-    [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
+    [`& .${c['columnHeader--sorted']} .${c.sortButton}, & .${c['columnHeader--filtered']} .${c.sortButton}`]:
       {
         visibility: 'visible',
         width: 'auto',
       },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
       opacity: 0,
       transition: vars.transition(['opacity'], {
         duration: vars.transitions.duration.short,
@@ -388,7 +387,7 @@ export const GridRootStyles = styled('div', {
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
-    [`& .${c.sortIcon}, & .${c.filterIcon}`]: {
+    [`& .${c.sortButton}, & .${c.filterButton}`]: {
       fontSize: 'inherit',
     },
     [`& .${c['columnHeader--sortable']}`]: {
@@ -401,10 +400,10 @@ export const GridRootStyles = styled('div', {
       {
         flexDirection: 'row-reverse',
       },
-    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
+    [`& .${c['columnHeader--alignCenter']} .${c.menuButton}`]: {
       marginLeft: 'auto',
     },
-    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+    [`& .${c['columnHeader--alignRight']} .${c.menuButton}`]: {
       marginRight: 'auto',
       marginLeft: -5,
     },
@@ -433,7 +432,7 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton}`]: {
         opacity: 0.5,
       },
     },
@@ -484,7 +483,7 @@ export const GridRootStyles = styled('div', {
         duration: vars.transitions.duration.short,
       }),
     },
-    [`& .${c.menuIcon}`]: {
+    [`& .${c.menuButton}`]: {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
@@ -492,7 +491,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`.${c.menuOpen}`]: {
+    [`.${c['menuButton--menuOpen']}`]: {
       visibility: 'visible',
       width: 'auto',
     },
@@ -694,6 +693,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeaderDraggableContainer}`]: {
       display: 'flex',
+      alignItems: 'center',
       width: '100%',
       height: '100%',
     },
