@@ -409,14 +409,16 @@ export type AxisDefaultized<
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
 > = MakeRequired<Omit<AxisConfig<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
-  AxisSideConfig<AxisProps> &
   AxisScaleComputedConfig[S] & {
     /**
      * An indication of the expected number of ticks.
      */
     tickNumber: number;
-  };
-
+  } & (AxisProps extends ChartsXAxisProps
+    ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
+    : AxisProps extends ChartsYAxisProps
+      ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
+      : AxisSideConfig<AxisProps>);
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {

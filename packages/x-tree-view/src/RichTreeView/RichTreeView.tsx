@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -11,6 +13,11 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { useSelector } from '../internals/hooks/useSelector';
+import {
+  selectorGetTreeViewError,
+  selectorIsTreeViewLoading,
+} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -73,6 +80,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props,
   });
+  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
+  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
   const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
@@ -85,6 +94,14 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProps<any, any>,
   });
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (treeViewError) {
+    return <Alert severity="error">{treeViewError.message}</Alert>;
+  }
 
   return (
     <TreeViewProvider value={contextValue}>
@@ -110,6 +127,7 @@ RichTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,

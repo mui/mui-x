@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-alpha.12",
+  "version": "8.0.0-alpha.13",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -109,7 +109,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.15",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.19",
+    "@types/node": "^20.17.22",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/requestidlecallback": "^0.3.7",
@@ -150,7 +150,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-testing-library": "^7.1.1",
     "fast-glob": "^3.3.3",
     "format-util": "^1.0.5",
@@ -186,7 +186,7 @@
     "sinon": "^19.0.2",
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.1.0",
-    "terser-webpack-plugin": "^5.3.11",
+    "terser-webpack-plugin": "^5.3.12",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "unist-util-visit": "^5.0.0",
@@ -198,7 +198,7 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.19"
+    "@types/node": "^20.17.22"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
