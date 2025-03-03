@@ -60,9 +60,6 @@ export default function ExampleToggleGroup({ selected, onToggleChange }: Example
           />
           GitHub example
         </ToggleButton>
-        {/* <ToggleButton value="vscode" title="VS Code" sx={{ flexGrow: 1 }}>
-        <img src="/static/x/overview/vscode.svg" height={18} alt="vscode logo" />
-      </ToggleButton> */}
       </StyledToggleButtonGroup>
     </Paper>
   );
