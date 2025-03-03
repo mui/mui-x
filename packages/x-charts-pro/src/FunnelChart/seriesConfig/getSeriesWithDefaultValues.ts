@@ -1,4 +1,4 @@
-import { defaultizeColorPerSeriesItem, GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
+import { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'funnel'> = (
   seriesData,
@@ -7,7 +7,11 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'funnel'> = (
 ) => {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    ...defaultizeColorPerSeriesItem<'funnel'>(seriesData, colors),
+    ...seriesData,
+    data: seriesData.data.map((d, index) => ({
+      color: colors[index % colors.length],
+      ...d,
+    })),
   };
 };
 

@@ -1,4 +1,3 @@
-import { defaultizeColorPerSeriesItem } from '../../internals/defaultizeColor';
 import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'pie'> = (
@@ -8,7 +7,11 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'pie'> = (
 ) => {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    ...defaultizeColorPerSeriesItem<'pie'>(seriesData, colors),
+    ...seriesData,
+    data: seriesData.data.map((d, index) => ({
+      color: colors[index % colors.length],
+      ...d,
+    })),
   };
 };
 

@@ -1,4 +1,4 @@
-import { defaultizeColorPerSeries } from '../../internals/defaultizeColor';
+import { defaultizeColorPerSeries } from '../../internals/defaultizeColorPerSeries';
 import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'line'> = (
