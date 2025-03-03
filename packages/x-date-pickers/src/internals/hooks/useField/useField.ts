@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useLocalizationContext, useUtils } from '../useUtils';
+import { useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -286,10 +286,9 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
-  const localizationContext = useLocalizationContext();
   const openPickerAriaLabel = React.useMemo(
-    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
-    [getOpenDialogAriaText, state.value, localizationContext],
+    () => getOpenDialogAriaText(state.value),
+    [getOpenDialogAriaText, state.value],
   );
 
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {

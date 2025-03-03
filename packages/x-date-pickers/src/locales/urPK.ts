@@ -63,6 +63,8 @@ const urPKPickers: Partial<PickersLocaleText> = {
     formattedDate ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate}` : 'تاریخ منتخب کریں',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime}` : 'وقت منتخب کریں',
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   // fieldClearLabel: 'Clear',
 
   // Table labels

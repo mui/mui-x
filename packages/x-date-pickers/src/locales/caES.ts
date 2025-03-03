@@ -63,6 +63,8 @@ const caESPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Tria la data, la data triada és ${formattedDate}` : 'Tria la data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Tria l'hora, l'hora triada és ${formattedTime}` : "Tria l'hora",
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   fieldClearLabel: 'Netega el valor',
 
   // Table labels

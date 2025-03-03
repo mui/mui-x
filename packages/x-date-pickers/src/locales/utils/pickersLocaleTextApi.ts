@@ -66,6 +66,14 @@ export interface PickersComponentAgnosticLocaleText {
   // Open picker labels
   openDatePickerDialogue: (formattedDate: string | null) => string;
   openTimePickerDialogue: (formattedTime: string | null) => string;
+  openDateRangePickerDialogue: (
+    formattedDate: string | null,
+    rangePosition: 'start' | 'end',
+  ) => string;
+  openTimeRangePickerDialogue: (
+    formattedTime: string | null,
+    rangePosition: 'start' | 'end',
+  ) => string;
 
   // Clear button label
   fieldClearLabel: string;
