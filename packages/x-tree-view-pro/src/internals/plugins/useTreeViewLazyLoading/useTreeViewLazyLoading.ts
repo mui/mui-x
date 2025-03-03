@@ -238,10 +238,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     await instance.fetchItems([eventParameters.itemId]);
     const fetchErrors = Boolean(selectorGetTreeItemError(store.value, eventParameters.itemId));
     if (!fetchErrors) {
-      instance.setItemExpansion(eventParameters.event, eventParameters.itemId, true);
+      instance.setItemExpansion({
+        itemId: eventParameters.itemId,
+        shouldBeExpanded: true,
+        ...(!!eventParameters.event && { event: eventParameters.event }),
+      });
       if (selectorIsItemSelected(store.value, eventParameters.itemId)) {
         // make sure selection propagation works correctly
-        instance.selectItem({
+        instance.setItemSelection({
           event: eventParameters.event as React.SyntheticEvent,
           itemId: eventParameters.itemId,
           keepExistingSelection: true,

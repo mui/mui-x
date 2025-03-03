@@ -229,7 +229,9 @@ All the new Tree Item-related components and utils (introduced in the previous m
 + } from '@mui/x-tree-view/TreeItemLabelInput';
 ```
 
-## Stop using `publicAPI` methods in the render
+## `publicAPI` methods
+
+### Stop using `publicAPI` methods in the render
 
 The Tree Items are now memoized to improve the performances of the Tree View components.
 If you call a `publicAPI` method in the render of an item, it might not re-render and you might not have the new value.
@@ -267,6 +269,36 @@ If you need to access the tree item model inside the render, you can use the new
 
 :::success
 If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
+:::
+
+### Rename `publicAPI.selectItem()`
+
+The `selectItem` method has been renamed `setItemSelection`:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleSelectItem() {
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+ }
+```
+
+## Change `pubicAPI.setItemExpansion()` signature
+
+The `setItemExpansion` method now receives a single object instead of a list of parameters:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleExpandItem() {
+-  publicAPI.setItemExpansion(event, props.itemId, true)
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+ }
+```
+
+:::success
+The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
 :::
 
 ## Apply the indentation on the item content instead of it's parent's group

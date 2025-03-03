@@ -6,14 +6,10 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks/useTreeViewApiRef';
 
-export default function ApiMethodSelectItemKeepExistingSelection() {
+export default function ApiMethodSetItemSelection() {
   const apiRef = useTreeViewApiRef();
-  const handleSelectGridPro = (event) => {
-    apiRef.current?.selectItem({
-      event,
-      itemId: 'grid-pro',
-      keepExistingSelection: true,
-    });
+  const handleSelectGridPro = (event: React.SyntheticEvent) => {
+    apiRef.current?.setItemSelection({ event, itemId: 'grid-pro' });
   };
 
   return (
@@ -22,12 +18,7 @@ export default function ApiMethodSelectItemKeepExistingSelection() {
         <Button onClick={handleSelectGridPro}>Select grid pro item</Button>
       </div>
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
-        <SimpleTreeView
-          apiRef={apiRef}
-          defaultExpandedItems={['grid']}
-          multiSelect
-          defaultSelectedItems={['grid-premium']}
-        >
+        <SimpleTreeView apiRef={apiRef} defaultExpandedItems={['grid']}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
             <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
