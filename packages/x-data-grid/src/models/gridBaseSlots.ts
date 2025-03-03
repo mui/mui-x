@@ -297,6 +297,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
+  ref?: Ref<HTMLInputElement>;
 };
 
 export type TooltipProps = {
