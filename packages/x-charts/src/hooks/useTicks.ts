@@ -165,9 +165,9 @@ export function useTicks(
         // Allowing the label to be placed in the middle of a continuous scale is weird.
         // But it is useful in some cases, like funnel categories with a linear scale.
         labelOffset:
-          tickLabelPlacement === 'tick'
-            ? 0
-            : scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2,
+          tickLabelPlacement === 'middle'
+            ? scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2
+            : 0,
       };
     });
   }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
