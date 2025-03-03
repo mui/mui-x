@@ -7,6 +7,7 @@ import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
+import type { ChipProps as MUIChipProps } from '@mui/material/Chip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -45,6 +46,7 @@ import type {
   SwitchProps,
   TooltipProps,
   TextFieldProps,
+  ChipProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -113,6 +115,7 @@ interface BaseSlotProps {
   baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
+  baseChip: ChipProps & BaseChipPropsOverrides;
 }
 
 interface MaterialSlotProps {
@@ -123,6 +126,7 @@ interface MaterialSlotProps {
   baseCircularProgress: MUICircularProgressProps;
   baseMenuItem: MUIMenuItemProps;
   baseTooltip: MUITooltipProps;
+  baseChip: MUIChipProps;
 }
 
 interface ElementSlotProps {

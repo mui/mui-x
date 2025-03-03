@@ -184,4 +184,9 @@ export interface GridIconSlotsComponent {
    * @default GridCheckIcon
    */
   menuItemCheckIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in the pivot menu.
+   * @default GridPivotIcon
+   */
+  pivotIcon: React.JSXElementConstructor<any>;
 }

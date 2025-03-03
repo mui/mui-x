@@ -26,12 +26,15 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  pivoting?: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
@@ -124,6 +127,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -204,6 +212,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Data source object.
    */
   dataSource?: GridDataSource;
+
+  pivotModel?: GridPivotModel;
+  onPivotModelChange?: React.Dispatch<React.SetStateAction<GridPivotModel>>;
+  pivotEnabled?: boolean;
+  onPivotEnabledChange?: (isPivot: boolean) => void;
+  pivotPanelOpen?: boolean;
+  onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
   /**
    * Callback fired when a data source request fails.
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.

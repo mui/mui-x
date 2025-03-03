@@ -291,6 +291,15 @@ export const GridRootStyles = styled('div', {
         width: 'unset',
       },
     },
+    [`&.${c.withSidePanel}`]: {
+      flexDirection: 'row',
+    },
+    [`& .${c.mainContent}`]: {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      flex: 1,
+    },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       padding: '0 10px',
@@ -358,11 +367,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
-    [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
+    [`& .${c['pivotField--sorted']} .${c.iconButtonContainer},
+      & .${c['columnHeader--sorted']} .${c.iconButtonContainer},
+      & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]: {
+      visibility: 'visible',
+      width: 'auto',
+    },
     [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
       opacity: 0,
       transition: vars.transition(['opacity'], {
@@ -432,18 +442,22 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
+      [`& .${c.columnHeader}:hover, & .${c.pivotField}:hover`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon},
+        & .${c.pivotField}:not(.${c['pivotField--sorted']}):hover .${c.sortIcon}`]: {
         opacity: 0.5,
       },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader}, & .${c.pivotField}`]: columnHeaderStyles,
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
           color: vars.colors.foreground.accent,
         },
+      },
+      [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortIcon}`]: {
+        opacity: 0.5,
       },
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {

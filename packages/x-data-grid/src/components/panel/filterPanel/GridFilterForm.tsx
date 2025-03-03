@@ -204,6 +204,14 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
+// TODO: use selectors
+const getPivotEnabled = (apiRef: any): boolean => {
+  return apiRef.current.state.pivoting?.enabled ?? false;
+};
+const getInitialColumns = (apiRef: any): GridColDef[] => {
+  return apiRef.current.state.pivoting?.initialColumns ?? [];
+};
+
 const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   function GridFilterForm(props, ref) {
     const {
@@ -250,6 +258,9 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
+    const pivotEnabled = useGridSelector(apiRef, getPivotEnabled);
+    const initialColumns = useGridSelector(apiRef, getInitialColumns);
+
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
 
@@ -260,6 +271,16 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (selectedNonFilterableColumn) {
         return {
           filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
+      if (pivotEnabled) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) =>
+              initialColumns?.find((col: GridColDef) => col.field === column.field) !== undefined,
+          ),
           selectedField: itemField,
         };
       }
@@ -284,7 +305,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
+    }, [
+      item.field,
+      columnLookup,
+      pivotEnabled,
+      filterColumns,
+      filterableColumns,
+      filterModel?.items,
+      initialColumns,
+    ]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
