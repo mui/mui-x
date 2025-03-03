@@ -38,6 +38,11 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) =
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
+/* Gap between a tick and its label. */
+const TICK_LABEL_GAP = 3;
+/* Gap between the axis label and tick labels. */
+const AXIS_LABEL_TICK_LABEL_GAP = 4;
+
 /* Returns a set of indices of the tick labels that should be visible.  */
 function getVisibleLabels(
   xTicks: TickItemType[],
@@ -126,8 +131,10 @@ function shortenLabels(
       shortenedLabels.set(
         item,
         ellipsize(item.formattedValue.toString(), {
+          // FIXME: Remove this hard-coded value
           width: axisWidth - item.offset + 100,
           height: maxHeight,
+          // FIXME: Do we need to mod by 180?
           angle: (tickLabelStyle?.angle ?? 0) % 180,
           measureText: (text) => getStringSize(text, tickLabelStyle),
         }),
@@ -257,7 +264,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.body1,
-        lineHeight: 1.2,
+        lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
@@ -288,7 +295,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   };
 
   /* If there's an axis title, the tick labels have less space to render  */
-  const tickLabelsMaxHeight = axisHeight - labelHeight - tickSize;
+  const tickLabelsMaxHeight = Math.max(
+    0,
+    axisHeight - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
+  );
 
   const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
     tickLabelStyle: axisTickLabelProps.style,
@@ -307,7 +317,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
+        const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
         const formattedValue = shortenedLabels.get(item);

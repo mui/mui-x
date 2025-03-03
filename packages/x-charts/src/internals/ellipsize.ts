@@ -32,23 +32,28 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
   let by = 1 / 2;
   let newLength = text.length;
   let lastLength = text.length;
+  let longestFittingText: string | null = null;
 
   do {
     lastLength = newLength;
     newLength = Math.floor(text.length * by);
 
+    // FIXME: This breaks for unicode characters. Check if we can use Intl.Segmenter.
     ellipsizedText = text.slice(0, newLength).trim();
     const fits = doesTextFitInRect(ellipsizedText + ELLIPSIS, config);
     step += 1;
 
     if (fits) {
+      longestFittingText = ellipsizedText;
       by += 1 / 2 ** step;
     } else {
       by -= 1 / 2 ** step;
     }
   } while (newLength !== lastLength);
 
-  return ellipsizedText.length === 0 ? '' : ellipsizedText + ELLIPSIS;
+  console.log({ text, largestFit: longestFittingText, config });
+
+  return longestFittingText ? longestFittingText + ELLIPSIS : '';
 }
 
 export function shortenText(text: string, by: number) {
