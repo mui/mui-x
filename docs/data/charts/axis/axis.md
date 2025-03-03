@@ -218,6 +218,15 @@ To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for 
 
 {{"demo": "MultipleAxes.js"}}
 
+### Overlapping axes
+
+In order to overlap axes, the axis size can be set to `0`.
+
+In the following example, we show a quarterly axis on the bottom and a monthly axis on top of it.
+By playing with the `tickSize` and `tickLabelPlacement` it is possible to make the labels of the two axes not overlap.
+
+{{"demo": "OverlappingAxes.js"}}
+
 ## Axis customization
 
 You can further customize the axis rendering besides the axis definition.

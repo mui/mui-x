@@ -95,6 +95,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const yTicks = useTicks({
     scale: yScale,
+    scaleType: settings.scaleType,
     tickNumber,
     valueFormatter,
     tickPlacement,

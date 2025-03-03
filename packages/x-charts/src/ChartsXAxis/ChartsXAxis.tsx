@@ -196,6 +196,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const xTicks = useTicks({
     scale: xScale,
+    scaleType: settings.scaleType,
     tickNumber,
     valueFormatter,
     tickInterval,

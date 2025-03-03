@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { AxisConfig, D3Scale } from '../models/axis';
+import { AxisConfig, D3Scale, ScaleName } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
 
@@ -40,7 +40,6 @@ export interface TickParams {
   tickPlacement?: 'start' | 'end' | 'middle' | 'extremities';
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
-   * Only used if scale is 'band'.
    * @default 'middle'
    */
   tickLabelPlacement?: 'middle' | 'tick';
@@ -84,11 +83,13 @@ export type TickItemType = {
 export function useTicks(
   options: {
     scale: D3Scale;
+    scaleType: ScaleName;
     valueFormatter?: AxisConfig['valueFormatter'];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): TickItemType[] {
   const {
     scale,
+    scaleType,
     tickNumber,
     valueFormatter,
     tickInterval,
@@ -155,7 +156,7 @@ export function useTicks(
     if (domain.some(isInfinity)) {
       return [];
     }
-    const tickLabelPlacement = tickLabelPlacementProp;
+
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
     return ticks.map((value: any, i) => {
       return {
@@ -166,11 +167,38 @@ export function useTicks(
         offset: scale(value),
         // Allowing the label to be placed in the middle of a continuous scale is weird.
         // But it is useful in some cases, like funnel categories with a linear scale.
-        labelOffset:
-          tickLabelPlacement === 'middle'
-            ? scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2
-            : 0,
+        labelOffset: getLabelOffset(scale, scaleType, tickLabelPlacementProp, ticks, i),
       };
     });
-  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacementProp]);
+  }, [
+    scale,
+    tickInterval,
+    tickNumber,
+    valueFormatter,
+    tickPlacement,
+    tickLabelPlacementProp,
+    scaleType,
+  ]);
+}
+
+function getLabelOffset(
+  scale: D3Scale,
+  scaleType: ScaleName,
+  tickPlacement: 'middle' | 'tick' | undefined,
+  allTicks: any[],
+  currentIndex: number,
+) {
+  const value = allTicks[currentIndex];
+
+  const scaledValue = scale(value)!;
+  // Time scales assumes that the important placement is in the future.
+  // e.g. The gap `2021-01-01 <-> 2021-02-01` should be labeled `January` and not `February`.
+  // While continuous scales assumes that the max value is the most important.
+  // e.g. `0 <-> 100` should be labeled `100` and not `0`.
+  // Though in most cases this shouldn't be used with non-time continuous scales.
+  const nextScaledValue = scale(
+    allTicks[currentIndex + (scaleType === 'time' || scaleType === 'utc' ? 1 : -1)] ?? 0,
+  )!;
+
+  return tickPlacement === 'middle' ? nextScaledValue - (scaledValue! + nextScaledValue) / 2 : 0;
 }
