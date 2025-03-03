@@ -129,7 +129,7 @@ function shortenLabels(
         ellipsize(item.formattedValue.toString(), {
           width: axisWidth - item.offset + 100,
           height: maxHeight,
-          angle: tickLabelStyle?.angle ?? 0,
+          angle: (tickLabelStyle?.angle ?? 0) % 180,
           measureText: (text) => getStringSize(text, tickLabelStyle),
         }),
       );
@@ -258,7 +258,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.body1,
-        lineHeight: 1,
+        lineHeight: 1.2,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
