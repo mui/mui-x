@@ -8,7 +8,7 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'pie'> = (
 ) => {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    ...defaultizeColorPerSeriesItem(seriesData, colors),
+    ...defaultizeColorPerSeriesItem<'pie'>(seriesData, colors),
   };
 };
 

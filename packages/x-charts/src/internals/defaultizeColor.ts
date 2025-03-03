@@ -1,5 +1,5 @@
 import { AllSeriesType } from '../models/seriesType';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesType, ChartSeriesTypeWithColorsInData } from '../models/seriesType/config';
 
 export function defaultizeColorPerSeries<T extends ChartSeriesType>(
   series: AllSeriesType<T>,
@@ -9,7 +9,7 @@ export function defaultizeColorPerSeries<T extends ChartSeriesType>(
   return { color: colors[seriesIndex % colors.length], ...series };
 }
 
-export function defaultizeColorPerSeriesItem<T extends 'pie'>(
+export function defaultizeColorPerSeriesItem<T extends ChartSeriesTypeWithColorsInData>(
   series: AllSeriesType<T>,
   colors: string[],
 ) {

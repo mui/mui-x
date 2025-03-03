@@ -71,6 +71,15 @@ export type CartesianChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
+export type ChartSeriesTypeWithColorsInData = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key]['seriesInput']['data'] extends object[]
+      ? Key
+      : never;
+  }[ChartSeriesType]
+>;
+
 export type StackableChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
