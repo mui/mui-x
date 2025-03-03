@@ -437,7 +437,7 @@ describeTreeView<
         },
       );
 
-      describe('setIsItemDisabled', () => {
+      describe('setIsItemDisabled API method', () => {
         it('should disable an item when called with shouldBeDisabled=true', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],

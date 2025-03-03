@@ -166,21 +166,22 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const setIsItemDisabled = useEventCallback(
     ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
       store.update((prevState) => {
-        const itemMetaLookup = { ...prevState.items.itemMetaLookup };
-        if (itemMetaLookup[itemId]) {
-          itemMetaLookup[itemId] = {
-            ...itemMetaLookup[itemId],
-            disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
-          };
-          return {
-            ...prevState,
-            items: {
-              ...prevState.items,
-              itemMetaLookup,
-            },
-          };
+        if (!prevState.items.itemMetaLookup[itemId]) {
+          return prevState;
         }
-        return prevState;
+
+        const itemMetaLookup = { ...prevState.items.itemMetaLookup };
+        itemMetaLookup[itemId] = {
+          ...itemMetaLookup[itemId],
+          disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
+        };
+        return {
+          ...prevState,
+          items: {
+            ...prevState.items,
+            itemMetaLookup,
+          },
+        };
       });
     },
   );
