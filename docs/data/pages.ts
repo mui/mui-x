@@ -168,6 +168,27 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-data-grid/components-group',
+        subheader: 'Components',
+        newFeature: true,
+        children: [
+          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
+          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
+          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
+          {
+            pathname: '/x/react-data-grid/components/columns-panel',
+            title: 'Columns Panel',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/filter-panel',
+            title: 'Filter Panel',
+            planned: true,
+          },
+        ],
+      },
+      {
         pathname: '/x/react-data-grid/customization-group',
         subheader: 'Customization',
         children: [
