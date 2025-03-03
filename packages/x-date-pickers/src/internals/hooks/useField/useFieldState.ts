@@ -36,8 +36,6 @@ import {
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
 
-const SHOULD_USE_INVALID_DATE_FOR_PARTIALLY_FILLED_VALUE = true;
-
 export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
   /**
    * The section on which we want to apply the new value.
@@ -275,26 +273,14 @@ export const useFieldState = <
 
     setSectionUpdateToApplyOnNextEmptyValue('');
 
-    const activeDate = fieldValueManager.getDateFromSection(value, activeSection!);
-    if (activeDate === null) {
+    if (fieldValueManager.getDateFromSection(value, activeSection) === null) {
       setState((prevState) => ({
         ...prevState,
         sections: setSectionValue(activeSectionIndex, ''),
         tempValueStrAndroid: null,
       }));
     } else {
-      const isLastNonEmptySection =
-        fieldValueManager
-          .getDateSectionsFromValue(state.sections, activeSection)
-          .filter((section) => section.value !== '').length === 1;
-
-      if (SHOULD_USE_INVALID_DATE_FOR_PARTIALLY_FILLED_VALUE && !isLastNonEmptySection) {
-        publishValue(
-          fieldValueManager.updateDateInValue(value, activeSection, utils.getInvalidDate()),
-        );
-      } else {
-        publishValue(fieldValueManager.updateDateInValue(value, activeSection, null));
-      }
+      publishValue(fieldValueManager.updateDateInValue(value, activeSection, null));
     }
   };
 
@@ -375,20 +361,6 @@ export const useFieldState = <
           }
         });
       }
-    } else if (SHOULD_USE_INVALID_DATE_FOR_PARTIALLY_FILLED_VALUE) {
-      if (activeDate == null || utils.isValid(activeDate)) {
-        setSectionUpdateToApplyOnNextEmptyValue(newSectionValue);
-        publishValue(fieldValueManager.updateDateInValue(value, section, utils.getInvalidDate()));
-      } else {
-        /**
-         * If the current date is already invalid, we update the sections.
-         */
-        setState((prevState) => ({
-          ...prevState,
-          sections: newSections,
-          tempValueStrAndroid: null,
-        }));
-      }
     } else if (activeDate != null) {
       /**
        * If the current date is not null, we publish a null value.
@@ -415,12 +387,10 @@ export const useFieldState = <
     let sections: InferFieldSection<TValue>[];
     if (
       sectionToUpdateOnNextEmptyValueRef.current != null &&
-      !utils.isValid(
-        fieldValueManager.getDateFromSection(
-          value,
-          state.sections[sectionToUpdateOnNextEmptyValueRef.current.sectionIndex],
-        ),
-      )
+      fieldValueManager.getDateFromSection(
+        value,
+        state.sections[sectionToUpdateOnNextEmptyValueRef.current.sectionIndex],
+      ) == null
     ) {
       sections = setSectionValue(
         sectionToUpdateOnNextEmptyValueRef.current.sectionIndex,
