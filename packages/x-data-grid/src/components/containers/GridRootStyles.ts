@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { CSSInterpolation } from '@mui/system';
+import { CSSInterpolation, keyframes } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
@@ -11,21 +11,16 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
+const fadeInAnimation = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
+
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
-    position: 'relative',
-    visibility: 'visible',
-    width: 'auto',
+    display: 'flex',
+    animation: `${fadeInAnimation} 150ms ease-in-out`,
   },
   [`& .${c.menuIcon}`]: {
-    position: 'relative',
-    width: 'auto',
-    visibility: 'visible',
-    marginRight: -5,
-  },
-  [`&.${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
-    marginRight: 'auto',
-    marginLeft: -5,
+    display: 'flex',
+    animation: `${fadeInAnimation} 150ms ease-in-out`,
   },
 };
 
@@ -281,9 +276,7 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {
-          position: 'absolute',
-          width: '0',
-          visibility: 'hidden',
+          display: 'none',
         },
       },
       [`& .${c.cell}`]: {
@@ -368,21 +361,12 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
-        position: 'relative',
-        visibility: 'visible',
-        width: 'auto',
+        display: 'flex',
       },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.iconButtonContainer}`]: {
-      position: 'absolute',
-      width: '0',
-      visibility: 'hidden',
-      [`& .${c.sortIcon}`]: {
-        opacity: 0,
-        transition: vars.transition(['opacity'], {
-          duration: vars.transitions.duration.short,
-        }),
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.iconButtonContainer}:has(.${c.sortIcon})`]:
+      {
+        display: 'none',
       },
-    },
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -417,6 +401,10 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
       marginLeft: 'auto',
+    },
+    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+      marginRight: 'auto',
+      marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: hoverBackground,
@@ -495,16 +483,13 @@ export const GridRootStyles = styled('div', {
       }),
     },
     [`& .${c.menuIcon}`]: {
-      width: 0,
-      visibility: 'hidden',
+      display: 'none',
       fontSize: 20,
-      display: 'flex',
+      marginRight: -5,
       alignItems: 'center',
     },
     [`.${c.menuOpen}`]: {
-      position: 'relative',
-      visibility: 'visible',
-      width: 'auto',
+      display: 'flex',
     },
 
     [`& .${c.headerFilterRow}`]: {
