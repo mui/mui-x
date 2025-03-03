@@ -13,8 +13,10 @@ export function doesTextFitInRect(text: string, config: EllipsizeConfig) {
   const angle = degToRad(config.angle);
   const textSize = measureText(text);
 
-  const angledWidth = textSize.width * Math.cos(angle) + textSize.height * Math.sin(angle);
-  const angledHeight = textSize.width * Math.sin(angle) + textSize.height * Math.cos(angle);
+  const angledWidth =
+    Math.abs(textSize.width * Math.cos(angle)) + Math.abs(textSize.height * Math.sin(angle));
+  const angledHeight =
+    Math.abs(textSize.width * Math.sin(angle)) + Math.abs(textSize.height * Math.cos(angle));
 
   return angledWidth <= width && angledHeight <= height;
 }
