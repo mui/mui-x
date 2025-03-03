@@ -20,7 +20,6 @@ const xLabels = [
 export default function DashedLineChart() {
   return (
     <LineChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId' },

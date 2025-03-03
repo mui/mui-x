@@ -4,7 +4,6 @@ import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
-  adapterToUse,
   getAllFieldInputRoot,
   getExpectedOnChangeCount,
   getFieldInputRoot,
@@ -169,7 +168,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange: handleChange,
-        defaultValue: adapterToUse.date('2018-01-01'),
+        defaultValue: values[0],
       });
       v7Response.selectSection(undefined);
       fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });

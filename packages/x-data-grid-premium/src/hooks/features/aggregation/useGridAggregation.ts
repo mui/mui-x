@@ -50,7 +50,7 @@ export const useGridAggregation = (
     | 'aggregationRowsScope'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -80,7 +80,7 @@ export const useGridAggregation = (
       getAggregationPosition: props.getAggregationPosition,
       aggregationFunctions: props.aggregationFunctions,
       aggregationRowsScope: props.aggregationRowsScope,
-      isDataSource: !!props.unstable_dataSource,
+      isDataSource: !!props.dataSource,
     });
 
     apiRef.current.setState((state) => ({
@@ -92,7 +92,7 @@ export const useGridAggregation = (
     props.getAggregationPosition,
     props.aggregationFunctions,
     props.aggregationRowsScope,
-    props.unstable_dataSource,
+    props.dataSource,
   ]);
 
   const aggregationApi: GridAggregationApi = {
@@ -131,13 +131,13 @@ export const useGridAggregation = (
           gridColumnLookupSelector(apiRef),
           gridAggregationModelSelector(apiRef),
           props.aggregationFunctions,
-          !!props.unstable_dataSource,
+          !!props.dataSource,
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
-      if (props.unstable_dataSource) {
-        apiRef.current.unstable_dataSource.fetchRows();
+      if (props.dataSource) {
+        apiRef.current.dataSource.fetchRows();
       } else {
         apiRef.current.requestPipeProcessorsApplication('hydrateRows');
         applyAggregation();
@@ -153,7 +153,7 @@ export const useGridAggregation = (
     applyAggregation,
     props.aggregationFunctions,
     props.disableAggregation,
-    props.unstable_dataSource,
+    props.dataSource,
   ]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);

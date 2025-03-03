@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
+import { warnOnce } from '@mui/x-internals/warning';
 
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
@@ -12,6 +13,7 @@ import { gridPaginationModelSelector } from '../pagination/gridPaginationSelecto
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
+import { GridGetRowsError } from './gridDataSourceError';
 
 import type { GridDataSourceApi, GridDataSourceApiBase } from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -40,11 +42,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   apiRef: RefObject<Api>,
   props: Pick<
     DataGridProcessedProps,
-    | 'unstable_dataSource'
-    | 'unstable_dataSourceCache'
-    | 'unstable_onDataSourceError'
-    | 'pageSizeOptions'
-    | 'signature'
+    'dataSource' | 'dataSourceCache' | 'onDataSourceError' | 'pageSizeOptions' | 'signature'
   >,
   options: {
     cacheOptions?: GridDataSourceCacheDefaultConfig;
@@ -56,9 +54,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
-      props.unstable_dataSource ? () => true : () => false,
+      props.dataSource ? () => true : () => false,
     );
-  }, [apiRef, props.unstable_dataSource]);
+  }, [apiRef, props.dataSource]);
 
   const [defaultRowsUpdateStrategyActive, setDefaultRowsUpdateStrategyActive] =
     React.useState(false);
@@ -66,7 +64,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
 
-  const onError = props.unstable_onDataSourceError;
+  const onDataSourceErrorProp = props.onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     const sortedPageSizeOptions = props.pageSizeOptions
@@ -77,12 +75,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     return new CacheChunkManager(cacheChunkSize);
   }).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache, options.cacheOptions),
+    getCache(props.dataSourceCache, options.cacheOptions),
   );
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
-      const getRows = props.unstable_dataSource?.getRows;
+      const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
       }
@@ -133,13 +131,30 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             fetchParams,
           });
         }
-      } catch (error) {
+      } catch (originalError) {
         if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
-            error: error as Error,
+            error: originalError as Error,
             fetchParams,
           });
-          onError?.(error as Error, fetchParams);
+          if (typeof onDataSourceErrorProp === 'function') {
+            onDataSourceErrorProp(
+              new GridGetRowsError({
+                message: (originalError as Error)?.message,
+                params: fetchParams,
+                cause: originalError as Error,
+              }),
+            );
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+              ],
+              'error',
+            );
+          }
         }
       } finally {
         if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {
@@ -152,8 +167,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       cache,
       apiRef,
       defaultRowsUpdateStrategyActive,
-      props.unstable_dataSource?.getRows,
-      onError,
+      props.dataSource?.getRows,
+      onDataSourceErrorProp,
       options,
       props.signature,
     ],
@@ -190,7 +205,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   );
 
   const dataSourceApi: GridDataSourceApi = {
-    unstable_dataSource: {
+    dataSource: {
       fetchRows,
       cache,
     },
@@ -204,19 +219,19 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       isFirstRender.current = false;
       return;
     }
-    if (props.unstable_dataSourceCache === undefined) {
+    if (props.dataSourceCache === undefined) {
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache, options.cacheOptions);
+    const newCache = getCache(props.dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache, options.cacheOptions]);
+  }, [props.dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
-    if (props.unstable_dataSource) {
-      apiRef.current.unstable_dataSource.cache.clear();
-      apiRef.current.unstable_dataSource.fetchRows();
+    if (props.dataSource) {
+      apiRef.current.dataSource.cache.clear();
+      apiRef.current.dataSource.fetchRows();
     }
-  }, [apiRef, props.unstable_dataSource]);
+  }, [apiRef, props.dataSource]);
 
   return {
     api: { public: dataSourceApi },
