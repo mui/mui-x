@@ -93,13 +93,15 @@ export function useTicks(
     valueFormatter,
     tickInterval,
     tickPlacement = 'extremities',
-    tickLabelPlacement = 'middle',
+    tickLabelPlacement: tickLabelPlacementProp,
   } = options;
 
   return React.useMemo(() => {
     // band scale
     if (isBandScale(scale)) {
       const domain = scale.domain();
+
+      const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
@@ -153,7 +155,7 @@ export function useTicks(
     if (domain.some(isInfinity)) {
       return [];
     }
-
+    const tickLabelPlacement = tickLabelPlacementProp;
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
     return ticks.map((value: any, i) => {
       return {
@@ -170,5 +172,5 @@ export function useTicks(
             : 0,
       };
     });
-  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
+  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacementProp]);
 }
