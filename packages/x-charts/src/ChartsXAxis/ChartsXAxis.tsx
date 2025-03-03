@@ -123,7 +123,6 @@ function shortenLabels(
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
-      console.log({ item, maxHeight, width: axisWidth - item.offset });
       shortenedLabels.set(
         item,
         ellipsize(item.formattedValue.toString(), {
@@ -290,7 +289,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = axisHeight - labelHeight - tickSize;
-  console.log({ tickLabelsMaxHeight });
 
   const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
     tickLabelStyle: axisTickLabelProps.style,
