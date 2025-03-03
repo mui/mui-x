@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -9,11 +9,13 @@ const config: Partial<BarChartProps> = {
     { x: 'A', v1: 4, v2: 2 },
     { x: 'B', v1: 1, v2: 1 },
   ],
-  margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  margin: 0,
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   hideLegend: true,
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //
@@ -26,13 +28,25 @@ const config: Partial<BarChartProps> = {
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
   describeSkipIf(isJSDOM)('axis trigger', () => {
-    it('should show right values with vertical layout on axis', () => {
-      render(
+    it('should show right values with vertical layout on axis', async () => {
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -49,51 +63,49 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      fireEvent.pointerEnter(svg); // Trigger the tooltip
-      fireEvent.pointerMove(svg, {
-        clientX: 198,
-        clientY: 60,
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
       });
 
       let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      let firstRow = ['', 'S1', '4'];
+      let secondRow = ['', 'S2', '2'];
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
         // Header
         'A',
-        // First row
-        '', // mark
-        'S1', // label
-        '4', // value
-        // Second row
-        '',
-        'S2',
-        '2',
+        ...firstRow,
+        ...secondRow,
       ]);
 
-      fireEvent.pointerMove(svg, {
-        clientX: 201,
-        clientY: 60,
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 201,
+          y: 60,
+        },
       });
 
       cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      firstRow = ['', 'S1', '1'];
+      secondRow = ['', 'S2', '1'];
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
         // Header
         'B',
-        // First row
-        '',
-        'S1',
-        '1',
-        // Second row
-        '',
-        'S2',
-        '1',
+        ...firstRow,
+        ...secondRow,
       ]);
     });
 
-    it('should show right values with horizontal layout on axis', () => {
-      render(
+    it('should show right values with horizontal layout on axis', async () => {
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -111,54 +123,52 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      fireEvent.pointerEnter(svg); // Trigger the tooltip
-      fireEvent.pointerMove(svg, {
-        clientX: 150,
-        clientY: 60,
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 150,
+          y: 60,
+        },
       });
 
       let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      let firstRow = ['', 'S1', '4'];
+      let secondRow = ['', 'S2', '2'];
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
         // Header
         'A',
-        // First row
-        '',
-        'S1',
-        '4',
-        // Second row
-        '',
-        'S2',
-        '2',
+        ...firstRow,
+        ...secondRow,
       ]);
 
-      fireEvent.pointerMove(svg, {
-        clientX: 150,
-        clientY: 220,
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 150,
+          y: 220,
+        },
       });
 
       cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+      firstRow = ['', 'S1', '1'];
+      secondRow = ['', 'S2', '1'];
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
         // Header
         'B',
-        // First row
-        '',
-        'S1',
-        '1',
-        // Second row
-        '',
-        'S2',
-        '1',
+        ...firstRow,
+        ...secondRow,
       ]);
     });
   });
 
   // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
   describeSkipIf(isJSDOM)('item trigger', () => {
-    it('should show right values with vertical layout on item', () => {
-      render(
+    it('should show right values with vertical layout on item', async () => {
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -174,30 +184,29 @@ describe('ChartsTooltip', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
       const rectangles = document.querySelectorAll<HTMLElement>('rect');
 
-      fireEvent.pointerEnter(rectangles[0]);
-
-      fireEvent.pointerEnter(svg); // Trigger the tooltip
-      fireEvent.pointerMove(svg, {
-        clientX: 150,
-        clientY: 60,
-      }); // Only to set the tooltip position
+      // Trigger the tooltip
+      await user.pointer({
+        target: rectangles[0],
+      });
 
       let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
 
-      fireEvent.pointerEnter(rectangles[3]);
+      // Trigger the tooltip
+      await user.pointer({
+        target: rectangles[3],
+      });
+
       cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });
 
-    it('should show right values with horizontal layout on item', () => {
-      render(
+    it('should show right values with horizontal layout on item', async () => {
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -214,21 +223,18 @@ describe('ChartsTooltip', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
       const rectangles = document.querySelectorAll<HTMLElement>('rect');
 
-      fireEvent.pointerEnter(rectangles[0]);
-
-      fireEvent.pointerEnter(svg); // Trigger the tooltip
-      fireEvent.pointerMove(svg, {
-        clientX: 150,
-        clientY: 60,
-      }); // Only to set the tooltip position
+      await user.pointer({
+        target: rectangles[0],
+      });
 
       let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
 
-      fireEvent.pointerEnter(rectangles[3]);
+      await user.pointer({
+        target: rectangles[3],
+      });
       cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });

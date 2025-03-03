@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
-import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
+import {
+  useGridPrivateApiContext,
+  gridDataSourceErrorSelector,
+  gridDataSourceLoadingIdSelector,
+  gridRowSelector,
+  vars,
+} from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
   getDataGridUtilityClass,
@@ -13,7 +18,6 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { GridStatePremium } from '../models/gridStatePremium';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -44,15 +48,13 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = (state: GridStatePremium) => state.dataSource.loading[id] ?? false;
-  const errorSelector = (state: GridStatePremium) => state.dataSource.errors[id];
-  const isDataLoading = useGridSelector(apiRef, loadingSelector);
-  const error = useGridSelector(apiRef, errorSelector);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.unstable_dataSource.fetchRows(id);
+      apiRef.current.dataSource.fetchRows(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }
@@ -98,13 +100,12 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const rowSelector = (state: GridStatePremium) => state.rows.dataRowIdToModelLookup[id];
-  const row = useGridSelector(apiRef, rowSelector);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = Math.max(rootProps.dataSource?.getChildrenCount?.(row) ?? 0, 0);
   }
 
   let cellContent: React.ReactNode;
@@ -119,14 +120,13 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={{
-        ml:
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>
@@ -142,6 +142,6 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

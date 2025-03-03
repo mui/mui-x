@@ -18,8 +18,8 @@ function ExtremaLabels() {
 
   return (
     <React.Fragment>
-      {lineSeries.seriesOrder.map((seriesId) => (
-        <SingleSeriesExtremaLabels series={lineSeries.series[seriesId]} />
+      {lineSeries.map((series) => (
+        <SingleSeriesExtremaLabels series={series} />
       ))}
     </React.Fragment>
   );

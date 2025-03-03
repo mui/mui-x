@@ -9,6 +9,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { PopperProps } from '../../models/gridBaseSlots';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
+import { vars } from '../../constants/cssVariables';
+import { useCSSVariablesClass } from '../../utils/css/context';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,12 +47,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridMenuRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: theme.zIndex.modal,
+})<{ ownerState: OwnerState }>({
+  zIndex: vars.zIndex.menu,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
   },
-}));
+});
 
 export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited'> {
   open: boolean;
@@ -65,6 +67,7 @@ function GridMenu(props: GridMenuProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
+  const variablesClass = useCSSVariablesClass();
 
   const savedFocusRef = React.useRef<HTMLElement | null>(null);
   useEnhancedEffect(() => {
@@ -93,7 +96,7 @@ function GridMenu(props: GridMenuProps) {
   return (
     <GridMenuRoot
       as={rootProps.slots.basePopper}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, className, variablesClass)}
       ownerState={rootProps}
       open={open}
       target={target}

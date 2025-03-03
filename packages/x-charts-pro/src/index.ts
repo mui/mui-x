@@ -1,4 +1,4 @@
-import {} from './typeOverloads/modules';
+import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/constants';
@@ -34,3 +34,4 @@ export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
+export * from './FunnelChart';

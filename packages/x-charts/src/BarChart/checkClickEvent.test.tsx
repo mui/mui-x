@@ -12,9 +12,11 @@ const config = {
     { x: 'B', v1: 1, v2: 1 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //
@@ -27,6 +29,19 @@ const config = {
 describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
@@ -34,7 +49,6 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -85,7 +99,6 @@ describe('BarChart - click event', () => {
         render(
           <div
             style={{
-              margin: -8, // Removes the body default margins
               width: 400,
               height: 400,
             }}
@@ -157,7 +170,6 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}

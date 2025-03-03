@@ -8,7 +8,7 @@ import {
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
 } from '@mui/x-data-grid';
-import type { GridBaseColDef } from '@mui/x-data-grid/internals';
+import { vars, type GridBaseColDef } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -45,14 +45,11 @@ const GridAggregationHeaderRoot = styled('div', {
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
-  overridesResolver: (_, styles) => styles.aggregationColumnHeaderLabel,
-})<{ ownerState: OwnerState }>(({ theme }) => {
-  return {
-    fontSize: theme.typography.caption.fontSize,
-    lineHeight: 'normal',
-    color: theme.palette.text.secondary,
-    marginTop: -1,
-  };
+})<{ ownerState: OwnerState }>({
+  fontSize: vars.typography.small.fontSize,
+  lineHeight: 'normal',
+  color: vars.colors.foreground.muted,
+  marginTop: -1,
 });
 
 const useUtilityClasses = (ownerState: OwnerState) => {

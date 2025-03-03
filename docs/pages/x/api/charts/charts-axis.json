@@ -1,26 +1,10 @@
 {
   "props": {
-    "bottomAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "xAxisIds[0] The id of the first provided axis"
-    },
-    "leftAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "yAxisIds[0] The id of the first provided axis"
-    },
-    "rightAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "topAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
     }
   },
   "name": "ChartsAxis",
@@ -93,7 +77,7 @@
     {
       "key": "tickLabel",
       "className": "MuiChartsAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

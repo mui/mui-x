@@ -13,7 +13,7 @@ import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
-import { useBarSeries } from '../hooks/useSeries';
+import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 
@@ -89,7 +89,7 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    useBarSeries() ??
+    useBarSeriesContext() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
 
   const drawingArea = useDrawingArea();

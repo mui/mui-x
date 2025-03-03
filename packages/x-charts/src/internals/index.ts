@@ -12,6 +12,7 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
+export * from './createSeriesSelectorOfType';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -42,7 +43,11 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
+export * from './stackSeries';
 export * from './getCurve';
+export * from './consumeSlots';
+export * from './consumeThemeProps';
+export * from './defaultizeMargin';
 
 // contexts
 

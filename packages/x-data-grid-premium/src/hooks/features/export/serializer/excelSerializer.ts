@@ -36,25 +36,31 @@ const getFormattedValueOptions = (
   row: GridValidRowModel,
   valueOptions: ValueOptions[],
   api: GridApi,
+  callback: (value: any, index: number) => void,
 ) => {
   if (!colDef.valueOptions) {
-    return [];
+    return;
   }
-  let valueOptionsFormatted = valueOptions;
+  const valueFormatter = colDef.valueFormatter;
 
-  if (colDef.valueFormatter) {
-    valueOptionsFormatted = valueOptionsFormatted.map((option) => {
+  for (let i = 0; i < valueOptions.length; i += 1) {
+    const option = valueOptions[i];
+    let value: any;
+    if (valueFormatter) {
       if (typeof option === 'object') {
-        return option;
+        value = option.label;
+      } else {
+        value = String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
       }
-
-      return String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
-    });
+    } else {
+      value = typeof option === 'object' ? option.label : option;
+    }
+    callback(value, i);
   }
-  return valueOptionsFormatted.map((option) =>
-    typeof option === 'object' ? option.label : option,
-  );
 };
+
+const commaRegex = /,/g;
+const commaReplacement = 'CHAR(44)';
 
 /**
  * FIXME: This function mutates the colspan info, but colspan info assumes that the columns
@@ -69,12 +75,16 @@ export const serializeRowUnsafe = (
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
-  const row: SerializedRow['row'] = {};
+  const serializedRow: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
 
-  const firstCellParams = apiRef.current.getCellParams(id, columns[0].field);
-  const outlineLevel = firstCellParams.rowNode.depth;
+  const row = apiRef.current.getRow(id);
+  const rowNode = apiRef.current.getRowNode(id);
+  if (!row || !rowNode) {
+    throw new Error(`No row with id #${id} found`);
+  }
+  const outlineLevel = rowNode.depth;
   const hasColSpan = gridHasColSpanSelector(apiRef);
 
   if (hasColSpan) {
@@ -101,35 +111,40 @@ export const serializeRowUnsafe = (
       });
     }
 
-    const cellParams = apiRef.current.getCellParams(id, column.field);
-
     let cellValue: string | undefined;
 
-    switch (cellParams.colDef.type) {
+    switch (column.type) {
       case 'singleSelect': {
-        const castColumn = cellParams.colDef as GridSingleSelectColDef;
+        const castColumn = column as GridSingleSelectColDef;
         if (typeof castColumn.valueOptions === 'function') {
           // If value option depends on the row, set specific options to the cell
           // This dataValidation is buggy with LibreOffice and does not allow to have coma
           const valueOptions = castColumn.valueOptions({
             id,
             row,
-            field: cellParams.field,
+            field: column.field,
           });
-          const formattedValueOptions = getFormattedValueOptions(
+
+          let formulae: string = '"';
+          getFormattedValueOptions(
             castColumn,
             row,
             valueOptions,
             apiRef.current,
+            (value, index) => {
+              const formatted = value.toString().replace(commaRegex, commaReplacement);
+              formulae += formatted;
+              if (index < valueOptions.length - 1) {
+                formulae += ',';
+              }
+            },
           );
+          formulae += '"';
+
           dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
-            formulae: [
-              `"${formattedValueOptions
-                .map((x) => x.toString().replaceAll(',', 'CHAR(44)'))
-                .join(',')}"`,
-            ],
+            formulae: [formulae],
           };
         } else {
           const address = defaultValueOptionsFormulae[column.field].address;
@@ -142,9 +157,9 @@ export const serializeRowUnsafe = (
           };
         }
 
-        const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
+        const formattedValue = apiRef.current.getRowFormattedValue(row, castColumn);
         if (process.env.NODE_ENV !== 'production') {
-          if (String(cellParams.formattedValue) === '[object Object]') {
+          if (String(formattedValue) === '[object Object]') {
             warnOnce([
               'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
               'You can provide a `valueFormatter` with a string representation to be used.',
@@ -152,22 +167,22 @@ export const serializeRowUnsafe = (
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
-          row[castColumn.field] = formattedValue?.label;
+          serializedRow[castColumn.field] = formattedValue?.label;
         } else {
-          row[castColumn.field] = formattedValue as any;
+          serializedRow[castColumn.field] = formattedValue as any;
         }
         break;
       }
       case 'boolean':
       case 'number':
-        cellValue = apiRef.current.getCellParams(id, column.field).value as any;
+        cellValue = apiRef.current.getRowValue(row, column);
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const value = apiRef.current.getCellParams<any, Date>(id, column.field).value;
+        const value = apiRef.current.getRowValue(row, column) as Date;
         // value may be `undefined` in auto-generated grouping rows
         if (!value) {
           break;
@@ -182,15 +197,15 @@ export const serializeRowUnsafe = (
             value.getSeconds(),
           ),
         );
-        row[column.field] = utcDate;
+        serializedRow[column.field] = utcDate;
         break;
       }
       case 'actions':
         break;
       default:
-        cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
+        cellValue = apiRef.current.getRowFormattedValue(row, column);
         if (process.env.NODE_ENV !== 'production') {
-          if (String(cellParams.formattedValue) === '[object Object]') {
+          if (String(cellValue) === '[object Object]') {
             warnOnce([
               'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
               'You can provide a `valueFormatter` with a string representation to be used.',
@@ -208,12 +223,12 @@ export const serializeRowUnsafe = (
     }
 
     if (typeof cellValue !== 'undefined') {
-      row[column.field] = cellValue;
+      serializedRow[column.field] = cellValue;
     }
   });
 
   return {
-    row,
+    row: serializedRow,
     dataValidation,
     outlineLevel,
     mergedCells,
@@ -251,38 +266,43 @@ export async function getDataForValueOptionsSheet(
   valueOptionsSheetName: string,
   api: GridPrivateApiPremium,
 ): Promise<ValueOptionsData> {
-  const candidateColumns = columns.filter(
-    (column) => isSingleSelectColDef(column) && Array.isArray(column.valueOptions),
-  );
-
   // Creates a temp worksheet to obtain the column letters
   const excelJS = await getExcelJs();
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = candidateColumns.map((column) => ({ key: column.field }));
+  const record: Record<string, { values: (string | number)[]; address: string }> = {};
+  const worksheetColumns: typeof worksheet.columns = [];
 
-  return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
-    (acc, column) => {
-      const singleSelectColumn = column as GridSingleSelectColDef;
-      const formattedValueOptions = getFormattedValueOptions(
-        singleSelectColumn,
-        {},
-        singleSelectColumn.valueOptions as Array<ValueOptions>,
-        api,
-      );
-      const header = column.headerName ?? column.field;
-      const values = [header, ...formattedValueOptions];
+  for (let i = 0; i < columns.length; i += 1) {
+    const column = columns[i];
+    const isCandidateColumn = isSingleSelectColDef(column) && Array.isArray(column.valueOptions);
+    if (!isCandidateColumn) {
+      continue;
+    }
 
-      const letter = worksheet.getColumn(column.field).letter;
-      const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
+    worksheetColumns.push({ key: column.field });
+    worksheet.columns = worksheetColumns;
 
-      acc[column.field] = { values, address };
+    const header = column.headerName ?? column.field;
+    const values: any[] = [header];
+    getFormattedValueOptions(
+      column,
+      {},
+      column.valueOptions as Array<ValueOptions>,
+      api,
+      (value) => {
+        values.push(value);
+      },
+    );
 
-      return acc;
-    },
-    {},
-  );
+    const letter = worksheet.getColumn(column.field).letter;
+    const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
+
+    record[column.field] = { values, address };
+  }
+
+  return record;
 }
 interface BuildExcelOptions
   extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,

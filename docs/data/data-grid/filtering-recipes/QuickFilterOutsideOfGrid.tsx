@@ -2,14 +2,21 @@ import * as React from 'react';
 import Portal from '@mui/material/Portal';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { DataGrid, GridToolbarQuickFilter, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridPortalWrapper,
+  GridToolbarQuickFilter,
+  GridToolbar,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function MyCustomToolbar(props: any) {
   return (
     <React.Fragment>
       <Portal container={() => document.getElementById('filter-panel')!}>
-        <GridToolbarQuickFilter />
+        <GridPortalWrapper>
+          <GridToolbarQuickFilter />
+        </GridPortalWrapper>
       </Portal>
       <GridToolbar {...props} />
     </React.Fragment>
@@ -43,6 +50,7 @@ export default function QuickFilterOutsideOfGrid() {
           slots={{
             toolbar: MyCustomToolbar,
           }}
+          showToolbar
           initialState={{
             filter: {
               filterModel: {

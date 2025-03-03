@@ -100,7 +100,7 @@ export const useGridKeyboardNavigation = (
         }
       }
       const field = listView
-        ? gridListColumnSelector(apiRef.current.state)!.field
+        ? gridListColumnSelector(apiRef)!.field
         : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
@@ -516,7 +516,7 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const visibleColumns = listView
-        ? [gridListColumnSelector(apiRef.current.state)]
+        ? [gridListColumnSelector(apiRef)]
         : gridVisibleColumnDefinitionsSelector(apiRef);
       const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
