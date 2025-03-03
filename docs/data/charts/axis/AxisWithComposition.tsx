@@ -5,7 +5,6 @@ import { LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function AxisWithComposition() {
   return (
@@ -17,11 +16,12 @@ export default function AxisWithComposition() {
             data: ['Q1', 'Q2', 'Q3', 'Q4'],
             id: 'quarters',
             label: 'Quarters',
+            height: 50,
           },
         ]}
         yAxis={[
-          { id: 'money', position: 'right', width: 40 },
-          { id: 'quantities', position: 'left', width: 40 },
+          { id: 'money', position: 'right', width: 65 },
+          { id: 'quantities', position: 'left', width: 65 },
         ]}
         series={[
           {
@@ -44,15 +44,6 @@ export default function AxisWithComposition() {
           },
         ]}
         height={400}
-        margin={{ left: 25, right: 25 }}
-        sx={{
-          [`.${axisClasses.left} .${axisClasses.label}`]: {
-            transform: 'translate(-25px, 0)',
-          },
-          [`.${axisClasses.right} .${axisClasses.label}`]: {
-            transform: 'translate(25px, 0)',
-          },
-        }}
       >
         <BarPlot />
         <LinePlot />

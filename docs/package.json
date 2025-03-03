@@ -116,7 +116,7 @@
     "@types/react-dom": "^19.0.4",
     "@types/stylis": "^4.2.7",
     "@types/webpack-bundle-analyzer": "^4.7.0",
-    "gm": "^1.25.0",
+    "gm": "^1.25.1",
     "serve": "^14.2.4"
   }
 }

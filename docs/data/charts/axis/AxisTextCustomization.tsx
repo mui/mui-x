@@ -33,10 +33,9 @@ export default function AxisTextCustomization() {
                 scaleType: 'band',
                 dataKey: 'month',
                 label: 'months',
-                height: 40,
+                height: 60,
                 labelStyle: {
                   fontSize: props.labelFontSize,
-                  transform: `translateY(10px)`,
                 },
                 tickLabelStyle: {
                   angle: props.angle,
@@ -51,7 +50,6 @@ export default function AxisTextCustomization() {
               { dataKey: 'newYork', label: 'New York', valueFormatter },
               { dataKey: 'seoul', label: 'Seoul', valueFormatter },
             ]}
-            margin={{ bottom: 30 }}
             {...chartSetting}
           />
         </Box>
