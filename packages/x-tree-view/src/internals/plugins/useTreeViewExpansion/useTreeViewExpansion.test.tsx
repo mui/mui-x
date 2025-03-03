@@ -309,7 +309,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
     });
   });
 
-  describe.only('setItemExpansion() api method', () => {
+  describe('setItemExpansion() api method', () => {
     it('should expand a collapsed item when calling the setItemExpansion method with `shouldBeExpanded=true`', () => {
       const onItemExpansionToggle = spy();
 
