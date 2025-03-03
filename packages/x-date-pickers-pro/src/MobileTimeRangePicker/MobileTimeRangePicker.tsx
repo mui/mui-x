@@ -23,6 +23,7 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
@@ -82,7 +83,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
 ) {
   const utils = useUtils();
 
-  // Props with the default values common to all date time pickers
+  // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
     MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimeRangePicker');
@@ -110,7 +111,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
       }),

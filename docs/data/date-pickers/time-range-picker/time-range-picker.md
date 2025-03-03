@@ -84,7 +84,15 @@ You can find more information in a [dedicated documentation page section](/x/rea
 
 ### Change end time label
 
+The below demo shows how to add a custom label on the end time view showing the selected time range duration.
+
+It replaces the default `digitalClockItem` slot component with a different one calculating the duration of the range when selecting the end time.
+
 {{"demo": "CustomizedBehaviorTimeRangePicker.js"}}
+
+### Customize the field
+
+You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
 ## Validation
 
