@@ -31,7 +31,6 @@ export default function CommunityOrPro({
         sx={{ maxWidth: { xs: '500px', md: '100%' } }}
       >
         <Stack flexBasis={{ xs: '100%', md: '65%' }} sx={{ marginBottom: { xs: '16px', md: 0 } }}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold">
             {caption}
           </Typography>
@@ -41,11 +40,9 @@ export default function CommunityOrPro({
             fontWeight="semiBold"
             color="text.primary"
             fontSize="1.625rem"
-            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             {title}
           </Typography>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary">
             {description}
           </Typography>
