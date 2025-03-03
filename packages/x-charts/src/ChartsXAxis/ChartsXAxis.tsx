@@ -15,7 +15,7 @@ import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -120,7 +120,7 @@ function getVisibleLabels(
 
 function shortenLabels(
   visibleLabels: Set<TickItemType>,
-  axisWidth: number,
+  drawingArea: Pick<ChartDrawingArea, 'left' | 'width' | 'right'>,
   maxHeight: number,
   { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
 ) {
@@ -128,11 +128,31 @@ function shortenLabels(
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
+      let leftBoundModifier = 1;
+      let rightBoundModifier = 1;
+
+      if (tickLabelStyle?.textAnchor === 'start') {
+        leftBoundModifier = Infinity;
+        rightBoundModifier = 1;
+      } else if (tickLabelStyle?.textAnchor === 'end') {
+        leftBoundModifier = 1;
+        rightBoundModifier = Infinity;
+      } else {
+        leftBoundModifier = 2;
+        rightBoundModifier = 2;
+      }
+
+      // That maximum width of the tick depends on its proximity to the axis bounds.
+      const width = Math.min(
+        item.offset * leftBoundModifier,
+        (drawingArea.left + drawingArea.width + drawingArea.right - item.offset) *
+          rightBoundModifier,
+      );
+
       shortenedLabels.set(
         item,
         ellipsize(item.formattedValue.toString(), {
-          // FIXME: Remove this hard-coded value
-          width: axisWidth - item.offset + 100,
+          width,
           height: maxHeight,
           // FIXME: Do we need to mod by 180?
           angle: (tickLabelStyle?.angle ?? 0) % 180,
@@ -204,7 +224,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const theme = useTheme();
   const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
+  const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
@@ -300,7 +321,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     axisHeight - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
   );
 
-  const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
+  const shortenedLabels = shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, {
     tickLabelStyle: axisTickLabelProps.style,
   });
 

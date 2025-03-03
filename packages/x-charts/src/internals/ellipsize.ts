@@ -51,8 +51,6 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
     }
   } while (newLength !== lastLength);
 
-  console.log({ text, largestFit: longestFittingText, config });
-
   return longestFittingText ? longestFittingText + ELLIPSIS : '';
 }
 
