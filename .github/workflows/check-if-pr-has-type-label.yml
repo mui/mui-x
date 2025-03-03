@@ -15,4 +15,3 @@ jobs:
       issues: write
       pull-requests: write
       contents: write
-
