@@ -600,6 +600,39 @@ async function initializeEnvironment(
         });
         expect(scrollTop).not.to.equal(0);
       });
+
+      // https://github.com/mui/mui-x/issues/14726
+      it('should not cause scroll jumping when the focused cell is outside of the viewport', async () => {
+        await renderFixture('DataGrid/DynamicRowHeight');
+
+        await page.click('[role="row"][data-id="2"] [role="gridcell"][data-field="id"]');
+
+        const scrollPositions: number[] = [];
+        await page.exposeFunction('storeScrollPosition', async (scrollTop: number) => {
+          scrollPositions.push(scrollTop);
+        });
+        await page.evaluate(() => {
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.addEventListener('scroll', () => {
+            // @ts-ignore
+            window.storeScrollPosition(virtualScroller.scrollTop);
+          });
+        });
+
+        await page.mouse.wheel(0, 150);
+        await page.waitForTimeout(500);
+
+        const hadScrollJump = scrollPositions.some((scrollTop, index) => {
+          if (index === 0) {
+            return false;
+          }
+          // When scrolling down, the scrollTop should be always decreasing
+          const prevScrollTop = scrollPositions[index - 1];
+          return scrollTop < prevScrollTop;
+        });
+
+        expect(hadScrollJump).to.equal(false, `Scroll jumped, scrollPositions: ${scrollPositions}`);
+      });
     });
 
     describe('<DatePicker />', () => {
