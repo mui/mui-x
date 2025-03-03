@@ -112,6 +112,7 @@ SimpleTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       setItemSelection: PropTypes.func.isRequired,
     }),

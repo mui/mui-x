@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },

@@ -13,8 +13,10 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
+  instance,
   store,
   params,
   models,
@@ -56,6 +58,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
     ({ itemId, event = null, shouldBeExpanded }) => {
+      const eventParameters = { isExpansionPrevented: false, event, itemId };
+      publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
+      if (eventParameters.isExpansionPrevented) {
+        return;
+      }
       const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       const isExpanded = shouldBeExpanded ?? !isExpandedBefore;
 
