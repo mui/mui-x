@@ -757,7 +757,7 @@
       "name": "toolbar",
       "description": "Toolbar component rendered inside the Header component.",
       "default": "GridToolbar",
-      "class": null
+      "class": "MuiDataGridPremium-toolbar"
     },
     {
       "name": "loadingOverlay",

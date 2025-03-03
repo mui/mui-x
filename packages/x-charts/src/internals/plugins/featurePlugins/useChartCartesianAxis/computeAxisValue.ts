@@ -121,6 +121,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       completeAxis[axis.id] = {
         offset: 0,
+        height: 0,
         categoryGapRatio,
         barGapRatio,
         ...axis,
@@ -147,6 +148,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       completeAxis[axis.id] = {
         offset: 0,
+        height: 0,
         ...axis,
         data,
         scale: scalePoint(axis.data!, zoomedRange),
@@ -193,6 +195,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     completeAxis[axis.id] = {
       offset: 0,
+      height: 0,
       ...axis,
       data,
       scaleType: scaleType as any,

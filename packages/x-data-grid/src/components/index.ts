@@ -20,3 +20,9 @@ export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
 export * from './GridShadowScrollArea';
+
+export * from './columnsPanel';
+export * from './export';
+export * from './filterPanel';
+export * from './toolbarV8';
+export * from './quickFilter';
