@@ -36,14 +36,10 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function ApiMethodSelectItemKeepExistingSelection() {
+export default function ApiMethodSetItemSelection() {
   const apiRef = useTreeViewApiRef();
   const handleSelectGridPro = (event) => {
-    apiRef.current?.selectItem({
-      event,
-      itemId: 'grid-pro',
-      keepExistingSelection: true,
-    });
+    apiRef.current?.setItemSelection({ event, itemId: 'grid-pro' });
   };
 
   return (
@@ -56,8 +52,6 @@ export default function ApiMethodSelectItemKeepExistingSelection() {
           items={MUI_X_PRODUCTS}
           apiRef={apiRef}
           defaultExpandedItems={['grid']}
-          multiSelect
-          defaultSelectedItems={['grid-premium']}
         />
       </Box>
     </Stack>

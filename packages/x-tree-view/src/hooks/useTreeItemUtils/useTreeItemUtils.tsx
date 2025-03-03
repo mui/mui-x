@@ -140,10 +140,10 @@ export const useTreeItemUtils = <
       if (event.shiftKey) {
         instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectItem({ event, itemId, keepExistingSelection: true });
+        instance.setItemSelection({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem({ event, itemId, shouldBeSelected: true });
+      instance.setItemSelection({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -152,7 +152,7 @@ export const useTreeItemUtils = <
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem({
+      instance.setItemSelection({
         event,
         itemId,
         keepExistingSelection: multiSelect,

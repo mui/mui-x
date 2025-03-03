@@ -122,10 +122,10 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Select or deselect an item
 
-Use the `selectItem()` API method to select or deselect an item:
+Use the `setItemSelection()` API method to select or deselect an item:
 
 ```ts
-apiRef.current.selectItem({
+apiRef.current.setItemSelection({
   // The DOM event that triggered the change
   event,
   // The id of the item to select or deselect
@@ -141,8 +141,8 @@ apiRef.current.selectItem({
 });
 ```
 
-{{"demo": "ApiMethodSelectItem.js", "defaultCodeOpen": false}}
+{{"demo": "ApiMethodSetItemSelection.js", "defaultCodeOpen": false}}
 
 You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
 
-{{"demo": "ApiMethodSelectItemKeepExistingSelection.js", "defaultCodeOpen": false}}
+{{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js", "defaultCodeOpen": false}}

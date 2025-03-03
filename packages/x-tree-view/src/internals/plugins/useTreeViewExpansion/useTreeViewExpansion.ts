@@ -2,7 +2,10 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
-import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
+import {
+  UseTreeViewExpansionInstance,
+  UseTreeViewExpansionSignature,
+} from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { selectorIsItemExpandable, selectorIsItemExpanded } from './useTreeViewExpansion.selectors';
 import { createExpandedItemsMap, getExpansionTrigger } from './useTreeViewExpansion.utils';
@@ -12,7 +15,6 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
-  instance,
   store,
   params,
   models,
@@ -47,21 +49,16 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     });
   }, [store, params.isItemEditable, params.expansionTrigger]);
 
-  const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
+  const setExpandedItems = (event: React.SyntheticEvent | null, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
     models.expandedItems.setControlledValue(value);
   };
 
-  const toggleItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: TreeViewItemId) => {
+  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
+    ({ itemId, event = null, shouldBeExpanded }) => {
       const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
-      instance.setItemExpansion(event, itemId, !isExpandedBefore);
-    },
-  );
+      const isExpanded = shouldBeExpanded ?? !isExpandedBefore;
 
-  const setItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
-      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       if (isExpandedBefore === isExpanded) {
         return;
       }
@@ -113,7 +110,6 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
     instance: {
       setItemExpansion,
-      toggleItemExpansion,
       expandAllSiblings,
     },
   };

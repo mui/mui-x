@@ -129,7 +129,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem({
+          instance.setItemSelection({
             event,
             itemId,
             keepExistingSelection: params.multiSelect,
@@ -154,9 +154,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
             event.preventDefault();
-            instance.selectItem({ event, itemId, keepExistingSelection: true });
+            instance.setItemSelection({ event, itemId, keepExistingSelection: true });
           } else if (!selectorIsItemSelected(store.value, itemId)) {
-            instance.selectItem({ event, itemId });
+            instance.setItemSelection({ event, itemId });
             event.preventDefault();
           }
         }

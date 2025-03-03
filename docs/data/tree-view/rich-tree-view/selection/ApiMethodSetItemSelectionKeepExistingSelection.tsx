@@ -2,11 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks/useTreeViewApiRef';
 
-const MUI_X_PRODUCTS = [
+const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -36,10 +36,14 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function ApiMethodSelectItem() {
+export default function ApiMethodSetItemSelectionKeepExistingSelection() {
   const apiRef = useTreeViewApiRef();
-  const handleSelectGridPro = (event) => {
-    apiRef.current?.selectItem({ event, itemId: 'grid-pro' });
+  const handleSelectGridPro = (event: React.SyntheticEvent) => {
+    apiRef.current?.setItemSelection({
+      event,
+      itemId: 'grid-pro',
+      keepExistingSelection: true,
+    });
   };
 
   return (
@@ -52,6 +56,8 @@ export default function ApiMethodSelectItem() {
           items={MUI_X_PRODUCTS}
           apiRef={apiRef}
           defaultExpandedItems={['grid']}
+          multiSelect
+          defaultSelectedItems={['grid-premium']}
         />
       </Box>
     </Stack>
