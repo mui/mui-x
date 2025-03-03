@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, reactMajor } from '@mui/internal-test-utils';
+import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
@@ -436,6 +436,73 @@ describeTreeView<
           });
         },
       );
+
+      describe('setIsItemDisabled API method', () => {
+        it('should disable an item when called with shouldBeDisabled=true', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+          });
+
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-disabled');
+
+          act(() => {
+            view.apiRef.current.setIsItemDisabled({ itemId: '1', shouldBeDisabled: true });
+          });
+
+          expect(view.getItemRoot('1')).to.have.attribute('aria-disabled', 'true');
+          expect(view.getItemRoot('2')).not.to.have.attribute('aria-disabled');
+        });
+
+        it('should enable a disabled item when called with shouldBeDisabled=false', () => {
+          const view = render({
+            items: [
+              { id: '1', disabled: true },
+              { id: '2', disabled: true },
+            ],
+          });
+
+          expect(view.getItemRoot('1')).to.have.attribute('aria-disabled', 'true');
+
+          act(() => {
+            view.apiRef.current.setIsItemDisabled({ itemId: '1', shouldBeDisabled: false });
+          });
+
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-disabled');
+          expect(view.getItemRoot('2')).to.have.attribute('aria-disabled', 'true');
+        });
+
+        it('should toggle disabled state when called without shouldBeDisabled parameter', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2', disabled: true }],
+          });
+
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-disabled');
+          expect(view.getItemRoot('2')).to.have.attribute('aria-disabled', 'true');
+
+          act(() => {
+            view.apiRef.current.setIsItemDisabled({ itemId: '1' });
+            view.apiRef.current.setIsItemDisabled({ itemId: '2' });
+          });
+
+          expect(view.getItemRoot('1')).to.have.attribute('aria-disabled', 'true');
+          expect(view.getItemRoot('2')).not.to.have.attribute('aria-disabled');
+        });
+
+        it('should do nothing when called with non-existent itemId', () => {
+          const view = render({
+            items: [{ id: '1' }],
+          });
+
+          act(() => {
+            view.apiRef.current.setIsItemDisabled({
+              itemId: 'non-existent',
+              shouldBeDisabled: true,
+            });
+          });
+
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-disabled');
+        });
+      });
     });
   },
 );

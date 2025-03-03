@@ -1,21 +1,15 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
+      width: 60,
     },
   ],
   height: 300,
-  margin: { left: 30 },
-  sx: {
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translate(-20px, 0)',
-    },
-  },
 };
 
 export default function BarsDataset() {
