@@ -64,6 +64,8 @@ const daDKPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Vælg dato, valgte dato er ${formattedDate}` : 'Vælg dato',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime}` : 'Vælg tidspunkt',
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   fieldClearLabel: 'ryd felt',
 
   // Table labels

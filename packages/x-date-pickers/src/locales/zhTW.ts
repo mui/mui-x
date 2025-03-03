@@ -61,6 +61,8 @@ const zhTWPickers: Partial<PickersLocaleText> = {
     formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   fieldClearLabel: '清除',
 
   // Table labels

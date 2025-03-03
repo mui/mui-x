@@ -21,8 +21,8 @@ export const openPicker = (params: OpenPickerParams) => {
 
   const target =
     params.type === 'time'
-      ? screen.getByLabelText(/choose time/i)
-      : screen.getByLabelText(/choose date/i);
+      ? screen.getByLabelText(/choose (start |end |)time/i)
+      : screen.getByLabelText(/choose (start |end |)date/i);
 
   fireEvent.click(target);
   return true;
