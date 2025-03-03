@@ -129,6 +129,9 @@ type TimeRangePickerToolbarTimeElementProps = Pick<
   separatorClasses: string;
 };
 
+/**
+ * @ignore - internal component
+ */
 function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElementProps) {
   const { value, ampm, onViewChange, view, separatorClasses, toolbarPlaceholder } = props;
   const utils = useUtils();
@@ -194,32 +197,15 @@ TimeRangePickerToolbarTimeElement.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool.isRequired,
-  /**
-   * Callback fired on view change.
-   * @template TView
-   * @param {TView} view The new view.
-   */
   onViewChange: PropTypes.func.isRequired,
-  pickerVariant: PropTypes.oneOf(['desktop', 'mobile']).isRequired,
   separatorClasses: PropTypes.string.isRequired,
   /**
    * Toolbar value placeholder—it is displayed when the value is empty.
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  utils: PropTypes.object.isRequired,
   value: PropTypes.object,
-  /**
-   * The visible view.
-   * Used when the component view is controlled.
-   * Must be a valid option from `views` list.
-   */
   view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
-    .isRequired,
 } as any;
 
 const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(

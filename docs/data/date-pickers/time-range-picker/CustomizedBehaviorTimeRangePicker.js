@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
-import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DigitalClockItem } from '@mui/x-date-pickers/DigitalClock';
 
@@ -43,10 +42,7 @@ export default function CustomizedBehaviorTimeRangePicker() {
           thresholdToRenderTimeInASingleColumn={96}
           format="HH:mm"
           ampm={false}
-          slots={{
-            digitalClockItem: CustomDigitalClockItem,
-            field: SingleInputTimeRangeField,
-          }}
+          slots={{ digitalClockItem: CustomDigitalClockItem }}
           slotProps={{
             digitalClockItem: {
               rangePosition,
