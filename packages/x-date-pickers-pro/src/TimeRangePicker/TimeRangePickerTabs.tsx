@@ -22,6 +22,7 @@ export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps 
    * @default `window.innerHeight < 667` for `DesktopTimeRangePicker` and `MobileTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticTimeRangePicker`
    */
   hidden?: boolean;
+  // TODO: Consider changing to `React.ReactElement` to avoid the need for wrapping `React.Fragment`.
   /**
    * Time tab icon.
    * @default Time
