@@ -51,7 +51,6 @@ export const useField = <
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
-    valueManager,
     validator,
     getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
@@ -61,6 +60,7 @@ export const useField = <
   const stateResponse = useFieldState(params);
   const {
     state,
+    value,
     activeSectionIndex,
     parsedSelectedSections,
     setSelectedSections,
@@ -84,10 +84,9 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
-    utils,
-    state.value,
-    valueManager.emptyValue,
+  const areAllSectionsEmpty = React.useMemo(
+    () => state.sections.every((section) => section.value === ''),
+    [state.sections],
   );
 
   const useFieldTextField = (
@@ -192,11 +191,6 @@ export const useField = <
         }
 
         const activeSection = state.sections[activeSectionIndex];
-        const activeDateManager = fieldValueManager.getActiveDateManager(
-          utils,
-          state,
-          activeSection,
-        );
 
         const newSectionValue = adjustSectionValue(
           utils,
@@ -205,12 +199,12 @@ export const useField = <
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           localizedDigits,
-          activeDateManager.date,
+          fieldValueManager.getDateFromSection(value, activeSection),
           { minutesStep },
         );
 
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue,
           shouldGoToNextSection: false,
         });
@@ -227,7 +221,7 @@ export const useField = <
     props: internalProps,
     validator,
     timezone,
-    value: state.value,
+    value,
     onError: internalProps.onError,
   });
 
@@ -288,8 +282,8 @@ export const useField = <
 
   const localizationContext = useLocalizationContext();
   const openPickerAriaLabel = React.useMemo(
-    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
-    [getOpenDialogAriaText, state.value, localizationContext],
+    () => getOpenDialogAriaText({ ...localizationContext, value }),
+    [getOpenDialogAriaText, value, localizationContext],
   );
 
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
