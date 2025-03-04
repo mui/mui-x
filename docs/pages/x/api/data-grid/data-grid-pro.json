@@ -686,8 +686,7 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "GridToolbar",
+      "description": "Toolbar component rendered in the grid header.",
       "class": "MuiDataGridPro-toolbar"
     },
     {
@@ -939,7 +938,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {
@@ -1072,6 +1071,12 @@
       "name": "menuItemCheckIcon",
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "printIcon",
+      "description": "Icon displayed on the print button in the toolbar.",
+      "default": "GridPrintIcon",
       "class": null
     },
     {

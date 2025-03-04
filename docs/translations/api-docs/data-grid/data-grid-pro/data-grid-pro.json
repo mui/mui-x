@@ -1292,12 +1292,13 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "printIcon": "Icon displayed on the print button in the toolbar.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
-    "toolbar": "Toolbar component rendered inside the Header component.",
+    "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }

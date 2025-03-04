@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import clsx from 'clsx';
-import { NotRendered } from '../../utils/assert';
+// import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -25,10 +25,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridToolbarQuickFilterRoot = styled(NotRendered<GridSlotProps['baseTextField']>, {
-  name: 'MuiDataGrid',
-  slot: 'ToolbarQuickFilter',
-})({
+// TODO: Use NotRendered from /utils/assert
+// Currently causes react-docgen to fail
+const GridToolbarQuickFilterRoot = styled(
+  (_props: GridSlotProps['baseTextField']) => {
+    throw new Error('Failed assertion: should not be rendered');
+  },
+  {
+    name: 'MuiDataGrid',
+    slot: 'ToolbarQuickFilter',
+  },
+)({
   width: 260,
   marginLeft: 'auto',
 });
@@ -76,7 +83,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       debounceMs={debounceMs}
     >
       <QuickFilterControl
-        render={({ ref, ...controlProps }) => (
+        render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
           <GridToolbarQuickFilterRoot
             as={rootProps.slots.baseTextField}
             className={clsx(classes.root, className)}
@@ -102,7 +109,9 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                     }
                   />
                 ) : null,
+                ...controlSlotProps?.input,
               },
+              ...controlSlotProps,
             }}
             {...rootProps.slotProps?.baseTextField}
             {...controlProps}

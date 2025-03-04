@@ -276,6 +276,7 @@ export type SwitchProps = {
 };
 
 export type TextFieldProps = {
+  role?: string;
   autoComplete?: string;
   className?: string;
   color?: 'primary' | 'error';

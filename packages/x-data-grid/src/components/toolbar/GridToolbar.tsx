@@ -83,7 +83,7 @@ GridToolbar.propTypes = {
   }),
   /**
    * Show the quick filter component.
-   * @default false
+   * @default true
    */
   showQuickFilter: PropTypes.bool,
   /**
