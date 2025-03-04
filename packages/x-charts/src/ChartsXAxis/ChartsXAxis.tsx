@@ -144,8 +144,12 @@ function shortenLabels(
 
       // That maximum width of the tick depends on its proximity to the axis bounds.
       const width = Math.min(
-        item.offset * leftBoundModifier,
-        (drawingArea.left + drawingArea.width + drawingArea.right - item.offset) *
+        (item.offset + item.labelOffset) * leftBoundModifier,
+        (drawingArea.left +
+          drawingArea.width +
+          drawingArea.right -
+          item.offset -
+          item.labelOffset) *
           rightBoundModifier,
       );
 

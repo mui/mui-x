@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 const defaultXAxis = {
   id: 'angle0',
   scaleType: 'band',
   dataKey: 'code',
   position: 'bottom',
+  zoom: true,
   height: 80,
   valueFormatter: (value: any) =>
     usAirportPassengers.find((item) => item.code === value)!.fullName,
@@ -14,7 +15,7 @@ const defaultXAxis = {
 
 export default function XAxisTickLabelOverflow() {
   return (
-    <BarChart
+    <BarChartPro
       xAxis={[
         {
           ...defaultXAxis,
