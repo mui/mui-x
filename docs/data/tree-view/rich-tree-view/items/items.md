@@ -223,9 +223,6 @@ Use the `getParentId()` API method to get the id of the item's parent.
 
 ```ts
 publicAPI.getParentId(itemId);
-  // The id of the item
-  itemId,
-});
 ```
 
 {{"demo": "GetParentIdPublicAPI.js", "defaultCodeOpen": false}}
