@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { degToRad, ellipsize } from './ellipsize';
+import { ellipsize } from './ellipsize';
+import { degToRad } from './degToRad';
 
 describe('ellipsizeText', () => {
   it('does nothing if text fits', () => {

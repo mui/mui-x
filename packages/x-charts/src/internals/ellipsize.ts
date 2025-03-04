@@ -1,3 +1,4 @@
+import { degToRad } from './degToRad';
 import { sliceUntil } from './sliceUntil';
 
 const ELLIPSIS = '…';
@@ -53,9 +54,4 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
   } while (newLength !== lastLength);
 
   return longestFittingText ? longestFittingText + ELLIPSIS : '';
-}
-
-/** Converts degrees to radians. */
-export function degToRad(degrees: number): number {
-  return degrees * (Math.PI / 180);
 }
