@@ -109,43 +109,43 @@ function getVisibleLabels(
 }
 
 function getDefaultTextAnchor(
-    angle: number,
-    position: 'top' | 'bottom' | 'none' | undefined,
+  angle: number,
+  position: 'top' | 'bottom' | 'none' | undefined,
 ): ChartsTextStyle['textAnchor'] {
-    /* Clamp angle to [0, 360[ */
-    const adjustedAngle = ((angle % 360) + 360) % 360;
+  /* Clamp angle to [0, 360[ */
+  const adjustedAngle = ((angle % 360) + 360) % 360;
 
-    if (adjustedAngle === 0 || adjustedAngle === 180) {
-        return 'middle';
-    }
+  if (adjustedAngle === 0 || adjustedAngle === 180) {
+    return 'middle';
+  }
 
-    if (adjustedAngle <= 90) {
-        return position === 'top' ? 'end' : 'start';
-    }
+  if (adjustedAngle <= 90) {
+    return position === 'top' ? 'end' : 'start';
+  }
 
-    if (adjustedAngle > 90 && adjustedAngle < 180) {
-        return position === 'top' ? 'end' : 'start';
-    }
+  if (adjustedAngle > 90 && adjustedAngle < 180) {
+    return position === 'top' ? 'end' : 'start';
+  }
 
-    return position === 'top' ? 'start' : 'end';
+  return position === 'top' ? 'start' : 'end';
 }
 
 function getDefaultBaseline(
-    angle: number,
-    position: 'top' | 'bottom' | 'none' | undefined,
+  angle: number,
+  position: 'top' | 'bottom' | 'none' | undefined,
 ): ChartsTextStyle['dominantBaseline'] {
-    /* Clamp angle to [0, 360[ */
-    const adjustedAngle = ((angle % 360) + 360) % 360;
+  /* Clamp angle to [0, 360[ */
+  const adjustedAngle = ((angle % 360) + 360) % 360;
 
-    if (adjustedAngle === 0) {
-        return position === 'bottom' ? 'hanging' : 'auto';
-    }
+  if (adjustedAngle === 0) {
+    return position === 'bottom' ? 'hanging' : 'auto';
+  }
 
-    if (adjustedAngle === 180) {
-        return position === 'bottom' ? 'auto' : 'hanging';
-    }
+  if (adjustedAngle === 180) {
+    return position === 'bottom' ? 'auto' : 'hanging';
+  }
 
-    return 'central';
+  return 'central';
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -206,7 +206,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses(defaultizedProps);
-    const { left, top, width, height } = useDrawingArea();
+  const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
