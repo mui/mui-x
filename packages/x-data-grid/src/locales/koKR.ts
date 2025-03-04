@@ -185,7 +185,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: '행 재배치',
 
   // Aggregation
-  aggregationMenuItemHeader: '총계',
+  aggregationMenuItemHeader: '집계',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',
