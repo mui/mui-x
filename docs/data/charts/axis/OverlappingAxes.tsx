@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import { AxisValueFormatterContext } from '@mui/x-charts/models';
 
 export default function OverlappingAxes() {
   return (
-    <LineChart
+    <BarChart
       xAxis={[
         {
-          scaleType: 'time',
+          scaleType: 'band',
           data: time,
           valueFormatter: formatShortMonth,
           height: 0,
           tickLabelPlacement: 'middle',
         },
         {
-          scaleType: 'time',
+          scaleType: 'band',
           data: time,
           tickInterval: time.filter((_, index) => index % 3 === 0),
           valueFormatter: formatQuarterYear,
@@ -58,7 +58,6 @@ const time = [
   new Date(2015, 9, 1),
   new Date(2015, 10, 1),
   new Date(2015, 11, 1),
-  new Date(2016, 0, 1),
 ];
 const a = [
   4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2400,
@@ -75,19 +74,18 @@ const chartConfig = {
   series: [
     {
       data: getPercents(a),
-      type: 'line',
-      label: 'a',
-      area: true,
-      stack: 'total',
-      showMark: false,
+      label: 'Income',
+      valueFormatter: (value: number | null) => `${(value ?? 0).toFixed(0)}%`,
     },
     {
       data: getPercents(b),
-      type: 'line',
-      label: 'b',
-      area: true,
-      stack: 'total',
-      showMark: false,
+      label: 'Expenses',
+      valueFormatter: (value: number | null) => `${(value ?? 0).toFixed(0)}%`,
+    },
+  ],
+  yAxis: [
+    {
+      valueFormatter: (value: number | null) => `${(value ?? 0).toFixed(0)}%`,
     },
   ],
 } as const;

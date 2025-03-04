@@ -121,7 +121,10 @@ export function useTicks(
             labelOffset:
               tickLabelPlacement === 'tick'
                 ? 0
-                : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
+                : scale.step() *
+                  (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]) *
+                  // Only really works if ticks are evenly spaced
+                  (domain.length !== filteredDomain.length ? filteredDomain.length - 1 : 1),
           })),
 
           ...(tickPlacement === 'extremities'
