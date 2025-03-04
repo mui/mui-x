@@ -1,0 +1,8 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  initialState={initialState}
+  columnGroupHeaderHeight={36}
+  showToolbar
+  experimentalFeatures={{ pivoting: true }}
+/>

@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridColDef,
+  GridRowModel,
+  GridPivotModel,
+  GridInitialState,
+} from '@mui/x-data-grid-premium';
 
-const rows = [
+const rows: GridRowModel[] = [
   { id: 1, product: 'Apples', region: 'North', quarter: 'Q1', sales: 1000 },
   { id: 2, product: 'Apples', region: 'South', quarter: 'Q1', sales: 1200 },
   { id: 3, product: 'Oranges', region: 'North', quarter: 'Q1', sales: 800 },
@@ -19,7 +25,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'product', headerName: 'Product' },
   { field: 'region', headerName: 'Region' },
   { field: 'quarter', headerName: 'Quarter' },
@@ -36,13 +42,13 @@ const columns = [
   },
 ];
 
-const pivotModel = {
-  rows: [{ field: 'product' }],
-  columns: [{ field: 'region' }, { field: 'quarter' }],
-  values: [{ field: 'sales', aggFunc: 'sum' }],
+const pivotModel: GridPivotModel = {
+  rows: [],
+  columns: [{ field: 'region' }, { field: 'quarter', hidden: true }],
+  values: [],
 };
 
-const initialState = {
+const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
     enabled: true,
@@ -50,9 +56,9 @@ const initialState = {
   },
 };
 
-export default function GridPivotingBasic() {
+export default function GridPivotingColumns() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}

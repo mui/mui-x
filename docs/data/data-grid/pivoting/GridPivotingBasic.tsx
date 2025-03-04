@@ -8,10 +8,14 @@ import {
 } from '@mui/x-data-grid-premium';
 
 const rows: GridRowModel[] = [
-  { id: 1, product: 'Product 1', type: 'Type A', price: 10, quantity: 2 },
-  { id: 2, product: 'Product 2', type: 'Type A', price: 12, quantity: 3 },
-  { id: 3, product: 'Product 3', type: 'Type B', price: 8, quantity: 1 },
-  { id: 4, product: 'Product 4', type: 'Type C', price: 20, quantity: 8 },
+  { id: 1, product: 'Apples', region: 'North', quarter: 'Q1', sales: 1000 },
+  { id: 2, product: 'Apples', region: 'South', quarter: 'Q1', sales: 1200 },
+  { id: 3, product: 'Oranges', region: 'North', quarter: 'Q1', sales: 800 },
+  { id: 4, product: 'Oranges', region: 'South', quarter: 'Q1', sales: 900 },
+  { id: 5, product: 'Apples', region: 'North', quarter: 'Q2', sales: 1100 },
+  { id: 6, product: 'Apples', region: 'South', quarter: 'Q2', sales: 1300 },
+  { id: 7, product: 'Oranges', region: 'North', quarter: 'Q2', sales: 850 },
+  { id: 8, product: 'Oranges', region: 'South', quarter: 'Q2', sales: 950 },
 ];
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -22,10 +26,12 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const columns: GridColDef[] = [
-  { field: 'product' },
-  { field: 'type' },
+  { field: 'product', headerName: 'Product' },
+  { field: 'region', headerName: 'Region' },
+  { field: 'quarter', headerName: 'Quarter' },
   {
-    field: 'price',
+    field: 'sales',
+    headerName: 'Sales',
     type: 'number',
     valueFormatter: (value) => {
       if (!value) {
@@ -34,13 +40,12 @@ const columns: GridColDef[] = [
       return currencyFormatter.format(value);
     },
   },
-  { field: 'quantity', type: 'number' },
 ];
 
 const pivotModel: GridPivotModel = {
-  rows: [{ field: 'type' }],
-  columns: [],
-  values: [{ field: 'price', aggFunc: 'sum' }],
+  rows: [{ field: 'product' }],
+  columns: [{ field: 'region' }, { field: 'quarter' }],
+  values: [{ field: 'sales', aggFunc: 'sum' }],
 };
 
 const initialState: GridInitialState = {

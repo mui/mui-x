@@ -37,9 +37,12 @@ const columns = [
 ];
 
 const pivotModel = {
-  rows: [{ field: 'product' }],
-  columns: [{ field: 'region' }, { field: 'quarter' }],
-  values: [{ field: 'sales', aggFunc: 'sum' }],
+  rows: [],
+  columns: [],
+  values: [
+    { field: 'sales', aggFunc: 'sum' },
+    { field: 'quarter', aggFunc: 'size', hidden: true },
+  ],
 };
 
 const initialState = {
@@ -50,9 +53,9 @@ const initialState = {
   },
 };
 
-export default function GridPivotingBasic() {
+export default function GridPivotingValues() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}

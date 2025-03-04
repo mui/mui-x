@@ -36,23 +36,16 @@ const columns = [
   },
 ];
 
-const pivotModel = {
-  rows: [{ field: 'product' }],
-  columns: [{ field: 'region' }, { field: 'quarter' }],
-  values: [{ field: 'sales', aggFunc: 'sum' }],
-};
-
 const initialState = {
   pivoting: {
-    model: pivotModel,
-    enabled: true,
+    enabled: false,
     panelOpen: true,
   },
 };
 
-export default function GridPivotingBasic() {
+export default function GridNonPivoted() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
