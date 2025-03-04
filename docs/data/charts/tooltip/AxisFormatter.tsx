@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const dataset = [
   { name: 'Austria', code: 'AT', gdp: 471 },
@@ -29,6 +28,7 @@ const chartParams: BarChartProps = {
   yAxis: [
     {
       label: 'GDP (million $USD)',
+      width: 70,
     },
   ],
   series: [
@@ -47,12 +47,6 @@ const chartParams: BarChartProps = {
   hideLegend: true,
   dataset,
   height: 400,
-  margin: { left: 40 },
-  sx: {
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translate(-20px, 0)',
-    },
-  },
 };
 
 export default function AxisFormatter() {

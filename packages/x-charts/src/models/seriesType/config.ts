@@ -94,11 +94,7 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
-  : ChartsSeriesConfig[T]['seriesInput'];
+export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seriesInput'];
 
 export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;

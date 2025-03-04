@@ -117,6 +117,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/gauge',
     title: 'Gauge',
   },
