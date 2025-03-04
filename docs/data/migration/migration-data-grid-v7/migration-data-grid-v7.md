@@ -214,6 +214,8 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
+- The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
+
 - The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
 
   ```diff
@@ -240,6 +242,8 @@ You have to import it from `@mui/x-license` instead:
   3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
 
   To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
+
+- The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example.
 
 ### Localization
 
