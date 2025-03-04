@@ -2,7 +2,7 @@
 title: Data Grid - Pivoting
 ---
 
-# Data Grid - Pivoting [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
+# Data Grid - Pivoting [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Rearrange rows and columns to view data from multiple perspectives.</p>
 
