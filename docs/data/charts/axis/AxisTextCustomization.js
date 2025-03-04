@@ -16,8 +16,24 @@ export default function AxisTextCustomization() {
         angle: { knob: 'number', defaultValue: 45, min: -180, max: 180 },
         textAnchor: {
           knob: 'select',
-          defaultValue: 'start',
-          options: ['start', 'middle', 'end'],
+          defaultValue: 'unset',
+          options: ['unset', 'start', 'middle', 'end'],
+        },
+        dominantBaseline: {
+          knob: 'select',
+          defaultValue: 'unset',
+          options: [
+            'unset',
+            'auto',
+            'text-bottom',
+            'alphabetic',
+            'ideographic',
+            'middle',
+            'central',
+            'mathematical',
+            'hanging',
+            'text-top',
+          ],
         },
         fontSize: { knob: 'number', defaultValue: 12 },
         labelFontSize: { knob: 'number', defaultValue: 14 },
@@ -37,7 +53,12 @@ export default function AxisTextCustomization() {
                 },
                 tickLabelStyle: {
                   angle: props.angle,
-                  textAnchor: props.textAnchor,
+                  ...(props.textAnchor === 'unset'
+                    ? {}
+                    : { textAnchor: props.textAnchor }),
+                  ...(props.dominantBaseline === 'unset'
+                    ? {}
+                    : { dominantBaseline: props.dominantBaseline }),
                   fontSize: props.fontSize,
                 },
               },
@@ -62,8 +83,17 @@ export default function AxisTextCustomization() {
         fontSize: ${props.labelFontSize},
       },
       tickLabelStyle: {
-        angle: ${props.angle},
-        textAnchor: '${props.textAnchor}',
+        angle: ${props.angle},${
+          props.textAnchor === 'unset'
+            ? ''
+            : `
+        textAnchor: '${props.textAnchor}',`
+        }${
+          props.dominantBaseline === 'unset'
+            ? ''
+            : `
+        dominantBaseline: '${props.dominantBaseline}',`
+        }
         fontSize: ${props.fontSize},
       },
     },

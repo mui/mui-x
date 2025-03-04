@@ -9,7 +9,7 @@ import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -108,6 +108,46 @@ function getVisibleLabels(
   );
 }
 
+function getDefaultTextAnchor(
+    angle: number,
+    position: 'top' | 'bottom' | 'none' | undefined,
+): ChartsTextStyle['textAnchor'] {
+    /* Clamp angle to [0, 360[ */
+    const adjustedAngle = ((angle % 360) + 360) % 360;
+
+    if (adjustedAngle === 0 || adjustedAngle === 180) {
+        return 'middle';
+    }
+
+    if (adjustedAngle <= 90) {
+        return position === 'top' ? 'end' : 'start';
+    }
+
+    if (adjustedAngle > 90 && adjustedAngle < 180) {
+        return position === 'top' ? 'end' : 'start';
+    }
+
+    return position === 'top' ? 'start' : 'end';
+}
+
+function getDefaultBaseline(
+    angle: number,
+    position: 'top' | 'bottom' | 'none' | undefined,
+): ChartsTextStyle['dominantBaseline'] {
+    /* Clamp angle to [0, 360[ */
+    const adjustedAngle = ((angle % 360) + 360) % 360;
+
+    if (adjustedAngle === 0) {
+        return position === 'bottom' ? 'hanging' : 'auto';
+    }
+
+    if (adjustedAngle === 180) {
+        return position === 'bottom' ? 'auto' : 'hanging';
+    }
+
+    return 'central';
+}
+
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
@@ -166,7 +206,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses(defaultizedProps);
-  const { left, top, width, height } = useDrawingArea();
+    const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
@@ -185,8 +225,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        textAnchor: getDefaultTextAnchor(tickLabelStyle?.angle ?? 0, position),
+        dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
