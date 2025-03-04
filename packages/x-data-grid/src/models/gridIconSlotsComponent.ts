@@ -71,7 +71,7 @@ export interface GridIconSlotsComponent {
   densityComfortableIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open export button present in the toolbar by default.
-   * @default GridSaveAltIcon
+   * @default GridDownloadIcon
    */
   exportIcon: React.JSXElementConstructor<any>;
   /**
@@ -184,4 +184,9 @@ export interface GridIconSlotsComponent {
    * @default GridCheckIcon
    */
   menuItemCheckIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the print button in the toolbar.
+   * @default GridPrintIcon
+   */
+  printIcon: React.JSXElementConstructor<any>;
 }

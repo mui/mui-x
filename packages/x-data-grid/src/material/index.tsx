@@ -46,7 +46,6 @@ import {
   GridKeyboardArrowRight,
   GridMoreVertIcon,
   GridRemoveIcon,
-  GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -58,6 +57,8 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridPrintIcon,
+  GridDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -170,7 +171,7 @@ const iconSlots: GridIconSlotsComponent = {
   densityCompactIcon: GridViewHeadlineIcon,
   densityStandardIcon: GridTableRowsIcon,
   densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridSaveAltIcon,
+  exportIcon: GridDownloadIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
   treeDataExpandIcon: GridKeyboardArrowRight,
@@ -180,7 +181,7 @@ const iconSlots: GridIconSlotsComponent = {
   detailPanelCollapseIcon: GridRemoveIcon,
   rowReorderIcon: GridDragIcon,
   quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridCloseIcon,
+  quickFilterClearIcon: GridClearIcon,
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
@@ -192,6 +193,7 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  printIcon: GridPrintIcon,
 };
 
 const baseSlots: GridBaseSlots = {
