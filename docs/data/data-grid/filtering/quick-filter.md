@@ -103,17 +103,32 @@ In the demo below, the column "Name" is not searchable with the quick filter, an
 
 ## Parsing values
 
-The values used by the quick filter are obtained by splitting with space.
-If you want to implement a more advanced logic, the `<QuickFilter />` component accepts a `parser` prop.
-This function takes the string from the search text field and returns an array of values.
+The values used by the quick filter are obtained by splitting the input string with space.
+If you want to implement a more advanced logic, the quick filter accepts a custom parser.
+This function takes the quick filter input string and returns an array of values.
 
 If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, the content of the input must be updated to reflect the new values.
-By default, values are joint with spaces. You can customize this behavior by providing `formatter`.
+By default, values are joint with spaces. You can customize this behavior by providing a custom formatter.
 This formatter can be seen as the inverse of the `parser`.
 
 For example, the following parser allows to search words containing a space by using the `','` to split values.
 
 ```jsx
+// Default toolbar:
+<DataGrid
+  showToolbar
+  slotProps={{
+    toolbar: {
+      quickFilterProps: {
+        quickFilterParser: (searchInput) => searchInput.split(',').map((value) => value.trim()),
+        quickFilterFormatter: (quickFilterValues) => quickFilterValues.join(', '),
+        debounceMs: 200, // time before applying the new quick filter value
+      },
+    },
+  }}
+/>
+
+// Custom quick filter:
 <QuickFilter
   parser={(searchInput) => searchInput.split(',').map((value) => value.trim())}
   formatter={(quickFilterValues) => quickFilterValues.join(', ')}
