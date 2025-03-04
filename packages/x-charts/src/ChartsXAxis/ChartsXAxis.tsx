@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { clampAngle } from '../internals/clampAngle';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
@@ -112,8 +113,7 @@ function getDefaultTextAnchor(
   angle: number,
   position: 'top' | 'bottom' | 'none' | undefined,
 ): ChartsTextStyle['textAnchor'] {
-  /* Clamp angle to [0, 360[ */
-  const adjustedAngle = ((angle % 360) + 360) % 360;
+  const adjustedAngle = clampAngle(angle);
 
   if (adjustedAngle === 0 || adjustedAngle === 180) {
     return 'middle';
@@ -134,8 +134,7 @@ function getDefaultBaseline(
   angle: number,
   position: 'top' | 'bottom' | 'none' | undefined,
 ): ChartsTextStyle['dominantBaseline'] {
-  /* Clamp angle to [0, 360[ */
-  const adjustedAngle = ((angle % 360) + 360) % 360;
+  const adjustedAngle = clampAngle(angle);
 
   if (adjustedAngle === 0) {
     return position === 'bottom' ? 'hanging' : 'auto';
