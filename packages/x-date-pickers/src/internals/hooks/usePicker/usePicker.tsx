@@ -55,6 +55,7 @@ export const usePicker = <
     onViewChange,
     viewRenderers,
     reduceAnimations: reduceAnimationsProp,
+    orientation: orientationProp,
     disableOpenPicker,
     // Form props
     disabled,
@@ -80,7 +81,12 @@ export const usePicker = <
   const utils = useUtils();
   const adapter = useLocalizationContext();
   const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
+  const orientation = useOrientation(views, orientationProp);
   const { current: initialView } = React.useRef<TView | null>(openTo ?? null);
+
+  /**
+   * Refs
+   */
   const triggerRef = React.useRef<HTMLElement>(null);
   const popupRef = React.useRef<HTMLElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
@@ -93,7 +99,17 @@ export const usePicker = <
     TExternalProps
   >({ props, valueManager, validator });
 
-  const isValid = (testedValue: TValue) => {
+  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+    useViews({
+      view: viewProp,
+      views,
+      openTo,
+      onChange: setValueFromView,
+      onViewChange,
+      autoFocus: autoFocusView,
+    });
+
+  const isValidContextValue = (testedValue: TValue) => {
     const error = validator({
       adapter,
       value: testedValue,
@@ -127,19 +143,7 @@ export const usePicker = <
     [utils, valueManager, state.draft],
   );
 
-  const orientation = useOrientation(views, props.orientation);
-
-  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
-    useViews({
-      view: viewProp,
-      views,
-      openTo,
-      onChange: setValueFromView,
-      onViewChange,
-      autoFocus: autoFocusView,
-    });
-
-  const { hasUIView, viewModeLookup } = React.useMemo(
+  const { hasUIView, viewModeLookup, timeViewsCount } = React.useMemo(
     () =>
       views.reduce(
         (acc, viewForReduce) => {
@@ -153,23 +157,19 @@ export const usePicker = <
           acc.viewModeLookup[viewForReduce] = viewMode;
           if (viewMode === 'UI') {
             acc.hasUIView = true;
+            if (isTimeView(viewForReduce)) {
+              acc.timeViewsCount += 1;
+            }
           }
 
           return acc;
         },
-        { hasUIView: false, viewModeLookup: {} as Record<TView, 'field' | 'UI'> },
+        {
+          hasUIView: false,
+          viewModeLookup: {} as Record<TView, 'field' | 'UI'>,
+          timeViewsCount: 0,
+        },
       ),
-    [viewRenderers, views],
-  );
-
-  const timeViewsCount = React.useMemo(
-    () =>
-      views.reduce((acc, viewForReduce) => {
-        if (viewRenderers[viewForReduce] != null && isTimeView(viewForReduce)) {
-          return acc + 1;
-        }
-        return acc;
-      }, 0),
     [viewRenderers, views],
   );
 
@@ -413,7 +413,7 @@ export const usePicker = <
       privateContextValue,
       actionsContextValue,
       fieldPrivateContextValue,
-      isValidContextValue: isValid,
+      isValidContextValue,
     },
     renderCurrentView,
     ownerState,
