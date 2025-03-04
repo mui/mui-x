@@ -225,15 +225,9 @@ You can further customize the axis rendering besides the axis definition.
 ### Fixing overflow issues
 
 If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
-Resolving this can be achieved in two ways:
+You can resolve this by [increasing the size of the overflowing axis](/x/react-charts/styling/#placement).
 
-- Increase the space between the SVG border and the axis by setting the [margin props](/x/react-charts/styling/#placement).
-- Modify the axis label position by:
-  - Using the axis configuration `labelStyle.transform`.
-  - Applying CSS transform to the class name `axisClasses.label`.
-
-In the following demo, the margin is modified to provide more space to the x and y axes.
-The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
+In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 {{"demo": "MarginAndLabelPosition.js"}}
 

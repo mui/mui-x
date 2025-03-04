@@ -99,7 +99,6 @@ export default function LimitOverflow() {
         valueLabelDisplay="auto"
         min={-40}
         max={40}
-        sx={{ mt: 2 }}
       />
     </Box>
   );
