@@ -25,6 +25,8 @@ The Data Grid exposes the `density` prop which supports the following values:
 - `compact`
 - `comfortable`
 
+### Set the density programmatically
+
 You can set the density programmatically in one of the following ways:
 
 1. Uncontrolled – initialize the density with the `initialState.density` prop.
