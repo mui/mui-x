@@ -126,23 +126,28 @@ function shortenLabels(
   { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
 ) {
   const shortenedLabels = new Map<TickItemType, string>();
+  const angle = clampAngle(tickLabelStyle?.angle ?? 0);
+
+  let leftBoundModifier = 1;
+  let rightBoundModifier = 1;
+
+  if (tickLabelStyle?.textAnchor === 'start') {
+    leftBoundModifier = Infinity;
+    rightBoundModifier = 1;
+  } else if (tickLabelStyle?.textAnchor === 'end') {
+    leftBoundModifier = 1;
+    rightBoundModifier = Infinity;
+  } else {
+    leftBoundModifier = 2;
+    rightBoundModifier = 2;
+  }
+
+  if (angle > 90 && angle < 270) {
+    [leftBoundModifier, rightBoundModifier] = [rightBoundModifier, leftBoundModifier];
+  }
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
-      let leftBoundModifier = 1;
-      let rightBoundModifier = 1;
-
-      if (tickLabelStyle?.textAnchor === 'start') {
-        leftBoundModifier = Infinity;
-        rightBoundModifier = 1;
-      } else if (tickLabelStyle?.textAnchor === 'end') {
-        leftBoundModifier = 1;
-        rightBoundModifier = Infinity;
-      } else {
-        leftBoundModifier = 2;
-        rightBoundModifier = 2;
-      }
-
       // That maximum width of the tick depends on its proximity to the axis bounds.
       const width = Math.min(
         (item.offset + item.labelOffset) * leftBoundModifier,
@@ -159,8 +164,7 @@ function shortenLabels(
         ellipsize(item.formattedValue.toString(), {
           width,
           height: maxHeight,
-          // FIXME: Do we need to mod by 180?
-          angle: (tickLabelStyle?.angle ?? 0) % 180,
+          angle,
           measureText: (text) => getStringSize(text, tickLabelStyle),
         }),
       );
