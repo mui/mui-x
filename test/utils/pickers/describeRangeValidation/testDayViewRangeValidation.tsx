@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
 
@@ -65,7 +65,7 @@ export function testDayViewRangeValidation(
         testDisabledDate('11', [true, true], !isDesktop || includesTimeView);
       });
 
-      it('should apply disablePast', () => {
+      it('should apply disablePast', async () => {
         const { render } = getOptions();
 
         let now;
@@ -93,18 +93,22 @@ export function testDayViewRangeValidation(
         if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
           setProps({ value: [yesterday, null] });
         }
-        testDisabledDate(
-          adapterToUse.format(yesterday, 'dayOfMonth'),
-          [true, false],
-          !isDesktop || includesTimeView,
-        );
+
+        await waitFor(() => {
+          testDisabledDate(
+            adapterToUse.format(yesterday, 'dayOfMonth'),
+            [true, false],
+            !isDesktop || includesTimeView,
+          );
+        });
       });
 
-      it('should apply disableFuture', () => {
+      it('should apply disableFuture', async () => {
         const { render } = getOptions();
 
-        const now = adapterToUse.date();
+        let now;
         function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
           const { referenceDate, ...otherProps } = props;
           return <ElementToTest value={[now, null]} {...otherProps} />;
         }
@@ -128,11 +132,13 @@ export function testDayViewRangeValidation(
           setProps({ value: [yesterday, null] });
         }
 
-        testDisabledDate(
-          adapterToUse.format(yesterday, 'dayOfMonth'),
-          [false, true],
-          !isDesktop || includesTimeView,
-        );
+        await waitFor(() => {
+          testDisabledDate(
+            adapterToUse.format(yesterday, 'dayOfMonth'),
+            [false, true],
+            !isDesktop || includesTimeView,
+          );
+        });
       });
 
       it('should apply minDate', () => {
