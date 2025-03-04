@@ -95,7 +95,7 @@ const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: () => null`.
 
 In the demo below, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
 

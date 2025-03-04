@@ -40,7 +40,7 @@ export default function QuickFilteringCustomLogic() {
           if (column.field === 'name') {
             return {
               ...column,
-              getApplyQuickFilterFn: undefined,
+              getApplyQuickFilterFn: () => null,
             };
           }
           return column;
