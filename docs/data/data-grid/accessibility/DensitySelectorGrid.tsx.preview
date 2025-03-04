@@ -1,7 +1,14 @@
 <DataGrid
   {...data}
+  density={density}
   slots={{
     toolbar: CustomToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      density,
+      onDensityChange: setDensity,
+    },
   }}
   showToolbar
 />

@@ -48,31 +48,36 @@ export function GridToolbar(props: GridToolbarProps) {
 
   return (
     <Toolbar>
-      <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
-        <ColumnsPanelTrigger render={<ToolbarButton />}>
-          <rootProps.slots.columnSelectorIcon fontSize="small" />
-        </ColumnsPanelTrigger>
-      </rootProps.slots.baseTooltip>
-
-      <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
-        <FilterPanelTrigger
-          render={(triggerProps, state) => (
-            <ToolbarButton {...triggerProps} color="default">
-              <rootProps.slots.baseBadge
-                badgeContent={state.filterCount}
-                color="primary"
-                variant="dot"
-              >
-                <rootProps.slots.openFilterButtonIcon fontSize="small" />
-              </rootProps.slots.baseBadge>
-            </ToolbarButton>
-          )}
-        />
-      </rootProps.slots.baseTooltip>
-
-      {(showExportMenu || !printOptions?.disableToolbarButton) && (
-        <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
+      {!rootProps.disableColumnSelector && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
+          <ColumnsPanelTrigger render={<ToolbarButton />}>
+            <rootProps.slots.columnSelectorIcon fontSize="small" />
+          </ColumnsPanelTrigger>
+        </rootProps.slots.baseTooltip>
       )}
+
+      {!rootProps.disableColumnFilter && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
+          <FilterPanelTrigger
+            render={(triggerProps, state) => (
+              <ToolbarButton {...triggerProps} color="default">
+                <rootProps.slots.baseBadge
+                  badgeContent={state.filterCount}
+                  color="primary"
+                  variant="dot"
+                >
+                  <rootProps.slots.openFilterButtonIcon fontSize="small" />
+                </rootProps.slots.baseBadge>
+              </ToolbarButton>
+            )}
+          />
+        </rootProps.slots.baseTooltip>
+      )}
+
+      {(showExportMenu || !printOptions?.disableToolbarButton) &&
+        (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
+          <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
+        )}
 
       {!printOptions?.disableToolbarButton && (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarExportPrint')}>
