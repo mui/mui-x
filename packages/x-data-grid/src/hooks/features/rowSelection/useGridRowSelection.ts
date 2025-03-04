@@ -478,11 +478,7 @@ export const useGridRowSelection = (
     if (propRowSelectionModel === undefined) {
       return;
     }
-    if (
-      !applyAutoSelection ||
-      !isNestedData ||
-      propRowSelectionModel.ids.size === 0
-    ) {
+    if (!applyAutoSelection || !isNestedData || propRowSelectionModel.ids.size === 0) {
       apiRef.current.setRowSelectionModel(propRowSelectionModel);
       return;
     }
