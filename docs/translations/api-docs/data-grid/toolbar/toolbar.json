@@ -1,0 +1,7 @@
+{
+  "componentDescription": "The top level Toolbar component that provides context to child components.\nIt renders a styled `<div />` element.",
+  "propDescriptions": {
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}
