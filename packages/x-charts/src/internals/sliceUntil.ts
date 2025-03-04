@@ -1,5 +1,5 @@
 const segmenter =
-  'Intl' in window && 'Segmenter' in Intl
+  typeof window !== 'undefined' && 'Intl' in window && 'Segmenter' in Intl
     ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
     : null;
 
