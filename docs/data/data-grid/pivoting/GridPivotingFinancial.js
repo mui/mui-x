@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -112,8 +112,6 @@ const getYearField = (field) => `${field}-year`;
 const getQuarterField = (field) => `${field}-quarter`;
 
 export default function GridPivotingFinancial() {
-  const apiRef = useGridApiRef();
-
   const [pivotModel, setPivotModel] = React.useState({
     rows: [{ field: 'ticker' }],
     columns: [
@@ -135,7 +133,6 @@ export default function GridPivotingFinancial() {
         <DataGridPremium
           rows={rows}
           columns={columns}
-          apiRef={apiRef}
           showToolbar
           pivotModel={pivotModel}
           onPivotModelChange={setPivotModel}

@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GridColDef,
-  useGridApiRef,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
 
@@ -118,8 +117,6 @@ const getYearField = (field: string) => `${field}-year`;
 const getQuarterField = (field: string) => `${field}-quarter`;
 
 export default function GridPivotingFinancial() {
-  const apiRef = useGridApiRef();
-
   const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
     rows: [{ field: 'ticker' }],
     columns: [
@@ -141,7 +138,6 @@ export default function GridPivotingFinancial() {
         <DataGridPremium
           rows={rows}
           columns={columns}
-          apiRef={apiRef}
           showToolbar
           pivotModel={pivotModel}
           onPivotModelChange={setPivotModel}

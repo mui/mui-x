@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function GridPivotingCommodities() {
-  const apiRef = useGridApiRef();
-
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1_000,
@@ -25,7 +23,6 @@ export default function GridPivotingCommodities() {
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
-          apiRef={apiRef}
           showToolbar
           pivotModel={pivotModel}
           onPivotModelChange={setPivotModel}

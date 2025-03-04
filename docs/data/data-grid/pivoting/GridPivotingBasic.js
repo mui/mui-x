@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-const initialRows = [
+const rows = [
   { id: 1, product: 'Product 1', type: 'Type A', price: 10, quantity: 2 },
   { id: 2, product: 'Product 2', type: 'Type A', price: 12, quantity: 3 },
   { id: 3, product: 'Product 3', type: 'Type B', price: 8, quantity: 1 },
@@ -15,7 +15,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const initialColumns = [
+const columns = [
   { field: 'product' },
   { field: 'type' },
   {
@@ -37,19 +37,21 @@ const pivotModel = {
   values: [{ field: 'price', aggFunc: 'sum' }],
 };
 
+const initialState = {
+  pivoting: {
+    model: pivotModel,
+    enabled: true,
+    panelOpen: true,
+  },
+};
+
 export default function GridPivotingBasic() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
-        rows={initialRows}
-        columns={initialColumns}
-        initialState={{
-          pivoting: {
-            model: pivotModel,
-            panelOpen: true,
-            enabled: true,
-          },
-        }}
+        rows={rows}
+        columns={columns}
+        initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
         experimentalFeatures={{ pivoting: true }}
