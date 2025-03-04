@@ -6,7 +6,7 @@ const defaultXAxis = {
   scaleType: 'band',
   dataKey: 'code',
   position: 'bottom',
-  height: 40,
+  height: 45,
 };
 
 export default function XAxisAnchorBaselineDefaults() {
