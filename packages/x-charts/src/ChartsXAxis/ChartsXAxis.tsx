@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { clampAngle } from '../internals/clampAngle';
+import { useIsClient } from '../hooks/useIsClient';
 import { ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
@@ -231,6 +232,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
+  const isClient = useIsClient();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -325,9 +327,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     axisHeight - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
   );
 
-  const shortenedLabels = shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, {
-    tickLabelStyle: axisTickLabelProps.style,
-  });
+  const tickLabels = isClient
+    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, {
+        tickLabelStyle: axisTickLabelProps.style,
+      })
+    : new Map();
 
   return (
     <XAxisRoot
@@ -345,7 +349,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
-        const formattedValue = shortenedLabels.get(item);
+        const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 
         return (
@@ -362,20 +366,20 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && showTickLabel && (
+            {tickLabel !== undefined && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
                 data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
-                text={formattedValue}
+                text={tickLabel}
               />
             )}
           </g>
         );
       })}
 
-      {label && (
+      {label && isClient && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
