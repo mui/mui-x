@@ -4,6 +4,7 @@ import {
   DEFAULT_Y_AXIS_KEY,
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
+  AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
 import { AxisConfig, ScaleName } from '../../../../models';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
@@ -26,9 +27,6 @@ export function defaultizeAxis(
 ): AxisConfig[] {
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
 
-  const hasNoDefaultAxis =
-    inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1;
-
   const offsets = {
     top: 0,
     right: 0,
@@ -37,18 +35,24 @@ export function defaultizeAxis(
     none: 0,
   };
 
-  const parsedAxes = [
-    ...(inAxis ?? []),
-    ...(hasNoDefaultAxis ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }] : []),
-  ].map((axisConfig, index) => {
+  const inputAxes =
+    inAxis && inAxis.length > 0 ? inAxis : [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }];
+
+  const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
     const defaultPosition = axisName === 'x' ? ('bottom' as const) : ('left' as const);
 
     const position = axisConfig.position ?? 'none';
     const dimension = axisName === 'x' ? 'height' : 'width';
 
-    const height = axisName === 'x' ? DEFAULT_AXIS_SIZE_HEIGHT : 0;
-    const width = axisName === 'y' ? DEFAULT_AXIS_SIZE_WIDTH : 0;
+    const height =
+      axisName === 'x'
+        ? DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0)
+        : 0;
+    const width =
+      axisName === 'y'
+        ? DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0)
+        : 0;
 
     const sharedConfig = {
       id: `defaultized-${axisName}-axis-${index}`,

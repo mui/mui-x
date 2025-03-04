@@ -62,7 +62,7 @@ export interface GridDataSourceApiPremium {
   /**
    * The data source API.
    */
-  unstable_dataSource: GridDataSourceApiBasePremium;
+  dataSource: GridDataSourceApiBasePremium;
 }
 
 export interface GridDataSourcePremiumPrivateApi extends GridDataSourcePrivateApi {

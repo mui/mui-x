@@ -66,6 +66,7 @@ export default function CsvGetRowsToExportRowGrouping() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         initialState={{
           ...data.initialState,
           rowGrouping: {
