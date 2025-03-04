@@ -12,7 +12,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "timeIcon": { "type": { "name": "node" }, "default": "Time" }
+    "timeIcon": { "type": { "name": "element" }, "default": "Time" }
   },
   "name": "TimeRangePickerTabs",
   "imports": [

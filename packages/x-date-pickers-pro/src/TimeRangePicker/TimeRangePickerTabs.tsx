@@ -22,12 +22,11 @@ export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps 
    * @default `window.innerHeight < 667` for `DesktopTimeRangePicker` and `MobileTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticTimeRangePicker`
    */
   hidden?: boolean;
-  // TODO: Consider changing to `React.ReactElement` to avoid the need for wrapping `React.Fragment`.
   /**
    * Time tab icon.
    * @default Time
    */
-  timeIcon?: React.ReactNode;
+  timeIcon?: React.ReactElement<any>;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -118,7 +117,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
       <TimeRangePickerTab
         value="start"
         iconPosition="start"
-        icon={<React.Fragment>{timeIcon}</React.Fragment>}
+        icon={timeIcon}
         label={translations.start}
         className={classes.tab}
       />
@@ -126,7 +125,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
         value="end"
         iconPosition="start"
         label={translations.end}
-        icon={<React.Fragment>{timeIcon}</React.Fragment>}
+        icon={timeIcon}
         className={classes.tab}
       />
     </TimeRangePickerTabsRoot>
@@ -160,7 +159,7 @@ TimeRangePickerTabs.propTypes = {
    * Time tab icon.
    * @default Time
    */
-  timeIcon: PropTypes.node,
+  timeIcon: PropTypes.element,
 } as any;
 
 export { TimeRangePickerTabs };
