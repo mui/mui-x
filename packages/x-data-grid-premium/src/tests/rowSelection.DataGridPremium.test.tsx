@@ -84,6 +84,30 @@ describe('<DataGridPremium /> - Row selection', () => {
       );
     });
 
+    it('should auto select the parent when updating the controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(<Test rowSelectionModel={includeRowSelection([])} onRowSelectionModelChange={onRowSelectionModelChange} />);
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([3, 4]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']));
+    });
+
+    it('should auto select descendants when updating the controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(<Test rowSelectionModel={includeRowSelection([])} onRowSelectionModelChange={onRowSelectionModelChange} />);
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection(['auto-generated-row-category1/Cat B']) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']));
+    });
+
     it('should select all the children when selecting a parent', () => {
       render(<Test />);
 

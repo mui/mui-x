@@ -470,6 +470,53 @@ export const useGridRowSelection = (
     props.signature === GridSignature.DataGrid ? 'private' : 'public',
   );
 
+  const syncControlledState = useEventCallback(() => {
+    if (!props.rowSelection) {
+      apiRef.current.setRowSelectionModel(emptyModel);
+      return;
+    }
+    if (propRowSelectionModel === undefined) {
+      return;
+    }
+    if (
+      !applyAutoSelection ||
+      !isNestedData ||
+      propRowSelectionModel.ids.size === 0
+    ) {
+      apiRef.current.setRowSelectionModel(propRowSelectionModel);
+      return;
+    }
+    const newSelectionModel = {
+      type: propRowSelectionModel.type,
+      ids: new Set(propRowSelectionModel.ids),
+    };
+    const selectionManager = createRowSelectionManager(newSelectionModel);
+    const addRow = (rowId: GridRowId) => {
+      selectionManager.select(rowId);
+    };
+    for (const id of newSelectionModel.ids) {
+      findRowsToSelect(
+        apiRef,
+        tree,
+        id,
+        props.rowSelectionPropagation?.descendants ?? false,
+        props.rowSelectionPropagation?.parents ?? false,
+        addRow,
+        selectionManager,
+      );
+    }
+    if (
+      propRowSelectionModel.ids.size === newSelectionModel.ids.size &&
+      propRowSelectionModel.type === newSelectionModel.type &&
+      Array.from(propRowSelectionModel.ids).every((id) => selectionManager.has(id))
+    ) {
+      apiRef.current.setRowSelectionModel(propRowSelectionModel);
+      return;
+    }
+    // Selection propagation yielded a new selection model, apply it
+    apiRef.current.setRowSelectionModel(newSelectionModel);
+  });
+
   /*
    * EVENTS
    */
@@ -806,16 +853,8 @@ export const useGridRowSelection = (
    * EFFECTS
    */
   React.useEffect(() => {
-    if (propRowSelectionModel !== undefined) {
-      apiRef.current.setRowSelectionModel(propRowSelectionModel);
-    }
-  }, [apiRef, propRowSelectionModel, props.rowSelection]);
-
-  React.useEffect(() => {
-    if (!props.rowSelection) {
-      apiRef.current.setRowSelectionModel(emptyModel);
-    }
-  }, [apiRef, props.rowSelection]);
+    syncControlledState();
+  }, [apiRef, propRowSelectionModel, props.rowSelection, syncControlledState]);
 
   const isStateControlled = propRowSelectionModel != null;
   React.useEffect(() => {
