@@ -230,19 +230,21 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If a grouping criterion's key is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If a grouping criterion's key is `null` or `undefined` for a given row, the Data Grid will consider that this row doesn't have a value for this group, and will inline it for those groups.
+The demo below illustrates this behavior:
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Group expansion
 
-By default, all groups are initially displayed collapsed. You can change this behavior by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
-If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
+By default, all groups are initially displayed collapsed.
+You can change this behavior by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
+To expand the whole tree, set `defaultGroupingExpansionDepth = -1`.
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault()` prop which is a callback receiving the node as an argument.
-When defined, this callback will always have priority over the `defaultGroupingExpansionDepth` prop.
+Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic. This prop is a callback that receives a node as an argument.
+When defined, this callback always takes priority over the `defaultGroupingExpansionDepth` prop.
 
 ```tsx
 isGroupExpandedByDefault={
@@ -252,17 +254,18 @@ isGroupExpandedByDefault={
 
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `setRowChildrenExpansion()` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
+Use the `setRowChildrenExpansion()` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event that you can listen for to react to the expansion change.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The `apiRef.current.setRowChildrenExpansion()` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.dataSource.fetchRows()` instead.
+The `apiRef.current.setRowChildrenExpansion()` method is not compatible with [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) or [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+Use `apiRef.current.dataSource.fetchRows()` instead.
 :::
 
 ### Customize grouping cell indent
 
-To change the default cell indent, you can use the `--DataGrid-cellOffsetMultiplier` CSS variable:
+Use the `--DataGrid-cellOffsetMultiplier` CSS variable to change the default cell indentation, as shown here:
 
 ```tsx
 <DataGridPremium
@@ -281,12 +284,12 @@ To change the default cell indent, you can use the `--DataGrid-cellOffsetMultipl
 
 When using `rowGroupingColumnMode = "single"`, the default behavior is to:
 
-- sort each grouping criteria using the `sortComparator` of the column
+- sort each grouping criterion using the column's `sortComparator`
 - apply the `filterOperators` of the top-level grouping criteria
 
-If you are rendering leaves with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
+If you are rendering leaves with the `leafField` property of the `groupingColDef`, sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
-You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
+You can force the filtering to be applied to other grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`.
 
 {{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -294,7 +297,7 @@ You can force the filtering to be applied on another grouping criteria with the 
 
 When using `rowGroupingColumnMode = "multiple"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the grouping criteria of each grouping column.
 
-If you are rendering leaves on one of those columns with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves for this grouping column based on the `sortComparator` and `filterOperators` of the leave's original column.
+If you are rendering leaves on one of those columns with the `leafField` property of `groupingColDef`, sorting and filtering will be applied on the leaves for this grouping column based on the `sortComparator` and `filterOperators` of the leave's original column.
 
 If you want to render leaves but apply the sorting and filtering on the grouping criteria of the column, you can force it by setting the `mainGroupingCriteria` property `groupingColDef` to be equal to the grouping criteria.
 
