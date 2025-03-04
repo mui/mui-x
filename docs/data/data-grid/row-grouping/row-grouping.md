@@ -199,7 +199,7 @@ In all examples, the `title` and `gross` columns cannot be grouped.
 
 To apply row grouping programmatically on non-groupable columns (columns with `groupable: false` in the [column definition](/x/api/data-grid/grid-col-def/)), you can provide the row grouping model in one of three ways:
 
-1. Pass `rowGrouping.model` to the `initialState` prop. This [initializes grouping](/x/react-data-grid/row-grouping/#initialize-the-row-grouping) with the provided model.
+1. Pass `rowGrouping.model` to the `initialState` prop. This [initializes grouping](/x/react-data-grid/row-grouping/#initializing-row-grouping) with the provided model.
 2. Provide the `rowGroupingModel` prop. This [controls grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
 3. Call the API method `setRowGroupingModel`. This sets the aggregation with the provided model.
 
@@ -230,7 +230,7 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If a grouping criterion's key is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
