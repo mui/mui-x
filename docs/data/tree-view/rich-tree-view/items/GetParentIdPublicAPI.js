@@ -15,14 +15,20 @@ export default function GetParentIdPublicAPI() {
       const parentId = apiRef.current?.getParentId(id);
       if (parentId) {
         setSelectedItemParent(parentId);
+        return;
       }
     }
+    setSelectedItemParent(null);
   };
 
   return (
     <Stack spacing={2}>
-      {selectedItemParent && (
-        <Alert severity="info">Selected child of {selectedItemParent}</Alert>
+      {selectedItemParent ? (
+        <Alert severity="info">
+          Selected child of <em>{selectedItemParent}</em>
+        </Alert>
+      ) : (
+        <Alert severity="info">No child node selected</Alert>
       )}
 
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
