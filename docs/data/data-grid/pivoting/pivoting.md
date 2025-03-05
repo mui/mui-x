@@ -19,6 +19,12 @@ You can enable it using the `experimentalFeatures` prop:
 
 :::
 
+## Quick start
+
+The pivoting feature is enabled by default and can be accessed from the toolbar.
+
+{{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Understanding the pivoting concepts
 
 Pivoting transforms your data by reorganizing it along three key dimensions: **rows**, **columns**, and **values**.
@@ -69,11 +75,89 @@ In the demo below, we pivot a dataset of sales to have `product` values as rows,
 
 {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Getting started with pivoting
+
+### Pivot model
+
+The pivot model is a configuration object that defines rows, columns, and values of the pivot data grid:
+
+```tsx
+interface GridPivotModel {
+  rows: Array<{
+    field: string;
+    hidden?: boolean;
+  }>;
+  columns: Array<{
+    field: string;
+    sort?: 'asc' | 'desc';
+    hidden?: boolean;
+  }>;
+  values: Array<{
+    field: string;
+    aggFunc: string;
+    hidden?: boolean;
+  }>;
+}
+```
+
+### Initialize pivoting
+
+The easiest way to initialize pivoting is with an uncontrolled mode using the `initialState` prop.
+You can initialize the pivot model, pivot panel visibility, and enable the pivot mode:
+
+```tsx
+<DataGridPremium
+  initialState={{ pivoting: { model: pivotModel, enabled: true, panelOpen: true } }}
+/>
+```
+
+{{"demo": "GridPivotingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled pivoting
+
+For fully controlled pivoting state, there are the following controlled props:
+
+- Pivot model:
+  - `pivotModel`: Controls the current pivot configuration.
+  - `onPivotModelChange`: Callback fired when the pivot model changes.
+- Pivot mode toggle:
+  - `pivotEnabled`: Controls whether pivoting is enabled.
+  - `onPivotEnabledChange`: Callback fired when pivoting is enabled/disabled.
+- Pivot panel:
+  - `pivotPanelOpen`: Controls whether the pivot panel is open.
+  - `onPivotPanelOpenChange`: Callback fired when the pivot panel is opened/closed.
+
+{{"demo": "GridPivotingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Using fields in the pivot model multiple times
+
+While this is not supported yet, we are working to bring this feature to the Data Grid.
+
+## Disable pivoting
+
+To disable the pivoting feature, set the `disablePivoting` prop to `true`:
+
+```tsx
+<DataGridPremium disablePivoting />
+```
+
+## Date columns
+
+For each date column, the Data Grid pivot feature will automatically generate fields for year, quarter and month.
+
+<!-- TODO: add a demo and implement a way to extend this behavior (a function that takes a date column and returns a list of fields?) -->
+
+## Multiple values
+
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Commodities
 
 {{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Movies
+
+{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Financials
 
