@@ -240,22 +240,41 @@ const getPivotedData = ({
       }
       const isLastColumnGroupLevel = depth === visibleColumns.length - 1;
       if (isLastColumnGroupLevel) {
-        visibleValues.forEach((pivotValue) => {
-          const valueField = pivotValue.field;
-          const mapValueKey = `${columnGroup.groupId}-${valueField}`;
-          const column: GridColDef = {
-            field: mapValueKey,
-            headerName: String(valueField),
-            aggregable: true,
-            availableAggregationFunctions: [pivotValue.aggFunc],
-            ...getAttributesFromInitialColumn(pivotValue.field),
+        if (visibleValues.length === 0) {
+          // If there are no visible values, there are no actual columns added to the data grid, which leads to column groups not being visible.
+          // Adding an empty column to each column group ensures that the column groups are visible.
+          const emptyColumnField = `${columnGroup.groupId}-empty`;
+          const emptyColumn: GridColDef = {
+            field: emptyColumnField,
+            headerName: '',
+            sortable: false,
+            filterable: false,
+            groupable: false,
+            aggregable: false,
+            disableColumnMenu: true,
           };
-          pivotColumns.push(column);
-          aggregationModel[mapValueKey] = pivotValue.aggFunc;
+          pivotColumns.push(emptyColumn);
           if (columnGroup) {
-            columnGroup.children.push({ field: mapValueKey });
+            columnGroup.children.push({ field: emptyColumnField });
           }
-        });
+        } else {
+          visibleValues.forEach((pivotValue) => {
+            const valueField = pivotValue.field;
+            const mapValueKey = `${columnGroup.groupId}-${valueField}`;
+            const column: GridColDef = {
+              field: mapValueKey,
+              headerName: String(valueField),
+              aggregable: true,
+              availableAggregationFunctions: [pivotValue.aggFunc],
+              ...getAttributesFromInitialColumn(pivotValue.field),
+            };
+            pivotColumns.push(column);
+            aggregationModel[mapValueKey] = pivotValue.aggFunc;
+            if (columnGroup) {
+              columnGroup.children.push({ field: mapValueKey });
+            }
+          });
+        }
       } else {
         createColumns(columnGroup.children, depth + 1);
       }
