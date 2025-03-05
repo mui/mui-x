@@ -132,7 +132,7 @@ export const useTreeItemUtils = <
     error,
   };
 
-  const handleExpansion = async (event: React.MouseEvent) => {
+  const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -146,7 +146,7 @@ export const useTreeItemUtils = <
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
       // make sure the children selection is propagated again
-      await instance.setItemExpansion({ event, itemId });
+      instance.setItemExpansion({ event, itemId });
     }
   };
 

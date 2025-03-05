@@ -56,32 +56,43 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     models.expandedItems.setControlledValue(value);
   };
 
-  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
-    ({ itemId, event = null, shouldBeExpanded }) => {
-      const eventParameters = { isExpansionPrevented: false, event, itemId };
-      publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
-      if (eventParameters.isExpansionPrevented) {
-        return;
-      }
-      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
-      const isExpanded = shouldBeExpanded ?? !isExpandedBefore;
-
-      if (isExpandedBefore === isExpanded) {
-        return;
-      }
-
+  const applyItemExpansion: UseTreeViewExpansionInstance['applyItemExpansion'] = useEventCallback(
+    ({ itemId, event, shouldBeExpanded }) => {
       let newExpanded: string[];
-      if (isExpanded) {
+      if (shouldBeExpanded) {
         newExpanded = [itemId].concat(models.expandedItems.value);
       } else {
         newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
       }
 
       if (params.onItemExpansionToggle) {
-        params.onItemExpansionToggle(event, itemId, isExpanded);
+        params.onItemExpansionToggle(event, itemId, shouldBeExpanded);
       }
 
       setExpandedItems(event, newExpanded);
+    },
+  );
+
+  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
+    ({ itemId, event = null, shouldBeExpanded }) => {
+      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
+      const cleanShouldBeExpanded = shouldBeExpanded ?? !isExpandedBefore;
+      if (isExpandedBefore === cleanShouldBeExpanded) {
+        return;
+      }
+
+      const eventParameters = {
+        isExpansionPrevented: false,
+        shouldBeExpanded: cleanShouldBeExpanded,
+        event,
+        itemId,
+      };
+      publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
+      if (eventParameters.isExpansionPrevented) {
+        return;
+      }
+
+      instance.applyItemExpansion({ itemId, event, shouldBeExpanded: cleanShouldBeExpanded });
     },
   );
 
@@ -117,6 +128,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
     instance: {
       setItemExpansion,
+      applyItemExpansion,
       expandAllSiblings,
     },
   };

@@ -226,11 +226,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
-    if (!isLazyLoadingEnabled) {
-      return;
-    }
-
-    if (selectorIsItemExpanded(store.value, eventParameters.itemId)) {
+    if (!isLazyLoadingEnabled || !eventParameters.shouldBeExpanded) {
       return;
     }
 
@@ -238,10 +234,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     await instance.fetchItems([eventParameters.itemId]);
     const fetchErrors = Boolean(selectorGetTreeItemError(store.value, eventParameters.itemId));
     if (!fetchErrors) {
-      instance.setItemExpansion({
+      instance.applyItemExpansion({
         itemId: eventParameters.itemId,
         shouldBeExpanded: true,
-        ...(!!eventParameters.event && { event: eventParameters.event }),
+        event: eventParameters.event,
       });
       if (selectorIsItemSelected(store.value, eventParameters.itemId)) {
         // make sure selection propagation works correctly

@@ -27,6 +27,20 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
    * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
    */
   expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
+  /**
+   * APply the new expansion status of a given item.
+   * Is used by the `setItemExpansion` method and by the `useTreeViewLazyLoading` plugin.
+   * Unlike `setItemExpansion`, this method does not trigger the lazy loading.
+   * @param {object} parameters The parameters of the method.
+   * @param {string} parameters.itemId The id of the item to expand of collapse.
+   * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
+   * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
+   */
+  applyItemExpansion: (parameters: {
+    itemId: string;
+    event: React.SyntheticEvent | null;
+    shouldBeExpanded: boolean;
+  }) => void;
 }
 
 export interface UseTreeViewExpansionParameters {
@@ -81,6 +95,7 @@ interface UseTreeViewExpansionEventLookup {
   beforeItemToggleExpansion: {
     params: {
       isExpansionPrevented: boolean;
+      shouldBeExpanded: boolean;
       event: React.SyntheticEvent | null;
       itemId: TreeViewItemId;
     };
