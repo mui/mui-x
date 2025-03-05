@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { clampAngle } from '../internals/clampAngle';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -108,6 +109,44 @@ function getVisibleLabels(
   );
 }
 
+function getDefaultTextAnchor(
+  angle: number,
+  position: 'top' | 'bottom' | 'none' | undefined,
+): ChartsTextStyle['textAnchor'] {
+  const adjustedAngle = clampAngle(angle);
+
+  if (adjustedAngle === 0 || adjustedAngle === 180) {
+    return 'middle';
+  }
+
+  if (adjustedAngle <= 90) {
+    return position === 'top' ? 'end' : 'start';
+  }
+
+  if (adjustedAngle > 90 && adjustedAngle < 180) {
+    return position === 'top' ? 'end' : 'start';
+  }
+
+  return position === 'top' ? 'start' : 'end';
+}
+
+function getDefaultBaseline(
+  angle: number,
+  position: 'top' | 'bottom' | 'none' | undefined,
+): ChartsTextStyle['dominantBaseline'] {
+  const adjustedAngle = clampAngle(angle);
+
+  if (adjustedAngle === 0) {
+    return position === 'bottom' ? 'hanging' : 'auto';
+  }
+
+  if (adjustedAngle === 180) {
+    return position === 'bottom' ? 'auto' : 'hanging';
+  }
+
+  return 'central';
+}
+
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
@@ -185,8 +224,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        textAnchor: getDefaultTextAnchor(tickLabelStyle?.angle ?? 0, position),
+        dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
