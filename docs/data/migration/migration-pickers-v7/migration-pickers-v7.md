@@ -302,7 +302,7 @@ const theme = createTheme({
 ### ⏩ Field editing on mobile Pickers
 
 The field is now editable if rendered inside a mobile Picker.
-Before v8, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
+Before version `v8.x`, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
 The mobile and desktop Pickers now behave similarly:
 
 - clicking on the field allows editing the value with the keyboard
@@ -424,6 +424,24 @@ This change causes a few breaking changes:
   ```
 
 - The button to render a single year is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Year Calendar.
+
+### ⏩ Treat partially filled date as `null` in `onChange`
+
+Before version `v8.x`, entering a partially filled date in the field would fire `onChange` with an invalid date.
+The date now remains `null` until fully filled.
+
+Here is are two concrete examples:
+
+#### A user fills a Date Field that has no default value
+
+1. The user enters the month, the rendered value is `01/DD/YYYY`, `onChange` is not fired.
+2. The user enters the day, the rendered value is `01/01/YYYY`, `onChange` is not fired.
+3. The user enters the year, the rendered value is `01/01/2025`, `onChange` is fired with the new date.
+
+#### A user cleans the year of a Date Field and enters a new year
+
+1. The user cleans the year, the rendered value is `01/01/YYYY`, `onChange` is fired with `null`.
+2. The user enters a new year, the rendered value is `01/01/2026`, `onChange` is fired with the new date.
 
 ### ⏩ Update default `closeOnSelect` and Action Bar `actions` values
 
