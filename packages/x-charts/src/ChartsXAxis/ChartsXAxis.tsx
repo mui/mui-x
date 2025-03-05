@@ -328,7 +328,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(
     0,
-    axisHeight - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
+    axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
   );
 
   const tickLabels = isClient
