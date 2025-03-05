@@ -65,7 +65,7 @@ For example, if you pivot by `sales` and `quarter` values, the pivot data grid w
 
 ### Pivoting in action
 
-In this simple example, we pivot a dataset of sales by their `product` (rows) and `region` (columns), showing the sum of `sales` in each cell:
+In the demo below, we pivot a dataset of sales to have `product` values as rows, `region` and `quarter` values as columns, and `sales` as aggregated values.
 
 {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
 
