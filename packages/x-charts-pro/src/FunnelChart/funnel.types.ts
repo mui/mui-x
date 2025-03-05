@@ -43,7 +43,7 @@ export interface FunnelSeriesType
   /**
    * Data associated to the funnel section.
    */
-  data?: Readonly<FunnelValueType[]>;
+  data: Readonly<FunnelValueType[]>;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */

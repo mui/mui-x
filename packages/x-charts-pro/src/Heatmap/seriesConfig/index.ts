@@ -3,6 +3,7 @@ import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
+import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 
 export const seriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   seriesProcessor,
@@ -11,4 +12,5 @@ export const seriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   tooltipGetter,
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
+  getSeriesWithDefaultValues,
 };

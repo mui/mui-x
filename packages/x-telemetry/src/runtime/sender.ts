@@ -2,7 +2,7 @@ import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
-import * as packageJson from '../../package.json';
+import packageJson from '../../package.json';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Priority to the config (e.g. in code, env)
