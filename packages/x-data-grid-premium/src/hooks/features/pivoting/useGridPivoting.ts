@@ -277,7 +277,12 @@ const getPivotedData = ({
             const column: GridColDef = {
               field: mapValueKey,
               headerName: String(valueField),
-              aggregable: true,
+              aggregable: false,
+              groupable: false,
+              filterable: false,
+              hideable: false,
+              editable: false,
+              disableReorder: true,
               availableAggregationFunctions: [pivotValue.aggFunc],
               ...getAttributesFromInitialColumn(pivotValue.field),
             };
