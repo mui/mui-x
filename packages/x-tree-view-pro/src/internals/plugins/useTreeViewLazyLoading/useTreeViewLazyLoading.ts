@@ -5,7 +5,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   selectorItemMeta,
   TreeViewPlugin,
-  selectorIsItemExpanded,
   selectorIsItemSelected,
   useInstanceEventHandler,
   selectorDataSourceState,
