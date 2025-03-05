@@ -949,12 +949,6 @@
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
       "class": null
-    },
-    {
-      "name": "printIcon",
-      "description": "Icon displayed on the print button in the toolbar.",
-      "default": "GridPrintIcon",
-      "class": null
     }
   ],
   "classes": [

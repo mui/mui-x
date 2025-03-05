@@ -62,7 +62,10 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
           slotProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
-      expect(screen.queryByRole('button', { name: 'Export' })).to.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
 
     it('should escape formulas in the cells', async () => {

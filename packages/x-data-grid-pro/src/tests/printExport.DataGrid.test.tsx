@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render, clock } = createRenderer();
@@ -53,7 +53,9 @@ describe('<DataGridPro /> - Print export', () => {
 
     it('should display print button by default', () => {
       render(<Test showToolbar />);
-      expect(screen.getByRole('button', { name: 'Print' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
     });
 
     it('should disable print export when passing `printOptions.disableToolbarButton`', () => {
@@ -63,7 +65,9 @@ describe('<DataGridPro /> - Print export', () => {
           slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );
-      expect(screen.queryByRole('button', { name: 'Print' })).to.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Print' })).to.equal(null);
     });
   });
 

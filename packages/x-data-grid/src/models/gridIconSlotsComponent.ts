@@ -184,9 +184,4 @@ export interface GridIconSlotsComponent {
    * @default GridCheckIcon
    */
   menuItemCheckIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed on the print button in the toolbar.
-   * @default GridPrintIcon
-   */
-  printIcon: React.JSXElementConstructor<any>;
 }

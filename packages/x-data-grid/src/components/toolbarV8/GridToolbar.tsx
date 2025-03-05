@@ -43,7 +43,10 @@ function GridToolbar(props: GridToolbarProps) {
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
-  const showExportMenu = !csvOptions?.disableToolbarButton || additionalExportMenuItems;
+  const showExportMenu =
+    !csvOptions?.disableToolbarButton ||
+    !printOptions?.disableToolbarButton ||
+    additionalExportMenuItems;
 
   const closeExportMenu = () => setExportMenuOpen(false);
 
@@ -75,17 +78,8 @@ function GridToolbar(props: GridToolbarProps) {
         </rootProps.slots.baseTooltip>
       )}
 
-      {(showExportMenu || !printOptions?.disableToolbarButton) &&
-        (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
-          <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
-        )}
-
-      {!printOptions?.disableToolbarButton && (
-        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarExportPrint')}>
-          <ExportPrint render={<ToolbarButton />} options={printOptions}>
-            <rootProps.slots.printIcon fontSize="small" />
-          </ExportPrint>
-        </rootProps.slots.baseTooltip>
+      {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
+        <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
       )}
 
       {showExportMenu && (
@@ -112,6 +106,15 @@ function GridToolbar(props: GridToolbarProps) {
               'aria-labelledby': exportMenuTriggerId,
             }}
           >
+            {!printOptions?.disableToolbarButton && (
+              <ExportPrint
+                render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
+                options={printOptions}
+                onClick={closeExportMenu}
+              >
+                {apiRef.current.getLocaleText('toolbarExportPrint')}
+              </ExportPrint>
+            )}
             {!csvOptions?.disableToolbarButton && (
               <ExportCsv
                 render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}

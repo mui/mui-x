@@ -1139,12 +1139,6 @@
       "class": null
     },
     {
-      "name": "printIcon",
-      "description": "Icon displayed on the print button in the toolbar.",
-      "default": "GridPrintIcon",
-      "class": null
-    },
-    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
