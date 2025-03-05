@@ -45,8 +45,10 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ## Grouping columns
 
-"Grouping column" refers to the column that holds row groups.
-This is sometimes—but not always—distinct from a "grouped column," which is the column containing shared values that serve as the basis for row groups.
+:::success
+A note on terminology: **Grouping column** refers to the column that holds row groups.
+This is sometimes—but not always—distinct from a **grouped column**, which is the column containing shared values that serve as the basis for row groups.
+:::
 
 ### Single grouping column
 
