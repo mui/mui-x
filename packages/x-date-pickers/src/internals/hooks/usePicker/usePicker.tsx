@@ -147,13 +147,7 @@ export const usePicker = <
     () =>
       views.reduce(
         (acc, viewForReduce) => {
-          let viewMode: 'field' | 'UI';
-          if (viewRenderers[viewForReduce] != null) {
-            viewMode = 'UI';
-          } else {
-            viewMode = 'field';
-          }
-
+          const viewMode = viewRenderers[viewForReduce] == null ? 'field' : 'UI';
           acc.viewModeLookup[viewForReduce] = viewMode;
           if (viewMode === 'UI') {
             acc.hasUIView = true;
