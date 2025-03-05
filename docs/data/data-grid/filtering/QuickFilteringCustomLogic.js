@@ -53,7 +53,7 @@ export default function QuickFilteringCustomLogic() {
           if (column.field === 'name') {
             return {
               ...column,
-              getApplyQuickFilterFn: undefined,
+              getApplyQuickFilterFn: () => null,
             };
           }
           return column;
@@ -68,6 +68,7 @@ export default function QuickFilteringCustomLogic() {
         loading={loading}
         columns={columns}
         slots={{ toolbar: QuickSearchToolbar }}
+        showToolbar
       />
     </Box>
   );

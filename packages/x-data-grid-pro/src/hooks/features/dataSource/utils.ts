@@ -87,7 +87,7 @@ export class NestedDataManager {
   };
 
   public clearPendingRequest = (id: GridRowId) => {
-    this.api.unstable_dataSource.setChildrenLoading(id, false);
+    this.api.dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };

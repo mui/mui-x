@@ -16,7 +16,6 @@ import {
   DataGridPro,
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
-  GridToolbar,
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
   GridColDef,
@@ -170,7 +169,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -199,7 +198,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             getColumnForNewFilter,
@@ -225,7 +224,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -918,14 +917,14 @@ describe('<DataGridPro /> - Filter', () => {
 
   // It's not re-rendering the filter panel correctly
   testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
-    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const { rerender } = render(<TestCase showToolbar />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
 
     let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const oldId = filterForm!.dataset.id;
 
-    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    rerender(<TestCase showToolbar rows={[{ id: 0, brand: 'ADIDAS' }]} />);
     filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const newId = filterForm!.dataset.id;
     expect(oldId).to.equal(newId);

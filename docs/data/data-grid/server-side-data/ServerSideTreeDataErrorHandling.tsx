@@ -5,6 +5,7 @@ import {
   GridInitialState,
   GridDataSource,
   GridGetRowsResponse,
+  GridGetRowsError,
 } from '@mui/x-data-grid-pro';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
@@ -75,7 +76,7 @@ export default function ServerSideTreeDataErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -94,17 +95,19 @@ export default function ServerSideTreeDataErrorHandling() {
         <DataGridPro
           {...props}
           treeData
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, params) => {
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(error.message);
-            } else {
-              setChildrenError(
-                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
-              );
+          dataSource={dataSource}
+          onDataSourceError={(error) => {
+            if (error instanceof GridGetRowsError) {
+              if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
+                setRootError(error.message);
+              } else {
+                setChildrenError(
+                  `${error.message} (Requested level: ${error.params.groupKeys.join(' > ')})`,
+                );
+              }
             }
           }}
-          unstable_dataSourceCache={null}
+          dataSourceCache={null}
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}

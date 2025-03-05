@@ -14,6 +14,7 @@ import {
   GridColumnsManagement,
   GridColumnHeaderSortIcon,
   GridNoColumnsOverlay,
+  GridToolbar,
 } from '../components';
 import { GridCell } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -38,7 +39,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   bottomContainer: GridBottomContainer,
   footer: GridFooter,
   footerRowCount: GridRowCount,
-  toolbar: null,
+  toolbar: GridToolbar,
   pinnedRows: GridPinnedRows,
   loadingOverlay: GridLoadingOverlay,
   noResultsOverlay: GridNoResultsOverlay,

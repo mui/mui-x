@@ -9,8 +9,13 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v7 to v8.
-The change between v7 and v8 is mostly here to match the version with other MUI X packages.
-No big breaking changes are expected.
+This new major brings improvements (and breaking changes) by fixing some API inconsistencies and updating the way to customize charts.
+
+With the v8 you can now:
+
+- Have access to the charts internal outside of the SVG by using the `ChartDataProvider` (see the [new composition docs](/x/react-charts/composition/#structural-components)).
+- Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
+- Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
 ## Start using the new release
 
@@ -137,6 +142,24 @@ Renames `LegendPosition` to `Position`.
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
+## Renaming tooltip slots and props
+
+The slots `popper`, `axisContent`, and `itemContent` have been replaced by the `tooltip` slot, which is now the single entry point to customize the tooltip.
+
+For consistency, the `tooltip` props have been replaced by the `slotProps.tooltip`.
+
+```diff
+ <LineChart
+-   tooltip={{ trigger: 'item' }}
++   slotProps={{ tooltip: { trigger: 'item' }}}
+ />
+```
+
+Some helpers are provided to create your custom tooltip:
+
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Removing ResponsiveChartContainer ✅
 
@@ -337,3 +360,15 @@ Now, the minimum spacing is consistent and is set by a new `minTickLabelGap` pro
 
 A consequence of this improved spacing is that tick labels may render differently than before.
 It is, therefore, recommended that you verify that your charts have the desired appearance after upgrading.
+
+## Styling and position changes for axes labels of cartesian charts
+
+Cartesian axes now have a size: `height` for x-axes and `width` for y-axes.
+In order to provide the most space for tick labels, the label of a cartesian axis will now be positioned as close to its outermost bound as possible.
+
+This means that 20px-tall label of a 50px-tall x-axis will leave 30px of space for ticks and tick labels.
+
+Accurately measuring the height taken by the axis label requires its `labelStyle` prop to apply all styles that affect the height of the label, such as `fontSize`, `lineHeight`, etc.
+To achieve that goal, we changed some of the default styles applied to the axis labels that might impact how axis labels look if you are customizing them.
+
+As such, it is recommended that you verify that your charts have the desired appearance and position after upgrading.

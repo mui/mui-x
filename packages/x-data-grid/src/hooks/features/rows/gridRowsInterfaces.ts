@@ -68,7 +68,7 @@ export interface GridRowsState {
   /**
    * Contains some values of type `GridRowId` that have been requested to be fetched
    * either by `defaultGroupingExpansionDepth` or `isGroupExpandedByDefault` props.
-   * Applicable with server-side grouped data and `unstable_dataSource` only.
+   * Applicable with server-side grouped data and `dataSource` only.
    */
   groupsToFetch?: GridRowId[];
 }

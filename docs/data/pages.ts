@@ -141,33 +141,50 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data-group',
             title: 'Server-side data',
+            newFeature: true,
             children: [
               {
                 pathname: '/x/react-data-grid/server-side-data',
                 title: 'Overview',
-                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/tree-data',
                 plan: 'pro',
-                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/lazy-loading',
                 plan: 'pro',
-                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/row-grouping',
                 plan: 'premium',
-                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
-                unstable: true,
               },
             ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-data-grid/components-group',
+        subheader: 'Components',
+        newFeature: true,
+        children: [
+          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
+          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
+          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
+          {
+            pathname: '/x/react-data-grid/components/columns-panel',
+            title: 'Columns Panel',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/filter-panel',
+            title: 'Filter Panel',
+            planned: true,
           },
         ],
       },
@@ -466,6 +483,7 @@ const pages: MuiPage[] = [
             title: 'Heatmap',
             plan: 'pro',
           },
+          { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', unstable: true },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
@@ -516,7 +534,6 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
             ],
@@ -552,6 +569,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
           { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
+            plan: 'pro',
+            newFeature: true,
+          },
           { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
         ],
       },
