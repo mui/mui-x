@@ -17,13 +17,13 @@ export default function AxisTextCustomization() {
           angle: { knob: 'number', defaultValue: 45, min: -180, max: 180 },
           textAnchor: {
             knob: 'select',
-            defaultValue: 'unset',
-            options: ['unset', 'start', 'middle', 'end'],
+            defaultValue: 'undefined',
+            options: ['undefined', 'start', 'middle', 'end'],
           },
           dominantBaseline: {
             knob: 'select',
-            defaultValue: 'unset',
-            options: ['unset', 'auto', 'central', 'hanging'],
+            defaultValue: 'undefined',
+            options: ['undefined', 'auto', 'central', 'hanging'],
           },
           fontSize: { knob: 'number', defaultValue: 12 },
           labelFontSize: { knob: 'number', defaultValue: 14 },
@@ -44,10 +44,10 @@ export default function AxisTextCustomization() {
                 },
                 tickLabelStyle: {
                   angle: props.angle,
-                  ...(props.textAnchor === 'unset'
+                  ...(props.textAnchor === 'undefined'
                     ? {}
                     : { textAnchor: props.textAnchor }),
-                  ...(props.dominantBaseline === 'unset'
+                  ...(props.dominantBaseline === 'undefined'
                     ? {}
                     : { dominantBaseline: props.dominantBaseline }),
                   fontSize: props.fontSize,
@@ -75,12 +75,12 @@ export default function AxisTextCustomization() {
       },
       tickLabelStyle: {
         angle: ${props.angle},${
-          props.textAnchor === 'unset'
+          props.textAnchor === 'undefined'
             ? ''
             : `
         textAnchor: '${props.textAnchor}',`
         }${
-          props.dominantBaseline === 'unset'
+          props.dominantBaseline === 'undefined'
             ? ''
             : `
         dominantBaseline: '${props.dominantBaseline}',`
