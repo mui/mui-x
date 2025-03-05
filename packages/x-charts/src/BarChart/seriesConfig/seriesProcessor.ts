@@ -35,8 +35,11 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: { [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data' | 'layout'> } =
-    {};
+  const completedSeries: {
+    [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data' | 'layout'> & {
+      stackedData: [number, number][];
+    };
+  } = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
