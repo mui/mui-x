@@ -127,18 +127,31 @@ const getPivotedData = ({
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
-  const pivotColumns: GridColDef[] = [];
+  let pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
+  const pivotColumnsIncludedInPivotValues: GridColDef[] = [];
 
   const initialColumns = new Map<string, GridColDef>();
   for (let i = 0; i < columns.length; i += 1) {
     const column = columns[i];
     if (!isGroupingColumn(column.field)) {
       initialColumns.set(column.field, column);
-      pivotColumns.push(column);
+
+      const pivotValueIndex = visibleValues.findIndex(({ field }) => field === column.field);
+      const isVisiblePivotValueField = pivotValueIndex !== -1;
+
+      if (isVisiblePivotValueField) {
+        // Store columns that are used as pivot values in a temporary array to keep them in the same order as in pivotModel.values, not in the order of the initial columns.
+        // `pivotColumnsIncludedInPivotValues` is concatenated to pivotColumns later.
+        pivotColumnsIncludedInPivotValues[pivotValueIndex] = column;
+      } else {
+        pivotColumns.push(column);
+      }
       columnVisibilityModel[column.field] = false;
     }
   }
+
+  pivotColumns = pivotColumns.concat(pivotColumnsIncludedInPivotValues);
 
   const getAttributesFromInitialColumn = (field: string) => {
     const attributes: Partial<GridColDef> = {};
