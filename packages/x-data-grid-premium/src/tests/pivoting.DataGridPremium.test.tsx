@@ -322,4 +322,39 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '$98.75', '1,000', '', '']);
     expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '$95.60', '750', '', '']);
   });
+
+  it('should render column groups with empty columns when there are no pivot values', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [],
+              columns: [{ field: 'year' }, { field: 'type' }],
+              values: [], // No pivot values
+            },
+          },
+        }}
+      />,
+    );
+
+    // Check that column groups are rendered
+    const yearHeaders = document.querySelectorAll<HTMLElement>(
+      '[aria-rowindex="1"] [role="columnheader"]',
+    );
+    const typeHeaders = document.querySelectorAll<HTMLElement>(
+      '[aria-rowindex="2"] [role="columnheader"]',
+    );
+
+    expect(Array.from(yearHeaders).map((header) => header.textContent)).to.deep.equal([
+      '2024',
+      '2023',
+    ]);
+    expect(Array.from(typeHeaders).map((header) => header.textContent)).to.deep.equal([
+      'stock',
+      'bond',
+      'stock',
+    ]);
+  });
 });
