@@ -15,6 +15,7 @@ export function useMaterialCSSVariables() {
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
+  const mutedBorderColor = getMutedBorderColor(t, borderColor);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
   const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
@@ -34,7 +35,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.spacingUnit]: t.spacing(1),
 
     [k.colors.border.base]: borderColor,
-    [k.colors.border.muted]: alpha(borderColor, 0.6),
+    [k.colors.border.muted]: mutedBorderColor,
     [k.colors.background.base]: backgroundBase,
     [k.colors.background.overlay]:
       t.palette.mode === 'dark'
@@ -104,4 +105,11 @@ function getBorderColor(theme: Theme) {
     return lighten(alpha(theme.palette.divider, 1), 0.88);
   }
   return darken(alpha(theme.palette.divider, 1), 0.68);
+}
+
+function getMutedBorderColor(theme: Theme, borderColor: string) {
+  if (theme.vars) {
+    return `color-mix(in srgb, ${borderColor} 60%, #fff)`;
+  }
+  return alpha(borderColor, 0.6);
 }
