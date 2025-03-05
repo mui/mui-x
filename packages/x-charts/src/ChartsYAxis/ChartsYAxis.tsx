@@ -47,7 +47,7 @@ function shortenLabels(
   visibleLabels: TickItemType[],
   drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
   maxWidth: number,
-  { tickLabelStyle }: Pick<ChartsYAxisProps, 'tickLabelStyle'>,
+  tickLabelStyle: ChartsYAxisProps['tickLabelStyle'],
 ) {
   const shortenedLabels = new Map<TickItemType, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
@@ -302,9 +302,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   );
 
   const tickLabels = isClient
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, {
-        tickLabelStyle: axisTickLabelProps.style,
-      })
+    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, axisTickLabelProps.style)
     : new Map();
 
   return (
