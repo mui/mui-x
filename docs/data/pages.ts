@@ -492,6 +492,7 @@ const pages: MuiPage[] = [
             title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
+          { pathname: '/x/react-charts/radar', unstable: true },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
@@ -546,7 +547,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },

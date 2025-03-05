@@ -128,7 +128,10 @@ MarkPlotZoom.propTypes = {
 
 export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'line', LineChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig'
+    > {}
 
 /**
  * Demos:
