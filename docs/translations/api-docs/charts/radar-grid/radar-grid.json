@@ -1,0 +1,7 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "divisions": { "description": "The number of divisions in the radar grid." }
+  },
+  "classDescriptions": {}
+}
