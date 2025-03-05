@@ -21,7 +21,7 @@ declare module '@mui/x-charts/internals' {
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
-      cartesian: true;
+      axisType: 'cartesian';
     };
     funnel: {
       seriesInput: Omit<DefaultizedProps<FunnelSeriesType, 'id'>, 'data'> & {
@@ -31,7 +31,7 @@ declare module '@mui/x-charts/internals' {
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
-      cartesian: true;
+      axisType: 'cartesian';
     };
   }
 
