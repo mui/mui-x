@@ -202,12 +202,12 @@ describe('<DataGridPremium /> - Pivoting', () => {
       expect(pivotSwitch).to.have.property('checked', true);
     });
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.77', '12,200']);
-    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800']);
-    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600']);
-    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000']);
-    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '$98.75', '1,000']);
-    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '$95.60', '750']);
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200', '$192.77']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '6,800', '$126.06']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '8,600', '$346.56']);
+    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '6,000', '$145.78']);
+    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '1,000', '$98.75']);
+    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750', '$95.60']);
   });
 
   it('should pivot the data with a pivot column and 2 pivot values', async () => {
