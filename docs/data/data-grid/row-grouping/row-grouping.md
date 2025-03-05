@@ -52,15 +52,15 @@ This is sometimes—but not always—distinct from a **grouped column**, which i
 
 ### Single grouping column
 
-By default, the Data Grid displays a single column that holds all grouping columns, no matter how many criteria are provided.
-If there's only one criterion, the name of the grouping column will be the same as that of the grouped column.
+By default, the Data Grid displays a single column that holds all grouped columns, no matter how many criteria are provided.
+If there's only one criterion, the name of the grouping column will be the same as that of the grouped column from which it's derived.
 When there are multiple criteria, the grouping column is named **Group**.
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Multiple grouping columns
 
-To display a column for each grouping criterion, set the `rowGroupingColumnMode` prop to `multiple`.
+To display a grouping column for each criterion, set the `rowGroupingColumnMode` prop to `multiple`.
 
 {{"demo": "RowGroupingMultipleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
