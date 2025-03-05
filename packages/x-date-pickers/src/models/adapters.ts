@@ -74,7 +74,7 @@ export interface AdapterFormats {
   /**
    * A keyboard input friendly date format.
    * Used in the date fields.
-   * @example "02/13/2020
+   * @example "02/13/2020"
    */
   keyboardDate: string;
   /**
