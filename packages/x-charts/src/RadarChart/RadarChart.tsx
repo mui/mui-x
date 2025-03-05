@@ -136,7 +136,6 @@ RadarChart.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
-    divisions: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),

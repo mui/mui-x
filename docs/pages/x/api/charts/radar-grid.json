@@ -1,5 +1,5 @@
 {
-  "props": { "divisionNumber": { "type": { "name": "number" }, "default": "5" } },
+  "props": { "divisions": { "type": { "name": "number" }, "default": "5" } },
   "name": "RadarGrid",
   "imports": [
     "import { RadarGrid } from '@mui/x-charts/RadarChart';",

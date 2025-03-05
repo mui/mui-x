@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
-    "divisionNumber": { "description": "The number of divisions in the radar grid." },
+    "divisions": { "description": "The number of divisions in the radar grid." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },

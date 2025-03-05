@@ -3,7 +3,7 @@
     "radar": {
       "type": {
         "name": "shape",
-        "description": "{ divisionNumber?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
+        "description": "{ max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
       },
       "required": true
     },
@@ -15,7 +15,7 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "divisionNumber": { "type": { "name": "number" }, "default": "5" },
+    "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
