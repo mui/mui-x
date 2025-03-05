@@ -14,7 +14,7 @@ export default function DemoRadar() {
           min: -180,
           max: 180,
         },
-        divisionNumber: {
+        divisions: {
           knob: 'number',
           defaultValue: 10,
           min: 0,
@@ -27,7 +27,7 @@ export default function DemoRadar() {
             height={250}
             margin={{ top: 20 }}
             series={[{ data: [120, 98, 86, 99, 85, 65] }]}
-            divisionNumber={props.divisionNumber}
+            divisions={props.divisions}
             radar={{
               max: 120,
               startAngle: props.startAngle,
@@ -49,7 +49,7 @@ export default function DemoRadar() {
           '',
           `<RadarChart`,
           '  {/** ... */}',
-          `  divisionNumber={${props.divisionNumber}}`,
+          `  divisions={${props.divisions}}`,
           `  radar={{`,
           `    startAngle: ${props.startAngle},`,
           `    metrics: [...],`,

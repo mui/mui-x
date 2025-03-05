@@ -4,7 +4,7 @@ export interface MetricConfig {
    */
   name: string;
   /**
-   * The minimal value of the domain.
+   * The minimum value of the domain.
    * @default 0
    */
   min?: number;
@@ -17,21 +17,17 @@ export interface MetricConfig {
 
 export interface RadarConfig {
   /**
-   * The different metrics shown by radar.
+   * The metrics shown by radar.
    */
   metrics: string[] | MetricConfig[];
   /**
-   * The default max value for axis.
-   * If will be override is `metrics` contains a `max` property.
+   * The default max value for radius axes.
+   * It will be override if `metrics` contains a `max` property.
    */
   max?: number;
   /**
-   * The angle of the first axis (in deg)
+   * The starting angle of the rotation axis (in degrees)
    * @default 0
    */
   startAngle?: number;
-  /**
-   * The number of steps in the radar grid.
-   */
-  divisionNumber?: number;
 }

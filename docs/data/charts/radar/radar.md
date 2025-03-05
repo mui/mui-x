@@ -47,9 +47,9 @@ This item can either be:
 The radar chart displays a grid behind the series that can be configured with
 
 - `startAngle` The rotation angle of the entire chart in degree
-- `divisionNumber` The number of division of the grid
+- `divisions` The number of division of the grid
 
-{{"demo": "DemoRadarNoSnap.js" }}
+{{"demo": "DemoRadar.js" }}
 
 ## Interaction 🚧
 

@@ -22,7 +22,6 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     height,
     margin,
     colors,
-    // dataset,
     sx,
     children,
     slots,
@@ -32,7 +31,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     highlightedItem,
     onHighlightChange,
     hideLegend,
-    divisionNumber,
+    divisions,
     ...other
   } = props;
 
@@ -43,7 +42,6 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     height,
     margin,
     colors,
-    // dataset,
     highlightedItem,
     onHighlightChange,
     skipAnimation,
@@ -62,11 +60,9 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
-    // legendPosition: props.slotProps?.legend?.position,
-    // legendDirection: props.slotProps?.legend?.direction,
   };
 
-  const radarGrid: RadarGridProps = { divisionNumber };
+  const radarGrid: RadarGridProps = { divisions };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 

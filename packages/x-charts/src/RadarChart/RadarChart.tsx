@@ -84,7 +84,7 @@ RadarChart.propTypes = {
    * The number of divisions in the radar grid.
    * @default 5
    */
-  divisionNumber: PropTypes.number,
+  divisions: PropTypes.number,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -136,7 +136,7 @@ RadarChart.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
-    divisionNumber: PropTypes.number,
+    divisions: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),

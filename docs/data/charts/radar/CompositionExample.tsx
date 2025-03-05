@@ -28,7 +28,7 @@ export default function CompositionExample() {
       }}
     >
       <ChartsSurface>
-        <RadarGrid divisionNumber={3} />
+        <RadarGrid divisions={3} />
         <RadarSeriesArea fillOpacity={0.7} strokeWidth={3} seriesId="australia-id" />
         <RadarSeriesArea fill="transparent" strokeWidth={3} seriesId="usa-id" />
         <RadarSeriesMarks />

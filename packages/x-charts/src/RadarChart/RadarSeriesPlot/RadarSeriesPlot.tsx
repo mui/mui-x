@@ -9,7 +9,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId, points, color }) => (
+      {seriesCoordinates?.map(({ seriesId, points, color, showMark }) => (
         <g key={seriesId}>
           {
             <path
@@ -20,9 +20,10 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
               fillOpacity={0.4}
             />
           }
-          {points.map((point, index) => (
-            <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
-          ))}
+          {showMark &&
+            points.map((point, index) => (
+              <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
+            ))}
         </g>
       ))}
     </React.Fragment>

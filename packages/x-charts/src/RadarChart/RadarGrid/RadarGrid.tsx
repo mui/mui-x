@@ -7,17 +7,14 @@ export interface RadarGridProps {
    * The number of divisions in the radar grid.
    * @default 5
    */
-  divisionNumber?: number;
+  divisions?: number;
 }
 
 function RadarGrid(props: RadarGridProps) {
-  const { divisionNumber = 5 } = props;
+  const { divisions = 5 } = props;
   const { center, corners } = useRadarGridData();
 
-  const divisionRatio = Array.from(
-    { length: divisionNumber },
-    (_, index) => (index + 1) / divisionNumber,
-  );
+  const divisionRatio = Array.from({ length: divisions }, (_, index) => (index + 1) / divisions);
 
   return (
     <React.Fragment>
@@ -50,7 +47,7 @@ RadarGrid.propTypes = {
    * The number of divisions in the radar grid.
    * @default 5
    */
-  divisionNumber: PropTypes.number,
+  divisions: PropTypes.number,
 } as any;
 
 export { RadarGrid };
