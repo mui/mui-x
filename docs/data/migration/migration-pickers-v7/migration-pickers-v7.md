@@ -430,7 +430,7 @@ This change causes a few breaking changes:
 Before version `v8.x`, entering a partially filled date in the field would fire `onChange` with an invalid date.
 The date now remains `null` until fully filled.
 
-Here is are two concrete examples:
+Here are two concrete examples:
 
 #### A user fills a Date Field that has no default value
 
