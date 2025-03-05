@@ -119,7 +119,7 @@ const useAggregatedData = (): {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScaleErrors(verticalLayout, seriesId, xAxisId, xAxis, yAxisId, yAxis);
+      checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxis, yAxisId, yAxis);
 
       const baseScaleConfig = (
         verticalLayout ? xAxisConfig : yAxisConfig

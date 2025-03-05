@@ -1,5 +1,6 @@
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
@@ -14,6 +15,7 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
+  series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
   xAxisId: AxisId,
   xAxis: { [axisId: AxisId]: AxisDefaultized },
   yAxisId: AxisId,
@@ -39,6 +41,11 @@ export function checkScaleErrors(
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
       `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
+    );
+  }
+  if (discreteAxisConfig.data.length < series.stackedData.length) {
+    throw new Error(
+      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have more data than the bar series of id "${seriesId}".`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {

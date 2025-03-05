@@ -11,6 +11,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -33,6 +35,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -46,6 +50,35 @@ describe('BarChart - checkScaleErrors', () => {
       }).throws('MUI X: The first `xAxis` should have data property.');
     });
 
+    it('should throw an error when the x-axis data property is smaller than the series data.', () => {
+      expect(() => {
+        const xKey = DEFAULT_X_AXIS_KEY;
+        const yKey = DEFAULT_Y_AXIS_KEY;
+        checkScaleErrors(
+          true,
+          'seriesId',
+          // @ts-expect-error
+          {
+            stackedData: [
+              [0, 1],
+              [0, 1],
+            ],
+          },
+          xKey,
+          {
+            // @ts-expect-error
+            [xKey]: { id: xKey, scaleType: 'band', data: [1] },
+          },
+          yKey,
+          {
+            [yKey]: { id: yKey, scaleType: 'linear' },
+          },
+        );
+      }).throws(
+        'MUI X: The first `xAxis` should have more data than the bar series of id "seriesId".',
+      );
+    });
+
     it('should throw an error when the y-axis is not a continuous scale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
@@ -53,6 +86,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -75,6 +110,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -97,6 +134,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -119,6 +158,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -139,6 +180,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -161,6 +204,8 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
             // @ts-expect-error
@@ -182,6 +227,8 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         true,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
           // @ts-expect-error
@@ -204,6 +251,8 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         false,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
           // @ts-expect-error
