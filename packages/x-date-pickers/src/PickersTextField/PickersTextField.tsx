@@ -151,51 +151,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         onChange={onChange}
         id={id}
         fullWidth={fullWidth}
-        required={required}
-        ownerState={ownerState}
-        {...other}
-      >
-        {label != null && label !== '' && (
-          <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
-            {label}
-          </InputLabel>
-        )}
-        <PickersInputComponent
-          elements={elements}
-          areAllSectionsEmpty={areAllSectionsEmpty}
-          onClick={onClick}
-          onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-          onInput={onInput}
-          onPaste={onPaste}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          endAdornment={endAdornment}
-          startAdornment={startAdornment}
-          tabIndex={tabIndex}
-          contentEditable={contentEditable}
-          value={value}
-          onChange={onChange}
-          id={id}
-          fullWidth={fullWidth}
-          inputProps={inputProps}
-          inputRef={inputRef}
-          sectionListRef={sectionListRef}
-          label={label}
-          name={name}
-          role="group"
-          aria-labelledby={inputLabelId}
-          aria-describedby={helperTextId}
-          aria-live={helperTextId ? 'polite' : undefined}
-          {...InputProps}
-        />
-        {helperText && (
-          <FormHelperText id={helperTextId} {...FormHelperTextProps}>
-            {helperText}
-          </FormHelperText>
-        )}
-      </PickersTextFieldRoot>
-    </PickerTextFieldOwnerStateContext.Provider>
+        aria-describedby={helperTextId}
+        aria-live={helperTextId ? 'polite' : undefined}
   );
 });
 
