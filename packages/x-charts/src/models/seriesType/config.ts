@@ -33,7 +33,7 @@ export interface ChartsSeriesConfig {
     itemIdentifier: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: string };
@@ -42,7 +42,7 @@ export interface ChartsSeriesConfig {
     itemIdentifier: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
@@ -50,7 +50,7 @@ export interface ChartsSeriesConfig {
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
@@ -67,7 +67,7 @@ export interface ChartsSeriesConfig {
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
     valueType: number;
-    polar: true;
+    axisType: 'polar';
   };
 }
 
@@ -76,14 +76,16 @@ export type ChartSeriesType = keyof ChartsSeriesConfig;
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { cartesian: true } ? Key : never;
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'cartesian' }
+      ? Key
+      : never;
   }[ChartSeriesType]
 >;
 
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { polar: true } ? Key : never;
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'polar' } ? Key : never;
   }[ChartSeriesType]
 >;
 

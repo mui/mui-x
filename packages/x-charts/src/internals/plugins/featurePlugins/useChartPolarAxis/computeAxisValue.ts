@@ -7,6 +7,9 @@ import {
   isPointScaleConfig,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
+  PolarAxisDefaultized,
+  AxisId,
+  PolarAxisConfig,
 } from '../../../../models/axis';
 import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -18,7 +21,11 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 
-import { DefaultizedAxisConfig } from '../useChartCartesianAxis/useChartCartesianAxis.types';
+export type DefaultizedAxisConfig<
+  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
+> = {
+  [axisId: AxisId]: PolarAxisDefaultized<ScaleName, any, AxisProps>;
+};
 
 const degreeToRad = (value?: number, defaultRad?: number) => {
   if (value === undefined) {
@@ -27,14 +34,12 @@ const degreeToRad = (value?: number, defaultRad?: number) => {
   return (Math.PI * value) / 180;
 };
 
-type RotationConfig = AxisConfig<ScaleName, any, ChartsRotationAxisProps>;
+type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
 
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'rotation' | 'radius',
-  axis:
-    | AxisConfig<'linear', any, ChartsRadiusAxisProps>
-    | AxisConfig<ScaleName, any, ChartsRotationAxisProps>,
+  axis: PolarAxisConfig<ScaleName, any>,
 ) {
   if (axisDirection === 'rotation') {
     if (axis.scaleType === 'point') {
