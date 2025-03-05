@@ -13,9 +13,7 @@ let element = undefined as HTMLStyleElement | undefined;
 
 export function css<T extends Record<string, CSSObject>>(prefix: string, styles: T): CSSMeta<T> {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      `The \`css()\` utility should not be called in a production bundle.`,
-    );
+    throw new Error(`The \`css()\` utility should not be called in a production bundle.`);
   } else {
     return cssDevMode(prefix, styles);
   }
