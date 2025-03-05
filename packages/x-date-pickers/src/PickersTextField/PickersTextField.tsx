@@ -151,8 +151,23 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         onChange={onChange}
         id={id}
         fullWidth={fullWidth}
+        inputProps={inputProps}
+        inputRef={inputRef}
+        sectionListRef={sectionListRef}
+        label={label}
+        name={name}
+        role="group"
+        aria-labelledby={inputLabelId}
         aria-describedby={helperTextId}
         aria-live={helperTextId ? 'polite' : undefined}
+        {...InputProps}
+      />
+      {helperText && (
+        <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+          {helperText}
+        </FormHelperText>
+      )}
+    </PickersTextFieldRoot>
   );
 });
 
