@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) =
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 2;
 /* Gap between the axis label and tick labels. */
-const AXIS_LABEL_TICK_LABEL_GAP = 4;
+const AXIS_LABEL_TICK_LABEL_GAP = 2;
 
 /** Clamp angle to [0, 360[. */
 function clampAngle(angle: number) {
