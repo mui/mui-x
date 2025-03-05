@@ -36,10 +36,10 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-export default function ApiMethodSelectItem() {
+export default function ApiMethodSetItemSelection() {
   const apiRef = useTreeViewApiRef();
   const handleSelectGridPro = (event: React.SyntheticEvent) => {
-    apiRef.current?.selectItem({ event, itemId: 'grid-pro' });
+    apiRef.current?.setItemSelection({ event, itemId: 'grid-pro' });
   };
 
   return (

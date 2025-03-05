@@ -13,7 +13,7 @@ export default function GetParentIdPublicAPI() {
   >();
 
   const handleSelectedItemsChange = (
-    _event: React.SyntheticEvent,
+    _event: React.SyntheticEvent | null,
     id: string | null,
   ) => {
     if (id) {
