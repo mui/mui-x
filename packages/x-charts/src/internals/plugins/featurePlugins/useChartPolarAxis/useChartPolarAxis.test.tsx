@@ -29,7 +29,6 @@ describe('useChartPolarAxis', () => {
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
           ]}
-          series={[{ type: 'radar', data: [1, 2, 3] }]}
           height={100}
           width={100}
           plugins={[useChartPolarAxis]}
@@ -53,7 +52,6 @@ describe('useChartPolarAxis', () => {
           <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
             rotationAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
             radiusAxis={[{ id: 'qwerty' }]}
-            series={[{ type: 'radar', data: [1, 2, 3] }]}
             height={100}
             width={100}
             plugins={[useChartPolarAxis]}
