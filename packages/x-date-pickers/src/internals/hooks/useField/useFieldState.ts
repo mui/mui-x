@@ -230,22 +230,22 @@ export const useFieldState = <
     return newSections;
   };
 
-  const sectionToUpdateOnNextEmptyValueRef = React.useRef<{
+  const sectionToUpdateOnNextInvalidDateRef = React.useRef<{
     sectionIndex: number;
     value: string;
   } | null>(null);
-  const timeoutToUpdateSectionValueOnNextEmptyValue = useTimeout();
-  const setSectionUpdateToApplyOnNextEmptyValue = (newSectionValue: string) => {
+  const timeoutToUpdateSectionValueOnNextInvalidDate = useTimeout();
+  const setSectionUpdateToApplyOnNextInvalidDate = (newSectionValue: string) => {
     if (activeSectionIndex == null) {
       return;
     }
 
-    sectionToUpdateOnNextEmptyValueRef.current = {
+    sectionToUpdateOnNextInvalidDateRef.current = {
       sectionIndex: activeSectionIndex,
       value: newSectionValue,
     };
-    timeoutToUpdateSectionValueOnNextEmptyValue.start(0, () => {
-      sectionToUpdateOnNextEmptyValueRef.current = null;
+    timeoutToUpdateSectionValueOnNextInvalidDate.start(0, () => {
+      sectionToUpdateOnNextInvalidDateRef.current = null;
     });
   };
 
@@ -271,7 +271,7 @@ export const useFieldState = <
       return;
     }
 
-    setSectionUpdateToApplyOnNextEmptyValue('');
+    setSectionUpdateToApplyOnNextInvalidDate('');
 
     if (fieldValueManager.getDateFromSection(value, activeSection) === null) {
       setState((prevState) => ({
@@ -315,31 +315,31 @@ export const useFieldState = <
     newSectionValue,
     shouldGoToNextSection,
   }: UpdateSectionValueParams<TValue>) => {
-    timeoutToUpdateSectionValueOnNextEmptyValue.clear();
+    timeoutToUpdateSectionValueOnNextInvalidDate.clear();
     timeoutToCleanActiveDateSectionsIfValueNull.clear();
 
     const activeDate = fieldValueManager.getDateFromSection(value, section);
 
     /**
-     * 1. Decide which section should be focused
+     * Decide which section should be focused
      */
     if (shouldGoToNextSection && activeSectionIndex! < state.sections.length - 1) {
       setSelectedSections(activeSectionIndex! + 1);
     }
 
     /**
-     * 2. Try to build a valid date from the new section value
+     * Try to build a valid date from the new section value
      */
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = fieldValueManager.getDateSectionsFromValue(newSections, section);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
+    /**
+     * If the new date is valid,
+     * Then we merge the value of the modified sections into the reference date.
+     * This makes sure that we don't lose some information of the initial date (like the time on a date field).
+     */
     if (utils.isValid(newActiveDate)) {
-      /**
-       * If the new date is valid,
-       * Then we merge the value of the modified sections into the reference date.
-       * This makes sure that we don't lose some information of the initial date (like the time on a date field).
-       */
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
         newActiveDate,
@@ -347,8 +347,6 @@ export const useFieldState = <
         fieldValueManager.getDateFromSection(state.referenceValue as any, section)!,
         true,
       );
-
-      publishValue(fieldValueManager.updateDateInValue(value, section, mergedDate));
 
       if (activeDate == null) {
         timeoutToCleanActiveDateSectionsIfValueNull.start(0, () => {
@@ -361,22 +359,37 @@ export const useFieldState = <
           }
         });
       }
-    } else if (activeDate != null) {
-      /**
-       * If the current date is not null, we publish a null value.
-       */
-      setSectionUpdateToApplyOnNextEmptyValue(newSectionValue);
-      publishValue(fieldValueManager.updateDateInValue(value, section, null));
-    } else {
-      /**
-       * If the current date is already null, we update the sections.
-       */
-      setState((prevState) => ({
-        ...prevState,
-        sections: newSections,
-        tempValueStrAndroid: null,
-      }));
+
+      return publishValue(fieldValueManager.updateDateInValue(value, section, mergedDate));
     }
+
+    /**
+     * If all the sections are filled but the date is invalid,
+     * Then we publish an invalid date.
+     */
+    if (newActiveDateSections.every((sectionBis) => sectionBis.value !== '')) {
+      setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
+      return publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
+    }
+
+    /**
+     * If the previous date is not null,
+     * Then we publish the date as `null`.
+     */
+    if (activeDate != null) {
+      setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
+      return publishValue(fieldValueManager.updateDateInValue(value, section, null));
+    }
+
+    /**
+     * If the previous date is already null,
+     * Then we don't publish the date and we update the sections.
+     */
+    return setState((prevState) => ({
+      ...prevState,
+      sections: newSections,
+      tempValueStrAndroid: null,
+    }));
   };
 
   const setTempAndroidValueStr = (tempValueStrAndroid: string | null) =>
@@ -386,15 +399,17 @@ export const useFieldState = <
   if (value !== state.lastValue) {
     let sections: InferFieldSection<TValue>[];
     if (
-      sectionToUpdateOnNextEmptyValueRef.current != null &&
-      fieldValueManager.getDateFromSection(
-        value,
-        state.sections[sectionToUpdateOnNextEmptyValueRef.current.sectionIndex],
-      ) == null
+      sectionToUpdateOnNextInvalidDateRef.current != null &&
+      !utils.isValid(
+        fieldValueManager.getDateFromSection(
+          value,
+          state.sections[sectionToUpdateOnNextInvalidDateRef.current.sectionIndex],
+        ),
+      )
     ) {
       sections = setSectionValue(
-        sectionToUpdateOnNextEmptyValueRef.current.sectionIndex,
-        sectionToUpdateOnNextEmptyValueRef.current.value,
+        sectionToUpdateOnNextInvalidDateRef.current.sectionIndex,
+        sectionToUpdateOnNextInvalidDateRef.current.value,
       );
     } else {
       sections = getSectionsFromValue(value);
