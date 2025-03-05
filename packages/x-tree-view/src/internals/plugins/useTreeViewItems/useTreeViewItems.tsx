@@ -163,6 +163,29 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     }));
   });
 
+  const setIsItemDisabled = useEventCallback(
+    ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
+      store.update((prevState) => {
+        if (!prevState.items.itemMetaLookup[itemId]) {
+          return prevState;
+        }
+
+        const itemMetaLookup = { ...prevState.items.itemMetaLookup };
+        itemMetaLookup[itemId] = {
+          ...itemMetaLookup[itemId],
+          disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
+        };
+        return {
+          ...prevState,
+          items: {
+            ...prevState.items,
+            itemMetaLookup,
+          },
+        };
+      });
+    },
+  );
+
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
       const item = selectorItemModel(store.value, itemId);
@@ -356,6 +379,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemDOMElement,
       getItemTree,
       getItemOrderedChildrenIds,
+      setIsItemDisabled,
       getParentId,
     },
     instance: {
