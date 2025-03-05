@@ -39,7 +39,7 @@ For example, if you pivot by `product`, each unique product name will become a r
 {{"demo": "GridPivotingRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for rows, the rows will be grouped in the order of the selected fields.
-For example, if you pivot by `region` and `product`, each unique combination of region and product will become a row in your pivot data grid.
+For example, if you pivot by `region` and `product` rows, each unique combination of region and product will become a row in your pivot data grid.
 
 ### Columns
 
@@ -50,7 +50,7 @@ For example, if you pivot by `region`, each unique region will become a column i
 {{"demo": "GridPivotingColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for columns, the columns will be grouped in the order of the selected fields.
-For example, if you pivot by `region` and `quarter`, each unique combination of region and quarter will become a column in your pivot data grid.
+For example, if you pivot by `region` and `quarter` columns, each unique combination of region and quarter will become a column in your pivot data grid.
 
 ### Values
 
@@ -59,6 +59,9 @@ These are typically numeric fields that can be aggregated (summed, averaged, cou
 For example, you might want to see the sum of `sales` for each combination of row and column.
 
 {{"demo": "GridPivotingValues.js", "bg": "inline", "defaultCodeOpen": false}}
+
+If multiple fields are selected for values, the each field will add a new aggregated column to the pivot data grid.
+For example, if you pivot by `sales` and `quarter` values, the pivot data grid will have two aggregated columns: `sales` and `quarter`.
 
 ### Pivoting in action
 
