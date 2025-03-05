@@ -444,6 +444,12 @@ export const useFieldState = <
     }));
   }
 
+  React.useEffect(() => {
+    if (sectionToUpdateOnNextInvalidDateRef.current != null) {
+      sectionToUpdateOnNextInvalidDateRef.current = null;
+    }
+  });
+
   return {
     state,
     value,
