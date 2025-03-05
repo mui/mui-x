@@ -34,7 +34,7 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) =
 };
 
 /* Gap between a tick and its label. */
-const TICK_LABEL_GAP = 3;
+const TICK_LABEL_GAP = 2;
 /* Gap between the axis label and tick labels. */
 const AXIS_LABEL_TICK_LABEL_GAP = 4;
 
@@ -317,7 +317,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
       {yTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset, value } = item;
-        const xTickLabel = positionSign * (tickSize + 2);
+        const xTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
         const yTickLabel = labelOffset;
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
@@ -355,7 +355,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-      {label && (
+      {label && isClient && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
