@@ -12,8 +12,8 @@ function getGraphemeCountModern(text: string) {
 
   let count = 0;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const unused of segments) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/naming-convention,no-underscore-dangle
+  for (const _unused of segments) {
     count += 1;
   }
 
