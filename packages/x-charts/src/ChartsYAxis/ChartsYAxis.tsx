@@ -98,10 +98,7 @@ function shortenLabels(
   return shortenedLabels;
 }
 
-function getDefaultTextAnchor(
-  angle: number,
-  position: 'left' | 'right' | 'none' | undefined,
-): ChartsTextStyle['textAnchor'] {
+function getDefaultTextAnchor(angle: number): ChartsTextStyle['textAnchor'] {
   const adjustedAngle = clampAngle(angle);
 
   if (adjustedAngle === 90 || adjustedAngle === 270) {
@@ -109,14 +106,14 @@ function getDefaultTextAnchor(
   }
 
   if (adjustedAngle < 90) {
-    return position === 'right' ? 'start' : 'end';
+    return 'end';
   }
 
   if (adjustedAngle < 270) {
-    return position === 'right' ? 'end' : 'start';
+    return 'start';
   }
 
-  return position === 'right' ? 'start' : 'end';
+  return 'end';
 }
 
 function getDefaultBaseline(
@@ -231,7 +228,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const defaultTextAnchor = getDefaultTextAnchor(tickLabelStyle?.angle ?? 0, position);
+  const defaultTextAnchor = getDefaultTextAnchor(tickLabelStyle?.angle ?? 0);
+  const shouldInvertTextAnchor =
+    (isRtl && position !== 'right') || (!isRtl && position === 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -239,7 +238,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: tickFontSize,
-        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        textAnchor: shouldInvertTextAnchor
+          ? invertTextAnchor(defaultTextAnchor)
+          : defaultTextAnchor,
         dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
         ...tickLabelStyle,
       },
