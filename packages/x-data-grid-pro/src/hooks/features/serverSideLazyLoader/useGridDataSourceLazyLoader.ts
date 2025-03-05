@@ -319,6 +319,7 @@ export const useGridDataSourceLazyLoader = (
 
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
+      const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         start: params.firstRowIndex,
         end: params.lastRowIndex,
@@ -349,14 +350,23 @@ export const useGridDataSourceLazyLoader = (
         },
       });
 
-      if (!skeletonRowsSection) {
+      if (skeletonRowsSection) {
+        getRowsParams.start = skeletonRowsSection.firstRowIndex;
+        getRowsParams.end = skeletonRowsSection.lastRowIndex;
+        fetchRows(adjustRowParams(getRowsParams));
         return;
       }
 
-      getRowsParams.start = skeletonRowsSection.firstRowIndex;
-      getRowsParams.end = skeletonRowsSection.lastRowIndex;
+      // Replace the rows with skeleton rows and refetch
+      const adjustedGetRowsParams = adjustRowParams(getRowsParams);
+      const startIndex =
+        typeof adjustedGetRowsParams.start === 'string'
+          ? Math.max(filteredSortedRowIds.indexOf(adjustedGetRowsParams.start), 0)
+          : adjustedGetRowsParams.start;
+      const skeletonRowsCount = adjustedGetRowsParams.end - startIndex + 1;
 
-      fetchRows(adjustRowParams(getRowsParams));
+      privateApiRef.current.unstable_replaceRowsWithSkeleton(startIndex, skeletonRowsCount);
+      fetchRows(adjustedGetRowsParams);
     },
     [privateApiRef, adjustRowParams, fetchRows],
   );

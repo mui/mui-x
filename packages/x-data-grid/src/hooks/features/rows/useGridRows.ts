@@ -67,6 +67,9 @@ export const rowsStateInitializer: GridStateInitializer<
   };
 };
 
+const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
+const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
+
 export const useGridRows = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
@@ -462,6 +465,60 @@ export const useGridRows = (
     [apiRef, props.signature, props.getRowId, props.loading, props.rowCount],
   );
 
+  const replaceRowsWithSkeleton = React.useCallback<GridRowApi['unstable_replaceRowsWithSkeleton']>(
+    (firstRowToRender, skeletonRows) => {
+      if (skeletonRows <= 0) {
+        return;
+      }
+
+      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
+
+      if (treeDepth > 1) {
+        throw new Error(
+          '`apiRef.current.unstable_replaceRowsWithSkeleton` is not compatible with tree data and row grouping',
+        );
+      }
+
+      const tree = { ...gridRowTreeSelector(apiRef) };
+      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
+      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+      const rootGroupChildren = [...rootGroup.children];
+
+      for (let i = firstRowToRender; i < firstRowToRender + skeletonRows; i += 1) {
+        const skeletonId = getSkeletonRowId(i);
+        const removedRowId = rootGroupChildren[i];
+        rootGroupChildren[i] = skeletonId;
+
+        delete dataRowIdToModelLookup[removedRowId];
+        delete tree[removedRowId];
+
+        const skeletonRowNode: any = {
+          type: 'skeletonRow',
+          id: `${skeletonId}-replaced`,
+          parent: GRID_ROOT_GROUP_ID,
+          depth: 0,
+        };
+
+        tree[skeletonId] = skeletonRowNode;
+      }
+
+      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          rows: {
+            ...state.rows,
+            dataRowIdToModelLookup,
+            tree,
+          },
+        }),
+        'addSkeletonRows',
+      );
+    },
+    [apiRef],
+  );
+
   const rowApi: GridRowApi = {
     getRow,
     setLoading,
@@ -474,6 +531,7 @@ export const useGridRows = (
     getRowNode,
     getRowIndexRelativeToVisibleRows,
     unstable_replaceRows: replaceRows,
+    unstable_replaceRowsWithSkeleton: replaceRowsWithSkeleton,
   };
 
   const rowProApi: GridRowProApi = {
