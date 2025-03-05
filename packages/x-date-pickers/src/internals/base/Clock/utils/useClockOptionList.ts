@@ -28,6 +28,7 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     step,
     format,
     loop = false,
+    skipInvalidItems = false,
   } = parameters;
 
   const utils = useUtils();
@@ -114,15 +115,18 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     }
   }, [utils, precision, step]);
 
+  const isOptionInvalid = rootContext.isOptionInvalid;
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
-      const firstOption = getFirstOption(rootContext.referenceDate);
+      const fistItem = getFirstOption(rootContext.referenceDate);
       const boundary = getEndOfRange(rootContext.referenceDate);
-      let current = firstOption;
+      let current = fistItem;
       const tempItems: PickerValidDate[] = [];
 
       while (!utils.isAfter(current, boundary)) {
-        tempItems.push(current);
+        if (!skipInvalidItems || !isOptionInvalid(current, precision)) {
+          tempItems.push(current);
+        }
         current = getNextItem(current);
       }
 
@@ -144,6 +148,9 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     getFirstOption,
     getEndOfRange,
     getNextItem,
+    isOptionInvalid,
+    precision,
+    skipInvalidItems,
     rootContext.referenceDate,
     rootContext.validationProps.minTime,
     rootContext.validationProps.maxTime,
@@ -233,6 +240,12 @@ export namespace useClockOptionList {
      * @returns {PickerValidDate[]} The list of items.
      */
     getItems?: (parameters: GetItemsParameters) => PickerValidDate[];
+    // Behavior change: Equivalent of skipDisabled in the old implementation
+    /**
+     * If `true`, the invalid items will not be rendered.
+     * @default false
+     */
+    skipInvalidItems?: boolean;
     /**
      * Whether to loop keyboard focus back to the first item
      * when the end of the list is reached while using the arrow keys.

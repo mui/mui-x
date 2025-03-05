@@ -11,10 +11,21 @@ const ClockHour12Options = React.forwardRef(function ClockHour12Options(
   props: ClockHour12Options.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, getItems, focusOnMount, loop, ...otherProps } = props;
+  const {
+    className,
+    render,
+    children,
+    getItems,
+    skipInvalidItems,
+    focusOnMount,
+    loop,
+    ...otherProps
+  } = props;
+
   const { getOptionsProps, context, scrollerRef, optionsRef } = useClockHour12Options({
     children,
     getItems,
+    skipInvalidItems,
     focusOnMount,
     loop,
   });

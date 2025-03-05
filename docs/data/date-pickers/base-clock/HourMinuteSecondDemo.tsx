@@ -12,8 +12,9 @@ export default function HourMinuteSecondDemo() {
       <Clock.Root
         defaultValue={dayjs('2022-04-17T15:30:00')}
         className={styles.Root}
+        minTime={dayjs('2022-04-17T09:00:00')}
       >
-        <Clock.Hour24Options render={<OptionList />}>
+        <Clock.Hour24Options render={<OptionList />} skipInvalidItems>
           {({ items }) =>
             items.map((item) => (
               <Clock.Option

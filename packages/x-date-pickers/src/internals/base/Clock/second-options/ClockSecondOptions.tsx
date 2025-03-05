@@ -11,11 +11,23 @@ const ClockSecondOptions = React.forwardRef(function ClockSecondOptions(
   props: ClockSecondOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, getItems, step, focusOnMount, loop, ...otherProps } = props;
+  const {
+    className,
+    render,
+    children,
+    getItems,
+    step,
+    skipInvalidItems,
+    focusOnMount,
+    loop,
+    ...otherProps
+  } = props;
+
   const { getOptionsProps, context, scrollerRef, optionsRef } = useClockSecondOptions({
     children,
     getItems,
     step,
+    skipInvalidItems,
     focusOnMount,
     loop,
   });

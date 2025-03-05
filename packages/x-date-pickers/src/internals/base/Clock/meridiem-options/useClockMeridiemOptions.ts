@@ -2,14 +2,12 @@ import { useClockOptionList } from '../utils/useClockOptionList';
 import { useUtils } from '../../../hooks/useUtils';
 
 export function useClockMeridiemOptions(parameters: useClockMeridiemOptions.Parameters) {
-  const { children, getItems } = parameters;
   const utils = useUtils();
 
   return useClockOptionList({
+    ...parameters,
     section: 'meridiem',
     precision: 'meridiem',
-    children,
-    getItems,
     step: 1,
     format: utils.formats.meridiem,
   });

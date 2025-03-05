@@ -2,15 +2,13 @@ import { useClockOptionList } from '../utils/useClockOptionList';
 import { useUtils } from '../../../hooks/useUtils';
 
 export function useClockSecondOptions(parameters: useClockSecondOptions.Parameters) {
-  const { children, getItems, step = 1 } = parameters;
   const utils = useUtils();
 
   return useClockOptionList({
+    ...parameters,
     section: 'second',
     precision: 'second',
-    children,
-    getItems,
-    step,
+    step: parameters.step ?? 1,
     format: utils.formats.seconds,
   });
 }

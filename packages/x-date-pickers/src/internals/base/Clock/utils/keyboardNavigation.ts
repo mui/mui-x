@@ -1,4 +1,13 @@
-const LIST_NAVIGATION_SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+const LIST_NAVIGATION_SUPPORTED_KEYS = [
+  'ArrowDown',
+  'ArrowUp',
+  'Home',
+  'End',
+  'PageUp',
+  'PageDown',
+];
+
+const PAGE_SIZE = 5;
 
 // TODO: Add PageUp / PageDown support (same for (Range)Calendar)
 export function navigateInList({
@@ -43,6 +52,14 @@ export function navigateInList({
         nextIndex = currentIndex - 1;
       }
       break;
+    case 'PageDown': {
+      nextIndex = Math.min(currentIndex + PAGE_SIZE, lastIndex);
+      break;
+    }
+    case 'PageUp': {
+      nextIndex = Math.max(currentIndex - PAGE_SIZE, 0);
+      break;
+    }
     case 'Home':
       nextIndex = 0;
       break;
