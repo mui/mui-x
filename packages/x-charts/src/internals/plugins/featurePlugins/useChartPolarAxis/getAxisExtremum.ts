@@ -39,9 +39,9 @@ export const getAxisExtremum = <TSeriesType extends PolarChartSeriesType>(
   axisIndex: number,
   formattedSeries: ProcessedSeries<TSeriesType>,
 ) => {
-  const charTypes = Object.keys(seriesConfig).filter(isPolarSeriesType);
+  const polarSeriesTypes = Object.keys(seriesConfig).filter(isPolarSeriesType);
 
-  const extremums = charTypes.reduce<PolarExtremumGetterResult>(
+  const extremums = polarSeriesTypes.reduce<PolarExtremumGetterResult>(
     (acc, charType) =>
       axisExtremumCallback(
         acc,
