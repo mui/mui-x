@@ -284,7 +284,7 @@ const getPivotedData = ({
   createColumns(columnGroupingModel);
 
   return {
-    rows: newRows,
+    rows: visibleRows.length > 0 ? newRows : [],
     columns: pivotColumns,
     rowGroupingModel: visibleRows.map((row) => row.field),
     aggregationModel,
