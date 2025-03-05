@@ -109,17 +109,6 @@ export const usePicker = <
       autoFocus: autoFocusView,
     });
 
-  const isValidContextValue = (testedValue: TValue) => {
-    const error = validator({
-      adapter,
-      value: testedValue,
-      timezone,
-      props,
-    });
-
-    return !valueManager.hasError(error);
-  };
-
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
   const setValueToToday = useEventCallback(() =>
@@ -178,7 +167,7 @@ export const usePicker = <
   }
 
   useEnhancedEffect(() => {
-    // Handle case of `DateTimePicker` without time renderers
+    // Handle case of Date Time Picker without time renderers
     if (currentViewMode === 'field' && state.open) {
       setOpen(false);
       setTimeout(() => {
@@ -358,6 +347,17 @@ export const usePicker = <
       fieldRef,
     ],
   );
+
+  const isValidContextValue = (testedValue: TValue) => {
+    const error = validator({
+      adapter,
+      value: testedValue,
+      timezone,
+      props,
+    });
+
+    return !valueManager.hasError(error);
+  };
 
   const renderCurrentView = () => {
     if (popperView == null) {
