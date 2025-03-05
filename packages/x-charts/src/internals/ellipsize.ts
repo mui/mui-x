@@ -1,3 +1,4 @@
+import { getGraphemeCount } from './getGraphemeCount';
 import { degToRad } from './degToRad';
 import { sliceUntil } from './sliceUntil';
 
@@ -24,34 +25,45 @@ export function doesTextFitInRect(text: string, config: EllipsizeConfig) {
   return angledWidth <= width && angledHeight <= height;
 }
 
-/** This function finds the best place to clip the text to add an ellipsis. */
-export function ellipsize(text: string, config: EllipsizeConfig) {
-  if (doesTextFitInRect(text, config)) {
+/** This function finds the best place to clip the text to add an ellipsis.
+ * This function assumes that the {@link doesTextFit} never return true for longer text after returning false for
+ * shorter text.
+ *
+ * @param text Text to ellipsize if needed
+ * @param doesTextFit a function that returns whether a string fits inside a container.
+ */
+export function ellipsize(text: string, doesTextFit: (text: string) => boolean) {
+  if (doesTextFit(text)) {
     return text;
   }
 
-  let ellipsizedText = text;
+  let shortenedText = text;
   let step = 1;
   let by = 1 / 2;
-  let newLength = text.length;
-  let lastLength = text.length;
+  const graphemeCount = getGraphemeCount(text);
+  let newLength = graphemeCount;
+  let lastLength = graphemeCount;
   let longestFittingText: string | null = null;
 
   do {
     lastLength = newLength;
-    newLength = Math.floor(text.length * by);
+    newLength = Math.floor(graphemeCount * by);
 
-    ellipsizedText = sliceUntil(text, newLength).trim();
-    const fits = doesTextFitInRect(ellipsizedText + ELLIPSIS, config);
+    if (newLength === 0) {
+      break;
+    }
+
+    shortenedText = sliceUntil(text, newLength).trim();
+    const fits = doesTextFit(shortenedText + ELLIPSIS);
     step += 1;
 
     if (fits) {
-      longestFittingText = ellipsizedText;
+      longestFittingText = shortenedText;
       by += 1 / 2 ** step;
     } else {
       by -= 1 / 2 ** step;
     }
-  } while (newLength !== lastLength);
+  } while (Math.abs(newLength - lastLength) !== 1);
 
   return longestFittingText ? longestFittingText + ELLIPSIS : '';
 }

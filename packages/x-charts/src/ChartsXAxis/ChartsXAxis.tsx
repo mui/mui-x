@@ -7,7 +7,7 @@ import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { clampAngle } from '../internals/clampAngle';
 import { useIsClient } from '../hooks/useIsClient';
-import { ellipsize } from '../internals/ellipsize';
+import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
@@ -159,15 +159,15 @@ function shortenLabels(
           rightBoundModifier,
       );
 
-      shortenedLabels.set(
-        item,
-        ellipsize(item.formattedValue.toString(), {
+      const doesTextFit = (text: string) =>
+        doesTextFitInRect(text, {
           width,
           height: maxHeight,
           angle,
-          measureText: (text) => getStringSize(text, tickLabelStyle),
-        }),
-      );
+          measureText: (string: string) => getStringSize(string, tickLabelStyle),
+        });
+
+      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
     }
   }
 
