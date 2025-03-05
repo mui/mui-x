@@ -168,7 +168,7 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
       display: 'inline-flex',
     },
   },
-}));
+})) as typeof MUIPagination;
 
 const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
   function BasePagination(props, ref) {
@@ -185,6 +185,7 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
 
     return (
       <StyledPagination
+        component='div'
         onRowsPerPageChange={useEventCallback(
           (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
             onRowsPerPageChange?.(Number(event.target.value));
