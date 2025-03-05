@@ -36,20 +36,12 @@ const columns = [
   },
 ];
 
-const initialState = {
-  pivoting: {
-    enabled: false,
-    panelOpen: true,
-  },
-};
-
 export default function GridNonPivoted() {
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
-        initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
         experimentalFeatures={{ pivoting: true }}

@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridColDef,
-  GridRowModel,
-  GridInitialState,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridColDef, GridRowModel } from '@mui/x-data-grid-premium';
 
 const rows: GridRowModel[] = [
   { id: 1, product: 'Apples', region: 'North', quarter: 'Q1', sales: 1000 },
@@ -41,20 +36,12 @@ const columns: GridColDef[] = [
   },
 ];
 
-const initialState: GridInitialState = {
-  pivoting: {
-    enabled: false,
-    panelOpen: true,
-  },
-};
-
 export default function GridNonPivoted() {
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
-        initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
         experimentalFeatures={{ pivoting: true }}
