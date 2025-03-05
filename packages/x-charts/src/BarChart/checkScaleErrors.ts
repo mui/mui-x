@@ -1,3 +1,4 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
@@ -43,14 +44,20 @@ export function checkScaleErrors(
       `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
-  if (discreteAxisConfig.data.length < series.stackedData.length) {
-    throw new Error(
-      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have more data than the bar series of id "${seriesId}".`,
-    );
-  }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
       `MUI X: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
+  }
+  if (process.env.NODE_ENV !== 'production') {
+    if (discreteAxisConfig.data.length < series.stackedData.length) {
+      warnOnce(
+        [
+          `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          'The axis data should have at least the same length than the series using it.',
+        ],
+        'error',
+      );
+    }
   }
 }
