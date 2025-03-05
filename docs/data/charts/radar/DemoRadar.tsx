@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 
-export default function DemoRadarNoSnap() {
+export default function DemoRadar() {
   return (
     <ChartsUsageDemo
       componentName="RadarChart"
@@ -26,12 +26,7 @@ export default function DemoRadarNoSnap() {
           <RadarChart
             height={250}
             margin={{ top: 20 }}
-            series={[
-              {
-                // label: 'Lisa',
-                data: [120, 98, 86, 99, 85, 65],
-              },
-            ]}
+            series={[{ data: [120, 98, 86, 99, 85, 65] }]}
             divisionNumber={props.divisionNumber}
             radar={{
               max: 120,
