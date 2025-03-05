@@ -175,6 +175,11 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
         }
         tabIndex={-1}
         aria-hidden="true"
+        // tabIndex does not prevent focus with a mouse click, throwing a console error
+        // https://github.com/mui/mui-x/issues/16706
+        onFocus={(event) => {
+          event.target.blur();
+        }}
       >
         <div ref={contentRef} className={classes.content} />
       </Container>
