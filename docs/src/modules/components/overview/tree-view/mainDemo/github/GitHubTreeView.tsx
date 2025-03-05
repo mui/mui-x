@@ -351,7 +351,6 @@ export default function GitHubTreeView({ selectedItem, setSelectedItem }: GitHub
         sx={{ height: 'fit-content', flexGrow: 1, width: 300, overflowY: 'auto' }}
         slots={{ item: CustomTreeItem }}
         itemChildrenIndentation={12}
-        expansionTrigger="iconContainer"
       />
     </ThemeProvider>
   );

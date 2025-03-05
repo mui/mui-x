@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { styled } from '@mui/material/styles';
-import { leafItems } from './items';
+import { leafItemGroups } from './items';
 
 const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   minHeight: 0,
@@ -101,16 +101,32 @@ export default function GitHubFiles({
   };
 
   return (
-    <Stack flexGrow={1} p={2} spacing={1} sx={{ overflowY: 'auto', height: '100%', width: '100%' }}>
-      {leafItems.map((item) => (
-        <CodeAccordion
-          type={item.itemType}
-          title={`${item.label}`}
-          expanded={item.id === selectedItem}
-          onChange={() => handleChange(item.id)}
-          code={item.code}
-          language={item.language}
-        />
+    <Stack
+      flexGrow={1}
+      p={2}
+      spacing={2.5}
+      sx={{ overflowY: 'auto', height: '100%', width: '100%' }}
+    >
+      {leafItemGroups.map((group, index) => (
+        <Stack key={index} spacing={1}>
+          <Typography
+            variant="caption"
+            fontWeight={400}
+            sx={(theme) => ({ color: theme.palette.grey[700] })}
+          >
+            {group.parentPath}
+          </Typography>
+          {group.leafItems.map((item) => (
+            <CodeAccordion
+              type={item.itemType}
+              title={`${item.label}`}
+              expanded={item.id === selectedItem}
+              onChange={() => handleChange(item.id)}
+              code={item.code}
+              language={item.language}
+            />
+          ))}
+        </Stack>
       ))}
     </Stack>
   );

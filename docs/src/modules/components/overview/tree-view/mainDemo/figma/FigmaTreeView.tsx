@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
@@ -165,9 +166,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               }}
             >
               {status.disabled ? (
-                <LockOutlinedIcon sx={{ fontSize: 16 }} />
+                <Tooltip title="Unlock" arrow>
+                  <LockOutlinedIcon sx={{ fontSize: 16 }} />
+                </Tooltip>
               ) : (
-                <LockOpenOutlinedIcon sx={{ fontSize: 16 }} />
+                <Tooltip title="Lock" arrow>
+                  <LockOpenOutlinedIcon sx={{ fontSize: 16 }} />
+                </Tooltip>
               )}
             </IconButton>
           </Stack>
