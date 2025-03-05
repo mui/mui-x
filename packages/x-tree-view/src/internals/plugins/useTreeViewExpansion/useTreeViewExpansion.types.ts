@@ -11,7 +11,7 @@ export interface UseTreeViewExpansionPublicAPI {
    * @param {object} parameters The parameters of the method.
    * @param {string} parameters.itemId The id of the item to expand of collapse.
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
-   * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's new expansion status will be the opposite of its current one.
+   * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's expansion status will be the toggled.
    */
   setItemExpansion: (parameters: {
     itemId: string;

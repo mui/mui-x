@@ -65,7 +65,7 @@ apiRef.current.setItemExpansion({
   itemId,
   // If `true` the item will be expanded
   // If `false` the item will be collapsed
-  // If not defined, the item's new expansion status will be the opposite of its current one.
+  // If not defined, the item's expansion status will be toggled.
   shouldBeExpanded,
 });
 ```

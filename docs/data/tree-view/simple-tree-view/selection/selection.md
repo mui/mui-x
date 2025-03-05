@@ -105,7 +105,7 @@ apiRef.current.setItemSelection({
   keepExistingSelection,
   // If `true` the item will be selected
   // If `false` the item will be deselected
-  // If not defined, the item's new selection status will be the opposite of its current one
+  // If not defined, the item's selection status will be toggled
   shouldBeSelected,
 });
 ```
