@@ -8,7 +8,7 @@ title: Data Grid - Row grouping
 
 The Data Grid Premium provides a row grouping feature to create subsets of rows based on repeated column values or custom functions.
 
-For example, in the demo below, movies are grouped based on their respective values in the production company column:
+For example, in the demo below, movies are grouped based on their respective values in the **Company** column—try clicking the **>** on the left side of a row group to expand it:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -32,7 +32,7 @@ The model's parameters correspond to the columns to be checked for repeating val
 />
 ```
 
-This example groups all movies matching the same company name, followed by a second group matching the director's name:
+This example creates groups for the **Company** column with nested subgroups based on the **Director** column:
 
 {{"demo": "RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -45,10 +45,14 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ## Grouping columns
 
+"Grouping column" refers to the column that holds row groups.
+This is sometimes—but not always—distinct from a "grouped column," which is the column containing shared values that serve as the basis for row groups.
+
 ### Single grouping column
 
-By default, the Data Grid displays a single column holding all grouping columns.
-If you have multiple grouping criteria, this column name will be set to **Group**.
+By default, the Data Grid displays a single column that holds all grouping columns, no matter how many criteria are provided.
+If there's only one criterion, the name of the grouping column will be the same as that of the grouped column.
+When there are multiple criteria, the grouping column is named **Group**.
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -61,7 +65,9 @@ To display a column for each grouping criterion, set the `rowGroupingColumnMode`
 ### Custom grouping column
 
 Use the `groupingColDef` prop to customize the rendering of the grouping column.
-You can override the header name and any other property of the column definition (`GridColDef`) interface, with the exceptions of the `field`, the `type`, and the properties related to inline editing.
+You can override any property from the column definition (`GridColDef`) interface, with the exceptions of the `field`, the `type`, and the properties related to inline editing.
+
+The demo below changes the grouping column's `headerName` from **Group** to **Director (by Company)**:
 
 {{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -71,15 +77,20 @@ This means that if `rowGroupingColumnMode` is set to `multiple`, then all column
 To override properties for specific grouping columns, or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef` instead of an object with its config.
 The callback is called for each grouping column, and it receives the respective column's fields as parameters.
 
+The demo below illustrates this approach to provide buttons for toggling between different grouping criteria:
+
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Grouping rows with custom cell renderer
 
-By default, when rows are grouped by a column with a custom cell component (`GridColDef['renderCell']`), the same custom cell component is used in the grouping column.
+By default, when rows are grouped by a column that uses a [custom cell component](/x/react-data-grid/cells/), that component is also used for the cells in the grouping column.
+
+For example, the demo below groups together movies based on the values in the **Rating** column.
+Those cells contain a custom component with a star icon, and that same component is used to fill the grouping column.
 
 {{"demo": "RowGroupingCustomCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
-You can opt out of this default behavior by returning `params.value` in `renderCell` for grouping rows instead:
+You can opt out of this default behavior by returning `params.value` from the `renderCell()` function—this ensures that the grouping rows will only display the shared value rather than the entire component.
 
 ```tsx
 const ratingColDef: GridColDef = {
@@ -103,24 +114,23 @@ const ratingColDef: GridColDef = {
 By default, grouped rows display no value in their grouping column cells—these cells are called **leaves**.
 To display a value in a leaf, provide the `leafField` property to the `groupingColDef`.
 
+The demo below uses `leafField` to display values from the **Title** column in the leaves.
+
 {{"demo": "RowGroupingLeafWithValue.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Hide descendant count
 
-Use the `hideDescendantCount` property of the `groupingColDef` to hide the number of descendants of a grouping row.
+By default, row group cells display the number of descendant rows they contain, in parentheses.
+Use the `hideDescendantCount` property of the `groupingColDef` to hide this number.
 
 {{"demo": "RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Hide grouped columns
 
-By default, the columns used to group rows remain visible.
-For instance, when grouping based on a column called `"director"`, there are actually two columns with the title **Director**:
-
-1. The _grouped_ column – the column from which the rows are grouped
-2. The _grouping_ column – the column with which you can toggle the groups
-
-You can use the `useKeepGroupedColumnsHidden` utility hook to hide the grouped columns.
-This hook automatically hides the columns when added to the model, and displays them when removed.
+By default, [grouped columns](#grouping-columns) remain visible when grouping is applied.
+This means that when there's only one grouping criterion, the grouping column and the grouped column both display the same values, which may be redundant or unnecessary.
+You can use the `useKeepGroupedColumnsHidden` utility hook to hide grouped columns.
+This automatically hides grouped columns when added to the model, and displays them when removed.
 
 :::warning
 This hook is not compatible with the deprecated column property `hide`.
