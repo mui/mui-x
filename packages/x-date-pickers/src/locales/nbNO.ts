@@ -63,6 +63,8 @@ const nbNOPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Velg dato, valgt dato er ${formattedDate}` : 'Velg dato',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Velg tid, valgt tid er ${formattedTime}` : 'Velg tid',
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   fieldClearLabel: 'Slett',
 
   // Table labels

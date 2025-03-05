@@ -65,6 +65,8 @@ const elGRPickers: Partial<PickersLocaleText> = {
       : 'Επιλέξτε ημερομηνία',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime}` : 'Επιλέξτε ώρα',
+  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
+  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
   // fieldClearLabel: 'Clear',
 
   // Table labels
