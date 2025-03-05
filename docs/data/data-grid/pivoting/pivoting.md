@@ -47,8 +47,6 @@ For example, if you pivot by `region` and `product`, each unique combination of 
 Each unique value in the fields you select for columns will create a new column in the pivot data grid.
 For example, if you pivot by `region`, each unique region will become a column in your pivot data grid.
 
-> TODO: empty columns should be shown in the demo below
-
 {{"demo": "GridPivotingColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for columns, the columns will be grouped in the order of the selected fields.
