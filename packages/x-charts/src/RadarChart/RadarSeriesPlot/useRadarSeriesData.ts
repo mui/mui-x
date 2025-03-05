@@ -6,7 +6,7 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { SeriesId } from '../../models/seriesType/common';
 
 /**
- * THis hook provides all the data needed to display radar series.
+ * This hook provides all the data needed to display radar series.
  * @param querySeriesId The id of the series to display
  * @returns
  */
