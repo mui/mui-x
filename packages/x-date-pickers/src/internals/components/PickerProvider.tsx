@@ -135,7 +135,7 @@ export interface PickerContextValue<
    */
   views: readonly TView[];
   /**
-   * The view currently rendered.
+   * The currently rendered view.
    */
   view: TView | null;
   /**
