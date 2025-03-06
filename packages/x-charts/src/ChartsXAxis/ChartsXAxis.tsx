@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { clampAngle } from '../internals/clampAngle';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -18,6 +20,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useXAxes } from '../hooks/useAxis';
+import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
   const { classes, position } = ownerState;
@@ -108,6 +111,37 @@ function getVisibleLabels(
   );
 }
 
+function getDefaultTextAnchor(angle: number): ChartsTextStyle['textAnchor'] {
+  const adjustedAngle = clampAngle(angle);
+
+  if (adjustedAngle === 0 || adjustedAngle === 180) {
+    return 'middle';
+  }
+
+  if (adjustedAngle < 180) {
+    return 'start';
+  }
+
+  return 'end';
+}
+
+function getDefaultBaseline(
+  angle: number,
+  position: 'top' | 'bottom' | 'none' | undefined,
+): ChartsTextStyle['dominantBaseline'] {
+  const adjustedAngle = clampAngle(angle);
+
+  if (adjustedAngle === 0) {
+    return position === 'bottom' ? 'hanging' : 'auto';
+  }
+
+  if (adjustedAngle === 180) {
+    return position === 'bottom' ? 'auto' : 'hanging';
+  }
+
+  return 'central';
+}
+
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
@@ -165,6 +199,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
+  const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
@@ -178,6 +213,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const defaultTextAnchor = getDefaultTextAnchor(tickLabelStyle?.angle ?? 0);
+  const shouldInvertTextAnchor = (isRtl && position !== 'top') || (!isRtl && position === 'top');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -185,8 +222,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        textAnchor: shouldInvertTextAnchor
+          ? invertTextAnchor(defaultTextAnchor)
+          : defaultTextAnchor,
+        dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,

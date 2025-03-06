@@ -27,12 +27,8 @@ export interface PickerManager<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
+  TValidationProps extends {},
   TFieldInternalProps extends {},
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
 > {
   /**
    * The type of the value (e.g. 'date', 'date-time', 'time').
@@ -55,7 +51,7 @@ export interface PickerManager<
    * });
    * ```
    */
-  validator: Validator<TValue, TError, TFieldInternalPropsWithDefaults>;
+  validator: Validator<TValue, TError, TValidationProps>;
   /**
    * Object containing basic methods to interact with the value of the picker or field.
    * This property is not part of the public API and should not be used directly.
@@ -83,7 +79,7 @@ export interface PickerManager<
    */
   internal_applyDefaultsToFieldInternalProps: (
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
-  ) => TFieldInternalPropsWithDefaults;
+  ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
    * Returns the aria-label to apply on the button that opens the picker.
    * @param {GetOpenPickerButtonAriaLabelParameters<TValue>} params The parameters to get the aria-label.
