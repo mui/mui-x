@@ -30,8 +30,8 @@ RadarSeriesArea.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The id of the series To display.
-   * If undefined all series are display.
+   * The id of the series to display.
+   * If undefined all series are displayed.
    */
   seriesId: PropTypes.string,
 } as any;
