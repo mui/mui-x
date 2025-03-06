@@ -18,6 +18,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider';
 import { useYAxes } from '../hooks';
+import { clampAngle } from '../internals/clampAngle';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position } = ownerState;
@@ -37,11 +38,6 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) =
 const TICK_LABEL_GAP = 2;
 /* Gap between the axis label and tick labels. */
 const AXIS_LABEL_TICK_LABEL_GAP = 2;
-
-/** Clamp angle to [0, 360[. */
-function clampAngle(angle: number) {
-  return ((angle % 360) + 360) % 360;
-}
 
 function shortenLabels(
   visibleLabels: TickItemType[],
