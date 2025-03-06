@@ -53,7 +53,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (value, user, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
@@ -107,7 +107,8 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
       }
       // Close the picker
       if (!isOpened) {
-        await user.keyboard('[Escape]');
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       } else {
         // return to the start date view in case we'd like to repeat the selection process
         fireEvent.click(

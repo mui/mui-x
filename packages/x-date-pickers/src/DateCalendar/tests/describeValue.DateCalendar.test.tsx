@@ -22,7 +22,7 @@ describe('<DateCalendar /> - Describe Value', () => {
         expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
-    setNewValue: async (value) => {
+    setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value!, 1);
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),

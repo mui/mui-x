@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   BuildFieldInteractionsResponse,
@@ -30,7 +30,6 @@ export type DescribeValueOptions<
         variant: 'desktop' | 'mobile';
         setNewValue: (
           value: InferNonNullablePickerValue<TValue>,
-          user: ReturnType<ReturnType<typeof createRenderer>['render']>['user'],
           options: {
             selectSection: FieldSectionSelector;
             pressKey: FieldPressCharacter;
@@ -43,7 +42,6 @@ export type DescribeValueOptions<
     : {
         setNewValue: (
           value: TValue,
-          user: ReturnType<ReturnType<typeof createRenderer>['render']>['user'],
           options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
         ) => Promise<TValue>;
       });

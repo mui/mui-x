@@ -52,9 +52,8 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
-      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;

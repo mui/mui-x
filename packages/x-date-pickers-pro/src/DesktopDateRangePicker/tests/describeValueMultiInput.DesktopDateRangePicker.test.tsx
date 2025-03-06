@@ -11,7 +11,9 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateRangePicker /> - Describe Value', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({
+    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+  });
 
   describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
@@ -43,9 +45,8 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
-      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;

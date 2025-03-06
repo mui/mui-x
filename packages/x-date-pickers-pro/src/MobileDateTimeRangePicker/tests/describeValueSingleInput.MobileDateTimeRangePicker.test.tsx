@@ -50,7 +50,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, _, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',

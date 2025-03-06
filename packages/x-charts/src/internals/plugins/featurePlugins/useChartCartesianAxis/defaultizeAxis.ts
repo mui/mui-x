@@ -28,22 +28,23 @@ export function defaultizeXAxis(
   const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
 
-    const position = axisConfig.position ?? 'none';
+    // The first x-axis is defaultized to the bottom
+    const defaultPosition = index === 0 ? 'bottom' : 'none';
+    const position = axisConfig.position ?? defaultPosition;
     const defaultHeight =
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const sharedConfig = {
       id: `defaultized-x-axis-${index}`,
-      // The fist axis is defaultized to the bottom/left
-      ...(index === 0 ? ({ position: 'bottom' } as const) : {}),
-      height: defaultHeight,
       offset: offsets[position],
       ...axisConfig,
+      position,
+      height: axisConfig.height ?? defaultHeight,
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += axisConfig.height ?? defaultHeight;
+      offsets[position] += sharedConfig.height;
     }
 
     // If `dataKey` is NOT provided
@@ -79,22 +80,23 @@ export function defaultizeYAxis(
   const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
 
-    const position = axisConfig.position ?? 'none';
+    // The first y-axis is defaultized to the left
+    const defaultPosition = index === 0 ? 'left' : 'none';
+    const position = axisConfig.position ?? defaultPosition;
     const defaultWidth =
       DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const sharedConfig = {
       id: `defaultized-y-axis-${index}`,
-      // The first axis is defaultized to the left
-      ...(index === 0 ? ({ position: 'left' } as const) : {}),
-      width: defaultWidth,
       offset: offsets[position],
       ...axisConfig,
+      position,
+      width: axisConfig.width ?? defaultWidth,
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += axisConfig.width ?? defaultWidth;
+      offsets[position] += sharedConfig.width;
     }
 
     // If `dataKey` is NOT provided

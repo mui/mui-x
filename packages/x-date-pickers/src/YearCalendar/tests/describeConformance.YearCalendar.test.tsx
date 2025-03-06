@@ -4,7 +4,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<YearCalendar /> - Describe Conformance', () => {
-  const { render } = createPickerRenderer({});
+  const { render } = createPickerRenderer();
 
   describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,

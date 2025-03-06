@@ -5,7 +5,7 @@ import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pi
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<YearCalendar /> - Describe Value', () => {
-  const { render } = createPickerRenderer({});
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'calendar'>(YearCalendar, () => ({
     render,

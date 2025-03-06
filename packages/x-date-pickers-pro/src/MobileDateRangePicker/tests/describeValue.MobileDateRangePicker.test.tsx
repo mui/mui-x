@@ -13,7 +13,9 @@ import {
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({
+    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+  });
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
@@ -45,7 +47,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: async (value, user, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -67,7 +69,8 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        await user.keyboard('[Escape]');
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       }
 
       return newValue;
@@ -104,9 +107,8 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
-      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;
