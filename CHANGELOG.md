@@ -76,7 +76,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.14`.
 
 - [charts] Fix `undefined` behaving differently from missing value for axis size (#16844) @bernardobelchior
 - [charts] Fix x-axis text anchor default when language is RTL (#16836) @bernardobelchior
-- [charts] Add Funnel chart (#14804) @JCQuintas
 - [charts] Add Radar chart (#16406) @alexfauquette
 - [charts] Move series default color generation in the series config (#16752) @alexfauquette
 - [charts] Render axis title within axis size (#16730) @bernardobelchior
