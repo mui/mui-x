@@ -2,9 +2,11 @@ import * as React from 'react';
 import {
   DataGrid,
   GridDensity,
-  GridSlotProps,
+  gridDensitySelector,
   Toolbar,
   ToolbarButton,
+  useGridApiContext,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
@@ -15,21 +17,15 @@ import ListItemText from '@mui/material/ListItemText';
 import CheckIcon from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    density: GridDensity;
-    onDensityChange: React.Dispatch<React.SetStateAction<GridDensity>>;
-  }
-}
-
 const DENISTY_OPTIONS: { label: string; value: GridDensity }[] = [
   { label: 'Compact density', value: 'compact' },
   { label: 'Standard density', value: 'standard' },
   { label: 'Comfortable density', value: 'comfortable' },
 ];
 
-function CustomToolbar(props: GridSlotProps['toolbar']) {
-  const { density, onDensityChange } = props;
+function CustomToolbar() {
+  const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
   const [densityMenuOpen, setDensityMenuOpen] = React.useState(false);
   const densityMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
@@ -58,7 +54,13 @@ function CustomToolbar(props: GridSlotProps['toolbar']) {
         }}
       >
         {DENISTY_OPTIONS.map((option) => (
-          <MenuItem key={option.value} onClick={() => onDensityChange(option.value)}>
+          <MenuItem
+            key={option.value}
+            onClick={() => {
+              apiRef.current.setDensity(option.value);
+              setDensityMenuOpen(false);
+            }}
+          >
             <ListItemIcon>
               {density === option.value && <CheckIcon fontSize="small" />}
             </ListItemIcon>
@@ -71,7 +73,6 @@ function CustomToolbar(props: GridSlotProps['toolbar']) {
 }
 
 export default function DensitySelectorGrid() {
-  const [density, setDensity] = React.useState<GridDensity>('standard');
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 4,
@@ -82,15 +83,8 @@ export default function DensitySelectorGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
-        density={density}
         slots={{
           toolbar: CustomToolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            density,
-            onDensityChange: setDensity,
-          },
         }}
         showToolbar
       />

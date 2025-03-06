@@ -55,7 +55,7 @@ You can set the density programmatically in one of the following ways:
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-You can create a density selector that will allow users to change the density of the Data Grid by using the `density` prop and a custom toolbar, as shown in the demo below.
+You can create a custom toolbar with a density selector that allows users to change the density of the Data Grid, as shown in the demo below.
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
 

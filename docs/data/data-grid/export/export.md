@@ -377,17 +377,28 @@ import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/setupExcelEx
 setupExcelExportWebWorker();
 ```
 
-The final step is to pass the path to the file created to `GridToolbarExport` or the API method:
+The final step is to pass the path to the file created to excel options or the API method:
 
 ```tsx
-<GridToolbarExport
-  excelOptions={{
+// Default toolbar:
+<DataGridPremium
+  slotProps={{
+    toolbar: {
+      excelOptions: {
+        worker: () => new Worker('/worker.ts'),
+      },
+    },
+  }}
+/>;
+
+// Custom trigger:
+<ExportExcel
+  options={{
     worker: () => new Worker('/worker.ts'),
   }}
 />;
 
-// or
-
+// API method:
 apiRef.current.exportDataAsExcel({
   worker: () => new Worker('/worker.ts'),
 });
@@ -398,14 +409,25 @@ If you are using Next.js or webpack 5, use the following syntax instead.
 Make sure to pass the **relative path**, considering the current file, to the worker script.
 
 ```tsx
-<GridToolbarExport
-  excelOptions={{
+// Default toolbar:
+<DataGridPremium
+  slotProps={{
+    toolbar: {
+      excelOptions: {
+        worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+      },
+    },
+  }}
+/>;
+
+// Custom trigger:
+<ExportExcel
+  options={{
     worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
   }}
 />;
 
-// or
-
+// API method:
 apiRef.current.exportDataAsExcel({
   worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
 });

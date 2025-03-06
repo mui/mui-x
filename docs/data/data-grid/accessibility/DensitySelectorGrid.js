@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  gridDensitySelector,
+  Toolbar,
+  ToolbarButton,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
@@ -15,8 +22,9 @@ const DENISTY_OPTIONS = [
   { label: 'Comfortable density', value: 'comfortable' },
 ];
 
-function CustomToolbar(props) {
-  const { density, onDensityChange } = props;
+function CustomToolbar() {
+  const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
   const [densityMenuOpen, setDensityMenuOpen] = React.useState(false);
   const densityMenuTriggerRef = React.useRef(null);
 
@@ -45,7 +53,13 @@ function CustomToolbar(props) {
         }}
       >
         {DENISTY_OPTIONS.map((option) => (
-          <MenuItem key={option.value} onClick={() => onDensityChange(option.value)}>
+          <MenuItem
+            key={option.value}
+            onClick={() => {
+              apiRef.current.setDensity(option.value);
+              setDensityMenuOpen(false);
+            }}
+          >
             <ListItemIcon>
               {density === option.value && <CheckIcon fontSize="small" />}
             </ListItemIcon>
@@ -58,7 +72,6 @@ function CustomToolbar(props) {
 }
 
 export default function DensitySelectorGrid() {
-  const [density, setDensity] = React.useState('standard');
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 4,
@@ -69,15 +82,8 @@ export default function DensitySelectorGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
-        density={density}
         slots={{
           toolbar: CustomToolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            density,
-            onDensityChange: setDensity,
-          },
         }}
         showToolbar
       />

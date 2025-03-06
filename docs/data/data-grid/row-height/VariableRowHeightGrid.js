@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  Toolbar,
+  ToolbarButton,
+  useGridApiContext,
+  useGridSelector,
+  gridDensitySelector,
+} from '@mui/x-data-grid';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,8 +22,9 @@ const DENISTY_OPTIONS = [
   { label: 'Comfortable density', value: 'comfortable' },
 ];
 
-function CustomToolbar(props) {
-  const { density, onDensityChange } = props;
+function CustomToolbar() {
+  const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
   const [densityMenuOpen, setDensityMenuOpen] = React.useState(false);
   const densityMenuTriggerRef = React.useRef(null);
 
@@ -45,7 +53,13 @@ function CustomToolbar(props) {
         }}
       >
         {DENISTY_OPTIONS.map((option) => (
-          <MenuItem key={option.value} onClick={() => onDensityChange(option.value)}>
+          <MenuItem
+            key={option.value}
+            onClick={() => {
+              apiRef.current.setDensity(option.value);
+              setDensityMenuOpen(false);
+            }}
+          >
             <ListItemIcon>
               {density === option.value && <CheckIcon fontSize="small" />}
             </ListItemIcon>
@@ -78,8 +92,6 @@ const rows = [
 ];
 
 export default function VariableRowHeightGrid() {
-  const [density, setDensity] = React.useState('standard');
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -92,15 +104,8 @@ export default function VariableRowHeightGrid() {
 
           return null;
         }}
-        density={density}
         slots={{
           toolbar: CustomToolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            density,
-            onDensityChange: setDensity,
-          },
         }}
         showToolbar
       />
