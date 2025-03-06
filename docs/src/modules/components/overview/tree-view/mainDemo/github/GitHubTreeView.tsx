@@ -1,5 +1,4 @@
 import * as React from 'react';
-import '@fontsource/geist-sans';
 import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
