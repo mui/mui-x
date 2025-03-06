@@ -11,7 +11,6 @@ import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
-import { GridToolbarPivotButton } from './GridToolbarPivotButton';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
@@ -38,8 +37,6 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     ...other
   } = props as typeof props & { excelOptions: any };
   const rootProps = useGridRootProps();
-  // @ts-ignore
-  const isPivotingEnabled = rootProps.experimentalFeatures?.pivoting && !rootProps.disablePivoting;
 
   if (
     rootProps.disableColumnFilter &&
@@ -54,7 +51,6 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     <GridToolbarContainer {...other} ref={ref}>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
-      {isPivotingEnabled && <GridToolbarPivotButton />}
       <GridToolbarDensitySelector />
       <GridToolbarExport
         csvOptions={csvOptions}
