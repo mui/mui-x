@@ -60,12 +60,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
       const onChange = spy();
 
-      const { selectSection, pressKey, user } = renderWithProps({
+      const { selectSection, pressKey } = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: values[0],
         onChange,
       });
-      const newValue = await setNewValue(values[0], user, {
+      const newValue = await setNewValue(values[0], {
         selectSection,
         pressKey,
       });
@@ -85,10 +85,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', async () => {
       const onChange = spy();
 
-      const useControlledElement = (props) => {
+      const useControlledElement = (props: any) => {
         const [value, setValue] = React.useState(props?.value || null);
         const handleChange = React.useCallback(
-          (newValue) => {
+          (newValue: any) => {
             setValue(newValue);
             props?.onChange(newValue);
           },
@@ -97,11 +97,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return { value, onChange: handleChange };
       };
 
-      const { selectSection, pressKey, user } = renderWithProps(
+      const { selectSection, pressKey } = renderWithProps(
         { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
         { hook: useControlledElement },
       );
-      const newValue = await setNewValue(values[0], user, {
+      const newValue = await setNewValue(values[0], {
         selectSection,
         pressKey,
       });

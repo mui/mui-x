@@ -30,7 +30,7 @@ describe('<TimeField /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, _, { selectSection, pressKey }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value!, 1);
       selectSection('hours');
       pressKey(undefined, 'ArrowUp');

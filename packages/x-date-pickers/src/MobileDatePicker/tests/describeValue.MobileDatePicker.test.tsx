@@ -29,7 +29,7 @@ describe('<MobileDatePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, user, { isOpened, applySameValue }) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date' });
       }

@@ -35,7 +35,7 @@ describe('<DesktopDateTimePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, _, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value!
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value!, 1), 1), 5);

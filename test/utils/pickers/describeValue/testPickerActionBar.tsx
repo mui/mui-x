@@ -88,7 +88,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey, user } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -100,7 +100,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], user, { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
@@ -149,7 +149,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey, user } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -161,7 +161,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], user, { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         fireEvent.click(screen.getByText(/ok/i));

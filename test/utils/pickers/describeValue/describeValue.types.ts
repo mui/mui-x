@@ -37,13 +37,13 @@ export type DescribeValueOptions<
             applySameValue?: boolean;
             setEndDate?: boolean;
           },
-        ) => Promise<InferNonNullablePickerValue<TValue>>;
+        ) => InferNonNullablePickerValue<TValue>;
       }
     : {
         setNewValue: (
           value: TValue,
           options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
-        ) => Promise<TValue>;
+        ) => TValue;
       });
 
 export type DescribeValueTestSuite<

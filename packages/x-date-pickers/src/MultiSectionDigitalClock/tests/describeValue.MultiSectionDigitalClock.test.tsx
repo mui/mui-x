@@ -38,7 +38,7 @@ describe('<MultiSectionDigitalClock /> - Describe Value', () => {
         }
       }
     },
-    setNewValue: async (value) => {
+    setNewValue: (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
       multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
 
