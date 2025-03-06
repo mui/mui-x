@@ -104,7 +104,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.14`.
 - [docs] Typo fixes (#16835) @alexfauquette
 - [code-infra] Fix console warning in telemetry package (#16816) @JCQuintas
 - [code-infra] Split date-picker test files (#16825) @JCQuintas
-- [infra] Replace PR label check workflow with reusable version. (#16762) @michelengelen
+- [infra] Replace PR label check workflow with reusable version (#16762) @michelengelen
 - [infra] Update label in priority-support issue template (#16767) @michelengelen
 
 ## 8.0.0-alpha.13
