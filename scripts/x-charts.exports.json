@@ -272,6 +272,7 @@
   { "name": "RadarGrid", "kind": "Function" },
   { "name": "RadarGridProps", "kind": "Interface" },
   { "name": "RadarItemIdentifier", "kind": "TypeAlias" },
+  { "name": "RadarMetricLabels", "kind": "Function" },
   { "name": "RadarSeriesArea", "kind": "Function" },
   { "name": "RadarSeriesAreaProps", "kind": "Interface" },
   { "name": "RadarSeriesMarks", "kind": "Function" },

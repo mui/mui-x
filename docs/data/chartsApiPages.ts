@@ -223,6 +223,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarGrid',
   },
   {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
+  },
+  {
     pathname: '/x/api/charts/radar-series-area',
     title: 'RadarSeriesArea',
   },
