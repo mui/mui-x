@@ -23,7 +23,9 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-### Breaking changes
+### Data Grid
+
+#### Breaking changes
 
 - The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](https://next.mui.com/x/react-data-grid/components/toolbar/#settings-menu) for an example.
 - The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
@@ -49,7 +51,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 
 #### Breaking changes
 
-- Stop passing invalid date to `onChange` when the date is partially fileld — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange)
+- Stop passing invalid date to `onChange` when the date is partially filled — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.14`
 
@@ -64,11 +66,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.14`.
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/16406
-
 - 🎁 The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks.
-
-From https://github.com/mui/mui-x/pull/14804
 
 - 🚀📊 New Pro Chart: It is now possible to create `Funnel` charts—perfect for visualizing conversions, sales pipelines and more!
   <img width="418" alt="Screenshot 2025-01-31 at 12 22 31" src="https://github.com/user-attachments/assets/8cd26821-5f11-46bf-a9bb-34d212880a47" />
