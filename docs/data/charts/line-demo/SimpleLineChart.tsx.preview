@@ -5,4 +5,5 @@
     { data: uData, label: 'uv' },
   ]}
   xAxis={[{ scaleType: 'point', data: xLabels }]}
+  margin={margin}
 />
