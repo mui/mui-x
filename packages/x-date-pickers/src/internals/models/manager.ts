@@ -1,4 +1,5 @@
 import type { PickerManager } from '../../models';
+import type { UseFieldInternalProps } from '../hooks/useField';
 
 export type PickerAnyManager = PickerManager<any, any, any, any, any>;
 
@@ -7,15 +8,15 @@ type PickerManagerProperties<TManager extends PickerAnyManager> =
     infer TValue,
     infer TEnableAccessibleFieldDOMStructure,
     infer TError,
-    infer TFieldInternalProps,
-    infer TFieldInternalPropsWithDefaults
+    infer TValidationProps,
+    infer TFieldInternalProps
   >
     ? {
         value: TValue;
         enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
         error: TError;
+        validationProps: TValidationProps;
         fieldInternalProps: TFieldInternalProps;
-        fieldInternalPropsWithDefaults: TFieldInternalPropsWithDefaults;
       }
     : never;
 
@@ -28,8 +29,16 @@ export type PickerManagerError<TManager extends PickerAnyManager> =
 export type PickerManagerFieldInternalProps<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['fieldInternalProps'];
 
+export type PickerManagerValidationProps<TManager extends PickerAnyManager> =
+  PickerManagerProperties<TManager>['validationProps'];
+
 export type PickerManagerFieldInternalPropsWithDefaults<TManager extends PickerAnyManager> =
-  PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'];
+  UseFieldInternalProps<
+    PickerManagerValue<TManager>,
+    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+    PickerManagerError<TManager>
+  > &
+    PickerManagerValidationProps<TManager>;
 
 export type PickerManagerEnableAccessibleFieldDOMStructure<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'];
