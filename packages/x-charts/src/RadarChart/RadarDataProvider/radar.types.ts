@@ -15,6 +15,8 @@ export interface MetricConfig {
   max?: number;
 }
 
+export type RadarLabelFormatterContext = { location: 'tick' | 'tooltip' };
+
 export interface RadarConfig {
   /**
    * The metrics shown by radar.
@@ -30,4 +32,11 @@ export interface RadarConfig {
    * @default 0
    */
   startAngle?: number;
+  /**
+   * Format metric names according to their placement.
+   * @param {string} name The matric name.
+   * @param {RadarLabelFormatterContext} context Indicate where the label will be used.
+   * @returns {string} The label to display.
+   */
+  labelFormatter?: (name: string, context: RadarLabelFormatterContext) => string;
 }

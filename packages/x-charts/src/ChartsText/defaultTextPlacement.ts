@@ -30,12 +30,12 @@ export function getDefaultTextAnchor(angle: number): ChartsTextStyle['textAnchor
 export function getDefaultBaseline(angle: number): ChartsTextStyle['dominantBaseline'] {
   const adjustedAngle = clampAngle(angle);
 
-  if (adjustedAngle <= 60 || adjustedAngle >= 300) {
+  if (adjustedAngle <= 30 || adjustedAngle >= 330) {
     // +/-60° around 0°
     return 'hanging';
   }
 
-  if (adjustedAngle <= 240 && adjustedAngle >= 120) {
+  if (adjustedAngle <= 210 && adjustedAngle >= 150) {
     // +/-60° around 180°
     return 'auto';
   }
