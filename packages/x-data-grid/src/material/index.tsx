@@ -46,7 +46,6 @@ import {
   GridKeyboardArrowRight,
   GridMoreVertIcon,
   GridRemoveIcon,
-  GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -59,6 +58,7 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridPivotIcon,
+  GridDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -178,7 +178,7 @@ const iconSlots: GridIconSlotsComponent = {
   densityCompactIcon: GridViewHeadlineIcon,
   densityStandardIcon: GridTableRowsIcon,
   densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridSaveAltIcon,
+  exportIcon: GridDownloadIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
   treeDataExpandIcon: GridKeyboardArrowRight,

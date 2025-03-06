@@ -51,7 +51,7 @@ export const GridCheckCircleIcon = createSvgIcon(
 );
 
 export const GridColumnIcon = createSvgIcon(
-  <path d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z" />,
+  <path d="M14.67 5v14H9.33V5zm1 14H21V5h-5.33zm-7.34 0V5H3v14z" />,
   'ColumnIcon',
 );
 
@@ -99,11 +99,6 @@ export const GridDragIcon = createSvgIcon(
   'Drag',
 );
 
-export const GridSaveAltIcon = createSvgIcon(
-  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
-  'SaveAlt',
-);
-
 export const GridCheckIcon = createSvgIcon(
   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />,
   'Check',
@@ -144,4 +139,9 @@ export const GridDeleteForeverIcon = createSvgIcon(
 export const GridPivotIcon = createSvgIcon(
   <path d="M10 8h11V5c0-1.1-.9-2-2-2h-9zM3 8h5V3H5c-1.1 0-2 .9-2 2zm2 13h3V10H3v9c0 1.1.9 2 2 2m8 1-4-4 4-4zm1-9 4-4 4 4zm.58 6H13v-2h1.58c1.33 0 2.42-1.08 2.42-2.42V13h2v1.58c0 2.44-1.98 4.42-4.42 4.42" />,
   'Pivot',
+);
+
+export const GridDownloadIcon = createSvgIcon(
+  <path d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z" />,
+  'Download',
 );

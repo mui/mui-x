@@ -375,6 +375,7 @@ GridColumnsManagement.propTypes = {
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
     placeholder: PropTypes.string,
+    role: PropTypes.string,
     size: PropTypes.oneOf(['medium', 'small']),
     slotProps: PropTypes.object,
     style: PropTypes.object,

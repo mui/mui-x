@@ -1386,7 +1386,7 @@
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
-    "toolbar": "Toolbar component rendered inside the Header component.",
+    "toolbar": "Toolbar component rendered in the grid header.",
     "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
     "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",

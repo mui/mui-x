@@ -16,7 +16,7 @@ import { GridToolbarPivotButton } from './GridToolbarPivotButton';
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
    * Show the quick filter component.
-   * @default false
+   * @default true
    */
   showQuickFilter?: boolean;
   /**
@@ -33,7 +33,7 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     csvOptions,
     printOptions,
     excelOptions,
-    showQuickFilter = false,
+    showQuickFilter = true,
     quickFilterProps = {},
     ...other
   } = props as typeof props & { excelOptions: any };
@@ -87,7 +87,7 @@ GridToolbar.propTypes = {
   }),
   /**
    * Show the quick filter component.
-   * @default false
+   * @default true
    */
   showQuickFilter: PropTypes.bool,
   /**
