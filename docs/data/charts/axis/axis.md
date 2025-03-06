@@ -222,16 +222,14 @@ To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for 
 
 You can further customize the axis rendering besides the axis definition.
 
-### Fixing overflow issues
+### Fixing tick label overflow issues
 
-If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
-You can resolve this by [increasing the size of the overflowing axis](/x/react-charts/styling/#placement).
+When your tick labels are too long, they are clipped to avoid overflowing.
+If you would like to reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
 
 In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 {{"demo": "MarginAndLabelPosition.js"}}
-
-{{"demo": "XAxisTickLabelOverflow.js"}}
 
 ### Rendering
 
