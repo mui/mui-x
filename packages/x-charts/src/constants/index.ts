@@ -8,7 +8,7 @@ export const DEFAULT_MARGINS = {
   left: 20,
   right: 20,
 };
-export const DEFAULT_AXIS_SIZE_WIDTH = 30;
+export const DEFAULT_AXIS_SIZE_WIDTH = 40;
 export const DEFAULT_AXIS_SIZE_HEIGHT = 25;
 
 // How many pixels to add to the default axis size if that axis has a label
