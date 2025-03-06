@@ -50,6 +50,14 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- Stop passing invalid date to `onChange` when the date is partially fileld — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange)
+
+
+
+
+
 #### `@mui/x-date-pickers@8.0.0-alpha.14`
 
 - [fields] Always use `props.value` as the source of truth when defined (#15875) @flaviendelangle
