@@ -1,13 +1,9 @@
 import * as React from 'react';
-import { PickersTimezone, PickerValidDate } from '../../../../models';
+import { PickerValidDate } from '../../../../models';
 import { ValidateTimeProps } from '../../../../validation';
 import { ClockPrecision, ClockSection } from '../utils/types';
 
 export interface ClockRootContext {
-  /**
-   * The timezone to use when rendering or interactive with the dates.
-   */
-  timezone: PickersTimezone;
   /**
    * Whether the calendar is disabled.
    */
@@ -19,7 +15,7 @@ export interface ClockRootContext {
   /**
    * The props to check if a time is valid or not.
    */
-  validationProps: ValidateTimeProps;
+  validationProps: Omit<ValidateTimeProps, 'disablePast' | 'disableFuture'>;
   /**
    * The currently selected value.
    */

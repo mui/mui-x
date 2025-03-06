@@ -1,50 +1,29 @@
 import { MuiPickersAdapter, PickerValidDate } from '../../../../../models';
-import { BaseDateValidationProps } from '../../../../models/validation';
 
 export function getFirstEnabledMonth(
   utils: MuiPickersAdapter,
-  validationProps: Required<BaseDateValidationProps>,
+  validationProps: { minDate: PickerValidDate },
 ): PickerValidDate {
-  const now = utils.date();
-  return utils.startOfMonth(
-    validationProps.disablePast && utils.isAfter(now, validationProps.minDate)
-      ? now
-      : validationProps.minDate,
-  );
+  return utils.startOfMonth(validationProps.minDate);
 }
 
 export function getLastEnabledMonth(
   utils: MuiPickersAdapter,
-  validationProps: Required<BaseDateValidationProps>,
+  validationProps: { maxDate: PickerValidDate },
 ): PickerValidDate {
-  const now = utils.date();
-  return utils.startOfMonth(
-    validationProps.disableFuture && utils.isBefore(now, validationProps.maxDate)
-      ? now
-      : validationProps.maxDate,
-  );
+  return utils.startOfMonth(validationProps.maxDate);
 }
 
 export function getFirstEnabledYear(
   utils: MuiPickersAdapter,
-  validationProps: Required<BaseDateValidationProps>,
+  validationProps: { minDate: PickerValidDate },
 ): PickerValidDate {
-  const now = utils.date();
-  return utils.startOfYear(
-    validationProps.disablePast && utils.isAfter(now, validationProps.minDate)
-      ? now
-      : validationProps.minDate,
-  );
+  return utils.startOfYear(validationProps.minDate);
 }
 
 export function getLastEnabledYear(
   utils: MuiPickersAdapter,
-  validationProps: Required<BaseDateValidationProps>,
+  validationProps: { maxDate: PickerValidDate },
 ): PickerValidDate {
-  const now = utils.date();
-  return utils.startOfYear(
-    validationProps.disableFuture && utils.isBefore(now, validationProps.maxDate)
-      ? now
-      : validationProps.maxDate,
-  );
+  return utils.startOfYear(validationProps.maxDate);
 }

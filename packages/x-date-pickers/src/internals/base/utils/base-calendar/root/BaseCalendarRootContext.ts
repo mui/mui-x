@@ -1,15 +1,11 @@
 import * as React from 'react';
-import { PickersTimezone, PickerValidDate } from '../../../../../models';
+import { PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
 import { BaseCalendarSection } from '../utils/types';
 import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavigation';
 
 export interface BaseCalendarRootContext {
-  /**
-   * The timezone to use when rendering or interactive with the dates.
-   */
-  timezone: PickersTimezone;
   /**
    * Whether the calendar is disabled.
    */
@@ -48,7 +44,7 @@ export interface BaseCalendarRootContext {
    * The props to check if a date is valid or not.
    * Warning: Even when used inside the RangeCalendar component, this is still equal to the validation props for a single date.
    */
-  dateValidationProps: ValidateDateProps;
+  dateValidationProps: Omit<ValidateDateProps, 'disableFuture' | 'disablePast'>;
   /**
    * Set the visible data.
    * @param {PickerValidDate} visibleDate The new visible data.

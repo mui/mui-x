@@ -413,15 +413,31 @@ export function useAddDefaultsToBaseDateValidationProps(
   const utils = useUtils();
   const defaultDates = useDefaultDates();
 
-  const { disablePast, disableFuture, minDate, maxDate } = validationDate;
+  const { disablePast, disableFuture, minDate = null, maxDate = null } = validationDate;
 
-  return React.useMemo(
-    () => ({
-      disablePast: disablePast ?? false,
-      disableFuture: disableFuture ?? false,
-      minDate: applyDefaultDate(utils, minDate, defaultDates.minDate),
-      maxDate: applyDefaultDate(utils, maxDate, defaultDates.maxDate),
-    }),
-    [disablePast, disableFuture, minDate, maxDate, utils, defaultDates],
-  );
+  return React.useMemo(() => {
+    let cleanMinDate = utils.isValid(minDate) ? minDate : defaultDates.minDate;
+    if (disablePast) {
+      const current = utils.date();
+      if (utils.isBefore(cleanMinDate, current)) {
+        cleanMinDate = current;
+      }
+    }
+
+    let cleanMaxDate = utils.isValid(maxDate) ? maxDate : defaultDates.maxDate;
+    if (disableFuture) {
+      const current = utils.date();
+      if (utils.isAfter(cleanMaxDate, current)) {
+        cleanMaxDate = current;
+      }
+    }
+
+    return {
+      // TODO: Remove disableFuture and disablePast from `validateDate`.
+      disablePast: false,
+      disableFuture: false,
+      minDate: cleanMinDate,
+      maxDate: cleanMaxDate,
+    };
+  }, [disablePast, disableFuture, minDate, maxDate, utils, defaultDates]);
 }

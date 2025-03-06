@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createIsAfterIgnoreDatePart } from '../../../utils/time-utils';
-import { PickersTimezone, PickerValidDate, TimeView } from '../../../../models';
+import { PickerValidDate, TimeView } from '../../../../models';
 import { useUtils } from '../../../hooks/useUtils';
 import { ValidateTimeProps } from '../../../../validation';
 import {
@@ -14,40 +14,28 @@ import {
 import { ClockPrecision } from '../utils/types';
 
 // TODO: Add prop?
-const disableIgnoringDatePartForTimeValidation = false;
-const shouldCheckPastEnd = true; // section === 'hour' || (section === 'minute' && sections.includes('second'));
+export const disableIgnoringDatePartForTimeValidation = false;
 
 export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
-  const { validationProps, timezone } = parameters;
-
   const utils = useUtils();
 
   return React.useCallback(
     (time: PickerValidDate, precision: ClockPrecision) => {
-      if (validationProps?.shouldDisableTime?.(time, convertPrecisionToLegacyView(precision))) {
+      if (parameters?.shouldDisableTime?.(time, convertPrecisionToLegacyView(precision))) {
         return true;
       }
 
       const containsValidTime = ([start, end]: [PickerValidDate, PickerValidDate]) => {
-        const now = utils.date(undefined, timezone);
         const isAfter = createIsAfterIgnoreDatePart(
           disableIgnoringDatePartForTimeValidation,
           utils,
         );
 
-        if (validationProps.minTime != null && isAfter(validationProps.minTime, end)) {
+        if (parameters.minTime != null && isAfter(parameters.minTime, end)) {
           return false;
         }
 
-        if (validationProps.maxTime != null && isAfter(start, validationProps.maxTime)) {
-          return false;
-        }
-
-        if (validationProps.disableFuture && isAfter(start, now)) {
-          return false;
-        }
-
-        if (validationProps.disablePast && isAfter(now, shouldCheckPastEnd ? end : start)) {
+        if (parameters.maxTime != null && isAfter(start, parameters.maxTime)) {
           return false;
         }
 
@@ -65,7 +53,7 @@ export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
 
         case 'minute': {
           return (
-            utils.getMinutes(time) % (validationProps.minutesStep ?? 1) !== 0 ||
+            utils.getMinutes(time) % (parameters.minutesStep ?? 1) !== 0 ||
             !containsValidTime([startOfMinute(utils, time), endOfMinute(utils, time)])
           );
         }
@@ -78,15 +66,12 @@ export function useIsOptionInvalid(parameters: useIsOptionInvalid.Parameters) {
           throw new Error('not supported');
       }
     },
-    [utils, validationProps, timezone],
+    [utils, parameters],
   );
 }
 
 export namespace useIsOptionInvalid {
-  export interface Parameters {
-    validationProps: ValidateTimeProps;
-    timezone: PickersTimezone;
-  }
+  export interface Parameters extends Omit<ValidateTimeProps, 'disableFuture' | 'disablePast'> {}
 }
 
 // TODO: Rename the view in the validation props and remove this function

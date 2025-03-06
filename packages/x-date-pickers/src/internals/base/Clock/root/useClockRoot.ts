@@ -19,7 +19,8 @@ import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { getTodayDate } from '../../../utils/date-utils';
-import { useIsOptionInvalid } from './useIsOptionInvalid';
+import { disableIgnoringDatePartForTimeValidation, useIsOptionInvalid } from './useIsOptionInvalid';
+import { createIsAfterIgnoreDatePart } from '../../../utils/time-utils';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
   const {
@@ -56,16 +57,34 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     valueManager: manager.internal_valueManager,
   });
 
-  const validationProps = React.useMemo<ValidateTimeProps>(
-    () => ({
-      disablePast: disablePast ?? false,
-      disableFuture: disableFuture ?? false,
-      minTime,
-      maxTime,
+  const validationProps = React.useMemo<ValidateTimeProps>(() => {
+    const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
+
+    let cleanMinTime = minTime;
+    if (disablePast) {
+      const now = utils.date();
+      if (minTime == null || isAfter(minTime, now)) {
+        cleanMinTime = now;
+      }
+    }
+
+    let cleanMaxTime = maxTime;
+    if (disableFuture) {
+      const now = utils.date();
+      if (maxTime == null || isAfter(now, maxTime)) {
+        cleanMaxTime = now;
+      }
+    }
+
+    return {
+      // TODO: Remove disableFuture and disablePast from `validateTime`.
+      disablePast: false,
+      disableFuture: false,
+      minTime: cleanMinTime,
+      maxTime: cleanMaxTime,
       shouldDisableTime,
-    }),
-    [disableFuture, disablePast, maxTime, minTime, shouldDisableTime],
-  );
+    };
+  }, [utils, disableFuture, disablePast, maxTime, minTime, shouldDisableTime]);
 
   const referenceDate = React.useMemo(
     () =>
@@ -84,7 +103,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
-  const isOptionInvalid = useIsOptionInvalid({ validationProps, timezone });
+  const isOptionInvalid = useIsOptionInvalid(validationProps);
 
   const resolvedChildren = React.useMemo(() => {
     if (!React.isValidElement(children) && typeof children === 'function') {

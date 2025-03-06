@@ -2,12 +2,13 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickerValidDate } from '../../../../../models';
-import { useNow, useUtils } from '../../../../hooks/useUtils';
+import { useUtils } from '../../../../hooks/useUtils';
 import { findClosestEnabledDate } from '../../../../utils/date-utils';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { useBaseCalendarMonthCell } from './useBaseCalendarMonthCell';
 import { useBaseCalendarMonthCollectionContext } from '../utils/BaseCalendarMonthCollectionContext';
+import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 
 export function useBaseCalendarMonthCellWrapper(
   parameters: useBaseCalendarMonthCellWrapper.Parameters,
@@ -17,7 +18,6 @@ export function useBaseCalendarMonthCellWrapper(
   const baseMonthListOrGridContext = useBaseCalendarMonthCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
-  const now = useNow(baseRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -28,20 +28,8 @@ export function useBaseCalendarMonthCellWrapper(
   const isCurrent = React.useMemo(() => utils.isSameMonth(value, utils.date()), [utils, value]);
 
   const isInvalid = React.useMemo(() => {
-    const firstEnabledMonth = utils.startOfMonth(
-      baseRootContext.dateValidationProps.disablePast &&
-        utils.isAfter(now, baseRootContext.dateValidationProps.minDate)
-        ? now
-        : baseRootContext.dateValidationProps.minDate,
-    );
-
-    const lastEnabledMonth = utils.startOfMonth(
-      baseRootContext.dateValidationProps.disableFuture &&
-        utils.isBefore(now, baseRootContext.dateValidationProps.maxDate)
-        ? now
-        : baseRootContext.dateValidationProps.maxDate,
-    );
-
+    const firstEnabledMonth = getFirstEnabledMonth(utils, baseRootContext.dateValidationProps);
+    const lastEnabledMonth = getLastEnabledMonth(utils, baseRootContext.dateValidationProps);
     const monthToValidate = utils.startOfMonth(value);
 
     if (utils.isBefore(monthToValidate, firstEnabledMonth)) {
@@ -57,7 +45,7 @@ export function useBaseCalendarMonthCellWrapper(
     }
 
     return baseRootContext.dateValidationProps.shouldDisableMonth(monthToValidate);
-  }, [baseRootContext.dateValidationProps, value, now, utils]);
+  }, [baseRootContext.dateValidationProps, value, utils]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
@@ -90,10 +78,10 @@ export function useBaseCalendarMonthCellWrapper(
           maxDate: utils.isAfter(baseRootContext.dateValidationProps.maxDate, endOfMonth)
             ? endOfMonth
             : baseRootContext.dateValidationProps.maxDate,
-          disablePast: baseRootContext.dateValidationProps.disablePast,
-          disableFuture: baseRootContext.dateValidationProps.disableFuture,
           isDateDisabled: baseRootContext.isDateInvalid,
-          timezone: baseRootContext.timezone,
+          // TODO: Remove the timezone param from the findClosestEnabledDate method once we remove disableFuture and disablePast from the validation.
+          // We don't pass the correct value here because we already removed the disableFuture and disablePast from the validation props in the Base UI X components.
+          timezone: 'default',
         })
       : newCleanValue;
 

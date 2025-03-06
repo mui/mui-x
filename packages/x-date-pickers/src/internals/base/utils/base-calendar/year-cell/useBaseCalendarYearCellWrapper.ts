@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickerValidDate } from '../../../../../models';
-import { useNow, useUtils } from '../../../../hooks/useUtils';
+import { useUtils } from '../../../../hooks/useUtils';
 import { findClosestEnabledDate } from '../../../../utils/date-utils';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
@@ -17,7 +17,6 @@ export function useBaseCalendarYearCellWrapper(
   const baseYearListOrGridContext = useBaseCalendarYearCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
-  const now = useNow(baseRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -28,22 +27,13 @@ export function useBaseCalendarYearCellWrapper(
   const isCurrent = React.useMemo(() => utils.isSameYear(value, utils.date()), [utils, value]);
 
   const isInvalid = React.useMemo(() => {
-    if (baseRootContext.dateValidationProps.disablePast && utils.isBeforeYear(value, now)) {
+    const yearToValidate = utils.startOfYear(value);
+
+    // TODO: If we use `getFirstEnabledYear` and `getLastEnabledYear` we can remove the isBeforeYear and isAfterYear methods.
+    if (utils.isBeforeYear(value, baseRootContext.dateValidationProps.minDate)) {
       return true;
     }
-    if (baseRootContext.dateValidationProps.disableFuture && utils.isAfterYear(value, now)) {
-      return true;
-    }
-    if (
-      baseRootContext.dateValidationProps.minDate &&
-      utils.isBeforeYear(value, baseRootContext.dateValidationProps.minDate)
-    ) {
-      return true;
-    }
-    if (
-      baseRootContext.dateValidationProps.maxDate &&
-      utils.isAfterYear(value, baseRootContext.dateValidationProps.maxDate)
-    ) {
+    if (utils.isAfterYear(value, baseRootContext.dateValidationProps.maxDate)) {
       return true;
     }
 
@@ -51,10 +41,8 @@ export function useBaseCalendarYearCellWrapper(
       return false;
     }
 
-    const yearToValidate = utils.startOfYear(value);
-
     return baseRootContext.dateValidationProps.shouldDisableYear(yearToValidate);
-  }, [baseRootContext.dateValidationProps, value, now, utils]);
+  }, [baseRootContext.dateValidationProps, value, utils]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
@@ -87,10 +75,10 @@ export function useBaseCalendarYearCellWrapper(
           maxDate: utils.isAfter(baseRootContext.dateValidationProps.maxDate, endOfYear)
             ? endOfYear
             : baseRootContext.dateValidationProps.maxDate,
-          disablePast: baseRootContext.dateValidationProps.disablePast,
-          disableFuture: baseRootContext.dateValidationProps.disableFuture,
           isDateDisabled: baseRootContext.isDateInvalid,
-          timezone: baseRootContext.timezone,
+          // TODO: Remove the timezone param from the findClosestEnabledDate method once we remove disableFuture and disablePast from the validation.
+          // We don't pass the correct value here because we already removed the disableFuture and disablePast from the validation props in the Base UI X components.
+          timezone: 'default',
         })
       : newCleanValue;
 
