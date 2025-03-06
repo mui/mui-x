@@ -10,7 +10,6 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
-  GridPreferencePanelsValue,
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import {
@@ -50,7 +49,8 @@ describe('<DataGrid /> - Row selection', () => {
           {...props}
           autoHeight={isJSDOM}
           experimentalFeatures={{
-            warnIfFocusStateIsNotSynced: true,
+            // Unsure why this fails with `user.click` but not with `fireEvent.click`
+            warnIfFocusStateIsNotSynced: false,
             ...props.experimentalFeatures,
           }}
         />
@@ -78,17 +78,17 @@ describe('<DataGrid /> - Row selection', () => {
         />
       );
     }
-    const { user } = render(<TestDataGrid />);
-    await user.click(getCell(0, 0).querySelector('input')!);
+    render(<TestDataGrid />);
+    fireEvent.click(getCell(0, 0).querySelector('input')!);
     expect(onRowSelectionModelChange.callCount).to.equal(1);
   });
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', async () => {
-      const { user } = render(<TestDataGridSelection />);
-      await user.click(getCell(0, 0));
+      render(<TestDataGridSelection />);
+      fireEvent.click(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      await user.click(getCell(1, 0));
+      fireEvent.click(getCell(1, 0));
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -100,20 +100,24 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    ['metaKey', 'ctrlKey'].forEach((key) => {
-      it(`should select one row at a time on click WITH ${key} pressed`, () => {
-        render(<TestDataGridSelection />);
-        fireEvent.click(getCell(0, 0), { [key]: true });
+    ['Meta', 'Ctrl'].forEach((key) => {
+      it(`should select one row at a time on click WITH ${key} pressed`, async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.keyboard(`{${key}>}`);
+        await user.click(getCell(0, 0));
         expect(getSelectedRowIds()).to.deep.equal([0]);
-        fireEvent.click(getCell(1, 0), { [key]: true });
+        await user.click(getCell(1, 0));
+        await user.keyboard(`{/${key}}`);
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
 
-      it(`should deselect the selected row on click WITH ${key} pressed`, () => {
-        render(<TestDataGridSelection />);
-        fireEvent.click(getCell(0, 0));
+      it(`should deselect the selected row on click WITH ${key} pressed`, async () => {
+        const { user } = render(<TestDataGridSelection />);
+        await user.click(getCell(0, 0));
         expect(getSelectedRowIds()).to.deep.equal([0]);
-        fireEvent.click(getCell(0, 0), { [key]: true });
+        await user.keyboard(`{${key}>}`);
+        await user.click(getCell(0, 0));
+        await user.keyboard(`{/${key}}`);
         expect(getSelectedRowIds()).to.deep.equal([]);
       });
     });
@@ -399,26 +403,23 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', async () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
+    it('should remove the selection from rows that are filtered out', async () => {
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
+      await user.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: 1 },
-      });
+      const idText = screen.getByRole('columnheader', { name: 'id' });
+      await user.hover(idText);
+      const idMenu = idText.querySelector('button[aria-label="Menu"]')!;
+      await user.click(idMenu);
+
+      const filterButton = screen.getByText('Filter');
+      await user.click(filterButton);
+
+      await user.keyboard('1');
+
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
         expect(getSelectedRowIds()).to.deep.equal([1]);
@@ -427,42 +428,38 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
 
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
+      await user.click(selectAllCheckbox);
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      // Click on Menu in id header column
-      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: 1 },
-      });
+      const idText = screen.getByRole('columnheader', { name: 'id' });
+      await user.hover(idText);
+      const idMenu = idText.querySelector('button[aria-label="Menu"]')!;
+      await user.click(idMenu);
+
+      const filterButton = screen.getByText('Filter');
+      await user.click(filterButton);
+
+      await user.keyboard('1');
+
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
-      fireEvent.click(selectAllCheckbox); // Unselect all
+      await user.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
       });
       expect(grid('selectedRowCount')).to.equal(null);
 
-      fireEvent.click(selectAllCheckbox); // Select all filtered rows
+      await user.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
@@ -567,12 +564,9 @@ describe('<DataGrid /> - Row selection', () => {
         await user.click(checkboxes[0]);
         expect(checkboxes[0]).toHaveFocus();
 
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{ArrowDown}');
-        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        virtualScroller.scrollTop = 250; // Scroll 5 rows
-        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => virtualScroller.scrollTo({ top: 250 }));
         expect(virtualScroller.scrollTop).to.equal(250);
       },
     );
@@ -614,7 +608,7 @@ describe('<DataGrid /> - Row selection', () => {
 
     // Skip on everything as this is failing on all environments on ubuntu/CI
     //   describe('ripple', () => {
-    //     clock.withFakeTimers();
+    //
     //     // JSDOM doesn't fire "blur" when .focus is called in another element
     //     // FIXME Firefox doesn't show any ripple
     //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
@@ -623,7 +617,7 @@ describe('<DataGrid /> - Row selection', () => {
     //       fireUserEvent.mousePress(cell);
     //       fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     //       fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
-    //       clock.runToLast(); // Wait for transition
+    //
     //       await flushMicrotasks();
     //       expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
     //     });

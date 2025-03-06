@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
@@ -16,7 +16,7 @@ describe('<DateField /> - Editing', () => {
   describeAdapters(
     'value props (value, defaultValue, onChange)',
     DateField,
-    ({ adapter, renderWithProps, clock }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not render any value when no value and no default value are defined', () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
@@ -260,7 +260,7 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
       });
 
-      it('should not call the onChange callback before filling the last section when starting from a null value', () => {
+      it('should not call the onChange callback before filling the last section when starting from a null value', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
@@ -280,8 +280,9 @@ describe('<DateField /> - Editing', () => {
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
-        clock.runToLast();
-        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+        });
 
         view.unmount();
 
@@ -305,8 +306,9 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(1);
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        clock.runToLast();
-        expectFieldValueV6(input, 'DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV6(input, 'DD MMMM');
+        });
       });
     },
   );
@@ -2489,8 +2491,8 @@ describe('<DateField /> - Editing', () => {
       let originalUserAgent: string = '';
 
       beforeEach(() => {
-        originalUserAgent = global.navigator.userAgent;
-        Object.defineProperty(global.navigator, 'userAgent', {
+        originalUserAgent = globalThis.navigator.userAgent;
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           writable: true,
           value:
@@ -2499,7 +2501,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       afterEach(() => {
-        Object.defineProperty(global.navigator, 'userAgent', {
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           value: originalUserAgent,
         });
@@ -2559,7 +2561,7 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps, clock }) => {
+  describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps }) => {
     it('should be able to reset the value from the outside', () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
@@ -2610,8 +2612,6 @@ describe('<DateField /> - Editing', () => {
       act(() => {
         view.getSectionsContainer().blur();
       });
-
-      clock.runToLast();
 
       view.setProps({ value: adapter.date('2022-11-23') });
       view.setProps({ value: null });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   BuildFieldInteractionsResponse,
@@ -19,8 +19,6 @@ interface DescribeValueBaseOptions<
   values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
   emptyValue: TValue;
   defaultProps?: object;
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
 }
 
 export type DescribeValueOptions<

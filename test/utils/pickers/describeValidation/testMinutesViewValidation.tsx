@@ -12,7 +12,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
   ElementToTest,
   getOption,
 ) => {
-  const { componentFamily, views, render, clock, withDate, withTime, variant } = getOption();
+  const { componentFamily, views, render, withDate, withTime, variant } = getOption();
 
   describeSkipIf(
     !views.includes('minutes') || !variant || componentFamily !== 'picker' || variant === 'desktop',
@@ -31,7 +31,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12T08:15:00')}
-          shouldDisableTime={(date) =>
+          shouldDisableTime={(date: any) =>
             adapterToUse.isAfter(date, adapterToUse.date('2018-03-12T08:20:00'))
           }
         />,
@@ -59,7 +59,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
 
     it('should apply disablePast', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -93,7 +93,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: tomorrow });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');
@@ -104,7 +103,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
 
     it('should apply disableFuture', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -138,7 +137,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: yesterday });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');

@@ -10,11 +10,10 @@ import {
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeClock /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'clock'>(TimeClock, () => ({
     render,
-    clock,
     componentFamily: 'clock',
     values: [adapterToUse.date('2018-01-01T12:30:00'), adapterToUse.date('2018-01-01T13:35:00')],
     emptyValue: null,

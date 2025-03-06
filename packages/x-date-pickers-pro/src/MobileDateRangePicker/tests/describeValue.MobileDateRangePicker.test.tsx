@@ -13,14 +13,12 @@ import {
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
+  const { render } = createPickerRenderer({
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-range',
     variant: 'mobile',
@@ -73,7 +71,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       }
 
       return newValue;
@@ -83,7 +80,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
   // With single input field
   describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-range',
     variant: 'mobile',

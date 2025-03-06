@@ -10,15 +10,13 @@ import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRange
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateRangePicker /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
+  const { render } = createPickerRenderer({
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
   // With single input field
   describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-range',
     variant: 'desktop',

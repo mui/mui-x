@@ -7,7 +7,7 @@ import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
