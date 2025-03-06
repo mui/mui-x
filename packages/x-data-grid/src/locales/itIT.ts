@@ -8,6 +8,8 @@ const itITGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nessun record trovato.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',

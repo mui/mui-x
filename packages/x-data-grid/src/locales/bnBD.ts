@@ -8,6 +8,8 @@ const bnBDGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'কোনো ফলাফল পাওয়া যায়নি।',
   noColumnsOverlayLabel: 'কোনো কলাম নেই',
   noColumnsOverlayManageColumns: 'কলাম পরিচালনা করুন',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'ঘনত্ব',

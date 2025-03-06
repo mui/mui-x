@@ -8,6 +8,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',

@@ -28,6 +28,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Дані не знайдено.',
   noColumnsOverlayLabel: 'Немає стовпців',
   noColumnsOverlayManageColumns: 'Керування стовпцями',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',

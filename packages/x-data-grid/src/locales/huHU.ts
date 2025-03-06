@@ -8,6 +8,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nincs találat.',
   noColumnsOverlayLabel: 'Nincsenek oszlopok',
   noColumnsOverlayManageColumns: 'Oszlopok kezelése',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',

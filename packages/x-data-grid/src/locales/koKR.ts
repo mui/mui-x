@@ -8,6 +8,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: '결과값이 없습니다.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',
