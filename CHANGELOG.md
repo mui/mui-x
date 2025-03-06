@@ -66,7 +66,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.14`.
 
 From https://github.com/mui/mui-x/pull/16406
 
-- 🎁 The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks
+- 🎁 The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks.
 
 From https://github.com/mui/mui-x/pull/14804
 
