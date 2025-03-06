@@ -182,6 +182,7 @@ RadarDataProvider.propTypes = {
    */
   radar: PropTypes.shape({
     labelFormatter: PropTypes.func,
+    labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),

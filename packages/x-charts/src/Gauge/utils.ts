@@ -1,4 +1,4 @@
-import { deg2rad } from "../internals/angleConversion";
+import { deg2rad } from '../internals/angleConversion';
 
 function getPoint(angle: number): [number, number] {
   const radAngle = deg2rad(angle);

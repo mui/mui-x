@@ -15,6 +15,7 @@ function RadarMetricLabels() {
           key={i}
           x={x}
           y={y}
+          fontSize={14}
           fill={(theme.vars || theme).palette.text.primary}
           stroke="none"
           textAnchor={getDefaultTextAnchor(180 + angle)}
