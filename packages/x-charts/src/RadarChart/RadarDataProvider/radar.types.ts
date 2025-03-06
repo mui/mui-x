@@ -1,3 +1,5 @@
+import { ChartsRotationAxisProps } from '../../models/axis';
+
 export interface MetricConfig {
   /**
    * The name of the metric.
@@ -17,7 +19,7 @@ export interface MetricConfig {
 
 export type RadarLabelFormatterContext = { location: 'tick' | 'tooltip' };
 
-export interface RadarConfig {
+export interface RadarConfig extends Pick<ChartsRotationAxisProps, 'labelGap'> {
   /**
    * The metrics shown by radar.
    */

@@ -8,7 +8,7 @@ export function useRadarMetricData() {
     any,
     ChartsRotationAxisProps
   >;
-  const { scale: rotationScale, valueFormatter } = rotationAxis;
+  const { scale: rotationScale, valueFormatter, labelGap = 10 } = rotationAxis;
   const { radiusAxis } = useRadiusAxes();
   const drawingArea = useDrawingArea();
 
@@ -22,7 +22,7 @@ export function useRadarMetricData() {
     corners: metrics.map((metric, dataIndex) => {
       const radiusScale = radiusAxis[metric].scale;
 
-      const r = radiusScale.range()[1] + 10;
+      const r = radiusScale.range()[1] + labelGap;
       const angle = angles[dataIndex];
       return {
         x: cx + r * Math.sin(angle),

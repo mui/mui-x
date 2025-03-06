@@ -64,6 +64,7 @@ function RadarDataProvider(props: RadarDataProviderProps) {
         data: radar.metrics.map((metric) => (typeof metric === 'string' ? metric : metric.name)),
         startAngle: radar.startAngle,
         endAngle: radar.startAngle !== undefined ? radar.startAngle + 360 : undefined,
+        labelGap: radar.labelGap,
         valueFormatter: (name, { location }) =>
           radar.labelFormatter?.(name, { location: location as 'tick' | 'tooltip' }) ?? name,
       },
