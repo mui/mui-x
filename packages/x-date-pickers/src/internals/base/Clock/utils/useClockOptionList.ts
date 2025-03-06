@@ -36,6 +36,8 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
   const { scrollerRef } = useScrollableList({ focusOnMount });
   const optionsRef = React.useRef<(HTMLElement | null)[]>([]);
 
+  const valueOrReferenceDate = rootContext.value ?? rootContext.referenceDate;
+
   const { getFirstOption, getEndOfRange } = React.useMemo<{
     getFirstOption: (referenceTime: PickerValidDate) => PickerValidDate;
     getEndOfRange: (referenceTime: PickerValidDate) => PickerValidDate;
@@ -118,8 +120,8 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
   const isOptionInvalid = rootContext.isOptionInvalid;
   const items = React.useMemo(() => {
     const getDefaultItems = () => {
-      const fistItem = getFirstOption(rootContext.referenceDate);
-      const boundary = getEndOfRange(rootContext.referenceDate);
+      const fistItem = getFirstOption(valueOrReferenceDate);
+      const boundary = getEndOfRange(valueOrReferenceDate);
       let current = fistItem;
       const tempItems: PickerValidDate[] = [];
 
@@ -151,7 +153,7 @@ export function useClockOptionList(parameters: useClockOptionList.Parameters) {
     isOptionInvalid,
     precision,
     skipInvalidItems,
-    rootContext.referenceDate,
+    valueOrReferenceDate,
     rootContext.validationProps.minTime,
     rootContext.validationProps.maxTime,
   ]);

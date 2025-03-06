@@ -128,7 +128,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       validationProps,
       value,
       setValue,
-      referenceDate: value ?? referenceDate,
+      referenceDate,
       isOptionInvalid,
     }),
     [

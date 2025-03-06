@@ -32,7 +32,7 @@ export interface ClockRootContext {
    */
   setValue: (value: PickerValidDate, options: { section: ClockSection }) => void;
   /**
-   * The reference date used to generate the option's value.
+   * The reference date used to generate the option's value when no value is selected.
    */
   referenceDate: PickerValidDate;
   /**
