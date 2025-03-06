@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import {
   DefaultizedScatterSeriesType,
@@ -119,14 +120,24 @@ function Scatter(props: ScatterProps) {
     instance,
   ]);
 
+  const Marker = slots?.marker ?? ScatterMarker;
+  const markerProps = useSlotProps({
+    elementType: Marker,
+    externalSlotProps: slotProps?.marker,
+    additionalProps: {
+      seriesId: series.id,
+      size: series.markerSize,
+    },
+    ownerState: undefined,
+  });
+
   return (
     <g>
       {cleanData.map((dataPoint) => (
-        <ScatterMarker
+        <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
+          {...markerProps}
           dataIndex={dataPoint.dataIndex}
-          seriesId={series.id}
-          size={series.markerSize}
           color={dataPoint.color}
           isHighlighted={dataPoint.isHighlighted}
           isFaded={dataPoint.isFaded}
@@ -142,8 +153,6 @@ function Scatter(props: ScatterProps) {
               }))
           }
           {...dataPoint.interactionProps}
-          slots={slots}
-          slotProps={slotProps}
         />
       ))}
     </g>
