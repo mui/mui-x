@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🛠️ New and improved Toolbar component for the data grid
 - 🐞 Bugfixes
 
-Special thanks go out to the community members for their valuable contributions:
+Special thanks go out to the community member for their valuable contributions:
 @vadimka123.
 
 Following are all team members who have contributed to this release:
