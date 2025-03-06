@@ -7,12 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 6, 2025_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-- 🐞 bugfixes
+- 🐞 Bugfixes
 
-Following are all team members who have contributed to this release:
-@arminmeh, @cherniavskii, @michelengelen.
+Team members who have contributed to this release:
+@arminmeh, @cherniavskii, @LukasTy, @michelengelen.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -20,8 +20,8 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.27.3`
 
-- [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (@arminmeh) (#16834) @github-actions[bot]
-- [DataGrid] Fix scroll jump with dynamic row height (@cherniavskii) (#16801) @github-actions[bot]
+- [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (#16834) @arminmeh
+- [DataGrid] Fix scroll jump with dynamic row height (#16801) @cherniavskii
 
 #### `@mui/x-data-grid-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -35,7 +35,7 @@ Same changes as in `@mui/x-data-grid-pro@7.27.3`.
 
 #### `@mui/x-date-pickers@7.27.3`
 
-- [fields] Fix Fields aria relationship with `helperText` (@LukasTy) (#16828) @github-actions[bot]
+- [fields] Fix Fields aria relationship with `helperText` (#16828) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -61,7 +61,7 @@ Internal changes.
 
 Same changes as in `@mui/x-tree-view@7.27.3`.
 
-- [infra] Update contributor acknowledgment wording (@michelengelen) (#16753) @github-actions[bot]
+- [infra] Update contributor acknowledgment wording (#16753) @michelengelen
 
 ## 7.27.2
 
