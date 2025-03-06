@@ -36,14 +36,14 @@ export function defaultizeXAxis(
       id: `defaultized-x-axis-${index}`,
       // The fist axis is defaultized to the bottom/left
       ...(index === 0 ? ({ position: 'bottom' } as const) : {}),
-      height: defaultHeight,
       offset: offsets[position],
       ...axisConfig,
+      height: axisConfig.height ?? defaultHeight,
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += axisConfig.height ?? defaultHeight;
+      offsets[position] += sharedConfig.height;
     }
 
     // If `dataKey` is NOT provided
@@ -87,14 +87,14 @@ export function defaultizeYAxis(
       id: `defaultized-y-axis-${index}`,
       // The first axis is defaultized to the left
       ...(index === 0 ? ({ position: 'left' } as const) : {}),
-      width: defaultWidth,
       offset: offsets[position],
       ...axisConfig,
+      width: axisConfig.width ?? defaultWidth,
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += axisConfig.width ?? defaultWidth;
+      offsets[position] += sharedConfig.width;
     }
 
     // If `dataKey` is NOT provided
