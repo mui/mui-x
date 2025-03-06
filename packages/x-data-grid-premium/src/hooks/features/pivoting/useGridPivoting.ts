@@ -205,7 +205,7 @@ const getPivotedData = ({
 
       visibleColumns.forEach(({ field: colGroupField }, depth) => {
         const column = initialColumns.get(colGroupField);
-        const colValue = apiRef.current.getRowValue(row, column!) || '(No value)';
+        const colValue = apiRef.current.getRowValue(row, column!) ?? '(No value)';
         columnGroupPath.push(String(colValue));
         const groupId = columnGroupPath.join('-');
 
