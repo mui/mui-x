@@ -12,9 +12,10 @@ export default function GitHubExample() {
         p={2}
         sx={(theme) => ({
           overflowY: 'auto',
-          borderRight: `1px solid ${theme.palette.divider}`,
+          borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
           height: '100%',
-          minWidth: 'fit-content',
+          minWidth: { xs: '100%', md: 'fit-content' },
+          alignItems: 'center',
         })}
       >
         <GitHubTreeView selectedItem={selectedItem} setSelectedItem={setSelectedItem} />

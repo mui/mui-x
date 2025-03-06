@@ -10,7 +10,7 @@ export default function MainDemo() {
     'figma',
   );
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} pb={8}>
       <ExampleToggleGroup selected={selectedExample} onToggleChange={setSelectedExample} />
       <Paper component="div" variant="outlined" sx={{ mb: 8, height: 640, overflow: 'hidden' }}>
         {selectedExample === 'github' && <GitHubExample />}

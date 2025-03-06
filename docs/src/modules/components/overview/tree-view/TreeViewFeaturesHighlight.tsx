@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -60,13 +61,14 @@ export default function TreeViewFeaturesHighlight() {
           sx={{ maxWidth: { xs: '500px', md: '100%' } }}
         >
           {featuredItems.map(({ title, description, icon }, index) => (
-            <InfoCard
-              title={title}
-              description={description}
-              icon={icon}
-              key={index}
-              backgroundColor="subtle"
-            />
+            <Box sx={{ flexBasis: '33%' }} key={index}>
+              <InfoCard
+                title={title}
+                description={description}
+                icon={icon}
+                backgroundColor="subtle"
+              />
+            </Box>
           ))}
         </Stack>
       </Stack>
