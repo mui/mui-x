@@ -9,7 +9,7 @@ export interface MetricConfig {
    */
   min?: number;
   /**
-   * The maximal value of the domain.
+   * The maximum value of the domain.
    * If not provided, it gets computed to display the entire chart data.
    */
   max?: number;
@@ -24,7 +24,7 @@ export interface RadarConfig {
   metrics: string[] | MetricConfig[];
   /**
    * The default max value for radius axes.
-   * It will be override if `metrics` contains a `max` property.
+   * It will be overridden if `metrics` contains a `max` property.
    */
   max?: number;
   /**

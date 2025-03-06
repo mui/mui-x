@@ -2,8 +2,8 @@ import * as React from 'react';
 
 interface CommonRadarSeriesPlotProps {
   /**
-   * The id of the series To display.
-   * If undefined all series are display.
+   * The id of the series to display.
+   * If undefined all series are displayed.
    */
   seriesId?: string;
 }

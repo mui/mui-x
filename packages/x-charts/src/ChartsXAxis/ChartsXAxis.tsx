@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
@@ -19,6 +20,7 @@ import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useXAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
+import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
   const { classes, position } = ownerState;
@@ -166,6 +168,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
+  const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
@@ -179,6 +182,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const defaultTextAnchor = getDefaultTextAnchor(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+  const defaultDominantBaseline = getDefaultBaseline(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -186,12 +196,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: getDefaultTextAnchor(
-          (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
-        ),
-        dominantBaseline: getDefaultBaseline(
-          (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
-        ),
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,

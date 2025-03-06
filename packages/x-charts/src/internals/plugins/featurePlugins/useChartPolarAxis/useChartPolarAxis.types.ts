@@ -20,11 +20,11 @@ export type PolarAxisState = {
    */
   radiusAxis: DefaultizedAxisConfig<ChartsRadiusAxisProps>;
   /**
-   * The rotation-axes IDs sorted by order they got provided.
+   * The rotation-axes IDs sorted by order they were provided.
    */
   rotationAxisIds: AxisId[];
   /**
-   * The radius-axes IDs sorted by order they got provided.
+   * The radius-axes IDs sorted by order they were provided.
    */
   radiusAxisIds: AxisId[];
 };
