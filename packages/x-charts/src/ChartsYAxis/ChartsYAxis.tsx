@@ -5,6 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { ellipsize } from '../internals/ellipsize';
 import { useIsClient } from '../hooks/useIsClient';
 import { getStringSize } from '../internals/domUtils';
@@ -92,41 +93,6 @@ function shortenLabels(
   }
 
   return shortenedLabels;
-}
-
-function getDefaultTextAnchor(angle: number): ChartsTextStyle['textAnchor'] {
-  const adjustedAngle = clampAngle(angle);
-
-  if (adjustedAngle === 90 || adjustedAngle === 270) {
-    return 'middle';
-  }
-
-  if (adjustedAngle < 90) {
-    return 'end';
-  }
-
-  if (adjustedAngle < 270) {
-    return 'start';
-  }
-
-  return 'end';
-}
-
-function getDefaultBaseline(
-  angle: number,
-  position: 'left' | 'right' | 'none' | undefined,
-): ChartsTextStyle['dominantBaseline'] {
-  const adjustedAngle = clampAngle(angle);
-
-  if (adjustedAngle === 90 || adjustedAngle === 270) {
-    return position === 'left' ? 'auto' : 'hanging';
-  }
-
-  if (adjustedAngle > 270) {
-    return position === 'left' ? 'auto' : 'hanging';
-  }
-
-  return 'central';
 }
 
 function invertTextAnchor(
@@ -224,9 +190,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const defaultTextAnchor = getDefaultTextAnchor(tickLabelStyle?.angle ?? 0);
-  const shouldInvertTextAnchor =
-    (isRtl && position !== 'right') || (!isRtl && position === 'right');
+  const defaultTextAnchor = getDefaultTextAnchor(
+    (position === 'right' ? -90 : 90) - (tickLabelStyle?.angle ?? 0),
+  );
+  const defaultDominantBaseline = getDefaultBaseline(
+    (position === 'right' ? -90 : 90) - (tickLabelStyle?.angle ?? 0),
+  );
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -234,10 +204,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: tickFontSize,
-        textAnchor: shouldInvertTextAnchor
-          ? invertTextAnchor(defaultTextAnchor)
-          : defaultTextAnchor,
-        dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
