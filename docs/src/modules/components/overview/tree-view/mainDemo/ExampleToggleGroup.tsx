@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(0.5),
   padding: theme.spacing(0.5),
+
   [`& .${toggleButtonGroupClasses.grouped}`]: {
     border: 0,
     borderRadius: theme.shape.borderRadius,
@@ -40,12 +41,12 @@ export default function ExampleToggleGroup({ selected, onToggleChange }: Example
           }
         }}
       >
-        <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1, gap: 1 }}>
+        <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}>
           <img src="/static/x/overview/figma.svg" height={24} alt="figma logo" />
           {/* eslint-disable material-ui/no-hardcoded-labels */}
           Figma example
         </ToggleButton>
-        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1, gap: 1 }}>
+        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}>
           <img
             className="only-light-mode"
             src="/static/x/overview/github_dark.svg"

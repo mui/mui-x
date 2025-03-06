@@ -1,4 +1,6 @@
 import * as React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import FigmaTreeView from './FigmaTreeView';
 import FigmaCard from './FigmaCard';
@@ -6,6 +8,9 @@ import { IdType } from './items';
 
 export default function FigmaExample() {
   const [selectedItem, setSelectedItem] = React.useState<IdType | null>(null);
+  const docsTheme = useTheme();
+  const isMd = useMediaQuery(docsTheme.breakpoints.up('md'));
+
   return (
     <Stack sx={{ width: '100%', height: '100%' }} direction="row">
       <Stack
@@ -20,18 +25,19 @@ export default function FigmaExample() {
       >
         <FigmaTreeView selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
       </Stack>
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={(theme) => ({
-          flexGrow: 1,
-          backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
-          backgroundSize: '20px 20px',
-          display: { xs: 'none', md: 'flex' },
-        })}
-      >
-        <FigmaCard selectedItem={selectedItem} />
-      </Stack>
+      {isMd && (
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
+            backgroundSize: '20px 20px',
+          })}
+        >
+          <FigmaCard selectedItem={selectedItem} />
+        </Stack>
+      )}
     </Stack>
   );
 }

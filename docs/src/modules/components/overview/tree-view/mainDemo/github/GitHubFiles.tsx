@@ -105,7 +105,7 @@ export default function GitHubFiles({
       flexGrow={1}
       p={2}
       spacing={2.5}
-      sx={{ overflowY: 'auto', height: '100%', width: '100%', display: { xs: 'none', md: 'flex' } }}
+      sx={{ overflowY: 'auto', height: '100%', width: '100%' }}
     >
       {leafItemGroups.map((group, index) => (
         <Stack key={index} spacing={1}>
