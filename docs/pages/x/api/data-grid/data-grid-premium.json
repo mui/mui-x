@@ -682,6 +682,12 @@
   ],
   "slots": [
     {
+      "name": "emptyPivotOverlay",
+      "description": "Component rendered when pivot mode is enabled but no rows are defined.",
+      "default": "GridEmptyPivotOverlay",
+      "class": null
+    },
+    {
       "name": "headerFilterCell",
       "description": "Component responsible for showing menu adornment in Header filter row",
       "default": "GridHeaderFilterCell",

@@ -7,4 +7,10 @@ import { GridPremiumIconSlotsComponent } from './gridPremiumIconSlotsComponent';
  */
 export interface GridPremiumSlotsComponent
   extends GridProSlotsComponent,
-    GridPremiumIconSlotsComponent {}
+    GridPremiumIconSlotsComponent {
+  /**
+   * Component rendered when pivot mode is enabled but no rows are defined.
+   * @default GridEmptyPivotOverlay
+   */
+  emptyPivotOverlay: React.JSXElementConstructor<any>;
+}

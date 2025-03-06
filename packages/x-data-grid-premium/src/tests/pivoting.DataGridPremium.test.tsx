@@ -357,4 +357,44 @@ describe('<DataGridPremium /> - Pivoting', () => {
       'stock',
     ]);
   });
+
+  it('should render "empty pivot overlay" when pivot mode is enabled but no rows are defined', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [],
+              columns: [],
+              values: [],
+            },
+          },
+        }}
+      />,
+    );
+    expect(
+      screen.getByText('Add fields to rows, columns, and values to create a pivot table'),
+    ).not.to.equal(null);
+  });
+
+  it('should not render "empty pivot overlay" when pivot mode is enabled and there are rows', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [],
+            },
+          },
+        }}
+      />,
+    );
+    expect(
+      screen.queryByText('Add fields to rows, columns, and values to create a pivot table'),
+    ).to.equal(null);
+  });
 });

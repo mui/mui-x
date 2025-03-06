@@ -19,6 +19,8 @@ export interface GridLocaleText {
   noResultsOverlayLabel: string;
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
+  emptyPivotOverlayLabel: string;
+  emptyPivotOverlayPivotSettings: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;

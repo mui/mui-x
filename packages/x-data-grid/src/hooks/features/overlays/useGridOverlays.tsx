@@ -28,16 +28,22 @@ export const useGridOverlays = () => {
   const showNoRowsOverlay = !loading && noRows;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
   const showNoColumnsOverlay = !loading && visibleColumns.length === 0;
+  const showEmptyPivotOverlay =
+    showNoRowsOverlay && (rootProps.experimentalFeatures as any)?.pivoting;
 
-  let overlayType: GridOverlayType = null;
+  let overlayType: GridOverlayType | 'emptyPivotOverlay' = null;
   let loadingOverlayVariant: GridLoadingOverlayVariant | null = null;
+
+  if (showNoRowsOverlay) {
+    overlayType = 'noRowsOverlay';
+  }
 
   if (showNoColumnsOverlay) {
     overlayType = 'noColumnsOverlay';
   }
 
-  if (showNoRowsOverlay) {
-    overlayType = 'noRowsOverlay';
+  if (showEmptyPivotOverlay) {
+    overlayType = 'emptyPivotOverlay';
   }
 
   if (showNoResultsOverlay) {
@@ -51,14 +57,17 @@ export const useGridOverlays = () => {
       (noRows ? 'skeleton' : 'linear-progress');
   }
 
-  const overlaysProps = { overlayType, loadingOverlayVariant };
+  const overlaysProps = {
+    overlayType: overlayType as NonNullable<GridOverlayType>,
+    loadingOverlayVariant,
+  };
 
   const getOverlay = () => {
     if (!overlayType) {
       return null;
     }
-    const Overlay = rootProps.slots?.[overlayType];
-    const overlayProps = rootProps.slotProps?.[overlayType];
+    const Overlay = rootProps.slots?.[overlayType as NonNullable<GridOverlayType>];
+    const overlayProps = rootProps.slotProps?.[overlayType as NonNullable<GridOverlayType>];
     return (
       <GridOverlayWrapper {...overlaysProps}>
         <Overlay {...overlayProps} />

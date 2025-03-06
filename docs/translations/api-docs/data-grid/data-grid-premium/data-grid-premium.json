@@ -1349,6 +1349,7 @@
     "detailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "detailPanels": "Component responsible for rendering the detail panels.",
+    "emptyPivotOverlay": "Component rendered when pivot mode is enabled but no rows are defined.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
     "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",

@@ -100,7 +100,15 @@ In the following demo, an illustration is added on top of the default "No result
 
 {{"demo": "NoResultsOverlayCustom.js", "bg": "inline"}}
 
-## API
+## Empty pivot overlay
+
+The empty pivot overlay is displayed when pivot mode is enabled but fields have been added to the rows section.
+
+{{"demo": "EmptyPivotOverlay.js", "bg": "inline"}}
+
+### Custom component
+
+If you want to customize the empty pivot overlay, a component can be passed to the `emptyPivotOverlay` slot and rendered in place.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)

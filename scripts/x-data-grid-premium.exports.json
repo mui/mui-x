@@ -317,6 +317,7 @@
   { "name": "gridEditRowsStateSelector", "kind": "Variable" },
   { "name": "GridEditSingleSelectCell", "kind": "Function" },
   { "name": "GridEditSingleSelectCellProps", "kind": "Interface" },
+  { "name": "GridEmptyPivotOverlay", "kind": "Variable" },
   { "name": "GridEventListener", "kind": "TypeAlias" },
   { "name": "GridEventLookup", "kind": "Interface" },
   { "name": "GridEventPublisher", "kind": "TypeAlias" },

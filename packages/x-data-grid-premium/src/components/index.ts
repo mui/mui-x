@@ -4,3 +4,4 @@ export * from './GridColumnMenuAggregationItem';
 export * from './promptControl';
 export { GridColumnMenuGroupingItem } from './GridPremiumColumnMenu';
 export * from './export';
+export * from './GridEmptyPivotOverlay';
