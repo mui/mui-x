@@ -1,6 +1,7 @@
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadiusAxes, useRotationAxis } from '../../hooks/useAxis';
 import { ChartsRotationAxisProps, PolarAxisDefaultized } from '../../models/axis';
+import { rad2deg } from '../../internals/angleConversion';
 
 export function useRadarMetricData() {
   const rotationAxis = useRotationAxis() as PolarAxisDefaultized<
@@ -27,7 +28,7 @@ export function useRadarMetricData() {
       return {
         x: cx + r * Math.sin(angle),
         y: cy - r * Math.cos(angle),
-        angle: (angle * 180) / Math.PI,
+        angle: rad2deg(angle),
         label: valueFormatter?.(metric, { location: 'tick', scale: rotationScale }) ?? metric,
       };
     }),
