@@ -167,6 +167,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange: handleChange,
+        defaultValue: values[0],
       });
       v7Response.selectSection(undefined);
       fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });

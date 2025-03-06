@@ -241,6 +241,9 @@ Axes rendering can be further customized. Below is an interactive demonstration 
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
+When not set, the default values for the properties `textAnchor` and `dominantBaseline` depend on the value of the `angle` property.
+You can test below how the value of `angle` influences them.
+
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition

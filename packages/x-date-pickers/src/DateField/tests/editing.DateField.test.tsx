@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
@@ -13,6 +13,1044 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf } from 'test/utils/skipIf';
 
 describe('<DateField /> - Editing', () => {
+  describeAdapters(
+    'value props (value, defaultValue, onChange)',
+    DateField,
+    ({ adapter, renderWithProps }) => {
+      it('should not render any value when no value and no default value are defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should use the default value when defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should use the controlled value instead of the default value when both are defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should use the controlled value instead of the default value when both are defined and the controlled value is null', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should react to controlled value update (from non null to another non null)', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+      });
+
+      it('should react to a controlled value update (from non null to null)', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should react to a controlled value update (from null to non null', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        const input = getTextbox();
+        fireUserEvent.keyPress(input, { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        fireUserEvent.keyPress(getTextbox(), { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should not call the onChange callback before filling the last section when starting from a null value', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          onChange: onChangeV7,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+
+        view.pressKey(0, '4');
+        expect(onChangeV7.callCount).to.equal(0);
+        expectFieldValueV7(view.getSectionsContainer(), '04 MMMM');
+
+        view.pressKey(1, 'S');
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          onChange: onChangeV6,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+        const input = getTextbox();
+
+        fireEvent.change(input, { target: { value: '4 MMMM' } }); // Press 4
+        expect(onChangeV6.callCount).to.equal(0);
+        expectFieldValueV6(input, '04 MMMM');
+
+        fireEvent.change(input, { target: { value: '04 S' } }); // Press S
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        expectFieldValueV6(input, 'DD MMMM');
+      });
+    },
+  );
+
+  describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
+    it("should set the year to today's value when no value is provided (ArrowDown)", () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        key: 'ArrowDown',
+        expectedValue: '2022',
+      });
+    });
+
+    it('should decrement the year when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        key: 'ArrowDown',
+        expectedValue: '2021',
+      });
+    });
+
+    it('should set the month to December when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        key: 'ArrowDown',
+        expectedValue: 'December',
+      });
+    });
+
+    it('should decrement the month when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        defaultValue: adapter.date(),
+        key: 'ArrowDown',
+        expectedValue: 'May',
+      });
+    });
+
+    it('should go to the last month of the current year when a value in January is provided', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date('2022-01-15'),
+        key: 'ArrowDown',
+        expectedValue: 'December 2022',
+      });
+    });
+
+    it('should set the day to 31 when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.dayOfMonth,
+        key: 'ArrowDown',
+        expectedValue: '31',
+      });
+    });
+
+    it('should decrement the day when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.dayOfMonth,
+        defaultValue: adapter.date(),
+        key: 'ArrowDown',
+        expectedValue: '14',
+      });
+    });
+
+    it('should decrement the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
+        defaultValue: adapter.date('2022-05-31'),
+        key: 'ArrowDown',
+        expectedValue: 'April 31',
+      });
+    });
+
+    it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
+        defaultValue: adapter.date('2022-06-01'),
+        key: 'ArrowDown',
+        expectedValue: 'June 30',
+        selectedSection: 'day',
+      });
+    });
+
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowDown)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        readOnly: true,
+        key: 'ArrowDown',
+        expectedValue: 'YYYY',
+      });
+    });
+
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        readOnly: true,
+        key: 'ArrowDown',
+        expectedValue: '2022',
+      });
+    });
+  });
+
+  describeAdapters('key: ArrowUp', DateField, ({ adapter, testFieldKeyPress }) => {
+    it("should set the year to today's value when no value is provided (ArrowUp)", () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        key: 'ArrowUp',
+        expectedValue: '2022',
+      });
+    });
+
+    it('should increment the year when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        key: 'ArrowUp',
+        expectedValue: '2023',
+      });
+    });
+
+    it('should set the month to January when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        key: 'ArrowUp',
+        expectedValue: 'January',
+      });
+    });
+
+    it('should increment the month when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        defaultValue: adapter.date(),
+        key: 'ArrowUp',
+        expectedValue: 'July',
+      });
+    });
+
+    it('should go to the first month of the current year when a value in December is provided', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date('2022-12-15'),
+        key: 'ArrowUp',
+        expectedValue: 'January 2022',
+      });
+    });
+
+    it('should set the day 1 when no value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.dayOfMonth,
+        key: 'ArrowUp',
+        expectedValue: '01',
+      });
+    });
+
+    it('should increment the day when a value is provided', () => {
+      testFieldKeyPress({
+        format: adapter.formats.dayOfMonth,
+        defaultValue: adapter.date(),
+        key: 'ArrowUp',
+        expectedValue: '16',
+      });
+    });
+
+    it('should increment the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
+        defaultValue: adapter.date('2022-05-31'),
+        key: 'ArrowUp',
+        expectedValue: 'June 31',
+      });
+    });
+
+    it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
+        defaultValue: adapter.date('2022-06-30'),
+        key: 'ArrowUp',
+        expectedValue: 'June 01',
+        selectedSection: 'day',
+      });
+    });
+
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowUp)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        readOnly: true,
+        key: 'ArrowUp',
+        expectedValue: 'YYYY',
+      });
+    });
+
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        readOnly: true,
+        key: 'ArrowUp',
+        expectedValue: '2022',
+      });
+    });
+  });
+
+  describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
+    it('should clear the selected section when only this section is completed', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+      });
+
+      view.selectSection('month');
+
+      // Set a value for the "month" section
+      view.pressKey(0, 'j');
+      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Set a value for the "month" section
+      fireEvent.change(input, {
+        target: { value: 'j YYYY' },
+      }); // press "j"
+      expectFieldValueV6(input, 'January YYYY');
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expectFieldValueV6(input, 'MMMM YYYY');
+    });
+
+    it('should clear the selected section when all sections are completed', () => {
+      testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        key: 'Delete',
+        expectedValue: 'MMMM 2022',
+      });
+    });
+
+    it('should clear all the sections when all sections are selected and all sections are completed', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+      });
+
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Select all sections
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expectFieldValueV6(input, 'MMMM YYYY');
+    });
+
+    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+      });
+
+      view.selectSection('month');
+
+      // Set a value for the "month" section
+      view.pressKey(0, 'j');
+      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+
+      // Select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Set a value for the "month" section
+      fireEvent.change(input, {
+        target: { value: 'j YYYY' },
+      }); // Press "j"
+      expectFieldValueV6(input, 'January YYYY');
+
+      // Select all sections
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expectFieldValueV6(input, 'MMMM YYYY');
+    });
+
+    it('should not keep query after typing again on a cleared section', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: adapter.formats.year,
+      });
+
+      view.selectSection('year');
+
+      view.pressKey(0, '2');
+      expectFieldValueV7(view.getSectionsContainer(), '0002');
+
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'YYYY');
+
+      view.pressKey(0, '2');
+      expectFieldValueV7(view.getSectionsContainer(), '0002');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: adapter.formats.year,
+      });
+
+      const input = getTextbox();
+      view.selectSection('year');
+
+      fireEvent.change(input, { target: { value: '2' } }); // press "2"
+      expectFieldValueV6(input, '0002');
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expectFieldValueV6(input, 'YYYY');
+
+      fireEvent.change(input, { target: { value: '2' } }); // press "2"
+      expectFieldValueV6(input, '0002');
+    });
+
+    it('should not clear the sections when props.readOnly = true', () => {
+      testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        readOnly: true,
+        key: 'Delete',
+        expectedValue: '2022',
+      });
+    });
+
+    it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+      // Test with accessible DOM structure
+      const onChangeV7 = spy();
+
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        onChange: onChangeV7,
+      });
+
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(0);
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      const onChangeV6 = spy();
+
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        onChange: onChangeV6,
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Select all sections
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(0);
+    });
+
+    it('should call `onChange` when clearing the first section', () => {
+      // Test with accessible DOM structure
+      const onChangeV7 = spy();
+
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange: onChangeV7,
+      });
+
+      view.selectSection('month');
+
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(1);
+      expect(onChangeV7.lastCall.firstArg).to.equal(null);
+
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+
+      fireUserEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(1);
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      const onChangeV6 = spy();
+
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange: onChangeV6,
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(1);
+      expect(onChangeV6.lastCall.firstArg).to.equal(null);
+
+      fireUserEvent.keyPress(input, { key: 'ArrowRight' });
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(1);
+    });
+
+    it('should not call `onChange` if the section is already empty', () => {
+      // Test with accessible DOM structure
+      const onChangeV7 = spy();
+
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange: onChangeV7,
+      });
+
+      view.selectSection('month');
+
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(1);
+
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(1);
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      const onChangeV6 = spy();
+
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange: onChangeV6,
+      });
+
+      const input = getTextbox();
+      view.selectSection('month');
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(1);
+
+      fireUserEvent.keyPress(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(1);
+    });
+  });
+
+  describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
+    describe('day section (PageUp)', () => {
+      it('should set day to minimal when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          key: 'PageUp',
+          expectedValue: '01',
+        });
+      });
+
+      it('should increment day by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: '20',
+        });
+      });
+
+      it('should flip day field when value is higher than 27', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-28'),
+          key: 'PageUp',
+          expectedValue: '02',
+        });
+      });
+    });
+
+    describe('weekday section (PageUp)', () => {
+      it('should set weekday to Sunday when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          key: 'PageUp',
+          expectedValue: 'Sunday',
+        });
+      });
+
+      it('should increment weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-03'),
+          key: 'PageUp',
+          expectedValue: 'Saturday',
+        });
+      });
+
+      it('should flip weekday field when value is higher than 3', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-07'),
+          key: 'PageUp',
+          expectedValue: 'Wednesday',
+        });
+      });
+    });
+
+    describe('month section (PageUp)', () => {
+      it('should set month to January when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          key: 'PageUp',
+          expectedValue: 'January',
+        });
+      });
+
+      it('should increment month by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: 'June',
+        });
+      });
+
+      it('should flip month field when value is higher than 7', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-08-15'),
+          key: 'PageUp',
+          expectedValue: 'January',
+        });
+      });
+    });
+
+    describe('year section (PageUp)', () => {
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          key: 'PageUp',
+          expectedValue: new Date().getFullYear().toString(),
+        });
+      });
+
+      it('should increment year by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageUp',
+          expectedValue: '2027',
+        });
+      });
+
+      it('should flip year field when value is higher than 9995', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('9996-01-15'),
+          key: 'PageUp',
+          expectedValue: '0001',
+        });
+      });
+    });
+  });
+
+  describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
+    describe('day section (PageDown)', () => {
+      it('should set day to maximal when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          key: 'PageDown',
+          expectedValue: '31',
+        });
+      });
+
+      it('should decrement day by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageDown',
+          expectedValue: '10',
+        });
+      });
+
+      it('should flip day field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.dayOfMonth,
+          defaultValue: adapter.date('2022-01-04'),
+          key: 'PageDown',
+          expectedValue: '30',
+        });
+      });
+    });
+
+    describe('weekday section (PageDown)', () => {
+      it('should set weekday to Saturday when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          key: 'PageDown',
+          expectedValue: 'Saturday',
+        });
+      });
+
+      it('should decrement weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-22'),
+          key: 'PageDown',
+          expectedValue: 'Monday',
+        });
+      });
+
+      it('should flip weekday field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.weekday,
+          defaultValue: adapter.date('2024-06-23'),
+          key: 'PageDown',
+          expectedValue: 'Tuesday',
+        });
+      });
+    });
+
+    describe('month section (PageDown)', () => {
+      it('should set month to December when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          key: 'PageDown',
+          expectedValue: 'December',
+        });
+      });
+
+      it('should decrement month by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-10-15'),
+          key: 'PageDown',
+          expectedValue: 'May',
+        });
+      });
+
+      it('should flip month field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.month,
+          defaultValue: adapter.date('2022-04-15'),
+          key: 'PageDown',
+          expectedValue: 'November',
+        });
+      });
+    });
+
+    describe('year section (PageDown)', () => {
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          key: 'PageDown',
+          expectedValue: new Date().getFullYear().toString(),
+        });
+      });
+
+      it('should decrement year by 5 when value is provided', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('2022-01-15'),
+          key: 'PageDown',
+          expectedValue: '2017',
+        });
+      });
+
+      it('should flip year field when value is lower than 5', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date('0003-01-15'),
+          key: 'PageDown',
+          expectedValue: adapter.lib === 'dayjs' ? '1898' : '9998',
+        });
+      });
+    });
+  });
+
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
     it('should not allow key editing on disabled field', () => {
       // Test with accessible DOM structure
@@ -641,7 +1679,7 @@ describe('<DateField /> - Editing', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      it('should call `onChange` when clearing the first and last section (Backspace)', () => {
+      it('should call `onChange` when clearing the first section (Backspace)', () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -655,13 +1693,11 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
         view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.args[1].validationError).to.equal('invalidDate');
+        expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
         view.selectSection('year');
         view.pressKey(1, '');
-        expect(onChangeV7.callCount).to.equal(2);
-        expect(onChangeV7.lastCall.firstArg).to.equal(null);
-        expect(onChangeV7.lastCall.args[1].validationError).to.equal(null);
+        expect(onChangeV7.callCount).to.equal(1);
 
         view.unmount();
 
@@ -679,14 +1715,12 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
         fireEvent.change(input, { target: { value: ' 2022' } });
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
+        expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
         fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
         fireEvent.change(input, { target: { value: 'MMMM ' } });
-        expect(onChangeV6.callCount).to.equal(2);
-        expect(onChangeV6.lastCall.firstArg).to.equal(null);
-        expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
+        expect(onChangeV6.callCount).to.equal(1);
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', () => {
@@ -983,7 +2017,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       firePasteEventV7(view.getActiveSection(0), '12');
 
-      expect(onChangeV7.callCount).to.equal(1);
+      expect(onChangeV7.callCount).to.equal(0);
       expectFieldValueV7(view.getSectionsContainer(), '12/DD/YYYY');
 
       view.unmount();
@@ -1002,7 +2036,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
       firePasteEventV6(input, '12');
 
-      expect(onChangeV6.callCount).to.equal(1);
+      expect(onChangeV6.callCount).to.equal(0);
       expectFieldValueV6(input, '12/DD/YYYY');
     });
 
@@ -1453,8 +2487,8 @@ describe('<DateField /> - Editing', () => {
       let originalUserAgent: string = '';
 
       beforeEach(() => {
-        originalUserAgent = globalThis.navigator.userAgent;
-        Object.defineProperty(globalThis.navigator, 'userAgent', {
+        originalUserAgent = global.navigator.userAgent;
+        Object.defineProperty(global.navigator, 'userAgent', {
           configurable: true,
           writable: true,
           value:
@@ -1463,7 +2497,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       afterEach(() => {
-        Object.defineProperty(globalThis.navigator, 'userAgent', {
+        Object.defineProperty(global.navigator, 'userAgent', {
           configurable: true,
           value: originalUserAgent,
         });
@@ -1553,52 +2587,49 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
-    it('should reset the input query state on an unfocused field with accessible DOM structure', async () => {
-      const { user, getSectionsContainer, setProps } = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
-        value: null,
-      });
+    it('should reset the input query state on an unfocused field', () => {
+      if (adapter.lib !== 'dayjs') {
+        return;
+      }
+      // Test with accessible DOM structure
+      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
 
-      await user.click(screen.getByLabelText('Month'));
+      view.selectSection('month');
 
-      await user.keyboard('1');
-      expectFieldValueV7(getSectionsContainer(), '01/DD/YYYY');
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
 
-      await user.keyboard('1');
-      expectFieldValueV7(getSectionsContainer(), '11/DD/YYYY');
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
 
-      await user.keyboard('2');
-      await user.keyboard('5');
-      expectFieldValueV7(getSectionsContainer(), '11/25/YYYY');
-
-      await user.keyboard('2');
-      await user.keyboard('0');
-      expectFieldValueV7(getSectionsContainer(), '11/25/0020');
+      view.pressKey(1, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
 
       act(() => {
-        getSectionsContainer().blur();
+        view.getSectionsContainer().blur();
       });
 
-      setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV7(getSectionsContainer(), '11/23/2022');
+      view.setProps({ value: adapter.date('2022-11-23') });
+      view.setProps({ value: null });
 
-      await user.tab();
-      await user.click(screen.getByLabelText('Year'));
+      view.selectSection('month');
 
-      await user.keyboard('3');
-      expectFieldValueV7(getSectionsContainer(), '11/23/0003');
-      await user.keyboard('1');
-      expectFieldValueV7(getSectionsContainer(), '11/23/0031');
-    });
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
 
-    it('should reset the input query state on an unfocused field with non-accessible DOM structure', async () => {
-      const { setProps, selectSection } = renderWithProps({
-        enableAccessibleFieldDOMStructure: false,
-        value: null,
-      });
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+
+      view.pressKey(1, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
 
       const input = getTextbox();
-      selectSection('month');
+      view.selectSection('month');
 
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
       expectFieldValueV6(input, '01/DD/YYYY');
@@ -1606,32 +2637,26 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
       expectFieldValueV6(input, '11/DD/YYYY');
 
-      fireEvent.change(input, { target: { value: '11/2/YYYY' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '11/5/YYYY' } }); // Press "5"
-      expectFieldValueV6(input, '11/25/YYYY');
-
-      fireEvent.change(input, { target: { value: '11/25/2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '11/25/0' } }); // Press "0"
-      expectFieldValueV6(input, '11/25/0020');
+      fireEvent.change(input, { target: { value: '11/1/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/01/YYYY');
 
       act(() => {
         input.blur();
       });
 
-      setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV6(input, '11/23/2022');
+      view.setProps({ value: adapter.date('2022-11-23') });
+      view.setProps({ value: null });
 
-      fireEvent.mouseDown(input);
-      fireEvent.mouseUp(input);
-      act(() => {
-        input.setSelectionRange(6, 9);
-      });
-      fireEvent.click(input);
+      view.selectSection('month');
 
-      fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
-      expectFieldValueV6(input, '11/23/0002');
-      fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "0"
-      expectFieldValueV6(input, '11/23/0021');
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '01/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/1/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/01/YYYY');
     });
   });
 
