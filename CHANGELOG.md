@@ -41,25 +41,7 @@ Same changes as in `@mui/x-data-grid-pro@7.27.3`.
 
 Same changes as in `@mui/x-date-pickers@7.27.3`.
 
-### Charts
-
-#### `@mui/x-charts@7.27.3`
-
-Internal changes.
-
-#### `@mui/x-charts-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@7.27.3`.
-
-### Tree View
-
-#### `@mui/x-tree-view@7.27.3`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@7.27.3`.
+### Core
 
 - [infra] Update contributor acknowledgment wording (#16753) @michelengelen
 
