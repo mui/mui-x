@@ -36,8 +36,8 @@ export interface RadarConfig extends Pick<ChartsRotationAxisProps, 'labelGap'> {
   startAngle?: number;
   /**
    * Format metric names according to their placement.
-   * @param {string} name The matric name.
-   * @param {RadarLabelFormatterContext} context Indicate where the label will be used.
+   * @param {string} name The metric name.
+   * @param {RadarLabelFormatterContext} context Indicates where the label will be used.
    * @returns {string} The label to display.
    */
   labelFormatter?: (name: string, context: RadarLabelFormatterContext) => string;
