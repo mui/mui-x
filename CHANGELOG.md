@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.0.0-beta1
+## 8.0.0-alpha14
 
 _Mar 6, 2025_
 
@@ -32,7 +32,7 @@ From https://github.com/mui/mui-x/pull/16814
 - The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
 - The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
 
-#### `@mui/x-data-grid@8.0.0-beta1`
+#### `@mui/x-data-grid@8.0.0-alpha14`
 
 - [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (#16829) @arminmeh
 - [DataGrid] Fix scroll jump with dynamic row height (#16763) @cherniavskii
@@ -40,26 +40,26 @@ From https://github.com/mui/mui-x/pull/16814
 - [DataGrid] Use new toolbar by default (#16814) @KenanYusuf
 - [DataGrid] remove the quick filtering on a given column (#16738) @vadimka123
 
-#### `@mui/x-data-grid-pro@8.0.0-beta1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.0.0-alpha14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.0.0-beta1`.
+Same changes as in `@mui/x-data-grid@8.0.0-alpha14`.
 
-#### `@mui/x-data-grid-premium@8.0.0-beta1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.0.0-alpha14` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.0.0-beta1`.
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha14`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.0.0-beta1`
+#### `@mui/x-date-pickers@8.0.0-alpha14`
 
 - [fields] Always use `props.value` as the source of truth when defined (#15875) @flaviendelangle
 - [fields] Fix Fields aria relationship with `helperText` (#16821) @LukasTy
 - [pickers] Add `TValidationProps` generic to the `PickerManager` interface (#16832) @flaviendelangle
 - [pickers] Fix typo in JSDoc (#16831) @flaviendelangle
 
-#### `@mui/x-date-pickers-pro@8.0.0-beta1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.0.0-alpha14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.0.0-beta1`.
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha14`.
 
 ### Charts
 
@@ -72,7 +72,7 @@ From https://github.com/mui/mui-x/pull/14804
 - 🚀📊 New Pro Chart: It is now possible to create `Funnel` charts—perfect for visualizing conversions, sales pipelines and more!
   <img width="418" alt="Screenshot 2025-01-31 at 12 22 31" src="https://github.com/user-attachments/assets/8cd26821-5f11-46bf-a9bb-34d212880a47" />
 
-#### `@mui/x-charts@8.0.0-beta1`
+#### `@mui/x-charts@8.0.0-alpha14`
 
 - [charts] Fix `undefined` behaving differently from missing value for axis size (#16844) @bernardobelchior
 - [charts] Fix x-axis text anchor default when language is RTL (#16836) @bernardobelchior
@@ -84,19 +84,19 @@ From https://github.com/mui/mui-x/pull/14804
 - [charts] Warn if axes data don't have enough elements (#16830) @alexfauquette
 - [charts] XAxis: Add defaults for `textAnchor` and `dominantBaseline` based on `angle` (#16817) @bernardobelchior
 
-#### `@mui/x-charts-pro@8.0.0-beta1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.0.0-alpha14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.0.0-beta1`.
+Same changes as in `@mui/x-charts@8.0.0-alpha14`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.0.0-beta1`
+#### `@mui/x-tree-view@8.0.0-alpha14`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.0.0-beta1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.0.0-alpha14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.0.0-beta1`.
+Same changes as in `@mui/x-tree-view@8.0.0-alpha14`.
 
 ### Docs
 
