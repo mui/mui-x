@@ -93,7 +93,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.14`.
 
 #### `@mui/x-tree-view@8.0.0-alpha.14`
 
-Internal changes.
+- [TreeView] Clean the expansion and selection API methods (#16795) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -103,6 +103,9 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.14`.
 
 - [docs] Fix padding package install on mobile (#16794) @oliviertassinari
 - [docs] Typo fixes (#16835) @alexfauquette
+
+### Core
+
 - [code-infra] Fix console warning in telemetry package (#16816) @JCQuintas
 - [code-infra] Split date-picker test files (#16825) @JCQuintas
 - [infra] Replace PR label check workflow with reusable version (#16762) @michelengelen
