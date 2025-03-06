@@ -11,7 +11,8 @@ _Mar 6, 2025_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Added Radar and Funnel charts
+- 🚀📊 New Pro Chart: It is now possible to create Funnel charts—perfect for visualizing conversions, sales pipelines and more!
+  <img width="418" alt="Screenshot 2025-01-31 at 12 22 31" src="https://github.com/user-attachments/assets/8cd26821-5f11-46bf-a9bb-34d212880a47" />
 - 🛠️ New and improved Toolbar component for the data grid
 - 🐞 Bugfixes
 
