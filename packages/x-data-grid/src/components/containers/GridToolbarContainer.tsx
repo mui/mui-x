@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
@@ -34,8 +34,7 @@ const GridToolbarContainerRoot = styled('div', {
   alignItems: 'center',
   flexWrap: 'wrap',
   gap: vars.spacing(1),
-  padding: vars.spacing(0.5),
-  borderBottom: `1px solid ${vars.colors.border.base}`,
+  padding: vars.spacing(0.5, 0.5, 0),
 });
 
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
