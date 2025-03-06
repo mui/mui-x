@@ -1,66 +1,44 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartProps } from '@mui/x-charts/BarChart';
 
 const defaultXAxis = {
-  id: 'angle0',
   scaleType: 'band',
   dataKey: 'code',
-  position: 'bottom',
-  zoom: true,
   height: 80,
   valueFormatter: (value: any) =>
     usAirportPassengers.find((item) => item.code === value)!.fullName,
   label: '0deg Axis Title',
 } as const;
 
+const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+
+type AxisPosition = NonNullable<BarChartProps['xAxis']>[number]['position'];
+
+const xAxes = degrees
+  .map((angle) => ({
+    ...defaultXAxis,
+    position: 'bottom' as AxisPosition,
+    id: `angle${angle}`,
+    label: `${angle}deg Axis Title`,
+    tickLabelStyle: { angle },
+  }))
+  .concat(
+    degrees.map((angle) => ({
+      ...defaultXAxis,
+      id: `top-angle${angle}`,
+      label: `${angle}deg Axis Title`,
+      position: 'top',
+      tickLabelStyle: { angle },
+    })),
+  ) satisfies BarChartProps['xAxis'];
+
 export default function XAxisTickLabelOverflow() {
   return (
     <BarChartPro
-      xAxis={[
-        {
-          ...defaultXAxis,
-          id: 'angle-90',
-          label: '-90deg Axis Title',
-          tickLabelStyle: {
-            angle: -90,
-            textAnchor: 'end',
-            dominantBaseline: 'central',
-          },
-        },
-
-        {
-          ...defaultXAxis,
-          id: 'angle-45',
-          label: '-45deg Axis Title',
-          tickLabelStyle: {
-            angle: -45,
-            textAnchor: 'end',
-            dominantBaseline: 'central',
-          },
-        },
-        defaultXAxis,
-        {
-          ...defaultXAxis,
-          id: 'angle45',
-          label: '45deg Axis Title',
-          tickLabelStyle: {
-            angle: 45,
-            textAnchor: 'start',
-          },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle90',
-          label: '90deg Axis Title',
-          tickLabelStyle: {
-            angle: 90,
-            textAnchor: 'start',
-            dominantBaseline: 'central',
-          },
-        },
-      ]}
+      xAxis={xAxes}
       // Other props
-      height={600}
+      height={1600}
       dataset={usAirportPassengers}
       series={[
         { dataKey: '2018', label: '2018' },
