@@ -22,10 +22,6 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-### Data Grid
-
-From https://github.com/mui/mui-x/pull/16814
-
 ### Breaking changes
 
 - The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](https://next.mui.com/x/react-data-grid/components/toolbar/#settings-menu) for an example.
@@ -36,9 +32,9 @@ From https://github.com/mui/mui-x/pull/16814
 
 - [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (#16829) @arminmeh
 - [DataGrid] Fix scroll jump with dynamic row height (#16763) @cherniavskii
-- [DataGrid] New Toolbar component (#14611) @KenanYusuf
+- [DataGrid] New `<Toolbar />` component (#14611) @KenanYusuf
 - [DataGrid] Use new toolbar by default (#16814) @KenanYusuf
-- [DataGrid] remove the quick filtering on a given column (#16738) @vadimka123
+- [DataGrid] Remove the quick filtering on a given column (#16738) @vadimka123
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -53,10 +49,6 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 #### Breaking changes
 
 - Stop passing invalid date to `onChange` when the date is partially fileld — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange)
-
-
-
-
 
 #### `@mui/x-date-pickers@8.0.0-alpha.14`
 
@@ -84,8 +76,8 @@ From https://github.com/mui/mui-x/pull/14804
 
 - [charts] Fix `undefined` behaving differently from missing value for axis size (#16844) @bernardobelchior
 - [charts] Fix x-axis text anchor default when language is RTL (#16836) @bernardobelchior
-- [charts] Funnel charts (#14804) @JCQuintas
-- [charts] Introduce the radar chart (#16406) @alexfauquette
+- [charts] Add Funnel chart (#14804) @JCQuintas
+- [charts] Add Radar chart (#16406) @alexfauquette
 - [charts] Move series default color generation in the series config (#16752) @alexfauquette
 - [charts] Render axis title within axis size (#16730) @bernardobelchior
 - [charts] Split `defaultizeAxis` function into two (#16745) @bernardobelchior
