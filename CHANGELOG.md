@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.27.3
+
+_Mar 6, 2025_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 bugfixes
+
+Following are all team members who have contributed to this release:
+@arminmeh, @cherniavskii, @michelengelen.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.27.3`
+
+- [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (@arminmeh) (#16834) @github-actions[bot]
+- [DataGrid] Fix scroll jump with dynamic row height (@cherniavskii) (#16801) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.27.3`.
+
+#### `@mui/x-data-grid-premium@7.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.27.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.27.3`
+
+- [fields] Fix Fields aria relationship with `helperText` (@LukasTy) (#16828) @github-actions[bot]
+
+#### `@mui/x-date-pickers-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.27.3`.
+
+### Charts
+
+#### `@mui/x-charts@7.27.3`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.27.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.27.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.27.3`.
+
+- [infra] Update contributor acknowledgment wording (@michelengelen) (#16753) @github-actions[bot]
+
 ## 7.27.2
 
 <!-- generated comparing v7.27.1..v7.x -->
