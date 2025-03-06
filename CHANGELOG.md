@@ -11,6 +11,7 @@ _Mar 6, 2025_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 📊 Added Radar and Funnel charts
 - 🛠️ New and improved Toolbar component for the data grid
 - 🐞 Bugfixes
 
