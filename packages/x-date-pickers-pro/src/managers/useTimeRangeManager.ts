@@ -59,8 +59,8 @@ export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     TimeRangeValidationError,
-    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateTimeRangeProps,
+    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface TimeRangeManagerFieldInternalProps<
@@ -76,12 +76,3 @@ export interface TimeRangeManagerFieldInternalProps<
     ExportedValidateTimeRangeProps,
     AmPmProps,
     RangeFieldSeparatorProps {}
-
-interface TimeRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      TimeRangeValidationError
-    >,
-    ValidateTimeRangeProps {}
