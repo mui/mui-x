@@ -5,6 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { clampAngle } from '../internals/clampAngle';
 import { useIsClient } from '../hooks/useIsClient';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
