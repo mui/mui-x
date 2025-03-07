@@ -144,7 +144,6 @@ const getPivotedData = ({
         ...column,
         aggregable: false,
         groupable: false,
-        filterable: false,
         hideable: false,
         editable: false,
         disableReorder: true,
