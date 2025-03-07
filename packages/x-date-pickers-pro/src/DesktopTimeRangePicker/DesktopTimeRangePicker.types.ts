@@ -1,5 +1,5 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals';
+import { DigitalTimePickerProps } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -23,7 +23,7 @@ export interface DesktopTimeRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseTimeRangePickerProps,
     DesktopRangeOnlyPickerProps,
-    DesktopOnlyTimePickerProps {
+    DigitalTimePickerProps {
   /**
    * Overridable component slots.
    * @default {}
