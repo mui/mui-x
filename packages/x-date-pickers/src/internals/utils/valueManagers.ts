@@ -1,4 +1,4 @@
-import type { PickerValueManager } from '../hooks/usePicker';
+import type { PickerValueManager } from '../models';
 import { DateValidationError, TimeValidationError, DateTimeValidationError } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
