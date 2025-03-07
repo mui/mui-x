@@ -310,6 +310,11 @@ const getPivotedData = ({
     getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
     columnVisibilityModel,
     columnGroupingModel,
+    groupingColDef: {
+      filterable: false,
+      aggregable: false,
+      hideable: false,
+    },
   };
 };
 

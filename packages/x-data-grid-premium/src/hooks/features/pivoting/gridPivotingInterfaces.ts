@@ -9,6 +9,7 @@ export type GridPivotingPropsOverrides = {
   getAggregationPosition: NonNullable<DataGridPremiumProcessedProps['getAggregationPosition']>;
   columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
+  groupingColDef: NonNullable<DataGridPremiumProcessedProps['groupingColDef']>;
 };
 
 export interface GridPivotingState {
