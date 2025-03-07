@@ -59,7 +59,7 @@ const csCZPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týden v roce`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vyberte datum, vybrané datum je ${formattedDate}` : 'Vyberte datum',
   openTimePickerDialogue: (formattedTime) =>

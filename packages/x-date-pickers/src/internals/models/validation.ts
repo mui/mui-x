@@ -15,7 +15,7 @@ interface FutureAndPastValidationProps {
 
 /**
  * Validation props common to all the time views.
- * All these props have a default value when used inside a field / picker / clock.
+ * All these props have a default value when used inside a Field / Picker / Clock.
  */
 export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
 
@@ -54,7 +54,7 @@ export interface TimeValidationProps {
 
 /**
  * Validation props common to all the date views.
- * All these props have a default value when used inside a field / picker / calendar.
+ * All these props have a default value when used inside a Field / Picker / Calendar.
  */
 export interface BaseDateValidationProps extends FutureAndPastValidationProps {
   /**
