@@ -22,9 +22,9 @@ export const getInitialColumns = (
 
       if (column.type === 'date') {
         initialColumns.push({
+          // String column type to avoid formatting the value as 2,025 instead of 2025
           field: `${field}-year`,
           headerName: `${column.headerName} (Year)`,
-          type: 'number',
           valueGetter: (value, row) => new Date(row[field]).getFullYear(),
         });
 
