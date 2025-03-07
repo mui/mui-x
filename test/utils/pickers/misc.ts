@@ -53,6 +53,9 @@ export const getExpectedOnChangeCount = (
     // but does not have meridiem control
     return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
   }
+  if (componentFamily === 'picker' && params.type === 'time-range') {
+    return getChangeCountForComponentFamily('multi-section-digital-clock');
+  }
   return getChangeCountForComponentFamily(componentFamily);
 };
 
@@ -67,8 +70,15 @@ export const formatFullTimeValue = (adapter: MuiPickersAdapter, value: PickerVal
   return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
 };
 
+export const isPickerRangeType = (type: OpenPickerParams['type']) =>
+  type === 'date-range' || type === 'date-time-range' || type === 'time-range';
+
 export const isPickerSingleInput = (parameters: OpenPickerParams) => {
-  if (parameters.type === 'date-range' || parameters.type === 'date-time-range') {
+  if (
+    parameters.type === 'date-range' ||
+    parameters.type === 'date-time-range' ||
+    parameters.type === 'time-range'
+  ) {
     return parameters.fieldType === 'single-input';
   }
 
