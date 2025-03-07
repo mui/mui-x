@@ -1747,7 +1747,7 @@ If you were using them, you need to replace them with the following code:
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
 
--  `ExportedUseClearableFieldProps`
+- `ExportedUseClearableFieldProps`
 
   ```ts
   interface ExportedUseClearableFieldProps {
@@ -1755,7 +1755,7 @@ If you were using them, you need to replace them with the following code:
     onClear?: React.MouseEventHandler;
   }
   ```
-  
+
 - `UseClearableFieldSlots`
 
   ```ts
@@ -1766,7 +1766,7 @@ If you were using them, you need to replace them with the following code:
   ```
 
 - `UseClearableFieldSlotProps`
-  
+
   ```ts
   import { SlotComponentProps } from '@mui/utils';
   import { FieldOwnerState } from '@mui/x-date-pickers/models';
@@ -1785,7 +1785,7 @@ If you were using them, you need to replace them with the following code:
   type UseClearableFieldResponse<TFieldProps extends {}> = Omit<
     TFieldProps,
     'clearable' | 'onClear' | 'slots' | 'slotProps'
-  >
+  >;
   ```
 
 ## Theme breaking change
