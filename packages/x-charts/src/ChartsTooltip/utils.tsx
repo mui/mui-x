@@ -21,7 +21,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const hover = instance.addInteractionListener('hover', (state) => {
+    const removeOnHover = instance.addInteractionListener('hover', (state) => {
       if (state.hovering) {
         setMousePosition({
           x: state.event.clientX,
@@ -35,7 +35,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
     });
 
     return () => {
-      hover();
+      removeOnHover();
     };
   }, [instance]);
 
@@ -51,13 +51,13 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const moveEnd = instance.addInteractionListener('moveEnd', (state) => {
+    const removeOnMoveEnd = instance.addInteractionListener('moveEnd', (state) => {
       if (state.event.pointerType !== 'mouse') {
         setPointerType(null);
       }
     });
 
-    const moveStart = instance.addInteractionListener('moveStart', (state) => {
+    const removeOnMoveStart = instance.addInteractionListener('moveStart', (state) => {
       setPointerType({
         height: state.event.height,
         pointerType: state.event.pointerType as PointerType['pointerType'],
@@ -65,8 +65,8 @@ export function usePointerType(): null | PointerType {
     });
 
     return () => {
-      moveEnd();
-      moveStart();
+      removeOnMoveEnd();
+      removeOnMoveStart();
     };
   }, [instance]);
 

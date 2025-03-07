@@ -84,7 +84,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const hover = instance.addInteractionListener('hover', (state) => {
+    const removeOnHover = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
         mousePosition.current = {
           isInChart: false,
@@ -96,14 +96,15 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       }
     });
 
-    const [move, drag] = ['move', 'drag'].map((interaction) =>
+    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((interaction) =>
       instance.addInteractionListener(
-        // We force `as drag` because it is the more complete interaction
-        // We check the `targetTouches` to handle touch events
+        // We force `as drag` to fix typing
         interaction as 'drag',
         (state) => {
           const target =
-            'targetTouches' in state.event ? state.event.targetTouches[0] : state.event;
+            'targetTouches' in state.event
+              ? (state.event as any as TouchEvent).targetTouches[0]
+              : state.event;
           const svgPoint = getSVGPoint(element, target);
 
           mousePosition.current.x = svgPoint.x;
@@ -132,9 +133,9 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     );
 
     return () => {
-      hover();
-      move();
-      drag();
+      removeOnHover();
+      removeOnMove();
+      removeOnDrag();
     };
   }, [
     svgRef,

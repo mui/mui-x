@@ -1,4 +1,4 @@
-import { Handler, WebKitGestureEvent } from '@use-gesture/react';
+import { Handler } from '@use-gesture/react';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
@@ -21,11 +21,11 @@ export type RemoveInteractionListener = () => void;
 export type AddInteractionListener = {
   (
     interaction: 'drag' | 'dragStart' | 'dragEnd',
-    callback: Handler<'drag', PointerEvent | MouseEvent | TouchEvent>,
+    callback: Handler<'drag', PointerEvent>,
   ): RemoveInteractionListener;
   (
     interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
-    callback: Handler<'pinch', PointerEvent | TouchEvent | WheelEvent | WebKitGestureEvent>,
+    callback: Handler<'pinch', PointerEvent>,
   ): RemoveInteractionListener;
   (
     interaction: 'wheel' | 'wheelStart' | 'wheelEnd',

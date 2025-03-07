@@ -162,13 +162,15 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseLeave = () => {
-      instance.cleanInteraction?.();
-      instance.clearHighlight?.();
-    };
+    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const closestPoint = getClosestPoint(event);
+    const removeOnMove = instance.addInteractionListener('move', (state) => {
+      const closestPoint = getClosestPoint(state.event);
 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
@@ -189,30 +191,29 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         seriesId,
         dataIndex,
       });
-    };
+    });
 
-    const handleMouseClick = (event: MouseEvent) => {
-      if (!onItemClick) {
-        return;
+    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+      if (state.tap) {
+        if (!onItemClick) {
+          return;
+        }
+        const closestPoint = getClosestPoint(state.event);
+
+        if (typeof closestPoint === 'string') {
+          // No point fond for any reason
+          return;
+        }
+
+        const { seriesId, dataIndex } = closestPoint;
+        onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
       }
-      const closestPoint = getClosestPoint(event);
+    });
 
-      if (typeof closestPoint === 'string') {
-        // No point fond for any reason
-        return;
-      }
-
-      const { seriesId, dataIndex } = closestPoint;
-      onItemClick(event, { type: 'scatter', seriesId, dataIndex });
-    };
-
-    element.addEventListener('pointerleave', handleMouseLeave);
-    element.addEventListener('pointermove', handleMouseMove);
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('pointerleave', handleMouseLeave);
-      element.removeEventListener('pointermove', handleMouseMove);
-      element.removeEventListener('click', handleMouseClick);
+      removeOnHover();
+      removeOnMove();
+      removeOnDrag();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 
