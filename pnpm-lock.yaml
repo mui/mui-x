@@ -1452,7 +1452,7 @@ importers:
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
       ci-info:
-        specifier: ^4.0.0
+        specifier: ^4.1.0
         version: 4.1.0
       conf:
         specifier: ^5.0.0
