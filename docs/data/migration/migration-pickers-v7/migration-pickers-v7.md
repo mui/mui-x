@@ -1747,7 +1747,46 @@ If you were using them, you need to replace them with the following code:
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
 
-- ⏩ `ExportedUseClearableFieldProps`, `UseClearableFieldSlots`, `UseClearableFieldSlotProps`, `UseClearableFieldResponse`
+-  `ExportedUseClearableFieldProps`
+
+  ```ts
+  interface ExportedUseClearableFieldProps {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler;
+  }
+  ```
+  
+- `UseClearableFieldSlots`
+
+  ```ts
+  interface UseClearableFieldSlots {
+    clearIcon?: React.ElementType;
+    clearButton?: React.ElementType;
+  }
+  ```
+
+- `UseClearableFieldSlotProps`
+  
+  ```ts
+  import { SlotComponentProps } from '@mui/utils';
+  import { FieldOwnerState } from '@mui/x-date-pickers/models';
+  import { ClearIcon } from '@mui/x-date-pickers/icons';
+  import IconButton from '@mui/material/IconButton';
+
+  interface UseClearableFieldSlotProps {
+    clearIcon?: SlotComponentProps<typeof ClearIcon, {}, FieldOwnerState>;
+    clearButton?: SlotComponentProps<typeof IconButton, {}, FieldOwnerState>;
+  }
+  ```
+
+- `UseClearableFieldResponse`
+
+  ```ts
+  type UseClearableFieldResponse<TFieldProps extends {}> = Omit<
+    TFieldProps,
+    'clearable' | 'onClear' | 'slots' | 'slotProps'
+  >
+  ```
 
   If you were using any of these types, please create an issue on GitHub to let us know about your use case.
 
