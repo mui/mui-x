@@ -121,14 +121,14 @@ function Scatter(props: ScatterProps) {
   ]);
 
   const Marker = slots?.marker ?? ScatterMarker;
-  const markerProps = useSlotProps({
+  const { ownerState, ...markerProps } = useSlotProps({
     elementType: Marker,
     externalSlotProps: slotProps?.marker,
     additionalProps: {
       seriesId: series.id,
       size: series.markerSize,
     },
-    ownerState: undefined,
+    ownerState: {},
   });
 
   return (
