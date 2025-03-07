@@ -1,8 +1,11 @@
 import { useRotationScale } from '../../hooks/useScale';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadiusAxes } from '../../hooks';
+import { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { useChartContext } from '../../context/ChartProvider/useChartContext';
 
 export function useRadarGridData() {
+  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
   const drawingArea = useDrawingArea();
@@ -23,9 +26,10 @@ export function useRadarGridData() {
 
       const r = radiusScale.range()[1];
       const angle = angles[dataIndex];
+      const [x, y] = instance.polar2svg(r, angle);
       return {
-        x: cx + r * Math.sin(angle),
-        y: cy - r * Math.cos(angle),
+        x,
+        y,
       };
     }),
   };

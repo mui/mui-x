@@ -2,7 +2,6 @@ import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale'
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsAxisProps,
-  ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
   ChartsRotationAxisProps,
@@ -93,13 +92,13 @@ export function computeAxisValue<T extends ChartSeriesType>(
     axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
-): ComputeResult<ChartsYAxisProps>;
+): ComputeResult<ChartsRadiusAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
     axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
-): ComputeResult<ChartsAxisProps>;
+): ComputeResult<ChartsRotationAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>({
   drawingArea,
   formattedSeries,

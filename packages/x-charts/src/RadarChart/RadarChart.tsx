@@ -10,6 +10,7 @@ import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarAxisHighlight } from './RadarAxisHighlight';
 
 export interface RadarChartSlots {}
 export interface RadarChartSlotProps {}
@@ -56,6 +57,7 @@ const RadarChart = React.forwardRef(function RadarChart(
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarSeriesPlot />
+          <RadarAxisHighlight />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -80,6 +82,12 @@ RadarChart.propTypes = {
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
   /**
    * The number of divisions in the radar grid.
    * @default 5
