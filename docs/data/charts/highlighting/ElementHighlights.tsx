@@ -188,6 +188,7 @@ export default function ElementHighlights() {
           <MenuItem value={'none'}>none</MenuItem>
           <MenuItem value={'item'}>item</MenuItem>
           <MenuItem value={'series'}>series</MenuItem>
+          <MenuItem value={'group'}>group</MenuItem>
         </TextField>
         <TextField
           select
