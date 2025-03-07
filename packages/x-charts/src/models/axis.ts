@@ -198,6 +198,10 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The end angle (in deg).
    */
   endAngle?: number;
+  /**
+   * The gap between the axis and the label.
+   */
+  labelGap?: number;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {

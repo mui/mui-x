@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../../ChartContainer';
 import { RadarSeriesType } from '../../models/seriesType/radar';
-import { AxisConfig, ChartsRadiusAxisProps, ChartsRotationAxisProps } from '../../models/axis';
+import { PolarAxisConfig, ChartsRadiusAxisProps, ChartsRotationAxisProps } from '../../models/axis';
 import { ChartDataProvider } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import {
@@ -64,24 +64,23 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     ...other
   } = props;
 
-  const rotationAxes: AxisConfig<'point', number | string, ChartsRotationAxisProps>[] =
-    React.useMemo(
-      () =>
-        [
-          {
-            id: 'radar-rotation-axis',
-            scaleType: 'point',
-            data: radar.metrics.map((metric) =>
-              typeof metric === 'string' ? metric : metric.name,
-            ),
-            startAngle: radar.startAngle,
-            endAngle: radar.startAngle !== undefined ? radar.startAngle + 360 : undefined,
-          },
-        ] as const,
-      [radar],
-    );
+  const rotationAxes: PolarAxisConfig<'point', string, ChartsRotationAxisProps>[] = React.useMemo(
+    () => [
+      {
+        id: 'radar-rotation-axis',
+        scaleType: 'point',
+        data: radar.metrics.map((metric) => (typeof metric === 'string' ? metric : metric.name)),
+        startAngle: radar.startAngle,
+        endAngle: radar.startAngle !== undefined ? radar.startAngle + 360 : undefined,
+        labelGap: radar.labelGap,
+        valueFormatter: (name, { location }) =>
+          radar.labelFormatter?.(name, { location: location as 'tick' | 'tooltip' }) ?? name,
+      },
+    ],
+    [radar],
+  );
 
-  const radiusAxis: AxisConfig<'linear', any, ChartsRadiusAxisProps>[] = React.useMemo(
+  const radiusAxis: PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>[] = React.useMemo(
     () =>
       radar.metrics.map((m) => {
         const { name, min = 0, max = radar.max } = typeof m === 'string' ? { name: m } : m;
@@ -196,6 +195,8 @@ RadarDataProvider.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
+    labelFormatter: PropTypes.func,
+    labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),
