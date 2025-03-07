@@ -106,6 +106,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.14`.
 - [code-infra] Split date-picker test files (#16825) @JCQuintas
 - [infra] Replace PR label check workflow with reusable version (#16762) @michelengelen
 - [infra] Update label in priority-support issue template (#16767) @michelengelen
+- [test] Add timeout to flaky screenshot tests (#16852) @LukasTy
 
 ## 8.0.0-alpha.13
 
