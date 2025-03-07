@@ -60,6 +60,11 @@ export default function GridPivotingMultipleValues() {
         }}
         showToolbar
         experimentalFeatures={{ pivoting: true }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: false,
+          },
+        }}
       />
     </div>
   );

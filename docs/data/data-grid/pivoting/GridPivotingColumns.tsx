@@ -66,6 +66,11 @@ export default function GridPivotingColumns() {
         columnGroupHeaderHeight={36}
         showToolbar
         experimentalFeatures={{ pivoting: true }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: false,
+          },
+        }}
       />
     </div>
   );

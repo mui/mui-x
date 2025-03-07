@@ -148,6 +148,11 @@ export default function GridPivotingFinancial() {
           cellSelection
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: false,
+            },
+          }}
         />
       </div>
     </div>

@@ -54,6 +54,11 @@ export default function GridPivotingMovies() {
               },
             },
           }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: false,
+            },
+          }}
         />
       </div>
     </div>
