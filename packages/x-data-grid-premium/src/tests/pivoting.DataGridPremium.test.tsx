@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { DataGridPremium, DataGridPremiumProps, GridColDef } from '@mui/x-data-grid-premium';
-import { getRowValues } from 'test/utils/helperFn';
+import {
+  DataGridPremium,
+  DataGridPremiumProps,
+  GridColDef,
+  GridPivotModel,
+} from '@mui/x-data-grid-premium';
+import { getColumnHeadersTextContent, getColumnValues, getRowValues } from 'test/utils/helperFn';
 import useTimeout from '@mui/utils/useTimeout';
 
 const ROWS = [
@@ -396,5 +401,44 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(
       screen.queryByText('Add fields to rows, columns, and values to create a pivot table'),
     ).to.equal(null);
+  });
+
+  it('should not throw when a field is moved from pivot values to pivot rows', async () => {
+    function Component({ pivotModel }: { pivotModel: GridPivotModel }) {
+      return (
+        <Test
+          initialState={{
+            pivoting: {
+              panelOpen: true,
+              enabled: true,
+            },
+          }}
+          pivotModel={pivotModel}
+        />
+      );
+    }
+    const { setProps } = render(
+      <Component
+        pivotModel={{
+          rows: [],
+          columns: [],
+          values: [{ field: 'year', aggFunc: 'size' }],
+        }}
+      />,
+    );
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['Yearsize']);
+    expect(getColumnValues(0)).to.have.length(0);
+
+    setProps({
+      pivotModel: {
+        rows: [{ field: 'year' }],
+        columns: [],
+        values: [],
+      },
+    });
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['Year']);
+    expect(getColumnValues(0)).to.deep.equal(['2024 (9)', '2023 (1)']);
   });
 });
