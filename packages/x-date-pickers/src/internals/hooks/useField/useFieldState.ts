@@ -29,7 +29,7 @@ import {
   InferError,
   InferFieldSection,
 } from '../../../models';
-import { useControlledValueWithTimezone } from '../useValueWithTimezone';
+import { useControlledValue } from '../useControlledValue';
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
@@ -110,7 +110,7 @@ export const useFieldState = <
     },
   } = params;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'a field component',
     timezone: timezoneProp,
     value: valueProp,

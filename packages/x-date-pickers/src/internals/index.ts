@@ -62,7 +62,7 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
 
-export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
+export { useControlledValue } from './hooks/useControlledValue';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,

@@ -339,7 +339,7 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
 
 export interface UseFieldState<TValue extends PickerValidValue> {
   /**
-   * Last value returned by `useControlledValueWithTimezone`.
+   * Last value returned by `useControlledValue`.
    */
   lastValue: TValue | undefined;
   /**

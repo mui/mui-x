@@ -3,7 +3,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
 import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
-import { useValueWithTimezone } from '../../useValueWithTimezone';
+import { useControlledValue } from '../../useControlledValue';
 import { useUtils } from '../../useUtils';
 import { InferError, PickerChangeHandlerContext } from '../../../../models';
 import { SetValueActionOptions } from '../../../components/PickerProvider';
@@ -82,7 +82,8 @@ export function useValueAndOpenStates<
     timezone,
     value: valuePropWithTimezoneToRender,
     handleValueChange,
-  } = useValueWithTimezone({
+  } = useControlledValue({
+    name: 'a picker component',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
