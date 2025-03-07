@@ -36,7 +36,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   },
   dismissViews: () => {},
   hasUIView: true,
-  getCurrentViewMode: () => true,
+  getCurrentViewMode: () => 'UI',
   rootRefObject: { current: null },
   viewContainerRole: null,
   labelId: undefined,
