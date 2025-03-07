@@ -6,7 +6,6 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
 import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
@@ -18,6 +17,7 @@ import {
   selectorChartsInteractionXAxisIsDefined,
   selectorChartsInteractionYAxisIsDefined,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useChartContext } from '../context/ChartProvider';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -61,8 +61,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     name: 'MuiChartsTooltipContainer',
   });
   const { trigger = 'axis', classes, children, ...other } = props;
+  const { instance } = useChartContext();
 
-  const svgRef = useSvgRef();
   const pointerType = usePointerType();
   const xAxis = useXAxis();
 
@@ -83,23 +83,16 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const handleMove = (event: PointerEvent) => {
+    const removeOnMove = instance.addInteractionListener('move', (state) => {
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
+      positionRef.current = { x: state.event.clientX, y: state.event.clientY };
       popperRef.current?.update();
-    };
-
-    element.addEventListener('pointermove', handleMove);
+    });
 
     return () => {
-      element.removeEventListener('pointermove', handleMove);
+      removeOnMove();
     };
-  }, [svgRef, positionRef]);
+  }, [positionRef, instance]);
 
   const anchorEl = React.useMemo(
     () => ({

@@ -155,13 +155,15 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const handleMouseClick = (event: MouseEvent) => {
-      event.preventDefault();
+    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+      if (!state.tap) {
+        return;
+      }
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
       if (interactionAxis.x === null && interactionAxis.y === null) {
-        const svgPoint = getSVGPoint(element, event);
+        const svgPoint = getSVGPoint(element, state.event);
 
         const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
         isXAxis = xIndex !== null && xIndex !== -1;
@@ -202,12 +204,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           });
         });
 
-      params.onAxisClick?.(event, { dataIndex, axisValue, seriesValues });
-    };
+      params.onAxisClick?.(state.event, { dataIndex, axisValue, seriesValues });
+    });
 
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('click', handleMouseClick);
+      removeOnDrag();
     };
   }, [
     params.onAxisClick,
@@ -221,6 +222,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     interactionAxis,
     usedXAxis,
     usedYAxis,
+    instance,
   ]);
 
   return {};
