@@ -34,6 +34,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
     sanitizeFilterItemValue(item.value),
   );
+  const lastValue = React.useRef<string | undefined>(filterValueState);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -59,8 +60,14 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (itemPlusTag.fromInput !== id || item.value == null) {
-      setFilterValueState(sanitizeFilterItemValue(item.value));
+    const sanitizedValue = sanitizeFilterItemValue(item.value);
+    if (
+      itemPlusTag.fromInput !== id ||
+      item.value == null ||
+      sanitizedValue !== lastValue.current
+    ) {
+      setFilterValueState(sanitizedValue);
+      lastValue.current = sanitizedValue;
     }
   }, [id, item]);
 
