@@ -3,5 +3,6 @@ export { RadarDataProvider as Unstable_RadarDataProvider } from './RadarDataProv
 export type { RadarChartProps } from './RadarChart';
 export type { RadarDataProviderProps } from './RadarDataProvider';
 export * from './RadarGrid';
+export * from './RadarAxisHighlight';
 export * from './RadarMetricLabels';
 export * from './RadarSeriesPlot';

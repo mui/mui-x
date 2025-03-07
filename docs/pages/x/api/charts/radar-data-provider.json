@@ -15,6 +15,7 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
