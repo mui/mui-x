@@ -1,7 +1,7 @@
 ---
 title: React Data Grid - Quick Filter component
 productId: x-data-grid
-components: QuickFilter, QuickFilterControl, QuickFilterClear
+components: QuickFilter, QuickFilterControl, QuickFilterClear, QuickFilterTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
@@ -19,11 +19,17 @@ The demo below shows the default quick filter configuration.
 ## Anatomy
 
 ```tsx
-import { QuickFilter, QuickFilterControl, QuickFilterClear } from '@mui/x-data-grid';
+import {
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
+  QuickFilterTrigger,
+} from '@mui/x-data-grid';
 
 <QuickFilter>
   <QuickFilterControl />
   <QuickFilterClear />
+  <QuickFilterTrigger />
 </QuickFilter>;
 ```
 
@@ -42,10 +48,25 @@ It renders the `baseTextField` slot.
 `<QuickFilterClear />` is a button that resets the filter value.
 It renders the `baseIconButton` slot.
 
+### Quick Filter Trigger
+
+`<QuickFilterTrigger />` is a button that expands the quick filter control.
+It renders the `baseIconButton` slot.
+
 ## Custom elements
 
 Use the `render` prop to replace default elements.
 See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick Filter.
+
+## Recipes
+
+Below are some ways the Quick Filter component can be used.
+
+### Persistent quick filter
+
+The demo below shows how to display a persistent quick filter by passing the `expanded` prop to the `<QuickFilter />` component.
+
+{{"demo": "GridPersistentQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Accessibility
 

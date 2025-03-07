@@ -2,14 +2,16 @@ import * as React from 'react';
 
 export interface QuickFilterState {
   value: string;
+  expanded: boolean;
 }
 
 export interface QuickFilterContextValue {
   state: QuickFilterState;
   controlRef: React.RefObject<HTMLInputElement | null>;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
-  onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   clearValue: () => void;
+  onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onExpandedChange: (expanded: boolean) => void;
 }
 
 export const QuickFilterContext = React.createContext<QuickFilterContextValue | undefined>(

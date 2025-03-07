@@ -46,6 +46,15 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
       props.onKeyDown?.(event);
     };
 
+    const isFirstRender = React.useRef(true);
+    React.useEffect(() => {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+      } else if (state.expanded) {
+        controlRef.current?.focus();
+      }
+    }, [state.expanded, controlRef]);
+
     const element = useGridComponentRenderer(
       rootProps.slots.baseTextField,
       render,
@@ -67,6 +76,10 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
       },
       state,
     );
+
+    if (!state.expanded) {
+      return null;
+    }
 
     return <React.Fragment>{element}</React.Fragment>;
   },

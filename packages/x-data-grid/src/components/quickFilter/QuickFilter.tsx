@@ -30,6 +30,20 @@ export type QuickFilterProps = {
    * @default 150
    */
   debounceMs?: number;
+  /**
+   * The initial expanded state of the quick filter control.
+   * @default false
+   */
+  initialExpanded?: boolean;
+  /**
+   * The expanded state of the quick filter control.
+   */
+  expanded?: boolean;
+  /**
+   * Callback function that is called when the quick filter input is expanded or collapsed.
+   * @param {boolean} expanded The new expanded state of the quick filter control
+   */
+  onExpandedChange?: (expanded: boolean) => void;
 };
 
 const DEFAULT_PARSER = (searchText: string) => searchText.split(' ').filter((word) => word !== '');
@@ -54,13 +68,33 @@ function QuickFilter(props: QuickFilterProps) {
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
     debounceMs = rootProps.filterDebounceMs,
+    initialExpanded = false,
+    expanded,
+    onExpandedChange,
     children,
   } = props;
+
   const apiRef = useGridApiContext();
   const controlRef = React.useRef<HTMLInputElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
+  const [internalExpanded, setInternalExpanded] = React.useState(initialExpanded);
+
+  // Use the controlled value if provided, otherwise use the internal state
+  const expandedValue = expanded ?? internalExpanded;
+
+  const handleExpandedChange = React.useCallback(
+    (newExpanded: boolean) => {
+      if (onExpandedChange) {
+        onExpandedChange(newExpanded);
+      }
+      if (expanded === undefined) {
+        setInternalExpanded(newExpanded);
+      }
+    },
+    [onExpandedChange, expanded],
+  );
 
   const prevQuickFilterValuesRef = React.useRef(quickFilterValues);
 
@@ -100,7 +134,8 @@ function QuickFilter(props: QuickFilterProps) {
     setValue('');
     apiRef.current.setQuickFilterValues([]);
     controlRef.current?.focus();
-  }, [apiRef, controlRef]);
+    handleExpandedChange(false);
+  }, [apiRef, controlRef, handleExpandedChange]);
 
   const contextValue = React.useMemo(
     () => ({
@@ -108,11 +143,13 @@ function QuickFilter(props: QuickFilterProps) {
       triggerRef,
       state: {
         value,
+        expanded: expandedValue,
       },
       clearValue: handleClear,
       onValueChange: handleValueChange,
+      onExpandedChange: handleExpandedChange,
     }),
-    [value, handleValueChange, handleClear],
+    [value, expandedValue, handleValueChange, handleClear, handleExpandedChange],
   );
 
   return <QuickFilterContext.Provider value={contextValue}>{children}</QuickFilterContext.Provider>;

@@ -12,6 +12,8 @@ import { TextFieldProps } from '../../models/gridBaseSlots';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { QuickFilter, QuickFilterClear, QuickFilterControl } from '../quickFilter';
+import { ToolbarButton } from '../toolbarV8';
+import { QuickFilterTrigger } from '../quickFilter/QuickFilterTrigger';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -37,7 +39,6 @@ const GridToolbarQuickFilterRoot = styled(
   },
 )({
   width: 260,
-  marginLeft: 'auto',
 });
 
 export type GridToolbarQuickFilterProps = {
@@ -82,6 +83,18 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       formatter={quickFilterFormatter}
       debounceMs={debounceMs}
     >
+      <QuickFilterTrigger
+        render={(triggerProps) => (
+          <rootProps.slots.baseTooltip
+            title={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+          >
+            <ToolbarButton {...triggerProps} color="default">
+              <rootProps.slots.quickFilterIcon fontSize="small" />
+            </ToolbarButton>
+          </rootProps.slots.baseTooltip>
+        )}
+      />
+
       <QuickFilterControl
         render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
           <GridToolbarQuickFilterRoot
@@ -94,7 +107,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
             slotProps={{
               input: {
                 startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
-                endAdornment: controlProps.value ? (
+                endAdornment: (
                   <QuickFilterClear
                     render={
                       <rootProps.slots.baseIconButton
@@ -108,7 +121,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                       </rootProps.slots.baseIconButton>
                     }
                   />
-                ) : null,
+                ),
                 ...controlSlotProps?.input,
               },
               ...controlSlotProps,
