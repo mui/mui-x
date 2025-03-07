@@ -290,7 +290,7 @@
   { "name": "ScatterChartSlotProps", "kind": "Interface" },
   { "name": "ScatterChartSlots", "kind": "Interface" },
   { "name": "ScatterItemIdentifier", "kind": "TypeAlias" },
-  { "name": "ScatterMarker", "kind": "Variable" },
+  { "name": "ScatterMarker", "kind": "Function" },
   { "name": "ScatterMarkerProps", "kind": "Interface" },
   { "name": "ScatterMarkerSlotExtension", "kind": "Interface" },
   { "name": "ScatterMarkerSlotProps", "kind": "Interface" },

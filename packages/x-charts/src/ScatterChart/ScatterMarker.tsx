@@ -58,6 +58,7 @@ function ScatterMarker(props: ScatterMarkerProps) {
     />
   );
 }
+
 ScatterMarker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
