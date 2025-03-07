@@ -108,11 +108,6 @@ const COLUMNS: GridColDef[] = [
     headerName: 'Price',
     valueFormatter: (value: number) => (value ? `$${value.toFixed(2)}` : null),
   },
-  {
-    field: 'year',
-    headerName: 'Year',
-    valueGetter: (value, row) => (row.date ? new Date(row.date).getFullYear() : null),
-  },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {
     field: 'type',
@@ -222,7 +217,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
           pivoting: {
             model: {
               rows: [{ field: 'ticker' }],
-              columns: [{ field: 'year' }],
+              columns: [{ field: 'date-year' }],
               values: [
                 { field: 'price', aggFunc: 'avg' },
                 { field: 'volume', aggFunc: 'sum' },
@@ -262,7 +257,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
             enabled: true,
             model: {
               rows: [{ field: 'ticker' }],
-              columns: [{ field: 'year' }],
+              columns: [{ field: 'date-year' }],
               values: [
                 { field: 'price', aggFunc: 'avg' },
                 { field: 'volume', aggFunc: 'sum' },
@@ -303,7 +298,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
               enabled: true,
               model: {
                 rows: [{ field: 'ticker' }],
-                columns: [{ field: 'year' }],
+                columns: [{ field: 'date-year' }],
                 values: [
                   { field: 'price', aggFunc: 'avg' },
                   { field: 'volume', aggFunc: 'sum' },
@@ -336,7 +331,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
             enabled: true,
             model: {
               rows: [],
-              columns: [{ field: 'year' }, { field: 'type' }],
+              columns: [{ field: 'date-year' }, { field: 'type' }],
               values: [], // No pivot values
             },
           },
@@ -422,23 +417,23 @@ describe('<DataGridPremium /> - Pivoting', () => {
         pivotModel={{
           rows: [],
           columns: [],
-          values: [{ field: 'year', aggFunc: 'size' }],
+          values: [{ field: 'date-year', aggFunc: 'size' }],
         }}
       />,
     );
 
-    expect(getColumnHeadersTextContent()).to.deep.equal(['Yearsize']);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)size']);
     expect(getColumnValues(0)).to.have.length(0);
 
     setProps({
       pivotModel: {
-        rows: [{ field: 'year' }],
+        rows: [{ field: 'date-year' }],
         columns: [],
         values: [],
       },
     });
 
-    expect(getColumnHeadersTextContent()).to.deep.equal(['Year']);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)']);
     expect(getColumnValues(0)).to.deep.equal(['2024 (9)', '2023 (1)']);
   });
 
@@ -450,7 +445,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
             enabled: true,
             model: {
               rows: [{ field: 'ticker' }],
-              columns: [{ field: 'year' }],
+              columns: [{ field: 'date-year' }],
               values: [
                 { field: 'price', aggFunc: 'avg' },
                 { field: 'volume', aggFunc: 'sum' },
@@ -473,7 +468,6 @@ describe('<DataGridPremium /> - Pivoting', () => {
       'Date (Year)',
       'Date (Quarter)',
       'Ticker',
-      'Year',
       'Type',
       'Price',
       'Volume',
