@@ -1271,6 +1271,36 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
    />
   ```
 
+### ⏩ `useClearableField`
+
+This hook has been removed. The custom field component now receives the `clearable` and `onClear` props.
+
+You can remove the `useClearableField` hook from your component and use the new props to conditionally render the clear button:
+
+```diff
+-import { useClearableField } from '@mui/x-date-pickers-pro/hooks';
+
+ function CustomField(props) {
+   const {
+     id,
+     label
+     value,
++    clearable,
++    onClear,
+   } = props;
+-  const processedFieldProps = useClearableField({
+-    ...fieldResponse,
+-    slots,
+-    slotProps,
+-  });
++  {clearable && value && (
++    <IconButton title="Clear" tabIndex={-1} onClick={onClear}>
++      <ClearIcon />
++    </IconButton>
++  )}
+ }
+```
+
 ## Typing breaking changes
 
 ### Do not pass the date object as a generic
@@ -1716,6 +1746,10 @@ If you were using them, you need to replace them with the following code:
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
+
+- ⏩ `ExportedUseClearableFieldProps`, `UseClearableFieldSlots`, `UseClearableFieldSlotProps`, `UseClearableFieldResponse`
+
+  If you were using any of these types, please create an issue on GitHub to let us know about your use case.
 
 ## Theme breaking change
 
