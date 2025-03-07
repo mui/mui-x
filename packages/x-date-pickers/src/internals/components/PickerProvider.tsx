@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 
-import { PickerOwnerState } from '../../models';
+import { PickerChangeImportance, PickerOwnerState, PickersTimezone } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 import {
@@ -11,22 +11,13 @@ import {
   PickerValidValue,
   PickerVariant,
 } from '../models';
-import type {
-  UsePickerValueActionsContextValue,
-  UsePickerValueContextValue,
-  UsePickerValuePrivateContextValue,
-} from '../hooks/usePicker/usePickerValue.types';
-import {
-  UsePickerViewsActionsContextValue,
-  UsePickerViewsContextValue,
-  UsePickerViewsPrivateContextValue,
-} from '../hooks/usePicker/usePickerViews';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
 import {
   PickerFieldPrivateContext,
   PickerFieldPrivateContextValue,
 } from '../hooks/useNullableFieldPrivateContext';
 import { PickerContext } from '../../hooks/usePickerContext';
+import type { PickersShortcutsItemContext } from '../../PickersShortcuts';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<
   any,
@@ -45,7 +36,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   },
   dismissViews: () => {},
   hasUIView: true,
-  doesTheCurrentViewHasAnUI: () => true,
+  getCurrentViewMode: () => 'UI',
   rootRefObject: { current: null },
   viewContainerRole: null,
   labelId: undefined,
@@ -100,8 +91,24 @@ export interface PickerContextValue<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-> extends UsePickerValueContextValue<TValue, TError>,
-    UsePickerViewsContextValue<TView> {
+> extends PickerActionsContextValue<TValue, TView, TError> {
+  /**
+   * The current value of the picker.
+   */
+  value: TValue;
+  /**
+   * The timezone to use when rendering the dates.
+   * If a `timezone` prop is provided, it will be used.
+   * If the `value` prop contains a valid date, its timezone will be used.
+   * If no `value` prop is provided, but the `defaultValue` contains a valid date, its timezone will be used.
+   * If no `value` or `defaultValue` is provided, but the `referenceDate` is provided, its timezone will be used.
+   * Otherwise, the timezone will be the default one of your date library.
+   */
+  timezone: PickersTimezone;
+  /**
+   * Whether the picker is open.
+   */
+  open: boolean;
   /**
    * Whether the picker is disabled.
    */
@@ -116,6 +123,25 @@ export interface PickerContextValue<
    * If the picker does not have a field (if it is a static picker) or is not open, the view should be focused.
    */
   autoFocus: boolean;
+  /**
+   * The views that the picker has to render.
+   * It is equal to the picker `views` prop—if defined.
+   * Otherwise, a default set of views is provided based on the component you are using:
+   * - Date Pickers: ['year', 'day']
+   * - Time Pickers: ['hours', 'minutes']
+   * - Date Time Pickers: ['year', 'day', 'hours', 'minutes']
+   * - Date Range Pickers: ['day']
+   * - Date Time Range Pickers: ['day', 'hours', 'minutes']
+   */
+  views: readonly TView[];
+  /**
+   * The currently rendered view.
+   */
+  view: TView | null;
+  /**
+   * The view showed when first opening the picker.
+   */
+  initialView: TView | null;
   /**
    * The responsive variant of the picker.
    * It is equal to "desktop" when using a desktop picker (like <DesktopDatePicker />).
@@ -202,12 +228,87 @@ export interface PickerActionsContextValue<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError = string | null,
-> extends UsePickerValueActionsContextValue<TValue, TError>,
-    UsePickerViewsActionsContextValue<TView> {}
+> {
+  /**
+   * Set the current value of the picker.
+   * @param {TValue} value The new value of the picker.
+   * @param {SetValueActionOptions<TError>} options The options to customize the behavior of this update.
+   */
+  setValue: (value: TValue, options?: SetValueActionOptions<TError>) => void;
+  /**
+   * Set the current open state of the Picker.
+   * It can be a function that will receive the current open state as parameter.
+   * ```ts
+   * setOpen(true); // Opens the picker.
+   * setOpen(false); // Closes the picker.
+   * setOpen((prevOpen) => !prevOpen); // Toggles the open state.
+   * ```
+   * @param {React.SetStateAction<boolean>} action The new open state of the Picker.
+   */
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  /**
+   * Set the current view.
+   * @template TView
+   * @param {TView} view The view to render
+   */
+  setView: (view: TView) => void;
+  /**
+   * Set the current value of the picker to be empty.
+   * The value will be `null` on single pickers and `[null, null]` on range pickers.
+   */
+  clearValue: () => void;
+  /**
+   * Set the current value of the picker to be the current date.
+   * The value will be `today` on single pickers and `[today, today]` on range pickers.
+   * With `today` being the current date, with its time set to `00:00:00` on Date Pickers and its time set to the current time on Time and Date Pickers.
+   */
+  setValueToToday: () => void;
+  /**
+   * Accept the current value of the picker.
+   * Will call `onAccept` if defined.
+   * If the picker is re-opened, this value will be the one used to initialize the views.
+   */
+  acceptValueChanges: () => void;
+  /**
+   * Cancel the changes made to the current value of the picker.
+   * The value will be reset to the last accepted value.
+   */
+  cancelValueChanges: () => void;
+}
 
-export interface PickerPrivateContextValue
-  extends UsePickerValuePrivateContextValue,
-    UsePickerViewsPrivateContextValue {
+export interface SetValueActionOptions<TError = string | null> {
+  /**
+   * The importance of the change when picking a value:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance?: PickerChangeImportance;
+  /**
+   * The validation error associated to the current value.
+   * If not defined, the validation will be computed by the picker.
+   */
+  validationError?: TError;
+  /**
+   * The shortcut that triggered this change.
+   * It should not be defined if the change does not come from a shortcut.
+   */
+  shortcut?: PickersShortcutsItemContext;
+  /**
+   * Whether the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
+   * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
+   * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
+   * @default false
+   */
+  skipPublicationIfPristine?: boolean;
+  /**
+   * Whether the picker should close.
+   * @default changeImportance === "accept"
+   */
+  shouldClose?: boolean;
+}
+
+export interface PickerPrivateContextValue {
   /**
    * The ownerState of the picker.
    */
@@ -221,4 +322,26 @@ export interface PickerPrivateContextValue
    * The id of the label element.
    */
   labelId: string | undefined;
+  /*
+   * Close the picker and accepts the current value if it is not equal to the last accepted value.
+   */
+  dismissViews: () => void;
+  /**
+   * Whether at least one view has an UI (it has a view renderer associated).
+   */
+  hasUIView: boolean;
+  /**
+   * Return the mode of the current view.
+   * @returns {boolean} The mode of the current view.
+   */
+  getCurrentViewMode: () => 'UI' | 'field';
+  /**
+   * The aria role associated with the view container.
+   * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
+   * It is equal to "dialog" when the view is rendered inside a `@mui/material/Popper` and the focus is trapped inside the view.
+   * It is equal to "tooltip" when the view is rendered inside a `@mui/material/Popper` and the focus remains inside the field.
+   * It is always equal to null if the picker does not have a field (static pickers).
+   * It is always equal to null if the component you are accessing the context from is not wrapped by a picker.
+   */
+  viewContainerRole: 'dialog' | 'tooltip' | null;
 }

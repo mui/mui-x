@@ -1,7 +1,6 @@
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
 import type { UseLocalizationContextReturnValue } from '../internals/hooks/useUtils';
-import type { PickerValidValue } from '../internals/models';
+import type { PickerValidValue, PickerValueManager } from '../internals/models';
 import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
 
