@@ -2,14 +2,20 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import * as React from 'react';
 import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 
-function HTMLCircle({ color, ...props }: ChartsLabelCustomMarkProps) {
-  return <div {...props} style={{ borderRadius: '100%', background: color }} />;
+function HTMLCircle({ className, color }: ChartsLabelCustomMarkProps) {
+  return (
+    <div className={className} style={{ borderRadius: '100%', background: color }} />
+  );
 }
 
-function SVGDiamond({ color, ...props }: ChartsLabelCustomMarkProps) {
+function SVGDiamond({ className, color }: ChartsLabelCustomMarkProps) {
   return (
     <svg viewBox="-7.423 -7.423 14.846 14.846">
-      <path {...props} d="M0,-7.423L4.285,0L0,7.423L-4.285,0Z" fill={color} />
+      <path
+        className={className}
+        d="M0,-7.423L4.285,0L0,7.423L-4.285,0Z"
+        fill={color}
+      />
     </svg>
   );
 }

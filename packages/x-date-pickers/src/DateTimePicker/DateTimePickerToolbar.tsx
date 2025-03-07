@@ -28,7 +28,7 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { SetValueActionOptions } from '../internals/hooks/usePicker/usePickerValue.types';
+import { SetValueActionOptions } from '../internals/components/PickerProvider';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
