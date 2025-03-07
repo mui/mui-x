@@ -185,7 +185,7 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
 
     return (
       <StyledPagination
-        component='div'
+        component="div"
         onRowsPerPageChange={useEventCallback(
           (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
             onRowsPerPageChange?.(Number(event.target.value));
