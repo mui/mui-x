@@ -15,7 +15,7 @@ import { PickerValidValue } from '../internals/models';
 
 export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
-   * Custom component for the action bar, it is placed below the Ficker views.
+   * Custom component for the action bar, it is placed below the Picker views.
    * @default PickersActionBar
    */
   actionBar?: React.ElementType<PickersActionBarProps>;
