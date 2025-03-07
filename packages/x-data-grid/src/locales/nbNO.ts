@@ -123,7 +123,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'usant',
 
   // Column menu text
-  columnMenuLabel: 'Meny',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',

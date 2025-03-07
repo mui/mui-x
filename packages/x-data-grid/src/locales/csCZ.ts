@@ -130,7 +130,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'ne',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Zobrazit sloupce',
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',

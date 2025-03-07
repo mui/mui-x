@@ -123,7 +123,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'onwaar',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Toon kolommen',
   columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
