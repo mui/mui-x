@@ -24,13 +24,13 @@ export type PickersSubcomponentType = {
   [k: string]: {
     examples: CustomizationItemsType;
     slots: string[];
-    moreInformation?: React.ReactElement | string;
+    moreInformation?: React.ReactElement<any> | string;
   };
 };
 
 export interface UseCustomizationPlaygroundProps {
   examples: PickersSubcomponentType;
-  children?: React.ReactElement | React.ReactElement[];
+  children?: React.ReactElement<any> | React.ReactElement<any>[];
   componentName: string;
 }
 export const customizationLabels: CustomizationLabelType = {
@@ -72,7 +72,7 @@ export type UseCustomizationPlaygroundReturnType = {
   handleTokenChange: HandleTokenChangeType;
   selectedTokens: StyleTokensType;
   selectedExample?: CustomizationItemType | null;
-  moreInformation?: React.ReactElement | string | null;
+  moreInformation?: React.ReactElement<any> | string | null;
 };
 
 export function withStyles(

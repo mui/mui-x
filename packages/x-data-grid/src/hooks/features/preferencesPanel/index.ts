@@ -1,3 +1,3 @@
-export * from './gridPreferencePanelSelector';
+export { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 export * from './gridPreferencePanelState';
 export * from './gridPreferencePanelsValue';

@@ -34,6 +34,7 @@ export default function FeatureHighlight() {
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Using MUI X Date Pickers
           </Typography>
@@ -43,9 +44,11 @@ export default function FeatureHighlight() {
             fontWeight="semiBold"
             color="text.primary"
             textAlign="center"
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             First-class developer experience
           </Typography>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
             MUI X Date and Time Pickers are designed to be delightful and intuitive for developers
             and users alike.

@@ -1,22 +1,14 @@
-import * as React from 'react';
-import type { UseFieldInternalProps } from '../hooks/useField';
-import { FieldSection, PickerOwnerState, PickerValidDate } from '../../models';
-import type { ExportedUseClearableFieldProps } from '../../hooks/useClearableField';
+import type { FieldSection } from '../../models';
+import { RangePosition } from './pickers';
 
-export interface BaseFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends Omit<
-      UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-      'format'
-    >,
-    ExportedUseClearableFieldProps {
-  className?: string;
-  format?: string;
-  disabled?: boolean;
-  ref?: React.Ref<HTMLDivElement>;
-  ownerState?: PickerOwnerState;
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
+
+/**
+ * Props the single input field can receive when used inside a picker.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
+ */
+export interface BaseSingleInputFieldProps {
+  id?: string;
 }

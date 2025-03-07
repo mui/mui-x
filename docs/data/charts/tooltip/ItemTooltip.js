@@ -3,7 +3,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 function usePointer() {
   const svgRef = useSvgRef();
@@ -78,7 +77,7 @@ function usePointer() {
   };
 }
 
-export function ItemTooltip() {
+export function ItemTooltip({ children }) {
   const tooltipData = useItemTooltip();
   const { isActive, isMousePointer, pointerHeight, popperRef, anchorEl } =
     usePointer();
@@ -111,7 +110,7 @@ export function ItemTooltip() {
           },
         ]}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

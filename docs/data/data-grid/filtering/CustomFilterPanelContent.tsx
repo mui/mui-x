@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { DataGridPro, GridLogicOperator, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import type { Theme } from '@mui/material/styles';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function CustomFilterPanelContent() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -16,11 +16,14 @@ export default function CustomFilterPanelContent() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        slots={{
-          toolbar: GridToolbar,
-          // Use custom FilterPanel only for deep modification
-          // FilterPanel: MyCustomFilterPanel,
-        }}
+        loading={loading}
+        showToolbar
+        slots={
+          {
+            // Use custom FilterPanel only for deep modification
+            // FilterPanel: MyCustomFilterPanel,
+          }
+        }
         slotProps={{
           filterPanel: {
             // Force usage of "And" operator

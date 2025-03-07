@@ -6,6 +6,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -31,6 +33,17 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hae',
   toolbarQuickFilterDeleteIconLabel: 'Tyhjennä',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Vie',
   toolbarExportLabel: 'Vie',
@@ -43,6 +56,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
   columnsManagementShowHideAllText: 'Näytä/Piilota kaikki',
   columnsManagementReset: 'Palauta',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
@@ -101,6 +115,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Enemmän tai yhtä paljon kuin',
   'headerFilterOperator<': 'Vähemmän kuin',
   'headerFilterOperator<=': 'Vähemmän tai yhtä paljon kuin',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',

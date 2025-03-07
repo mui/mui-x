@@ -43,10 +43,6 @@ export default function OnlyReorderLeaves() {
         items={MUI_X_PRODUCTS}
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
-        experimentalFeatures={{
-          indentationAtItemLevel: true,
-          itemsReordering: true,
-        }}
         apiRef={apiRef}
         isItemReorderable={(itemId) =>
           apiRef.current!.getItemOrderedChildrenIds(itemId).length === 0

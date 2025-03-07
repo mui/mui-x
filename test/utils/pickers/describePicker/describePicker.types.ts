@@ -5,5 +5,5 @@ export interface DescribePickerOptions {
   fieldType: 'single-input' | 'multi-input';
   variant: 'mobile' | 'desktop' | 'static';
   hasNoView?: boolean;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
 }

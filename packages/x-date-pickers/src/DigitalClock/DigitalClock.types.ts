@@ -7,11 +7,9 @@ import {
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/time';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, TimeView } from '../models';
 
-export interface ExportedDigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedBaseClockProps<TDate>,
-    DigitalClockOnlyProps {}
+export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 
 export interface DigitalClockSlots {
   /**
@@ -22,12 +20,12 @@ export interface DigitalClockSlots {
 }
 
 export interface DigitalClockSlotProps {
-  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
+  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, DigitalClockOwnerState>;
 }
 
-export interface DigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedDigitalClockProps<TDate>,
-    BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
+export interface DigitalClockProps
+  extends ExportedDigitalClockProps,
+    BaseClockProps<Extract<TimeView, 'hours'>> {
   /**
    * Available views.
    * @default ['hours']
@@ -47,4 +45,11 @@ export interface DigitalClockProps<TDate extends PickerValidDate>
    * @default {}
    */
   slotProps?: DigitalClockSlotProps;
+}
+
+export interface DigitalClockOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
 }

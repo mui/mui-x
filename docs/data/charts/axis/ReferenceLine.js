@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -48,19 +48,19 @@ const config = {
 export default function ReferenceLine() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
-      <ResponsiveChartContainer {...config}>
+      <ChartContainer {...config}>
         <LinePlot />
         <ChartsReferenceLine
           x={new Date(2023, 8, 2, 9)}
           lineStyle={{ strokeDasharray: '10 5' }}
-          labelStyle={{ fontSize: '10' }}
+          labelStyle={{ fontSize: '10', lineHeight: 1.2 }}
           label={`Wake up\n9AM`}
           labelAlign="start"
         />
         <ChartsReferenceLine y={50} label="Middle value" labelAlign="end" />
         <ChartsXAxis />
         <ChartsYAxis />
-      </ResponsiveChartContainer>
+      </ChartContainer>
     </Box>
   );
 }

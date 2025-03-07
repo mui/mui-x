@@ -2,16 +2,16 @@
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { BarPlotProps } from './BarPlot';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsLegendProps } from '../ChartsLegend';
-import { ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -31,14 +31,8 @@ export const useBarChartProps = (props: BarChartProps) => {
     colors,
     dataset,
     sx,
-    tooltip,
-    onAxisClick,
     axisHighlight,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -51,6 +45,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     borderRadius,
     barLabel,
     className,
+    hideLegend,
     ...rest
   } = props;
 
@@ -69,7 +64,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
@@ -87,16 +82,15 @@ export const useBarChartProps = (props: BarChartProps) => {
     yAxis:
       yAxis ??
       (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined),
-    sx,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
-      tooltip?.trigger !== 'axis' &&
+      slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none' &&
-      !onAxisClick,
+      axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    plugins: BAR_CHART_PLUGINS,
   };
 
   const barPlotProps: BarPlotProps = {
@@ -105,10 +99,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     slotProps,
     borderRadius,
     barLabel,
-  };
-
-  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
-    onAxisClick,
   };
 
   const gridProps: ChartsGridProps = {
@@ -131,10 +121,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };
@@ -144,21 +130,21 @@ export const useBarChartProps = (props: BarChartProps) => {
     ...axisHighlight,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps<'bar'> = {
-    ...tooltip,
-    slots,
-    slotProps,
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
   };
 
   return {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -166,7 +152,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     chartsAxisProps,
     axisHighlightProps,
     legendProps,
-    tooltipProps,
     children,
   };
 };

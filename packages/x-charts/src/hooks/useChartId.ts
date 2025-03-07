@@ -1,9 +1,13 @@
 'use client';
-import * as React from 'react';
-import { DrawingContext } from '../context/DrawingProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartId } from '../internals/plugins/corePlugins/useChartId/useChartId.selectors';
 
-export function useChartId() {
-  const { chartId } = React.useContext(DrawingContext);
-
-  return React.useMemo(() => chartId, [chartId]);
+/**
+ * Get the unique identifier of the chart.
+ * @returns chartId if it exists.
+ */
+export function useChartId(): string | undefined {
+  const store = useStore();
+  return useSelector(store, selectorChartId);
 }

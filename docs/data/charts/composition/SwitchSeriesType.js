@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -24,7 +24,7 @@ export default function SwitchSeriesType() {
       </TextField>
 
       <div>
-        <ResponsiveChartContainer
+        <ChartContainer
           series={[
             {
               type,
@@ -40,14 +40,15 @@ export default function SwitchSeriesType() {
               data: ['A', 'B', 'C', 'D', 'E'],
               scaleType: 'band',
               id: 'x-axis-id',
+              height: 45,
             },
           ]}
           height={200}
         >
           <BarPlot />
           <LinePlot />
-          <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
-        </ResponsiveChartContainer>
+          <ChartsXAxis label="X axis" axisId="x-axis-id" />
+        </ChartContainer>
       </div>
     </Box>
   );

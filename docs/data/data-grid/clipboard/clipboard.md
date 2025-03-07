@@ -62,7 +62,7 @@ To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
 ### Persisting pasted data
 
-Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#server-side-persistence)—use the `processRowUpdate` prop to persist the updated row in your data source:
+Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/persistence/)—use the `processRowUpdate` prop to persist the updated row in your data source:
 
 ```tsx
 processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;

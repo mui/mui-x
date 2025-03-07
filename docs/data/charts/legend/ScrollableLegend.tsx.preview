@@ -1,0 +1,15 @@
+<PieChart
+  series={series}
+  sx={{
+    height: '100%',
+  }}
+  slotProps={{
+    legend: {
+      sx: {
+        overflowY: 'scroll',
+        flexWrap: 'nowrap',
+        height: '100%',
+      },
+    },
+  }}
+/>

@@ -11,12 +11,12 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
-    internalProps: { disabled, readOnly = false },
+    internalProps: { disabled, readOnly = false, autoFocus = false, focused: focusedProp },
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -24,8 +24,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       onFocus,
       onInput,
       onPaste,
-      focused: focusedProp,
-      autoFocus = false,
     },
     fieldValueManager,
     applyCharacterEditing,
@@ -44,7 +42,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
   const id = useId();
 
@@ -114,7 +112,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
       },
       focusField: (newSelectedSections = 0) => {
-        if (!sectionListRef.current) {
+        if (
+          !sectionListRef.current ||
+          // if the field is already focused, we don't need to focus it again
+          interactions.getActiveSectionIndexFromDOM() != null
+        ) {
           return;
         }
 
@@ -233,6 +235,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     } else if (keyPressed.length > 1) {
       updateValueFromValueStr(keyPressed);
     } else {
+      if (parsedSelectedSections === 'all') {
+        setSelectedSections(0);
+      }
       applyCharacterEditing({
         keyPressed,
         sectionIndex: 0,
@@ -253,24 +258,26 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleContainerFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
 
     if (focused || !sectionListRef.current) {
       return;
     }
 
+    const activeElement = getActiveElement(document);
+
     setFocused(true);
 
     const isFocusInsideASection =
-      sectionListRef.current.getSectionIndexFromDOMElement(getActiveElement(document)) != null;
+      sectionListRef.current.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
       setSelectedSections(sectionOrder.startIndex);
     }
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setTimeout(() => {
       if (!sectionListRef.current) {
         return;
@@ -328,7 +335,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       if (isValidPastedValue) {
         resetCharacterQuery();
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
@@ -374,6 +381,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       }
 
       resetCharacterQuery();
+      revertDOMSectionChange(sectionIndex);
       clearActiveSection();
       return;
     }

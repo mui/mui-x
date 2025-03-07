@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
@@ -8,16 +10,21 @@ import {
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
-import { useHighlighted } from '../context';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
+import {
+  selectorChartsVoronoiIsVoronoiEnabled,
+  UseChartVoronoiSignature,
+} from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { useChartContext } from '../context/ChartProvider';
+import { ScatterMarker } from './ScatterMarker';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
-  markerSize: number;
   color: string;
   colorGetter?: (dataIndex: number) => string;
   /**
@@ -29,7 +36,13 @@ export interface ScatterProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
+  slots?: ScatterSlots;
+  slotProps?: ScatterSlotProps;
 }
+
+export interface ScatterSlots extends ScatterMarkerSlots {}
+
+export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
  * Demos:
@@ -42,15 +55,15 @@ export interface ScatterProps {
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
+  const { series, xScale, yScale, color, colorGetter, onItemClick, slots, slotProps } = props;
 
-  const drawingArea = useDrawingArea();
+  const { instance } = useChartContext();
+  const store = useStore<[UseChartVoronoiSignature]>();
+  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
 
-  const { useVoronoiInteraction } = React.useContext(InteractionContext);
-
-  const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
+  const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
-  const { isFaded, isHighlighted } = useHighlighted();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
@@ -70,7 +83,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = drawingArea.isPointInside({ x, y });
+      const isInRange = instance.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -97,7 +110,6 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
-    drawingArea,
     series.data,
     series.id,
     isHighlighted,
@@ -105,19 +117,31 @@ function Scatter(props: ScatterProps) {
     getInteractionItemProps,
     colorGetter,
     color,
+    instance,
   ]);
+
+  const Marker = slots?.marker ?? ScatterMarker;
+  const { ownerState, ...markerProps } = useSlotProps({
+    elementType: Marker,
+    externalSlotProps: slotProps?.marker,
+    additionalProps: {
+      seriesId: series.id,
+      size: series.markerSize,
+    },
+    ownerState: {},
+  });
 
   return (
     <g>
       {cleanData.map((dataPoint) => (
-        <circle
-          key={dataPoint.id}
-          cx={0}
-          cy={0}
-          r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}
-          transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
-          fill={dataPoint.color}
-          opacity={(dataPoint.isFaded && 0.3) || 1}
+        <Marker
+          key={dataPoint.id ?? dataPoint.dataIndex}
+          dataIndex={dataPoint.dataIndex}
+          color={dataPoint.color}
+          isHighlighted={dataPoint.isHighlighted}
+          isFaded={dataPoint.isFaded}
+          x={dataPoint.x}
+          y={dataPoint.y}
           onClick={
             onItemClick &&
             ((event) =>
@@ -127,8 +151,8 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          cursor={onItemClick ? 'pointer' : 'unset'}
           {...dataPoint.interactionProps}
+          {...markerProps}
         />
       ))}
     </g>
@@ -142,7 +166,6 @@ Scatter.propTypes = {
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,
-  markerSize: PropTypes.number.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -150,6 +173,8 @@ Scatter.propTypes = {
    */
   onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
 } as any;

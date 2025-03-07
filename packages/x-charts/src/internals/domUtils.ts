@@ -98,6 +98,7 @@ export const getStyleString = (style: React.CSSProperties) =>
     );
 
 let domCleanTimeout: NodeJS.Timeout | undefined;
+
 /**
  *
  * @param text The string to estimate

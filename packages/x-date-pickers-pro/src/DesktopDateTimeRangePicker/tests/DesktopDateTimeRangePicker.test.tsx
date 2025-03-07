@@ -20,7 +20,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should allow to select range within the same day', () => {
       render(<DesktopDateTimeRangePicker />);
 
-      openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-time-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // select start date range
       fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
@@ -34,10 +34,24 @@ describe('<DesktopDateTimeRangePicker />', () => {
       fireEvent.click(screen.getByRole('option', { name: '10 minutes' }));
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
 
-      const startSectionsContainer = getFieldSectionsContainer(0);
-      const endSectionsContainer = getFieldSectionsContainer(1);
-      expect(expectFieldValueV7(startSectionsContainer, '01/11/2018 04:05 PM'));
-      expect(expectFieldValueV7(endSectionsContainer, '01/11/2018 05:10 PM'));
+      const sectionsContainer = getFieldSectionsContainer();
+      expect(expectFieldValueV7(sectionsContainer, '01/11/2018 04:05 PM – 01/11/2018 05:10 PM'));
+    });
+
+    it('should use time from `referenceDate` when selecting the day', () => {
+      render(
+        <DesktopDateTimeRangePicker referenceDate={adapterToUse.date('2022-04-14T14:15:00')} />,
+      );
+
+      openPicker({ type: 'date-time-range', initialFocus: 'start', fieldType: 'single-input' });
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
+
+      expect(screen.getByRole('option', { name: '2 hours', selected: true })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: '15 minutes', selected: true })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: 'PM', selected: true })).not.to.equal(null);
+      const sectionsContainer = getFieldSectionsContainer();
+      expect(expectFieldValueV7(sectionsContainer, '04/11/2022 02:15 PM – MM/DD/YYYY hh:mm aa'));
     });
   });
 

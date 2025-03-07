@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -22,13 +23,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
-  overridesResolver: (props, styles) => styles.panelContent,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
+  padding: vars.spacing(2.5, 1.5, 2, 1),
+  gap: vars.spacing(2.5),
 });
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {

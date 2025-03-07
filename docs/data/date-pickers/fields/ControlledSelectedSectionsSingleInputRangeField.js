@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -35,6 +36,7 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
             size="small"
             variant="outlined"
             onClick={() => setSelectedSectionType(sectionName, position)}
+            key={sectionName}
           >
             {sectionName}
           </Button>

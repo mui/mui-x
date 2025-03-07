@@ -8,10 +8,6 @@ export interface GridStateApi<State extends GridStateCommunity> {
    */
   state: State;
   /**
-   * Forces the grid to rerender. It's often used after a state update.
-   */
-  forceUpdate: () => void;
-  /**
    * Sets the whole state of the grid.
    * @param {GridState | (oldState: GridState) => GridState} state The new state or the callback creating the new state.
    * @param {string} reason The reason for this change to happen.
@@ -42,7 +38,7 @@ export interface GridStatePrivateApi<State extends GridStateCommunity> {
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
    */
-  registerControlState: <E extends keyof GridControlledStateEventLookup>(
-    controlState: GridControlStateItem<State, E>,
+  registerControlState: <E extends keyof GridControlledStateEventLookup, Args>(
+    controlState: GridControlStateItem<State, Args, E>,
   ) => void;
 }

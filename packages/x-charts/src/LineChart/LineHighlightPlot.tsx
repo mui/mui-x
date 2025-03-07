@@ -2,14 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { useCartesianContext } from '../context/CartesianProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import getColor from './seriesConfig/getColor';
+import { useChartContext } from '../context/ChartProvider';
+import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -45,12 +47,17 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
-  const drawingArea = useDrawingArea();
-  const { axis } = React.useContext(InteractionContext);
+  const seriesData = useLineSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const highlightedIndex = axis.x?.index;
+  const { instance } = useChartContext();
+
+  const store = useStore();
+  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+
+  const highlightedIndex = xAxisIdentifier?.index;
+
   if (highlightedIndex === undefined) {
     return null;
   }
@@ -59,7 +66,6 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
@@ -75,6 +81,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             stackedData,
             data,
             disableHighlight,
+            shape = 'circle',
           } = series[seriesId];
 
           if (disableHighlight || data[highlightedIndex] == null) {
@@ -97,7 +104,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
           const x = xScale(xData[highlightedIndex]);
           const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
-          if (!drawingArea.isPointInside({ x, y })) {
+          if (!instance.isPointInside({ x, y })) {
             return null;
           }
 
@@ -109,6 +116,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
               color={colorGetter(highlightedIndex)}
               x={x}
               y={y}
+              shape={shape}
               {...slotProps?.lineHighlight}
             />
           );

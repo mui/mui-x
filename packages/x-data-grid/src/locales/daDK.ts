@@ -6,6 +6,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tæthed',
@@ -31,6 +33,17 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Søg',
   toolbarQuickFilterDeleteIconLabel: 'Ryd',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksport',
   toolbarExportLabel: 'Eksporter',
@@ -43,6 +56,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen søjler',
   columnsManagementShowHideAllText: 'Vis/Skjul Alle',
   columnsManagementReset: 'Nulstil',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
@@ -101,6 +115,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',

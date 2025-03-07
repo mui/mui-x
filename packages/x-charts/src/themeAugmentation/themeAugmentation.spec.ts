@@ -42,7 +42,7 @@ createTheme({
     },
     MuiChartsLegend: {
       defaultProps: {
-        direction: 'row',
+        direction: 'vertical',
         // @ts-expect-error invalid MuiChartsLegend prop
         someRandomProp: true,
       },

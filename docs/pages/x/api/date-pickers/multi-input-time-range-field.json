@@ -1,7 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
-    "autoFocus": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
@@ -60,7 +60,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -102,20 +102,27 @@
     "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';",
     "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiMultiInputTimeRangeField-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "MultiInputRangeFieldRoot",
+      "class": "MuiMultiInputTimeRangeField-root"
     },
     {
-      "key": "separator",
-      "className": "MuiMultiInputTimeRangeField-separator",
-      "description": "Styles applied to the separator element.",
-      "isGlobal": false
+      "name": "separator",
+      "description": "Element rendered between the two inputs.",
+      "default": "MultiInputRangeFieldSeparator",
+      "class": "MuiMultiInputTimeRangeField-separator"
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMultiInputTimeRangeField",

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem, isDatePickerView } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Omit<DateRangeCalendarProps<TDate>, 'views'> {
+export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
+  extends Omit<
+    DateRangeCalendarProps,
+    'views' | 'onRangePositionChange' | 'rangePosition' | 'defaultRangePosition'
+  > {
   views: readonly TView[];
 }
 
@@ -14,7 +14,12 @@ export interface DateRangeViewRendererProps<
  * We don't pass all the props down to `DateRangeCalendar`,
  * because otherwise some unwanted props would be passed to the HTML element.
  */
-export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
+export const renderDateRangeViewCalendar = ({
+  views,
+  view,
+  onViewChange,
+  focusedView,
+  onFocusedViewChange,
   value,
   defaultValue,
   referenceDate,
@@ -28,9 +33,6 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  rangePosition,
-  defaultRangePosition,
-  onRangePositionChange,
   calendars,
   currentMonthCalendarPosition,
   slots,
@@ -50,11 +52,13 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   displayWeekNumber,
   timezone,
   availableRangePositions,
-  views,
-  view,
-  onViewChange,
-}: DateRangeViewRendererProps<TDate, 'day'>) => (
+}: DateRangeViewRendererProps<'day'>) => (
   <DateRangeCalendar
+    view={view}
+    views={views}
+    onViewChange={onViewChange}
+    focusedView={focusedView && isDatePickerView(focusedView) ? focusedView : null}
+    onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}
     referenceDate={referenceDate}
@@ -68,9 +72,6 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    rangePosition={rangePosition}
-    defaultRangePosition={defaultRangePosition}
-    onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     currentMonthCalendarPosition={currentMonthCalendarPosition}
     slots={slots}
@@ -90,8 +91,5 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
     availableRangePositions={availableRangePositions}
-    view={view}
-    views={views}
-    onViewChange={onViewChange}
   />
 );

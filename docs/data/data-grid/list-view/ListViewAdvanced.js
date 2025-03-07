@@ -13,6 +13,7 @@ import OpenIcon from '@mui/icons-material/Visibility';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
+import { useTheme } from '@mui/material/styles';
 import { FileIcon } from './components/FileIcon';
 import { DetailsDrawer } from './components/DetailsDrawer';
 import { ListCell } from './components/ListCell';
@@ -24,16 +25,18 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
-export default function ListViewAdvanced() {
+export default function ListViewAdvanced(props) {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef(null);
   const container = () => containerRef.current;
 
-  const isListView = useMediaQuery('(min-width: 700px)');
+  const theme = useTheme();
+  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isDocsDemo = props.window !== undefined;
+  const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
-
-  const [rows, setRows] = React.useState(INITIAL_ROWS);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -46,65 +49,67 @@ export default function ListViewAdvanced() {
     setOverlayState({ overlay: null, params: null });
   };
 
-  const handleDelete = React.useCallback((ids) => {
-    setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
-  }, []);
+  const handleDelete = React.useCallback(
+    (ids) => {
+      apiRef.current?.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+    },
+    [apiRef],
+  );
 
-  const handleUpdate = React.useCallback((id, field, value) => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id
-          ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
-          : row,
-      ),
-    );
-  }, []);
+  const handleUpdate = React.useCallback(
+    (id, field, value) => {
+      const updatedAt = new Date().toISOString();
+      apiRef.current?.updateRows([{ id, [field]: value, updatedAt }]);
+    },
+    [apiRef],
+  );
 
-  const handleUpload = React.useCallback((event) => {
-    if (!event.target.files) {
-      return;
-    }
+  const handleUpload = React.useCallback(
+    (event) => {
+      if (!event.target.files) {
+        return;
+      }
 
-    const file = event.target.files[0];
-    const createdAt = new Date().toISOString();
+      const file = event.target.files[0];
+      const createdAt = new Date().toISOString();
 
-    const fileType = file.type.split('/')[1];
+      const fileType = file.type.split('/')[1];
 
-    // validate file type
-    if (!FILE_TYPES.includes(fileType)) {
-      alert('Invalid file type');
-      return;
-    }
+      // validate file type
+      if (!FILE_TYPES.includes(fileType)) {
+        alert('Invalid file type');
+        return;
+      }
 
-    const row = {
-      id: randomId(),
-      name: file.name,
-      description: '',
-      type: fileType,
-      size: file.size,
-      createdBy: 'Kenan Yusuf',
-      createdAt,
-      updatedAt: createdAt,
-      state: 'pending',
-    };
+      const row = {
+        id: randomId(),
+        name: file.name,
+        description: '',
+        type: fileType,
+        size: file.size,
+        createdBy: 'Kenan Yusuf',
+        createdAt,
+        updatedAt: createdAt,
+        state: 'pending',
+      };
 
-    event.target.value = '';
+      event.target.value = '';
 
-    // Add temporary row
-    setLoading(true);
-    setRows((prevRows) => [...prevRows, row]);
+      // Add temporary row
+      setLoading(true);
+      apiRef.current?.updateRows([row]);
 
-    // Simulate server response time
-    const timeout = Math.floor(Math.random() * 3000) + 2000;
-    setTimeout(() => {
-      const uploadedRow = { ...row, state: 'uploaded' };
-      setRows((prevRows) =>
-        prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
-      );
-      setOverlayState({ overlay: 'actions', params: { row } });
-      setLoading(false);
-    }, timeout);
-  }, []);
+      // Simulate server response time
+      const timeout = Math.floor(Math.random() * 3000) + 2000;
+      setTimeout(() => {
+        const uploadedRow = { ...row, state: 'uploaded' };
+        apiRef.current?.updateRows([uploadedRow]);
+        setOverlayState({ overlay: 'actions', params: { row } });
+        setLoading(false);
+      }, timeout);
+    },
+    [apiRef],
+  );
 
   const columns = React.useMemo(
     () => [
@@ -267,13 +272,13 @@ export default function ListViewAdvanced() {
       >
         <DataGridPremium
           apiRef={apiRef}
-          rows={rows}
+          rows={INITIAL_ROWS}
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               listView: isListView,
               container,
               handleDelete,

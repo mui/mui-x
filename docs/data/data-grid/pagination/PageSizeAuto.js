@@ -8,7 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 
 export default function PageSizeAuto() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -35,7 +35,7 @@ export default function PageSizeAuto() {
         </Select>
       </FormControl>
       <div style={{ height, width: '100%' }}>
-        <DataGrid autoPageSize {...data} />
+        <DataGrid autoPageSize {...data} loading={loading} />
       </div>
     </Stack>
   );

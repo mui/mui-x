@@ -27,8 +27,8 @@ const treeViewApiPages: MuiPage[] = [
     title: 'TreeItemIcon',
   },
   {
-    pathname: '/x/api/tree-view/tree-view',
-    title: 'TreeView',
+    pathname: '/x/api/tree-view/tree-item-provider',
+    title: 'TreeItemProvider',
   },
 ];
 export default treeViewApiPages;

@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
+import { testSkipIf, hasTouchSupport, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
@@ -19,7 +20,7 @@ describe('<TimeClock />', () => {
     render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
+    expect(listbox).toHaveAccessibleName('Select hours. Selected time is 04:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
@@ -154,7 +155,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(3);
+    expect(adapterToUse.getHours(newDate)).to.equal(23);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -174,7 +175,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(21);
+    expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -220,69 +221,65 @@ describe('<TimeClock />', () => {
     });
   });
 
-  it('should display options, but not update value when readOnly prop is passed', function test() {
-    // Only run in supported browsers
-    if (typeof Touch === 'undefined') {
-      this.skip();
-    }
-    const selectEvent = {
-      changedTouches: [
-        {
-          clientX: 150,
-          clientY: 60,
-        },
-      ],
-    };
-    const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
+  testSkipIf(!hasTouchSupport)(
+    'should display options, but not update value when readOnly prop is passed',
+    () => {
+      const selectEvent = {
+        changedTouches: [
+          {
+            clientX: 150,
+            clientY: 60,
+          },
+        ],
+      };
+      const onChangeMock = spy();
+      render(
+        <TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />,
+      );
 
-    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
+      expect(onChangeMock.callCount).to.equal(0);
 
-    // hours are not disabled
-    const hoursContainer = screen.getByRole('listbox');
-    const hours = within(hoursContainer).getAllByRole('option');
-    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+      // hours are not disabled
+      const hoursContainer = screen.getByRole('listbox');
+      const hours = within(hoursContainer).getAllByRole('option');
+      const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(12);
-    expect(disabledHours.length).to.equal(0);
-  });
+      expect(hours.length).to.equal(12);
+      expect(disabledHours.length).to.equal(0);
+    },
+  );
 
-  it('should display disabled options when disabled prop is passed', function test() {
-    // Only run in supported browsers
-    if (typeof Touch === 'undefined') {
-      this.skip();
-    }
-    const selectEvent = {
-      changedTouches: [
-        {
-          clientX: 150,
-          clientY: 60,
-        },
-      ],
-    };
-    const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
+  testSkipIf(!hasTouchSupport)(
+    'should display disabled options when disabled prop is passed',
+    () => {
+      const selectEvent = {
+        changedTouches: [
+          {
+            clientX: 150,
+            clientY: 60,
+          },
+        ],
+      };
+      const onChangeMock = spy();
+      render(
+        <TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />,
+      );
 
-    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
+      expect(onChangeMock.callCount).to.equal(0);
 
-    // hours are disabled
-    const hoursContainer = screen.getByRole('listbox');
-    const hours = within(hoursContainer).getAllByRole('option');
-    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+      // hours are disabled
+      const hoursContainer = screen.getByRole('listbox');
+      const hours = within(hoursContainer).getAllByRole('option');
+      const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(12);
-    expect(disabledHours.length).to.equal(12);
-  });
+      expect(hours.length).to.equal(12);
+      expect(disabledHours.length).to.equal(12);
+    },
+  );
 
-  describe('Time validation on touch ', () => {
-    before(function beforeHook() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-    });
-
+  describeSkipIf(!hasTouchSupport)('Time validation on touch ', () => {
     const clockTouchEvent = {
       '13:--': {
         changedTouches: [

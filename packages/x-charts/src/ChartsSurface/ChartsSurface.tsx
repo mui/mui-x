@@ -2,79 +2,83 @@
 import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { useAxisEvents } from '../hooks/useAxisEvents';
+import useForkRef from '@mui/utils/useForkRef';
+import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorChartContainerSize,
+  selectorChartPropsSize,
+} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
-type ViewBox = {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-};
 export interface ChartsSurfaceProps {
-  /**
-   * The width of the chart in px.
-   */
-  width: number;
-  /**
-   * The height of the chart in px.
-   */
-  height: number;
-  viewBox?: ViewBox;
   className?: string;
   title?: string;
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener?: boolean;
 }
 
-const ChartChartsSurfaceStyles = styled('svg', {
+const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})(() => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
   touchAction: 'none',
 }));
 
+/**
+ * It provides the drawing area for the chart elements.
+ * It is the root `<svg>` of all the chart elements.
+ *
+ * It also provides the `title` and `desc` elements for the chart.
+ *
+ * Demos:
+ *
+ * - [Composition](https://mui.com/x/api/charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
+ */
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
-  const {
-    children,
-    width,
-    height,
-    viewBox,
-    disableAxisListener = false,
-    className,
-    title,
-    desc,
-    ...other
-  } = props;
-  const svgView = { width, height, x: 0, y: 0, ...viewBox };
+  const store = useStore();
+  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+  const svgRef = useSvgRef();
+  const handleRef = useForkRef(svgRef, ref);
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  useAxisEvents(disableAxisListener);
+  const { children, className, title, desc, ...other } = themeProps;
+
+  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
-    <ChartChartsSurfaceStyles
-      width={width}
-      height={height}
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={ref}
+    <ChartsSurfaceStyles
+      ownerState={{ width: propsWidth, height: propsHeight }}
+      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
       {...other}
+      ref={handleRef}
     >
-      <title>{title}</title>
-      <desc>{desc}</desc>
-      {children}
-    </ChartChartsSurfaceStyles>
+      {title && <title>{title}</title>}
+      {desc && <desc>{desc}</desc>}
+      <ChartsAxesGradients />
+      {hasIntrinsicSize && children}
+    </ChartsSurfaceStyles>
   );
 });
 
@@ -86,32 +90,12 @@ ChartsSurface.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
-  /**
-   * The height of the chart in px.
-   */
-  height: PropTypes.number.isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
-  /**
-   * The width of the chart in px.
-   */
-  width: PropTypes.number.isRequired,
 } as any;
 
 export { ChartsSurface };

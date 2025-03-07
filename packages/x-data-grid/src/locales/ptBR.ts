@@ -6,6 +6,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nenhuma linha',
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
@@ -31,6 +33,18 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Limpar',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Digite um prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
+  toolbarPromptControlLabel: 'Entrada de prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +57,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nenhuma coluna',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Redefinir',
+  columnsManagementDeleteIconLabel: 'Limpar',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
@@ -101,6 +116,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Maior que ou igual a',
   'headerFilterOperator<': 'Menor que',
   'headerFilterOperator<=': 'Menor que ou igual a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualquer',

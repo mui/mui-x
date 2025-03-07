@@ -3,7 +3,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 type PointerState = {
   isActive: boolean;
@@ -56,7 +55,7 @@ function usePointer(): PointerState {
   return pointer;
 }
 
-export function ItemTooltipFixedY() {
+export function ItemTooltipFixedY({ children }: React.PropsWithChildren) {
   const tooltipData = useItemTooltip();
   const { isActive } = usePointer();
 
@@ -74,7 +73,7 @@ export function ItemTooltipFixedY() {
     const handleMove = (event: PointerEvent) => {
       positionRef.current = {
         x: event.clientX,
-        y: event.clientY,
+        y: (svgRef.current?.getBoundingClientRect().top ?? 0) + drawingArea.top,
       };
       popperRef.current?.update();
     };
@@ -106,8 +105,8 @@ export function ItemTooltipFixedY() {
             y: positionRef.current.y,
             top: positionRef.current.y,
             left: positionRef.current.x,
-            right: positionRef.current.x,
-            bottom: positionRef.current.y,
+            right: 0,
+            bottom: 0,
             width: 0,
             height: 0,
             toJSON: () => '',
@@ -115,7 +114,7 @@ export function ItemTooltipFixedY() {
         }}
         popperRef={popperRef}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

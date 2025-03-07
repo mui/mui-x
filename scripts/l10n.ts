@@ -144,7 +144,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, for example MuiTablePagination
+        // Ignore translations for Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }

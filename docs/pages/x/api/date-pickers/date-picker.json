@@ -7,9 +7,9 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -66,7 +66,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": {
@@ -82,7 +85,7 @@
     },
     "onYearChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+      "signature": { "type": "function(year: PickerValidDate) => void", "describedArgs": ["year"] }
     },
     "open": { "type": { "name": "bool" }, "default": "false" },
     "openTo": {
@@ -94,6 +97,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -120,7 +124,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate) => boolean",
+        "type": "function(day: PickerValidDate) => boolean",
         "describedArgs": ["day"],
         "returned": "boolean"
       }
@@ -128,7 +132,7 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }
@@ -136,7 +140,7 @@
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(year: TDate) => boolean",
+        "type": "function(year: PickerValidDate) => boolean",
         "describedArgs": ["year"],
         "returned": "boolean"
       }
@@ -228,7 +232,7 @@
     {
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
+      "default": "PickerPopperPaper",
       "class": null
     },
     {
@@ -344,8 +348,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

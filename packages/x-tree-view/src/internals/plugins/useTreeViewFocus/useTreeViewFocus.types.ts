@@ -3,7 +3,6 @@ import { TreeViewPluginSignature } from '../../models';
 import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewFocusPublicAPI {
   /**
@@ -18,20 +17,6 @@ export interface UseTreeViewFocusPublicAPI {
 }
 
 export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
-  /**
-   * Check if an item is the currently focused item.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is focused, `false` otherwise.
-   */
-  isItemFocused: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Check if an item should be sequentially focusable (usually with the Tab key).
-   * At any point in time, there is a single item that can be sequentially focused in the Tree View.
-   * This item is the first selected item (that is both visible and navigable), if any, or the first navigable item if no item is selected.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item can be sequentially focusable, `false` otherwise.
-   */
-  canItemBeTabbed: (itemId: TreeViewItemId) => boolean;
   /**
    * Remove the focus from the currently focused item (both from the internal state and the DOM).
    */
@@ -50,7 +35,10 @@ export interface UseTreeViewFocusParameters {
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
-  focusedItemId: string | null;
+  focus: {
+    focusedItemId: string | null;
+    defaultFocusableItemId: string | null;
+  };
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{

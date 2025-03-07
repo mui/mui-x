@@ -2,14 +2,14 @@
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
-import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
-import { ZAxisContextProviderProps } from '../context';
+import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -24,20 +24,16 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     yAxis,
     zAxis,
     series,
-    tooltip,
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
+    hideLegend,
     width,
     height,
     margin,
     colors,
     sx,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     onItemClick,
     children,
     slots,
@@ -49,7 +45,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
@@ -58,23 +54,19 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     colors,
     xAxis,
     yAxis,
-    sx,
+    zAxis,
     highlightedItem,
     onHighlightChange,
-    className,
-  };
-  const zAxisProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-  };
-  const voronoiHandlerProps: ChartsVoronoiHandlerProps = {
+    disableVoronoi,
     voronoiMaxRadius,
-    onItemClick: onItemClick as ChartsVoronoiHandlerProps['onItemClick'],
+    onItemClick: disableVoronoi
+      ? undefined
+      : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
+    className,
+    plugins: SCATTER_CHART_PLUGINS,
   };
+
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };
@@ -96,7 +88,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
@@ -107,24 +99,21 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps<'scatter'> = {
-    trigger: 'item' as const,
-    ...tooltip,
-    slots,
-    slotProps,
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
   };
 
   return {
+    chartsWrapperProps,
     chartContainerProps,
-    zAxisProps,
-    voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   };
 };

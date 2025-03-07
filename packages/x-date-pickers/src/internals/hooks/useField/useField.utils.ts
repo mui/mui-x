@@ -8,18 +8,20 @@ import {
 } from './useField.types';
 import {
   FieldSectionType,
-  FieldValueType,
   FieldSection,
   MuiPickersAdapter,
   FieldSectionContentType,
   PickersTimezone,
   PickerValidDate,
   FieldSelectedSections,
+  PickerValueType,
+  InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { PickerValidValue } from '../../models';
 
-export const getDateSectionConfigFromFormatToken = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const getDateSectionConfigFromFormatToken = (
+  utils: MuiPickersAdapter,
   formatToken: string,
 ): Pick<FieldSection, 'type' | 'contentType'> & { maxLength: number | undefined } => {
   const config = utils.formatTokenMap[formatToken];
@@ -63,11 +65,8 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
   }
 };
 
-export const getDaysInWeekStr = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  format: string,
-) => {
-  const elements: TDate[] = [];
+export const getDaysInWeekStr = (utils: MuiPickersAdapter, format: string) => {
+  const elements: PickerValidDate[] = [];
 
   const now = utils.date(undefined, 'default');
   const startDate = utils.startOfWeek(now);
@@ -82,8 +81,8 @@ export const getDaysInWeekStr = <TDate extends PickerValidDate>(
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
-export const getLetterEditingOptions = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const getLetterEditingOptions = (
+  utils: MuiPickersAdapter,
   timezone: PickersTimezone,
   sectionType: FieldSectionType,
   format: string,
@@ -118,9 +117,7 @@ export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-export const getLocalizedDigits = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-) => {
+export const getLocalizedDigits = (utils: MuiPickersAdapter) => {
   const today = utils.date(undefined);
   const formattedZero = utils.formatByString(
     utils.setSeconds(today, 0),
@@ -191,10 +188,10 @@ export const cleanLeadingZeros = (valueStr: string, size: number) => {
   return cleanValueStr;
 };
 
-export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const cleanDigitSectionValue = (
+  utils: MuiPickersAdapter,
   value: number,
-  sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
+  sectionBoundaries: FieldSectionValueBoundaries<any>,
   localizedDigits: string[],
   section: Pick<
     FieldSection,
@@ -219,7 +216,7 @@ export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
 
   if (section.type === 'day' && section.contentType === 'digit-with-letter') {
     const date = utils.setDate(
-      (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
+      (sectionBoundaries as FieldSectionValueBoundaries<'day'>).longestMonth,
       value,
     );
     return utils.formatByString(date, section.format);
@@ -235,14 +232,14 @@ export const cleanDigitSectionValue = <TDate extends PickerValidDate>(
   return applyLocalizedDigits(valueStr, localizedDigits);
 };
 
-export const adjustSectionValue = <TDate extends PickerValidDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
+export const adjustSectionValue = <TValue extends PickerValidValue>(
+  utils: MuiPickersAdapter,
   timezone: PickersTimezone,
-  section: TSection,
+  section: InferFieldSection<TValue>,
   keyCode: AvailableAdjustKeyCode,
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries,
   localizedDigits: string[],
-  activeDate: TDate | null,
+  activeDate: PickerValidDate | null,
   stepsAttributes?: { minutesStep?: number },
 ): string => {
   const delta = getDeltaFromKeyCode(keyCode);
@@ -375,8 +372,8 @@ export const getSectionVisibleValue = (
   return value;
 };
 
-export const changeSectionValueFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const changeSectionValueFormat = (
+  utils: MuiPickersAdapter,
   valueStr: string,
   currentFormat: string,
   newFormat: string,
@@ -390,13 +387,11 @@ export const changeSectionValueFormat = <TDate extends PickerValidDate>(
   return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
 };
 
-const isFourDigitYearFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  format: string,
-) => utils.formatByString(utils.date(undefined, 'system'), format).length === 4;
+const isFourDigitYearFormat = (utils: MuiPickersAdapter, format: string) =>
+  utils.formatByString(utils.date(undefined, 'system'), format).length === 4;
 
-export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const doesSectionFormatHaveLeadingZeros = (
+  utils: MuiPickersAdapter,
   contentType: FieldSectionContentType,
   sectionType: FieldSectionType,
   format: string,
@@ -453,11 +448,11 @@ export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>
  * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
  * To make sure that the parsing works, we are building a format and a date without any separator.
  */
-export const getDateFromDateSections = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const getDateFromDateSections = (
+  utils: MuiPickersAdapter,
   sections: FieldSection[],
   localizedDigits: string[],
-) => {
+): PickerValidDate => {
   // If we have both a day and a weekDay section,
   // Then we skip the weekDay in the parsing because libraries like dayjs can't parse complicated formats containing a weekDay.
   // dayjs(dayjs().format('dddd MMMM D YYYY'), 'dddd MMMM D YYYY')) // returns `Invalid Date` even if the format is valid.
@@ -519,11 +514,11 @@ export const createDateStrForV6InputFromSections = (
   return `\u2066${dateStr}\u2069`;
 };
 
-export const getSectionsBoundaries = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const getSectionsBoundaries = (
+  utils: MuiPickersAdapter,
   localizedDigits: string[],
   timezone: PickersTimezone,
-): FieldSectionsValueBoundaries<TDate> => {
+): FieldSectionsValueBoundaries => {
   const today = utils.date(undefined, timezone);
   const endOfYear = utils.endOfYear(today);
   const endOfDay = utils.endOfDay(today);
@@ -538,7 +533,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
 
       return acc;
     },
-    { maxDaysInMonth: 0, longestMonth: null as TDate | null },
+    { maxDaysInMonth: 0, longestMonth: null as PickerValidDate | null },
   );
 
   return {
@@ -553,10 +548,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
     }),
     day: ({ currentDate }) => ({
       minimum: 1,
-      maximum:
-        currentDate != null && utils.isValid(currentDate)
-          ? utils.getDaysInMonth(currentDate)
-          : maxDaysInMonth,
+      maximum: utils.isValid(currentDate) ? utils.getDaysInMonth(currentDate) : maxDaysInMonth,
       longestMonth: longestMonth!,
     }),
     weekDay: ({ format, contentType }) => {
@@ -621,9 +613,9 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
 
 let warnedOnceInvalidSection = false;
 
-export const validateSections = <TSection extends FieldSection>(
-  sections: TSection[],
-  valueType: FieldValueType,
+export const validateSections = <TValue extends PickerValidValue>(
+  sections: InferFieldSection<TValue>[],
+  valueType: PickerValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
@@ -648,11 +640,11 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
-const transferDateSectionValue = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+const transferDateSectionValue = (
+  utils: MuiPickersAdapter,
   section: FieldSection,
-  dateToTransferFrom: TDate,
-  dateToTransferTo: TDate,
+  dateToTransferFrom: PickerValidDate,
+  dateToTransferTo: PickerValidDate,
 ) => {
   switch (section.type) {
     case 'year': {
@@ -664,12 +656,15 @@ const transferDateSectionValue = <TDate extends PickerValidDate>(
     }
 
     case 'weekDay': {
+      let dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
+      if (section.hasLeadingZerosInInput) {
+        dayInWeekStrOfActiveDate = cleanLeadingZeros(dayInWeekStrOfActiveDate, section.maxLength!);
+      }
+
       const formattedDaysInWeek = getDaysInWeekStr(utils, section.format);
-      const dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
       const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-
       return utils.addDays(dateToTransferFrom, diff);
     }
 
@@ -722,13 +717,13 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
   empty: 9,
 };
 
-export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateToTransferFrom: TDate,
+export const mergeDateIntoReferenceDate = (
+  utils: MuiPickersAdapter,
+  dateToTransferFrom: PickerValidDate,
   sections: FieldSection[],
-  referenceDate: TDate,
+  referenceDate: PickerValidDate,
   shouldLimitToEditedSections: boolean,
-) =>
+): PickerValidDate =>
   // cloning sections before sort to avoid mutating it
   [...sections]
     .sort(
@@ -744,7 +739,7 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-// TODO v8: Remove if we drop the v6 TextField approach.
+// TODO v9: Remove
 export const getSectionOrder = (
   sections: FieldSection[],
   shouldApplyRTL: boolean,
@@ -812,15 +807,16 @@ export const parseSelectedSections = (
   }
 
   if (typeof selectedSections === 'string') {
-    return sections.findIndex((section) => section.type === selectedSections);
+    const index = sections.findIndex((section) => section.type === selectedSections);
+    return index === -1 ? null : index;
   }
 
   return selectedSections;
 };
 
-export const getSectionValueText = <TDate extends PickerValidDate>(
+export const getSectionValueText = (
   section: FieldSection,
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickersAdapter,
 ): string | undefined => {
   if (!section.value) {
     return undefined;
@@ -848,9 +844,9 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   }
 };
 
-export const getSectionValueNow = <TDate extends PickerValidDate>(
+export const getSectionValueNow = (
   section: FieldSection,
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickersAdapter,
 ): number | undefined => {
   if (!section.value) {
     return undefined;

@@ -2,8 +2,16 @@ export { useTreeView } from './useTreeView';
 export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
 export { RichTreeViewItems } from './components/RichTreeViewItems';
+export type {
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from './components/RichTreeViewItems';
 
-export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
+export {
+  unstable_resetCleanupTracking,
+  useInstanceEventHandler,
+} from './hooks/useInstanceEventHandler';
+export { useSelector } from './hooks/useSelector';
 
 export type {
   TreeViewPlugin,
@@ -11,10 +19,12 @@ export type {
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewPublicAPI,
+  TreeViewState,
   TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
   TreeViewItemPlugin,
+  TreeViewUsedStore,
 } from './models';
 
 // Core plugins
@@ -48,6 +58,12 @@ export {
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
 } from './plugins/useTreeViewItems';
+export {
+  selectorItemMetaLookup,
+  selectorItemMeta,
+  selectorItemIndex,
+  selectorItemOrderedChildrenIds,
+} from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
@@ -58,10 +74,20 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
+export { selectorIsItemExpanded } from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+export {
+  selectorDataSourceState,
+  selectorGetTreeItemError,
+} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
+export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
+export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
+export { TreeViewStore } from './utils/TreeViewStore';

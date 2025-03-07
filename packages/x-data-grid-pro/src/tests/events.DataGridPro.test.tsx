@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -15,10 +16,9 @@ import {
   GridApi,
   GridEventListener,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
@@ -53,7 +53,7 @@ describe('<DataGridPro /> - Events params', () => {
     ],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -76,7 +76,7 @@ describe('<DataGridPro /> - Events params', () => {
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({
-        colDef: apiRef.current.getColumn('age'),
+        colDef: apiRef.current?.getColumn('age'),
         field: 'age',
       });
     });
@@ -97,7 +97,7 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventArgs!.params).to.deep.include({
         id: 2,
         row: baselineProps.rows[1],
-        columns: apiRef.current.getAllColumns(),
+        columns: apiRef.current?.getAllColumns(),
       });
     });
   });
@@ -120,7 +120,7 @@ describe('<DataGridPro /> - Events params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef.current.getColumn('first'),
+        colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
       });
@@ -145,7 +145,7 @@ describe('<DataGridPro /> - Events params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef.current.getColumn('first'),
+        colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
       });
@@ -239,7 +239,9 @@ describe('<DataGridPro /> - Events params', () => {
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
-      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal(
+        includeRowSelection([2]),
+      );
     });
 
     it('should not select a row if props.disableRowSelectionOnClick', () => {
@@ -329,10 +331,33 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
+    function test() {
+      if (isJSDOM) {
+        this.skip(); // Needs layout
+      }
+      const handleFetchRows = spy();
+      render(
+        <TestEvents
+          onFetchRows={handleFetchRows}
+          sortingMode="server"
+          filterMode="server"
+          rowsLoadingMode="server"
+          paginationMode="server"
+          rowCount={50}
+        />,
+      );
+      expect(handleFetchRows.callCount).to.equal(1);
+      expect(handleFetchRows.lastCall.firstArg).to.contain({
+        firstRowToRender: 3,
+        lastRowToRender: 50,
+      });
+    },
+  );
+
+  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', () => {
     const handleFetchRows = spy();
     render(
       <TestEvents
@@ -344,8 +369,21 @@ describe('<DataGridPro /> - Events params', () => {
         rowCount={50}
       />,
     );
-    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
+    // Since rowheight < viewport height, onmount calls fetchRows directly
     expect(handleFetchRows.callCount).to.equal(1);
+    act(() => {
+      apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+        firstRowIndex: 3,
+        lastRowIndex: 10,
+        firstColumnIndex: 0,
+        lastColumnIndex: 0,
+      });
+    });
+    expect(handleFetchRows.callCount).to.equal(2);
+    expect(handleFetchRows.lastCall.firstArg).to.contain({
+      firstRowToRender: 3,
+      lastRowToRender: 10,
+    });
   });
 
   it('should publish "unmount" event when unmounting the Grid', () => {
@@ -353,7 +391,7 @@ describe('<DataGridPro /> - Events params', () => {
 
     const { unmount } = render(<TestEvents />);
 
-    act(() => apiRef.current.subscribeEvent('unmount', onUnmount));
+    act(() => apiRef.current?.subscribeEvent('unmount', onUnmount));
     unmount();
     expect(onUnmount.calledOnce).to.equal(true);
   });

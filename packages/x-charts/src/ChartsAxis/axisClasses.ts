@@ -1,7 +1,5 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface ChartsAxisClasses {
   /** Styles applied to the root element. */
@@ -12,7 +10,11 @@ export interface ChartsAxisClasses {
   tickContainer: string;
   /** Styles applied to ticks. */
   tick: string;
-  /** Styles applied to ticks label. */
+  /** Styles applied to ticks label.
+   *
+   * ⚠️ For performance reasons, only the inline styles get considered for bounding box computation.
+   * Modifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.
+   */
   tickLabel: string;
   /** Styles applied to the group containing the axis label. */
   label: string;

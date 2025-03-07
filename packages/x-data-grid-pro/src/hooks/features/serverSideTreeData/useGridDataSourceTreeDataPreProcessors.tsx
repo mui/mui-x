@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -11,6 +12,7 @@ import {
 import {
   GridPipeProcessor,
   GridRowsPartialUpdates,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -37,7 +39,7 @@ import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 import { TreeDataStrategy } from '../treeData/gridTreeDataUtils';
 
 export const useGridDataSourceTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -46,16 +48,16 @@ export const useGridDataSourceTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
+      GridStrategyGroup.RowTree,
       TreeDataStrategy.DataSource,
-      props.treeData && props.unstable_dataSource ? () => true : () => false,
+      props.treeData && props.dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
+  }, [privateApiRef, props.treeData, props.dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -94,7 +96,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (!props.unstable_dataSource) {
+      if (!props.dataSource) {
         return columnsState;
       }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
@@ -126,17 +128,17 @@ export const useGridDataSourceTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, props.unstable_dataSource, getGroupingColDef],
+    [props.treeData, props.dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const getGroupKey = props.unstable_dataSource?.getGroupKey;
+      const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const getChildrenCount = props.unstable_dataSource?.getChildrenCount;
+      const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
@@ -189,11 +191,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         groupingName: TreeDataStrategy.DataSource,
       });
     },
-    [
-      props.unstable_dataSource,
-      props.defaultGroupingExpansionDepth,
-      props.isGroupExpandedByDefault,
-    ],
+    [props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {

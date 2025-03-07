@@ -205,7 +205,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(view.isItemExpanded('1')).to.equal(true);
     });
 
-    it('should be able to limit the expansion to the icon', function test() {
+    it('should be able to limit the expansion to the icon', () => {
       const CustomTreeItem = React.forwardRef(function MyTreeItem(
         props: TreeItemProps,
         ref: React.Ref<HTMLLIElement>,
@@ -309,8 +309,8 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
     });
   });
 
-  describe('setItemExpansion api method', () => {
-    it('should expand a collapsed item when calling the setItemExpansion method with `isExpanded=true`', () => {
+  describe('setItemExpansion() api method', () => {
+    it('should expand a collapsed item when calling the setItemExpansion method with `shouldBeExpanded=true`', () => {
       const onItemExpansionToggle = spy();
 
       const view = render({
@@ -319,7 +319,11 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       });
 
       act(() => {
-        view.apiRef.current.setItemExpansion({} as any, '1', true);
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+          shouldBeExpanded: true,
+        });
       });
 
       expect(view.isItemExpanded('1')).to.equal(true);
@@ -328,7 +332,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
     });
 
-    it('should collapse an expanded item when calling the setItemExpansion method with `isExpanded=false`', () => {
+    it('should collapse an expanded item when calling the setItemExpansion method with `shouldBeExpanded=false`', () => {
       const onItemExpansionToggle = spy();
 
       const view = render({
@@ -338,7 +342,11 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       });
 
       act(() => {
-        view.apiRef.current.setItemExpansion({} as any, '1', false);
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+          shouldBeExpanded: false,
+        });
       });
 
       expect(view.isItemExpanded('1')).to.equal(false);
@@ -347,7 +355,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
     });
 
-    it('should do nothing when calling the setItemExpansion method with `isExpanded=true` on an already expanded item', () => {
+    it('should do nothing when calling the setItemExpansion method with `shouldBeExpanded=true` on an already expanded item', () => {
       const onItemExpansionToggle = spy();
 
       const view = render({
@@ -357,14 +365,18 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       });
 
       act(() => {
-        view.apiRef.current.setItemExpansion({} as any, '1', true);
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+          shouldBeExpanded: true,
+        });
       });
 
       expect(view.isItemExpanded('1')).to.equal(true);
       expect(onItemExpansionToggle.callCount).to.equal(0);
     });
 
-    it('should do nothing when calling the setItemExpansion method with `isExpanded=false` on an already collapsed item', () => {
+    it('should do nothing when calling the setItemExpansion method with `shouldBeExpanded=false` on an already collapsed item', () => {
       const onItemExpansionToggle = spy();
 
       const view = render({
@@ -373,11 +385,54 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       });
 
       act(() => {
-        view.apiRef.current.setItemExpansion({} as any, '1', false);
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+          shouldBeExpanded: false,
+        });
       });
 
       expect(view.isItemExpanded('1')).to.equal(false);
       expect(onItemExpansionToggle.callCount).to.equal(0);
+    });
+
+    it('should expand a collapsed item when shouldBeExpanded is not defined', () => {
+      const onItemExpansionToggle = spy();
+
+      const view = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        onItemExpansionToggle,
+      });
+
+      act(() => {
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+        });
+      });
+
+      expect(view.isItemExpanded('1')).to.equal(true);
+      expect(onItemExpansionToggle.callCount).to.equal(1);
+    });
+
+    it('should collapse an expanded item when shouldBeExpanded is not defined', () => {
+      const onItemExpansionToggle = spy();
+
+      const view = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        defaultExpandedItems: ['1'],
+        onItemExpansionToggle,
+      });
+
+      act(() => {
+        view.apiRef.current.setItemExpansion({
+          event: {} as any,
+          itemId: '1',
+        });
+      });
+
+      expect(view.isItemExpanded('1')).to.equal(false);
+      expect(onItemExpansionToggle.callCount).to.equal(1);
     });
   });
 });

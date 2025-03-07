@@ -1,23 +1,25 @@
 ---
 title: Charts - Tooltip
 productId: x-charts
-components: ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent
+components: ChartsTooltip, ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltipContainer
 ---
 
 # Charts - Tooltip
 
 <p class="description">Tooltip provides extra data on charts item.</p>
 
-In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
-If you are using composition, you can add the `<ChartsTooltip />` component and pass props directly.
+In all charts components, the tooltip is accessible via the slot `tooltip`.
+If you are using composition, you can use the `<ChartsTooltip />` component.
 
 ## Tooltip trigger
 
-The tooltip can be triggered by two kinds of events:
+The Tooltip can be triggered by two kinds of events:
 
 - `'item'`—when the user's mouse hovers over an item on the chart, the tooltip displays data about this specific item.
 - `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip displays data about all series at this specific x value.
 - `'none'`—disable the tooltip.
+
+To pass this trigger attribute to the tooltip use `slotProps.tooltip.trigger`.
 
 {{"demo": "Interaction.js"}}
 
@@ -90,29 +92,65 @@ It removes the header showing the x-axis value from the tooltip.
 
 ### Overriding content
 
-To modify the tooltip content, use `slots.itemContent` or `slots.axisContent`.
-The first one is rendered when tooltip trigger is set to `"item"`.
-The second one when trigger is set to `"axis"`.
+To override tooltip content, provide a custom component to `slots.tooltip`.
+Some helper are provided, such as:
+
+- `<ChartsTooltipContainer />` which provide a tooltip with built-in open and position management.
+- `useItemTooltip()` which provides all basic information associated to the current item.
+- `useAxisTooltip()` which provides all basic information associated to the current axis.
+
+Here is the basic scheme to follow.
+Examples about helpers are provided in the composition section.
 
 ```jsx
-// With single component
+import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
+
+function CustomItemTooltipContent() {
+  const tooltipData = useItemTooltip();
+
+  if (!tooltipData) { // No data to display
+    return null;
+  }
+
+  return <div>{/** Your custom content **/}</div>;
+}
+
 <LineChart
-  slots={{
-    itemContent: CustomItemTooltip
-  }}
+  slots={{ tooltip: CustomItemTooltip }}
 />
 
 // With composition
 <ChartContainer>
   // ...
-  <Tooltip
-    trigger='item'
-    slots={{
-      itemContent: CustomItemTooltip
-    }}
-  />
+  <ChartsTooltipContainer trigger="item">
+    <CustomItemTooltipContent />
+  </ChartsTooltipContainer>
 </ChartContainer>
 ```
+
+:::warning
+Do not skip ChartsTooltipContainer rendering if the tooltip has no data to display.
+For example the following code does not work.
+
+```jsx
+if (tooltipData === null) {
+  return null;
+}
+
+return (
+  <ChartsTooltipContainer trigger="item">
+    {/** My content **/}
+  </ChartsTooltipContainer>
+);
+```
+
+The ChartsTooltipContainer must render before the pointer enters the SVG because it uses this event to get the pointer type.
+:::
+
+### Overriding placement
+
+To override tooltip placement, override to the tooltip with `slots.tooltip`.
+If you want to keep the default content, you can place the `ChartsItemTooltipContent` or `ChartsAxisTooltipContent` in your custom tooltip.
 
 ## Composition
 

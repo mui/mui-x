@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
@@ -24,7 +25,7 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
+import { GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -32,8 +33,12 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource } from '../gridDataSource';
+import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
+import type {
+  GridGetRowsError,
+  GridUpdateRowError,
+} from '../../hooks/features/dataSource/gridDataSourceError';
 
 export interface GridExperimentalFeatures {
   /**
@@ -252,14 +257,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   ignoreDiacritics: boolean;
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: 'select' | 'deselect';
-  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -324,6 +321,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   showColumnVerticalBorder: boolean;
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: boolean;
+  /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
@@ -374,14 +376,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   clipboardCopyCellDelimiter: string;
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
-  /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
    */
@@ -395,7 +389,15 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
-  unstable_rowSpanning: boolean;
+  rowSpanning: boolean;
+  /**
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
+   * @default false
+   */
+  virtualizeColumnsWithAutoRowHeight: boolean;
 }
 
 /**
@@ -406,12 +408,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiCommunity>;
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps?: Record<string, unknown>;
+  apiRef?: RefObject<GridApiCommunity | null>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the Data Grid is exposed [[GridSignature]].
@@ -422,6 +419,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridClasses>;
+  /**
+   * The data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache?: GridDataSourceCache | null;
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -505,6 +510,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -642,7 +652,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (
+    model: GridPaginationModel,
+    details: GridCallbackDetails<'pagination'>,
+  ) => void;
   /**
    * Callback fired when the row count has changed.
    * @param {number} count Updated row count.
@@ -717,7 +730,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel?: GridInputRowSelectionModel;
+  rowSelectionModel?: GridRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
@@ -765,6 +778,8 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId?: GridRowIdGetter<R>;
   /**
@@ -852,7 +867,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
@@ -868,7 +883,6 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
-  unstable_dataSource?: GridDataSource;
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */

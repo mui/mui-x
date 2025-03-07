@@ -7,7 +7,6 @@ import {
   DataGridPremium,
   GridRowId,
   gridClasses,
-  GridRowModel,
 } from '@mui/x-data-grid-premium';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +16,7 @@ import OpenIcon from '@mui/icons-material/Visibility';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
+import { useTheme } from '@mui/material/styles';
 import { FileIcon } from './components/FileIcon';
 import { DetailsDrawer } from './components/DetailsDrawer';
 import { ListCell } from './components/ListCell';
@@ -28,16 +28,32 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
-export default function ListViewAdvanced() {
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    listView: boolean;
+    container: () => HTMLElement;
+    handleDelete: (ids: GridRowId[]) => void;
+    handleUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  }
+}
+
+interface Props {
+  // Injected by the documentation to work in an iframe.
+  window?: () => Window;
+}
+
+export default function ListViewAdvanced(props: Props) {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef<HTMLDivElement>(null);
   const container = () => containerRef.current as HTMLElement;
 
-  const isListView = useMediaQuery('(min-width: 700px)');
+  const theme = useTheme();
+  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isDocsDemo = props.window !== undefined;
+  const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
-
-  const [rows, setRows] = React.useState<GridRowModel<RowModel>[]>(INITIAL_ROWS);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -53,9 +69,12 @@ export default function ListViewAdvanced() {
     setOverlayState({ overlay: null, params: null });
   };
 
-  const handleDelete = React.useCallback((ids: GridRowId[]) => {
-    setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
-  }, []);
+  const handleDelete = React.useCallback(
+    (ids: GridRowId[]) => {
+      apiRef.current?.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+    },
+    [apiRef],
+  );
 
   const handleUpdate = React.useCallback(
     (
@@ -63,15 +82,10 @@ export default function ListViewAdvanced() {
       field: GridRowParams<RowModel>['columns'][number]['field'],
       value: string,
     ) => {
-      setRows((prevRows) =>
-        prevRows.map((row) =>
-          row.id === id
-            ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
-            : row,
-        ),
-      );
+      const updatedAt = new Date().toISOString();
+      apiRef.current?.updateRows([{ id, [field]: value, updatedAt }]);
     },
-    [],
+    [apiRef],
   );
 
   const handleUpload = React.useCallback(
@@ -107,20 +121,18 @@ export default function ListViewAdvanced() {
 
       // Add temporary row
       setLoading(true);
-      setRows((prevRows) => [...prevRows, row]);
+      apiRef.current?.updateRows([row]);
 
       // Simulate server response time
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-        setRows((prevRows) =>
-          prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
-        );
+        apiRef.current?.updateRows([uploadedRow]);
         setOverlayState({ overlay: 'actions', params: { row } });
         setLoading(false);
       }, timeout);
     },
-    [],
+    [apiRef],
   );
 
   const columns: GridColDef[] = React.useMemo(
@@ -284,13 +296,13 @@ export default function ListViewAdvanced() {
       >
         <DataGridPremium
           apiRef={apiRef}
-          rows={rows}
+          rows={INITIAL_ROWS}
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               listView: isListView,
               container,
               handleDelete,

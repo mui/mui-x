@@ -52,7 +52,7 @@ The code above is already enough to display different options in the **Account**
 The only task left is to reset the account once the type is changed.
 This is needed because the previously selected account will not exist now in the options.
 To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onValueChange` prop.
-This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
+This function should call `apiRef.current.setEditCellValue()` to reset the value of the other field.
 
 ```tsx
 const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
@@ -77,7 +77,7 @@ The **Account** column is automatically updated with the correct options.
 {{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
+The call to `apiRef.current.setEditCellValue()` returns a promise that must be awaited.
 For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
 
 ```ts
@@ -93,7 +93,7 @@ const handleChange = async () => {
 :::
 
 A similar behavior can be reproduced with cell editing.
-Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.
+Instead of `apiRef.current.setEditCellValue()`, the `rows` prop must be updated or `apiRef.current.updateRows()` be used.
 Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -108,7 +108,7 @@ The following demo implements this behavior.
 
 ## Bulk editing
 
-The Data Grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+The Data Grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
 You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
 
 The demo below stores edited and deleted rows in the `unsavedChangesRef`.
@@ -118,6 +118,6 @@ These changes are saved or discarded when the user clicks the **Save** or **Disc
 
 ### With commercial features [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-When using [Data Grid Premium](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
+When using [Data Grid Premium](/x/react-data-grid/#premium-version), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
 
 {{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}

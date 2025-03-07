@@ -1,14 +1,7 @@
-export const DATE_ADAPTER_VERSIONS: Record<string, string> = {
-  'date-fns': '^2.30.0',
-  'date-fns-jalali': '^2.30.0-0',
-  dayjs: '^1.11.10',
-  luxon: '^3.4.4',
-  moment: '^2.29.4',
-  'moment-hijri': '^2.1.2',
-  'moment-jalaali': '^0.10.0',
-} as const;
+// eslint-disable-next-line import/no-relative-packages
+import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
 
-export const ADAPTER_TO_LIBRARY: Record<string, string> = {
+export const ADAPTER_TO_LIBRARY: Record<string, keyof typeof pickersPackageJson.devDependencies> = {
   AdapterDateFns: 'date-fns',
   AdapterDateFnsJalali: 'date-fns-jalali',
   AdapterDayjs: 'dayjs',
@@ -34,7 +27,7 @@ export const postProcessImport = (importName: string): Record<string, string> | 
         `Can't determine required npm package for adapter '${dateAdapterMatch[1]}'`,
       );
     }
-    return { [packageName]: DATE_ADAPTER_VERSIONS[packageName] ?? 'latest' };
+    return { [packageName]: pickersPackageJson.devDependencies[packageName] ?? 'latest' };
   }
   return null;
 };

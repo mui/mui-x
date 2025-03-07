@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -10,6 +11,7 @@ import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
+  GridStrategyGroup,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -50,7 +52,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method) - can be after, async only
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'initialState'
@@ -63,7 +65,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
     | 'slotProps'
     | 'slots'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -83,7 +85,6 @@ export const useGridRowGrouping = (
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithRowGroupingModel(model));
         setStrategyAvailability(apiRef, props.disableRowGrouping);
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, props.disableRowGrouping],
@@ -245,15 +246,15 @@ export const useGridRowGrouping = (
           return;
         }
 
-        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
-          apiRef.current.unstable_dataSource.fetchRows(params.id);
+        if (props.dataSource && !params.rowNode.childrenExpanded) {
+          apiRef.current.dataSource.fetchRows(params.id);
           return;
         }
 
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.rowGroupingColumnMode, props.unstable_dataSource],
+    [apiRef, props.rowGroupingColumnMode, props.dataSource],
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<
@@ -275,7 +276,9 @@ export const useGridRowGrouping = (
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.getActiveStrategy('rowTree') === RowGroupingStrategy.Default) {
+      if (
+        apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) === RowGroupingStrategy.Default
+      ) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }
@@ -285,7 +288,7 @@ export const useGridRowGrouping = (
   useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () =>
-    apiRef.current.unstable_dataSource.fetchRows(),
+    apiRef.current.dataSource.fetchRows(),
   );
 
   /*

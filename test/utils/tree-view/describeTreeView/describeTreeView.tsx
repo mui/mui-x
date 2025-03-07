@@ -118,6 +118,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       items: rawItems,
       withErrorBoundary,
       slotProps,
+      slots,
       ...other
     }) => {
       const items = rawItems as readonly DescribeTreeViewItem[];
@@ -127,7 +128,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
         <TreeViewComponent
           items={items}
           apiRef={apiRef}
-          slots={{ item: TreeItem }}
+          slots={{ item: TreeItem, ...slots }}
           slotProps={{
             ...slotProps,
             item: (ownerState) =>

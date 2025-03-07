@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -29,10 +29,7 @@
       "default": "'content'"
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ lazyLoading?: bool }" }
     },
     "getItemId": {
       "type": { "name": "func" },
@@ -61,7 +58,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "isItemReorderable": {
       "type": { "name": "func" },
       "default": "() => true",
@@ -94,7 +94,7 @@
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
@@ -165,12 +165,6 @@
       "class": "MuiRichTreeViewPro-root"
     },
     {
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem.",
-      "class": null
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -184,6 +178,12 @@
       "name": "endIcon",
       "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
+    },
+    {
+      "name": "item",
+      "description": "Custom component to render a Tree Item.",
+      "default": "TreeItem.",
+      "class": null
     }
   ],
   "classes": [],
@@ -193,6 +193,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view-pro/src/RichTreeViewPro/RichTreeViewPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy Loading Children</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

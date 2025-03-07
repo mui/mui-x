@@ -45,18 +45,18 @@ We support `date-fns` package v2.x, v3.x, and v4.x major versions.
 
 A single adapter cannot work for all `date-fns` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns` v3.x or v4.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+To use `date-fns` v2.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV2` instead of `@mui/x-date-pickers/AdapterDateFns`.
 :::
 
 ```tsx
-// with date-fns v2.x
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // with date-fns v3.x or v4.x
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // with date-fns v2.x
-import de from 'date-fns/locale/de';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
 // with date-fns v3.x or v4.x
 import { de } from 'date-fns/locale/de';
+// with date-fns v2.x
+import de from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
   {children}
@@ -143,32 +143,32 @@ For example, they don't support day of the year or quarter.
 Here is the list of the currently supported formats:
 
 - The year
-  - ✅ 2-digits values (e.g: `23`)
-  - ✅ 4-digits values (e.g: `2023`)
-  - ❌ Values with ordinal (e.g: `2023th`)
+  - ✅ 2-digits values (for example, `23`)
+  - ✅ 4-digits values (for example, `2023`)
+  - ❌ Values with ordinal (for example, `2023th`)
 - The month
 
-  - ✅ 1-based digit (e.g: `08`)
-  - ✅ Multi-letter values (for example `Aug`, `August`)
-  - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
+  - ✅ 1-based digit (for example, `08`)
+  - ✅ Multi-letter values (for example, `Aug`, `August`)
+  - ❌ 1-letter values (for example, `A`) because several months are represented with the same letter
 
 - The day of the month
 
-  - ✅ 1-based digit values (e.g: `24`)
-  - ✅ 1-based digit values with ordinal (e.g: `24th`)
+  - ✅ 1-based digit values (for example, `24`)
+  - ✅ 1-based digit values with ordinal (for example, `24th`)
 
 - The day of the week
 
-  - ✅ 0-based digit values (e.g: `03`)
-  - ✅ 1-based digit values (e.g: `04`)
-  - ✅ Multi-letter values (e.g: `Tue`, `Tuesday`)
-  - ❌ 1-letter values (e.g: `T`) because several days of the week are represented with the same letter
+  - ✅ 0-based digit values (for example, `03`)
+  - ✅ 1-based digit values (for example, `04`)
+  - ✅ Multi-letter values (for example, `Tue`, `Tuesday`)
+  - ❌ 1-letter values (for example, `T`) because several days of the week are represented with the same letter
 
 - The hours
 
-  - ✅ 0-based 12-hours values (e.g: `03`)
-  - ✅ 0-based 24-hours values (e.g: `15`)
-  - ❌ 1-based values (e.g: `24` instead of `00`)
+  - ✅ 0-based 12-hours values (for example, `03`)
+  - ✅ 0-based 24-hours values (for example, `15`)
+  - ❌ 1-based values (for example, `24` instead of `00`)
 
 - The minutes
 
@@ -190,7 +190,7 @@ If you need to get the clean value from the input, you can remove this character
 :::
 
 :::warning
-Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
 :::
 
 {{"demo": "RespectLeadingZerosFieldFormat.js"}}
@@ -303,10 +303,10 @@ For `date-fns`, override the `options.weekStartsOn` of the used locale:
 
 ```ts
 import { Locale } from 'date-fns';
+// with date-fns v3.x or v4.x
+import { enUS } from 'date-fns/locale/en-US';
 // with date-fns v2.x
 import enUS from 'date-fns/locale/en-US';
-// with date-fns v3.x
-import { enUS } from 'date-fns/locale/en-US';
 
 const customEnLocale: Locale = {
   ...enUS,

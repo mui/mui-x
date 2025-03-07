@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -17,7 +18,7 @@ export const densityStateInitializer: GridStateInitializer<
 });
 
 export const useGridDensity = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange' | 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
@@ -31,7 +32,7 @@ export const useGridDensity = (
   });
 
   const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
-    const currentDensity = gridDensitySelector(apiRef.current.state);
+    const currentDensity = gridDensitySelector(apiRef);
     if (currentDensity === newDensity) {
       return;
     }
@@ -52,7 +53,7 @@ export const useGridDensity = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const exportedDensity = gridDensitySelector(apiRef.current.state);
+      const exportedDensity = gridDensitySelector(apiRef);
 
       const shouldExportRowCount =
         // Always export if the `exportOnlyDirtyModels` property is not activated
@@ -78,7 +79,7 @@ export const useGridDensity = (
     (params, context) => {
       const restoredDensity = context.stateToRestore?.density
         ? context.stateToRestore.density
-        : gridDensitySelector(apiRef.current.state);
+        : gridDensitySelector(apiRef);
       apiRef.current.setState((state) => ({
         ...state,
         density: restoredDensity,

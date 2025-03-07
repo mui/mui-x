@@ -6,6 +6,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -31,6 +33,17 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Tìm kiếm',
   toolbarQuickFilterDeleteIconLabel: 'Xóa tìm kiếm',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
@@ -43,6 +56,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Không có cột',
   columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
   columnsManagementReset: 'Đặt lại',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
@@ -101,6 +115,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Lớn hơn hoặc bằng',
   'headerFilterOperator<': 'Nhỏ hơn',
   'headerFilterOperator<=': 'Nhỏ hơn hoặc bằng',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',

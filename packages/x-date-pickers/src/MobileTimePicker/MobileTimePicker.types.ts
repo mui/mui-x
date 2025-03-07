@@ -9,36 +9,30 @@ import {
   BaseTimePickerSlots,
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { PickerValidDate, TimeView } from '../models';
+import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileTimePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends TimeViewWithMeridiem,
-> extends BaseTimePickerSlots<TDate>,
-    MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
+export interface MobileTimePickerSlots
+  extends BaseTimePickerSlots,
+    MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileTimePickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends TimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseTimePickerSlotProps,
-    ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure> {}
+export interface MobileTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseTimePickerSlotProps,
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileTimePickerProps<
-  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem = TimeView,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseTimePickerProps<TDate, TView>,
+> extends BaseTimePickerProps<TView>,
     MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileTimePickerSlots<TDate, TView>;
+  slots?: MobileTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileTimePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

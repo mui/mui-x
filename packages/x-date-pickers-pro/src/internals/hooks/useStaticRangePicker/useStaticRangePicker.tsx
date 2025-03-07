@@ -1,94 +1,69 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
-  ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
-  PickersProvider,
+  PickerProvider,
+  PickerRangeValue,
+  mergeSx,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersLayout;
+})) as typeof PickersLayout;
 
 /**
  * Hook managing all the range static pickers:
  * - StaticDateRangePicker
  */
 export const useStaticRangePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
-  ref,
   ...pickerParams
-}: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
+}: UseStaticRangePickerParams<TView, TExternalProps>) => {
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const { rangePosition, onRangePositionChange } = useRangePosition(props);
+  const rangePositionResponse = useRangePosition(props);
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    DateRange<TDate>,
-    TDate,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    {}
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
+    variant: displayStaticWrapperAs,
     autoFocusView: autoFocus ?? false,
-    fieldRef: undefined,
+    viewContainerRole: null,
     localeText,
-    additionalViewProps: {
-      rangePosition,
-      onRangePositionChange,
-    },
-    wrapperVariant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
-    ...slotProps,
-    toolbar: {
-      ...slotProps?.toolbar,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseToolbarProps,
-  };
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
-      <Layout
-        {...layoutProps}
-        {...slotProps?.layout}
-        slots={slots}
-        slotProps={slotPropsForLayout}
-        sx={[
-          ...(Array.isArray(sx) ? sx : [sx]),
-          ...(Array.isArray(slotProps?.layout?.sx)
-            ? slotProps!.layout!.sx
-            : [slotProps?.layout?.sx]),
-        ]}
-        className={clsx(className, slotProps?.layout?.className)}
-        ref={ref}
-      >
-        {renderCurrentView()}
-      </Layout>
-    </PickersProvider>
+    <PickerRangePositionContext.Provider value={rangePositionResponse}>
+      <PickerProvider {...providerProps}>
+        <Layout
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotProps}
+          sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
+          className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
+          ref={providerProps.contextValue.rootRef}
+        >
+          {renderCurrentView()}
+        </Layout>
+      </PickerProvider>
+    </PickerRangePositionContext.Provider>
   );
 
   return { renderPicker };

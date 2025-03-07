@@ -6,30 +6,43 @@ import clsx from 'clsx';
 import { minimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
-import { GridOverlayType } from '../../hooks/features/overlays/useGridOverlays';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
+import { GridSlotsComponent } from '../../models';
+
+export type GridOverlayType =
+  | keyof Pick<
+      GridSlotsComponent,
+      'noColumnsOverlay' | 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'
+    >
+  | null;
 
 interface GridOverlaysProps {
   overlayType: GridOverlayType;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 }
 
+interface GridOverlayWrapperRootProps extends GridOverlaysProps {
+  right: number;
+}
+
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
-  shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
+  shouldForwardProp: (prop) =>
+    prop !== 'overlayType' && prop !== 'loadingOverlayVariant' && prop !== 'right',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})<GridOverlaysProps>(({ overlayType, loadingOverlayVariant }) =>
+})<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant, right }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
     ? {
         position: 'sticky', // To stay in place while scrolling
         top: 'var(--DataGrid-headersTotalHeight)', // TODO: take pinned rows into account
         left: 0,
+        right: `${right}px`,
         width: 0, // To stay above the content instead of shifting it down
         height: 0, // To stay above the content instead of shifting it down
         zIndex:
@@ -60,7 +73,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
+export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
@@ -80,7 +93,11 @@ function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
 
   return (
-    <GridOverlayWrapperRoot className={clsx(classes.root)} {...props}>
+    <GridOverlayWrapperRoot
+      className={clsx(classes.root)}
+      {...props}
+      right={dimensions.columnsTotalWidth - dimensions.viewportOuterSize.width}
+    >
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
@@ -99,32 +116,10 @@ GridOverlayWrapper.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   loadingOverlayVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
-  overlayType: PropTypes.oneOf(['loadingOverlay', 'noResultsOverlay', 'noRowsOverlay']),
+  overlayType: PropTypes.oneOf([
+    'loadingOverlay',
+    'noResultsOverlay',
+    'noRowsOverlay',
+    'noColumnsOverlay',
+  ]),
 } as any;
-
-GridOverlays.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  loadingOverlayVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
-  overlayType: PropTypes.oneOf(['loadingOverlay', 'noResultsOverlay', 'noRowsOverlay']),
-} as any;
-
-export function GridOverlays(props: GridOverlaysProps) {
-  const { overlayType } = props;
-  const rootProps = useGridRootProps();
-
-  if (!overlayType) {
-    return null;
-  }
-
-  const Overlay = rootProps.slots?.[overlayType];
-  const overlayProps = rootProps.slotProps?.[overlayType];
-
-  return (
-    <GridOverlayWrapper {...props}>
-      <Overlay {...overlayProps} />
-    </GridOverlayWrapper>
-  );
-}

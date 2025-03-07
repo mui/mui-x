@@ -4,11 +4,15 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import {
+  ChartsTooltipContainer,
+  ChartsItemTooltipContent,
+} from '@mui/x-charts/ChartsTooltip';
 import { ItemTooltip } from './ItemTooltip';
 import { ItemTooltipFixedY } from './ItemTooltipFixedY';
 import { ItemTooltipTopElement } from './ItemTooltipTopElement';
@@ -19,6 +23,14 @@ export default function CustomTooltipPosition() {
 
   const id = React.useId();
   const clipPathId = `${id}-clip-path`;
+
+  // Pick one of the custom tooltip wrapper according to the state.
+  const TooltipPlacement =
+    (tooltipType === 'mouse' && ItemTooltip) ||
+    (tooltipType === 'fixedY' && ItemTooltipFixedY) ||
+    (tooltipType === 'itemTop' && ItemTooltipTopElement) ||
+    ChartsTooltipContainer;
+
   return (
     <div style={{ width: '100%' }}>
       <FormControl>
@@ -41,7 +53,7 @@ export default function CustomTooltipPosition() {
           <FormControlLabel value="itemTop" control={<Radio />} label="top of bar" />
         </RadioGroup>
       </FormControl>
-      <ResponsiveChartContainer
+      <ChartContainer
         height={300}
         dataset={dataset}
         series={[
@@ -55,11 +67,13 @@ export default function CustomTooltipPosition() {
         </g>
         <ChartsXAxis />
         <ChartsYAxis />
-        {tooltipType === 'mouse' && <ItemTooltip />}
-        {tooltipType === 'fixedY' && <ItemTooltipFixedY />}
-        {tooltipType === 'itemTop' && <ItemTooltipTopElement />}
+        {/* Our custom tooltip wrapper with the default item content. */}
+        <TooltipPlacement>
+          <ChartsItemTooltipContent />
+        </TooltipPlacement>
+
         <ChartsClipPath id={clipPathId} />
-      </ResponsiveChartContainer>
+      </ChartContainer>
     </div>
   );
 }

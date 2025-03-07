@@ -71,7 +71,7 @@ export interface GridIconSlotsComponent {
   densityComfortableIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open export button present in the toolbar by default.
-   * @default GridSaveAltIcon
+   * @default GridDownloadIcon
    */
   exportIcon: React.JSXElementConstructor<any>;
   /**
@@ -179,4 +179,9 @@ export interface GridIconSlotsComponent {
    * @default GridDragIcon
    */
   columnReorderIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed to indicate that a menu item is selected.
+   * @default GridCheckIcon
+   */
+  menuItemCheckIcon: React.JSXElementConstructor<any>;
 }

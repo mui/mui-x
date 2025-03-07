@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -12,102 +11,78 @@ import {
   THEME_ID,
 } from '@mui/joy/styles';
 import Input from '@mui/joy/Input';
+import IconButton from '@mui/joy/IconButton';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import { createSvgIcon } from '@mui/joy/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+const CalendarIcon = createSvgIcon(
+  <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />,
+  'Calendar',
+);
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+function JoyDateField(props) {
+  const fieldResponse = useDateField(props);
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
+    // Can be used to style the component
     disabled,
-    id,
-    label,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    formControlSx,
-    endDecorator,
-    startDecorator,
-    slotProps,
+    readOnly,
+    error,
     inputRef,
+    // The rest can be passed to the root element
+    id,
     ...other
-  } = props;
+  } = fieldResponse;
+
+  const pickerContext = usePickerContext();
 
   return (
-    <FormControl
-      disabled={disabled}
-      id={id}
-      sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
-      ref={ref}
-    >
-      <FormLabel>{label}</FormLabel>
+    <FormControl disabled={disabled} id={id} ref={pickerContext.rootRef}>
+      <FormLabel>{pickerContext.label}</FormLabel>
       <Input
-        ref={ref}
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
         endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
+          <IconButton
+            onClick={() => pickerContext.setOpen((prev) => !prev)}
+            aria-label={openPickerAriaLabel}
+          >
+            <CalendarIcon size="md" />
+          </IconButton>
         }
         slotProps={{
-          ...slotProps,
-          root: { ...slotProps?.root, ref: containerRef },
-          input: { ...slotProps?.input, ref: inputRef },
+          input: { ref: inputRef },
         }}
         {...other}
+        ref={pickerContext.triggerRef}
       />
     </FormControl>
   );
-});
+}
 
-const JoyDateField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...textFieldProps } = props;
-
-  const fieldResponse = useDateField({
-    ...textFieldProps,
-    enableAccessibleFieldDOMStructure: false,
-  });
-
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <JoyField ref={ref} {...processedFieldProps} />;
-});
-
-const JoyDatePicker = React.forwardRef((props, ref) => {
+function JoyDatePicker(props) {
   return (
     <DatePicker
-      ref={ref}
       {...props}
+      enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoyDateField }}
-      slotProps={{
-        ...props.slotProps,
-        field: {
-          ...props.slotProps?.field,
-          formControlSx: {
-            flexDirection: 'row',
-          },
-        },
-      }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.
@@ -130,11 +105,7 @@ export default function JoyV6Field() {
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker
-            slotProps={{
-              field: { clearable: true },
-            }}
-          />
+          <JoyDatePicker />
         </LocalizationProvider>
       </CssVarsProvider>
     </MaterialCssVarsProvider>

@@ -1,19 +1,16 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "closeOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -68,7 +65,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onOpen": { "type": { "name": "func" } },
     "onRangePositionChange": {
@@ -87,6 +87,7 @@
     },
     "open": { "type": { "name": "bool" }, "default": "false" },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -113,7 +114,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
+        "type": "function(day: PickerValidDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
       }
@@ -185,15 +186,15 @@
       "default": "PickersModalDialogRoot",
       "class": null
     },
-    { "name": "field", "description": "", "class": null },
     {
-      "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input.",
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
       "class": null
     },
     {
-      "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+      "default": "InputAdornment",
       "class": null
     },
     {
@@ -223,6 +224,17 @@
       "name": "nextIconButton",
       "description": "Button allowing to switch to the right view.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the picker on desktop.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon displayed in the open picker button on desktop.",
       "class": null
     },
     {
@@ -257,8 +269,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

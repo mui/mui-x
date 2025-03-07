@@ -1,0 +1,16 @@
+<PieChart
+  series={[
+    {
+      innerRadius: 0,
+      outerRadius: 80,
+      data: data1,
+    },
+    {
+      innerRadius: 100,
+      outerRadius: 120,
+      data: data2,
+    },
+  ]}
+  height={300}
+  hideLegend
+/>

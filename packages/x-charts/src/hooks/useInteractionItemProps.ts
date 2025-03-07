@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
 import { SeriesItemIdentifier } from '../models';
-import { useHighlighted } from '../context';
+import { useChartContext } from '../context/ChartProvider';
+import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export const useInteractionItemProps = (skip?: boolean) => {
-  const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
-  const { setHighlighted, clearHighlighted } = useHighlighted();
+  const { instance } =
+    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
   if (skip) {
     return () => ({});
@@ -18,19 +19,19 @@ export const useInteractionItemProps = (skip?: boolean) => {
       }
     };
     const onPointerEnter = () => {
-      dispatchInteraction({
-        type: 'enterItem',
-        data,
-      });
-      setHighlighted({
+      instance.setItemInteraction(data);
+      instance.setHighlight({
         seriesId: data.seriesId,
         dataIndex: data.dataIndex,
       });
     };
     const onPointerLeave = (event: React.PointerEvent) => {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-      dispatchInteraction({ type: 'leaveItem', data });
-      clearHighlighted();
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+
+      instance.removeItemInteraction(data);
+      instance.clearHighlight();
     };
     return {
       onPointerEnter,

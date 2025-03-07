@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { TransitionProps } from '@mui/material/transitions';
+import { SlotComponentProps } from '@mui/utils/types';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
@@ -48,17 +50,31 @@ export interface TreeItemSlots extends TreeItemIconSlots {
    * @default TreeItemDragAndDropOverlay
    */
   dragAndDropOverlay?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an error state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemErrorContainer
+   */
+  errorIcon?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an loading state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemLoadingContainer
+   */
+  loadingIcon?: React.ElementType;
 }
 
 export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
-  groupTransition?: SlotComponentProps<'div', {}, {}>;
+  groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
   checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
+  errorIcon?: SlotComponentProps<'div', {}, {}>;
+  loadingIcon?: SlotComponentProps<'div', {}, {}>;
 }
 
 export interface TreeItemProps

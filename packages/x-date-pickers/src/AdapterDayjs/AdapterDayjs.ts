@@ -1,10 +1,14 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
-import weekOfYearPlugin from 'dayjs/plugin/weekOfYear';
-import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
-import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
-import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import advancedFormatPlugin from 'dayjs/plugin/advancedFormat';
+// dayjs has no exports field defined
+// See https://github.com/iamkun/dayjs/issues/2562
+/* eslint-disable import/extensions */
+import weekOfYearPlugin from 'dayjs/plugin/weekOfYear.js';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat.js';
+import localizedFormatPlugin from 'dayjs/plugin/localizedFormat.js';
+import isBetweenPlugin from 'dayjs/plugin/isBetween.js';
+import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
+/* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   FieldFormatTokenMap,
@@ -83,11 +87,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
 };
@@ -138,7 +140,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
+export class AdapterDayjs implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -296,10 +298,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Dayjs> => {
-    type R = DateBuilderReturnType<T, Dayjs>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     let parsedValue: Dayjs;
@@ -312,10 +314,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (this.locale === undefined) {
-      return <R>parsedValue;
+      return parsedValue as unknown as R;
     }
 
-    return <R>parsedValue.locale(this.locale);
+    return parsedValue.locale(this.locale) as unknown as R;
   };
 
   public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
@@ -414,7 +416,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public isValid = (value: Dayjs | null) => {
+  public isValid = (value: Dayjs | null): value is Dayjs => {
     if (value == null) {
       return false;
     }

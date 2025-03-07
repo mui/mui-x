@@ -29,26 +29,24 @@ const data2 = [
 export default function MultipleYAxesScatterChart() {
   return (
     <ScatterChart
-      width={500}
       height={300}
       series={[
         {
           data: data1,
           yAxisId: 'leftAxis',
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
         {
           data: data2,
           yAxisId: 'rightAxis',
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
       ]}
       xAxis={[{ min: 0 }]}
       yAxis={[
         { id: 'leftAxis', min: 0 },
-        { id: 'rightAxis', min: 0 },
+        { id: 'rightAxis', min: 0, position: 'right' },
       ]}
-      rightAxis="rightAxis"
       sx={{
         [`& .${axisClasses.left}`]: {
           line: { stroke: '#8884d8' },

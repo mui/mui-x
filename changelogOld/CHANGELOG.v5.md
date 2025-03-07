@@ -34,7 +34,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Allow to pass props to the `FocusTrap` inside the panel wrapper (#7897) @Vivek-Prajapatii
-- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7945) @cherniavskii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows()` (#7945) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7878) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7959) @MBilalShafi
 
@@ -332,7 +332,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - [DataGrid] Fix `ErrorOverlay` not receiving defined input props (#6885) @banoth-ravinder
 - [DataGrid] Improve typing for `styleOverrides` (#6980) @iigrik
-- [DataGridPro] Fix lazy-loaded rows not working with `updateRows` API method (#6875) @cherniavskii
+- [DataGridPro] Fix lazy-loaded rows not working with `updateRows()` API method (#6875) @cherniavskii
 - [l10n] Fix translation of `filterOperatorBefore` in Arabic (ar-SD) locale (#6917) @HassanGhazy
 
 ### `@mui/x-date-pickers@v5.0.9` / `@mui/x-date-pickers-pro@v5.0.9`
@@ -2184,7 +2184,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
 - [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
 - [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
-- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Only update the visibility status of the updated columns when calling `updateRows()` (#3735) @flaviendelangle
 - [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
 - [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
 - [DataGrid] Variable row height (#3218) @DanailH
@@ -2726,10 +2726,10 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Block multi-rows updates in `apiRef.current.updateRows` on the Community plan (#3095) @flaviendelangle
+- [DataGrid] Block multi-rows updates in `updateRows()` on the Community plan (#3095) @flaviendelangle
 - [DataGrid] Fix filter not working after deleting the value (#3018) @m4theushw
 - [DataGrid] Fix performance regression when selecting 100k rows (#3077) @m4theushw
-- [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
+- [DataGrid] Fix `updateRows()` to not share rows from other instances (#3127) @m4theushw
 - [DataGrid] Fix flex space allocation to not cause a horizontal scroll when there is enough space (#3099) @flaviendelangle
 - [DataGrid] Improve the filter panel behaviors (#3080) @flaviendelangle
 - [DataGrid] Fix keyboard navigation between column headers and rows when not on the first page (#3086) @flaviendelangle

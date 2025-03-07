@@ -1,1 +1,2 @@
-export { useHeatmapSeries as unstable_useHeatmapSeries } from './useSeries';
+export { useHeatmapSeries } from './useHeatmapSeries';
+export * from './zoom';

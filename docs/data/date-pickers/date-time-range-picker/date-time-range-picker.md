@@ -17,7 +17,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `MultiInputDateTimeRangeField` for the keyboard editing, the `DateRangeCalendar` for the date view editing and `DigitalClock` for the time view editing.
+The component is built using the `SingleInputDateTimeRangeField` for the keyboard editing, the `DateRangeCalendar` for the date view editing and `DigitalClock` for the time view editing.
 
 Check-out their documentation page for more information:
 
@@ -26,7 +26,7 @@ Check-out their documentation page for more information:
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-time-range-picker/#props).
-Some [MultiInputDateTimeRangeField props](/x/api/date-pickers/multi-input-date-time-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
+Some [SingleInputDateTimeRangeField props](/x/api/date-pickers/single-input-date-time-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
@@ -47,10 +47,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in three variants:
 
 - The `DesktopDateTimeRangePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateTimeRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
 
 - The `DateTimeRangePicker` component which renders `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` depending on the device it runs on.
 
@@ -66,7 +66,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateTimeRangePickers.js"}}
 
@@ -82,14 +82,14 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateTimeRangePickerCalendarProp.js"}}
 
-### Use a single input field
+### Use a multi input field
 
-You can pass the `SingleInputDateTimeRangeField` component to the Date Time Range Picker to use it for keyboard editing:
+You can pass the `MultiInputDateTimeRangeField` component to the Date Time Range Picker to use it for keyboard editing:
 
-{{"demo": "SingleInputDateTimeRangePicker.js"}}
+{{"demo": "MultiInputDateTimeRangePicker.js"}}
 
 :::info
-You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Customize the field

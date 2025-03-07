@@ -5,11 +5,7 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import {
-  computeSlots,
-  useProps,
-  ROW_SELECTION_PROPAGATION_DEFAULT,
-} from '@mui/x-data-grid/internals';
+import { computeSlots, ROW_SELECTION_PROPAGATION_DEFAULT } from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
@@ -27,7 +23,7 @@ type GetDataGridProForcedProps = (
 
 const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: 'DataGridPro',
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',
@@ -55,19 +51,20 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,
   treeData: false,
+  lazyLoading: false,
+  lazyLoadingRequestThrottleMs: 500,
   unstable_listView: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const themedProps = useProps(
+  const themedProps =
     // eslint-disable-next-line material-ui/mui-name-matches-component-name
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',
-    }),
-  );
+    });
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

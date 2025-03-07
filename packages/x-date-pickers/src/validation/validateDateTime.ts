@@ -1,27 +1,45 @@
 import { Validator } from './useValidation';
-import { ExportedValidateDateProps, validateDate, ValidateDateProps } from './validateDate';
-import { ExportedValidateTimeProps, validateTime, ValidateTimeProps } from './validateTime';
-import { DateTimeValidationError, PickerValidDate } from '../models';
+import {
+  ExportedValidateDateProps,
+  validateDate,
+  ValidateDateProps,
+  ValidateDatePropsToDefault,
+} from './validateDate';
+import {
+  ExportedValidateTimeProps,
+  validateTime,
+  ValidateTimeProps,
+  ValidateTimePropsToDefault,
+} from './validateTime';
+import { DateTimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeValidationProps } from '../internals/models/validation';
+import { PickerValue } from '../internals/models';
 
 /**
  * Validation props used by the Date Time Picker and Date Time Field components.
  */
-export interface ExportedValidateDateTimeProps<TDate extends PickerValidDate>
-  extends ExportedValidateDateProps<TDate>,
-    ExportedValidateTimeProps<TDate>,
-    DateTimeValidationProps<TDate> {}
+export interface ExportedValidateDateTimeProps
+  extends ExportedValidateDateProps,
+    ExportedValidateTimeProps,
+    DateTimeValidationProps {}
 
-export interface ValidateDateTimeProps<TDate extends PickerValidDate>
-  extends ValidateDateProps<TDate>,
-    ValidateTimeProps<TDate> {}
+/**
+ * Validation props as received by the validateDateTime method.
+ */
+export interface ValidateDateTimeProps extends ValidateDateProps, ValidateTimeProps {}
+
+/**
+ * Name of the props that should be defaulted before being passed to the validateDateTime method.
+ */
+export type ValidateDateTimePropsToDefault =
+  | ValidateDatePropsToDefault
+  | ValidateTimePropsToDefault;
 
 export const validateDateTime: Validator<
-  any | null,
-  any,
+  PickerValue,
   DateTimeValidationError,
-  ValidateDateTimeProps<any>
+  ValidateDateTimeProps
 > = ({ adapter, value, timezone, props }) => {
   const dateValidationResult = validateDate({
     adapter,

@@ -1,5 +1,19 @@
+/**
+ * Workaround for the codesadbox preview error.
+ *
+ * Once these issues are resolved
+ * https://github.com/mui/mui-x/issues/15765
+ * https://github.com/codesandbox/codesandbox-client/issues/8673
+ *
+ * `showError` can simply use `console.error` again.
+ */
+const isCodeSandbox =
+  typeof window !== 'undefined' && window.location.hostname.endsWith('.csb.app');
+
 function showError(message: string[]) {
-  console.error(
+  // eslint-disable-next-line no-console
+  const logger = isCodeSandbox ? console.log : console.error;
+  logger(
     [
       '*************************************************************',
       '',

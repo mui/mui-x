@@ -9,7 +9,7 @@ import {
 } from '../models';
 
 type DateFnsLocaleBase = {
-  formatLong?: {
+  formatLong: {
     date: (...args: Array<any>) => any;
     time: (...args: Array<any>) => any;
     dateTime: (...args: Array<any>) => any;
@@ -103,11 +103,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 'p',
   fullTime12h: 'hh:mm aa',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
 };
@@ -151,7 +149,7 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
 export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   implements
     Pick<
-      MuiPickersAdapter<Date, DateFnsLocale>,
+      MuiPickersAdapter<DateFnsLocale>,
       | 'date'
       | 'getInvalidDate'
       | 'getTimezone'
@@ -187,19 +185,17 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     this.lib = lib || 'date-fns';
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
+  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (typeof value === 'undefined') {
-      return <R>new Date();
+      return new Date() as unknown as R;
     }
 
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
-    return <R>new Date(value);
+    return new Date(value) as unknown as R;
   };
 
   public getInvalidDate = () => new Date('Invalid Date');

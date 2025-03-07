@@ -1,6 +1,4 @@
 import * as React from 'react';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import {
   useGridSelector,
   gridColumnLookupSelector,
@@ -35,11 +33,9 @@ export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
         onClick={ungroupColumn}
         key={field}
         disabled={!groupedColumn.groupable}
+        iconStart={<rootProps.slots.columnMenuUngroupIcon fontSize="small" />}
       >
-        <ListItemIcon>
-          <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
+        {apiRef.current.getLocaleText('unGroupColumn')(name)}
       </rootProps.slots.baseMenuItem>
     );
   };

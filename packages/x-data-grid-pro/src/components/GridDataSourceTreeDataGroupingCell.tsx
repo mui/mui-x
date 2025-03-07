@@ -1,19 +1,17 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
-import Box from '@mui/material/Box';
 import {
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
-import { useGridSelectorV8 } from '@mui/x-data-grid/internals';
-import CircularProgress from '@mui/material/CircularProgress';
+import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPrivateApiPro } from '../models/gridApiPro';
-import { GridStatePro } from '../models/gridStatePro';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -49,18 +47,18 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const isDataLoading = useGridSelectorV8(apiRef, gridDataSourceLoadingIdSelector, id);
-  const error = useGridSelectorV8(apiRef, gridDataSourceErrorSelector, id);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.unstable_dataSource.fetchRows(id);
+      apiRef.current.dataSource.fetchRows(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }
@@ -75,7 +73,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <CircularProgress size="1rem" color="inherit" />
+        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }
@@ -105,17 +103,19 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
-  const row = useGridSelector(apiRef, rowSelector);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = Math.max(rootProps.dataSource?.getChildrenCount?.(row) ?? 0, 0);
   }
 
   return (
-    <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
+    <div
+      className={classes.root}
+      style={{ marginLeft: vars.spacing(rowNode.depth * offsetMultiplier) }}
+    >
       <div className={classes.toggle}>
         <GridTreeDataGroupingCellIcon
           id={id}
@@ -129,6 +129,6 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
-    </Box>
+    </div>
   );
 }

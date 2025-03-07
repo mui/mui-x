@@ -16,7 +16,7 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.treeData &&
       props.filterMode === 'server' &&
-      !props.unstable_dataSource &&
+      !props.dataSource &&
       'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.') ||
     undefined,
   (props) =>
@@ -30,5 +30,11 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
       props.rowsLoadingMode !== 'server' &&
       isNumber(props.rowCount) &&
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
+    undefined,
+  (props) =>
+    (props.signature !== GridSignature.DataGrid &&
+      (props.rowsLoadingMode === 'server' || props.onRowsScrollEnd) &&
+      props.lazyLoading &&
+      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"` or `onRowsScrollEnd=...`) cannot be used together with server side lazy loading `lazyLoading="true"`.') ||
     undefined,
 ];

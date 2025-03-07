@@ -4,6 +4,7 @@
   "node": "20",
   "packages": [
     "packages/x-license",
+    "packages/x-telemetry",
     "packages/x-data-grid",
     "packages/x-data-grid-pro",
     "packages/x-data-grid-premium",
@@ -19,6 +20,7 @@
   ],
   "publishDirectory": {
     "@mui/x-license": "packages/x-license/build",
+    "@mui/x-telemetry": "packages/x-telemetry/build",
     "@mui/x-data-grid": "packages/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/x-data-grid-pro/build",
     "@mui/x-data-grid-premium": "packages/x-data-grid-premium/build",
@@ -32,6 +34,6 @@
     "@mui/x-tree-view-pro": "packages/x-tree-view-pro/build",
     "@mui/x-internals": "packages/x-internals/build"
   },
-  "sandboxes": ["/bug-reproductions/x-data-grid"],
+  "sandboxes": ["/bug-reproductions/x-data-grid", "/bug-reproductions/x-charts"],
   "silent": true
 }

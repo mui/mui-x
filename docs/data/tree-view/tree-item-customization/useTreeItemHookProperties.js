@@ -21,6 +21,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   ref,
 ) {
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -33,7 +34,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <TreeItemRoot {...getRootProps()}>
         <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
@@ -63,9 +64,6 @@ export default function useTreeItemHookProperties() {
         slots={{ item: CustomTreeItem }}
         checkboxSelection
         isItemEditable
-        experimentalFeatures={{
-          labelEditing: true,
-        }}
       />
     </Box>
   );

@@ -1,5 +1,4 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -10,38 +9,28 @@ import {
   BaseDateTimeRangePickerSlots,
   BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerView } from '../internals/models';
 
-export interface MobileDateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlots<TDate>,
-    MakeOptional<UseMobileRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
+export interface MobileDateTimeRangePickerSlots
+  extends BaseDateTimeRangePickerSlots,
+    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileDateTimeRangePickerSlotProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateTimeRangePickerSlotProps<TDate>,
-    Omit<
-      UseMobileRangePickerSlotProps<
-        TDate,
-        DateTimeRangePickerView,
-        TEnableAccessibleFieldDOMStructure
-      >,
-      'tabs' | 'toolbar'
-    > {}
+> extends BaseDateTimeRangePickerSlotProps,
+    Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileDateTimeRangePickerProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimeRangePickerProps<TDate>,
+> extends BaseDateTimeRangePickerProps,
     MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimeRangePickerSlots<TDate>;
+  slots?: MobileDateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

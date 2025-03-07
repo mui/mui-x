@@ -11,7 +11,7 @@ export interface ColumnHeaderMenuIconProps {
   columnMenuId: string;
   columnMenuButtonId: string;
   open: boolean;
-  iconButtonRef: React.RefObject<HTMLButtonElement>;
+  iconButtonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 type OwnerState = ColumnHeaderMenuIconProps & {

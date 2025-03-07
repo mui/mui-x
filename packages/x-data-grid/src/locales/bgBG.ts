@@ -6,6 +6,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -30,6 +32,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
@@ -42,6 +55,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Няма колони',
   columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
   columnsManagementReset: 'Нулирай',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
@@ -100,6 +114,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'По-голямо или равно на',
   'headerFilterOperator<': 'По-малко от',
   'headerFilterOperator<=': 'По-малко или равно на',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'всякакви',

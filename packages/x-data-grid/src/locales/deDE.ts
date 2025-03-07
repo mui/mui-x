@@ -6,6 +6,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
+  noColumnsOverlayLabel: 'Keine Spalten',
+  noColumnsOverlayManageColumns: 'Spalten verwalten',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -31,6 +33,18 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
+  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
+  toolbarPromptControlLabel: 'Prompteingabe',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
+  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
+  toolbarPromptControlSendActionLabel: 'Senden',
+  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
+  toolbarPromptControlErrorMessage:
+    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
@@ -43,6 +57,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
+  columnsManagementDeleteIconLabel: 'Löschen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
@@ -101,6 +116,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Größer als oder gleich',
   'headerFilterOperator<': 'Kleiner als',
   'headerFilterOperator<=': 'Kleiner als oder gleich',
+  headerFilterClear: 'Filter löschen',
 
   // Filter values text
   filterValueAny: 'Beliebig',

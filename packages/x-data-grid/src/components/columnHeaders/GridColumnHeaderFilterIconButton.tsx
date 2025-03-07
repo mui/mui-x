@@ -2,7 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { useGridSelector } from '../../hooks';
-import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
+import {
+  gridPreferencePanelSelectorWithLabel,
+  gridPreferencePanelStateSelector,
+} from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -31,14 +34,31 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+function GridColumnHeaderFilterIconButtonWrapped(props: ColumnHeaderFilterIconButtonProps) {
+  if (!props.counter) {
+    return null;
+  }
+  return <GridColumnHeaderFilterIconButton {...props} />;
+}
+
+GridColumnHeaderFilterIconButtonWrapped.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  counter: PropTypes.number,
+  field: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+} as any;
+
 function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
   const labelId = useId();
+  const isOpen = useGridSelector(apiRef, gridPreferencePanelSelectorWithLabel, labelId);
   const panelId = useId();
 
   const toggleFilter = React.useCallback(
@@ -46,7 +66,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef.current.state);
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef);
 
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hideFilterPanel();
@@ -65,19 +85,16 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
     return null;
   }
 
-  const open = preferencePanel.open && preferencePanel.labelId === labelId;
-
   const iconButton = (
     <rootProps.slots.baseIconButton
       id={labelId}
       onClick={toggleFilter}
-      color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
       aria-haspopup="menu"
-      aria-expanded={open}
-      aria-controls={open ? panelId : undefined}
+      aria-expanded={isOpen}
+      aria-controls={isOpen ? panelId : undefined}
       {...rootProps.slotProps?.baseIconButton}
     >
       <rootProps.slots.columnFilteredIcon className={classes.icon} fontSize="small" />
@@ -89,7 +106,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
-        ) as React.ReactElement
+        ) as React.ReactElement<any>
       }
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}
@@ -117,4 +134,4 @@ GridColumnHeaderFilterIconButton.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnHeaderFilterIconButton };
+export { GridColumnHeaderFilterIconButtonWrapped as GridColumnHeaderFilterIconButton };

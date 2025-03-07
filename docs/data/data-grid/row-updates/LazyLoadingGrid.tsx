@@ -82,7 +82,7 @@ export default function LazyLoadingGrid() {
     async (params: GridFetchRowsParams) => {
       const { slice, total } = await fetchRow(params);
 
-      apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
+      apiRef.current?.unstable_replaceRows(params.firstRowToRender, slice);
       setRowCount(total);
     },
     [apiRef, fetchRow],

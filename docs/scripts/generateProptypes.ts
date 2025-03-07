@@ -10,12 +10,12 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
+const COMPONENTS_WITHOUT_PROPTYPES = ['AnimatedBarElement'];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
-  const isTDate = (name: string) => {
+  const isDateObject = (name: string) => {
     if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
-      const T_DATE_PROPS = [
+      const DATE_OBJECT_PROPS = [
         'value',
         'defaultValue',
         'minDate',
@@ -30,7 +30,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'month',
       ];
 
-      if (T_DATE_PROPS.includes(name)) {
+      if (DATE_OBJECT_PROPS.includes(name)) {
         return true;
       }
     }
@@ -70,23 +70,21 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'unstableEndFieldRef',
         'series',
         'axis',
-        'bottomAxis',
-        'topAxis',
-        'leftAxis',
-        'rightAxis',
         'plugins',
+        'seriesConfig',
+        'manager',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
       }
 
-      if (isTDate(name)) {
+      if (isDateObject(name)) {
         return false;
       }
 
       return undefined;
     },
-    shouldUseObjectForDate: ({ name }) => isTDate(name),
+    shouldUseObjectForDate: ({ name }) => isDateObject(name),
   });
 
   if (components.length === 0) {
@@ -115,6 +113,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       },
       shouldInclude: ({ component, prop }) => {
         if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
+          return false;
+        }
+        if (['plugins', 'seriesConfig'].includes(prop.name) && component.name.includes('Chart')) {
           return false;
         }
         let shouldExclude = false;

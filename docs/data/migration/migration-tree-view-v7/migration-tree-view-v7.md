@@ -17,6 +17,9 @@ In `package.json`, change the version of the Tree View package to `next`.
 ```diff
 -"@mui/x-tree-view": "7.x.x",
 +"@mui/x-tree-view": "next",
+
+-"@mui/x-tree-view-pro": "7.x.x",
++"@mui/x-tree-view-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -34,10 +37,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Tree View specific
+# Tree View specific
 npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
@@ -57,13 +60,60 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<RichTreeView {...pickerProps} />
+<RichTreeView {...treeViewProps} />
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
+
+### ✅ Use Simple Tree View instead of Tree View
+
+The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem itemId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
+
+If you were using theme augmentation, you will also need to migrate it:
+
+```diff
+ const theme = createTheme({
+   components: {
+-    MuiTreeView: {
++    MuiSimpleTreeView: {
+       styleOverrides: {
+         root: {
+           opacity: 0.5,
+         },
+       },
+     },
+   },
+ });
+```
+
+If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
+
+```diff
+ import { treeViewClasses } from '@mui/x-tree-view/TreeView';
+ import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+
+-const rootClass = treeViewClasses.root;
++const rootClass = simpleTreeViewClasses.root;
+```
 
 ## New API to customize the Tree Item
 
@@ -79,13 +129,13 @@ This inconsistency has been solved, all the event manager now target the root of
 
 ```diff
 -<SimpleTreeView>
-+<SimpleTreeView onItemClick={handleItemClick}>
 -  <TreeItem onClick={handleItemClick}>
-+  <TreeItem >
++<SimpleTreeView onItemClick={handleItemClick}>
++  <TreeItem>
  </SimpleTreeView>
 ```
 
-## Rename the `TreeItem2` (and related utils)
+## ✅ Rename the `TreeItem2` (and related utils)
 
 All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
 
@@ -177,4 +227,113 @@ All the new Tree Item-related components and utils (introduced in the previous m
 +  TreeItemLabelInputProps,
 - } from '@mui/x-tree-view/TreeItem2LabelInput';
 + } from '@mui/x-tree-view/TreeItemLabelInput';
+```
+
+## `publicAPI` methods
+
+### Stop using `publicAPI` methods in the render
+
+The Tree Items are now memoized to improve the performances of the Tree View components.
+If you call a `publicAPI` method in the render of an item, it might not re-render and you might not have the new value.
+
+```ts
+function CustomTreeItem(props) {
+  const { publicAPI } = useTreeItemUtils();
+
+  // Invalid
+  console.log(publicAPI.getItem(props.itemId));
+
+  // Valid
+  React.useEffect(() => {
+    console.log(publicAPI.getItem(props.itemId));
+  });
+
+  // Valid
+  function handleItemClick() {
+    console.log(publicAPI.getItem(props.itemId));
+  }
+}
+```
+
+If you need to access the tree item model inside the render, you can use the new `useTreeItemModel` hook:
+
+```diff
++import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+
+ function CustomTreeItem(props) {
+-  const { publicAPI } = useTreeItemUtils();
+-  const item = publicAPI.getItem(props.itemId);
++  const item = useTreeItemModel(props.itemId);
+ }
+```
+
+:::success
+If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
+:::
+
+### Rename `publicAPI.selectItem()`
+
+The `selectItem` method has been renamed `setItemSelection`:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleSelectItem() {
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+ }
+```
+
+## Change `pubicAPI.setItemExpansion()` signature
+
+The `setItemExpansion` method now receives a single object instead of a list of parameters:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleExpandItem() {
+-  publicAPI.setItemExpansion(event, props.itemId, true)
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+ }
+```
+
+:::success
+The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
+:::
+
+## Apply the indentation on the item content instead of it's parent's group
+
+The indentation of nested Tree Items is now applied on the content of the element.
+This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
+
+### Apply custom indentation
+
+If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure:
+
+```tsx
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  itemChildrenIndentation={24}
+  defaultExpandedItems={['grid']}
+/>
+```
+
+:::info
+See [Tree Item Customization—Change nested item's indentation](/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
+:::
+
+### Fallback to the old behavior
+
+If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior:
+
+```tsx
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
+  // Remove the additional padding of nested elements
+  padding: theme.spacing(0.5, 1),
+}));
+
+const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)({
+  // Add the padding back on the group transition element
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation) !important',
+});
 ```

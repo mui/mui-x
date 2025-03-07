@@ -5,27 +5,25 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
-    "disableAxisListener": {
-      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
-    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
     },
@@ -34,29 +32,17 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",
     "pieArcLabel": "",
-    "popper": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

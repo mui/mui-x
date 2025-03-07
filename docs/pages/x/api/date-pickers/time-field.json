@@ -3,6 +3,10 @@
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
+    "clearButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "color": {
       "type": {
         "name": "enum",
@@ -64,6 +68,10 @@
         "describedArgs": ["newValue"]
       }
     },
+    "openPickerButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "object" },
@@ -79,7 +87,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }

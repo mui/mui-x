@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
@@ -40,10 +41,10 @@ export const TreeItemContent = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-  shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
-})<{ status: UseTreeItemStatus; indentationAtItemLevel?: true }>(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
+})<{ status: UseTreeItemStatus }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
@@ -61,12 +62,6 @@ export const TreeItemContent = styled('div', {
     },
   },
   variants: [
-    {
-      props: { indentationAtItemLevel: true },
-      style: {
-        paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
-      },
-    },
     {
       props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
       style: {
@@ -146,6 +141,7 @@ export const TreeItemIconContainer = styled('div', {
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',
+  position: 'relative',
   '& svg': {
     fontSize: 18,
   },
@@ -155,17 +151,30 @@ export const TreeItemGroupTransition = styled(Collapse, {
   name: 'MuiTreeItem',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
-})<{ indentationAtItemLevel?: true }>({
+})({
   margin: 0,
   padding: 0,
-  paddingLeft: 'var(--TreeView-itemChildrenIndentation)',
-  variants: [
-    {
-      props: { indentationAtItemLevel: true },
-      style: { paddingLeft: 0 },
-    },
-  ],
+});
+
+export const TreeItemErrorContainer = styled('div', {
+  name: 'MuiTreeItem',
+  slot: 'ErrorIcon',
+  overridesResolver: (props, styles) => styles.errorIcon,
+})({
+  position: 'absolute',
+  right: -3,
+  width: 7,
+  height: 7,
+  borderRadius: '50%',
+  backgroundColor: 'red',
+});
+
+export const TreeItemLoadingContainer = styled(CircularProgress, {
+  name: 'MuiTreeItem',
+  slot: 'LoadingIcon',
+  overridesResolver: (props, styles) => styles.loadingIcon,
+})({
+  color: 'text.primary',
 });
 
 export const TreeItemCheckbox = styled(
@@ -206,6 +215,8 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     groupTransition: ['groupTransition'],
     labelInput: ['labelInput'],
     dragAndDropOverlay: ['dragAndDropOverlay'],
+    errorIcon: ['errorIcon'],
+    loadingIcon: ['loadingIcon'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -234,6 +245,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -242,6 +254,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     getGroupTransitionProps,
     getLabelInputProps,
     getDragAndDropOverlayProps,
+    getErrorContainerProps,
+    getLoadingContainerProps,
     status,
   } = useTreeItem({
     id,
@@ -342,12 +356,36 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.dragAndDropOverlay,
   });
 
+  const ErrorIcon: React.ElementType = slots.errorIcon ?? TreeItemErrorContainer;
+  const errorContainerProps = useSlotProps({
+    elementType: ErrorIcon,
+    getSlotProps: getErrorContainerProps,
+    externalSlotProps: slotProps.errorIcon,
+    ownerState: {},
+    className: classes.errorIcon,
+  });
+
+  const LoadingIcon: React.ElementType = slots.loadingIcon ?? TreeItemLoadingContainer;
+  const loadingContainerProps = useSlotProps({
+    elementType: LoadingIcon,
+    getSlotProps: getLoadingContainerProps,
+    externalSlotProps: slotProps.loadingIcon,
+    ownerState: {},
+    className: classes.loadingIcon,
+  });
+
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            {status.error && <ErrorIcon {...errorContainerProps} />}
+
+            {status.loading ? (
+              <LoadingIcon {...loadingContainerProps} />
+            ) : (
+              <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            )}
           </IconContainer>
           <Checkbox {...checkboxProps} />
           {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}
@@ -367,7 +405,7 @@ TreeItem.propTypes = {
   /**
    * The content of the component.
    */
-  children: PropTypes.node,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.any,
   /**
    * Override or extend the styles applied to the component.
    */

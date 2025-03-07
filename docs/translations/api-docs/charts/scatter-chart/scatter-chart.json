@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -22,15 +19,23 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "data": "The data about the clicked axis and items associated with it."
+      }
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
@@ -43,12 +48,6 @@
         "scatterItemIdentifier": "The scatter item identifier."
       }
     },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
     },
@@ -57,13 +56,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "voronoiMaxRadius": {
       "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
     },
@@ -80,16 +72,15 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "marker": "The component that renders the marker for a scatter point.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
-    "popper": "Custom component for the tooltip popper.",
-    "scatter": ""
+    "scatter": "",
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

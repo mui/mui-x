@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -8,12 +8,10 @@ import {
   GetApplyQuickFilterFn,
   GridFilterModel,
   GridLogicOperator,
-  GridToolbar,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Quick filter', () => {
   const { render, clock } = createRenderer();
@@ -43,7 +41,7 @@ describe('<DataGrid /> - Quick filter', () => {
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           {...baselineProps}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter
@@ -313,18 +311,21 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
+      // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+      const initialCallCount = reactMajor >= 19 ? 1 : 2;
+
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(3);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
 
       setProps({ columnVisibilityModel: { brand: true } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(4);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
@@ -380,18 +381,21 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
+      // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+      const initialCallCount = reactMajor >= 19 ? 1 : 2;
+
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: true } });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(2);
+      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
     });
   });
 
@@ -639,10 +643,7 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/6783
-  it('should not override user input when typing', async function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
+  testSkipIf(isJSDOM)('should not override user input when typing', async () => {
     // Warning: this test doesn't fail consistently as it is timing-sensitive.
     const debounceMs = 50;
 
@@ -657,19 +658,18 @@ describe('<DataGrid /> - Quick filter', () => {
     );
 
     const searchBox = screen.getByRole<HTMLInputElement>('searchbox');
-    let searchBoxValue = searchBox.value;
 
     expect(searchBox.value).to.equal('');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}a` } });
+    fireEvent.change(searchBox, { target: { value: 'a' } });
     await sleep(debounceMs - 2);
-    searchBoxValue = searchBox.value;
+    expect(searchBox.value).to.equal('a');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}b` } });
+    fireEvent.change(searchBox, { target: { value: 'ab' } });
     await sleep(10);
-    searchBoxValue = searchBox.value;
+    expect(searchBox.value).to.equal('ab');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}c` } });
+    fireEvent.change(searchBox, { target: { value: 'abc' } });
     await sleep(debounceMs * 2);
     expect(searchBox.value).to.equal('abc');
   });

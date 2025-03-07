@@ -2,10 +2,10 @@ import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ScatterValueType } from '@mui/x-charts/models';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-
 import { Chance } from 'chance';
 
 const POINTS_NUMBER = 50;
@@ -24,59 +24,76 @@ export default function ColorScale() {
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={1}>
-        <TextField
-          select
-          sx={{ minWidth: 150 }}
-          label="x-axis colorMap"
-          value={colorX}
-          onChange={(event) =>
-            setColorX(event.target.value as 'None' | 'piecewise' | 'continuous')
-          }
-        >
-          <MenuItem value="None">None</MenuItem>
-          <MenuItem value="piecewise">piecewise</MenuItem>
-          <MenuItem value="continuous">continuous</MenuItem>
-        </TextField>
-        <TextField
-          select
-          sx={{ minWidth: 150 }}
-          label="y-axis colorMap"
-          value={colorY}
-          onChange={(event) =>
-            setColorY(event.target.value as 'None' | 'piecewise' | 'continuous')
-          }
-        >
-          <MenuItem value="None">None</MenuItem>
-          <MenuItem value="piecewise">piecewise</MenuItem>
-          <MenuItem value="continuous">continuous</MenuItem>
-        </TextField>
-        <TextField
-          select
-          sx={{ minWidth: 150 }}
-          label="z-axis colorMap"
-          value={colorZ}
-          onChange={(event) =>
-            setColorZ(
-              event.target.value as 'None' | 'piecewise' | 'continuous' | 'ordinal',
-            )
-          }
-        >
-          <MenuItem value="None">None</MenuItem>
-          <MenuItem value="piecewise">piecewise</MenuItem>
-          <MenuItem value="continuous">continuous</MenuItem>
-          <MenuItem value="ordinal">ordinal</MenuItem>
-        </TextField>
+      <Stack
+        direction="row"
+        gap={1}
+        sx={{
+          width: '100%',
+          '&>div': {
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
+        flexWrap="wrap"
+      >
+        <div>
+          <Typography variant="caption">x-axis colorMap</Typography>
+          <ToggleButtonGroup
+            color="primary"
+            size="small"
+            exclusive
+            value={colorX}
+            onChange={(_, value: 'None' | 'piecewise' | 'continuous') =>
+              setColorX(value)
+            }
+            aria-label="Platform"
+          >
+            <ToggleButton value="None">None</ToggleButton>
+            <ToggleButton value="piecewise">piecewise</ToggleButton>
+            <ToggleButton value="continuous">continuous</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div>
+          <Typography variant="caption">y-axis colorMap</Typography>
+          <ToggleButtonGroup
+            color="primary"
+            size="small"
+            exclusive
+            value={colorY}
+            onChange={(_, value: 'None' | 'piecewise' | 'continuous') =>
+              setColorY(value)
+            }
+            aria-label="Platform"
+          >
+            <ToggleButton value="None">None</ToggleButton>
+            <ToggleButton value="piecewise">piecewise</ToggleButton>
+            <ToggleButton value="continuous">continuous</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div>
+          <Typography variant="caption">z-axis colorMap</Typography>
+          <ToggleButtonGroup
+            color="primary"
+            size="small"
+            exclusive
+            value={colorZ}
+            onChange={(_, value: 'None' | 'piecewise' | 'continuous' | 'ordinal') =>
+              setColorZ(value)
+            }
+            aria-label="Platform"
+          >
+            <ToggleButton value="None">None</ToggleButton>
+            <ToggleButton value="piecewise">piecewise</ToggleButton>
+            <ToggleButton value="continuous">continuous</ToggleButton>
+            <ToggleButton value="ordinal">ordinal</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </Stack>
 
       <ScatterChart
         height={300}
         grid={{ horizontal: true, vertical: true }}
         series={series}
-        margin={{
-          top: 10,
-          bottom: 20,
-        }}
         yAxis={[
           {
             min: -3,
@@ -264,7 +281,8 @@ const series = [
   },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v: ScatterValueType | null) =>
+    v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 function getGaussianSeriesData(

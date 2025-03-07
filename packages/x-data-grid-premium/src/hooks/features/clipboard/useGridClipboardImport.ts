@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   GridRowId,
@@ -12,6 +13,8 @@ import {
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
+  gridRowSelectionIdsSelector,
+  gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
@@ -89,7 +92,7 @@ class CellValueUpdater {
   updateRow: (row: GridRowModel) => void;
 
   options: {
-    apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+    apiRef: RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
@@ -171,7 +174,7 @@ class CellValueUpdater {
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -212,7 +215,7 @@ function defaultPasteResolver({
   paginationMode,
 }: {
   pastedData: string[][];
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
@@ -252,11 +255,10 @@ function defaultPasteResolver({
     return true;
   });
 
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0 && !isSingleValuePasted) {
+  if (gridRowSelectionCountSelector(apiRef) > 0 && !isSingleValuePasted) {
     // Multiple values are pasted starting from the first and top-most cell
     const pastedRowsDataCount = pastedData.length;
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
 
     // There's no guarantee that the selected rows are in the same order as the pasted rows
     selectedRows.forEach((row, rowId) => {
@@ -321,7 +323,7 @@ function defaultPasteResolver({
 }
 
 export const useGridClipboardImport = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'pagination'
@@ -340,7 +342,6 @@ export const useGridClipboardImport = (
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
-  const rootEl = apiRef.current.rootElementRef?.current;
   const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
@@ -365,6 +366,7 @@ export const useGridClipboardImport = (
         }
       }
 
+      const rootEl = apiRef.current.rootElementRef?.current;
       if (!rootEl) {
         return;
       }
@@ -417,7 +419,6 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
-      rootEl,
       splitClipboardPastedText,
       pagination,
       paginationMode,

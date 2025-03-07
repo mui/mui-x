@@ -10,7 +10,7 @@ function read(fileName) {
 
 const TEST_FILES = ['community-nested-imports', 'community-root-imports', 'pro-root-imports'];
 
-describe('v7.0.0/tree-view', () => {
+describe('v8.0.0/tree-view', () => {
   describe('rename-tree-item-2', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;

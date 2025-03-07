@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -11,6 +13,11 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { useSelector } from '../internals/hooks/useSelector';
+import {
+  selectorGetTreeViewError,
+  selectorIsTreeViewLoading,
+} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -68,14 +75,13 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView<
-    RichTreeViewPluginSignatures,
-    typeof props
-  >({
+  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
     props,
   });
+  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
+  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
   const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
@@ -89,14 +95,18 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (treeViewError) {
+    return <Alert severity="error">{treeViewError.message}</Alert>;
+  }
+
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          itemsToRender={instance.getItemsToRender()}
-        />
+        <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>
     </TreeViewProvider>
   );
@@ -117,8 +127,10 @@ RichTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
@@ -169,10 +181,7 @@ RichTreeView.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures: PropTypes.shape({
-    indentationAtItemLevel: PropTypes.bool,
-    labelEditing: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * Used to determine the id of a given item.
    *
@@ -204,13 +213,11 @@ RichTreeView.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
-   * Determines if a given item is editable or not.
-   * Make sure to also enable the `labelEditing` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
-   * By default, the items are not editable.
+   * Determine if a given item can be edited.
    * @template R
    * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item is editable.
+   * @returns {boolean} `true` if the item can be edited.
+   * @default () => false
    */
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
@@ -227,7 +234,7 @@ RichTreeView.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -239,7 +246,7 @@ RichTreeView.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -258,14 +265,14 @@ RichTreeView.propTypes = {
   onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

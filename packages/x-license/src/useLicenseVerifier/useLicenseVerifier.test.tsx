@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,
   LicenseInfo,
@@ -8,6 +8,7 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
@@ -20,16 +21,13 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
-describe('useLicenseVerifier', function test() {
-  // Can't change the process.env.NODE_ENV in Karma
-  if (!/jsdom/.test(window.navigator.userAgent)) {
-    return;
-  }
-
+// Can't change the process.env.NODE_ENV in Browser
+describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
   let env: any;
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
@@ -37,6 +35,7 @@ describe('useLicenseVerifier', function test() {
     process.env['NODE_' + 'ENV'] = 'test';
   });
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
     // eslint-disable-next-line no-useless-concat
@@ -94,19 +93,20 @@ describe('useLicenseVerifier', function test() {
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 
-      let actualErrorMsg;
+      const errorRef = React.createRef<any>();
+
       expect(() => {
-        try {
-          render(<TestComponent />);
-        } catch (error: any) {
-          actualErrorMsg = error.message;
-        }
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <TestComponent />
+          </ErrorBoundary>,
+        );
       }).to.toErrorDev([
         'MUI X: Expired license key',
-        'MUI X: Expired license key',
-        'The above error occurred in the <TestComponent> component',
+        reactMajor < 19 && 'MUI X: Expired license key',
+        reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
       ]);
-      expect(actualErrorMsg).to.match(/MUI X: Expired license key/);
+      expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);
     });
 
     it('should throw if the license is not covering charts and tree-view', () => {

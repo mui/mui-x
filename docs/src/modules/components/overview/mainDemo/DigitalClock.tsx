@@ -13,7 +13,6 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { TimeView } from '@mui/x-date-pickers/models';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -24,11 +23,14 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
-  const { actionBar, content } = usePickerLayout(props);
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
+  const { actionBar, content, ownerState } = usePickerLayout(props);
   return (
-    <StyledLayout ownerState={props}>
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+    <StyledLayout ownerState={ownerState}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {content}
         {actionBar}
       </PickersLayoutContentWrapper>
@@ -38,6 +40,7 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) 
 export default function DigitalClock() {
   return (
     <Card variant="outlined" sx={{ padding: 0.8, height: 'fit-content' }}>
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <Typography variant="subtitle2" sx={{ pt: 1, pb: 2 }}>
         Book now!
       </Typography>
@@ -57,7 +60,7 @@ export default function DigitalClock() {
               hours: renderMultiSectionDigitalClockTimeView,
               minutes: renderMultiSectionDigitalClockTimeView,
               meridiem: renderMultiSectionDigitalClockTimeView,
-            } as StaticTimePickerProps<Dayjs>['viewRenderers']
+            } as StaticTimePickerProps['viewRenderers']
           }
         />
       </Paper>

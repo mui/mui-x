@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 const settings = {
-  valueFormatter: (v) => `${v}%`,
+  valueFormatter: (value) => `${value}%`,
   height: 100,
   showTooltip: true,
   showHighlight: true,
@@ -19,7 +19,7 @@ export default function CustomYAxis() {
       <Typography>Without fixed y-range</Typography>
       <Stack sx={{ width: '100%', mb: 2 }} direction="row" spacing={2}>
         <Box sx={{ flexGrow: 1 }}>
-          <SparkLineChart data={smallValues} colors={['red']} {...settings} />
+          <SparkLineChart data={smallValues} color="red" {...settings} />
         </Box>
         <Box sx={{ flexGrow: 1 }}>
           <SparkLineChart data={largeValues} {...settings} />
@@ -34,7 +34,7 @@ export default function CustomYAxis() {
               min: 0,
               max: 100,
             }}
-            colors={['red']}
+            color="red"
             {...settings}
           />
         </Box>

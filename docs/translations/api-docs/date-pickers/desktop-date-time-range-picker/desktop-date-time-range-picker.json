@@ -9,7 +9,7 @@
       "description": "The number of calendars to render on <strong>desktop</strong>."
     },
     "closeOnSelect": {
-      "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
+      "description": "If <code>true</code>, the Picker will close after submitting the full date."
     },
     "currentMonthCalendarPosition": { "description": "Position the current month is rendered in." },
     "dayOfWeekFormatter": {
@@ -28,7 +28,9 @@
     "disableAutoMonthSwitching": {
       "description": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date."
     },
-    "disabled": { "description": "If <code>true</code>, the picker and text field are disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableDragEditing": {
       "description": "If <code>true</code>, editing dates by dragging is disabled."
     },
@@ -59,10 +61,8 @@
     "formatDensity": {
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
-    "inputRef": {
-      "description": "Pass a ref to the <code>input</code> element. Ignored if the field has several inputs."
-    },
-    "label": { "description": "The label content. Ignored if the field has several inputs." },
+    "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
+    "label": { "description": "The label content." },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
     },
@@ -85,7 +85,7 @@
     },
     "minutesStep": { "description": "Step over minutes." },
     "name": {
-      "description": "Name attribute used by the <code>input</code> element in the Field. Ignored if the field has several inputs."
+      "description": "Name attribute used by the <code>input</code> element in the Field."
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
@@ -136,6 +136,9 @@
     },
     "rangePosition": {
       "description": "The position in the currently edited date range. Used when the component position is controlled."
+    },
+    "readOnly": {
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
@@ -206,12 +209,13 @@
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "digitalClockItem": "Component responsible for rendering a single digital clock item.",
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
-    "field": "",
-    "fieldRoot": "Element rendered at the root. Ignored if the field has only one input.",
-    "fieldSeparator": "Element rendered between the two inputs. Ignored if the field has only one input.",
+    "field": "Component used to enter the date with the keyboard.",
+    "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",
+    "openPickerButton": "Button to open the picker on desktop.",
+    "openPickerIcon": "Icon displayed in the open picker button on desktop.",
     "popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
@@ -219,7 +223,7 @@
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
     "tabs": "Tabs enabling toggling between date and time pickers.",
-    "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
+    "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

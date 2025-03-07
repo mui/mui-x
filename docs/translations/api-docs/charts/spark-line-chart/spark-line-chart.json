@@ -4,7 +4,7 @@
     "area": {
       "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
     },
-    "colors": { "description": "Color palette used to colorize multiple series." },
+    "color": { "description": "Color used to colorize the sparkline." },
     "data": { "description": "Data to plot." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -12,23 +12,38 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "data": "The data about the clicked axis and items associated with it."
+      }
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
-    "plotType": { "description": "Type of plot used." },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
+    "onItemClick": {
+      "description": "Callback fired when clicking close to an item. This is only available for scatter plot for now.",
+      "typeDescriptions": {
+        "event": "Mouse event caught at the svg level",
+        "scatterItemIdentifier": "Identify which item got clicked"
+      }
     },
+    "plotType": { "description": "Type of plot used." },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
     },
@@ -44,6 +59,9 @@
       "description": "Formatter used by the tooltip.",
       "typeDescriptions": { "value": "The value to format.", "string": "the formatted value." }
     },
+    "voronoiMaxRadius": {
+      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
+    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -57,12 +75,10 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "area": "The component that renders the area.",
-    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
     "bar": "The component that renders the bar.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",
-    "popper": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

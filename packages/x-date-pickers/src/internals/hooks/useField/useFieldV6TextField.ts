@@ -3,11 +3,12 @@ import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
-import { FieldSection } from '../../../models';
+import { InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
+import { PickerValidValue } from '../../models';
 
-type FieldSectionWithPositions<TSection> = TSection & {
+type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
   /**
    * Start index of the section in the format
    */
@@ -30,14 +31,14 @@ type FieldSectionWithPositions<TSection> = TSection & {
 
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
-export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: TSection[],
+export const addPositionPropertiesToSections = <TValue extends PickerValidValue>(
+  sections: InferFieldSection<TValue>[],
   localizedDigits: string[],
   isRtl: boolean,
-): FieldSectionWithPositions<TSection>[] => {
+): FieldSectionWithPositions<TValue>[] => {
   let position = 0;
   let positionInInput = isRtl ? 1 : 0;
-  const newSections: FieldSectionWithPositions<TSection>[] = [];
+  const newSections: FieldSectionWithPositions<TValue>[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
@@ -76,8 +77,8 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
-  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const {
     forwardedProps: {
@@ -88,7 +89,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false, disabled = false },
+    internalProps: { readOnly = false, disabled = false, focused },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -201,6 +202,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
         return nextSectionIndex === -1 ? sections.length - 1 : nextSectionIndex - 1;
       },
       focusField: (newSelectedSection = 0) => {
+        if (getActiveElement(document) === inputRef.current) {
+          return;
+        }
         inputRef.current?.focus();
         setSelectedSections(newSelectedSection);
       },
@@ -228,8 +232,8 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     setSelectedSections(sectionIndex);
   };
 
-  const handleInputFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleInputFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
@@ -291,7 +295,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       if (isValidPastedValue) {
         resetCharacterQuery();
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
@@ -308,8 +312,8 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setSelectedSections(null);
   });
 
@@ -331,6 +335,10 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     const shouldUseEventData = eventData && eventData.length > 1;
     const valueStr = shouldUseEventData ? eventData : targetValue;
     const cleanValueStr = cleanString(valueStr);
+
+    if (parsedSelectedSections === 'all') {
+      setSelectedSections(activeSectionIndex);
+    }
 
     // If no section is selected or eventData should be used, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
@@ -470,6 +478,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       autoComplete: 'off',
       value: shouldShowPlaceholder ? '' : valueStr,
       onChange: handleInputChange,
+      focused,
     },
   };
 };

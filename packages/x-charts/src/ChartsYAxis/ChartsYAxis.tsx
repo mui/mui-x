@@ -3,19 +3,21 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useCartesianContext } from '../context/CartesianProvider';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { ChartsYAxisProps } from '../models/axis';
+import { AxisConfig, ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
+import { useChartContext } from '../context/ChartProvider';
+import { useYAxes } from '../hooks';
 
-const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
+const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionY', position],
@@ -36,11 +38,8 @@ const YAxisRoot = styled(AxisRoot, {
 })({});
 
 const defaultProps = {
-  position: 'left',
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 12,
-  labelFontSize: 14,
   tickSize: 6,
 } as const;
 
@@ -54,7 +53,7 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const { yAxisIds, yAxis } = useCartesianContext();
+  const { yAxisIds, yAxis } = useYAxes();
   const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
@@ -68,9 +67,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     position,
     disableLine,
     disableTicks,
-    tickFontSize,
     label,
-    labelFontSize,
     labelStyle,
     tickLabelStyle,
     tickSize: tickSizeProp,
@@ -82,14 +79,17 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickInterval,
     tickLabelInterval,
     sx,
+    offset,
+    width: axisWidth,
   } = defaultizedProps;
 
   const theme = useTheme();
   const isRtl = useRtl();
 
-  const classes = useUtilityClasses({ ...defaultizedProps, theme });
+  const classes = useUtilityClasses(defaultizedProps);
 
-  const { left, top, width, height, isPointInside } = useDrawingArea();
+  const { instance } = useChartContext();
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -104,10 +104,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const positionSign = position === 'right' ? 1 : -1;
 
-  const labelRefPoint = {
-    x: positionSign * (tickFontSize + tickSize + 10),
-    y: top + height / 2,
-  };
+  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
 
   const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
@@ -120,6 +117,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        ...theme.typography.caption,
         fontSize: tickFontSize,
         textAnchor: revertAnchor ? 'start' : 'end',
         dominantBaseline: 'central',
@@ -135,7 +133,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize,
+        ...theme.typography.body1,
+        lineHeight: 1,
+        fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
@@ -156,16 +156,28 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const domain = yScale.domain();
   const ordinalAxis = isBandScale(yScale);
+
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
-  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+  // - The position is 'none'.
+  if (
+    (ordinalAxis && domain.length === 0) ||
+    (!ordinalAxis && domain.some(isInfinity)) ||
+    position === 'none'
+  ) {
     return null;
   }
 
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: positionSign * (axisWidth - labelHeight),
+    y: top + height / 2,
+  };
+
   return (
     <YAxisRoot
-      transform={`translate(${position === 'right' ? left + width : left}, 0)`}
+      transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
       className={classes.root}
       sx={sx}
     >
@@ -173,20 +185,24 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
       )}
 
-      {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
+      {yTicks.map(({ formattedValue, offset: tickOffset, labelOffset, value }, index) => {
         const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = isPointInside({ x: -1, y: offset }, { direction: 'y' });
+        const showLabel = instance.isPointInside({ x: -1, y: tickOffset }, { direction: 'y' });
 
         if (!showLabel) {
           return null;
         }
 
         return (
-          <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
+          <g
+            key={index}
+            transform={`translate(0, ${tickOffset})`}
+            className={classes.tickContainer}
+          >
             {!disableTicks && (
               <Tick
                 x2={positionSign * tickSize}
@@ -199,6 +215,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsYAxisTickLabel"
                 text={formattedValue.toString()}
                 {...axisTickLabelProps}
               />
@@ -220,6 +237,7 @@ ChartsYAxis.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  axis: PropTypes.oneOf(['y']),
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -249,19 +267,9 @@ ChartsYAxis.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
-  /**
-   * Position of the axis.
-   */
-  position: PropTypes.oneOf(['left', 'right']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -282,12 +290,6 @@ ChartsYAxis.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize: PropTypes.number,
   /**
    * Defines which ticks are displayed.
    * Its value can be:

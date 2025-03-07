@@ -378,8 +378,8 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
 
-  - The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state.
-    To update the value in the state, call `setEditCellProps` before.
+  - The `props` key in the first argument of `commitCellChange()` was removed to promote the use of the value already stored in the state.
+    To update the value in the state, call `setEditCellProps()` before.
 
     ```diff
     -apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
@@ -387,14 +387,14 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
     +apiRef.current.commitCellChange({ id: 1, field: 'name' });
     ```
 
-  - Calling `commitCellChange` in a cell in view mode will throw an error. Make sure to first enter the edit mode.
+  - Calling `commitCellChange()` in a cell in view mode throws an error. Make sure to first enter the edit mode.
 
     ```diff
     +apiRef.current.setCellMode(1, 'name', 'edit');
      apiRef.current.commitCellChange({ id: 1, field: 'name' });
     ```
 
-  - The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
+  - The `setCellValue()` was removed from the API. Use `commitCellChange()` or `updateRows()` in place.
 
     ```diff
     -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
@@ -1807,7 +1807,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   +apiRef.current.setRows()
   ```
 
-  `apiRef.current.updateRowModels` has been removed, please use `apiRef.current.updateRows`.
+  `apiRef.current.updateRowModels()` has been removed, please use `apiRef.current.updateRows()`.
 
 #### Changes
 

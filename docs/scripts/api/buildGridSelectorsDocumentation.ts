@@ -20,7 +20,6 @@ interface Selector {
   category?: string;
   deprecated?: string;
   description?: string;
-  supportsApiRef?: boolean;
 }
 
 export default async function buildGridSelectorsDocumentation(
@@ -51,26 +50,15 @@ export default async function buildGridSelectorsDocumentation(
 
         const parameterSymbol = signature.getParameters()[0];
 
-        let isSelector = false;
-        let supportsApiRef = false;
-
         const firstParamName = project.checker.getTypeOfSymbolAtLocation(
           parameterSymbol,
           parameterSymbol.valueDeclaration!,
         ).symbol?.name;
 
-        if (['GridStatePro', 'GridStateCommunity'].includes(firstParamName)) {
-          // Selector not wrapped in `createSelector`
-          isSelector = true;
-        } else if (
-          // Selector wrapped in `createSelector`
-          type.symbol.name === 'OutputSelector'
+        if (
+          firstParamName !== 'RefObject' ||
+          symbol.name === 'useGridSelector' // Ignore hook
         ) {
-          isSelector = true;
-          supportsApiRef = true;
-        }
-
-        if (!isSelector) {
           return null;
         }
 
@@ -90,7 +78,6 @@ export default async function buildGridSelectorsDocumentation(
           category,
           deprecated,
           description,
-          supportsApiRef,
         };
       }),
     )

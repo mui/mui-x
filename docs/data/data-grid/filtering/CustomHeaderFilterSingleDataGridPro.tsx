@@ -43,14 +43,18 @@ function AdminFilter(props: GridRenderHeaderFilterProps) {
   const label = !value ? 'Filter' : 'Is admin';
 
   return (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
-      <InputLabel id="select-is-admin-label">{label}</InputLabel>
+    <FormControl variant="outlined" size="small" fullWidth>
+      <InputLabel id="select-is-admin-label" shrink>
+        {label}
+      </InputLabel>
       <Select
         labelId="select-is-admin-label"
         id="select-is-admin"
         value={value}
         onChange={handleChange}
         label={label}
+        inputProps={{ sx: { fontSize: 14 } }}
+        notched
       >
         <MenuItem value="">
           <em>None</em>
@@ -63,7 +67,7 @@ function AdminFilter(props: GridRenderHeaderFilterProps) {
 }
 
 export default function CustomHeaderFilterSingleDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
     visibleFields: ['name', 'website', 'phone', 'isAdmin', 'salary'],
@@ -92,7 +96,13 @@ export default function CustomHeaderFilterSingleDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} disableColumnFilter headerFilters />
+      <DataGridPro
+        {...data}
+        loading={loading}
+        columns={columns}
+        disableColumnFilter
+        headerFilters
+      />
     </div>
   );
 }

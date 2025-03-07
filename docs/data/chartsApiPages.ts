@@ -48,12 +48,25 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider',
+    title: 'ChartDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/chart-data-provider-pro',
+    title: 'ChartDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
   {
     pathname: '/x/api/charts/charts-axis-highlight',
     title: 'ChartsAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/charts-axis-tooltip-content',
+    title: 'ChartsAxisTooltipContent',
   },
   {
     pathname: '/x/api/charts/charts-clip-path',
@@ -64,12 +77,12 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsGrid',
   },
   {
-    pathname: '/x/api/charts/charts-legend',
-    title: 'ChartsLegend',
+    pathname: '/x/api/charts/charts-item-tooltip-content',
+    title: 'ChartsItemTooltipContent',
   },
   {
-    pathname: '/x/api/charts/charts-on-axis-click-handler',
-    title: 'ChartsOnAxisClickHandler',
+    pathname: '/x/api/charts/charts-legend',
+    title: 'ChartsLegend',
   },
   {
     pathname: '/x/api/charts/charts-reference-line',
@@ -88,8 +101,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltip',
   },
   {
-    pathname: '/x/api/charts/charts-voronoi-handler',
-    title: 'ChartsVoronoiHandler',
+    pathname: '/x/api/charts/charts-tooltip-container',
+    title: 'ChartsTooltipContainer',
   },
   {
     pathname: '/x/api/charts/charts-x-axis',
@@ -104,20 +117,13 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
-    pathname: '/x/api/charts/default-charts-axis-tooltip-content',
-    title: 'DefaultChartsAxisTooltipContent',
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/default-charts-item-tooltip-content',
-    title: 'DefaultChartsItemTooltipContent',
-  },
-  {
-    pathname: '/x/api/charts/default-charts-legend',
-    title: 'DefaultChartsLegend',
-  },
-  {
-    pathname: '/x/api/charts/default-heatmap-tooltip',
-    title: 'DefaultHeatmapTooltip',
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
     plan: 'pro',
   },
   {
@@ -136,6 +142,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip',
+    title: 'HeatmapTooltip',
     plan: 'pro',
   },
   {
@@ -200,13 +211,32 @@ const chartsApiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
-    pathname: '/x/api/charts/responsive-chart-container',
-    title: 'ResponsiveChartContainer',
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
   },
   {
-    pathname: '/x/api/charts/responsive-chart-container-pro',
-    title: 'ResponsiveChartContainerPro',
-    plan: 'pro',
+    pathname: '/x/api/charts/radar-data-provider',
+    title: 'RadarDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-area',
+    title: 'RadarSeriesArea',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-marks',
+    title: 'RadarSeriesMarks',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
   },
   {
     pathname: '/x/api/charts/scatter',

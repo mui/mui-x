@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -17,7 +18,7 @@ interface GridToolbarColumnsButtonProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
+const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
@@ -57,11 +58,10 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={ref}
           id={columnButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
@@ -69,9 +69,16 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
-          {...buttonProps}
-          onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+            buttonProps.onPointerUp?.(event);
+          }}
+          onClick={showColumns}
+          ref={ref}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>

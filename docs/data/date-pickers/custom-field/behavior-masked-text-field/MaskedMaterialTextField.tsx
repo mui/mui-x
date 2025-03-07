@@ -2,7 +2,8 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
-import useControlled from '@mui/utils/useControlled';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -10,8 +11,13 @@ import {
   DatePickerProps,
   DatePickerFieldProps,
 } from '@mui/x-date-pickers/DatePicker';
-import { useSplitFieldProps, useParsedFormat } from '@mui/x-date-pickers/hooks';
+import {
+  useSplitFieldProps,
+  useParsedFormat,
+  usePickerContext,
+} from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 const MASK_USER_INPUT_SYMBOL = '_';
 const ACCEPT_REGEX = /[\d]/gi;
@@ -19,7 +25,7 @@ const ACCEPT_REGEX = /[\d]/gi;
 const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
-function getValueStrFromValue(value: Dayjs | null, format: string) {
+function getInputValueFromValue(value: Dayjs | null, format: string) {
   if (value == null) {
     return '';
   }
@@ -27,70 +33,52 @@ function getValueStrFromValue(value: Dayjs | null, format: string) {
   return value.isValid() ? value.format(format) : '';
 }
 
-function MaskedField(props: DatePickerFieldProps<Dayjs>) {
-  const { slots, slotProps, ...other } = props;
-
-  const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
-
-  const {
-    format,
-    value: valueProp,
-    defaultValue,
-    onChange,
-    timezone,
-    onError,
-  } = internalProps;
-
-  const [value, setValue] = useControlled({
-    controlled: valueProp,
-    default: defaultValue ?? null,
-    name: 'MaskedField',
-    state: 'value',
-  });
+function MaskedDateField(props: DatePickerFieldProps) {
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  const pickerContext = usePickerContext();
+  const parsedFormat = useParsedFormat();
 
   // Control the input text
   const [inputValue, setInputValue] = React.useState<string>(() =>
-    getValueStrFromValue(value, format),
+    getInputValueFromValue(pickerContext.value, pickerContext.fieldFormat),
   );
 
   React.useEffect(() => {
-    if (value && value.isValid()) {
-      const newDisplayDate = getValueStrFromValue(value, format);
+    if (pickerContext.value && pickerContext.value.isValid()) {
+      const newDisplayDate = getInputValueFromValue(
+        pickerContext.value,
+        pickerContext.fieldFormat!,
+      );
       setInputValue(newDisplayDate);
     }
-  }, [format, value]);
-
-  const parsedFormat = useParsedFormat(internalProps);
+  }, [pickerContext.fieldFormat, pickerContext.value]);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
-    value,
-    timezone,
-    onError,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
     validator: validateDate,
   });
 
-  const handleValueStrChange = (newValueStr: string) => {
-    setInputValue(newValueStr);
+  const handleInputValueChange = (newInputValue: string) => {
+    setInputValue(newInputValue);
 
-    const newValue = dayjs(newValueStr, format);
-    setValue(newValue);
-
-    if (onChange) {
-      onChange(newValue, {
-        validationError: getValidationErrorForNewValue(newValue),
-      });
-    }
+    const newValue = dayjs(newInputValue, pickerContext.fieldFormat);
+    pickerContext.setValue(newValue, {
+      validationError: getValidationErrorForNewValue(newValue),
+    });
   };
 
   const rifmFormat = React.useMemo(() => {
-    const formattedDateWith1Digit = staticDateWith1DigitTokens.format(format);
+    const formattedDateWith1Digit = staticDateWith1DigitTokens.format(
+      pickerContext.fieldFormat,
+    );
     const inferredFormatPatternWith1Digits = formattedDateWith1Digit.replace(
       ACCEPT_REGEX,
       MASK_USER_INPUT_SYMBOL,
     );
     const inferredFormatPatternWith2Digits = staticDateWith2DigitTokens
-      .format(format)
+      .format(pickerContext.fieldFormat)
       .replace(ACCEPT_REGEX, '_');
 
     if (inferredFormatPatternWith1Digits !== inferredFormatPatternWith2Digits) {
@@ -137,26 +125,47 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
         })
         .join('');
     };
-  }, [format]);
+  }, [pickerContext.fieldFormat]);
 
   const rifmProps = useRifm({
     value: inputValue,
-    onChange: handleValueStrChange,
+    onChange: handleInputValueChange,
     format: rifmFormat,
   });
 
   return (
     <TextField
       placeholder={parsedFormat}
-      error={!!hasValidationError}
+      error={hasValidationError}
+      focused={pickerContext.open}
+      name={pickerContext.name}
+      label={pickerContext.label}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      ref={pickerContext.rootRef}
       {...rifmProps}
       {...forwardedProps}
+      InputProps={{
+        ref: pickerContext.triggerRef,
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
+              edge="end"
+            >
+              <CalendarIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
     />
   );
 }
 
-function MaskedFieldDatePicker(props: DatePickerProps<Dayjs>) {
-  return <DatePicker slots={{ ...props.slots, field: MaskedField }} {...props} />;
+function MaskedFieldDatePicker(props: DatePickerProps) {
+  return (
+    <DatePicker slots={{ ...props.slots, field: MaskedDateField }} {...props} />
+  );
 }
 
 export default function MaskedMaterialTextField() {

@@ -1,6 +1,5 @@
+'use client';
 import * as React from 'react';
-import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
 type MousePosition = {
@@ -98,20 +97,6 @@ export function usePointerType(): null | PointerType {
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
-
-export function getTooltipHasData(
-  trigger: TriggerOptions,
-  displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
-): boolean {
-  if (trigger === 'item') {
-    return displayedData !== null;
-  }
-
-  const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
-  const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
-
-  return hasAxisXData || hasAxisYData;
-}
 
 export function utcFormatter(v: string | number | Date): string {
   if (v instanceof Date) {

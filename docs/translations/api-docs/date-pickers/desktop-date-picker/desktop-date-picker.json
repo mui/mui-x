@@ -5,7 +5,7 @@
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
     "closeOnSelect": {
-      "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
+      "description": "If <code>true</code>, the Picker will close after submitting the full date."
     },
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
@@ -17,7 +17,9 @@
     "defaultValue": {
       "description": "The default value. Used when the component is not controlled."
     },
-    "disabled": { "description": "If <code>true</code>, the picker and text field are disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
@@ -104,6 +106,9 @@
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
     },
     "orientation": { "description": "Force rendering in particular orientation." },
+    "readOnly": {
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+    },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
@@ -185,7 +190,7 @@
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
     "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
-    "textField": "Form control with an input to render the value inside the default field.",
+    "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views.",
     "yearButton": "Button displayed to render a single year in the <code>year</code> view."
   }

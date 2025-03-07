@@ -3,6 +3,10 @@
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
+    "clearButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "color": {
       "type": {
         "name": "enum",
@@ -68,6 +72,10 @@
         "describedArgs": ["newValue"]
       }
     },
+    "openPickerButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "object" },
@@ -83,7 +91,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate) => boolean",
+        "type": "function(day: PickerValidDate) => boolean",
         "describedArgs": ["day"],
         "returned": "boolean"
       }
@@ -91,7 +99,7 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }
@@ -99,7 +107,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -107,7 +115,7 @@
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(year: TDate) => boolean",
+        "type": "function(year: PickerValidDate) => boolean",
         "describedArgs": ["year"],
         "returned": "boolean"
       }

@@ -9,12 +9,14 @@
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
     },
     "closeOnSelect": {
-      "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
+      "description": "If <code>true</code>, the Picker will close after submitting the full date."
     },
     "defaultValue": {
       "description": "The default value. Used when the component is not controlled."
     },
-    "disabled": { "description": "If <code>true</code>, the picker and text field are disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
@@ -88,6 +90,9 @@
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
     },
     "orientation": { "description": "Force rendering in particular orientation." },
+    "readOnly": {
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+    },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
@@ -124,17 +129,22 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display inside the clear button.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",
+    "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "nextIconButton": "Button allowing to switch to the right view.",
+    "openPickerButton": "Button to open the picker on desktop.",
+    "openPickerIcon": "Icon displayed in the open picker button on desktop.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render the value inside the default field.",
+    "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

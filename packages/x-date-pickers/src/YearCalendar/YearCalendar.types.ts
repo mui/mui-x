@@ -4,8 +4,13 @@ import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimezoneProps } from '../models';
-import type { PickersYearProps } from './PickersYear';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import { FormProps } from '../internals/models/formProps';
+
+export interface YearButtonOwnerState extends PickerOwnerState {
+  isYearSelected: boolean;
+  isYearDisabled: boolean;
+}
 
 export interface YearCalendarSlots {
   /**
@@ -19,7 +24,7 @@ export interface YearCalendarSlotProps {
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersYearProps
+    YearButtonOwnerState
   >;
 }
 
@@ -37,11 +42,12 @@ export interface ExportedYearCalendarProps {
   yearsPerRow?: 3 | 4;
 }
 
-export interface YearCalendarProps<TDate extends PickerValidDate>
+export interface YearCalendarProps
   extends ExportedYearCalendarProps,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    TimezoneProps {
+    YearValidationProps,
+    BaseDateValidationProps,
+    TimezoneProps,
+    FormProps {
   autoFocus?: boolean;
   className?: string;
   /**
@@ -62,31 +68,26 @@ export interface YearCalendarProps<TDate extends PickerValidDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate} value The new value.
+   * @param {PickerValidDate} value The new value.
    */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
+  onChange?: (value: PickerValidDate) => void;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false

@@ -11,18 +11,19 @@ import {
   useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
+  PickerRangeValue,
+  PickerToolbarOwnerState,
+  useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateRange } from '../models';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
+import { usePickerRangePositionContext } from '../hooks';
 
-const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     container: ['container'],
@@ -31,10 +32,9 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
 
-export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
+export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<DateRange<TDate>, 'day'>, 'onChange' | 'isLandscape'>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -48,7 +48,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateRangePickerToolbarProps<any>;
+  ownerState: PickerToolbarOwnerState;
 }>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
@@ -59,8 +59,8 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
-type DateRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
-  props: DateRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangePickerToolbarComponent = ((
+  props: DateRangePickerToolbarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -73,59 +73,53 @@ type DateRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
  *
  * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
  */
-const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
+const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
+  inProps: DateRangePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
-  const {
-    value: [start, end],
-    rangePosition,
-    onRangePositionChange,
-    toolbarFormat,
-    className,
-    onViewChange,
-    view,
-    views,
-    ...other
-  } = props;
+  const { toolbarFormat: toolbarFormatProp, className, classes: classesProp, ...other } = props;
 
-  const translations = usePickersTranslations<TDate>();
+  const { value } = usePickerContext<PickerRangeValue>();
+  const translations = usePickerTranslations();
+  const ownerState = useToolbarOwnerState();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
+  const classes = useUtilityClasses(classesProp);
 
-  const startDateValue = start
-    ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : translations.start;
+  // This can't be a default value when spreading because it breaks the API generation.
+  const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
 
-  const endDateValue = end
-    ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : translations.end;
+  const formatDate = (date: PickerValidDate | null, fallback: string) => {
+    if (!utils.isValid(date)) {
+      return fallback;
+    }
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+    return utils.formatByString(date, toolbarFormat);
+  };
 
   return (
     <DateRangePickerToolbarRoot
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
-      isLandscape={false}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
     >
       <DateRangePickerToolbarContainer className={classes.container}>
         <PickersToolbarButton
-          variant={start !== null ? 'h5' : 'h6'}
-          value={startDateValue}
+          variant={value[0] == null ? 'h6' : 'h5'}
+          value={formatDate(value[0], translations.start)}
           selected={rangePosition === 'start'}
-          onClick={() => onRangePositionChange('start')}
+          onClick={() => setRangePosition('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
-          variant={end !== null ? 'h5' : 'h6'}
-          value={endDateValue}
+          variant={value[1] == null ? 'h6' : 'h5'}
+          value={formatDate(value[1], translations.end)}
           selected={rangePosition === 'end'}
-          onClick={() => onRangePositionChange('end')}
+          onClick={() => setRangePosition('end')}
         />
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>
@@ -142,21 +136,11 @@ DateRangePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -175,15 +159,6 @@ DateRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

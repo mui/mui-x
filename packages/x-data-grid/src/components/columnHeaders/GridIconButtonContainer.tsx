@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -30,20 +31,19 @@ const GridIconButtonContainerRoot = styled('div', {
   width: 0,
 }));
 
-export const GridIconButtonContainer = React.forwardRef<
-  HTMLDivElement,
-  GridIconButtonContainerProps
->(function GridIconButtonContainer(props: GridIconButtonContainerProps, ref) {
-  const { className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
+  function GridIconButtonContainer(props, ref) {
+    const { className, ...other } = props;
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
-  return (
-    <GridIconButtonContainerRoot
-      ref={ref}
-      className={clsx(classes.root, className)}
-      ownerState={rootProps}
-      {...other}
-    />
-  );
-});
+    return (
+      <GridIconButtonContainerRoot
+        className={clsx(classes.root, className)}
+        ownerState={rootProps}
+        {...other}
+        ref={ref}
+      />
+    );
+  },
+);

@@ -55,12 +55,14 @@ const CustomTreeItemLabelInput = styled(TreeItemLabelInput)(({ theme }) => ({
     borderColor: theme.palette.primary.main,
   },
 }));
+
 const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   border: '1px solid transparent',
   '&:hover:not(:has(:hover))': {
     borderColor: theme.palette.primary.main,
   },
 }));
+
 const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
@@ -68,6 +70,7 @@ const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) =>
     borderColor: theme.palette.primary.main,
   },
 }));
+
 const CustomTreeItemLabel = styled(TreeItemLabel)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
@@ -75,6 +78,7 @@ const CustomTreeItemLabel = styled(TreeItemLabel)(({ theme }) => ({
     borderColor: theme.palette.primary.main,
   },
 }));
+
 const CustomTreeItemCheckbox = styled(TreeItemCheckbox)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
@@ -111,12 +115,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     getLabelInputProps,
+    getContextProviderProps,
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   return (
     <React.Fragment>
-      <TreeItemProvider itemId={itemId}>
+      <TreeItemProvider {...getContextProviderProps()}>
         <TreeItemRoot
           {...getRootProps({
             ...other,
@@ -220,7 +225,6 @@ export default function CustomTreeItemDemo() {
         slots={{ item: CustomTreeItem }}
         defaultSelectedItems="1.1"
         checkboxSelection
-        experimentalFeatures={{ labelEditing: true }}
         isItemEditable={(item) => Boolean(item?.editable)}
       />
     </Box>

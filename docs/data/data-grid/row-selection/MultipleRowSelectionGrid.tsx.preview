@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   pagination
   initialState={{
     ...data.initialState,

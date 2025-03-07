@@ -5,6 +5,7 @@ import {
   GridColDef,
   GridRowsProp,
   GridRowId,
+  DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -15,16 +16,15 @@ import {
 import Alert from '@mui/material/Alert';
 
 export default function ControlMasterDetail() {
-  const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState<
-    GridRowId[]
-  >([]);
-
-  const handleDetailPanelExpandedRowIdsChange = React.useCallback(
-    (newIds: GridRowId[]) => {
-      setDetailPanelExpandedRowIds(newIds);
-    },
-    [],
+  const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState(
+    () => new Set<GridRowId>(),
   );
+
+  const handleDetailPanelExpandedRowIdsChange = React.useCallback<
+    NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
+  >((newIds) => {
+    setDetailPanelExpandedRowIds(newIds);
+  }, []);
 
   return (
     <Box sx={{ width: '100%' }}>

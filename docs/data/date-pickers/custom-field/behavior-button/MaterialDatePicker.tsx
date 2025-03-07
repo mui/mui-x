@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,57 +12,43 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
-  usePickersContext,
+  usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
+function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
 
-  const pickersContext = usePickersContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
-    } else {
-      pickersContext.onOpen(event);
-    }
-  };
-
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      ref={handleRef}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }
 
-function ButtonFieldDatePicker(props: DatePickerProps<Dayjs>) {
+function ButtonFieldDatePicker(props: DatePickerProps) {
   return (
     <DatePicker {...props} slots={{ ...props.slots, field: ButtonDateField }} />
   );

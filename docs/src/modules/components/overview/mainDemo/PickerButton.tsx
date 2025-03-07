@@ -3,67 +3,63 @@ import dayjs, { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+import { DatePicker, DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
+import { useParsedFormat, usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
-interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<Dayjs | null, Dayjs, FieldSection, true, DateValidationError> {
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+function ButtonDateField(props: DatePickerFieldProps) {
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
 
-function ButtonField(props: ButtonFieldProps) {
-  const {
-    setOpen,
-    label,
-    id,
-    disabled,
-    InputProps: { ref } = {},
-    inputProps: { 'aria-label': ariaLabel } = {},
-  } = props;
+  const pickerContext = usePickerContext();
+
+  const parsedFormat = useParsedFormat();
+  const { hasValidationError } = useValidation({
+    validator: validateDate,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
+    props: internalProps,
+  });
+
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
 
   return (
     <Button
+      {...forwardedProps}
       variant="outlined"
       size="small"
-      id={id}
-      disabled={disabled}
-      ref={ref}
-      aria-label={ariaLabel}
-      onClick={() => setOpen?.((prev) => !prev)}
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
-      sx={{ minWidth: 'fit-content' }}
+      sx={[
+        { minWidth: 'fit-content' },
+        ...(Array.isArray(pickerContext.rootSx) ? pickerContext.rootSx : [pickerContext.rootSx]),
+      ]}
       fullWidth
+      color={hasValidationError ? 'error' : 'primary'}
+      ref={pickerContext.triggerRef}
+      className={pickerContext.rootClassName}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}` : 'Pick a date'}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }
 
 export default function PickerButton() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2023-04-17'));
-  const [open, setOpen] = React.useState(false);
 
   return (
     <Card variant="outlined" sx={{ padding: 1 }}>
       <DatePicker
         value={value}
-        label={value == null ? null : value.format('MMM DD, YYYY')}
+        format="MMM DD, YYYY"
         onChange={(newValue) => setValue(newValue)}
-        slots={{ field: ButtonField }}
+        slots={{ field: ButtonDateField }}
         slotProps={{
-          field: { setOpen } as any,
           nextIconButton: { size: 'small' },
           previousIconButton: { size: 'small' },
         }}
-        open={open}
-        onClose={() => setOpen(false)}
-        onOpen={() => setOpen(true)}
         views={['day', 'month', 'year']}
       />
     </Card>

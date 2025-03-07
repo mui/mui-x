@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   GridRowId,
@@ -40,7 +41,7 @@ import {
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
@@ -48,7 +49,7 @@ export const useGridRowGroupingPreProcessors = (
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
@@ -57,7 +58,7 @@ export const useGridRowGroupingPreProcessors = (
         return [];
       }
 
-      const strategy = props.unstable_dataSource
+      const strategy = props.dataSource
         ? RowGroupingStrategy.DataSource
         : RowGroupingStrategy.Default;
 
@@ -107,7 +108,7 @@ export const useGridRowGroupingPreProcessors = (
       props.groupingColDef,
       props.rowGroupingColumnMode,
       props.disableRowGrouping,
-      props.unstable_dataSource,
+      props.dataSource,
     ],
   );
 
@@ -116,10 +117,13 @@ export const useGridRowGroupingPreProcessors = (
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
       const newColumnsLookup: GridColumnRawLookup = {};
+      const prevGroupingfields: string[] = [];
 
       // We only keep the non-grouping columns
       columnsState.orderedFields.forEach((field) => {
-        if (!isGroupingColumn(field)) {
+        if (isGroupingColumn(field)) {
+          prevGroupingfields.push(field);
+        } else {
           newColumnFields.push(field);
           newColumnsLookup[field] = columnsState.lookup[field];
         }
@@ -135,14 +139,17 @@ export const useGridRowGroupingPreProcessors = (
 
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
-      const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-      newColumnFields = [
-        ...newColumnFields.slice(0, startIndex),
-        ...groupingColDefs.map((colDef) => colDef.field),
-        ...newColumnFields.slice(startIndex),
-      ];
 
-      columnsState.orderedFields = newColumnFields;
+      if (prevGroupingfields.length !== groupingColDefs.length) {
+        const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
+        newColumnFields = [
+          ...newColumnFields.slice(0, startIndex),
+          ...groupingColDefs.map((colDef) => colDef.field),
+          ...newColumnFields.slice(startIndex),
+        ];
+        columnsState.orderedFields = newColumnFields;
+      }
+
       columnsState.lookup = newColumnsLookup;
 
       return columnsState;
@@ -255,15 +262,15 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   useFirstRender(() => {
-    setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
+    setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
   });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (!isFirstRender.current) {
-      setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
+      setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, props.disableRowGrouping, props.unstable_dataSource]);
+  }, [apiRef, props.disableRowGrouping, props.dataSource]);
 };

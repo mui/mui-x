@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
-import type { TreeItemProps } from '../../TreeItem';
+import { EventHandlers } from '@mui/utils/types';
 import type {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemDragAndDropOverlaySlotOwnProps,
@@ -10,10 +9,11 @@ import type {
   UseTreeItemStatus,
 } from '../../useTreeItem';
 import type { UseTreeItemInteractions } from '../../hooks/useTreeItemUtils/useTreeItemUtils';
+import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
-  rootRefObject: React.MutableRefObject<HTMLLIElement | null>;
-  contentRefObject: React.MutableRefObject<HTMLDivElement | null>;
+  rootRefObject: React.RefObject<HTMLLIElement | null>;
+  contentRefObject: React.RefObject<HTMLDivElement | null>;
   externalEventHandlers: EventHandlers;
   interactions: UseTreeItemInteractions;
   status: UseTreeItemStatus;
@@ -50,11 +50,11 @@ export interface TreeViewItemPluginResponse {
   propsEnhancers?: TreeViewItemPluginSlotPropsEnhancers;
 }
 
-export interface TreeViewItemPluginOptions<TProps extends {}>
+export interface TreeViewItemPluginOptions
   extends Omit<TreeViewItemPluginResponse, 'propsEnhancers'> {
-  props: TProps;
+  props: TreeItemProps;
 }
 
 export type TreeViewItemPlugin = (
-  options: TreeViewItemPluginOptions<TreeItemProps>,
+  options: TreeViewItemPluginOptions,
 ) => void | TreeViewItemPluginResponse;

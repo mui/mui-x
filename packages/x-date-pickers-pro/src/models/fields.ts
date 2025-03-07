@@ -1,41 +1,21 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import { BaseFieldProps, UseFieldResponse } from '@mui/x-date-pickers/internals';
-import {
-  BaseSingleInputPickersTextFieldProps,
-  FieldRef,
-  FieldSection,
-  PickerValidDate,
-} from '@mui/x-date-pickers/models';
-import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
-import { SxProps } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import { RangePosition } from './range';
+import { PickerValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
+import type { UseMultiInputRangeFieldTextFieldProps } from '../hooks/useMultiInputRangeField';
 
-export interface RangeFieldSection extends FieldSection {
-  dateName: RangePosition;
-}
+export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
 export type FieldType = 'single-input' | 'multi-input';
 
 /**
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */
-export interface MultiInputFieldSlotTextFieldProps {
-  label?: React.ReactNode;
-  id?: string;
-  disabled?: boolean;
-  readOnly?: boolean;
-  onKeyDown?: React.KeyboardEventHandler;
-  onClick?: React.MouseEventHandler;
-  onFocus?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-}
+export type MultiInputFieldSlotTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = UseMultiInputRangeFieldTextFieldProps<
+  TEnableAccessibleFieldDOMStructure,
+  { label?: React.ReactNode; focused?: boolean }
+>;
 
 /**
  * Props the `root` slot of the multi input field can receive when used inside a picker.
@@ -45,8 +25,8 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
 }
 
 export interface RangeFieldSeparatorProps {
@@ -58,57 +38,8 @@ export interface RangeFieldSeparatorProps {
 }
 
 /**
- * Props the multi input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field,
- * not what users can pass using the `props.slotProps.field`.
+ * Props the `slotProps.field` of a range picker component can receive.
  */
-export interface BaseMultiInputFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends Omit<
-      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-      'unstableFieldRef'
-    >,
-    RangeFieldSeparatorProps {
-  sx?: SxProps<any>;
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  slots?: {
-    root?: React.ElementType;
-    separator?: React.ElementType;
-    textField?: React.ElementType;
-  };
-  slotProps?: {
-    root?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotRootProps>,
-      {},
-      Record<string, any>
-    >;
-    textField?: SlotComponentProps<
-      typeof TextField,
-      {},
-      { position?: RangePosition } & Record<string, any>
-    >;
-  };
-}
-
-/**
- * Props the text field receives when used with a multi input picker.
- * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.textField`.
- */
-export type BaseMultiInputPickersTextFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>
->;
-
-/**
- * Props the text field receives when used with a single or multi input picker.
- * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` or `props.slotProps.textField`.
- */
-export type BasePickersTextFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  BaseSingleInputPickersTextFieldProps<TEnableAccessibleFieldDOMStructure> &
-    BaseMultiInputPickersTextFieldProps<TEnableAccessibleFieldDOMStructure>;
+export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
+    RangeFieldSeparatorProps;

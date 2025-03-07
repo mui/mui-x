@@ -2,9 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
-import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { fireUserEvent } from '../fireUserEvent';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
@@ -88,10 +89,10 @@ export const buildFieldInteractions = <P extends {}>({
     props,
     { hook, componentFamily = 'field', direction = 'ltr' } = {},
   ) => {
-    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+    let fieldRef: React.RefObject<FieldRef<PickerValue> | null> = { current: null };
 
     function WrappedComponent(propsFromRender: any) {
-      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      fieldRef = React.useRef<FieldRef<PickerValue>>(null);
       const hookResult = hook?.(propsFromRender);
 
       const allProps = {
@@ -113,7 +114,7 @@ export const buildFieldInteractions = <P extends {}>({
         const hasMultipleInputs =
           // @ts-ignore
           Component.render.name.includes('Range') &&
-          allProps.slots?.field?.fieldType !== 'single-input';
+          allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {
           allProps.slotProps.field.unstableStartFieldRef = fieldRef;
         } else {
@@ -259,26 +260,23 @@ export const buildFieldInteractions = <P extends {}>({
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
     keyStrokes,
     selectedSection,
-    skipV7,
     ...props
   }) => {
-    if (!skipV7) {
-      // Test with accessible DOM structure
-      const v7Response = renderWithProps({
-        ...props,
-        enableAccessibleFieldDOMStructure: true,
-      } as any);
-      v7Response.selectSection(selectedSection);
-      keyStrokes.forEach((keyStroke) => {
-        v7Response.pressKey(undefined, keyStroke.value);
-        expectFieldValueV7(
-          v7Response.getSectionsContainer(),
-          keyStroke.expected,
-          (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
-        );
-      });
-      v7Response.unmount();
-    }
+    // Test with accessible DOM structure
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
+    v7Response.selectSection(selectedSection);
+    keyStrokes.forEach((keyStroke) => {
+      v7Response.pressKey(undefined, keyStroke.value);
+      expectFieldValueV7(
+        v7Response.getSectionsContainer(),
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+    v7Response.unmount();
 
     // Test with non-accessible DOM structure
     const v6Response = renderWithProps({

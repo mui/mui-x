@@ -26,10 +26,10 @@ const roROPickers: Partial<PickersLocaleText> = {
   // DateRange labels
   start: 'Început',
   end: 'Sfârșit',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data de început',
+  startTime: 'Ora de început',
+  endDate: 'Data de sfârșit',
+  endTime: 'Ora de sfârșit',
 
   // Action bar
   cancelButtonLabel: 'Anulare',
@@ -74,24 +74,24 @@ const roROPickers: Partial<PickersLocaleText> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'LLLL' : 'LL'),
   fieldDayPlaceholder: () => 'ZZ',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'ZZZZ' : 'ZZ'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'An',
+  month: 'Luna',
+  day: 'Ziua',
+  weekDay: 'Ziua saptămânii',
+  hours: 'Ore',
+  minutes: 'Minute',
+  seconds: 'Secunde',
+  meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Gol',
 };
 
 export const roRO = getPickersLocalization(roROPickers);

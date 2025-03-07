@@ -6,6 +6,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -38,6 +40,17 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -50,6 +63,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žiadne stĺpce',
   columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
@@ -108,6 +122,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Väčší ako alebo rovný',
   'headerFilterOperator<': 'Menší ako',
   'headerFilterOperator<=': 'Menší ako alebo rovný',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',

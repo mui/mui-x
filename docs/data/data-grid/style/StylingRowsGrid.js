@@ -63,7 +63,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function StylingRowsGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
   });
@@ -72,6 +72,7 @@ export default function StylingRowsGrid() {
     <Box sx={{ height: 400, width: '100%' }}>
       <StyledDataGrid
         {...data}
+        loading={loading}
         getRowClassName={(params) => `super-app-theme--${params.row.status}`}
       />
     </Box>

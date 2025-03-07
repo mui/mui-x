@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
@@ -54,7 +55,7 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnReorder'
@@ -72,7 +73,7 @@ export const useGridColumnReorder = (
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
-  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const isRtl = useRtl();
@@ -103,7 +104,6 @@ export const useGridColumnReorder = (
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
       }));
-      apiRef.current.forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
@@ -339,7 +339,6 @@ export const useGridColumnReorder = (
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: '' },
       }));
-      apiRef.current.forceUpdate();
     },
     [
       apiRef,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   DataGridProProps,
@@ -41,7 +42,7 @@ const generateDate = (
 describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const defaultData: Pick<DataGridProProps, 'rows' | 'columns'> = { columns: [], rows: [] };
 
@@ -62,7 +63,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with debounce', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -150,7 +151,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with debounce', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -232,12 +233,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'date', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
@@ -254,7 +255,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -273,7 +274,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
       await act(async () => {
-        apiRef.current.setEditCellValue({
+        apiRef.current?.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10),
@@ -284,7 +285,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -353,12 +354,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'dateTime', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
@@ -375,7 +376,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
@@ -394,7 +395,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
       await act(async () => {
-        apiRef.current.setEditCellValue({
+        apiRef.current?.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10, 15, 10, 0),
@@ -405,7 +406,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -472,7 +473,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue with the correct value when valueOptions is an array of strings', async () => {
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       await user.dblClick(cell);
@@ -499,7 +500,7 @@ describe('<DataGridPro /> - Edit components', () => {
         },
       ];
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       await user.dblClick(cell);
@@ -522,7 +523,7 @@ describe('<DataGridPro /> - Edit components', () => {
         },
       ];
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       await user.dblClick(cell);
@@ -543,7 +544,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
       await act(async () => {
-        apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+        apiRef.current?.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
       });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
@@ -592,13 +593,16 @@ describe('<DataGridPro /> - Edit components', () => {
 
       defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
 
-      render(<TestCase processRowUpdate={processRowUpdate} />);
+      const { user } = render(<TestCase processRowUpdate={processRowUpdate} />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireUserEvent.mousePress(screen.queryAllByRole('option')[1]);
-      await waitFor(() => expect(screen.queryByRole('listbox')).to.equal(null));
-      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
+      expect(screen.queryByRole('listbox')).to.equal(null);
+      await act(async () => {
+        screen.getByRole('combobox').focus();
+      });
+      await user.keyboard('{Enter}');
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();
@@ -614,7 +618,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should call setEditCellValue', () => {
       render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);

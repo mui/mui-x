@@ -9,8 +9,15 @@ import {
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridSlotsComponent, GridValidRowModel } from '../models';
-import { computeSlots, useProps } from '../internals/utils';
+import { computeSlots } from '../internals/utils';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../constants/dataGridPropsDefaultValues';
+
+interface GetDataGridPropsDefaultValues extends DataGridProps {}
+
+type DataGridForcedProps = {
+  [key in keyof DataGridProps]?: DataGridProcessedProps[key];
+};
+type GetDataGridForcedProps = (themedProps: GetDataGridPropsDefaultValues) => DataGridForcedProps;
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -25,16 +32,26 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   unstable_listView: false,
 };
 
+const getDataGridForcedProps: GetDataGridForcedProps = (themedProps) => ({
+  ...DATA_GRID_FORCED_PROPS,
+  ...(themedProps.dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
+
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const themedProps = useProps(
+  const themedProps =
     // eslint-disable-next-line material-ui/mui-name-matches-component-name
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',
-    }),
-  );
+    });
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
@@ -68,7 +85,7 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
       ...injectDefaultProps,
       localeText,
       slots,
-      ...DATA_GRID_FORCED_PROPS,
+      ...getDataGridForcedProps(themedProps),
     }),
     [themedProps, localeText, slots, injectDefaultProps],
   );

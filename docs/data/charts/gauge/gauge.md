@@ -24,7 +24,7 @@ The Gauge displays a numeric value that varies within a defined range.
 The Gauge's value is provided through the `value` props, which accept a value range between 0 and 100.
 To modify it, use the `valueMin` and `valueMax` props.
 
-{{"demo": "GaugeValueRangeNoSnap.js"}}
+{{"demo": "GaugeValueRange.js"}}
 
 ## Arcs configuration
 
@@ -34,7 +34,7 @@ Modify the arc shape with the following props:
 - `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 - `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 
-{{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
+{{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true }}
 
 :::success
 Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
@@ -52,7 +52,7 @@ In the second case, the formatter argument contains the `value`, `valueMin` and 
 
 To modify the text's layout, use the `gaugeClasses.valueText` class name.
 
-{{"demo": "TextPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true}}
+{{"demo": "TextPlayground.js", "bg": "playground", "hideToolbar": true}}
 
 ## Arc design
 

@@ -25,6 +25,7 @@ export default function Birthday() {
             ),
           }}
         />
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Button variant="contained" fullWidth size="small">
           Submit
         </Button>

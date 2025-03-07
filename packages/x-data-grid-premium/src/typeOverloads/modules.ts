@@ -1,4 +1,4 @@
-import { GridValidRowModel } from '@mui/x-data-grid-pro';
+import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
@@ -14,6 +14,7 @@ import type {
 } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -95,6 +96,14 @@ declare module '@mui/x-data-grid-pro' {
   interface GridColumnHeaderParams<R, V, F> extends GridColumnHeaderParamsPremium<R, V, F> {}
 
   interface GridApiCaches extends GridApiCachesPremium {}
+
+  interface GridToolbarExportProps {
+    excelOptions?: GridExcelExportOptions & GridExportDisplayOptions;
+  }
+
+  interface GridToolbarProps {
+    excelOptions?: GridExcelExportOptions & GridExportDisplayOptions;
+  }
 }
 
 declare module '@mui/x-data-grid-pro/internals' {

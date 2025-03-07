@@ -19,6 +19,8 @@ interface GridHeaderFilterMenuProps {
   id: string;
   labelledBy: string;
   target: HTMLElement | null;
+  showClearItem: boolean;
+  clearFilterItem: () => void;
 }
 
 function GridHeaderFilterMenu({
@@ -30,6 +32,8 @@ function GridHeaderFilterMenu({
   item,
   id,
   labelledBy,
+  showClearItem,
+  clearFilterItem,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -55,13 +59,27 @@ function GridHeaderFilterMenu({
   }
 
   return (
-    <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
+    <GridMenu position="bottom-end" open={open} target={target} onClose={hideMenu}>
       <rootProps.slots.baseMenuList
         aria-labelledby={labelledBy}
         id={id}
         onKeyDown={handleListKeyDown}
       >
-        {operators.map((op, i) => {
+        {showClearItem && [
+          <rootProps.slots.baseMenuItem
+            key="filter-menu-clear-filter"
+            iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
+            onClick={() => {
+              clearFilterItem();
+              hideMenu();
+            }}
+          >
+            {apiRef.current.getLocaleText('headerFilterClear')}
+          </rootProps.slots.baseMenuItem>,
+          <rootProps.slots.baseDivider key="filter-menu-divider" />,
+        ]}
+        {operators.map((op) => {
+          const selected = op.value === item.operator;
           const label =
             op?.headerLabel ??
             apiRef.current.getLocaleText(
@@ -70,13 +88,15 @@ function GridHeaderFilterMenu({
 
           return (
             <rootProps.slots.baseMenuItem
+              key={`${field}-${op.value}`}
+              iconStart={
+                selected ? <rootProps.slots.menuItemCheckIcon fontSize="small" /> : <span />
+              }
               onClick={() => {
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
               }}
-              autoFocus={i === 0 ? open : false}
-              selected={op.value === item.operator}
-              key={`${field}-${op.value}`}
+              autoFocus={selected ? open : false}
             >
               {label}
             </rootProps.slots.baseMenuItem>
@@ -93,6 +113,7 @@ GridHeaderFilterMenu.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
+  clearFilterItem: PropTypes.func.isRequired,
   field: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   item: PropTypes.shape({
@@ -109,12 +130,53 @@ GridHeaderFilterMenu.propTypes = {
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
+      InputComponentProps: PropTypes.shape({
+        apiRef: PropTypes.shape({
+          current: PropTypes.object.isRequired,
+        }),
+        applyValue: PropTypes.func,
+        className: PropTypes.string,
+        clearButton: PropTypes.node,
+        disabled: PropTypes.bool,
+        focusElementRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: PropTypes.any.isRequired,
+          }),
+        ]),
+        headerFilterMenu: PropTypes.node,
+        inputRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: (props, propName) => {
+              if (props[propName] == null) {
+                return null;
+              }
+              if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+                return new Error(`Expected prop '${propName}' to be of type Element`);
+              }
+              return null;
+            },
+          }),
+        ]),
+        isFilterActive: PropTypes.bool,
+        item: PropTypes.shape({
+          field: PropTypes.string.isRequired,
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+          operator: PropTypes.string.isRequired,
+          value: PropTypes.any,
+        }),
+        onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
+        slotProps: PropTypes.object,
+        tabIndex: PropTypes.number,
+      }),
       label: PropTypes.string,
       requiresFilterValue: PropTypes.bool,
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  showClearItem: PropTypes.bool.isRequired,
   target: HTMLElementType,
 } as any;
 

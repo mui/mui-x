@@ -16,16 +16,19 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
-  setState,
+  store,
 }) => {
   instance.preventItemUpdates();
 
   const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
-    setState((prevState) => {
-      if (prevState.items.itemMetaMap[item.id] != null) {
+    store.update((prevState) => {
+      if (prevState.items.itemMetaLookup[item.id] != null) {
         throw new Error(
           [
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -39,25 +42,28 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         ...prevState,
         items: {
           ...prevState.items,
-          itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: item },
+          itemMetaLookup: { ...prevState.items.itemMetaLookup, [item.id]: item },
           // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
-          itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
+          itemModelLookup: {
+            ...prevState.items.itemModelLookup,
+            [item.id]: { id: item.id, label: item.label ?? '' },
+          },
         },
       };
     });
 
     return () => {
-      setState((prevState) => {
-        const newItemMetaMap = { ...prevState.items.itemMetaMap };
-        const newItemMap = { ...prevState.items.itemMap };
-        delete newItemMetaMap[item.id];
-        delete newItemMap[item.id];
+      store.update((prevState) => {
+        const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
+        const newItemModelLookup = { ...prevState.items.itemModelLookup };
+        delete newItemMetaLookup[item.id];
+        delete newItemModelLookup[item.id];
         return {
           ...prevState,
           items: {
             ...prevState.items,
-            itemMetaMap: newItemMetaMap,
-            itemMap: newItemMap,
+            itemMetaLookup: newItemMetaLookup,
+            itemModelLookup: newItemModelLookup,
           },
         };
       });
@@ -68,16 +74,16 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
-    setState((prevState) => ({
+    store.update((prevState) => ({
       ...prevState,
       items: {
         ...prevState.items,
-        itemOrderedChildrenIds: {
-          ...prevState.items.itemOrderedChildrenIds,
+        itemOrderedChildrenIdsLookup: {
+          ...prevState.items.itemOrderedChildrenIdsLookup,
           [parentIdWithDefault]: orderedChildrenIds,
         },
-        itemChildrenIndexes: {
-          ...prevState.items.itemChildrenIndexes,
+        itemChildrenIndexesLookup: {
+          ...prevState.items.itemChildrenIndexesLookup,
           [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
         },
       },
@@ -108,15 +114,8 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   };
 };
 
-const isItemExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
-  const { instance, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+  const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -131,9 +130,10 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
   }
   const { registerChild, unregisterChild, parentId } = parentContext;
 
-  const expandable = isItemExpandable(children);
+  const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
+  const treeId = useSelector(store, selectorTreeViewId);
 
   // Prevent any flashing
   useEnhancedEffect(() => {
@@ -142,10 +142,11 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
     return () => {
       unregisterChild(idAttribute);
+      unregisterChild(idAttribute);
     };
-  }, [registerChild, unregisterChild, itemId, id, treeId]);
+  }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
@@ -173,12 +174,12 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
+useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   return (
-    <TreeViewChildrenItemProvider itemId={itemId}>
+    <TreeViewChildrenItemProvider itemId={itemId} idAttribute={idAttribute}>
       <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
         {children}
       </TreeViewItemDepthContext.Provider>
@@ -187,7 +188,7 @@ useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
 };
 
 useTreeViewJSXItems.wrapRoot = ({ children }) => (
-  <TreeViewChildrenItemProvider>
+  <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
     <TreeViewItemDepthContext.Provider value={0}>{children}</TreeViewItemDepthContext.Provider>
   </TreeViewChildrenItemProvider>
 );

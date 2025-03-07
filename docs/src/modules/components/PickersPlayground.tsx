@@ -104,8 +104,11 @@ function TriBooleanGroupControl({
             color="primary"
             fullWidth
           >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={''}>Undefined</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value>True</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={false}>False</ToggleButton>
           </ToggleButtonGroup>
         }
@@ -217,7 +220,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-function DisabledCheckboxTooltip({ children }: { children: React.ReactElement }) {
+function DisabledCheckboxTooltip({ children }: { children: React.ReactElement<any> }) {
   return (
     <Tooltip title="At least one view has to be provided to the components">{children}</Tooltip>
   );
@@ -270,6 +273,7 @@ function ViewSwitcher({
 
   return (
     <FormControl component="fieldset" variant="standard">
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <FormLabel id="views-label" component="legend">
         Available views
       </FormLabel>
@@ -370,7 +374,7 @@ export default function PickersPlayground() {
   const dateViews = React.useMemo(() => availableViews.filter(isDatePickerView), [availableViews]);
   const timeViews = React.useMemo(() => availableViews.filter(isTimeView), [availableViews]);
 
-  const commonProps = React.useMemo<StaticDateTimePickerProps<Dayjs>>(
+  const commonProps = React.useMemo<StaticDateTimePickerProps>(
     () => ({
       orientation: isLandscape ? 'landscape' : 'portrait',
       showDaysOutsideCurrentMonth,
@@ -544,6 +548,7 @@ export default function PickersPlayground() {
       >
         <ComponentSection sx={{ width: { xs: '100%', md: '60%' }, padding: { xs: 2, md: 4 } }}>
           <FormControl fullWidth>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
               labelId="selected-component-family-label"
@@ -657,6 +662,7 @@ export default function PickersPlayground() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Playground
           </Typography>

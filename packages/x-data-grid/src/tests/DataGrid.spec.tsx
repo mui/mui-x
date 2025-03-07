@@ -60,11 +60,11 @@ function RowPropTest() {
   return (
     <div>
       {/* @ts-expect-error */}
-      <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />;
+      <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />
       {/* @ts-expect-error */}
-      <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />;
-      <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />;
-      <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />;
+      <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />
+      <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />
+      <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />
     </div>
   );
 }
@@ -219,8 +219,6 @@ function ApiRefPrivateMethods() {
     apiRef.current.applyStrategyProcessor;
     // @ts-expect-error Property 'storeDetailPanelHeight' does not exist on type 'GridApiCommunity'
     apiRef.current.storeDetailPanelHeight;
-    // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiCommunity'
-    apiRef.current.detailPanelHasAutoHeight;
     // @ts-expect-error Property 'calculateColSpan' does not exist on type 'GridApiCommunity'
     apiRef.current.calculateColSpan;
     // @ts-expect-error Property 'rowHasAutoHeight' does not exist on type 'GridApiCommunity'
@@ -263,7 +261,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
@@ -278,4 +276,11 @@ function ApiRefProMethods() {
   });
 
   return null;
+}
+
+function ImmutableProps() {
+  const rows = [] as const;
+  const columns = [] as const;
+  const initialState = { sorting: { sortModel: [{ field: 'id', sort: 'asc' }] } } as const;
+  return <DataGrid rows={rows} columns={columns} initialState={initialState} />;
 }

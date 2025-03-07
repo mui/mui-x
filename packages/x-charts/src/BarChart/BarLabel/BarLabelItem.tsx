@@ -6,7 +6,7 @@ import { useUtilityClasses } from './barLabelClasses';
 import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, BarLabelProps } from './BarLabel';
-import { useItemHighlighted } from '../../context';
+import { useItemHighlighted } from '../../hooks/useItemHighlighted';
 
 export interface BarLabelSlots {
   /**

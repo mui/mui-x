@@ -3,24 +3,22 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { DateOrTimeViewWithMeridiem } from '../models';
+import { PickerToolbarOwnerState, useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
 
-export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
+export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
-  const { classes, isLandscape } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     content: ['content'],
-    penIconButton: ['penIconButton', isLandscape && 'penIconButtonLandscape'],
   };
 
   return composeClasses(slots, getPickersToolbarUtilityClass, classes);
@@ -30,9 +28,7 @@ const PickersToolbarRoot = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{
-  ownerState: PickersToolbarProps<any, any>;
-}>(({ theme }) => ({
+})<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -40,7 +36,7 @@ const PickersToolbarRoot = styled('div', {
   padding: theme.spacing(2, 3),
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         height: 'auto',
         maxWidth: 160,
@@ -56,8 +52,10 @@ const PickersToolbarContent = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'landscapeDirection',
 })<{
-  ownerState: PickersToolbarProps<any, any>;
+  ownerState: PickerToolbarOwnerState;
+  landscapeDirection: 'row' | 'column' | undefined;
 }>({
   display: 'flex',
   flexWrap: 'wrap',
@@ -68,7 +66,7 @@ const PickersToolbarContent = styled('div', {
   flexDirection: 'row',
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
@@ -76,7 +74,7 @@ const PickersToolbarContent = styled('div', {
       },
     },
     {
-      props: { isLandscape: true, landscapeDirection: 'row' },
+      props: { pickerOrientation: 'landscape', landscapeDirection: 'row' },
       style: {
         flexDirection: 'row',
       },
@@ -84,33 +82,29 @@ const PickersToolbarContent = styled('div', {
   ],
 });
 
-type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
-  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
-    React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = ((
+  props: React.PropsWithChildren<PickersToolbarProps> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<
-  TValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar(
+  inProps: React.PropsWithChildren<PickersToolbarProps>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
   const {
     children,
     className,
+    classes: classesProp,
     toolbarTitle,
     hidden,
     titleId,
-    isLandscape,
     classes: inClasses,
     landscapeDirection,
     ...other
   } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const ownerState = useToolbarOwnerState();
+  const classes = useUtilityClasses(classesProp);
 
   if (hidden) {
     return null;
@@ -132,7 +126,11 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
       >
         {toolbarTitle}
       </Typography>
-      <PickersToolbarContent className={classes.content} ownerState={ownerState}>
+      <PickersToolbarContent
+        className={classes.content}
+        ownerState={ownerState}
+        landscapeDirection={landscapeDirection}
+      >
         {children}
       </PickersToolbarContent>
     </PickersToolbarRoot>

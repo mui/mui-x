@@ -11,13 +11,11 @@ export default function LineChartConnectNulls() {
         xAxis={[{ data: xData, scaleType: 'point' }]}
         series={[{ data }]}
         height={200}
-        margin={{ top: 10, bottom: 20 }}
       />
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
         series={[{ data, connectNulls: true }]}
         height={200}
-        margin={{ top: 10, bottom: 20 }}
       />
     </Stack>
   );

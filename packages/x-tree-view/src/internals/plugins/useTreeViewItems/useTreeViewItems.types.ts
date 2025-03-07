@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { TreeViewItemMeta, TreeViewPluginSignature } from '../../models';
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import {
+  TreeViewBaseItem,
+  TreeViewDefaultItemModelProperties,
+  TreeViewItemId,
+} from '../../../models';
 
-export interface TreeViewItemToRenderProps {
-  label: string;
-  itemId: string;
-  id: string | undefined;
-  children?: TreeViewItemToRenderProps[];
-}
-
+export type AddItemsParameters<R> = {
+  items: readonly R[];
+  parentId?: TreeViewItemId;
+  depth: number;
+  getChildrenCount?: (item: R) => number;
+};
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
@@ -34,46 +37,25 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Get all the items in the same format as provided by `props.items`.
-   * @returns {TreeViewItemToRenderProps[]} The items in the tree.
+   * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
+  /**
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} parameters The params of the method.
+   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
+   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
+   */
+  setIsItemDisabled: (parameters: { itemId: TreeViewItemId; shouldBeDisabled?: boolean }) => void;
+  /** * Get the id of the parent item.
+   * @param {string} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
-export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  /**
-   * Get the meta-information of an item.
-   * Check the `TreeViewItemMeta` type for more information.
-   * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
-   * @returns {TreeViewItemMeta} The meta-information of the item.
-   */
-  getItemMeta: (itemId: TreeViewItemId) => TreeViewItemMeta;
-  /**
-   * Get the item that should be rendered.
-   * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemToRenderProps` type for more information.
-   * @returns {TreeViewItemToRenderProps[]} The items to render.
-   */
-  getItemsToRender: () => TreeViewItemToRenderProps[];
-  /**
-   * Check if a given item is disabled.
-   * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is disabled, `false` otherwise.
-   */
-  isItemDisabled: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
-   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is navigable, `false` otherwise.
-   */
-  isItemNavigable: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Get the index of a given item in its parent's children list.
-   * @param {TreeViewItemId} itemId The id of the item to get the index of.
-   * @returns {number} The index of the item in its parent's children list.
-   */
-  getItemIndex: (itemId: TreeViewItemId) => number;
+export interface UseTreeViewItemsInstance<R extends {}>
+  extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
@@ -85,6 +67,26 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  /**
+   * Add an array of items to the tree.
+   * @param {AddItemsParameters<R>} args The items to add to the tree and information about their ancestors.
+   */
+  addItems: (args: AddItemsParameters<R>) => void;
+  /**
+   * Remove the children of an item.
+   * @param {TreeViewItemId} parentId The id of the item to remove the children of.
+   */
+  removeChildren: (parentId?: TreeViewItemId) => void;
+  /**
+   * Set the loading state of the tree.
+   * @param {boolean} loading True if the tree view is loading.
+   */
+  setTreeViewLoading: (loading: boolean) => void;
+  /**
+   * Set the error state of the tree.
+   * @param {Error | null} error The error on the tree view.
+   */
+  setTreeViewError: (error: Error | null) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -146,19 +148,45 @@ interface UseTreeViewItemsEventLookup {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    itemMetaMap: TreeViewItemMetaMap;
-    itemMap: TreeViewItemMap<R>;
-    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
-    itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
+    /**
+     * If `true`, will allow focus on disabled items.
+     * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
+     */
+    disabledItemsFocusable: boolean;
+    /**
+     * Model of each item as provided by `props.items` or by imperative items updates.
+     * It is not updated when properties derived from the model are updated:
+     * - when the label of an item is updated, `itemMetaLookup` is updated, not `itemModelLookup`.
+     * - when the children of an item are updated, `itemOrderedChildrenIdsLookup` and `itemChildrenIndexesLookup` are updated, not `itemModelLookup`.
+     * This means that the `children`, `label` or `id` properties of an item model should never be used directly, always use the structured sub-states instead.
+     */
+    itemModelLookup: { [itemId: string]: TreeViewBaseItem<R> };
+    /**
+     * Meta data of each item.
+     */
+    itemMetaLookup: { [itemId: string]: TreeViewItemMeta };
+    /**
+     * Ordered children ids of each item.
+     */
+    itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    /**
+     * Index of each child in the ordered children ids of its parent.
+     */
+    itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
+    /**
+     * The loading state of the tree.
+     */
+    loading: boolean;
+    /**
+     * The error state of the tree.
+     */
+    error: Error | null;
   };
 }
 
 interface UseTreeViewItemsContextValue {
-  items: Pick<
-    UseTreeViewItemsDefaultizedParameters<any>,
-    'disabledItemsFocusable' | 'onItemClick'
-  > & {
-    indentationAtItemLevel: boolean;
+  items: {
+    onItemClick: (event: React.MouseEvent, itemId: string) => void;
   };
 }
 
@@ -168,11 +196,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
-  state: UseTreeViewItemsState<any>;
+  state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
   contextValue: UseTreeViewItemsContextValue;
-  experimentalFeatures: 'indentationAtItemLevel';
 }>;
-
-export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
-
-export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };

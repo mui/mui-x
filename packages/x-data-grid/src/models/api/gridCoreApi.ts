@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
-import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
+import type { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { Store } from '../../utils/Store';
-import { GridApiCaches } from '../gridApiCaches';
+import type { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 
@@ -14,7 +14,7 @@ export interface GridCoreApi {
    * The React ref of the grid root container div element.
    * @ignore - do not document.
    */
-  rootElementRef: React.RefObject<HTMLDivElement>;
+  rootElementRef: React.RefObject<HTMLDivElement | null>;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
@@ -67,27 +67,27 @@ export interface GridCorePrivateApi<
   /**
    * The React ref of the grid main container div element.
    */
-  mainElementRef: React.RefObject<HTMLDivElement>;
+  mainElementRef: React.RefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid's virtual scroller container element.
    */
-  virtualScrollerRef: React.RefObject<HTMLDivElement>;
+  virtualScrollerRef: React.RefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid's vertical virtual scrollbar container element.
    */
-  virtualScrollbarVerticalRef: React.RefObject<HTMLDivElement>;
+  virtualScrollbarVerticalRef: React.RefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid's horizontal virtual scrollbar container element.
    */
-  virtualScrollbarHorizontalRef: React.RefObject<HTMLDivElement>;
+  virtualScrollbarHorizontalRef: React.RefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid column container virtualized div element.
    */
-  columnHeadersContainerRef: React.RefObject<HTMLDivElement>;
+  columnHeadersContainerRef: React.RefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid header filter row element.
    */
-  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement | null>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'

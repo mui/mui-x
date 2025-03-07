@@ -4,11 +4,10 @@ import {
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { PickerValidDate, TimeView } from '../models';
+import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface ExportedTimeClockProps<TDate extends PickerValidDate>
-  extends ExportedBaseClockProps<TDate> {
+export interface ExportedTimeClockProps extends ExportedBaseClockProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default false
@@ -20,11 +19,9 @@ export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 
 export interface TimeClockSlotProps extends PickersArrowSwitcherSlotProps {}
 
-export interface TimeClockProps<
-  TDate extends PickerValidDate,
-  TView extends TimeViewWithMeridiem = TimeView,
-> extends ExportedTimeClockProps<TDate>,
-    BaseClockProps<TDate, TView> {
+export interface TimeClockProps<TView extends TimeViewWithMeridiem = TimeView>
+  extends ExportedTimeClockProps,
+    BaseClockProps<TView> {
   /**
    * Available views.
    * @default ['hours', 'minutes']

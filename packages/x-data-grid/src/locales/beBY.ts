@@ -25,6 +25,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма радкоў',
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',
@@ -54,6 +56,17 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Ачысціць',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Экспарт',
   toolbarExportLabel: 'Экспарт',
@@ -66,6 +79,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
@@ -124,6 +138,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // 'headerFilterOperator>=': 'Greater than or equal to',
   // 'headerFilterOperator<': 'Less than',
   // 'headerFilterOperator<=': 'Less than or equal to',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'усякі',
