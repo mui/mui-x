@@ -125,7 +125,7 @@ export interface PickerContextValue<
   autoFocus: boolean;
   /**
    * The views that the picker has to render.
-   * It is equal to the picker `views` prop if defined.
+   * It is equal to the picker `views` prop—if defined.
    * Otherwise, a default set of views is provided based on the component you are using:
    * - Date Pickers: ['year', 'day']
    * - Time Pickers: ['hours', 'minutes']
