@@ -60,6 +60,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 - [fields] Always use `props.value` as the source of truth when defined (#15875) @flaviendelangle
 - [fields] Fix Fields aria relationship with `helperText` (#16821) @LukasTy
 - [pickers] Add `TValidationProps` generic to the `PickerManager` interface (#16832) @flaviendelangle
+- [pickers] Fix `edge` property setting in different button position cases (#16838) @LukasTy
 - [pickers] Fix typo in JSDoc (#16831) @flaviendelangle
 - [pickers] Refactor the files in the `usePicker` folder (#16680) @flaviendelangle 
 
