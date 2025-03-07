@@ -18,7 +18,7 @@ describe('<StaticDateTimePicker />', () => {
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
     expect(onChange.callCount).to.equal(1);
 
-    expect(screen.getByLabelText(/Selected time/)).toBeVisible();
+    expect(screen.getByLabelText('35 minutes')).toBeVisible();
   });
 
   describe('Component slot: Tabs', () => {
