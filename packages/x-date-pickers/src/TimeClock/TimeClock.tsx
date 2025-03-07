@@ -17,7 +17,7 @@ import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -110,7 +110,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'TimeClock',
     timezone: timezoneProp,
     value: valueProp,
