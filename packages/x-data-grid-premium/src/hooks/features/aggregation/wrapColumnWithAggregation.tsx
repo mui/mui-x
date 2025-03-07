@@ -218,6 +218,10 @@ export const wrapColumnWithAggregationValue = ({
     let cellAggregationPosition: GridAggregationPosition | null = null;
     const rowNode = gridRowNodeSelector(apiRef, id);
 
+    if (!rowNode) {
+      return null;
+    }
+
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';
     } else if (id.toString().startsWith('auto-generated-group-footer-')) {
