@@ -5,16 +5,19 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { clampAngle } from '../internals/clampAngle';
+import { useIsClient } from '../hooks/useIsClient';
+import { ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -35,6 +38,11 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) =
 
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
+
+/* Gap between a tick and its label. */
+const TICK_LABEL_GAP = 3;
+/* Gap between the axis label and tick labels. */
+const AXIS_LABEL_TICK_LABEL_GAP = 4;
 
 /* Returns a set of indices of the tick labels that should be visible.  */
 function getVisibleLabels(
@@ -111,35 +119,59 @@ function getVisibleLabels(
   );
 }
 
-function getDefaultTextAnchor(angle: number): ChartsTextStyle['textAnchor'] {
-  const adjustedAngle = clampAngle(angle);
+function shortenLabels(
+  visibleLabels: Set<TickItemType>,
+  drawingArea: Pick<ChartDrawingArea, 'left' | 'width' | 'right'>,
+  maxHeight: number,
+  { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
+) {
+  const shortenedLabels = new Map<TickItemType, string>();
+  const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
-  if (adjustedAngle === 0 || adjustedAngle === 180) {
-    return 'middle';
+  let leftBoundModifier = 1;
+  let rightBoundModifier = 1;
+
+  if (tickLabelStyle?.textAnchor === 'start') {
+    leftBoundModifier = Infinity;
+    rightBoundModifier = 1;
+  } else if (tickLabelStyle?.textAnchor === 'end') {
+    leftBoundModifier = 1;
+    rightBoundModifier = Infinity;
+  } else {
+    leftBoundModifier = 2;
+    rightBoundModifier = 2;
   }
 
-  if (adjustedAngle < 180) {
-    return 'start';
+  if (angle > 90 && angle < 270) {
+    [leftBoundModifier, rightBoundModifier] = [rightBoundModifier, leftBoundModifier];
   }
 
-  return 'end';
-}
+  for (const item of visibleLabels) {
+    if (item.formattedValue) {
+      // That maximum width of the tick depends on its proximity to the axis bounds.
+      const width = Math.min(
+        (item.offset + item.labelOffset) * leftBoundModifier,
+        (drawingArea.left +
+          drawingArea.width +
+          drawingArea.right -
+          item.offset -
+          item.labelOffset) *
+          rightBoundModifier,
+      );
 
-function getDefaultBaseline(
-  angle: number,
-  position: 'top' | 'bottom' | 'none' | undefined,
-): ChartsTextStyle['dominantBaseline'] {
-  const adjustedAngle = clampAngle(angle);
-
-  if (adjustedAngle === 0) {
-    return position === 'bottom' ? 'hanging' : 'auto';
+      shortenedLabels.set(
+        item,
+        ellipsize(item.formattedValue.toString(), {
+          width,
+          height: maxHeight,
+          angle,
+          measureText: (text) => getStringSize(text, tickLabelStyle),
+        }),
+      );
+    }
   }
 
-  if (adjustedAngle === 180) {
-    return position === 'bottom' ? 'auto' : 'hanging';
-  }
-
-  return 'central';
+  return shortenedLabels;
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -201,8 +233,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const theme = useTheme();
   const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
+  const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
+  const isClient = useIsClient();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -213,8 +247,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const defaultTextAnchor = getDefaultTextAnchor(tickLabelStyle?.angle ?? 0);
-  const shouldInvertTextAnchor = (isRtl && position !== 'top') || (!isRtl && position === 'top');
+  const defaultTextAnchor = getDefaultTextAnchor(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+  const defaultDominantBaseline = getDefaultBaseline(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -222,10 +261,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: shouldInvertTextAnchor
-          ? invertTextAnchor(defaultTextAnchor)
-          : defaultTextAnchor,
-        dominantBaseline: getDefaultBaseline(tickLabelStyle?.angle ?? 0, position),
+        lineHeight: 1.25,
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -287,6 +325,18 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     y: positionSign * (axisHeight - labelHeight),
   };
 
+  /* If there's an axis title, the tick labels have less space to render  */
+  const tickLabelsMaxHeight = Math.max(
+    0,
+    axisHeight - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
+  );
+
+  const tickLabels = isClient
+    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, {
+        tickLabelStyle: axisTickLabelProps.style,
+      })
+    : new Map();
+
   return (
     <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
@@ -298,11 +348,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       )}
 
       {xTicks.map((item, index) => {
-        const { formattedValue, offset: tickOffset, labelOffset } = item;
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
+        const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 
         return (
@@ -319,20 +370,20 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && showTickLabel && (
+            {tickLabel !== undefined && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
                 data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                text={tickLabel}
               />
             )}
           </g>
         );
       })}
 
-      {label && (
+      {label && isClient && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
