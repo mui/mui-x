@@ -1,20 +1,26 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Autocomplete from '@mui/material/Autocomplete';
-import IconButton from '@mui/material/IconButton';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import useForkRef from '@mui/utils/useForkRef';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Autocomplete from '@mui/material/Autocomplete';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerContext,
+  usePickerTranslations,
+  useSplitFieldProps,
+} from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function AutocompleteField(props) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-  const { timezone, value, setValue } = usePickerContext();
-  const { options = [], ...other } = forwardedProps;
   const pickerContext = usePickerContext();
+  const pickerTranslations = usePickerTranslations();
+  const { options = [], ...other } = forwardedProps;
+  const { value, setValue, timezone } = pickerContext;
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
@@ -23,13 +29,17 @@ function AutocompleteField(props) {
     props: internalProps,
   });
 
-  console.log(pickerContext);
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+
+  const formattedValue = value ? value.format('ll') : null;
+  const openPickerAriaLabel =
+    pickerTranslations.openDatePickerDialogue(formattedValue);
 
   return (
     <Autocomplete
       {...other}
       options={options}
-      ref={pickerContext.rootRef}
+      ref={handleRef}
       className={pickerContext.rootClassName}
       sx={[
         { minWidth: 250 },
@@ -48,12 +58,12 @@ function AutocompleteField(props) {
             name={pickerContext.name}
             InputProps={{
               ...params.InputProps,
-              ref: pickerContext.triggerRef,
               endAdornment: React.cloneElement(endAdornment, {
                 children: (
                   <React.Fragment>
                     <IconButton
                       onClick={() => pickerContext.setOpen((prev) => !prev)}
+                      aria-label={openPickerAriaLabel}
                       size="small"
                     >
                       <CalendarIcon />
@@ -71,7 +81,7 @@ function AutocompleteField(props) {
           return '';
         }
 
-        return option.format('MM / DD / YYYY');
+        return option.format('MM/DD/YYYY');
       }}
       value={value}
       onChange={(_, newValue) => {
