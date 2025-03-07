@@ -61,6 +61,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 - [fields] Fix Fields aria relationship with `helperText` (#16821) @LukasTy
 - [pickers] Add `TValidationProps` generic to the `PickerManager` interface (#16832) @flaviendelangle
 - [pickers] Fix typo in JSDoc (#16831) @flaviendelangle
+- [pickers] Refactor the files in the `usePicker` folder (#16680) @flaviendelangle 
 
 #### `@mui/x-date-pickers-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
