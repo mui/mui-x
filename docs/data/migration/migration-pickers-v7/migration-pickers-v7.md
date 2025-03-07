@@ -1337,7 +1337,7 @@ The `TSection` generic of the `FieldRef` type has been replaced with the `TValue
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
 
 :::success
-If you were using them, you can replace them with the below examples.
+If you were using them, you can replace them with the examples below.
 
 However, consider looking into your usage to see if you really need those types.
 :::
