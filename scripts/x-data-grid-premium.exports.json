@@ -687,6 +687,8 @@
   { "name": "QuickFilterControl", "kind": "Variable" },
   { "name": "QuickFilterControlProps", "kind": "TypeAlias" },
   { "name": "QuickFilterProps", "kind": "TypeAlias" },
+  { "name": "QuickFilterTrigger", "kind": "Variable" },
+  { "name": "QuickFilterTriggerProps", "kind": "TypeAlias" },
   { "name": "renderActionsCell", "kind": "Variable" },
   { "name": "renderBooleanCell", "kind": "Variable" },
   { "name": "renderEditBooleanCell", "kind": "Variable" },

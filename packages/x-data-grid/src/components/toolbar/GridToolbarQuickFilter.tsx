@@ -94,7 +94,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           </rootProps.slots.baseTooltip>
         )}
       />
-
       <QuickFilterControl
         render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
           <GridToolbarQuickFilterRoot

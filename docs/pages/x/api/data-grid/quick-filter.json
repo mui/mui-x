@@ -1,6 +1,7 @@
 {
   "props": {
     "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "expanded": { "type": { "name": "bool" } },
     "formatter": {
       "type": { "name": "func" },
       "default": "(values: string[]) => values.join(' ')",
@@ -9,6 +10,11 @@
         "describedArgs": ["values"],
         "returned": "string"
       }
+    },
+    "initialExpanded": { "type": { "name": "bool" }, "default": "false" },
+    "onExpandedChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(expanded: boolean) => void", "describedArgs": ["expanded"] }
     },
     "parser": {
       "type": { "name": "func" },

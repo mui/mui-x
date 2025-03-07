@@ -167,12 +167,26 @@ QuickFilter.propTypes = {
    */
   debounceMs: PropTypes.number,
   /**
+   * The expanded state of the quick filter control.
+   */
+  expanded: PropTypes.bool,
+  /**
    * Function responsible for formatting values of quick filter in a string when the model is modified
    * @param {any[]} values The new values passed to the quick filter model
    * @returns {string} The string to display in the text field
    * @default (values: string[]) => values.join(' ')
    */
   formatter: PropTypes.func,
+  /**
+   * The initial expanded state of the quick filter control.
+   * @default false
+   */
+  initialExpanded: PropTypes.bool,
+  /**
+   * Callback function that is called when the quick filter input is expanded or collapsed.
+   * @param {boolean} expanded The new expanded state of the quick filter control
+   */
+  onExpandedChange: PropTypes.func,
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user

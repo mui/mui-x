@@ -15,7 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 function CustomToolbar() {
   return (
     <Toolbar>
-      <QuickFilter>
+      <QuickFilter expanded>
         <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
