@@ -17,7 +17,8 @@ const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
-  'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
 ];
