@@ -483,8 +483,8 @@ importers:
         specifier: ^9.7.5
         version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tanstack/query-core':
-        specifier: ^5.66.4
-        version: 5.66.4
+        specifier: ^5.67.2
+        version: 5.67.2
       '@tanstack/react-query':
         specifier: ^5.66.0
         version: 5.66.0(react@19.0.0)
@@ -4108,8 +4108,8 @@ packages:
   '@tanstack/query-core@5.66.0':
     resolution: {integrity: sha512-J+JeBtthiKxrpzUu7rfIPDzhscXF2p5zE/hVdrqkACBP8Yu0M96mwJ5m/8cPPYQE9aRNvXztXHlNwIh4FEeMZw==}
 
-  '@tanstack/query-core@5.66.4':
-    resolution: {integrity: sha512-skM/gzNX4shPkqmdTCSoHtJAPMTtmIJNS0hE+xwTTUVYwezArCT34NMermABmBVUg5Ls5aiUXEDXfqwR1oVkcA==}
+  '@tanstack/query-core@5.67.2':
+    resolution: {integrity: sha512-+iaFJ/pt8TaApCk6LuZ0WHS/ECVfTzrxDOEL9HH9Dayyb5OVuomLzDXeSaI2GlGT/8HN7bDGiRXDts3LV+u6ww==}
 
   '@tanstack/react-query@5.66.0':
     resolution: {integrity: sha512-z3sYixFQJe8hndFnXgWu7C79ctL+pI0KAelYyW+khaNJ1m22lWrhJU2QrsTcRKMuVPtoZvfBYrTStIdKo+x0Xw==}
@@ -13300,7 +13300,7 @@ snapshots:
 
   '@tanstack/query-core@5.66.0': {}
 
-  '@tanstack/query-core@5.66.4': {}
+  '@tanstack/query-core@5.67.2': {}
 
   '@tanstack/react-query@5.66.0(react@19.0.0)':
     dependencies:
