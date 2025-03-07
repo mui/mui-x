@@ -80,67 +80,61 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || !element || params.disableAxisListener) {
       return () => {};
     }
 
-    const handleOut = () => {
-      mousePosition.current = {
-        isInChart: false,
-        x: -1,
-        y: -1,
-      };
+    const hover = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
+        mousePosition.current = {
+          isInChart: false,
+          x: -1,
+          y: -1,
+        };
 
-      instance.cleanInteraction?.();
-    };
-
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
-
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
-
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
-        if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
-          mousePosition.current.isInChart = false;
-        }
-        return;
+        instance.cleanInteraction?.();
       }
-      mousePosition.current.isInChart = true;
+    });
 
-      instance.setAxisInteraction?.({
-        x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
-        y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
-      });
-    };
+    const [move, drag] = ['move', 'drag'].map((interaction) =>
+      instance.addInteractionListener(
+        // We force `as drag` because it is the more complete interaction
+        // We check the `targetTouches` to handle touch events
+        interaction as 'drag',
+        (state) => {
+          const target =
+            'targetTouches' in state.event ? state.event.targetTouches[0] : state.event;
+          const svgPoint = getSVGPoint(element, target);
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+          mousePosition.current.x = svgPoint.x;
+          mousePosition.current.y = svgPoint.y;
 
-      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
+          if (
+            !instance.isPointInside(svgPoint, { targetElement: state.event.target as SVGElement })
+          ) {
+            if (mousePosition.current.isInChart) {
+              store.update((prev) => ({
+                ...prev,
+                interaction: { item: null, axis: { x: null, y: null } },
+              }));
+              mousePosition.current.isInChart = false;
+            }
+            return;
+          }
+          mousePosition.current.isInChart = true;
 
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerout', handleOut);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
+          instance.setAxisInteraction?.({
+            x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
+            y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
+          });
+        },
+      ),
+    );
+
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerout', handleOut);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      hover();
+      move();
+      drag();
     };
   }, [
     svgRef,

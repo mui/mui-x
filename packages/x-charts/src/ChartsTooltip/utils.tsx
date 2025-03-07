@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useSvgRef } from '../hooks';
+import { useChartContext } from '../context/ChartProvider';
 
 type MousePosition = {
   x: number;
@@ -15,44 +15,29 @@ export type UseMouseTrackerReturnValue = null | MousePosition;
  * @deprecated We recommend using vanilla JS to let popper track mouse position.
  */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
-  const svgRef = useSvgRef();
+  const { instance } = useChartContext();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const controller = new AbortController();
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
+    const hover = instance.addInteractionListener('hover', (state) => {
+      if (state.hovering) {
+        setMousePosition({
+          x: state.event.clientX,
+          y: state.event.clientY,
+          height: state.event.height,
+          pointerType: state.event.pointerType as MousePosition['pointerType'],
+        });
+      } else if (state.event.pointerType !== 'mouse') {
         setMousePosition(null);
       }
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
-        height: event.height,
-        pointerType: event.pointerType as MousePosition['pointerType'],
-      });
-    };
-
-    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
-    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
-    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
+    });
 
     return () => {
-      // Calling `.abort()` removes ALL event listeners
-      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
-      controller.abort();
+      hover();
     };
-  }, [svgRef]);
+  }, [instance]);
 
   return mousePosition;
 }
@@ -60,38 +45,30 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
 type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
 
 export function usePointerType(): null | PointerType {
-  const svgRef = useSvgRef();
+  const { instance } = useChartContext();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
+    const moveEnd = instance.addInteractionListener('moveEnd', (state) => {
+      if (state.event.pointerType !== 'mouse') {
         setPointerType(null);
       }
-    };
+    });
 
-    const handleEnter = (event: PointerEvent) => {
+    const moveStart = instance.addInteractionListener('moveStart', (state) => {
       setPointerType({
-        height: event.height,
-        pointerType: event.pointerType as PointerType['pointerType'],
+        height: state.event.height,
+        pointerType: state.event.pointerType as PointerType['pointerType'],
       });
-    };
-
-    element.addEventListener('pointerenter', handleEnter);
-    element.addEventListener('pointerup', handleOut);
+    });
 
     return () => {
-      element.removeEventListener('pointerenter', handleEnter);
-      element.removeEventListener('pointerup', handleOut);
+      moveEnd();
+      moveStart();
     };
-  }, [svgRef]);
+  }, [instance]);
 
   return pointerType;
 }

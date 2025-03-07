@@ -34,6 +34,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
       onMove: (state) => retriggerEvent('move', state),
       onMoveStart: (state) => retriggerEvent('moveStart', state),
       onMoveEnd: (state) => retriggerEvent('moveEnd', state),
+      onHover: (state) => retriggerEvent('hover', state),
     },
     {
       target: svgRef,

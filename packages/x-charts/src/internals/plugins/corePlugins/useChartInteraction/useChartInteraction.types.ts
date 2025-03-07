@@ -13,14 +13,15 @@ export type ChartInteraction =
   | 'wheelEnd'
   | 'move'
   | 'moveStart'
-  | 'moveEnd';
+  | 'moveEnd'
+  | 'hover';
 
 export type RemoveInteractionListener = () => void;
 
 export type AddInteractionListener = {
   (
     interaction: 'drag' | 'dragStart' | 'dragEnd',
-    callback: Handler<'drag', PointerEvent | MouseEvent | TouchEvent | KeyboardEvent>,
+    callback: Handler<'drag', PointerEvent | MouseEvent | TouchEvent>,
   ): RemoveInteractionListener;
   (
     interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
@@ -34,6 +35,7 @@ export type AddInteractionListener = {
     interaction: 'move' | 'moveStart' | 'moveEnd',
     callback: Handler<'move', PointerEvent>,
   ): RemoveInteractionListener;
+  (interaction: 'hover', callback: Handler<'hover', PointerEvent>): RemoveInteractionListener;
 };
 
 export interface UseChartInteractionParameters {}
