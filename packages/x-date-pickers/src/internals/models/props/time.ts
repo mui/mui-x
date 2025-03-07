@@ -47,7 +47,7 @@ export interface BaseClockProps<TView extends TimeViewWithMeridiem>
   referenceDate?: PickerValidDate;
 }
 
-export interface DesktopOnlyTimePickerProps
+export interface DigitalTimePickerProps
   extends Omit<ExportedDigitalClockProps, 'timeStep'>,
     Omit<ExportedMultiSectionDigitalClockProps, 'timeSteps'> {
   /**

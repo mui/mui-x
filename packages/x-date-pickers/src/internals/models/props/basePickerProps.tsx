@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { MakeOptional } from '@mui/x-internals/types';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
-import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
+import type { UsePickerProps } from '../../hooks/usePicker';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { PickerValidValue } from '../value';
 
@@ -14,7 +14,7 @@ export interface BasePickerProps<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any>,
+  TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
 > extends UsePickerBaseProps<TValue, TView, TError, TExternalProps> {
   className?: string;
   /**
