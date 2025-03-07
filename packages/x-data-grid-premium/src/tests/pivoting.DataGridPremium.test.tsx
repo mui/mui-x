@@ -150,16 +150,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
-    await user.click(columnsBtn);
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       user.click(pivotSwitch);
     });
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       expect(pivotSwitch).to.have.property('checked', true);
     });
 
@@ -189,16 +189,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
-    await user.click(columnsBtn);
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       user.click(pivotSwitch);
     });
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       expect(pivotSwitch).to.have.property('checked', true);
     });
 
@@ -228,16 +228,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Pivot/i });
-    await user.click(columnsBtn);
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       user.click(pivotSwitch);
     });
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
+      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
       expect(pivotSwitch).to.have.property('checked', true);
     });
 

@@ -11,7 +11,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const additionalItems = (
+  const additionalItems = rootProps.experimentalFeatures?.pivoting ? (
     <PivotPanelTrigger
       render={(triggerProps, state) => (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
@@ -21,7 +21,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
         </rootProps.slots.baseTooltip>
       )}
     />
-  );
+  ) : undefined;
 
   const additionalExportMenuItems = !props.excelOptions?.disableToolbarButton
     ? (onMenuItemClick: () => void) => (
