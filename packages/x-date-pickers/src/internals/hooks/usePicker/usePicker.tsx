@@ -157,7 +157,7 @@ export const usePicker = <
   );
 
   const currentViewMode = viewModeLookup[view];
-  const doesTheCurrentViewHasAnUI = useEventCallback(() => currentViewMode === 'UI');
+  const getCurrentViewMode = useEventCallback(() => currentViewMode);
 
   const [popperView, setPopperView] = React.useState<TView | null>(
     currentViewMode === 'UI' ? view : null,
@@ -314,7 +314,7 @@ export const usePicker = <
     () => ({
       dismissViews,
       hasUIView,
-      doesTheCurrentViewHasAnUI,
+      getCurrentViewMode,
       ownerState,
       rootRefObject,
       labelId,
@@ -323,7 +323,7 @@ export const usePicker = <
     [
       dismissViews,
       hasUIView,
-      doesTheCurrentViewHasAnUI,
+      getCurrentViewMode,
       ownerState,
       rootRefObject,
       labelId,

@@ -36,7 +36,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   },
   dismissViews: () => {},
   hasUIView: true,
-  doesTheCurrentViewHasAnUI: () => true,
+  getCurrentViewMode: () => true,
   rootRefObject: { current: null },
   viewContainerRole: null,
   labelId: undefined,
@@ -331,10 +331,10 @@ export interface PickerPrivateContextValue {
    */
   hasUIView: boolean;
   /**
-   * Check whether the current view has an UI.
-   * @returns {boolean} Whether the current view has an UI.
+   * Return the mode of the current view.
+   * @returns {boolean} The mode of the current view.
    */
-  doesTheCurrentViewHasAnUI: () => boolean;
+  getCurrentViewMode: () => 'UI' | 'field';
   /**
    * The aria role associated with the view container.
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
