@@ -28,16 +28,16 @@ export interface ClockRootContext {
    */
   setValue: (value: PickerValidDate, options: { section: ClockSection }) => void;
   /**
-   * The reference date used to generate the option's value when no value is selected.
+   * The reference date used to generate the cell's value when no value is selected.
    */
   referenceDate: PickerValidDate;
   /**
-   * Determine if the given option is invalid.
-   * @param {PickerValidDate} option The option to check.
-   * @param {ClockPrecision} precision The precision of the option.
-   * @returns {boolean} Whether the option is invalid.
+   * Determine if the given item is invalid.
+   * @param {PickerValidDate} item The item to check.
+   * @param {ClockPrecision} precision The precision of the item.
+   * @returns {boolean} Whether the item is invalid.
    */
-  isOptionInvalid: (option: PickerValidDate, precision: ClockPrecision) => boolean;
+  isItemInvalid: (item: PickerValidDate, precision: ClockPrecision) => boolean;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);

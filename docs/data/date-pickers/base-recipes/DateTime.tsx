@@ -72,39 +72,39 @@ function CalendarView(props: Calendar.Root.Props) {
 function ClockView(props: Clock.Root.Props) {
   return (
     <Clock.Root className={clockStyles.Root} {...props}>
-      <Clock.Hour24Options render={<OptionList />}>
+      <Clock.Hour24List render={<OptionList />}>
         {({ items }) =>
           items.map((item) => (
-            <Clock.Option
+            <Clock.Cell
               key={item.toString()}
               value={item}
               className={clockStyles.Option}
             />
           ))
         }
-      </Clock.Hour24Options>
-      <Clock.MinuteOptions render={<OptionList />}>
+      </Clock.Hour24List>
+      <Clock.MinuteList render={<OptionList />}>
         {({ items }) =>
           items.map((item) => (
-            <Clock.Option
+            <Clock.Cell
               key={item.toString()}
               value={item}
               className={clockStyles.Option}
             />
           ))
         }
-      </Clock.MinuteOptions>
-      <Clock.SecondOptions render={<OptionList />}>
+      </Clock.MinuteList>
+      <Clock.SecondList render={<OptionList />}>
         {({ items }) =>
           items.map((item) => (
-            <Clock.Option
+            <Clock.Cell
               key={item.toString()}
               value={item}
               className={clockStyles.Option}
             />
           ))
         }
-      </Clock.SecondOptions>
+      </Clock.SecondList>
     </Clock.Root>
   );
 }

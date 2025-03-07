@@ -19,7 +19,7 @@ import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { getTodayDate } from '../../../utils/date-utils';
-import { disableIgnoringDatePartForTimeValidation, useIsOptionInvalid } from './useIsOptionInvalid';
+import { disableIgnoringDatePartForTimeValidation, useIsItemInvalid } from './useIsItemInvalid';
 import { createIsAfterIgnoreDatePart } from '../../../utils/time-utils';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
@@ -103,7 +103,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
-  const isOptionInvalid = useIsOptionInvalid(validationProps);
+  const isItemInvalid = useIsItemInvalid(validationProps);
 
   const resolvedChildren = React.useMemo(() => {
     if (!React.isValidElement(children) && typeof children === 'function') {
@@ -148,18 +148,9 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       value,
       setValue,
       referenceDate,
-      isOptionInvalid,
+      isItemInvalid,
     }),
-    [
-      timezone,
-      disabled,
-      readOnly,
-      validationProps,
-      value,
-      setValue,
-      referenceDate,
-      isOptionInvalid,
-    ],
+    [timezone, disabled, readOnly, validationProps, value, setValue, referenceDate, isItemInvalid],
   );
 
   return React.useMemo(

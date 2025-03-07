@@ -12,21 +12,21 @@ packageName: '@mui/x-date-pickers'
 
 ```tsx
 <Clock.Root>
-  <Clock.Hour12Options>
-    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.Hour12Options>
-  <Clock.Hour24Options>
-    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.Hour24Options>
-  <Clock.MinuteOptions>
-    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.MinuteOptions>
-  <Clock.SecondOptions>
-    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.SecondOptions>
-  <Clock.MeridiemOptions>
-    {({ options }) => options.map((option) => <Clock.Option value={option} />)}
-  </Clock.MeridiemOptions>
+  <Clock.Hour12List>
+    {({ options }) => options.map((option) => <Clock.Cell value={option} />)}
+  </Clock.Hour12List>
+  <Clock.Hour24List>
+    {({ options }) => options.map((option) => <Clock.Cell value={option} />)}
+  </Clock.Hour24List>
+  <Clock.MinuteList>
+    {({ options }) => options.map((option) => <Clock.Cell value={option} />)}
+  </Clock.MinuteList>
+  <Clock.SecondList>
+    {({ options }) => options.map((option) => <Clock.Cell value={option} />)}
+  </Clock.SecondList>
+  <Clock.MeridiemList>
+    {({ options }) => options.map((option) => <Clock.Cell value={option} />)}
+  </Clock.MeridiemList>
 </Clock.Root>
 ```
 
@@ -34,48 +34,48 @@ packageName: '@mui/x-date-pickers'
 
 ### Hours without meridiem
 
-{{"demo": "HourMinuteSecondDemo.js", "defaultCodeOpen": false}}
+{{"demo": "Hour24Demo.js", "defaultCodeOpen": false}}
 
 ### Hours with meridiem
 
 WIP
 
-{{"demo": "HourWithMeridiemMinuteSecondDemo.js", "defaultCodeOpen": false}}
+{{"demo": "Hour12Demo.js", "defaultCodeOpen": false}}
 
 ### Custom seconds step
 
 ```tsx
-<Clock.SecondOptions step={5}>{/** Options */}</Clock.SecondOptions>
+<Clock.SecondList step={5}>{/** Options */}</Clock.SecondList>
 ```
 
-{{"demo": "StepSecondOptions.js", "defaultCodeOpen": false}}
+{{"demo": "SecondWithCustomStepDemo.js", "defaultCodeOpen": false}}
 
 ### Custom minutes step
 
 ```tsx
-<Clock.MinuteOptions step={5}>{/** Options */}</Clock.MinuteOptions>
+<Clock.MinuteList step={5}>{/** Options */}</Clock.MinuteList>
 ```
 
-{{"demo": "StepMinuteOptions.js", "defaultCodeOpen": false}}
+{{"demo": "MinuteWithCustomStepDemo.js", "defaultCodeOpen": false}}
 
 ## Single column layout
 
 ### Basic example
 
-{{"demo": "SingleColumnDemo.js", "defaultCodeOpen": false}}
+{{"demo": "FullTimeDemo.js", "defaultCodeOpen": false}}
 
 ### Custom step
 
 ```tsx
-<Clock.Options precision="minute" step={30}>{/** Options */}</Clock.MinuteOptions>
+<Clock.FullTimeList precision="minute" step={30}>{/** Options */}</Clock.MinuteList>
 ```
 
-{{"demo": "SingleColumnStepDemo.js", "defaultCodeOpen": false}}
+{{"demo": "FullTimeWithCustomStepDemo.js", "defaultCodeOpen": false}}
 
 ### Custom format
 
 ```tsx
-<Clock.Option format="hh:mm:ss" />
+<Clock.Cell format="hh:mm:ss" />
 ```
 
-{{"demo": "SingleColumnFormatDemo.js", "defaultCodeOpen": false}}
+{{"demo": "FullTimeWithCustomFormatDemo.js", "defaultCodeOpen": false}}

@@ -9,13 +9,12 @@ const LIST_NAVIGATION_SUPPORTED_KEYS = [
 
 const PAGE_SIZE = 5;
 
-// TODO: Add PageUp / PageDown support (same for (Range)Calendar)
 export function navigateInList({
-  options,
+  cells,
   event,
   loop,
 }: {
-  options: (HTMLElement | null)[];
+  cells: (HTMLElement | null)[];
   event: React.KeyboardEvent;
   loop: boolean;
 }) {
@@ -25,16 +24,16 @@ export function navigateInList({
 
   event.preventDefault();
 
-  const navigableOptions: HTMLElement[] = [];
-  for (let i = 0; i < options.length; i += 1) {
-    const option = options[i];
-    if (isNavigable(option)) {
-      navigableOptions.push(option);
+  const navigableCells: HTMLElement[] = [];
+  for (let i = 0; i < cells.length; i += 1) {
+    const cell = cells[i];
+    if (isNavigable(cell)) {
+      navigableCells.push(cell);
     }
   }
 
-  const lastIndex = navigableOptions.length - 1;
-  const currentIndex = navigableOptions.indexOf(event.target as HTMLElement);
+  const lastIndex = navigableCells.length - 1;
+  const currentIndex = navigableCells.indexOf(event.target as HTMLElement);
   let nextIndex = -1;
 
   switch (event.key) {
@@ -70,8 +69,8 @@ export function navigateInList({
       break;
   }
 
-  if (nextIndex > -1 && nextIndex < navigableOptions.length) {
-    navigableOptions[nextIndex].focus();
+  if (nextIndex > -1 && nextIndex < navigableCells.length) {
+    navigableCells[nextIndex].focus();
   }
 }
 
