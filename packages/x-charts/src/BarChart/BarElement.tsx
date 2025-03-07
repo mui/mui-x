@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
+import { AnimatedBarElement, AnimatedBarElementV2, BarProps } from './AnimatedBarElement';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */

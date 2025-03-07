@@ -267,6 +267,9 @@ function BarPlot(props: BarPlotProps) {
     enter: enterStyle,
     update: enterStyle,
     immediate: skipAnimation,
+    config: {
+      // duration: 5_000,
+    },
   });
 
   const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
@@ -294,12 +297,17 @@ function BarPlot(props: BarPlotProps) {
           );
         })}
       {transition((style, { seriesId, dataIndex, color, maskId }) => {
+        console.log(style);
         const barElement = (
           <BarElement
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
             {...other}
+            x={style.x.goal}
+            y={style.y.goal}
+            width={style.width.goal}
+            height={style.height.goal}
             onClick={
               onItemClick &&
               ((event) => {
