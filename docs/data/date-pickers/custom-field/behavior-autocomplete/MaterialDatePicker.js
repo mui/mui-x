@@ -17,10 +17,21 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function AutocompleteField(props) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-  const pickerContext = usePickerContext();
+  const {
+    value,
+    setValue,
+    timezone,
+    triggerRef,
+    rootRef,
+    rootClassName,
+    rootSx,
+    open,
+    label,
+    name,
+    setOpen,
+  } = usePickerContext();
   const pickerTranslations = usePickerTranslations();
   const { options = [], ...other } = forwardedProps;
-  const { value, setValue, timezone } = pickerContext;
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
@@ -29,7 +40,7 @@ function AutocompleteField(props) {
     props: internalProps,
   });
 
-  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+  const handleRef = useForkRef(triggerRef, rootRef);
 
   const formattedValue = value ? value.format('ll') : null;
   const openPickerAriaLabel =
@@ -40,29 +51,24 @@ function AutocompleteField(props) {
       {...other}
       options={options}
       ref={handleRef}
-      className={pickerContext.rootClassName}
-      sx={[
-        { minWidth: 250 },
-        ...(Array.isArray(pickerContext.rootSx)
-          ? pickerContext.rootSx
-          : [pickerContext.rootSx]),
-      ]}
+      className={rootClassName}
+      sx={[{ minWidth: 250 }, ...(Array.isArray(rootSx) ? rootSx : [rootSx])]}
       renderInput={(params) => {
         const endAdornment = params.InputProps.endAdornment;
         return (
           <TextField
             {...params}
             error={hasValidationError}
-            focused={pickerContext.open}
-            label={pickerContext.label}
-            name={pickerContext.name}
+            focused={open}
+            label={label}
+            name={name}
             InputProps={{
               ...params.InputProps,
               endAdornment: React.cloneElement(endAdornment, {
                 children: (
                   <React.Fragment>
                     <IconButton
-                      onClick={() => pickerContext.setOpen((prev) => !prev)}
+                      onClick={() => setOpen((prev) => !prev)}
                       aria-label={openPickerAriaLabel}
                       size="small"
                     >
