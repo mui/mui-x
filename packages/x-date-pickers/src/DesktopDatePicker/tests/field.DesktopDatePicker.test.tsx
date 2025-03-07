@@ -105,7 +105,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       let view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true as const,
-          value: adapterToUse.date('2022-10-31'),
+          defaultValue: adapterToUse.date('2022-10-31'),
         },
         { componentFamily: 'picker' },
       );
@@ -216,7 +216,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       const view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true as const,
-          value: adapter.date()!,
+          defaultValue: adapter.date()!,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           timezone: 'America/Chicago',
         },
