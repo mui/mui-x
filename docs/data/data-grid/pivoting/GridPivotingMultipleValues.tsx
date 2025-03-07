@@ -47,7 +47,7 @@ const pivotModel: GridPivotModel = {
 
 export default function GridPivotingMultipleValues() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={initialRows}
         columns={initialColumns}

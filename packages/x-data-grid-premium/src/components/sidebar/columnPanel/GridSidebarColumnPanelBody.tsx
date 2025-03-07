@@ -23,7 +23,7 @@ const Container = styled('div')({
 
 const TopPane = styled(GridShadowScrollArea)({
   flex: 1,
-  minHeight: 50,
+  minHeight: 84,
   transition: vars.transition(['background-color'], {
     duration: vars.transitions.duration.short,
     easing: vars.transitions.easing.easeInOut,
@@ -35,7 +35,7 @@ const TopPane = styled(GridShadowScrollArea)({
 
 const BottomPane = styled('div')({
   position: 'relative',
-  minHeight: 44,
+  minHeight: 158,
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',

@@ -33,7 +33,7 @@ export default function GridPivotingMovies() {
 
   return (
     <div style={{ width: '100%' }}>
-      <div style={{ height: 650, width: '100%' }}>
+      <div style={{ height: 550, width: '100%' }}>
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}

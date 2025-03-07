@@ -51,7 +51,7 @@ export default function GridPivotingControlled() {
   const [pivotPanelOpen, setPivotPanelOpen] = React.useState(true);
 
   return (
-    <div style={{ height: 450, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
