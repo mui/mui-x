@@ -140,12 +140,22 @@ const getPivotedData = ({
       const pivotValueIndex = visibleValues.findIndex(({ field }) => field === column.field);
       const isVisiblePivotValueField = pivotValueIndex !== -1;
 
+      const columnToAdd = {
+        ...column,
+        aggregable: false,
+        groupable: false,
+        filterable: false,
+        hideable: false,
+        editable: false,
+        disableReorder: true,
+      };
+
       if (isVisiblePivotValueField) {
         // Store columns that are used as pivot values in a temporary array to keep them in the same order as in pivotModel.values, not in the order of the initial columns.
         // `pivotColumnsIncludedInPivotValues` is concatenated to pivotColumns later.
-        pivotColumnsIncludedInPivotValues[pivotValueIndex] = column;
+        pivotColumnsIncludedInPivotValues[pivotValueIndex] = columnToAdd;
       } else {
-        pivotColumns.push(column);
+        pivotColumns.push(columnToAdd);
       }
       columnVisibilityModel[column.field] = false;
     }
@@ -174,14 +184,6 @@ const getPivotedData = ({
 
     return attributes;
   };
-
-  visibleRows.forEach((pivotRow) => {
-    pivotColumns.push({
-      field: pivotRow.field,
-      groupable: true,
-    });
-    columnVisibilityModel[pivotRow.field] = false;
-  });
 
   const aggregationModel: GridAggregationModel = {};
 
