@@ -127,8 +127,6 @@ export function useValueAndOpenStates<
       shouldClose = changeImportance === 'accept',
     } = options ?? {};
 
-    const isEqualToCurrentValue = valueManager.areValuesEqual(utils, newValue, value);
-
     let shouldFireOnChange: boolean;
     let shouldFireOnAccept: boolean;
     if (!skipPublicationIfPristine && !isValueControlled && !state.hasBeenModifiedSinceMount) {
@@ -137,21 +135,19 @@ export function useValueAndOpenStates<
       shouldFireOnChange = true;
       shouldFireOnAccept = changeImportance === 'accept';
     } else {
-      shouldFireOnChange = !isEqualToCurrentValue;
+      shouldFireOnChange = !valueManager.areValuesEqual(utils, newValue, value);
       shouldFireOnAccept =
         changeImportance === 'accept' &&
         !valueManager.areValuesEqual(utils, newValue, state.lastCommittedValue);
     }
 
-    if (!isEqualToCurrentValue) {
-      setState((prevState) => ({
-        ...prevState,
-        // We reset the shallow value whenever we fire onChange.
-        clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
-        lastCommittedValue: shouldFireOnAccept ? newValue : prevState.lastCommittedValue,
-        hasBeenModifiedSinceMount: true,
-      }));
-    }
+    setState((prevState) => ({
+      ...prevState,
+      // We reset the shallow value whenever we fire onChange.
+      clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
+      lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
+      hasBeenModifiedSinceMount: true,
+    }));
 
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
     const getContext = (): PickerChangeHandlerContext<TError> => {
@@ -187,9 +183,7 @@ export function useValueAndOpenStates<
     setState((prevState) => ({
       ...prevState,
       lastExternalValue: value,
-      internalValueDependencies: { timezone },
-      internalValue: value,
-      lastCommittedValue: value,
+      clockShallowValue: undefined,
       hasBeenModifiedSinceMount: true,
     }));
   }
@@ -224,7 +218,11 @@ export function useValueAndOpenStates<
   }, [isOpenControlled, openProp]);
 
   const viewValue = React.useMemo(
-    () => valueManager.cleanValue(utils, state.clockShallowValue ?? value),
+    () =>
+      valueManager.cleanValue(
+        utils,
+        state.clockShallowValue === undefined ? value : state.clockShallowValue,
+      ),
     [utils, valueManager, state.clockShallowValue, value],
   );
 
