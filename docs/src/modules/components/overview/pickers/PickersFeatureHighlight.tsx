@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import LanguageIcon from '@mui/icons-material/Language';
-import InfoCard from './InfoCard';
+import InfoCard from '../InfoCard';
 
 const featuredItems = [
   {
