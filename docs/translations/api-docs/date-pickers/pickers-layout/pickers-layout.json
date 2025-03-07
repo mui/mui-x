@@ -20,7 +20,7 @@
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the Ficker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "shortcuts": "Custom component for the shortcuts.",
     "tabs": "Tabs enabling toggling between views.",

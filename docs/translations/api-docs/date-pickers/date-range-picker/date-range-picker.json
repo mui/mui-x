@@ -157,7 +157,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the Ficker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",

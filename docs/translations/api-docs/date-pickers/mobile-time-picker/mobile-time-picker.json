@@ -128,7 +128,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the Ficker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
