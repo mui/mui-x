@@ -95,6 +95,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const yTicks = useTicks({
     scale: yScale,
+    scaleType: settings.scaleType,
     tickNumber,
     valueFormatter,
     tickPlacement,
@@ -309,7 +310,6 @@ ChartsYAxis.propTypes = {
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
-   * Only used if scale is 'band'.
    * @default 'middle'
    */
   tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
