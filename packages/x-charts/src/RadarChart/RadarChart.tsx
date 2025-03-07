@@ -7,7 +7,7 @@ import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverla
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
 import { RadarMetricLabels } from './RadarMetricLabels';
