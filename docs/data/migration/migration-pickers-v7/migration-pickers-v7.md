@@ -1788,8 +1788,6 @@ If you were using them, you need to replace them with the following code:
   >
   ```
 
-  If you were using any of these types, please create an issue on GitHub to let us know about your use case.
-
 ## Theme breaking change
 
 ### ⏩ `MuiPickersPopper`
