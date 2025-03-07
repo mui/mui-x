@@ -237,13 +237,13 @@ export interface PickerActionsContextValue<
   setValue: (value: TValue, options?: SetValueActionOptions<TError>) => void;
   /**
    * Set the current open state of the Picker.
+   * It can be a function that will receive the current open state as parameter.
    * ```ts
    * setOpen(true); // Opens the picker.
    * setOpen(false); // Closes the picker.
    * setOpen((prevOpen) => !prevOpen); // Toggles the open state.
    * ```
    * @param {React.SetStateAction<boolean>} action The new open state of the Picker.
-   * It can be a function that will receive the current open state.
    */
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   /**
