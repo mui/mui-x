@@ -122,7 +122,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'hamis',
 
   // Column menu text
-  columnMenuLabel: 'Menü',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Oszlopok megjelenítése',
   columnMenuManageColumns: 'Oszlopok kezelése',
   columnMenuFilter: 'Szűrők',

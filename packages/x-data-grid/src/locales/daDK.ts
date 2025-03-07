@@ -123,7 +123,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'negativ',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filtrer',
