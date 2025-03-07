@@ -94,7 +94,6 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       } else {
         const toolbarHourButtons = screen.getAllByRole('button', {
           name: adapterToUse.format(newValue[0], hasMeridiem ? 'hours12h' : 'hours24h'),

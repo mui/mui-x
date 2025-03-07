@@ -5,22 +5,21 @@ import {
   adapterToUse,
   expectFieldValueV7,
   describeValue,
-  openPicker,
   getFieldInputRoot,
 } from 'test/utils/pickers';
-import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
+import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
-describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
+describe('<DesktopTimeRangePicker /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopTimeRangePicker, () => ({
     render,
+    clock,
     componentFamily: 'picker',
     type: 'time-range',
-    variant: 'mobile',
+    variant: 'desktop',
     initialFocus: 'start',
     fieldType: 'single-input',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -45,15 +44,10 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
-      if (!isOpened) {
-        openPicker({
-          type: 'time-range',
-          initialFocus: setEndDate ? 'end' : 'start',
-          fieldType: 'single-input',
-        });
-      }
-
+    setNewValue: (
+      value,
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
+    ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -62,23 +56,41 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
       } else {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
       }
+      if (isOpened) {
+        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+        const hours = adapterToUse.format(
+          newValue[setEndDate ? 1 : 0],
+          hasMeridiem ? 'hours12h' : 'hours24h',
+        );
+        const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
+        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        fireEvent.click(
+          screen.getByRole('option', {
+            name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
+          }),
+        );
+        if (hasMeridiem) {
+          // meridiem is an extra view on `DesktopDateTimeRangePicker`
+          // we need to click it to finish selection
+          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        }
+      } else {
+        selectSection('hours');
+        pressKey(undefined, 'ArrowUp');
 
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hours = adapterToUse.format(
-        newValue[setEndDate ? 1 : 0],
-        hasMeridiem ? 'hours12h' : 'hours24h',
-      );
-      const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      fireEvent.click(
-        screen.getByRole('option', {
-          name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
-        }),
-      );
-      if (hasMeridiem) {
-        // meridiem is an extra view on `MobileTimeRangePicker`
-        // we need to click it to finish selection
-        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        selectSection('minutes');
+        pressKey(undefined, 'PageUp'); // increment by 5 minutes
+
+        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+        if (hasMeridiem) {
+          selectSection('meridiem');
+          const previousHours = adapterToUse.getHours(value[setEndDate ? 1 : 0]);
+          const newHours = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
+          // update meridiem section if it changed
+          if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
+            pressKey(undefined, 'ArrowUp');
+          }
+        }
       }
 
       return newValue;
