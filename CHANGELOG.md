@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.27.3
+
+_Mar 7, 2025_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@arminmeh, @cherniavskii, @LukasTy, @michelengelen.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.27.3`
+
+- [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (#16834) @arminmeh
+- [DataGrid] Fix scroll jump with dynamic row height (#16801) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.27.3`.
+
+#### `@mui/x-data-grid-premium@7.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.27.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.27.3`
+
+- [fields] Fix Fields aria relationship with `helperText` (#16828) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.27.3`.
+
+### Core
+
+- [infra] Update contributor acknowledgment wording (#16753) @michelengelen
+
 ## 7.27.2
 
 <!-- generated comparing v7.27.1..v7.x -->
