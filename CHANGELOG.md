@@ -53,16 +53,18 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 
 #### Breaking changes
 
+- All Date Time Picker variants now use Digital Clock for time editing.
 - Stop passing invalid date to `onChange` when the date is partially filled — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.14`
 
+- [DateTimePicker] Use Digital Clock in all component variants (#16678) @LukasTy
 - [fields] Always use `props.value` as the source of truth when defined (#15875) @flaviendelangle
 - [fields] Fix Fields aria relationship with `helperText` (#16821) @LukasTy
 - [pickers] Add `TValidationProps` generic to the `PickerManager` interface (#16832) @flaviendelangle
 - [pickers] Fix `edge` property setting in different button position cases (#16838) @LukasTy
 - [pickers] Fix typo in JSDoc (#16831) @flaviendelangle
-- [pickers] Refactor the files in the `usePicker` folder (#16680) @flaviendelangle 
+- [pickers] Refactor the files in the `usePicker` folder (#16680) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
