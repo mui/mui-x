@@ -28,6 +28,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Дані не знайдено.',
   noColumnsOverlayLabel: 'Немає стовпців',
   noColumnsOverlayManageColumns: 'Керування стовпцями',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -75,6 +77,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Завантажити у форматі CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Пошук',
@@ -226,6 +231,38 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
+
+  // Pivot
+  // pivotSettings: 'Pivot settings',
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+
+  // Sidebar
+  // sidebarExpandSection: name => `Expand ${name}`,
+  // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

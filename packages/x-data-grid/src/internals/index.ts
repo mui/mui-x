@@ -31,7 +31,7 @@ export type {
   GridStrategyProcessorName,
 } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
-export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
+export { unwrapPrivateAPI, useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export * from '../hooks/features/columnHeaders/useGridColumnHeaders';

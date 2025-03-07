@@ -19,6 +19,8 @@ export interface GridLocaleText {
   noResultsOverlayLabel: string;
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
+  emptyPivotOverlayLabel: string;
+  emptyPivotOverlayPivotSettings: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -60,6 +62,9 @@ export interface GridLocaleText {
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
+
+  // Toolbar pivot button
+  toolbarPivot: string;
 
   // Columns management text
   columnsManagementSearchTitle: string;
@@ -200,6 +205,38 @@ export interface GridLocaleText {
   aggregationFunctionLabelMin: string;
   aggregationFunctionLabelMax: string;
   aggregationFunctionLabelSize: string;
+
+  // Pivot
+  pivotSettings: string;
+  pivotToggleLabel: string;
+  pivotSearchButton: string;
+  pivotSearchControlPlaceholder: string;
+  pivotSearchControlLabel: string;
+  pivotSearchControlClear: string;
+  pivotNoFields: string;
+  pivotCloseButton: string;
+  pivotRows: string;
+  pivotColumns: string;
+  pivotValues: string;
+  pivotMenuMoveUp: string;
+  pivotMenuMoveDown: string;
+  pivotMenuMoveToTop: string;
+  pivotMenuMoveToBottom: string;
+  pivotMenuRows: string;
+  pivotMenuColumns: string;
+  pivotMenuValues: string;
+  pivotMenuOptions: string;
+  pivotMenuAddToRows: string;
+  pivotMenuAddToColumns: string;
+  pivotMenuAddToValues: string;
+  pivotMenuRemove: string;
+  pivotDragToRows: string;
+  pivotDragToColumns: string;
+  pivotDragToValues: string;
+
+  // Sidebar
+  sidebarCollapseSection: (name: string) => string;
+  sidebarExpandSection: (name: string) => string;
 
   // Used core components translation keys
   MuiTablePagination: MuiTablePaginationLocalizedProps;
