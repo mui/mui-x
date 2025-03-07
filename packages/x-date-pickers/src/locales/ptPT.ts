@@ -58,7 +58,7 @@ const ptPTPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Escolha uma data, a data selecionada é ${formattedDate}` : 'Escolha uma data',
   openTimePickerDialogue: (formattedTime) =>

@@ -52,7 +52,7 @@ const enUSPickers: PickersLocaleText = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date',
   openTimePickerDialogue: (formattedTime) =>

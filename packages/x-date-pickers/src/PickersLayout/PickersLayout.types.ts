@@ -15,7 +15,7 @@ import { PickerValidValue } from '../internals/models';
 
 export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
-   * Custom component for the action bar, it is placed below the picker views.
+   * Custom component for the action bar, it is placed below the Ficker views.
    * @default PickersActionBar
    */
   actionBar?: React.ElementType<PickersActionBarProps>;
@@ -34,7 +34,7 @@ export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
-  // The direction cannot be part of PickerOwnerState because we need to have the correct direction value even when there is no picker above for standalone components.
+  // The direction cannot be part of PickerOwnerState because we need to have the correct direction value even when there is no Picker above for standalone components.
   /**
    * The direction of the layout.
    * Is equal to "ltr" when the layout is in left-to-right direction.
@@ -66,7 +66,7 @@ export interface PickersLayoutSlots<TValue extends PickerValidValue>
   tabs?: React.ElementType<{}>;
   /**
    * Custom component for the toolbar.
-   * It is placed above the picker views.
+   * It is placed above the Picker views.
    */
   toolbar?: React.JSXElementConstructor<BaseToolbarProps>;
 }

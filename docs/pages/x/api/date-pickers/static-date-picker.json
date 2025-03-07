@@ -177,7 +177,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Ficker views.",
       "default": "PickersActionBar",
       "class": null
     },
