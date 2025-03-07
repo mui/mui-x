@@ -441,4 +441,42 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Year']);
     expect(getColumnValues(0)).to.deep.equal(['2024 (9)', '2023 (1)']);
   });
+
+  it('should allow to filter rows in pivot mode using original columns', async () => {
+    const { user } = render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'year' }],
+              values: [
+                { field: 'price', aggFunc: 'avg' },
+                { field: 'volume', aggFunc: 'sum' },
+              ],
+            },
+          },
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Filters' }));
+
+    const columnSelector = screen.getByRole('combobox', { name: 'Columns' });
+    await user.click(columnSelector);
+
+    const options = screen.getAllByRole('option').map((option) => option.textContent);
+    expect(options).to.deep.equal([
+      'ID',
+      'Date',
+      'Date (Year)',
+      'Date (Quarter)',
+      'Ticker',
+      'Year',
+      'Type',
+      'Price',
+      'Volume',
+    ]);
+  });
 });
