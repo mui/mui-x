@@ -686,9 +686,8 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "GridToolbar",
-      "class": null
+      "description": "Toolbar component rendered in the grid header.",
+      "class": "MuiDataGridPro-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -939,7 +938,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {

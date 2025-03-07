@@ -84,24 +84,15 @@ export { useNullableFieldPrivateContext } from './hooks/useNullableFieldPrivateC
 export { useNullablePickerContext } from './hooks/useNullablePickerContext';
 export { usePicker } from './hooks/usePicker';
 export type {
-  UsePickerParams,
+  UsePickerParameters,
   UsePickerProps,
-  UsePickerValueFieldResponse,
   PickerViewsRendererProps,
-} from './hooks/usePicker';
-export type {
-  UsePickerValueContextValue,
-  UsePickerValueNonStaticProps,
-  PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue.types';
-export type {
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
   PickerViewRenderer,
-  UsePickerViewsProps,
-} from './hooks/usePicker/usePickerViews';
-export type { UsePickerProviderNonStaticProps } from './hooks/usePicker/usePickerProvider';
+  UsePickerNonStaticProps,
+} from './hooks/usePicker';
 export { usePickerPrivateContext } from './hooks/usePickerPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
@@ -121,11 +112,12 @@ export type {
   PickerManagerFieldInternalProps,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
+  PickerValueManager,
 } from './models/manager';
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
+export type { BaseClockProps, DigitalTimePickerProps, AmPmProps } from './models/props/time';
 export type { ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { FormProps } from './models/formProps';

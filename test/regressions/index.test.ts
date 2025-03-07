@@ -18,6 +18,8 @@ const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
   'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
 ];
@@ -33,7 +35,12 @@ const isConsoleWarningIgnored = (msg?: string) => {
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute) {
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;

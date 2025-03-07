@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -9,9 +9,10 @@ import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
+  Toolbar,
+  ToolbarButton,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -79,11 +80,13 @@ function EditToolbar(props) {
   };
 
   return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-    </GridToolbarContainer>
+    <Toolbar>
+      <Tooltip title="Add record">
+        <ToolbarButton onClick={handleClick}>
+          <AddIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+    </Toolbar>
   );
 }
 
