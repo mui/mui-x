@@ -60,15 +60,15 @@ export function useBaseCalendarSetVisibleYearWrapper(
     utils,
   ]);
 
-  const tabbableYears = baseYearListOrGridContext?.tabbableYears;
+  const canCellBeTabbed = baseYearListOrGridContext?.canCellBeTabbed;
   const isTabbable = React.useMemo(() => {
     // If the button is not inside a year list or grid, then it is always tabbable.
-    if (tabbableYears == null) {
+    if (canCellBeTabbed == null) {
       return true;
     }
 
-    return tabbableYears.some((year) => utils.isSameYear(year, targetDate));
-  }, [tabbableYears, targetDate, utils]);
+    return canCellBeTabbed(targetDate);
+  }, [canCellBeTabbed, targetDate]);
 
   const setTarget = useEventCallback(() => {
     if (isDisabled) {
