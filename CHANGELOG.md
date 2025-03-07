@@ -87,6 +87,30 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.14`, plus:
 
 ### Tree View
 
+#### Breaking changes
+
+- The `selectItem` method has been renamed `setItemSelection`:
+
+  ```diff
+   const { publicAPI } = useTreeItemUtils();
+  
+   const handleSelectItem() {
+  -  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
+  +  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+   }
+  ```
+
+- The `setItemExpansion` method now receives a single object instead of a list of parameters:
+
+  ```diff
+   const { publicAPI } = useTreeItemUtils();
+  
+   const handleExpandItem() {
+  -  publicAPI.setItemExpansion(event, props.itemId, true)
+  +  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+   }
+  ```
+
 #### `@mui/x-tree-view@8.0.0-alpha.14`
 
 - [TreeView] Clean the expansion and selection API methods (#16795) @flaviendelangle
