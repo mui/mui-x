@@ -117,6 +117,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/gauge',
     title: 'Gauge',
   },
@@ -199,6 +209,30 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
+  },
+  {
+    pathname: '/x/api/charts/radar-data-provider',
+    title: 'RadarDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-area',
+    title: 'RadarSeriesArea',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-marks',
+    title: 'RadarSeriesMarks',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
   },
   {
     pathname: '/x/api/charts/scatter',

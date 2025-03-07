@@ -51,6 +51,8 @@
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
+    "dataSource": { "description": "Data source object." },
+    "dataSourceCache": { "description": "Data source cache object." },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded."
     },
@@ -237,6 +239,12 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
+    "lazyLoading": {
+      "description": "Used together with <code>dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
+    },
+    "lazyLoadingRequestThrottleMs": {
+      "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
+    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
@@ -406,6 +414,10 @@
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
+    },
+    "onDataSourceError": {
+      "description": "Callback fired when a data source request fails.",
+      "typeDescriptions": { "error": "The data source error object." }
     },
     "onDensityChange": {
       "description": "Callback fired when the density changes.",
@@ -630,7 +642,7 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "scrollEndThreshold": {
-      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>unstable_lazyLoading</code>, it defines the area where the next data request is triggered."
+      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."
@@ -638,6 +650,7 @@
     "showColumnVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
+    "showToolbar": { "description": "If <code>true</code>, the toolbar is displayed." },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
     },
@@ -660,26 +673,11 @@
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
     },
-    "unstable_dataSource": { "description": "Data source object." },
-    "unstable_dataSourceCache": { "description": "Data source cache object." },
-    "unstable_lazyLoading": {
-      "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
-    },
-    "unstable_lazyLoadingRequestThrottleMs": {
-      "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
-    },
     "unstable_listColumn": {
       "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
     },
     "unstable_listView": {
       "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
-    },
-    "unstable_onDataSourceError": {
-      "description": "Callback fired when the data source request fails.",
-      "typeDescriptions": {
-        "error": "The error object.",
-        "params": "With all properties from GridGetRowsParams."
-      }
     },
     "virtualizeColumnsWithAutoRowHeight": {
       "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."
@@ -1364,7 +1362,7 @@
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
-    "toolbar": "Toolbar component rendered inside the Header component.",
+    "toolbar": "Toolbar component rendered in the grid header.",
     "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
     "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",

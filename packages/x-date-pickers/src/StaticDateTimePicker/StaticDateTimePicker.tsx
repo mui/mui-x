@@ -11,7 +11,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDateTime } from '../validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { mergeSx } from '../internals/utils/utils';
 import {

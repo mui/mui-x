@@ -8,7 +8,6 @@ import {
   GetApplyQuickFilterFn,
   GridFilterModel,
   GridLogicOperator,
-  GridToolbar,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
@@ -42,7 +41,7 @@ describe('<DataGrid /> - Quick filter', () => {
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           {...baselineProps}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter
@@ -659,19 +658,18 @@ describe('<DataGrid /> - Quick filter', () => {
     );
 
     const searchBox = screen.getByRole<HTMLInputElement>('searchbox');
-    let searchBoxValue = searchBox.value;
 
     expect(searchBox.value).to.equal('');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}a` } });
+    fireEvent.change(searchBox, { target: { value: 'a' } });
     await sleep(debounceMs - 2);
-    searchBoxValue = searchBox.value;
+    expect(searchBox.value).to.equal('a');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}b` } });
+    fireEvent.change(searchBox, { target: { value: 'ab' } });
     await sleep(10);
-    searchBoxValue = searchBox.value;
+    expect(searchBox.value).to.equal('ab');
 
-    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}c` } });
+    fireEvent.change(searchBox, { target: { value: 'abc' } });
     await sleep(debounceMs * 2);
     expect(searchBox.value).to.equal('abc');
   });

@@ -47,7 +47,6 @@ export default function SxStyling() {
         { data: rData, label: 'r', id: 'r_id' },
       ]}
       colors={colors}
-      width={500}
       height={300}
     />
   );

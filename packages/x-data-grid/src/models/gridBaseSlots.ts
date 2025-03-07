@@ -132,7 +132,9 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type DividerProps = {};
+export type DividerProps = {
+  orientation?: 'horizontal' | 'vertical';
+};
 
 export type MenuListProps = {
   ref?: Ref<HTMLUListElement>;
@@ -187,7 +189,6 @@ export type PopperProps = {
   clickAwayMouseEvent?: false | ClickAwayMouseEventHandler;
   flip?: boolean;
   focusTrap?: boolean;
-  focusTrapEnabled?: boolean;
   onExited?: (node: HTMLElement | null) => void;
   onClickAway?: (event: MouseEvent | TouchEvent) => void;
   onDidShow?: () => void;
@@ -275,6 +276,7 @@ export type SwitchProps = {
 };
 
 export type TextFieldProps = {
+  role?: string;
   autoComplete?: string;
   className?: string;
   color?: 'primary' | 'error';
@@ -298,6 +300,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
+  ref?: Ref<HTMLInputElement>;
 };
 
 export type TooltipProps = {

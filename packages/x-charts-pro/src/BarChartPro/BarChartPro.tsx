@@ -66,7 +66,10 @@ BarChartPlotZoom.propTypes = {
 
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig'
+    > {}
 
 /**
  * Demos:
@@ -239,7 +242,8 @@ BarChartPro.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.oneOfType([
     PropTypes.number,

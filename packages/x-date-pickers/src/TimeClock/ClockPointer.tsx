@@ -84,7 +84,7 @@ const ClockPointerThumb = styled('div', {
   boxSizing: 'content-box',
   variants: [
     {
-      props: { isBetweenTwoClockValues: false },
+      props: { isClockPointerBetweenTwoValues: false },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
       },

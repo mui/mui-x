@@ -49,7 +49,7 @@ export default function ExpandingStep() {
           select
           label="curve"
           value={curve}
-          sx={{ minWidth: 200, mb: 2 }}
+          sx={{ minWidth: 100, mb: 2 }}
           onChange={(event) => setCurve(event.target.value as StepCurve)}
         >
           {stepCurves.map((curveType) => (

@@ -54,7 +54,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.unstable_dataSource.fetchRows(id);
+      apiRef.current.dataSource.fetchRows(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }
@@ -105,7 +105,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = Math.max(rootProps.dataSource?.getChildrenCount?.(row) ?? 0, 0);
   }
 
   let cellContent: React.ReactNode;

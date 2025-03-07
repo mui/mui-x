@@ -128,7 +128,10 @@ MarkPlotZoom.propTypes = {
 
 export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'line', LineChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig'
+    > {}
 
 /**
  * Demos:
@@ -294,7 +297,8 @@ LineChartPro.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.oneOfType([
     PropTypes.number,

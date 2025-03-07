@@ -30,6 +30,15 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "dataSource": {
+      "type": {
+        "name": "shape",
+        "description": "{ getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+      }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
@@ -186,6 +195,8 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -326,6 +337,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
+      }
+    },
     "onDensityChange": {
       "type": { "name": "func" },
       "signature": {
@@ -342,6 +360,8 @@
     },
     "onFetchRows": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -469,6 +489,8 @@
     },
     "onRowsScrollEnd": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -535,7 +557,9 @@
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\""
+      "default": "\"client\"",
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
@@ -546,6 +570,7 @@
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sortingMode": {
@@ -571,17 +596,6 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
-    "unstable_dataSource": {
-      "type": {
-        "name": "shape",
-        "description": "{ getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
-      }
-    },
-    "unstable_dataSourceCache": {
-      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
-    },
-    "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
-    "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "unstable_listColumn": {
       "type": {
         "name": "shape",
@@ -589,13 +603,6 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_onDataSourceError": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(error: Error, params: GridGetRowsParams) => void",
-        "describedArgs": ["error", "params"]
-      }
-    },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
@@ -679,9 +686,8 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "null",
-      "class": null
+      "description": "Toolbar component rendered in the grid header.",
+      "class": "MuiDataGridPro-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -932,7 +938,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {

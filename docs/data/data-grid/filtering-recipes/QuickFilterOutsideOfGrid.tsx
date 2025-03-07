@@ -5,20 +5,88 @@ import Grid from '@mui/material/Grid';
 import {
   DataGrid,
   GridPortalWrapper,
-  GridToolbarQuickFilter,
-  GridToolbar,
+  QuickFilter,
+  QuickFilterClear,
+  QuickFilterControl,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  Toolbar,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
-function MyCustomToolbar(props: any) {
+function MyCustomToolbar() {
   return (
     <React.Fragment>
       <Portal container={() => document.getElementById('filter-panel')!}>
         <GridPortalWrapper>
-          <GridToolbarQuickFilter />
+          <QuickFilter>
+            <QuickFilterControl
+              render={({ ref, ...other }) => (
+                <TextField
+                  {...other}
+                  sx={{ width: 260 }}
+                  inputRef={ref}
+                  aria-label="Search"
+                  placeholder="Search..."
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: other.value ? (
+                      <InputAdornment position="end">
+                        <QuickFilterClear
+                          edge="end"
+                          size="small"
+                          aria-label="Clear search"
+                          sx={{ marginRight: -0.75 }}
+                        >
+                          <CancelIcon fontSize="small" />
+                        </QuickFilterClear>
+                      </InputAdornment>
+                    ) : null,
+                  }}
+                />
+              )}
+            />
+          </QuickFilter>
         </GridPortalWrapper>
       </Portal>
-      <GridToolbar {...props} />
+
+      <Toolbar>
+        <Tooltip title="Columns">
+          <ColumnsPanelTrigger render={<ToolbarButton />}>
+            <ViewColumnIcon fontSize="small" />
+          </ColumnsPanelTrigger>
+        </Tooltip>
+
+        <Tooltip title="Filters">
+          <FilterPanelTrigger
+            render={(triggerProps, state) => (
+              <ToolbarButton {...triggerProps} color="default">
+                <Badge
+                  badgeContent={state.filterCount}
+                  color="primary"
+                  variant="dot"
+                >
+                  <FilterListIcon fontSize="small" />
+                </Badge>
+              </ToolbarButton>
+            )}
+          />
+        </Tooltip>
+      </Toolbar>
     </React.Fragment>
   );
 }
@@ -50,6 +118,12 @@ export default function QuickFilterOutsideOfGrid() {
           slots={{
             toolbar: MyCustomToolbar,
           }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: false,
+            },
+          }}
+          showToolbar
           initialState={{
             filter: {
               filterModel: {

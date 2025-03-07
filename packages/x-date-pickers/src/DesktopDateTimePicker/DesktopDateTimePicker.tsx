@@ -30,7 +30,7 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
-} from '../internals/hooks/usePicker/usePickerViews';
+} from '../internals/hooks/usePicker';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 
