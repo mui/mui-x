@@ -341,9 +341,9 @@ export interface UseFieldState<TValue extends PickerValidValue> {
   /**
    * Last value returned by `useControlledValue`.
    */
-  lastValue: TValue | undefined;
+  lastExternalValue: TValue;
   /**
-   * Last value of the parameters used to generate the sections.
+   * Last set of parameters used to generate the sections.
    */
   lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
   /**
@@ -351,6 +351,9 @@ export interface UseFieldState<TValue extends PickerValidValue> {
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
   referenceValue: InferNonNullablePickerValue<TValue>;
+  /**
+   * Sections currently displayed in the field.
+   */
   sections: InferFieldSection<TValue>[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.

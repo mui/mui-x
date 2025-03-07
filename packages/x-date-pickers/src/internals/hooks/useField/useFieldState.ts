@@ -165,7 +165,7 @@ export const useFieldState = <
 
     const stateWithoutReferenceDate: Omit<UseFieldState<TValue>, 'referenceValue'> = {
       sections,
-      lastValue: value,
+      lastExternalValue: value,
       lastSectionsDependencies: { format, isRtl, locale: utils.locale },
       tempValueStrAndroid: null,
     };
@@ -396,7 +396,7 @@ export const useFieldState = <
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
 
   // If `prop.value` changes, we update the state to reflect the new value
-  if (value !== state.lastValue) {
+  if (value !== state.lastExternalValue) {
     let sections: InferFieldSection<TValue>[];
     if (
       sectionToUpdateOnNextInvalidDateRef.current != null &&
@@ -417,7 +417,7 @@ export const useFieldState = <
 
     setState((prevState) => ({
       ...prevState,
-      lastValue: value,
+      lastExternalValue: value,
       sections,
       sectionsDependencies: { format, isRtl, locale: utils.locale },
       referenceValue: fieldValueManager.updateReferenceValue(
