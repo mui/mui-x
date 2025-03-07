@@ -327,7 +327,7 @@ export interface PickerPrivateContextValue {
    */
   dismissViews: () => void;
   /**
-   * Whether one of the view has an UI (it has a view renderer associated).
+   * Whether at least one view has an UI (it has a view renderer associated).
    */
   hasUIView: boolean;
   /**
