@@ -5,6 +5,10 @@ import react from '@vitejs/plugin-react';
 const isCI = process.env.CI === 'true';
 
 export default defineConfig({
+  mode: 'build',
+  build: {
+    minify: false,
+  },
   plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
   test: {
     setupFiles: ['./setup.ts'],
