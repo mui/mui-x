@@ -136,7 +136,6 @@ function Scatter(props: ScatterProps) {
       {cleanData.map((dataPoint) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
-          {...markerProps}
           dataIndex={dataPoint.dataIndex}
           color={dataPoint.color}
           isHighlighted={dataPoint.isHighlighted}
@@ -153,6 +152,7 @@ function Scatter(props: ScatterProps) {
               }))
           }
           {...dataPoint.interactionProps}
+          {...markerProps}
         />
       ))}
     </g>
