@@ -61,7 +61,12 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProps> & { shouldRequestsFail?: boolean, dataSetOptions?: Partial<typeof dataSetOptions> }) {
+  function TestDataSource(
+    props: Partial<DataGridProps> & {
+      shouldRequestsFail?: boolean;
+      dataSetOptions?: Partial<typeof dataSetOptions>;
+    },
+  ) {
     apiRef = useGridApiRef();
     const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...rest } = props;
     mockServer = useMockServer(
@@ -307,18 +312,24 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       const cache = new Map<string, GridGetRowsResponse>();
       const dataSourceCache = {
         get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
-        set: (key: GridGetRowsParams, value: GridGetRowsResponse) => cache.set(getKeyDefault(key), value),
+        set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
+          cache.set(getKeyDefault(key), value),
         clear: () => {
-          cache.clear()
+          cache.clear();
           clearSpy();
         },
       };
-      const { user } = render(<TestDataSource dataSourceCache={dataSourceCache} dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }} />);
+      const { user } = render(
+        <TestDataSource
+          dataSourceCache={dataSourceCache}
+          dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
+        />,
+      );
 
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
-      
+
       await waitFor(() => {
         expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
       });
@@ -335,7 +346,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
       expect(editRowSpy.callCount).to.equal(1);
       expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
-
 
       await waitFor(() => {
         // One extra call is a side effect of the data update in `useMockServer`
