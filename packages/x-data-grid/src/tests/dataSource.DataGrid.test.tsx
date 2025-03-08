@@ -14,6 +14,7 @@ import {
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
 class TestCache {
@@ -42,12 +43,13 @@ class TestCache {
 
 const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
+const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
 // Needs layout
 describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
-
+  const editRowSpy = spy();
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -59,15 +61,16 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProps> & { shouldRequestsFail?: boolean }) {
+  function TestDataSource(props: Partial<DataGridProps> & { shouldRequestsFail?: boolean, dataSetOptions?: Partial<typeof dataSetOptions> }) {
     apiRef = useGridApiRef();
+    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...rest } = props;
     mockServer = useMockServer(
-      { rowLength: 100, maxColumns: 1 },
+      dataSetOptionsProp ?? dataSetOptions,
       serverOptions,
-      props.shouldRequestsFail ?? false,
+      shouldRequestsFail ?? false,
     );
 
-    const { fetchRows } = mockServer;
+    const { fetchRows, editRow } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -88,8 +91,13 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
             rowCount: getRowsResponse.rowCount,
           };
         },
+        updateRow: async (params) => {
+          editRowSpy(params);
+          const syncedRow = await editRow(params.rowId, params.updatedRow);
+          return syncedRow;
+        },
       };
-    }, [fetchRows]);
+    }, [fetchRows, editRow]);
 
     if (!mockServer.isReady) {
       return null;
@@ -106,7 +114,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           pagination
           pageSizeOptions={pageSizeOptions}
           disableVirtualization
-          {...props}
+          {...rest}
         />
       </div>
     );
@@ -289,6 +297,51 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       render(<TestDataSource onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
         expect(onDataSourceError.callCount).to.equal(1);
+      });
+    });
+  });
+
+  describe('Editing', () => {
+    it('should call `editRow()` and clear the cache when a row is updated', async () => {
+      const clearSpy = spy();
+      const cache = new Map<string, GridGetRowsResponse>();
+      const dataSourceCache = {
+        get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
+        set: (key: GridGetRowsParams, value: GridGetRowsResponse) => cache.set(getKeyDefault(key), value),
+        clear: () => {
+          cache.clear()
+          clearSpy();
+        },
+      };
+      const { user } = render(<TestDataSource dataSourceCache={dataSourceCache} dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }} />);
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      
+      await waitFor(() => {
+        expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+      });
+      const cell = getCell(0, 2);
+      await user.click(cell);
+      expect(cell).toHaveFocus();
+
+      clearSpy.resetHistory();
+
+      expect(cache.size).to.equal(1);
+
+      // edit the cell
+      await user.keyboard('{Enter} updated{Enter}');
+
+      expect(editRowSpy.callCount).to.equal(1);
+      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
+
+
+      await waitFor(() => {
+        // One extra call is a side effect of the data update in `useMockServer`
+        // which regenerates the `fetchRows` method which updates the `dataSource` instance resetting the cache
+        // TODO: Change it to `1` once https://github.com/mui/mui-x/issues/15098 is done
+        expect(clearSpy.callCount).to.equal(2);
       });
     });
   });
