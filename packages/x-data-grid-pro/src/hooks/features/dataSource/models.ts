@@ -5,7 +5,7 @@ import type {
   GridDataSource,
   GridGetRowsParams,
 } from '@mui/x-data-grid';
-import type { GridDataSourceApiBase, GridDataSourcePrivateApi } from '@mui/x-data-grid/internals';
+import type { GridDataSourceApiBase } from '@mui/x-data-grid/internals';
 
 export interface GridDataSourceState {
   loading: Record<GridRowId, boolean>;
@@ -75,7 +75,7 @@ export interface GridDataSourceApiPro {
   dataSource: GridDataSourceApiBasePro;
 }
 
-export interface GridDataSourcePrivateApiPro extends GridDataSourcePrivateApi {
+export interface GridDataSourcePrivateApiPro {
   /**
    * Initiates the fetch of the children of a row.
    * @param {string} id The id of the group to be fetched.

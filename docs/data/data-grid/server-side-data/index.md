@@ -281,6 +281,15 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 
 {{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
+:::warning
+When using the `updateRow()` method, be aware that the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
+This means any previously cached data will be refetched on the next request.
+
+For applications requiring caching with editing operations, consider implementing server-side caching instead.
+
+If you have a specific use case that requires preserving the client-side cache during edit operations, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
+:::
+
 ## Error handling
 
 You could handle the errors with the data source by providing an error handler function using the `onDataSourceError()`.

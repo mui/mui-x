@@ -164,11 +164,7 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * from '../models/props/DataGridProps';
-export type {
-  GridDataSourceApiBase,
-  GridDataSourceApi,
-  GridDataSourcePrivateApi,
-} from '../hooks/features/dataSource/models';
+export type { GridDataSourceApiBase, GridDataSourceApi } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';

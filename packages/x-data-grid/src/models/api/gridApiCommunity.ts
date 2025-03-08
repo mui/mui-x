@@ -1,7 +1,4 @@
-import type {
-  GridDataSourceApi,
-  GridDataSourcePrivateApi,
-} from '../../hooks/features/dataSource/models';
+import type { GridDataSourceApi } from '../../hooks/features/dataSource/models';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
@@ -20,7 +17,6 @@ export interface GridApiCommunity
 export interface GridPrivateApiCommunity
   extends GridApiCommunity,
     GridPrivateOnlyApiCommon<GridApiCommunity, GridPrivateApiCommunity, DataGridProcessedProps>,
-    GridDataSourcePrivateApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi,

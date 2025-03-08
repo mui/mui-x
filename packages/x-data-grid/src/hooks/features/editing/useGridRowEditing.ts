@@ -570,8 +570,8 @@ export const useGridRowEditing = (
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               if (finalRowUpdate !== row) {
-                // Avoid mutating the cache if the row is not updated
-                apiRef.current.mutateRowInCache?.(id, finalRowUpdate);
+                // Reset the outdated cache
+                apiRef.current.dataSource.cache.clear();
               }
               finishRowEditMode();
             })

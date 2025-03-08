@@ -250,7 +250,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   };
 
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
-    ...api.private,
     fetchRowChildren,
     resetDataSourceState,
   };

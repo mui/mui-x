@@ -21,7 +21,6 @@ export const useGridDataSource = (
   );
 
   useGridApiMethod(apiRef, api.public, 'public');
-  useGridApiMethod(apiRef, api.private, 'private');
 
   useGridRegisterStrategyProcessor(
     apiRef,

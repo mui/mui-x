@@ -1,5 +1,5 @@
 import { GridDataSourceCache, GridGetRowsParams } from '../../../models/gridDataSource';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 
 export interface GridDataSourceApiBase {
   /**
@@ -21,13 +21,4 @@ export interface GridDataSourceApi {
    * The data source API.
    */
   dataSource: GridDataSourceApiBase;
-}
-
-export interface GridDataSourcePrivateApi {
-  /**
-   * Mutates a row in the cache.
-   * @param {GridRowId} id The id of the row to be mutated.
-   * @param {GridRowModel} row The row to be mutated.
-   */
-  mutateRowInCache: (id: GridRowId, row: GridRowModel) => void;
 }
