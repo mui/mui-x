@@ -3,8 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, styled } from '@mui/material/styles';
+import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
@@ -79,8 +80,10 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelInterval,
     sx,
     offset,
+    width: axisWidth,
   } = defaultizedProps;
 
+  const theme = useTheme();
   const isRtl = useRtl();
 
   const classes = useUtilityClasses(defaultizedProps);
@@ -103,11 +106,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
 
-  const labelRefPoint = {
-    x: positionSign * (tickFontSize + tickSize + 10),
-    y: top + height / 2,
-  };
-
   const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
@@ -119,6 +117,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        ...theme.typography.caption,
         fontSize: tickFontSize,
         textAnchor: revertAnchor ? 'start' : 'end',
         dominantBaseline: 'central',
@@ -134,6 +133,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1,
         fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
@@ -167,6 +168,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   ) {
     return null;
   }
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: positionSign * (axisWidth - labelHeight),
+    y: top + height / 2,
+  };
 
   return (
     <YAxisRoot
@@ -208,6 +215,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsYAxisTickLabel"
                 text={formattedValue.toString()}
                 {...axisTickLabelProps}
               />

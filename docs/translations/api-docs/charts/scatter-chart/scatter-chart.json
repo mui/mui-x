@@ -78,6 +78,7 @@
     "axisTickLabel": "Custom component for tick label.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "marker": "The component that renders the marker for a scatter point.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "scatter": "",
     "tooltip": "Custom component for the tooltip popper."

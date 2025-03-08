@@ -31,3 +31,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ## PieChartWithCenterLabel
 
 {{"demo": "PieChartWithCenterLabel.js"}}
+
+## Pie chart with custom mark in legend and tooltip
+
+{{"demo": "PieChartWithCustomLegendAndTooltip.js"}}

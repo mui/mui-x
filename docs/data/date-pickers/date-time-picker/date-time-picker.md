@@ -17,14 +17,13 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile time view editing.
+The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing and `DigitalClock` for the time view editing.
 
 Check-out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
-- [Time Clock](/x/react-date-pickers/time-clock/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-time-picker/#props).
 Some [DateTimeField props](/x/api/date-pickers/date-time-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.

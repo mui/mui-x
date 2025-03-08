@@ -1,17 +1,11 @@
 import * as React from 'react';
 import { ScaleLogarithmic } from '@mui/x-charts-vendor/d3-scale';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 const otherSetting = {
   height: 300,
   grid: { horizontal: true, vertical: true },
-  sx: {
-    [`& .${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
 };
 
 // https://en.wikipedia.org/wiki/Low-pass_filter
@@ -52,6 +46,7 @@ export default function FormatterD3() {
         {
           scaleType: 'log',
           label: 'Vo/Vi',
+          width: 60,
           valueFormatter: (f, context) => {
             if (context.location === 'tick') {
               const d3Text = (

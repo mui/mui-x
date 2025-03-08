@@ -9,6 +9,8 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
+export { GridToolbar } from '../components/toolbarV8/GridToolbar';
+export type { GridToolbarProps } from '../components/toolbarV8/GridToolbar';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
@@ -154,6 +156,7 @@ export {
   useGridListView,
   listViewStateInitializer,
 } from '../hooks/features/listView/useGridListView';
+export { useGridComponentRenderer } from '../hooks/utils/useGridComponentRenderer';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -203,5 +206,7 @@ export { serializeCellValue } from '../hooks/features/export/serializers/csvSeri
 export * from './utils';
 export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';
+
+export * from './demo';
 
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
