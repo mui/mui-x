@@ -132,7 +132,7 @@ describe('<DataGrid /> - Column headers', () => {
     });
   });
 
-  it("should use 'headerName' for aria-label", async () => {
+  it("should use 'headerName' as the aria-label for the menu icon button", async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
