@@ -156,7 +156,8 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !params.onAxisClick) {
+    const onAxisClick = params.onAxisClick;
+    if (element === null || !onAxisClick) {
       return () => {};
     }
 
@@ -207,7 +208,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           });
         });
 
-      params.onAxisClick?.(event, { dataIndex, axisValue, seriesValues });
+      onAxisClick(event, { dataIndex, axisValue, seriesValues });
     };
 
     element.addEventListener('click', handleMouseClick);
@@ -222,7 +223,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     xAxisIds,
     yAxisWithScale,
     yAxisIds,
-    params,
     interactionAxis,
     usedXAxis,
     usedYAxis,
