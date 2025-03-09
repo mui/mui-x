@@ -63,7 +63,7 @@ describe('<DataGrid /> - Column headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column options'));
       await user.click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -86,7 +86,7 @@ describe('<DataGrid /> - Column headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column options'));
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column options'));
       await user
         .setup({ pointerEventsCheck: 0 })
         .click(screen.getByRole('menuitem', { name: 'Hide column' }));
@@ -127,7 +127,7 @@ describe('<DataGrid /> - Column headers', () => {
       await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column options'));
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
-      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column option'));
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column options'));
       expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
@@ -143,7 +143,7 @@ describe('<DataGrid /> - Column headers', () => {
       </div>,
     );
     const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
     await user.click(menuIconButton);
 
     expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
