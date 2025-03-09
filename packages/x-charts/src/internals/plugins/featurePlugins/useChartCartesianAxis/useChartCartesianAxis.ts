@@ -71,13 +71,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  // Use a ref to avoid rerendering on every mousemove event.
-  const mousePosition = React.useRef({
-    isInChart: false,
-    x: -1,
-    y: -1,
-  });
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || element === null || params.disableAxisListener) {
@@ -85,12 +78,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     const handleOut = () => {
-      mousePosition.current = {
-        isInChart: false,
-        x: -1,
-        y: -1,
-      };
-
       instance.cleanInteraction?.();
     };
 
@@ -98,20 +85,13 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
       const svgPoint = getSVGPoint(element, target);
 
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
-
       if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
-        if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
-          mousePosition.current.isInChart = false;
-        }
+        store.update((prev) => ({
+          ...prev,
+          interaction: { item: null, axis: { x: null, y: null } },
+        }));
         return;
       }
-      mousePosition.current.isInChart = true;
 
       instance.setAxisInteraction?.({
         x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
