@@ -38,13 +38,14 @@ export type AddInteractionListener = {
   (interaction: 'hover', callback: Handler<'hover', PointerEvent>): RemoveInteractionListener;
 };
 
-export interface UseChartInteractionParameters {}
+export interface UseChartInteractionListenerParameters {}
 
-export type UseChartInteractionDefaultizedParameters = UseChartInteractionParameters & {};
+export type UseChartInteractionListenerDefaultizedParameters =
+  UseChartInteractionListenerParameters & {};
 
-export interface UseChartInteractionState {}
+export interface UseChartInteractionListenerState {}
 
-export interface UseChartInteractionInstance {
+export interface UseChartInteractionListenerInstance {
   /**
    * Adds an interaction listener to the SVG element.
    *
@@ -54,9 +55,9 @@ export interface UseChartInteractionInstance {
   addInteractionListener: AddInteractionListener;
 }
 
-export type UseChartInteractionSignature = ChartPluginSignature<{
-  params: UseChartInteractionParameters;
-  defaultizedParams: UseChartInteractionDefaultizedParameters;
-  state: UseChartInteractionState;
-  instance: UseChartInteractionInstance;
+export type UseChartInteractionListenerSignature = ChartPluginSignature<{
+  params: UseChartInteractionListenerParameters;
+  defaultizedParams: UseChartInteractionListenerDefaultizedParameters;
+  state: UseChartInteractionListenerState;
+  instance: UseChartInteractionListenerInstance;
 }>;

@@ -3,14 +3,16 @@ import * as React from 'react';
 import { Handler, useGesture } from '@use-gesture/react';
 import { ChartPlugin } from '../../models';
 import {
-  UseChartInteractionSignature,
+  UseChartInteractionListenerSignature,
   AddInteractionListener,
   ChartInteraction,
-} from './useChartInteraction.types';
+} from './useChartInteractionListener.types';
 
 type ListenerRef = Map<ChartInteraction, Set<Handler<any>>>;
 
-export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ svgRef }) => {
+export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
+  svgRef,
+}) => {
   const listenersRef = React.useRef<ListenerRef>(new Map());
 
   const retriggerEvent = React.useCallback((interaction: ChartInteraction, state: any) => {
@@ -77,12 +79,12 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   };
 };
 
-useChartInteraction.params = {};
+useChartInteractionListener.params = {};
 
-useChartInteraction.getDefaultizedParams = ({ params }) => ({
+useChartInteractionListener.getDefaultizedParams = ({ params }) => ({
   ...params,
 });
 
-useChartInteraction.getInitialState = () => {
+useChartInteractionListener.getInitialState = () => {
   return {};
 };
