@@ -132,6 +132,20 @@ describe('<DataGrid /> - Column headers', () => {
     });
   });
 
+  it("should use 'headerName' for aria-label", async () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          disableColumnSorting
+          columns={[{ headerName: 'brand header name', field: 'brand' }]}
+        />
+      </div>,
+    );
+    expect(within(getColumnHeaderCell(0)).getByLabelText('brand header name column options')).to
+      .exist;
+  });
+
   it('should display sort column menu items as per sortingOrder prop', async () => {
     const { user } = render(
       <div style={{ width: 300, height: 500 }}>

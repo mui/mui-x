@@ -162,7 +162,9 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnWithMenuCell = getColumnHeaderCell(0);
       const columnToResizeCell = getColumnHeaderCell(1);
 
-      const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnWithMenuCell.querySelector(
+        'button[aria-label="brand column options"]',
+      )!;
 
       fireEvent.click(menuIconButton);
       clock.runToLast();
