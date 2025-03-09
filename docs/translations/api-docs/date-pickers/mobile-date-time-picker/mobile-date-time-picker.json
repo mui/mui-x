@@ -172,10 +172,19 @@
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
+    "skipDisabled": {
+      "description": "If <code>true</code>, disabled digital clock items will not be rendered."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "thresholdToRenderTimeInASingleColumn": {
+      "description": "Amount of time options below or at which the single column time renderer is used."
+    },
+    "timeSteps": {
+      "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used."
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
@@ -202,6 +211,8 @@
     "clearIcon": "Icon to display inside the clear button.",
     "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "digitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",

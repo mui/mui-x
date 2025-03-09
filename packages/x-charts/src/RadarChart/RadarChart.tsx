@@ -10,6 +10,7 @@ import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarMetricLabels } from './RadarMetricLabels';
 
 export interface RadarChartSlots {}
 export interface RadarChartSlotProps {}
@@ -55,6 +56,7 @@ const RadarChart = React.forwardRef(function RadarChart(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
+          <RadarMetricLabels />
           <RadarSeriesPlot />
           <ChartsOverlay {...overlayProps} />
           {children}
@@ -136,6 +138,8 @@ RadarChart.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
+    labelFormatter: PropTypes.func,
+    labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),

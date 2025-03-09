@@ -303,7 +303,6 @@ export default function ListViewAdvanced(props: Props) {
           showToolbar
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               listView: isListView,
               container,
               handleDelete,
