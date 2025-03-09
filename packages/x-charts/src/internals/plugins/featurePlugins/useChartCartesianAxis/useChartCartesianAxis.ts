@@ -161,6 +161,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     y: null,
   });
 
+  // This avoids re-attaching the event listener on mouse move.
   React.useEffect(() => {
     const { x, y } = interactionAxis;
     axisInteractionRef.current.x = x;
