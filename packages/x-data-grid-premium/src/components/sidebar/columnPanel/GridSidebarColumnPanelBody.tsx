@@ -83,7 +83,7 @@ const Placeholder = styled('div')({
   justifyContent: 'center',
   textWrap: 'balance',
   textAlign: 'center',
-  minHeight: 42,
+  minHeight: 38,
   height: '100%',
   padding: vars.spacing(0, 1),
   color: vars.colors.foreground.muted,
