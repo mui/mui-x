@@ -16,8 +16,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
-import { useMounted } from '@mui/x-internals/useMounted';
-// import { usePreviousProps } from '@mui/utils';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridStateInitializer,
@@ -116,6 +114,7 @@ function sortColumnGroups(
   });
 }
 
+// TODO: fix getPivotedData called twice in controlled mode
 const getPivotedData = ({
   rows,
   columns,
@@ -370,20 +369,6 @@ export const useGridPivoting = (
     changeEvent: 'pivotPanelOpenChange',
   });
 
-  const isMounted = useMounted();
-
-  const [isLoading, setIsLoading] = React.useState(true);
-  useOnMount(() => {
-    return apiRef.current?.store.subscribe(() => {
-      const loading = gridRowsLoadingSelector(apiRef);
-      if (typeof loading !== 'undefined') {
-        setIsLoading(loading);
-      }
-    });
-  });
-
-  // const prevProps = usePreviousProps({ isPivot });
-
   const getInitialData = React.useCallback(() => {
     exportedStateRef.current = apiRef.current.exportState();
 
@@ -404,7 +389,7 @@ export const useGridPivoting = (
 
   const computePivotingState = React.useCallback(
     ({ enabled, model: pivotModel }: Pick<GridPivotingState, 'enabled' | 'model'>) => {
-      if (isMounted && !isLoading && enabled && pivotModel) {
+      if (enabled && pivotModel) {
         // if (apiRef.current && (prevProps.isPivot === false || !nonPivotDataRef.current)) {
         const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: [] };
 
@@ -422,14 +407,17 @@ export const useGridPivoting = (
       // return nonPivotDataRef.current;
       return undefined;
     },
-    [isMounted, isLoading, apiRef],
+    [apiRef],
   );
 
-  useEnhancedEffect(() => {
-    if (!isPivotingEnabled) {
-      return;
+  useOnMount(() => {
+    if (!isPivotingEnabled || !isPivot) {
+      return undefined;
     }
-    if (isPivot) {
+
+    const isLoading = gridRowsLoadingSelector(apiRef) ?? false;
+
+    const runPivoting = () => {
       nonPivotDataRef.current = getInitialData();
       apiRef.current.setState((state) => {
         const pivotingState = {
@@ -444,18 +432,33 @@ export const useGridPivoting = (
           pivoting: pivotingState,
         };
       });
-    } else {
-      if (nonPivotDataRef.current) {
-        // const { rows, columns } = nonPivotDataRef.current;
-        // apiRef.current.setRows(rows);
-        // apiRef.current.updateColumns(columns);
-      }
-      if (exportedStateRef.current) {
-        apiRef.current.restoreState(exportedStateRef.current);
-        exportedStateRef.current = null;
-      }
+    };
+
+    if (!isLoading) {
+      runPivoting();
+      return undefined;
     }
-  }, [isPivot, apiRef, isPivotingEnabled, getInitialData, computePivotingState]);
+
+    const unsubscribe = apiRef.current?.store.subscribe(() => {
+      const loading = gridRowsLoadingSelector(apiRef);
+      if (loading === false) {
+        unsubscribe();
+        runPivoting();
+      }
+    });
+
+    return unsubscribe;
+  });
+
+  useEnhancedEffect(() => {
+    if (!isPivotingEnabled) {
+      return;
+    }
+    if (!isPivot && exportedStateRef.current) {
+      apiRef.current.restoreState(exportedStateRef.current);
+      exportedStateRef.current = null;
+    }
+  }, [isPivot, apiRef, isPivotingEnabled]);
 
   const setPivotModel = React.useCallback<GridPivotingApi['setPivotModel']>(
     (callback) => {
@@ -465,6 +468,9 @@ export const useGridPivoting = (
       apiRef.current.setState((state) => {
         const newPivotModel =
           typeof callback === 'function' ? callback(state.pivoting?.model) : callback;
+        if (state.pivoting?.model === newPivotModel) {
+          return state;
+        }
         const newPivotingState: GridPivotingState = {
           ...state.pivoting,
           ...computePivotingState({
@@ -490,6 +496,10 @@ export const useGridPivoting = (
       apiRef.current.setState((state) => {
         const newPivotMode =
           typeof callback === 'function' ? callback(state.pivoting?.enabled) : callback;
+
+        if (state.pivoting?.enabled === newPivotMode) {
+          return state;
+        }
 
         if (newPivotMode) {
           nonPivotDataRef.current = getInitialData();
