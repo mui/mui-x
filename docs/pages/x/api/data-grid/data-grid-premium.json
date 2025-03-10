@@ -149,6 +149,7 @@
     },
     "getPivotDerivedColumns": {
       "type": { "name": "func" },
+      "default": "{defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.",
       "signature": {
         "type": "function(column: GridColDef) => Array<GridColDef> | undefined",
         "describedArgs": ["column"],
