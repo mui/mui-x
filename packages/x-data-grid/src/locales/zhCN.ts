@@ -30,17 +30,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜索',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '输入提示词',
-  toolbarPromptControlWithRecordingPlaceholder: '输入或录制提示词',
-  toolbarPromptControlRecordingPlaceholder: '正在录音…',
-  toolbarPromptControlLabel: '提示词输入',
-  toolbarPromptControlRecordButtonDefaultLabel: '录音',
-  toolbarPromptControlRecordButtonActiveLabel: '停止录音',
-  toolbarPromptControlSendActionLabel: '发送',
-  toolbarPromptControlSendActionAriaLabel: '发送提示词',
-  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词再试。',
-
   // Export selector toolbar button text
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
@@ -112,7 +101,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大于或等于',
   'headerFilterOperator<': '小于',
   'headerFilterOperator<=': '小于或等于',
-  headerFilterClear: '清除筛选',
 
   // Filter values text
   filterValueAny: '任何',
