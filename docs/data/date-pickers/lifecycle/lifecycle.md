@@ -21,7 +21,7 @@ The field components have an internal state controlling the visible value.
 It will only call the `onChange` callback when:
 
 - the user completes all sections of a field. The value reflects the field.
-  - the value could be `Invalid Date` in case of an unparsable date (i.e., if the [year is less than "100"](https://github.com/iamkun/dayjs/issues/1237) in case of `dayjs`).
+  - the value will be `Invalid Date` in case of an unparsable date (for example, if the [year is less than "100"](https://github.com/iamkun/dayjs/issues/1237) in case of `dayjs`).
 - the user cleans at least one or all sections of a completed field. The value equals `null`.
 
 The example below shows the last value received by `onChange`.
