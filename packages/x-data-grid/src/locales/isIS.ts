@@ -123,7 +123,7 @@ const isISGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'falskt',
 
   // Column menu text
-  columnMenuLabel: 'Valmynd',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Sýna dálka',
   columnMenuManageColumns: 'Stjórna dálkum',
   columnMenuFilter: 'Síur',

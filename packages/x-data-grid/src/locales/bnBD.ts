@@ -124,7 +124,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'মিথ্যা',
 
   // Column menu text
-  columnMenuLabel: 'মেনু',
+  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'কলাম দেখান',
   columnMenuManageColumns: 'কলাম পরিচালনা করুন',
   columnMenuFilter: 'ফিল্টার',
