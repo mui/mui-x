@@ -441,6 +441,7 @@ DataGridPremiumRaw.propTypes = {
    * Useful e.g. for date columns to generate year, quarter, month, etc.
    * @param {GridColDef} column The column to generate derived columns for.
    * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
    */
   getPivotDerivedColumns: PropTypes.func,
   /**
