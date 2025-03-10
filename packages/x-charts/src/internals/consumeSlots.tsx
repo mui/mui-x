@@ -104,11 +104,17 @@ export const consumeSlots = <
       delete (outProps as unknown as Props)[prop];
     }
 
+    // Component can be wrapped in React.forwardRef or just a function that accepts (props, ref).
+    // If it is a plain function which accepts two arguments, we need to wrap it in React.forwardRef.
+    const OutComponent = (
+      Component.length >= 2 ? React.forwardRef(Component) : Component
+    ) as React.FunctionComponent<Props>;
+
     if (process.env.NODE_ENV !== 'production') {
-      Component.displayName = `${name}.slots.${slotPropName}`;
+      OutComponent.displayName = `${name}.slots.${slotPropName}`;
     }
 
-    return <Component {...outProps} ref={ref} />;
+    return <OutComponent {...outProps} ref={ref} />;
   }
 
   return React.forwardRef<Ref, Props>(ConsumeSlotsInternal);
