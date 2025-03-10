@@ -49,7 +49,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -85,7 +85,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

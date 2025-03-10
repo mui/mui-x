@@ -63,7 +63,7 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -99,7 +99,7 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

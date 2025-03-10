@@ -28,7 +28,7 @@ const FunnelSection = consumeSlots(
   },
   function FunnelSection(props: FunnelSectionProps, ref: React.Ref<SVGPathElement>) {
     const { seriesId, dataIndex, classes, color, onClick, className, ...other } = props;
-    const getInteractionItemProps = useInteractionItemProps();
+    const interactionProps = useInteractionItemProps({ type: 'funnel', seriesId, dataIndex });
     const { isFaded, isHighlighted } = useItemHighlighted({
       seriesId,
       dataIndex,
@@ -36,7 +36,7 @@ const FunnelSection = consumeSlots(
 
     return (
       <FunnelSectionPath
-        {...getInteractionItemProps({ type: 'funnel', seriesId, dataIndex })}
+        {...interactionProps}
         filter={isHighlighted ? 'brightness(120%)' : undefined}
         opacity={isFaded ? 0.3 : 1}
         fill={color}
