@@ -27,6 +27,10 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import {
+  gridPivotEnabledSelector,
+  gridPivotInitialColumnsSelector,
+} from '../../../hooks/features/pivoting';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -250,6 +254,9 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
+    const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+    const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
 
@@ -260,6 +267,16 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (selectedNonFilterableColumn) {
         return {
           filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
+      if (pivotEnabled) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) =>
+              initialColumns?.find((col: GridColDef) => col.field === column.field) !== undefined,
+          ),
           selectedField: itemField,
         };
       }
@@ -284,7 +301,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
+    }, [
+      item.field,
+      columnLookup,
+      pivotEnabled,
+      filterColumns,
+      filterableColumns,
+      filterModel?.items,
+      initialColumns,
+    ]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {

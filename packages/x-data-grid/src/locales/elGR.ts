@@ -8,6 +8,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayPivotSettings: 'Pivot settings',
 
   // Density selector toolbar button text
   toolbarDensity: 'Ύψος σειράς',
@@ -50,6 +52,9 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Λήψη ως CSV',
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportExcel: 'Λήψη ως Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
@@ -195,6 +200,38 @@ const elGRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'ελάχιστο',
   aggregationFunctionLabelMax: 'μέγιστο',
   aggregationFunctionLabelSize: 'μέγεθος',
+
+  // Pivot
+  // pivotSettings: 'Pivot settings',
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+
+  // Sidebar
+  // sidebarExpandSection: name => `Expand ${name}`,
+  // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);

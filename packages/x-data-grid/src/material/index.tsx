@@ -57,6 +57,7 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridPivotIcon,
   GridDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
@@ -69,11 +70,11 @@ export { useMaterialCSSVariables } from './variables';
 
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
-const InputAdornment = styled(MUIInputAdornment)({
+const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
-    marginRight: '-7px',
+    marginRight: theme.spacing(-0.75),
   },
-});
+}));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'fullWidth',
@@ -87,6 +88,13 @@ const FormControlLabel = styled(MUIFormControlLabel, {
     {
       props: { fullWidth: true },
       style: {
+        width: '100%',
+      },
+    },
+    {
+      props: { labelPlacement: 'start', fullWidth: true },
+      style: {
+        justifyContent: 'space-between',
         width: '100%',
       },
     },
@@ -192,12 +200,14 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  pivotIcon: GridPivotIcon,
 };
 
 const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
   baseBadge: MUIBadge,
   baseCheckbox: React.forwardRef(BaseCheckbox),
+  baseChip: MUIChip,
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseInput: BaseInput,
@@ -212,7 +222,7 @@ const baseSlots: GridBaseSlots = {
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
-  baseSwitch: MUISwitch,
+  baseSwitch: forwardRef(BaseSwitch),
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -223,7 +233,7 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 export default materialSlots;
 
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, density, truncate, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -248,6 +258,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
         touchRippleRef={rippleRef}
+        density={density}
       />
     );
   }
@@ -261,10 +272,29 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
           touchRippleRef={rippleRef}
+          density={density}
         />
       }
       label={label}
       fullWidth={fullWidth}
+    />
+  );
+}
+
+function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButtonElement>) {
+  const { label, labelPlacement, className, fullWidth, ...other } = props;
+
+  if (!label) {
+    return <MUISwitch {...other} className={className} ref={ref} />;
+  }
+
+  return (
+    <FormControlLabel
+      className={className}
+      control={<MUISwitch {...other} ref={ref} />}
+      fullWidth={fullWidth}
+      label={label}
+      labelPlacement={labelPlacement}
     />
   );
 }

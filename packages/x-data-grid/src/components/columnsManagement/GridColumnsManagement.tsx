@@ -357,6 +357,7 @@ GridColumnsManagement.propTypes = {
   getTogglableColumns: PropTypes.func,
   searchInputProps: PropTypes.shape({
     autoComplete: PropTypes.string,
+    autoFocus: PropTypes.bool,
     className: PropTypes.string,
     color: PropTypes.oneOf(['error', 'primary']),
     disabled: PropTypes.bool,

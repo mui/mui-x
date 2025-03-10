@@ -2,12 +2,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridRoot,
+  GridContextProvider,
+  GridValidRowModel,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -18,8 +24,13 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { GridSidebar } from '../components/sidebar/GridSidebar';
+import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSidebarColumnPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
+import { isPivotingEnabled } from '../hooks/features/pivoting/utils';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -43,13 +54,27 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   inProps: DataGridPremiumProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDataGridPremiumProps(inProps);
-  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const initialProps = useDataGridPremiumProps(inProps);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiPremium, GridApiPremium>(
+    initialProps.apiRef,
+    initialProps,
+  );
+
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
+
+  const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
+  const sidePanel =
+    isPivotingEnabled(props) && pivotSettingsOpen ? (
+      <GridSidebar>
+        <GridSidebarColumnPanel />
+      </GridSidebar>
+    ) : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -59,6 +84,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sx={props.sx}
         {...props.slotProps?.root}
         ref={ref}
+        sidePanel={sidePanel}
       >
         {watermark}
       </GridRoot>
@@ -310,6 +336,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleRowSelection: PropTypes.bool,
   /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: PropTypes.bool,
+  /**
    * If `true`, the row grouping is disabled.
    * @default false
    */
@@ -340,6 +371,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    pivoting: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -404,6 +436,14 @@ DataGridPremiumRaw.propTypes = {
    * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
    */
   getEstimatedRowHeight: PropTypes.func,
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
@@ -781,6 +821,9 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,
+  onPivotEnabledChange: PropTypes.func,
+  onPivotModelChange: PropTypes.func,
+  onPivotPanelOpenChange: PropTypes.func,
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
@@ -936,6 +979,24 @@ DataGridPremiumRaw.propTypes = {
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  pivotEnabled: PropTypes.bool,
+  pivotModel: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+    rows: PropTypes.arrayOf(
+      PropTypes.shape({
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
+    values: PropTypes.arrayOf(
+      PropTypes.shape({
+        aggFunc: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
+  }),
+  pivotPanelOpen: PropTypes.bool,
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
