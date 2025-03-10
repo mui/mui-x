@@ -22,7 +22,9 @@ import { RefObject } from '@mui/x-internals/types';
 import {
   GridStateInitializer,
   useGridApiMethod,
+  useGridRegisterPipeProcessor,
   useGridSelector,
+  GridPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -265,6 +267,7 @@ const getPivotedData = ({
             filterable: false,
             groupable: false,
             aggregable: false,
+            hideable: false,
             disableColumnMenu: true,
           };
           pivotColumns.push(emptyColumn);
@@ -522,6 +525,18 @@ export const useGridPivoting = (
     },
     [apiRef, isPivotingEnabled],
   );
+
+  const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (menuItems) => {
+      if (isPivotingEnabled) {
+        return [...menuItems, 'columnMenuPivotItem'];
+      }
+      return menuItems;
+    },
+    [isPivotingEnabled],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotEnabled, setPivotPanelOpen }, 'public');
 
