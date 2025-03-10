@@ -26,7 +26,10 @@ const FunnelSection = consumeSlots(
   {
     classesResolver: useUtilityClasses,
   },
-  function FunnelSection(props: FunnelSectionProps, ref: React.Ref<SVGPathElement>) {
+  React.forwardRef(function FunnelSection(
+    props: FunnelSectionProps,
+    ref: React.Ref<SVGPathElement>,
+  ) {
     const { seriesId, dataIndex, classes, color, onClick, className, ...other } = props;
     const getInteractionItemProps = useInteractionItemProps();
     const { isFaded, isHighlighted } = useItemHighlighted({
@@ -53,7 +56,7 @@ const FunnelSection = consumeSlots(
         ref={ref}
       />
     );
-  },
+  }),
 );
 
 export { FunnelSection };
