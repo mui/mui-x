@@ -157,6 +157,15 @@ It is called for each original column and should return an array of derived colu
 
 {{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
 
+## Sticky column groups
+
+Depending on the pivot mode, some column groups might exceed the width of the Data Grid viewport.
+To improve the user experience, you can make these column groups "sticky" so that the column group labels are visible while scrolling horizontally.
+
+In the demo below, the `sx` prop is used to make the column groups sticky:
+
+{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Multiple values
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -164,14 +173,6 @@ It is called for each original column and should return an array of derived colu
 ## Commodities
 
 {{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Movies
-
-{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Financials
-
-{{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 
