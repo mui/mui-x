@@ -72,8 +72,8 @@ describe('ChartsTooltip', () => {
       await user.pointer({
         target: svg,
         coords: {
-          x: 30,
-          y: 40,
+          x: 198,
+          y: 60,
         },
       });
 
