@@ -190,7 +190,7 @@ function extractColumnWidths(
   const widthByField = {} as Record<string, number>;
 
   const root = apiRef.current.rootElementRef!.current!;
-  root.classList.add(gridClasses.autosizing);
+  root?.classList.add(gridClasses.autosizing);
 
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
