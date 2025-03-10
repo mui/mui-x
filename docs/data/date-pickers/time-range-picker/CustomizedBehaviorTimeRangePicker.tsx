@@ -26,12 +26,12 @@ function CustomDigitalClockItem(
         ? timeDifference.toHuman()
         : timeDifference.shiftTo('hours').toHuman();
     return (
-      <DigitalClockItem {...other}>
+      <DigitalClockItem {...other} sx={{ minWidth: 175 }}>
         {formattedValue} ({timeDifferenceLabel})
       </DigitalClockItem>
     );
   }
-  return <DigitalClockItem {...other} />;
+  return <DigitalClockItem {...other} sx={{ minWidth: 175 }} />;
 }
 
 export default function CustomizedBehaviorTimeRangePicker() {
