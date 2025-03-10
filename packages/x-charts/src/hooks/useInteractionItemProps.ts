@@ -5,39 +5,53 @@ import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
+const onPointerDown = (event: React.PointerEvent) => {
+  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+};
+
 export const useInteractionItemProps = (skip?: boolean) => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const dataRef = React.useRef<SeriesItemIdentifier | null>(null);
 
-  if (skip) {
-    return () => ({});
-  }
-  const getInteractionItemProps = (data: SeriesItemIdentifier) => {
-    const onPointerDown = (event: React.PointerEvent) => {
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
+  const onPointerEnter = React.useMemo(() => {
+    return () => {
+      if (!dataRef.current) {
+        return;
       }
-    };
-    const onPointerEnter = () => {
-      instance.setItemInteraction(data);
+      instance.setItemInteraction(dataRef.current);
       instance.setHighlight({
-        seriesId: data.seriesId,
-        dataIndex: data.dataIndex,
+        seriesId: dataRef.current.seriesId,
+        dataIndex: dataRef.current.dataIndex,
       });
     };
-    const onPointerLeave = (event: React.PointerEvent) => {
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
+  }, [instance]);
 
-      instance.removeItemInteraction(data);
+  const onPointerLeave = React.useMemo(() => {
+    return () => {
+      if (!dataRef.current) {
+        return;
+      }
+      instance.removeItemInteraction(dataRef.current);
       instance.clearHighlight();
     };
-    return {
-      onPointerEnter,
-      onPointerLeave,
-      onPointerDown,
+  }, [instance]);
+
+  const getInteractionItemProps = React.useMemo(() => {
+    if (skip) {
+      return () => ({});
+    }
+    return (data: SeriesItemIdentifier) => {
+      dataRef.current = data;
+      return {
+        onPointerEnter,
+        onPointerLeave,
+        onPointerDown,
+      };
     };
-  };
+  }, [skip, onPointerEnter, onPointerLeave]);
+
   return getInteractionItemProps;
 };
