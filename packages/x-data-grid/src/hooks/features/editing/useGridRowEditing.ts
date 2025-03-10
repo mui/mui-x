@@ -712,12 +712,10 @@ export const useGridRowEditing = (
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
-        if(column){
-          if (column.valueSetter) {
-            rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
-          } else {
-            rowUpdate[field] = fieldProps.value;
-          }
+        if (column && column.valueSetter) { //Ensure that column has a value before trying to access the value setter.
+          rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
+        } else {
+          rowUpdate[field] = fieldProps.value;
         }
       });
 
