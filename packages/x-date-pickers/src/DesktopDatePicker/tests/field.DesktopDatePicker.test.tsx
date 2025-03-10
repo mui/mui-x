@@ -1,6 +1,5 @@
 import { fireEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   createPickerRenderer,
   buildFieldInteractions,

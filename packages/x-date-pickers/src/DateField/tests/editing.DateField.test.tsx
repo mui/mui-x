@@ -99,6 +99,26 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '');
       });
 
+      it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
       it('should react to controlled value update (from non null to another non null)', () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
