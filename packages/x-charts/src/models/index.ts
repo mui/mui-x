@@ -7,6 +7,7 @@ export type {
   ScaleName,
   ContinuousScaleName,
   ChartsAxisData,
+  AxisValueFormatterContext,
 } from './axis';
 
 // Utils shared across the X packages
