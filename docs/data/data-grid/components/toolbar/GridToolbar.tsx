@@ -88,11 +88,13 @@ function CustomToolbar() {
 
       <QuickFilter>
         <QuickFilterTrigger
-          render={
-            <ToolbarButton color="default" sx={{ ml: 'auto' }}>
-              <SearchIcon fontSize="small" />
-            </ToolbarButton>
-          }
+          render={(triggerProps) => (
+            <Tooltip title="Search">
+              <ToolbarButton sx={{ ml: 'auto' }} {...triggerProps} color="default">
+                <SearchIcon fontSize="small" />
+              </ToolbarButton>
+            </Tooltip>
+          )}
         />
         <QuickFilterControl
           render={({ ref, ...other }) => (

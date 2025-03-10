@@ -11,9 +11,11 @@ import {
   QuickFilter,
   QuickFilterControl,
   QuickFilterClear,
+  QuickFilterTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
+import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 function Button(props: React.HTMLAttributes<HTMLButtonElement>) {
@@ -42,22 +44,41 @@ function TextInput(props: React.HTMLAttributes<HTMLInputElement>) {
 }
 
 function CustomToolbar() {
+  const [quickFilterExpanded, setQuickFilterExpanded] = React.useState(false);
   return (
     <Toolbar className="gap-2! p-2!">
-      <ColumnsPanelTrigger
-        render={<ToolbarButton render={<Button>Columns</Button>} />}
-      />
-      <FilterPanelTrigger
-        render={<ToolbarButton render={<Button>Filter</Button>} />}
-      />
-      <ExportCsv render={<ToolbarButton render={<Button>Export CSV</Button>} />} />
-      <ExportPrint render={<ToolbarButton render={<Button>Print</Button>} />} />
-      <QuickFilter expanded>
-        <div className="flex ml-auto">
+      {!quickFilterExpanded && (
+        <React.Fragment>
+          <ColumnsPanelTrigger
+            render={<ToolbarButton render={<Button>Columns</Button>} />}
+          />
+          <FilterPanelTrigger
+            render={<ToolbarButton render={<Button>Filter</Button>} />}
+          />
+          <ExportCsv render={<ToolbarButton render={<Button>Export</Button>} />} />
+          <ExportPrint render={<ToolbarButton render={<Button>Print</Button>} />} />
+        </React.Fragment>
+      )}
+      <QuickFilter
+        expanded={quickFilterExpanded}
+        onExpandedChange={setQuickFilterExpanded}
+      >
+        <div className={quickFilterExpanded ? 'flex w-full' : 'ml-auto'}>
+          <QuickFilterTrigger
+            render={
+              <ToolbarButton
+                render={
+                  <Button aria-label="Search">
+                    <SearchIcon fontSize="small" />
+                  </Button>
+                }
+              />
+            }
+          />
           <QuickFilterControl
             aria-label="Search"
             placeholder="Search"
-            render={<TextInput className="w-56 rounded-r-none border-r-0" />}
+            render={<TextInput className="flex-1 rounded-r-none border-r-0" />}
           />
           <QuickFilterClear
             render={
