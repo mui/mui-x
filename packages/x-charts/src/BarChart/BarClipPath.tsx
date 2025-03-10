@@ -9,6 +9,7 @@ export interface BarClipPathProps {
   hasNegative: boolean;
   hasPositive: boolean;
   layout?: 'vertical' | 'horizontal';
+  style?: React.CSSProperties;
 
   x: number;
   y: number;
@@ -35,7 +36,7 @@ export const barClipPathClasses: BarClipPathClasses = generateUtilityClasses('Mu
  * @ignore - internal component.
  */
 function BarClipPath(props: BarClipPathProps) {
-  const { className, maskId, x, y, width, height, ...radiusData } = props;
+  const { className, maskId, x, y, width, height, style, ...radiusData } = props;
 
   if (!props.borderRadius || props.borderRadius <= 0) {
     return null;
@@ -50,6 +51,7 @@ function BarClipPath(props: BarClipPathProps) {
         width={width}
         height={height}
         style={{
+          ...style,
           clipPath: `inset(0px round ${getRadius('top-left', radiusData)}px ${getRadius('top-right', radiusData)}px ${getRadius('bottom-right', radiusData)}px ${getRadius('bottom-left', radiusData)}px)`,
         }}
       />

@@ -220,7 +220,7 @@ const BarPlotRoot = styled('g', {
     transition: `opacity 0.2s ease-in, fill 0.2s ease-in, height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
 
     '@keyframes growHeight': {
-      from: { height: 0 },
+      from: { height: 0, y: 'calc(var(--y) + var(--height))' },
       to: {},
     },
 
@@ -230,7 +230,7 @@ const BarPlotRoot = styled('g', {
     transition: `height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
 
     '@keyframes growClipPathHeight': {
-      from: { height: 0 },
+      from: { height: 0, y: 'calc(var(--y) + var(--height))' },
       to: {},
     },
 
@@ -295,6 +295,7 @@ function BarPlot(props: BarPlotProps) {
             y={y}
             width={width}
             height={height}
+            style={{ '--y': `${y}px`, '--height': `${height}px` }}
           />
         ))}
       {completedData.map(({ x, y, width, height, dataIndex, color, seriesId, maskId, layout }) => {
@@ -309,6 +310,7 @@ function BarPlot(props: BarPlotProps) {
             width={width}
             height={height}
             layout={layout ?? 'vertical'}
+            style={{ '--y': `${y}px`, '--height': `${height}px` }}
             {...other}
             onClick={
               onItemClick &&
