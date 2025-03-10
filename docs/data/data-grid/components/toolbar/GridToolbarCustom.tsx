@@ -52,7 +52,7 @@ function CustomToolbar() {
       />
       <ExportCsv render={<ToolbarButton render={<Button>Export CSV</Button>} />} />
       <ExportPrint render={<ToolbarButton render={<Button>Print</Button>} />} />
-      <QuickFilter>
+      <QuickFilter expanded>
         <div className="flex ml-auto">
           <QuickFilterControl
             aria-label="Search"
