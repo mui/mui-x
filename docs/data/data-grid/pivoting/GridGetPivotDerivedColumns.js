@@ -1,11 +1,29 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridColDef,
-  GridPivotModel,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-const columns: GridColDef[] = [
+const getPivotDerivedColumns = (column) => {
+  if (column.type === 'date') {
+    const field = column.field;
+    return [
+      {
+        field: `${field}-year`,
+        headerName: `${column.headerName} (Year)`,
+        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+      },
+      {
+        field: `${field}-month`,
+        headerName: `${column.headerName} (Month)`,
+        valueGetter: (value, row) =>
+          `M${`${new Date(row[field]).getMonth() + 1}`.padStart(2, '0')}`,
+      },
+    ];
+  }
+  return undefined;
+};
+const getYearField = (field) => `${field}-year`;
+const getMonthField = (field) => `${field}-month`;
+
+const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'transactionDate',
@@ -19,8 +37,7 @@ const columns: GridColDef[] = [
     field: 'price',
     type: 'number',
     headerName: 'Price',
-    valueFormatter: (value: number | undefined) =>
-      value ? `$${value.toFixed(2)}` : null,
+    valueFormatter: (value) => (value ? `$${value.toFixed(2)}` : null),
   },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {
@@ -31,14 +48,11 @@ const columns: GridColDef[] = [
   },
 ];
 
-const getYearField = (field: string) => `${field}-year`;
-const getQuarterField = (field: string) => `${field}-quarter`;
-
-const pivotModel: GridPivotModel = {
+const pivotModel = {
   rows: [{ field: 'ticker' }],
   columns: [
     { field: getYearField('transactionDate'), sort: 'asc' },
-    { field: getQuarterField('transactionDate'), sort: 'asc' },
+    { field: getMonthField('transactionDate'), sort: 'asc' },
   ],
   values: [
     { field: 'price', aggFunc: 'avg' },
@@ -46,14 +60,14 @@ const pivotModel: GridPivotModel = {
   ],
 };
 
-export default function GridPivotingFinancial() {
+export default function GridGetPivotDerivedColumns() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 550, width: '100%' }}>
         <DataGridPremium
           rows={rows}
           columns={columns}
-          showToolbar
+          getPivotDerivedColumns={getPivotDerivedColumns}
           initialState={{
             pivoting: {
               enabled: false,
@@ -61,8 +75,9 @@ export default function GridPivotingFinancial() {
               model: pivotModel,
             },
           }}
-          columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
+          showToolbar
+          columnGroupHeaderHeight={36}
           slotProps={{
             toolbar: {
               showQuickFilter: false,

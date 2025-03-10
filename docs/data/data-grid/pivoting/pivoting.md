@@ -141,11 +141,21 @@ To disable the pivoting feature, set the `disablePivoting` prop to `true`:
 <DataGridPremium disablePivoting />
 ```
 
-## Date columns
+## Derived columns in pivot mode
 
-For each date column, the Data Grid pivot feature will automatically generate fields for year, quarter and month.
+In pivot mode, it's often useful to group data by a year or quarter.
+Data Grid automatically generates year and quarter columns for each `date` column.
 
-<!-- TODO: add a demo and implement a way to extend this behavior (a function that takes a date column and returns a list of fields?) -->
+In the demo below, the `transactionDate` column is represented by additional columns in the pivot mode: `transactionDate-year` and `transactionDate-quarter`:
+
+{{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom derived columns
+
+To customize the derived columns, use the `getPivotDerivedColumns` prop.
+It is called for each original column and should return an array of derived columns, or `undefined` if no derived columns are needed.
+
+{{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
 
 ## Multiple values
 

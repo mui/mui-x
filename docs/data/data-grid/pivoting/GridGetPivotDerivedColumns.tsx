@@ -1,9 +1,35 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  DataGridPremiumProps,
   GridColDef,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
+
+const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
+  column,
+) => {
+  if (column.type === 'date') {
+    const field = column.field;
+    return [
+      {
+        field: `${field}-year`,
+        headerName: `${column.headerName} (Year)`,
+        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+      },
+
+      {
+        field: `${field}-month`,
+        headerName: `${column.headerName} (Month)`,
+        valueGetter: (value, row) =>
+          `M${`${new Date(row[field]).getMonth() + 1}`.padStart(2, '0')}`,
+      },
+    ];
+  }
+  return undefined;
+};
+const getYearField = (field: string) => `${field}-year`;
+const getMonthField = (field: string) => `${field}-month`;
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -31,14 +57,11 @@ const columns: GridColDef[] = [
   },
 ];
 
-const getYearField = (field: string) => `${field}-year`;
-const getQuarterField = (field: string) => `${field}-quarter`;
-
 const pivotModel: GridPivotModel = {
   rows: [{ field: 'ticker' }],
   columns: [
     { field: getYearField('transactionDate'), sort: 'asc' },
-    { field: getQuarterField('transactionDate'), sort: 'asc' },
+    { field: getMonthField('transactionDate'), sort: 'asc' },
   ],
   values: [
     { field: 'price', aggFunc: 'avg' },
@@ -46,14 +69,14 @@ const pivotModel: GridPivotModel = {
   ],
 };
 
-export default function GridPivotingFinancial() {
+export default function GridGetPivotDerivedColumns() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 550, width: '100%' }}>
         <DataGridPremium
           rows={rows}
           columns={columns}
-          showToolbar
+          getPivotDerivedColumns={getPivotDerivedColumns}
           initialState={{
             pivoting: {
               enabled: false,
@@ -61,8 +84,9 @@ export default function GridPivotingFinancial() {
               model: pivotModel,
             },
           }}
-          columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
+          showToolbar
+          columnGroupHeaderHeight={36}
           slotProps={{
             toolbar: {
               showQuickFilter: false,
