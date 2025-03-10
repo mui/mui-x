@@ -25,6 +25,7 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValueWithTimezone,
   useViews,
+  areDatesEqual,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -440,11 +441,18 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   });
 
   const handleDayMouseEnter = useEventCallback(
-    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: TDate) => {
-      if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
-        setRangePreviewDay(newPreviewRequest);
+    (event: React.MouseEvent<HTMLDivElement>, newRangePreviewDay: TDate) => {
+      let cleanNewRangePreviewDay: TDate | null;
+      if (valueDayRange[0] == null && valueDayRange[1] == null) {
+        cleanNewRangePreviewDay = null;
+      } else if (isWithinRange(utils, newRangePreviewDay, valueDayRange)) {
+        cleanNewRangePreviewDay = null;
       } else {
-        setRangePreviewDay(null);
+        cleanNewRangePreviewDay = newRangePreviewDay;
+      }
+
+      if (!areDatesEqual(utils, cleanNewRangePreviewDay, rangePreviewDay)) {
+        setRangePreviewDay(cleanNewRangePreviewDay);
       }
     },
   );

@@ -112,8 +112,8 @@ export const applyDefaultDate = <TDate extends PickerValidDate>(
 
 export const areDatesEqual = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  a: TDate,
-  b: TDate,
+  a: TDate | null,
+  b: TDate | null,
 ) => {
   if (!utils.isValid(a) && a != null && !utils.isValid(b) && b != null) {
     return true;
