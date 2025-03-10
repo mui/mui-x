@@ -6,8 +6,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '没有数据。',
   noResultsOverlayLabel: '未找到数据。',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: '没有列',
+  noColumnsOverlayManageColumns: '管理列',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -41,7 +41,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarPromptControlRecordButtonActiveLabel: '停止录音',
   toolbarPromptControlSendActionLabel: '发送',
   toolbarPromptControlSendActionAriaLabel: '发送提示词',
-  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词再试。',
+  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词重试。',
 
   // Export selector toolbar button text
   toolbarExport: '导出',
@@ -123,7 +123,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '菜单',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 列菜单`,
   columnMenuShowColumns: '显示',
   columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',
