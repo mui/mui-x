@@ -95,7 +95,7 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: { ...interactionProps },
+    additionalProps: interactionProps,
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,

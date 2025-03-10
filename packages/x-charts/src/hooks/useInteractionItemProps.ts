@@ -11,7 +11,14 @@ const onPointerDown = (event: React.PointerEvent) => {
   }
 };
 
-export const useInteractionItemProps = (data: SeriesItemIdentifier, skip?: boolean) => {
+export const useInteractionItemProps = (
+  data: SeriesItemIdentifier,
+  skip?: boolean,
+): {
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+} => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
