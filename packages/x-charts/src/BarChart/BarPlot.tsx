@@ -238,19 +238,14 @@ const BarPlotRoot = styled('g', {
   overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, height 0.5s ease-in, y 0.5s ease-in',
 
     '@keyframes growHeight': {
-      from: {
-        height: 0,
-        y: 'calc(var(--y) + var(--height))',
-      },
-      to: {
-        height: 'var(--height)',
-        y: 'var(--y)',
-      },
+      from: { transform: 'scaleY(0%)' },
+      to: { transform: 'scaleY(100%)' },
     },
     animation: 'growHeight 0.5s ease',
+    transformOrigin: '0% 100%',
   },
 });
 

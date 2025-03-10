@@ -112,13 +112,7 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
-      style: {
-        ...style,
-        '--x': `${other.x}px`,
-        '--y': `${other.y}px`,
-        '--width': `${other.width}px`,
-        '--height': `${other.height}px`,
-      },
+      style,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       stroke: 'none',
