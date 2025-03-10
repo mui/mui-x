@@ -373,13 +373,15 @@ export function useGridColumns(
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems) => {
-      if (props.disableColumnSelector) {
+      const isPivotEnabled = (apiRef.current.state as any).pivoting?.enabled;
+
+      if (props.disableColumnSelector || isPivotEnabled) {
         return columnMenuItems;
       }
 
       return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
-    [props.disableColumnSelector],
+    [props.disableColumnSelector, apiRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);

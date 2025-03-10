@@ -18,7 +18,7 @@ export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
       onClick={openPivotSettings}
       iconStart={<rootProps.slots.pivotIcon fontSize="small" />}
     >
-      Pivot settings
+      {apiRef.current.getLocaleText('pivotSettings')}
     </rootProps.slots.baseMenuItem>
   );
 }
