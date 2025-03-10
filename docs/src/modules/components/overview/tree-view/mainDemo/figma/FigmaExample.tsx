@@ -9,7 +9,7 @@ import { IdType } from './items';
 export default function FigmaExample() {
   const [selectedItem, setSelectedItem] = React.useState<IdType | null>(null);
   const docsTheme = useTheme();
-  const isMd = useMediaQuery(docsTheme.breakpoints.up('md'));
+  const isMd = useMediaQuery(docsTheme.breakpoints.up('md'), { defaultMatches: true });
 
   return (
     <Stack sx={{ width: '100%', height: '100%' }} direction="row">
@@ -33,6 +33,7 @@ export default function FigmaExample() {
             flexGrow: 1,
             backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
             backgroundSize: '20px 20px',
+            display: { xs: 'none', md: 'flex' },
           })}
         >
           <FigmaCard selectedItem={selectedItem} />

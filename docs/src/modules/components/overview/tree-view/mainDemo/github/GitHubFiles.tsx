@@ -19,6 +19,7 @@ const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   },
   '& .MuiAccordionSummary-content': {
     margin: '11px 0',
+    overflow: 'hidden',
     '&.Mui-expanded': { margin: '11px 0' },
   },
 }));
@@ -52,7 +53,7 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
           aria-controls={`${title}-content`}
           id={`${title}-header`}
         >
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ overflow: 'hidden' }}>
             <Stack direction="row" spacing={0.025} alignItems="center">
               <SquareRoundedIcon
                 sx={{ fontSize: '16px' }}
@@ -72,7 +73,7 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
               />
               <SquareRoundedIcon sx={{ fontSize: '16px' }} color="disabled" />
             </Stack>
-            <Typography fontFamily="monospace" color="text.secondary" variant="body2">
+            <Typography fontFamily="monospace" color="text.secondary" variant="body2" noWrap>
               {title}
             </Typography>
           </Stack>
@@ -105,7 +106,7 @@ export default function GitHubFiles({
       flexGrow={1}
       p={2}
       spacing={2.5}
-      sx={{ overflowY: 'auto', height: '100%', width: '100%' }}
+      sx={{ overflowY: 'auto', height: '100%', width: '100%', display: { xs: 'none', md: 'flex' } }}
     >
       {leafItemGroups.map((group, index) => (
         <Stack key={index} spacing={1}>
