@@ -33,8 +33,6 @@ jobs:
           (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') ||
           (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts'))
       }}
-    env:
-      NODE_ENV: production
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
@@ -47,9 +45,13 @@ jobs:
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
-      - run: pnpm --filter "@mui/x-charts-pro..." build
+      - run: pnpm --filter "@mui/x-charts-pro..." build\
+        env:
+          NODE_ENV: production
       - name: Run benchmarks
         uses: CodSpeedHQ/action@63ae6025a0ffee97d7736a37c9192dbd6ed4e75f
+        env:
+          NODE_ENV: production
         with:
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}
