@@ -45,7 +45,7 @@ describe('ScatterChart - click event', () => {
   });
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  describeSkipIf(isJSDOM)('onItemClick - using vornoid', () => {
+  describeSkipIf(isJSDOM)('onItemClick - using voronoi', () => {
     it('should provide the right context as second argument when clicking svg', () => {
       const onItemClick = spy();
       render(
@@ -115,11 +115,11 @@ describe('ScatterChart - click event', () => {
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 
-  describe('onItemClick - disabling vornoid', () => {
+  describe('onItemClick - disabling voronoi', () => {
     it('should not call onItemClick when clicking the SVG', () => {
       const onItemClick = spy();
       render(
@@ -175,7 +175,7 @@ describe('ScatterChart - click event', () => {
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 });
