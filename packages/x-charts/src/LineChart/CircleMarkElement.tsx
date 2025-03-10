@@ -57,7 +57,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, [skipAnimation]);
+  const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, []);
 
   React.useEffect(() => {
     api.start({ x, y, immediate: skipAnimation });

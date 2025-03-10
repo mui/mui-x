@@ -24,9 +24,19 @@ const config: Partial<BarChartProps> = {
 // | X X
 // | X X X X
 // ---A---B-
+//
+// Horizontal layout
+// A| X X X X
+// A| X X
+// B| X
+// B| X
+//   --------
 
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
+  const wrapper = ({ children }: { children?: React.ReactNode }) => (
+    <div style={{ width: 400, height: 400 }}>{children}</div>
+  );
 
   beforeEach(() => {
     // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
@@ -45,21 +55,16 @@ describe('ChartsTooltip', () => {
   describeSkipIf(isJSDOM)('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
       const { user } = render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            series={[
-              { dataKey: 'v1', id: 's1', label: 'S1' },
-              { dataKey: 'v2', id: 's2', label: 'S2' },
-            ]}
-            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-          />
-        </div>,
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
@@ -67,8 +72,8 @@ describe('ChartsTooltip', () => {
       await user.pointer({
         target: svg,
         coords: {
-          x: 198,
-          y: 60,
+          x: 30,
+          y: 40,
         },
       });
 
@@ -104,22 +109,17 @@ describe('ChartsTooltip', () => {
 
     it('should show right values with horizontal layout on axis', async () => {
       const { user } = render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            layout="horizontal"
-            series={[
-              { dataKey: 'v1', id: 's1', label: 'S1' },
-              { dataKey: 'v2', id: 's2', label: 'S2' },
-            ]}
-            yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-          />
-        </div>,
+        <BarChart
+          {...config}
+          layout="horizontal"
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          yAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
@@ -167,22 +167,16 @@ describe('ChartsTooltip', () => {
   describeSkipIf(isJSDOM)('item trigger', () => {
     it('should show right values with vertical layout on item', async () => {
       const { user } = render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            series={[
-              { dataKey: 'v1', id: 's1', label: 'S1' },
-              { dataKey: 'v2', id: 's2', label: 'S2' },
-            ]}
-            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            slotProps={{ tooltip: { trigger: 'item' } }}
-          />
-        </div>,
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'item' } }}
+        />,
+        { wrapper },
       );
       const rectangles = document.querySelectorAll<HTMLElement>('rect');
 
@@ -205,30 +199,24 @@ describe('ChartsTooltip', () => {
 
     it('should show right values with horizontal layout on item', async () => {
       const { user } = render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            series={[
-              { dataKey: 'v1', id: 's1', label: 'S1' },
-              { dataKey: 'v2', id: 's2', label: 'S2' },
-            ]}
-            layout="horizontal"
-            yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            slotProps={{ tooltip: { trigger: 'item' } }}
-          />
-        </div>,
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          layout="horizontal"
+          yAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'item' } }}
+        />,
+        { wrapper },
       );
+
       const rectangles = document.querySelectorAll<HTMLElement>('rect');
 
       await user.pointer({
         target: rectangles[0],
       });
-
       let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
 
