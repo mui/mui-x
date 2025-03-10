@@ -705,10 +705,12 @@ export const useGridRowEditing = (
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
-        if (column.valueSetter) {
-          rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
-        } else {
-          rowUpdate[field] = fieldProps.value;
+        if(column){
+          if (column.valueSetter) {
+            rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
+          } else {
+            rowUpdate[field] = fieldProps.value;
+          }
         }
       });
 
