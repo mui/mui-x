@@ -147,6 +147,14 @@
         "returned": "number | null"
       }
     },
+    "getPivotDerivedColumns": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(column: GridColDef) => Array<GridColDef> | undefined",
+        "describedArgs": ["column"],
+        "returned": "Array<GridColDef> | undefined"
+      }
+    },
     "getRowClassName": {
       "type": { "name": "func" },
       "signature": {

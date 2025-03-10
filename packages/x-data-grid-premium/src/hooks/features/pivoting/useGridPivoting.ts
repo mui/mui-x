@@ -55,6 +55,7 @@ export const pivotingStateInitializer: GridStateInitializer<
     | 'initialState'
     | 'experimentalFeatures'
     | 'disablePivoting'
+    | 'getPivotDerivedColumns'
   >
 > = (state, props) => {
   if (!isPivotingEnabledFn(props)) {
@@ -72,6 +73,7 @@ export const pivotingStateInitializer: GridStateInitializer<
     // Cast to GridColumnsState to reverse the DeepPartial applied to the state by GridStateInitializer
     (state.columns?.orderedFields as GridColumnsState['orderedFields']) ?? [],
     (state.columns?.lookup as GridColumnsState['lookup']) ?? {},
+    props.getPivotDerivedColumns,
   );
 
   return {
@@ -333,6 +335,7 @@ export const useGridPivoting = (
     | 'onPivotPanelOpenChange'
     | 'experimentalFeatures'
     | 'disablePivoting'
+    | 'getPivotDerivedColumns'
   >,
 ) => {
   const isPivot = useGridSelector(apiRef, gridPivotEnabledSelector);
@@ -390,10 +393,14 @@ export const useGridPivoting = (
 
     const columnFields = gridColumnFieldsSelector(apiRef);
     const columnsLookup = gridColumnLookupSelector(apiRef);
-    const initialColumns = getInitialColumns(columnFields, columnsLookup);
+    const initialColumns = getInitialColumns(
+      columnFields,
+      columnsLookup,
+      props.getPivotDerivedColumns,
+    );
 
     return { rows, columns: initialColumns };
-  }, [apiRef]);
+  }, [apiRef, props.getPivotDerivedColumns]);
 
   const computePivotingState = React.useCallback(
     ({ enabled, model: pivotModel }: Pick<GridPivotingState, 'enabled' | 'model'>) => {

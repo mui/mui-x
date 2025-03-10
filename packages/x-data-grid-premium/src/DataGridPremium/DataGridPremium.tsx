@@ -437,6 +437,13 @@ DataGridPremiumRaw.propTypes = {
    */
   getEstimatedRowHeight: PropTypes.func,
   /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   */
+  getPivotDerivedColumns: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.

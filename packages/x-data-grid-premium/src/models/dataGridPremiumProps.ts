@@ -6,6 +6,7 @@ import {
   GridEventListener,
   GridGetRowsError,
   GridUpdateRowError,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -132,6 +133,14 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   disablePivoting: boolean;
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns: (column: GridColDef) => GridColDef[] | undefined;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -212,6 +221,11 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Data source object.
    */
   dataSource?: GridDataSource;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 
   pivotModel?: GridPivotModel;
   onPivotModelChange?: React.Dispatch<React.SetStateAction<GridPivotModel>>;
@@ -219,9 +233,4 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onPivotEnabledChange?: (isPivot: boolean) => void;
   pivotPanelOpen?: boolean;
   onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
-  /**
-   * Callback fired when a data source request fails.
-   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
-   */
-  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }
