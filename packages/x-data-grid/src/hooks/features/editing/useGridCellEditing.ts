@@ -39,6 +39,8 @@ import {
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
+import { GridUpdateRowParams } from '../../../models/gridDataSource';
+import { GridUpdateRowError } from '../dataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -52,6 +54,8 @@ export const useGridCellEditing = (
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
     | 'signature'
+    | 'dataSource'
+    | 'onDataSourceError'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
@@ -411,6 +415,7 @@ export const useGridCellEditing = (
 
       const editingState = gridEditRowsStateSelector(apiRef);
       const { error, isProcessingProps } = editingState[id][field];
+      const row = apiRef.current.getRow(id)!;
 
       if (error || isProcessingProps) {
         // Attempt to change cell mode to "view" was not successful
@@ -423,7 +428,51 @@ export const useGridCellEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
-      if (processRowUpdate) {
+      if (props.dataSource?.updateRow) {
+        const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
+          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+          // Revert the mode in the cellModesModel prop back to "edit"
+          updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+
+          if (typeof props.onDataSourceError === 'function') {
+            props.onDataSourceError(
+              new GridUpdateRowError({
+                message: errorThrown?.message,
+                params: updateParams,
+                cause: errorThrown,
+              }),
+            );
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+              ],
+              'error',
+            );
+          }
+        };
+
+        try {
+          Promise.resolve(
+            props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
+          )
+            .then((finalRowUpdate) => {
+              apiRef.current.updateRows([finalRowUpdate]);
+              if (finalRowUpdate !== row) {
+                // Reset the outdated cache
+                apiRef.current.dataSource.cache.clear();
+              }
+              finishCellEditMode();
+            })
+            .catch((errorThrown) =>
+              handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate }),
+            );
+        } catch (errorThrown) {
+          handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate });
+        }
+      } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
           prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
           // Revert the mode in the cellModesModel prop back to "edit"
@@ -444,7 +493,6 @@ export const useGridCellEditing = (
         };
 
         try {
-          const row = apiRef.current.getRow(id)!;
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
