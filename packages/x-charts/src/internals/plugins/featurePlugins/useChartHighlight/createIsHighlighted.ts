@@ -6,17 +6,15 @@ export const createIsHighlighted =
   (
     highlightScope: HighlightScope | null | undefined,
     highlightedItem: HighlightItemData | null,
-    axisInteractionData: AxisInteractionData,
+    axisInteractionData: AxisInteractionData | undefined,
   ) =>
   (item: HighlightItemData | null): boolean => {
-    console.log({ highlightScope, item });
     if (!highlightScope || !item) {
       return false;
     }
 
     if (highlightScope.highlight === 'group') {
-      console.log(axisInteractionData, item);
-      return axisInteractionData.x?.index === item.dataIndex;
+      return axisInteractionData?.x?.index === item.dataIndex;
     }
 
     if (!highlightedItem) {
