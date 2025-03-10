@@ -15,7 +15,7 @@ import {
   ValidateTimeProps,
   ValidateTimePropsToDefault,
 } from '../validation/validateTime';
-import { PickerValue } from '../internals/models';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 
 export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -73,8 +73,8 @@ export type UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     TimeValidationError,
-    TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateTimeProps,
+    TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
@@ -85,15 +85,6 @@ export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructur
     ExportedValidateTimeProps,
     AmPmProps {}
 
-interface TimeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      TimeValidationError
-    >,
-    ValidateTimeProps {}
-
 type TimeManagerFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
 
 interface GetTimeFieldInternalPropsDefaultsParameters
@@ -102,4 +93,7 @@ interface GetTimeFieldInternalPropsDefaultsParameters
 }
 
 interface GetTimeFieldInternalPropsDefaultsReturnValue
-  extends Pick<TimeManagerFieldInternalPropsWithDefaults<true>, TimeManagerFieldPropsToDefault> {}
+  extends Pick<
+    PickerManagerFieldInternalPropsWithDefaults<UseTimeManagerReturnValue<true>>,
+    TimeManagerFieldPropsToDefault
+  > {}
