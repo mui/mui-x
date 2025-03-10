@@ -16,27 +16,23 @@ export const useInteractionItemProps = (skip?: boolean) => {
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const dataRef = React.useRef<SeriesItemIdentifier | null>(null);
 
-  const onPointerEnter = React.useMemo(() => {
-    return () => {
-      if (!dataRef.current) {
-        return;
-      }
-      instance.setItemInteraction(dataRef.current);
-      instance.setHighlight({
-        seriesId: dataRef.current.seriesId,
-        dataIndex: dataRef.current.dataIndex,
-      });
-    };
+  const onPointerEnter = React.useCallback(() => {
+    if (!dataRef.current) {
+      return;
+    }
+    instance.setItemInteraction(dataRef.current);
+    instance.setHighlight({
+      seriesId: dataRef.current.seriesId,
+      dataIndex: dataRef.current.dataIndex,
+    });
   }, [instance]);
 
-  const onPointerLeave = React.useMemo(() => {
-    return () => {
-      if (!dataRef.current) {
-        return;
-      }
-      instance.removeItemInteraction(dataRef.current);
-      instance.clearHighlight();
-    };
+  const onPointerLeave = React.useCallback(() => {
+    if (!dataRef.current) {
+      return;
+    }
+    instance.removeItemInteraction(dataRef.current);
+    instance.clearHighlight();
   }, [instance]);
 
   const getInteractionItemProps = React.useMemo(() => {
