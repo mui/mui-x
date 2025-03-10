@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedBarElement, AnimatedBarElementV2, BarProps } from './AnimatedBarElement';
+import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -112,7 +112,13 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
-      style,
+      style: {
+        ...style,
+        '--x': `${other.x}px`,
+        '--y': `${other.y}px`,
+        '--width': `${other.width}px`,
+        '--height': `${other.height}px`,
+      },
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       stroke: 'none',

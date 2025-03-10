@@ -239,6 +239,18 @@ const BarPlotRoot = styled('g', {
 })({
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+
+    '@keyframes growHeight': {
+      from: {
+        height: 0,
+        y: 'calc(var(--y) + var(--height))',
+      },
+      to: {
+        height: 'var(--height)',
+        y: 'var(--y)',
+      },
+    },
+    animation: 'growHeight 0.5s ease',
   },
 });
 
@@ -259,18 +271,6 @@ function BarPlot(props: BarPlotProps) {
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
-
-  const transition = useTransition(completedData, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: leaveStyle,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-    config: {
-      // duration: 5_000,
-    },
-  });
 
   const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
     keys: (v) => v.id,
@@ -296,25 +296,24 @@ function BarPlot(props: BarPlotProps) {
             />
           );
         })}
-      {transition((style, { seriesId, dataIndex, color, maskId }) => {
-        console.log(style);
+      {completedData.map(({ x, y, width, height, dataIndex, color, seriesId, maskId }) => {
         const barElement = (
           <BarElement
+            key={`${seriesId}-${dataIndex}`}
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
             {...other}
-            x={style.x.goal}
-            y={style.y.goal}
-            width={style.width.goal}
-            height={style.height.goal}
             onClick={
               onItemClick &&
               ((event) => {
                 onItemClick(event, { type: 'bar', seriesId, dataIndex });
               })
             }
-            style={style}
           />
         );
 
