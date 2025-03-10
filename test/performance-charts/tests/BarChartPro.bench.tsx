@@ -1,6 +1,6 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';
@@ -33,6 +33,8 @@ describe('BarChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

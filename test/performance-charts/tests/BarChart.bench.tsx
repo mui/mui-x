@@ -1,6 +1,6 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
@@ -37,6 +37,8 @@ describe('BarChart', () => {
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );
