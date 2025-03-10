@@ -13,11 +13,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 <p class="description">A collection of React UI components for selecting dates, times, and ranges. </p>
 
-{{"component": "modules/components/overview/MainDemo.tsx"}}
+{{"component": "modules/components/overview/pickers/MainDemo.tsx"}}
 
-{{"component": "modules/components/overview/FeatureHighlight.tsx"}}
-{{"component": "modules/components/overview/CommunityOrPro.tsx"}}
-{{"component": "modules/components/overview/Customization.tsx"}}
-{{"component": "modules/components/overview/Keyboard.tsx"}}
-{{"component": "modules/components/overview/Internationalization.tsx"}}
-{{"component": "modules/components/overview/DateLibraries.tsx"}}
+{{"component": "modules/components/overview/pickers/PickersFeatureHighlight.tsx"}}
+{{"component": "modules/components/overview/pickers/PickersCommunityOrPro.tsx"}}
+{{"component": "modules/components/overview/pickers/PickersCustomization.tsx"}}
+{{"component": "modules/components/overview/pickers/PickersKeyboard.tsx"}}
+{{"component": "modules/components/overview/pickers/Internationalization.tsx"}}
+{{"component": "modules/components/overview/pickers/DateLibraries.tsx"}}
