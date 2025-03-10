@@ -27,6 +27,10 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import {
+  gridPivotEnabledSelector,
+  gridPivotInitialColumnsSelector,
+} from '../../../hooks/features/pivoting';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -204,14 +208,6 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
-// TODO: use selectors
-const getPivotEnabled = (apiRef: any): boolean => {
-  return apiRef.current.state.pivoting?.enabled ?? false;
-};
-const getInitialColumns = (apiRef: any): GridColDef[] => {
-  return apiRef.current.state.pivoting?.initialColumns ?? [];
-};
-
 const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   function GridFilterForm(props, ref) {
     const {
@@ -258,8 +254,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const pivotEnabled = useGridSelector(apiRef, getPivotEnabled);
-    const initialColumns = useGridSelector(apiRef, getInitialColumns);
+    const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+    const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
 
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;

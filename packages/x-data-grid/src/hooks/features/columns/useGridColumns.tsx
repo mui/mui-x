@@ -39,6 +39,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { gridPivotEnabledSelector } from '../pivoting';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
@@ -373,7 +374,7 @@ export function useGridColumns(
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems) => {
-      const isPivotEnabled = (apiRef.current.state as any).pivoting?.enabled;
+      const isPivotEnabled = gridPivotEnabledSelector(apiRef);
 
       if (props.disableColumnSelector || isPivotEnabled) {
         return columnMenuItems;

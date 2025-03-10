@@ -1,4 +1,5 @@
 import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridPivotingStatePartial } from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 export type GridPivotingPropsOverrides = {
@@ -12,12 +13,9 @@ export type GridPivotingPropsOverrides = {
   groupingColDef: NonNullable<DataGridPremiumProcessedProps['groupingColDef']>;
 };
 
-export interface GridPivotingState {
+export interface GridPivotingState extends GridPivotingStatePartial {
   model: GridPivotModel;
-  enabled: boolean;
-  panelOpen: boolean;
   propsOverrides: GridPivotingPropsOverrides | undefined;
-  initialColumns: GridColDef[] | undefined;
 }
 
 export interface GridPivotingInitialState {
