@@ -142,8 +142,7 @@ describe('<DataGrid /> - Column headers', () => {
         />
       </div>,
     );
-    expect(within(getColumnHeaderCell(0)).getByLabelText('brand header name column options')).to
-      .exist;
+    expect(await screen.findByLabelText('brand header name column options')).not.to.equal(null);
   });
 
   it('should display sort column menu items as per sortingOrder prop', async () => {
