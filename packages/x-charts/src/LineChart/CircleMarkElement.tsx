@@ -49,7 +49,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -57,7 +57,12 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
+  const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, []);
+
+  React.useEffect(() => {
+    api.start({ x, y, immediate: skipAnimation });
+  }, [api, x, y, skipAnimation]);
+
   const ownerState = {
     id,
     classes: innerClasses,
@@ -80,7 +85,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

@@ -87,7 +87,7 @@ function BarElement(props: BarElementProps) {
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
     dataIndex,
@@ -111,7 +111,7 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      ...interactionProps,
       style,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',

@@ -63,7 +63,7 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -71,7 +71,12 @@ function MarkElement(props: MarkElementProps) {
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
+  const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, []);
+
+  React.useEffect(() => {
+    api.start({ x, y, immediate: skipAnimation });
+  }, [api, x, y, skipAnimation]);
+
   const ownerState = {
     id,
     classes: innerClasses,
@@ -94,7 +99,7 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }
