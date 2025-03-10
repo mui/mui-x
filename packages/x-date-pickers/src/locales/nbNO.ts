@@ -41,6 +41,7 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Velg dato & klokkeslett',
   timePickerToolbarTitle: 'Velg klokkeslett',
   dateRangePickerToolbarTitle: 'Velg datoperiode',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

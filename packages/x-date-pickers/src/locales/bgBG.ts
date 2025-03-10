@@ -41,6 +41,7 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Избери дата и час',
   timePickerToolbarTitle: 'Избери час',
   dateRangePickerToolbarTitle: 'Избери времеви период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
