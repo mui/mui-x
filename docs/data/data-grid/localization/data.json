@@ -35,7 +35,7 @@
     "languageTag": "zh-HK",
     "importName": "zhHK",
     "localeName": "Chinese (Hong Kong)",
-    "missingKeysCount": 9,
+    "missingKeysCount": 1,
     "totalKeysCount": 123,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/zhHK.ts"
   },
@@ -51,7 +51,7 @@
     "languageTag": "zh-TW",
     "importName": "zhTW",
     "localeName": "Chinese (Taiwan)",
-    "missingKeysCount": 9,
+    "missingKeysCount": 1,
     "totalKeysCount": 123,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/zhTW.ts"
   },
