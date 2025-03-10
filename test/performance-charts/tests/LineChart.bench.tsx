@@ -1,9 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { bench, describe, vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
+
+vi.spyOn(React, 'act').mockImplementation(async (cb) => {
+  await cb();
+});
 
 describe('LineChart', () => {
   const dataLength = 200;
