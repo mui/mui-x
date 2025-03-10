@@ -45,7 +45,7 @@ jobs:
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
-      - run: pnpm --filter "@mui/x-charts-pro..." build\
+      - run: pnpm --filter "@mui/x-charts-pro..." build
         env:
           NODE_ENV: production
       - name: Run benchmarks
