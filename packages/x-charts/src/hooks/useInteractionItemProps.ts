@@ -16,23 +16,25 @@ export const useInteractionItemProps = (data: SeriesItemIdentifier, skip?: boole
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
   const onPointerEnter = React.useCallback(() => {
-    if (!data) {
-      return;
-    }
-    instance.setItemInteraction(data);
+    instance.setItemInteraction({
+      type: data.type,
+      seriesId: data.seriesId,
+      dataIndex: data.dataIndex,
+    } as SeriesItemIdentifier);
     instance.setHighlight({
       seriesId: data.seriesId,
       dataIndex: data.dataIndex,
     });
-  }, [instance, data]);
+  }, [instance, data.type, data.seriesId, data.dataIndex]);
 
   const onPointerLeave = React.useCallback(() => {
-    if (!data) {
-      return;
-    }
-    instance.removeItemInteraction(data);
+    instance.removeItemInteraction({
+      type: data.type,
+      seriesId: data.seriesId,
+      dataIndex: data.dataIndex,
+    } as SeriesItemIdentifier);
     instance.clearHighlight();
-  }, [instance, data]);
+  }, [instance, data.type, data.seriesId, data.dataIndex]);
 
   if (skip) {
     return {};
