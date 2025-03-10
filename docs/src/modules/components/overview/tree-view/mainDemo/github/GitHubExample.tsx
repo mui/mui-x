@@ -8,7 +8,7 @@ import GitHubFiles from './GitHubFiles';
 export default function GitHubExample() {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const docsTheme = useTheme();
-  const isMd = useMediaQuery(docsTheme.breakpoints.up('md'));
+  const isMd = useMediaQuery(docsTheme.breakpoints.up('md'), { defaultMatches: true });
 
   return (
     <Stack sx={{ width: '100%', height: '100%', overflowY: 'auto' }} direction="row" spacing={0}>
