@@ -238,14 +238,28 @@ const BarPlotRoot = styled('g', {
   overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, height 0.5s ease-in, y 0.5s ease-in',
+    [`&.${barElementClasses.vertical}`]: {
+      transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, height 0.5s ease-in, y 0.5s ease-in',
 
-    '@keyframes growHeight': {
-      from: { transform: 'scaleY(0%)' },
-      to: { transform: 'scaleY(100%)' },
+      '@keyframes growHeight': {
+        from: { transform: 'scaleY(0%)' },
+        to: { transform: 'scaleY(100%)' },
+      },
+
+      transformOrigin: '0% 100%',
+      animation: 'growHeight 0.5s ease',
     },
-    animation: 'growHeight 0.5s ease',
-    transformOrigin: '0% 100%',
+
+    [`&.${barElementClasses.horizontal}`]: {
+      transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, width 0.5s ease-in, x 0.5s ease-in',
+
+      '@keyframes growWidth': {
+        from: { transform: 'scaleX(0%)' },
+        to: { transform: 'scaleX(100%)' },
+      },
+
+      animation: 'growWidth 0.5s ease',
+    },
   },
 });
 
@@ -291,7 +305,7 @@ function BarPlot(props: BarPlotProps) {
             />
           );
         })}
-      {completedData.map(({ x, y, width, height, dataIndex, color, seriesId, maskId }) => {
+      {completedData.map(({ x, y, width, height, dataIndex, color, seriesId, maskId, layout }) => {
         const barElement = (
           <BarElement
             key={`${seriesId}-${dataIndex}`}
@@ -302,6 +316,7 @@ function BarPlot(props: BarPlotProps) {
             y={y}
             width={width}
             height={height}
+            layout={layout}
             {...other}
             onClick={
               onItemClick &&
