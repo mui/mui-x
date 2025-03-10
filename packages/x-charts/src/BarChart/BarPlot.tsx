@@ -216,30 +216,46 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  [`& .${barElementClasses.root}.${barElementClasses.vertical}, & .${barClipPathClasses.root}.${barClipPathClasses.vertical}`]:
-    {
-      transition: `opacity 0.2s ease-in, fill 0.2s ease-in, height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
+  [`& .${barElementClasses.root}.${barElementClasses.vertical}`]: {
+    transition: `opacity 0.2s ease-in, fill 0.2s ease-in, height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
 
-      '@keyframes growHeight': {
-        from: { transform: 'scaleY(0%)' },
-        to: { transform: 'scaleY(100%)' },
-      },
-
-      transformOrigin: 'bottom',
-      animation: `growHeight ${ANIMATION_DURATION} ease`,
+    '@keyframes growHeight': {
+      from: { height: 0 },
+      to: {},
     },
 
-  [`& .${barElementClasses.root}.${barElementClasses.horizontal}, & .${barClipPathClasses.root}.${barClipPathClasses.horizontal}`]:
-    {
-      transition: `opacity 0.2s ease-in, fill 0.2s ease-in, width ${ANIMATION_DURATION} ease-in, x ${ANIMATION_DURATION} ease-in`,
+    animation: `growHeight ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barClipPathClasses.root}.${barClipPathClasses.vertical}`]: {
+    transition: `height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
 
-      '@keyframes growWidth': {
-        from: { transform: 'scaleX(0%)' },
-        to: { transform: 'scaleX(100%)' },
-      },
-
-      animation: `growWidth ${ANIMATION_DURATION} ease`,
+    '@keyframes growClipPathHeight': {
+      from: { height: 0 },
+      to: {},
     },
+
+    animation: `growClipPathHeight ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barElementClasses.root}.${barElementClasses.horizontal}`]: {
+    transition: `opacity 0.2s ease-in, fill 0.2s ease-in, width ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growWidth': {
+      from: { width: 0 },
+      to: {},
+    },
+
+    animation: `growWidth ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barClipPathClasses.root}.${barClipPathClasses.horizontal}`]: {
+    transition: `width ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growClipPathWidth': {
+      from: { width: 0 },
+      to: {},
+    },
+
+    animation: `growClipPathWidth ${ANIMATION_DURATION} ease`,
+  },
 });
 
 /**
@@ -265,6 +281,7 @@ function BarPlot(props: BarPlotProps) {
       {!withoutBorderRadius &&
         masksData.map(({ id, hasPositive, hasNegative, layout, x, y, width, height }) => (
           <BarClipPath
+            key={id}
             className={clsx(
               barClipPathClasses.root,
               layout === 'horizontal' ? barClipPathClasses.horizontal : barClipPathClasses.vertical,

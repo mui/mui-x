@@ -50,7 +50,7 @@ function BarClipPath(props: BarClipPathProps) {
         width={width}
         height={height}
         style={{
-          clipPath: `inset(0px round ${getRadius('top-left', radiusData)}px ${getRadius('top-right', radiusData)}px ${getRadius('bottom-left', radiusData)}px ${getRadius('bottom-right', radiusData)}px)`,
+          clipPath: `inset(0px round ${getRadius('top-left', radiusData)}px ${getRadius('top-right', radiusData)}px ${getRadius('bottom-right', radiusData)}px ${getRadius('bottom-left', radiusData)}px)`,
         }}
       />
     </clipPath>
