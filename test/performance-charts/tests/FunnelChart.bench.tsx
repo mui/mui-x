@@ -1,9 +1,8 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { options } from '../utils/options';
+import { directRender } from '../utils/directRender';
 
 describe('FunnelChart', () => {
   const dataLength = 10;
@@ -16,11 +15,13 @@ describe('FunnelChart', () => {
   bench(
     'FunnelChart with big data amount',
     async () => {
-      const { findByText } = render(<FunnelChart series={series} width={500} height={300} />);
+      const { unmount, findByText } = directRender(
+        <FunnelChart series={series} width={500} height={300} />,
+      );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
 
-      cleanup();
+      unmount();
     },
     options,
   );
