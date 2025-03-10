@@ -6,6 +6,7 @@ import {
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { deg2rad } from '../../internals/angleConversion';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -60,7 +61,7 @@ export function useTransformData(
         };
         const paddingAngle = Math.max(
           0,
-          (Math.PI * (attributesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+          deg2rad(attributesOverride.paddingAngle ?? basePaddingAngle),
         );
         const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
 

@@ -81,7 +81,9 @@ function QuickFilter(props: QuickFilterProps) {
   const setQuickFilterValueDebounced = React.useMemo(
     () =>
       debounce((newValue: string) => {
-        apiRef.current.setQuickFilterValues(parser(newValue));
+        const newQuickFilterValues = parser(newValue);
+        prevQuickFilterValuesRef.current = newQuickFilterValues;
+        apiRef.current.setQuickFilterValues(newQuickFilterValues);
       }, debounceMs),
     [apiRef, debounceMs, parser],
   );

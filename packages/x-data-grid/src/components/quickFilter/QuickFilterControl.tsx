@@ -51,6 +51,13 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
       render,
       {
         ...rootProps.slotProps?.baseTextField,
+        slotProps: {
+          htmlInput: {
+            role: 'searchbox',
+            ...props.slotProps?.htmlInput,
+          },
+          ...props.slotProps,
+        },
         value: state.value,
         className: resolvedClassName,
         onChange: onValueChange,
@@ -95,6 +102,7 @@ QuickFilterControl.propTypes = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  role: PropTypes.string,
   size: PropTypes.oneOf(['medium', 'small']),
   slotProps: PropTypes.object,
   style: PropTypes.object,

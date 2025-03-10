@@ -3,8 +3,7 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { UsePickerParams } from '../usePicker';
-import { UsePickerViewsProps } from '../usePicker/usePickerViews';
+import { UsePickerParameters, UsePickerProps } from '../usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
 export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
@@ -33,7 +32,7 @@ export interface StaticOnlyPickerProps {
 export interface UseStaticPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any>,
+  TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 > extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     StaticOnlyPickerProps {
   /**
@@ -52,7 +51,7 @@ export interface UseStaticPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps>,
+    UsePickerParameters<PickerValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
