@@ -1,6 +1,6 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
@@ -31,8 +31,6 @@ describe('ScatterChart', () => {
       );
 
       await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
-
-      cleanup();
     },
     options,
   );

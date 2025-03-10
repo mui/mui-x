@@ -1,6 +1,6 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
@@ -39,8 +39,6 @@ describe('ScatterChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
-
-      cleanup();
     },
     options,
   );
