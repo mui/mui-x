@@ -74,8 +74,8 @@ function MarkElement(props: MarkElementProps) {
   const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, []);
 
   React.useEffect(() => {
-    api.start({ x, y });
-  }, [api, x, y]);
+    api.start({ x, y, immediate: skipAnimation });
+  }, [api, x, y, skipAnimation]);
 
   const ownerState = {
     id,
