@@ -76,7 +76,7 @@ const hrHRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tjedan ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Odaberi datum, odabrani datum je ${formattedDate}` : 'Odaberi datum',
   openTimePickerDialogue: (formattedTime) =>

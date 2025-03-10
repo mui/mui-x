@@ -221,7 +221,7 @@ DateField.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * The position at which the opening button is placed.
-   * If there is no picker to open, the button is not rendered
+   * If there is no Picker to open, the button is not rendered
    * @default 'end'
    */
   openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),

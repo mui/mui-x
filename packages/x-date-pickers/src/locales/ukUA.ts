@@ -58,7 +58,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Оберіть дату, обрана дата  ${formattedDate}` : 'Оберіть дату',
   openTimePickerDialogue: (formattedTime) =>
