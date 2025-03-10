@@ -2,32 +2,20 @@ import * as React from 'react';
 import {
   DataGrid,
   Toolbar,
-  ToolbarButton,
   QuickFilter,
   QuickFilterControl,
   QuickFilterClear,
-  QuickFilterTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
-import Tooltip from '@mui/material/Tooltip';
 
 function CustomToolbar() {
   return (
     <Toolbar>
-      <QuickFilter>
-        <QuickFilterTrigger
-          render={(triggerProps) => (
-            <Tooltip title="Search">
-              <ToolbarButton {...triggerProps} color="default">
-                <SearchIcon fontSize="small" />
-              </ToolbarButton>
-            </Tooltip>
-          )}
-        />
+      <QuickFilter expanded>
         <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
@@ -43,7 +31,7 @@ function CustomToolbar() {
                     <SearchIcon fontSize="small" />
                   </InputAdornment>
                 ),
-                endAdornment: (
+                endAdornment: other.value ? (
                   <InputAdornment position="end">
                     <QuickFilterClear
                       edge="end"
@@ -54,7 +42,7 @@ function CustomToolbar() {
                       <CancelIcon fontSize="small" />
                     </QuickFilterClear>
                   </InputAdornment>
-                ),
+                ) : null,
               }}
             />
           )}
@@ -64,7 +52,7 @@ function CustomToolbar() {
   );
 }
 
-export default function GridQuickFilter() {
+export default function GridPersistentQuickFilter() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
