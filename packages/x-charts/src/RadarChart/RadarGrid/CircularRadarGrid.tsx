@@ -2,6 +2,9 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { RadarGridRenderProps } from './RadarGrid.types';
 
+/**
+ * @ignore - internal component.
+ */
 export function CircularRadarGrid(props: RadarGridRenderProps) {
   const { center, corners, divisions, radius } = props;
   const theme = useTheme();

@@ -159,6 +159,11 @@ RadarChart.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
+  /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */

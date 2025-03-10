@@ -26,6 +26,11 @@ RadarGrid.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
 } as any;
 
 export { RadarGrid };

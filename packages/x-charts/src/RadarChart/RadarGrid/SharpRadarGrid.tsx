@@ -2,19 +2,9 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { RadarGridRenderProps } from './RadarGrid.types';
 
-export interface RadarGridProps {
-  /**
-   * The number of divisions in the radar grid.
-   * @default 5
-   */
-  divisions?: number;
-  /**
-   * The grid shape.
-   * @default 'sharp'
-   */
-  shape?: 'sharp' | 'rounded';
-}
-
+/**
+ * @ignore - internal component.
+ */
 export function SharpRadarGrid(props: RadarGridRenderProps) {
   const { center, corners, divisions } = props;
   const theme = useTheme();

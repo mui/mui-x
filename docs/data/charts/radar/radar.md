@@ -48,7 +48,7 @@ The radar chart displays a grid behind the series that can be configured with:
 
 - `startAngle` The rotation angle of the entire chart in degrees.
 - `divisions` The number of divisions of the grid.
-- `shape` The gird shape that can be `circular` or `sharp`.
+- `shape` The grid shape that can be `circular` or `sharp`.
 
 {{"demo": "DemoRadar.js" }}
 
