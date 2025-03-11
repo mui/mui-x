@@ -185,6 +185,10 @@ const getPivotedData = ({
       attributes.headerName = initialColumn.headerName;
     }
 
+    if (initialColumn?.renderCell) {
+      attributes.renderCell = initialColumn.renderCell;
+    }
+
     return attributes;
   };
 
