@@ -63,6 +63,7 @@ const fiFIPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Valitse päivä, valittu päivä on ${formattedDate}` : 'Valitse päivä',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Valitse aika, valittu aika on ${formattedTime}` : 'Valitse aika',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Tyhjennä arvo',
 
   // Table labels

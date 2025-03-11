@@ -125,6 +125,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meniu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Afișează toate coloanele',
   columnMenuManageColumns: 'Gestionează coloane',
   columnMenuFilter: 'Filtru',

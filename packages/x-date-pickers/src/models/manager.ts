@@ -80,21 +80,13 @@ export interface PickerManager<
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
-   * Returns the aria-label to apply on the button that opens the Picker.
-   * @param {GetOpenPickerButtonAriaLabelParameters<TValue>} params The parameters to get the aria-label.
-   * @returns {string} The aria-label to apply on the button that opens the Picker.
+   * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
+   * @returns {(value: TValue) => string} The method to create the aria-label to apply on the button that opens the Picker.
    */
-  internal_getOpenPickerButtonAriaLabel: (
-    params: GetOpenPickerButtonAriaLabelParameters<TValue>,
-  ) => string;
+  internal_useOpenPickerButtonAriaLabel: () => (value: TValue) => string;
 }
 
 interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
   extends UseLocalizationContextReturnValue {
   internalProps: TFieldInternalProps;
-}
-
-interface GetOpenPickerButtonAriaLabelParameters<TValue extends PickerValidValue>
-  extends UseLocalizationContextReturnValue {
-  value: TValue;
 }

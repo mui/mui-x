@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarDataProvider
+components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarDataProvider
 ---
 
 # Charts - Radar 🚧
@@ -46,8 +46,9 @@ This item can either be:
 
 The radar chart displays a grid behind the series that can be configured with:
 
-- `startAngle` The rotation angle of the entire chart in degrees
-- `divisions` The number of divisions of the grid
+- `startAngle` The rotation angle of the entire chart in degrees.
+- `divisions` The number of divisions of the grid.
+- `shape` The grid shape that can be `circular` or `sharp`.
 
 {{"demo": "DemoRadar.js" }}
 

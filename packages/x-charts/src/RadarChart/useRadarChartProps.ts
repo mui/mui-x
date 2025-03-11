@@ -5,7 +5,8 @@ import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
-import { RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGridProps } from './RadarGrid';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -32,6 +33,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onHighlightChange,
     hideLegend,
     divisions,
+    shape,
     ...other
   } = props;
 
@@ -40,7 +42,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     radar,
     width,
     height,
-    margin,
+    margin: defaultizeMargin(margin, { top: 30, bottom: 30, left: 50, right: 50 }),
     colors,
     highlightedItem,
     onHighlightChange,
@@ -62,7 +64,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     sx,
   };
 
-  const radarGrid: RadarGridProps = { divisions };
+  const radarGrid: RadarGridProps = { divisions, shape };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 

@@ -134,6 +134,7 @@ export interface GridLocaleText {
 
   // Column menu text
   columnMenuLabel: string;
+  columnMenuAriaLabel: (columnName: string) => string;
   columnMenuShowColumns: React.ReactNode;
   columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
