@@ -186,11 +186,13 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Pagination
   paginationRowsPerPage: 'Rows per page:',
-  paginationDisplayedRows: ({ from, to, count, estimated }) =>
-    !estimated ?
-      `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` :
-      `${from}–${to} of ${count !== -1 ? count : (estimated && estimated > to ? `around ${estimated}` : `more than ${to}`)}`
-  ,
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Go to first page';

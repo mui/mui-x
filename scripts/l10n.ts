@@ -225,9 +225,9 @@ function injectTranslations(
 
       const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
       const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
-      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`
+      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`;
 
-      lines.push(...content.split('\n').map(line => `${comment}${line}`));
+      lines.push(...content.split('\n').map((line) => `${comment}${line}`));
     });
   });
 
