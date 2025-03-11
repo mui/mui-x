@@ -7,6 +7,17 @@ interface CountryProps {
   value: CountryIsoOption;
 }
 
+// Used to avoid the flagcdn.com rate limit in CI
+function LaosFlag() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 600 900">
+      <path fill="#ce1126" d="M0 0h600v400H0z" />
+      <path fill="#002868" d="M0 100h600v200H0z" />
+      <circle r="80" cy="200" cx="300" fill="#fff" />
+    </svg>
+  );
+}
+
 const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
 
@@ -23,7 +34,7 @@ const Country = React.memo(function Country(props: CountryProps) {
         },
       }}
     >
-      {process.env.CI ? null : (
+      {(globalThis as any).DISABLE_CHANCE_RANDOM ? null : (
         <img
           loading="lazy"
           width="20"
