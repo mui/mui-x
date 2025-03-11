@@ -30,6 +30,11 @@ const Divider = styled(NotRendered<GridSlotProps['baseDivider']>, {
   margin: vars.spacing(0, 0.5),
 });
 
+function GridToolbarDivider() {
+  const rootProps = useGridRootProps();
+  return <Divider as={rootProps.slots.baseDivider} orientation="vertical" />;
+}
+
 function GridToolbar(props: GridToolbarProps) {
   const {
     showQuickFilter = true,
@@ -86,7 +91,7 @@ function GridToolbar(props: GridToolbarProps) {
       {additionalItems}
 
       {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
-        <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
+        <GridToolbarDivider />
       )}
 
       {showExportMenu && (
@@ -177,4 +182,4 @@ GridToolbar.propTypes = {
   ]),
 } as any;
 
-export { GridToolbar };
+export { GridToolbar, GridToolbarDivider };
