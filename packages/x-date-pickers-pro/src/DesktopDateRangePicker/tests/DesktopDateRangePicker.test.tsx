@@ -47,7 +47,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByText('May 2019')).toBeVisible();
   });
 
-  it.only(`should not crash when opening picker with invalid date value`, () => {
+  it(`should not crash when opening picker with invalid date value`, () => {
     render(
       <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
     );
