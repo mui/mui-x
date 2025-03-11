@@ -12,7 +12,6 @@ export function GridSidebarSearchButton(props: GridSidebarSearchButtonProps) {
 
   return (
     <rootProps.slots.baseIconButton
-      size="small"
       aria-label={apiRef.current.getLocaleText('pivotSearchButton')}
       {...props}
     >

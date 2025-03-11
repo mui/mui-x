@@ -11,7 +11,6 @@ export function GridSidebarCloseButton(props: GridSlotProps['baseIconButton']) {
 
   return (
     <rootProps.slots.baseIconButton
-      size="small"
       {...props}
       onClick={() => apiRef.current.setPivotPanelOpen(false)}
     >

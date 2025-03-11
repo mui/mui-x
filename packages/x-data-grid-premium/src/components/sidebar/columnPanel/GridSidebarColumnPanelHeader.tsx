@@ -27,7 +27,7 @@ const Header = styled('div')({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  padding: vars.spacing(0, 2),
+  padding: vars.spacing(0, 0.75, 0, 2),
   boxSizing: 'border-box',
   height: 52,
 });
@@ -36,7 +36,7 @@ const Subheader = styled('div')({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  padding: vars.spacing(1.25, 2),
+  padding: vars.spacing(1.25, 1.25, 1.25, 2),
   borderTop: `1px solid ${vars.colors.border.muted}`,
 });
 
@@ -73,7 +73,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
           <React.Fragment>
             <Title>{apiRef.current.getLocaleText('pivotSettings')}</Title>
             <GridSidebarSearchButton onClick={enableSearch} />
-            <GridSidebarCloseButton sx={{ mr: -1 }} />
+            <GridSidebarCloseButton />
           </React.Fragment>
         )}
       </Header>
