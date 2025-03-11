@@ -78,7 +78,6 @@ const rows = [
 
 const columns = [
   { field: 'product', headerName: 'Product' },
-  { field: 'size', headerName: 'Size' },
   { field: 'region', headerName: 'Region' },
   { field: 'quarter', headerName: 'Quarter' },
   {
@@ -103,12 +102,19 @@ const columns = [
       return `${value}%`;
     },
   },
+  {
+    field: 'size',
+    headerName: 'Size',
+  },
 ];
 
 const pivotModel = {
-  rows: [{ field: 'product' }, { field: 'size', hidden: true }],
-  columns: [],
-  values: [],
+  rows: [{ field: 'product' }, { field: 'size' }],
+  columns: [{ field: 'region' }, { field: 'quarter' }],
+  values: [
+    { field: 'sales', aggFunc: 'sum' },
+    { field: 'profit', aggFunc: 'avg' },
+  ],
 };
 
 const initialState = {
@@ -119,7 +125,7 @@ const initialState = {
   },
 };
 
-export default function GridPivotingRows() {
+export default function GridPivotingMultipleValues() {
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
