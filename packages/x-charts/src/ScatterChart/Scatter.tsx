@@ -124,10 +124,6 @@ function Scatter(props: ScatterProps) {
 
   const interactionItemProps = useInteractionAllItemProps(cleanData, skipInteractionHandlers);
 
-  const fullData = cleanData.map((dataPoint, i) => {
-    return { ...dataPoint, interactionProps: interactionItemProps[i] };
-  });
-
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
     elementType: Marker,
@@ -141,7 +137,7 @@ function Scatter(props: ScatterProps) {
 
   return (
     <g>
-      {fullData.map((dataPoint) => (
+      {cleanData.map((dataPoint, i) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
           dataIndex={dataPoint.dataIndex}
@@ -159,7 +155,7 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          {...dataPoint.interactionProps}
+          {...interactionItemProps[i]}
           {...markerProps}
         />
       ))}
