@@ -128,35 +128,37 @@ function shortenLabels(
   const shortenedLabels = new Map<TickItemType, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
-  let leftBoundModifier = 1;
-  let rightBoundModifier = 1;
+  // Multiplying the space available to the left of the text position by leftBoundFactor returns the max width of the text.
+  // Same for rightBoundFactor
+  let leftBoundFactor = 1;
+  let rightBoundFactor = 1;
 
   if (tickLabelStyle?.textAnchor === 'start') {
-    leftBoundModifier = Infinity;
-    rightBoundModifier = 1;
+    leftBoundFactor = Infinity;
+    rightBoundFactor = 1;
   } else if (tickLabelStyle?.textAnchor === 'end') {
-    leftBoundModifier = 1;
-    rightBoundModifier = Infinity;
+    leftBoundFactor = 1;
+    rightBoundFactor = Infinity;
   } else {
-    leftBoundModifier = 2;
-    rightBoundModifier = 2;
+    leftBoundFactor = 2;
+    rightBoundFactor = 2;
   }
 
   if (angle > 90 && angle < 270) {
-    [leftBoundModifier, rightBoundModifier] = [rightBoundModifier, leftBoundModifier];
+    [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
   }
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
       // That maximum width of the tick depends on its proximity to the axis bounds.
       const width = Math.min(
-        (item.offset + item.labelOffset) * leftBoundModifier,
+        (item.offset + item.labelOffset) * leftBoundFactor,
         (drawingArea.left +
           drawingArea.width +
           drawingArea.right -
           item.offset -
           item.labelOffset) *
-          rightBoundModifier,
+          rightBoundFactor,
       );
 
       const doesTextFit = (text: string) =>

@@ -229,10 +229,10 @@ If you would like to reduce clipping due to overflow, you can [apply an angle to
 
 In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
-{{"demo": "MarginAndLabelPosition.js"}}
-
 The first and last tick labels may bleed into the margin. If that margin is not enough to display the label, it might be clipped.
 To avoid this, you can use the `margin` property to increase the space between the chart and the edge of the container.
+
+{{"demo": "MarginAndLabelPosition.js"}}
 
 ### Rendering
 

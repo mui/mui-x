@@ -26,11 +26,11 @@ export function doesTextFitInRect(text: string, config: EllipsizeConfig) {
 }
 
 /** This function finds the best place to clip the text to add an ellipsis.
- * This function assumes that the {@link doesTextFit} never return true for longer text after returning false for
- * shorter text.
+ *  This function assumes that the {@link doesTextFit} never returns true for longer text after returning false for
+ *  shorter text.
  *
- * @param text Text to ellipsize if needed
- * @param doesTextFit a function that returns whether a string fits inside a container.
+ *  @param text Text to ellipsize if needed
+ *  @param doesTextFit a function that returns whether a string fits inside a container.
  */
 export function ellipsize(text: string, doesTextFit: (text: string) => boolean) {
   if (doesTextFit(text)) {
