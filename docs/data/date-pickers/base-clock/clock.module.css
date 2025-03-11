@@ -66,15 +66,38 @@
   padding: 0;
   min-height: 32px;
 
-  &:hover {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    right: 4px;
+    border-radius: 4px;
+    border: none;
+    z-index: -1;
+    background-color: transparent;
+  }
+
+  &::after {
+    content: '';
+    border-radius: 4px;
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    right: 4px;
+  }
+
+  &:hover::before {
     background-color: var(--option-hover-bg-color);
   }
 
-  &[data-selected] {
+  &[data-selected]::before {
     background-color: var(--option-selected-bg-color);
   }
 
-  &:focus-visible {
+  &:focus-visible::after {
     outline: 2px solid var(--option-focus-border-color);
   }
 }
