@@ -10,10 +10,10 @@ interface CountryProps {
 // Used to avoid the flagcdn.com rate limit in CI
 function LaosFlag() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 600 900">
-      <path fill="#ce1126" d="M0 0h600v400H0z" />
-      <path fill="#002868" d="M0 100h600v200H0z" />
-      <circle r="80" cy="200" cx="300" fill="#fff" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+      <path fill="#ce1126" d="M0 0h900v600H0z" />
+      <path fill="#002868" d="M0 150h900v300H0z" />
+      <circle r="120" cy="300" cx="450" fill="#fff" />
     </svg>
   );
 }
@@ -30,7 +30,7 @@ const Country = React.memo(function Country(props: CountryProps) {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        '&  > img': {
+        '&  > img, & > svg': {
           mr: 0.5,
           flexShrink: 0,
           width: '20px',
