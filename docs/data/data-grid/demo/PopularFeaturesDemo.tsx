@@ -87,7 +87,7 @@ export const featuresSet: Row[] = [
     name: 'Lazy loading',
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
-    detailPage: '/pagination/',
+    detailPage: '/row-updates/#lazy-loading',
     demo: <LazyLoadingGrid />,
     linkToCode: '/row-updates/#system-LazyLoadingGrid.tsx',
   },
