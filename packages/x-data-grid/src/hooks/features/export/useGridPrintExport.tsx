@@ -121,6 +121,20 @@ export const useGridPrintExport = (
     [apiRef],
   );
 
+  const replaceNodeTagName = (node: HTMLElement, newTagName: keyof HTMLElementTagNameMap) => {
+    const newNode = document.createElement(newTagName);
+
+    while (node.firstChild) {
+      newNode.appendChild(node.firstChild);
+    }
+
+    Array.from(node.attributes).forEach((attribute) => {
+      newNode.attributes.setNamedItem(attribute.cloneNode() as Attr);
+    });
+
+    node.parentNode?.replaceChild(newNode, node);
+  };
+
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
     (printWindow, options): void => {
       const normalizeOptions = {
@@ -147,7 +161,8 @@ export const useGridPrintExport = (
       gridMain!.style.overflow = 'visible';
 
       // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
-      gridClone!.style.contain = 'size';
+      // TODO: This breaks thead on each page, is there a different way to fix the issue?
+      // gridClone!.style.contain = 'size';
 
       let gridToolbarElementHeight =
         gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
@@ -176,6 +191,23 @@ export const useGridPrintExport = (
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
 
+      const topContainer = gridClone.querySelector(
+        `.${gridClasses['container--top']}`,
+      ) as HTMLDivElement;
+      // Get rid of sticky position
+      topContainer.style.position = 'relative';
+      replaceNodeTagName(topContainer, 'thead');
+
+      const virtualScrollerContent = gridClone.querySelector(
+        `.${gridClasses.virtualScrollerContent}`,
+      ) as HTMLDivElement;
+      replaceNodeTagName(virtualScrollerContent, 'tbody');
+
+      const renderZone = gridClone.querySelector(
+        `.${gridClasses.virtualScrollerRenderZone}`,
+      ) as HTMLDivElement;
+      renderZone.style.position = 'relative';
+
       if (!normalizeOptions.hideFooter) {
         // the footer is always being placed at the bottom of the page as if all rows are exported
         // so if getRowsToExport is being used to only export a subset of rows then we need to
@@ -195,7 +227,7 @@ export const useGridPrintExport = (
       container.appendChild(gridClone);
       // To avoid an empty page in start on Chromium based browsers
       printDoc.body.style.marginTop = '0px';
-      printDoc.body.innerHTML = container.innerHTML;
+      printDoc.body.appendChild(container);
 
       const defaultPageStyle =
         typeof normalizeOptions.pageStyle === 'function'
