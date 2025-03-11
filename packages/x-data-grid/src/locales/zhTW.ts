@@ -6,10 +6,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayManagePivot: 'Manage pivot',
+  noColumnsOverlayLabel: '沒有欄位',
+  noColumnsOverlayManageColumns: '管理欄位',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -35,15 +33,15 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: '清除',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: '輸入提示詞',
+  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
+  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
+  toolbarPromptControlLabel: '提示詞輸入',
+  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
+  toolbarPromptControlSendActionLabel: '發送',
+  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
+  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重新嘗試。',
 
   // Export selector toolbar button text
   toolbarExport: '匯出',
@@ -60,7 +58,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '沒有欄位',
   columnsManagementShowHideAllText: '顯示/隱藏所有',
   columnsManagementReset: '重置',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
@@ -128,7 +126,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄位選單`,
   columnMenuShowColumns: '顯示欄位',
   columnMenuManageColumns: '管理欄位',
   columnMenuFilter: '篩選器',
