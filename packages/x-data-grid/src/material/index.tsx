@@ -388,11 +388,11 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
     result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
   }
 
-  if (slotProps?.htmlInput) {
+  if (slotProps?.input) {
     if (result.inputProps) {
-      result.inputProps = { ...result.inputProps, ...slotProps?.htmlInput };
+      result.inputProps = { ...result.inputProps, ...slotProps?.input };
     } else {
-      result.inputProps = slotProps?.htmlInput;
+      result.inputProps = slotProps?.input;
     }
   }
 
