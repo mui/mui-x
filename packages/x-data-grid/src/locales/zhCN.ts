@@ -1,4 +1,3 @@
-import { zhCN as zhCNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -188,6 +187,33 @@ const zhCNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '显示',
   collapseDetailPanel: '折叠',
 
+  // Pagination
+  paginationRowsPerPage: '每页行数:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一页';
+    }
+    if (type === 'last') {
+      return '最后一页';
+    }
+    if (type === 'next') {
+      return '下一页';
+    }
+    return '上一页';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '重新排列行',
 
@@ -231,4 +257,4 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);
+export const zhCN: Localization = getGridLocalization(zhCNGrid);

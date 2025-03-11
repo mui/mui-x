@@ -1,4 +1,3 @@
-import { skSK as skSKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -218,6 +217,34 @@ const skSKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozbaliť',
   collapseDetailPanel: 'Zbaliť',
 
+  // Pagination
+  paginationRowsPerPage: 'Riadkov na stránke:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ísť na prvú stránku';
+    }
+    if (type === 'last') {
+      return 'Ísť na poslednú stránku';
+    }
+    if (type === 'next') {
+      return 'Ísť na ďaľšiu stránku';
+    }
+    // if (type === 'previous') {
+    return 'Ísť na predchádzajúcu stránku';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
 
@@ -261,4 +288,4 @@ const skSKGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
+export const skSK: Localization = getGridLocalization(skSKGrid);

@@ -1,4 +1,3 @@
-import { isIS as isISCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -190,6 +189,34 @@ const isISGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Stækka',
   collapseDetailPanel: 'Minnka',
 
+  // Pagination
+  paginationRowsPerPage: 'Raðir á síðu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Fara á fyrstu síðu';
+    }
+    if (type === 'last') {
+      return 'Fara á síðustu síðu';
+    }
+    if (type === 'next') {
+      return 'Fara á næstu síðu';
+    }
+    // if (type === 'previous') {
+    return 'Fara á fyrri síðu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Endurröðun raða',
 
@@ -233,4 +260,4 @@ const isISGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const isIS: Localization = getGridLocalization(isISGrid, isISCore);
+export const isIS: Localization = getGridLocalization(isISGrid);

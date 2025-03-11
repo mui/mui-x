@@ -1,14 +1,5 @@
 import * as React from 'react';
-import type { ComponentsPropsList } from '@mui/material/styles';
-import type { WrappedLabelDisplayedRows } from '../../components/GridPagination';
 import type { GridColDef } from '../colDef';
-
-export type MuiTablePaginationLocalizedProps = Omit<
-  ComponentsPropsList['MuiTablePagination'],
-  'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange' | 'labelDisplayedRows'
-> & {
-  labelDisplayedRows?: WrappedLabelDisplayedRows;
-};
 
 /**
  * Set the types of the texts in the grid.
@@ -208,6 +199,16 @@ export interface GridLocaleText {
   aggregationFunctionLabelMax: string;
   aggregationFunctionLabelSize: string;
 
+  // Pagination
+  paginationRowsPerPage: string;
+  paginationDisplayedRows: (params: {
+    from: number;
+    to: number;
+    count: number;
+    estimated: number | undefined;
+  }) => string;
+  paginationItemAriaLabel: (type: 'first' | 'last' | 'previous' | 'next') => string;
+
   // Pivot
   pivotToggleLabel: string;
   pivotCloseButton: string;
@@ -238,9 +239,6 @@ export interface GridLocaleText {
   // Sidebar
   sidebarCollapseSection: (name: string) => string;
   sidebarExpandSection: (name: string) => string;
-
-  // Used core components translation keys
-  MuiTablePagination: MuiTablePaginationLocalizedProps;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

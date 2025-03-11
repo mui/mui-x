@@ -1,4 +1,3 @@
-import { ptPT as ptPTCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -193,6 +192,34 @@ const ptPTGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Colapsar',
 
+  // Pagination
+  paginationRowsPerPage: 'Linhas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Primeira página';
+    }
+    if (type === 'last') {
+      return 'Última página';
+    }
+    if (type === 'next') {
+      return 'Próxima página';
+    }
+    // if (type === 'previous') {
+    return 'Página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenação de linhas',
 
@@ -236,4 +263,4 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const ptPT = getGridLocalization(ptPTGrid, ptPTCore);
+export const ptPT = getGridLocalization(ptPTGrid);

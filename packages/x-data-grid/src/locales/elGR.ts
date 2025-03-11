@@ -1,4 +1,3 @@
-import { elGR as elGRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -192,6 +191,35 @@ const elGRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Ανάπτυξη',
   collapseDetailPanel: 'Σύμπτυξη',
 
+  // Pagination
+  paginationRowsPerPage: 'Γραμμές ανα σελίδα:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Πρώτη σελίδα';
+    }
+    if (type === 'last') {
+      return 'Τελευταία σελίδα';
+    }
+    if (type === 'next') {
+      return 'Επόμενη σελίδα';
+    }
+
+    // if (type === "previous") {
+    return 'Προηγούμενη σελίδα';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Αναδιάταξη γραμμών',
 
@@ -235,4 +263,4 @@ const elGRGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);
+export const elGR: Localization = getGridLocalization(elGRGrid);

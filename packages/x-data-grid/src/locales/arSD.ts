@@ -1,4 +1,3 @@
-import { arSD as arSDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -190,6 +189,34 @@ const arSDGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
 
+  // Pagination
+  paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'انتقل إلى الصفحة الأولى';
+    }
+    if (type === 'last') {
+      return 'انتقل إلى الصفحة الأخيرة';
+    }
+    if (type === 'next') {
+      return 'انتقل إلى الصفحة التالية';
+    }
+    // if (type === 'previous') {
+    return 'انتقل إلى الصفحة السابقة';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'أعادة ترتيب الصفوف',
 
@@ -233,4 +260,4 @@ const arSDGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);
+export const arSD: Localization = getGridLocalization(arSDGrid);

@@ -1,4 +1,3 @@
-import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -221,6 +220,34 @@ const beBYGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгарнуць',
   collapseDetailPanel: 'Згарнуць',
 
+  // Pagination
+  paginationRowsPerPage: 'Радкоў на старонцы:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перайсці на першую старонку';
+    }
+    if (type === 'last') {
+      return 'Перайсці на апошнюю старонку';
+    }
+    if (type === 'next') {
+      return 'Перайсці на наступную старонку';
+    }
+    // if (type === 'previous') {
+    return 'Перайсці на папярэднюю старонку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Змяненне чарговасці радкоў',
 
@@ -264,4 +291,4 @@ const beBYGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const beBY: Localization = getGridLocalization(beBYGrid, beBYCore);
+export const beBY: Localization = getGridLocalization(beBYGrid);

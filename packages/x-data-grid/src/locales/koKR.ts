@@ -1,4 +1,3 @@
-import { koKR as koKRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -188,6 +187,34 @@ const koKRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '열기',
   collapseDetailPanel: '접기',
 
+  // Pagination
+  paginationRowsPerPage: '페이지 당 행:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '첫 번째 페이지로 이동';
+    }
+    if (type === 'last') {
+      return '마지막 페이지로 이동';
+    }
+    if (type === 'next') {
+      return '다음 페이지로 이동';
+    }
+    // if (type === 'previous') {
+    return '이전 페이지로 이동';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '행 재배치',
 
@@ -231,4 +258,4 @@ const koKRGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);
+export const koKR: Localization = getGridLocalization(koKRGrid);

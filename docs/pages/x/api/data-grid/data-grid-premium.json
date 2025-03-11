@@ -918,6 +918,12 @@
       "class": null
     },
     {
+      "name": "basePagination",
+      "description": "The custom Pagination component used in the grid.",
+      "default": "Pagination",
+      "class": null
+    },
+    {
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",

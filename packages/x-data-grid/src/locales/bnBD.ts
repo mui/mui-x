@@ -1,4 +1,3 @@
-import { bnBD as bnBDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -193,6 +192,34 @@ const bnBDGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'সম্প্রসারিত করুন',
   collapseDetailPanel: 'সংকুচিত করুন',
 
+  // Pagination
+  paginationRowsPerPage: 'প্রতি পৃষ্ঠায় সারি:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'প্রথম পৃষ্ঠায় যান';
+    }
+    if (type === 'last') {
+      return 'শেষ পৃষ্ঠায় যান';
+    }
+    if (type === 'next') {
+      return 'পরবর্তী পৃষ্ঠায় যান';
+    }
+    // if (type === 'previous') {
+    return 'আগের পৃষ্ঠায় যান';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'সারি পুনর্বিন্যাস',
 
@@ -236,4 +263,4 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // sidebarCollapseSection: name => `Collapse ${name}`,
 };
 
-export const bnBD: Localization = getGridLocalization(bnBDGrid, bnBDCore);
+export const bnBD: Localization = getGridLocalization(bnBDGrid);
