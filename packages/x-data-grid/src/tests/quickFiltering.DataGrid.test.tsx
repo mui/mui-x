@@ -652,7 +652,7 @@ describe('<DataGrid /> - Quick filter', () => {
     await user.type(screen.getByRole('searchbox'), `b`);
     await act(() => sleep(10));
     expect(searchBox.value).to.equal('ab');
-    
+
     await user.type(screen.getByRole('searchbox'), `c`);
     await act(() => sleep(debounceMs * 2));
     expect(searchBox.value).to.equal('abc');
