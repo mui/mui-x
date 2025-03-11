@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
-import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
+import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 

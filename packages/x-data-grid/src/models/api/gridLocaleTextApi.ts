@@ -209,14 +209,13 @@ export interface GridLocaleText {
   aggregationFunctionLabelSize: string;
 
   // Pivot
-  pivot: string;
   pivotToggleLabel: string;
+  pivotCloseButton: string;
   pivotSearchButton: string;
   pivotSearchControlPlaceholder: string;
   pivotSearchControlLabel: string;
   pivotSearchControlClear: string;
   pivotNoFields: string;
-  pivotCloseButton: string;
   pivotRows: string;
   pivotColumns: string;
   pivotValues: string;

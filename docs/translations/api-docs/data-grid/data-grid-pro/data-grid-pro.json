@@ -1062,6 +1062,22 @@
       "nodeName": "the pivot field",
       "conditions": "sorted"
     },
+    "pivotPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel header"
+    },
+    "pivotPanelSearchContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel search container"
+    },
+    "pivotPanelSwitch": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch"
+    },
+    "pivotPanelSwitchLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch label"
+    },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

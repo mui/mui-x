@@ -707,6 +707,22 @@ export interface GridClasses {
    */
   'pinnedRows--bottom': string;
   /**
+   * Styles applied to the pivot panel header.
+   */
+  pivotPanelHeader: string;
+  /**
+   * Styles applied to the pivot panel search container.
+   */
+  pivotPanelSearchContainer: string;
+  /**
+   * Styles applied to the pivot panel switch label.
+   */
+  pivotPanelSwitchLabel: string;
+  /**
+   * Styles applied to the pivot panel switch.
+   */
+  pivotPanelSwitch: string;
+  /**
    * Styles applied to the pivot field.
    */
   pivotField: string;
@@ -898,4 +914,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
+  'pivotPanelHeader',
+  'pivotPanelSearchContainer',
+  'pivotPanelSwitch',
+  'pivotPanelSwitchLabel',
+  'pivotField',
+  'pivotField--sorted',
 ]);

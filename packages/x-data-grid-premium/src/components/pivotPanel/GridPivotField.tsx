@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import {
   getDataGridUtilityClass,
+  gridClasses,
   GridColDef,
   GridSlotProps,
   GridSortDirection,
@@ -53,10 +54,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const PivotFieldRoot = styled('div', {
+const GridPivotFieldRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotField',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['pivotField--sorted']}`]: styles.sorted },
+    styles.root,
+  ],
   shouldForwardProp: (prop) =>
     prop !== 'dropPosition' && prop !== 'section' && prop !== 'ownerState',
 })<{
@@ -67,7 +71,7 @@ const PivotFieldRoot = styled('div', {
   flexShrink: 0,
   position: 'relative',
   padding: vars.spacing(0, 1, 0, 2),
-  height: '32px',
+  height: 32,
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.5),
@@ -94,19 +98,19 @@ const PivotFieldRoot = styled('div', {
   },
 });
 
-const PivotFieldName = styled('span')({
+const GridPivotFieldName = styled('span')({
   flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 });
 
-const PivotFieldActionContainer = styled('div')({
+const GridPivotFieldActionContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
 });
 
-const PivotFieldDragIcon = styled('div')({
+const GridPivotFieldDragIcon = styled('div')({
   position: 'absolute',
   left: -1,
   width: 16,
@@ -119,7 +123,7 @@ const PivotFieldDragIcon = styled('div')({
   },
 });
 
-const PivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
+const GridPivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
   flex: 1,
   position: 'relative',
   margin: vars.spacing(0, 0, 0, -1),
@@ -321,7 +325,7 @@ function GridPivotField(props: GridPivotFieldProps) {
   const hideable = props.modelKey !== null;
 
   return (
-    <PivotFieldRoot
+    <GridPivotFieldRoot
       ownerState={ownerState}
       className={classes.root}
       onDragOver={handleDragOver}
@@ -333,12 +337,12 @@ function GridPivotField(props: GridPivotFieldProps) {
       section={props.modelKey}
       draggable="true"
     >
-      <PivotFieldDragIcon>
+      <GridPivotFieldDragIcon>
         <slots.columnReorderIcon fontSize="small" />
-      </PivotFieldDragIcon>
+      </GridPivotFieldDragIcon>
 
       {hideable ? (
-        <PivotFieldCheckbox
+        <GridPivotFieldCheckbox
           as={rootProps.slots.baseCheckbox}
           size="small"
           density="compact"
@@ -349,10 +353,10 @@ function GridPivotField(props: GridPivotFieldProps) {
           label={children}
         />
       ) : (
-        <PivotFieldName>{children}</PivotFieldName>
+        <GridPivotFieldName>{children}</GridPivotFieldName>
       )}
 
-      <PivotFieldActionContainer>
+      <GridPivotFieldActionContainer>
         {props.modelKey === 'columns' && (
           // TODO: finalize this functionality
           // - do we need to define an index here?
@@ -380,8 +384,8 @@ function GridPivotField(props: GridPivotFieldProps) {
           pivotModel={pivotModel}
           updatePivotModel={updatePivotModel}
         />
-      </PivotFieldActionContainer>
-    </PivotFieldRoot>
+      </GridPivotFieldActionContainer>
+    </GridPivotFieldRoot>
   );
 }
 

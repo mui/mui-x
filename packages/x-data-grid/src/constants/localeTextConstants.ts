@@ -205,8 +205,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'size',
 
-  // Pivot
-  pivot: 'Pivot',
+  // Pivot panel
   pivotToggleLabel: 'Pivot',
   pivotRows: 'Rows',
   pivotColumns: 'Columns',

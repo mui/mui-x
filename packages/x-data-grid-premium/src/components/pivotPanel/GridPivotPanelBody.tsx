@@ -14,14 +14,14 @@ import { GridSidebarCollapsibleSection } from '../sidebar';
 import { useResize } from '../../hooks/utils/useResize';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-const Container = styled('div')({
+const GridPivotPanelBodyRoot = styled('div')({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 });
 
-const TopPane = styled(GridShadowScrollArea)({
+const GridPivotPanelBodyTop = styled(GridShadowScrollArea)({
   flex: 1,
   minHeight: 84,
   transition: vars.transition(['background-color'], {
@@ -33,7 +33,7 @@ const TopPane = styled(GridShadowScrollArea)({
   },
 });
 
-const BottomPane = styled('div')({
+const GridPivotPanelBodyBottom = styled('div')({
   position: 'relative',
   minHeight: 158,
   overflow: 'hidden',
@@ -41,11 +41,11 @@ const BottomPane = styled('div')({
   flexDirection: 'column',
 });
 
-const ScrollArea = styled(GridShadowScrollArea)({
+const GridPivotPanelScrollArea = styled(GridShadowScrollArea)({
   height: '100%',
 });
 
-const CollapsibleSection = styled(GridSidebarCollapsibleSection)({
+const GridPivotPanelSection = styled(GridSidebarCollapsibleSection)({
   margin: vars.spacing(0.5, 1),
   transition: vars.transition(['border-color', 'background-color'], {
     duration: vars.transitions.duration.short,
@@ -58,7 +58,7 @@ const CollapsibleSection = styled(GridSidebarCollapsibleSection)({
   },
 });
 
-const CollapsibleSectionTitle = styled('div')({
+const GridPivotPanelSectionTitle = styled('div')({
   flex: 1,
   marginRight: vars.spacing(1.75),
   display: 'flex',
@@ -69,14 +69,14 @@ const CollapsibleSectionTitle = styled('div')({
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-const FieldList = styled('div')({
+const GridPivotPanelFieldList = styled('div')({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   padding: vars.spacing(0.5, 0),
 });
 
-const Placeholder = styled('div')({
+const GridPivotPanelPlaceholder = styled('div')({
   flex: 1,
   display: 'flex',
   alignItems: 'center',
@@ -90,7 +90,7 @@ const Placeholder = styled('div')({
   ...vars.typography.body,
 });
 
-const ResizeHandle = styled('div')({
+const GridPivotPanelResizeHandle = styled('div')({
   position: 'absolute',
   zIndex: 2,
   top: 0,
@@ -124,16 +124,9 @@ export type UpdatePivotModel = (params: {
 
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
-function GridPivotPanelBody({
-  searchState,
-}: {
-  searchState: {
-    value: string;
-    enabled: boolean;
-  };
-}) {
+function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridApiContext();
-  const { ref: resizeHandleRef } = useResize({
+  const { ref: GridPivotPanelResizeHandleRef } = useResize({
     direction: 'vertical',
     getInitialSize: (handle) => {
       return handle.parentElement!.offsetHeight;
@@ -186,21 +179,13 @@ function GridPivotPanelBody({
       if (pivotModel.values.find((item) => item.field === field)) {
         return false;
       }
-      if (searchState.enabled) {
+      if (searchValue) {
         const fieldName = getColumnName(field);
-        return fieldName.toLowerCase().includes(searchState.value.toLowerCase());
+        return fieldName.toLowerCase().includes(searchValue.toLowerCase());
       }
       return true;
     });
-  }, [
-    pivotModel.columns,
-    pivotModel.rows,
-    pivotModel.values,
-    searchState.value,
-    searchState.enabled,
-    fields,
-    getColumnName,
-  ]);
+  }, [pivotModel.columns, pivotModel.rows, pivotModel.values, searchValue, fields, getColumnName]);
 
   const updatePivotModel = React.useCallback<UpdatePivotModel>(
     ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
@@ -320,8 +305,8 @@ function GridPivotPanelBody({
   const valuesLabel = apiRef.current.getLocaleText('pivotValues');
 
   return (
-    <Container data-dragging={drag.active} onDragLeave={handleDragLeave}>
-      <TopPane
+    <GridPivotPanelBodyRoot data-dragging={drag.active} onDragLeave={handleDragLeave}>
+      <GridPivotPanelBodyTop
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -329,10 +314,12 @@ function GridPivotPanelBody({
         data-drag-over={drag.active && drag.dropZone === null}
       >
         {availableFields.length === 0 && (
-          <Placeholder>{apiRef.current.getLocaleText('pivotNoFields')}</Placeholder>
+          <GridPivotPanelPlaceholder>
+            {apiRef.current.getLocaleText('pivotNoFields')}
+          </GridPivotPanelPlaceholder>
         )}
         {availableFields.length > 0 && (
-          <FieldList>
+          <GridPivotPanelFieldList>
             {availableFields.map((field) => (
               <GridPivotField
                 key={field}
@@ -349,21 +336,21 @@ function GridPivotPanelBody({
                 {getColumnName(field)}
               </GridPivotField>
             ))}
-          </FieldList>
+          </GridPivotPanelFieldList>
         )}
-      </TopPane>
+      </GridPivotPanelBodyTop>
 
-      <BottomPane>
-        <ResizeHandle ref={resizeHandleRef} />
-        <ScrollArea>
-          <CollapsibleSection
+      <GridPivotPanelBodyBottom>
+        <GridPivotPanelResizeHandle ref={GridPivotPanelResizeHandleRef} />
+        <GridPivotPanelScrollArea>
+          <GridPivotPanelSection
             title={
-              <CollapsibleSectionTitle>
+              <GridPivotPanelSectionTitle>
                 {rowsLabel}
                 {pivotModel.rows.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.rows.length} />
                 )}
-              </CollapsibleSectionTitle>
+              </GridPivotPanelSectionTitle>
             }
             aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(rowsLabel)}
             onDrop={handleDrop}
@@ -373,10 +360,12 @@ function GridPivotPanelBody({
             data-drag-over={drag.dropZone === 'rows'}
           >
             {pivotModel.rows.length === 0 && (
-              <Placeholder>{apiRef.current.getLocaleText('pivotDragToRows')}</Placeholder>
+              <GridPivotPanelPlaceholder>
+                {apiRef.current.getLocaleText('pivotDragToRows')}
+              </GridPivotPanelPlaceholder>
             )}
             {pivotModel.rows.length > 0 && (
-              <FieldList>
+              <GridPivotPanelFieldList>
                 {pivotModel.rows.map(({ field, hidden }) => (
                   <GridPivotField
                     key={field}
@@ -395,18 +384,18 @@ function GridPivotPanelBody({
                     {getColumnName(field)}
                   </GridPivotField>
                 ))}
-              </FieldList>
+              </GridPivotPanelFieldList>
             )}
-          </CollapsibleSection>
+          </GridPivotPanelSection>
 
-          <CollapsibleSection
+          <GridPivotPanelSection
             title={
-              <CollapsibleSectionTitle>
+              <GridPivotPanelSectionTitle>
                 {columnsLabel}
                 {pivotModel.columns.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.columns.length} />
                 )}
-              </CollapsibleSectionTitle>
+              </GridPivotPanelSectionTitle>
             }
             aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(columnsLabel)}
             onDrop={handleDrop}
@@ -416,10 +405,12 @@ function GridPivotPanelBody({
             data-drag-over={drag.dropZone === 'columns'}
           >
             {pivotModel.columns.length === 0 && (
-              <Placeholder>{apiRef.current.getLocaleText('pivotDragToColumns')}</Placeholder>
+              <GridPivotPanelPlaceholder>
+                {apiRef.current.getLocaleText('pivotDragToColumns')}
+              </GridPivotPanelPlaceholder>
             )}
             {pivotModel.columns.length > 0 && (
-              <FieldList>
+              <GridPivotPanelFieldList>
                 {pivotModel.columns.map(({ field, sort, hidden }) => (
                   <GridPivotField
                     key={field}
@@ -438,18 +429,18 @@ function GridPivotPanelBody({
                     {getColumnName(field)}
                   </GridPivotField>
                 ))}
-              </FieldList>
+              </GridPivotPanelFieldList>
             )}
-          </CollapsibleSection>
+          </GridPivotPanelSection>
 
-          <CollapsibleSection
+          <GridPivotPanelSection
             title={
-              <CollapsibleSectionTitle>
+              <GridPivotPanelSectionTitle>
                 {valuesLabel}
                 {pivotModel.values.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.values.length} />
                 )}
-              </CollapsibleSectionTitle>
+              </GridPivotPanelSectionTitle>
             }
             aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(valuesLabel)}
             onDrop={handleDrop}
@@ -459,10 +450,12 @@ function GridPivotPanelBody({
             data-drag-over={drag.dropZone === 'values'}
           >
             {pivotModel.values.length === 0 && (
-              <Placeholder>{apiRef.current.getLocaleText('pivotDragToValues')}</Placeholder>
+              <GridPivotPanelPlaceholder>
+                {apiRef.current.getLocaleText('pivotDragToValues')}
+              </GridPivotPanelPlaceholder>
             )}
             {pivotModel.values.length > 0 && (
-              <FieldList>
+              <GridPivotPanelFieldList>
                 {pivotModel.values.map(({ field, aggFunc, hidden }) => (
                   <GridPivotField
                     key={field}
@@ -482,12 +475,12 @@ function GridPivotPanelBody({
                     {getColumnName(field)}
                   </GridPivotField>
                 ))}
-              </FieldList>
+              </GridPivotPanelFieldList>
             )}
-          </CollapsibleSection>
-        </ScrollArea>
-      </BottomPane>
-    </Container>
+          </GridPivotPanelSection>
+        </GridPivotPanelScrollArea>
+      </GridPivotPanelBodyBottom>
+    </GridPivotPanelBodyRoot>
   );
 }
 

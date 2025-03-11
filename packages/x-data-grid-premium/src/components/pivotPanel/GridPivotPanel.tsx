@@ -3,18 +3,11 @@ import { GridPivotPanelHeader } from './GridPivotPanelHeader';
 import { GridPivotPanelBody } from './GridPivotPanelBody';
 
 function GridPivotPanel() {
-  const [searchState, setSearchState] = React.useState<{
-    value: string;
-    enabled: boolean;
-  }>({
-    value: '',
-    enabled: false,
-  });
-
+  const [searchValue, setSearchValue] = React.useState<string>('');
   return (
     <React.Fragment>
-      <GridPivotPanelHeader searchState={searchState} onSearchStateChange={setSearchState} />
-      <GridPivotPanelBody searchState={searchState} />
+      <GridPivotPanelHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
+      <GridPivotPanelBody searchValue={searchValue} />
     </React.Fragment>
   );
 }
