@@ -716,7 +716,9 @@ export const useGridRowEditing = (
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
         const column = apiRef.current.getColumn(field);
-        if (column.valueSetter) {
+        // Column might have been removed
+        // see https://github.com/mui/mui-x/pull/16888
+        if (column?.valueSetter) {
           rowUpdate = column.valueSetter(fieldProps.value, rowUpdate, column, apiRef);
         } else {
           rowUpdate[field] = fieldProps.value;
