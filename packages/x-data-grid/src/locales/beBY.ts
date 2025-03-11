@@ -147,6 +147,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Паказаць слупкі',
   columnMenuManageColumns: 'Кіраваць слупкамі',
   columnMenuFilter: 'Фільтр',

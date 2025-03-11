@@ -123,6 +123,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Покажи колоните',
   columnMenuManageColumns: 'Управление на колони',
   columnMenuFilter: 'Филтри',
