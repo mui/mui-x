@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const GridPivotPanelSearchContainer = styled('div', {
   name: 'DataGrid',
-  slot: 'PivotPanelSearch',
+  slot: 'PivotPanelSearchContainer',
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(0, 1, 1),
 });
