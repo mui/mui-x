@@ -76,7 +76,7 @@ export interface BaseDateTimeRangePickerSlotProps
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
-export type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
+type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
   PickerViewRendererLookup<
     PickerRangeValue,
     TView,

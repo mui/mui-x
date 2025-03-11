@@ -124,6 +124,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'فهرست',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'نمایش ستون‌ها',
   columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',

@@ -39,6 +39,7 @@ const zhTWPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: '選擇日期和時間',
   timePickerToolbarTitle: '選擇時間',
   dateRangePickerToolbarTitle: '選擇時間範圍',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -61,6 +62,7 @@ const zhTWPickers: Partial<PickersLocaleText> = {
     formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '清除',
 
   // Table labels
