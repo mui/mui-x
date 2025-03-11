@@ -6,7 +6,7 @@ permissions: {}
 
 jobs:
   vale:
-    name: runner / vale
+    name: Check Write Style
     runs-on: ubuntu-latest
     permissions:
       contents: read

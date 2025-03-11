@@ -381,7 +381,7 @@ workflows:
             - Checkout
       - run_danger:
           <<: *default-context
-          name: 'Check PR'
+          name: 'Danger automation'
           requires:
             - Checkout
   e2e-website:
