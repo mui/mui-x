@@ -1020,8 +1020,8 @@ importers:
         specifier: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/system
         version: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/system(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/types':
-        specifier: ^7.2.23
-        version: 7.2.23(@types/react@19.0.10)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/types
+        version: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/types(@types/react@19.0.10)
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14
