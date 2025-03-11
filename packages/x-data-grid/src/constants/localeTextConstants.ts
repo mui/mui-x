@@ -186,7 +186,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Pagination
   paginationRowsPerPage: 'Rows per page:',
-  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+  paginationDisplayedRows: (params) => {
+    const { from, to, count, estimated } = params;
     if (!estimated) {
       return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
     }

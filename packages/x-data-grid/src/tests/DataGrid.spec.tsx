@@ -11,15 +11,8 @@ function PropTest() {
       <DataGrid pagination={false} />
       {/* @ts-expect-error Type 'GridApiRef' is not assignable to type 'undefined' */}
       <DataGrid apiRef={apiRef} />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-        localeText={{}}
-      />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-      />
+      <DataGrid rows={[]} columns={[]} localeText={{}} />
+      <DataGrid rows={[]} columns={[]} />
     </div>
   );
 }
