@@ -23,13 +23,15 @@ const Country = React.memo(function Country(props: CountryProps) {
         },
       }}
     >
-      <img
-        loading="lazy"
-        width="20"
-        src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
-        srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
-        alt=""
-      />
+      {process.env.CI ? null : (
+        <img
+          loading="lazy"
+          width="20"
+          src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
+          srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
+          alt=""
+        />
+      )}
       <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {value.label}
       </Box>
