@@ -48,7 +48,13 @@ const isConsoleWarningIgnored = (msg?: string) => {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning || isMuiLoadingButtonWarning) {
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
     return true;
   }
   return false;
