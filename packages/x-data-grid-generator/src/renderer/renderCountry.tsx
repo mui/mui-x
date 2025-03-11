@@ -18,6 +18,9 @@ function LaosFlag() {
   );
 }
 
+declare const DISABLE_CHANCE_RANDOM: any;
+const useSvgFlag = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
+
 const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
 
@@ -34,9 +37,7 @@ const Country = React.memo(function Country(props: CountryProps) {
         },
       }}
     >
-      {(globalThis as any).DISABLE_CHANCE_RANDOM ? (
-        <LaosFlag />
-      ) : (
+      {useSvgFlag ? null : (
         <img
           loading="lazy"
           width="20"
