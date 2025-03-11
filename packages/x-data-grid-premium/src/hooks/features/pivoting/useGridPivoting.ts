@@ -13,6 +13,7 @@ import {
   gridRowsLookupSelector,
   gridStringOrNumberComparator,
   isLeaf,
+  GridSingleSelectColDef,
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
@@ -209,7 +210,16 @@ const getPivotedData = ({
 
       visibleColumns.forEach(({ field: colGroupField }, depth) => {
         const column = initialColumns.get(colGroupField);
-        const colValue = apiRef.current.getRowValue(row, column!) ?? '(No value)';
+        if (!column) {
+          return;
+        }
+        let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
+        if (column.type === 'singleSelect') {
+          const singleSelectColumn = column as GridSingleSelectColDef;
+          if (singleSelectColumn.getOptionLabel) {
+            colValue = singleSelectColumn.getOptionLabel(colValue);
+          }
+        }
         columnGroupPath.push(String(colValue));
         const groupId = columnGroupPath.join('-');
 
