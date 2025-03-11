@@ -959,16 +959,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('localeText', () => {
-    it('should replace the density selector button label text to "Size"', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
-        </div>,
-      );
-
-      expect(screen.getByText('Size')).not.to.equal(null);
-    });
-
     it('should support translations in the theme', () => {
       render(
         <ThemeProvider theme={createTheme({}, ptBR)}>
@@ -988,10 +978,12 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         );
       }
-      const { setProps } = render(<TestCase localeText={{ toolbarDensity: 'Density' }} />);
-      expect(screen.getByText('Density')).not.to.equal(null);
-      setProps({ localeText: { toolbarDensity: 'Densidade' } });
-      expect(screen.getByText('Densidade')).not.to.equal(null);
+      const { setProps } = render(
+        <TestCase localeText={{ toolbarQuickFilterPlaceholder: 'Recherche' }} />,
+      );
+      expect(screen.getByPlaceholderText('Recherche')).not.to.equal(null);
+      setProps({ localeText: { toolbarQuickFilterPlaceholder: 'Buscar' } });
+      expect(screen.getByPlaceholderText('Buscar')).not.to.equal(null);
     });
   });
 

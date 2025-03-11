@@ -13,14 +13,13 @@ import {
   InferFieldSection,
   PickerValueType,
 } from '../../../models';
-import type { PickerValueManager } from '../usePicker';
+import type { PickerValueManager } from '../../models';
 import type { Validator } from '../../../validation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
-import { UseLocalizationContextReturnValue } from '../useUtils';
 
 export interface UseFieldParams<
   TValue extends PickerValidValue,
@@ -35,9 +34,7 @@ export interface UseFieldParams<
   fieldValueManager: FieldValueManager<TValue>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
   valueType: PickerValueType;
-  getOpenPickerButtonAriaLabel: (
-    parameters: UseLocalizationContextReturnValue & { value: TValue },
-  ) => string;
+  getOpenPickerButtonAriaLabel: (value: TValue) => string;
 }
 
 export interface UseFieldInternalProps<

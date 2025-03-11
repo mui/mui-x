@@ -555,7 +555,7 @@ describe('<DataGrid /> - Column spanning', () => {
     );
 
     // hide `category` column
-    await user.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(1)).getByLabelText('category column menu'));
     await user.click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
     // Nike row

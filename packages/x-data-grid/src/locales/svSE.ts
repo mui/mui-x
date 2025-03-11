@@ -124,6 +124,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Visa kolumner',
   columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',

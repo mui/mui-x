@@ -34,7 +34,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Prompt toolbar field
   toolbarPromptControlPlaceholder: '输入提示词',
-  toolbarPromptControlWithRecordingPlaceholder: '输入提示词或点击录音',
+  toolbarPromptControlWithRecordingPlaceholder: '输入或录制提示词',
   toolbarPromptControlRecordingPlaceholder: '正在录音…',
   toolbarPromptControlLabel: '提示词输入',
   toolbarPromptControlRecordButtonDefaultLabel: '录音',
@@ -114,7 +114,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大于或等于',
   'headerFilterOperator<': '小于',
   'headerFilterOperator<=': '小于或等于',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: '清除筛选',
 
   // Filter values text
   filterValueAny: '任何',
@@ -123,6 +123,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '菜单',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '显示',
   columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',

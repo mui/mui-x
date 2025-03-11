@@ -7,9 +7,10 @@ import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverla
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarMetricLabels } from './RadarMetricLabels';
 
 export interface RadarChartSlots {}
 export interface RadarChartSlotProps {}
@@ -55,6 +56,7 @@ const RadarChart = React.forwardRef(function RadarChart(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
+          <RadarMetricLabels />
           <RadarSeriesPlot />
           <ChartsOverlay {...overlayProps} />
           {children}
@@ -136,6 +138,8 @@ RadarChart.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
+    labelFormatter: PropTypes.func,
+    labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),
@@ -154,6 +158,11 @@ RadarChart.propTypes = {
    * An array of [[RadarSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

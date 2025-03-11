@@ -131,6 +131,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Izbornik',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Prikaži stupce',
   columnMenuManageColumns: 'Upravljanje stupcima',
   columnMenuFilter: 'Filter',

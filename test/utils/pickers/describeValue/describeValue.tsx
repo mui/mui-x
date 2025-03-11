@@ -3,7 +3,7 @@ import createDescribe from '@mui/internal-test-utils/createDescribe';
 import {
   BasePickerInputProps,
   PickerValidValue,
-  UsePickerValueNonStaticProps,
+  UsePickerNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
@@ -28,7 +28,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
   const { defaultProps, render, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
+    props: BasePickerInputProps<TValue, any, any> & UsePickerNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);

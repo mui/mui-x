@@ -64,6 +64,7 @@ const skSKPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Vyberte dátum, vybraný dátum je ${formattedDate}` : 'Vyberte dátum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vyberte čas, vybraný čas je ${formattedTime}` : 'Vyberte čas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels
