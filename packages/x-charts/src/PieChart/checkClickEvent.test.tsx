@@ -14,9 +14,22 @@ const config = {
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
-      render(
+    it('should add cursor="pointer" to arc elements', () => {
+      const { container } = render(
         <PieChart
           {...config}
           series={[
@@ -31,7 +44,7 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([
         'pointer',

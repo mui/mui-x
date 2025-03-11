@@ -154,8 +154,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   footerRowCount: React.JSXElementConstructor<GridSlotProps['footerRowCount']>;
   /**
-   * Toolbar component rendered inside the Header component.
-   * @default GridToolbar
+   * Toolbar component rendered in the grid header.
    */
   toolbar: React.JSXElementConstructor<GridSlotProps['toolbar']>;
   /**

@@ -132,7 +132,9 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type DividerProps = {};
+export type DividerProps = {
+  orientation?: 'horizontal' | 'vertical';
+};
 
 export type MenuListProps = {
   ref?: Ref<HTMLUListElement>;
@@ -274,6 +276,7 @@ export type SwitchProps = {
 };
 
 export type TextFieldProps = {
+  role?: string;
   autoComplete?: string;
   className?: string;
   color?: 'primary' | 'error';
@@ -297,6 +300,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
+  ref?: Ref<HTMLInputElement>;
 };
 
 export type TooltipProps = {

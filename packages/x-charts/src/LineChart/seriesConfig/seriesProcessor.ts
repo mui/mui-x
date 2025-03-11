@@ -34,7 +34,10 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: Record<SeriesId, DefaultizedProps<ChartSeries<'line'>, 'data'>> = {};
+  const completedSeries: Record<
+    SeriesId,
+    DefaultizedProps<ChartSeries<'line'>, 'data'> & { stackedData: [number, number][] }
+  > = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain

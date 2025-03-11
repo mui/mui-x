@@ -1,0 +1,37 @@
+{
+  "props": {
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "formatter": {
+      "type": { "name": "func" },
+      "default": "(values: string[]) => values.join(' ')",
+      "signature": {
+        "type": "function(values: Array<any>) => string",
+        "describedArgs": ["values"],
+        "returned": "string"
+      }
+    },
+    "parser": {
+      "type": { "name": "func" },
+      "default": "(searchText: string) => searchText.split(' ').filter((word) => word !== '')",
+      "signature": {
+        "type": "function(input: string) => Array<any>",
+        "describedArgs": ["input"],
+        "returned": "Array<any>"
+      }
+    }
+  },
+  "name": "QuickFilter",
+  "imports": [
+    "import { QuickFilter } from '@mui/x-data-grid/components';",
+    "import { QuickFilter } from '@mui/x-data-grid';",
+    "import { QuickFilter } from '@mui/x-data-grid-pro';",
+    "import { QuickFilter } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiQuickFilter",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilter.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter</a></li></ul>",
+  "cssComponent": false
+}

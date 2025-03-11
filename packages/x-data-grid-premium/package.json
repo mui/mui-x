@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.0.0-alpha.12",
+  "version": "8.0.0-alpha.14",
   "description": "The Premium plan edition of the Data Grid Components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -72,7 +72,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.2",
+    "@mui/internal-test-utils": "^2.0.3",
     "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/material",
     "@mui/system": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/system",
     "@types/prop-types": "^15.7.14",

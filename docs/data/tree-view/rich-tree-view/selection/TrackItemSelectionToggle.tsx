@@ -41,7 +41,7 @@ export default function TrackItemSelectionToggle() {
   );
 
   const handleItemSelectionToggle = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string,
     isSelected: boolean,
   ) => {

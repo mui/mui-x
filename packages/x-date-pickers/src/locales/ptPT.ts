@@ -63,6 +63,7 @@ const ptPTPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Escolha uma data, a data selecionada é ${formattedDate}` : 'Escolha uma data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Escolha uma hora, a hora selecionada é ${formattedTime}` : 'Escolha uma hora',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Limpar valor',
 
   // Table labels
