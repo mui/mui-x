@@ -1,61 +1,64 @@
 import * as React from 'react';
-import { useRadiusAxes } from '../../hooks/useAxis';
-import { useRadarSeries } from '../../hooks/useRadarSeries';
-import { useRotationScale } from '../../hooks/useScale';
-import { useSelector } from '../../internals/store/useSelector';
-import { useStore } from '../../internals/store/useStore';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import PropTypes from 'prop-types';
+import composeClasses from '@mui/utils/composeClasses';
+import { RadarAxisSliceHighlight } from './RadarAxisSliceHighlight';
+import { RadarAxisPointsHighlight } from './RadarAxisPointsHighlight';
 import {
-  selectorChartPolarCenter,
-  UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { selectorChartsInteractionXAxis } from '../../internals/plugins/featurePlugins/useChartInteraction';
+  getRadarAxisHighlightUtilityClass,
+  RadarAxisHighlightClasses,
+} from './radarAxisHighlightClasses';
 
-export function RadarAxisHighlight() {
-  const radarSeries = useRadarSeries();
+const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
+  const slots = {
+    root: ['root'],
+    line: ['line'],
+    slice: ['slice'],
+    dot: ['dot'],
+  };
 
-  const rotationScale = useRotationScale<'point'>();
-  const { radiusAxis, radiusAxisIds } = useRadiusAxes();
+  return composeClasses(slots, getRadarAxisHighlightUtilityClass, classes);
+};
 
-  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
+export interface RadarAxisHighlightProps {
+  /**
+   * Switch between different axis highlight visualization.
+   * - points: display points on each highlighted value. Recommended for radar with multiple series.
+   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
+   * The default value is computed depending on the number of series provided.
+   */
+  axisHighlightShape: 'points' | 'slice';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<RadarAxisHighlightClasses>;
+}
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
-  const center = useSelector(store, selectorChartPolarCenter);
+function RadarAxisHighlight(props: RadarAxisHighlightProps) {
+  const classes = useUtilityClasses(props.classes);
 
-  const highlightedIndex = xAxisIdentifier?.index;
-
-  if (highlightedIndex === undefined) {
-    return null;
-  }
-
-  if (radarSeries === undefined || radarSeries.length === 0) {
-    return null;
-  }
-
-  const metric = radiusAxisIds[highlightedIndex];
-  const radiusScale = radiusAxis[metric].scale;
-  const radius = radiusScale.range()[1];
-  const angle = rotationScale(xAxisIdentifier?.value as string)!;
-
-  const [x, y] = instance.polar2svg(radius, angle);
-  return (
-    <g pointerEvents="none">
-      <path
-        d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
-        stroke="black"
-        strokeDasharray="5 5"
-        strokeWidth={5}
-      />
-
-      {radarSeries.map((series) => {
-        const value = series.data[highlightedIndex];
-        if (value == null) {
-          return null;
-        }
-        const [cx, cy] = instance.polar2svg(radiusScale(value) ?? 0, angle);
-        return <circle key={series.id} fill={series.color} cx={cx} cy={cy} r={10} />;
-      })}
-    </g>
+  return props.axisHighlightShape === 'slice' ? (
+    <RadarAxisSliceHighlight classes={classes} />
+  ) : (
+    <RadarAxisPointsHighlight classes={classes} />
   );
 }
+
+RadarAxisHighlight.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Switch between different axis highlight visualization.
+   * - points: display points on each highlighted value. Recommended for radar with multiple series.
+   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
+   * The default value is computed depending on the number of series provided.
+   */
+  axisHighlightShape: PropTypes.oneOf(['points', 'slice']).isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+} as any;
+
+export { RadarAxisHighlight };
