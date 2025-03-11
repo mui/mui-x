@@ -9,7 +9,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Nincsenek oszlopok',
   noColumnsOverlayManageColumns: 'Oszlopok kezelése',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
@@ -135,6 +135,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Sorrend visszaállítása',
   columnMenuSortAsc: 'Növekvő sorrendbe',
   columnMenuSortDesc: 'Csökkenő sorrendbe',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} aktív szűrő`,
@@ -197,14 +198,14 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Darabszám',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

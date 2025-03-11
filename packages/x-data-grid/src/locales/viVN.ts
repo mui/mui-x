@@ -9,7 +9,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -136,6 +136,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -200,14 +201,14 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Kích cỡ',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

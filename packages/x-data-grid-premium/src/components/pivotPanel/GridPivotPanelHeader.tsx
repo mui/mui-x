@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid/internals';
-import { useGridSelector } from '@mui/x-data-grid-pro';
-import {
-  GridSidebarHeader,
-  GridSidebarCloseButton,
-  GridSidebarSearchButton,
-  GridSidebarSearchField,
-} from '../sidebar';
+import { GridSlotProps, NotRendered, useGridSelector } from '@mui/x-data-grid-pro';
+import { GridSidebarHeader, GridSidebarCloseButton, GridSidebarSearchField } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
@@ -26,26 +21,25 @@ export interface GridPivotPanelHeaderProps {
 }
 
 const Header = styled('div')({
-  position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  padding: vars.spacing(0, 0.75, 0, 2),
+  gap: vars.spacing(1),
+  padding: vars.spacing(0, 0.75, 0, 1),
   boxSizing: 'border-box',
   height: 52,
 });
 
-const Subheader = styled('div')({
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  padding: vars.spacing(1.25, 1.25, 1.25, 2),
-  borderTop: `1px solid ${vars.colors.border.muted}`,
+const SearchFieldContainer = styled('div')({
+  padding: vars.spacing(0, 1, 1),
+});
+
+const Switch = styled(NotRendered<GridSlotProps['baseSwitch']>)({
+  marginRight: 'auto',
 });
 
 const Title = styled('span')({
   ...vars.typography.large,
   fontWeight: vars.typography.fontWeight.medium,
-  marginRight: 'auto',
 });
 
 function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
@@ -53,45 +47,31 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const enableSearch = () => {
-    onSearchStateChange((state) => ({ ...state, enabled: true }));
-  };
-
   const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
 
   return (
     <GridSidebarHeader>
       <Header>
-        {searchState.enabled ? (
-          <GridSidebarSearchField
-            value={searchState.value}
-            onClear={() => onSearchStateChange({ value: '', enabled: false })}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              onSearchStateChange({ value: event.target.value, enabled: true })
-            }
-            autoFocus
-          />
-        ) : (
-          <React.Fragment>
-            <Title>{apiRef.current.getLocaleText('pivotSettings')}</Title>
-            <GridSidebarSearchButton onClick={enableSearch} />
-            <GridSidebarCloseButton />
-          </React.Fragment>
-        )}
-      </Header>
-
-      <Subheader>
-        <rootProps.slots.baseSwitch
+        <Switch
+          as={rootProps.slots.baseSwitch}
           checked={pivotEnabled}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             apiRef.current.setPivotEnabled(event.target.checked)
           }
           size="small"
-          label={apiRef.current.getLocaleText('pivotToggleLabel')}
-          labelPlacement="start"
-          fullWidth
+          label={<Title>{apiRef.current.getLocaleText('pivot')}</Title>}
         />
-      </Subheader>
+        <GridSidebarCloseButton />
+      </Header>
+      <SearchFieldContainer>
+        <GridSidebarSearchField
+          value={searchState.value}
+          onClear={() => onSearchStateChange({ value: '', enabled: false })}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onSearchStateChange({ value: event.target.value, enabled: true })
+          }
+        />
+      </SearchFieldContainer>
     </GridSidebarHeader>
   );
 }

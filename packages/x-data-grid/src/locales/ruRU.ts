@@ -29,7 +29,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Нет столбцов',
   noColumnsOverlayManageColumns: 'Управление столбцами',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -161,6 +161,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -233,14 +234,14 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'счет',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

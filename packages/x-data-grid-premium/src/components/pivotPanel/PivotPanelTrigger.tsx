@@ -59,6 +59,9 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       apiRef.current.setPivotPanelOpen(!open);
+      if (!open) {
+        apiRef.current.setPivotEnabled(true);
+      }
       onClick?.(event);
     };
 

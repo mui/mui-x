@@ -9,7 +9,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -137,6 +137,7 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -203,14 +204,14 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Numărul elementelor',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

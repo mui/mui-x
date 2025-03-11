@@ -9,7 +9,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Wysokość rzędu',
@@ -136,6 +136,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Anuluj sortowanie',
   columnMenuSortAsc: 'Sortuj rosnąco',
   columnMenuSortDesc: 'Sortuj malejąco',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
@@ -198,14 +199,14 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'rozmiar',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

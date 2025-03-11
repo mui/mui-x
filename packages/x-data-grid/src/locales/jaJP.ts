@@ -9,7 +9,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: '行間隔',
@@ -135,6 +135,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'ソート解除',
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
@@ -197,14 +198,14 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'サイズ',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

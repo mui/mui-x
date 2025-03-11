@@ -23,7 +23,7 @@ const GridEmptyPivotOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
           {...rootProps.slotProps?.baseButton}
           onClick={handleOpenPivotSettings}
         >
-          {apiRef.current.getLocaleText('emptyPivotOverlayPivotSettings')}
+          {apiRef.current.getLocaleText('emptyPivotOverlayManagePivot')}
         </rootProps.slots.baseButton>
       </GridOverlay>
     );

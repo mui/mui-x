@@ -9,7 +9,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'تراکم',
@@ -136,6 +136,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌سازی صعودی',
   columnMenuSortDesc: 'مرتب‌سازی نزولی',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -202,14 +203,14 @@ const faIRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'اندازه',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

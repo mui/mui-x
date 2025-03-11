@@ -9,7 +9,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Nema stupaca',
   noColumnsOverlayManageColumns: 'Upravljaj stupcima',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayPivotSettings: 'Pivot settings',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Gustoća',
@@ -143,6 +143,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Poništi sortiranje',
   columnMenuSortAsc: 'Poredaj uzlazno',
   columnMenuSortDesc: 'Poredaj silazno',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -221,14 +222,14 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'veličina',
 
   // Pivot
-  // pivotSettings: 'Pivot settings',
+  // pivot: 'Pivot',
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
   // pivotValues: 'Values',
   // pivotCloseButton: 'Close pivot settings',
   // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search',
+  // pivotSearchControlPlaceholder: 'Search fields',
   // pivotSearchControlLabel: 'Search fields',
   // pivotSearchControlClear: 'Clear search',
   // pivotNoFields: 'No fields',

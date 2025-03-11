@@ -7,7 +7,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   noColumnsOverlayLabel: 'No columns',
   noColumnsOverlayManageColumns: 'Manage columns',
   emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  emptyPivotOverlayPivotSettings: 'Pivot settings',
+  emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Density',
@@ -135,6 +135,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuUnsort: 'Unsort',
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',
+  columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -204,14 +205,14 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   aggregationFunctionLabelSize: 'size',
 
   // Pivot
-  pivotSettings: 'Pivot settings',
+  pivot: 'Pivot',
   pivotToggleLabel: 'Pivot',
   pivotRows: 'Rows',
   pivotColumns: 'Columns',
   pivotValues: 'Values',
   pivotCloseButton: 'Close pivot settings',
   pivotSearchButton: 'Search fields',
-  pivotSearchControlPlaceholder: 'Search',
+  pivotSearchControlPlaceholder: 'Search fields',
   pivotSearchControlLabel: 'Search fields',
   pivotSearchControlClear: 'Clear search',
   pivotNoFields: 'No fields',

@@ -30,7 +30,7 @@ function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
       slotProps={{
         input: {
           startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
-          endAdornment: (
+          endAdornment: props.value ? (
             <rootProps.slots.baseIconButton
               edge="end"
               size="small"
@@ -39,7 +39,7 @@ function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
             >
               <rootProps.slots.pivotSearchClearIcon fontSize="small" />
             </rootProps.slots.baseIconButton>
-          ),
+          ) : null,
         },
       }}
       {...rest}

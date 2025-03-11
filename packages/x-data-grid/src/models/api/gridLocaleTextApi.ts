@@ -20,7 +20,7 @@ export interface GridLocaleText {
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
   emptyPivotOverlayLabel: string;
-  emptyPivotOverlayPivotSettings: string;
+  emptyPivotOverlayManagePivot: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -146,6 +146,7 @@ export interface GridLocaleText {
   columnMenuUnsort: React.ReactNode;
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuManagePivot: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -207,7 +208,7 @@ export interface GridLocaleText {
   aggregationFunctionLabelSize: string;
 
   // Pivot
-  pivotSettings: string;
+  pivot: string;
   pivotToggleLabel: string;
   pivotSearchButton: string;
   pivotSearchControlPlaceholder: string;

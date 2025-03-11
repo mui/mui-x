@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps, useGridSelector, vars } from '@mui/x-data-grid/internals';
-import {
-  getDataGridUtilityClass,
-  gridDimensionsSelector,
-  useGridRootProps,
-} from '@mui/x-data-grid';
+import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
+import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export type GridSidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -36,14 +31,11 @@ const GridSidebarHeaderRoot = styled('div', {
 
 function GridSidebarHeader(props: GridSidebarHeaderProps) {
   const { className, children, ...other } = props;
-  const apiRef = useGridApiContext();
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
   return (
     <GridSidebarHeaderRoot
-      style={{ minHeight: dimensions.headerHeight }}
       className={clsx(className, classes.root)}
       ownerState={rootProps}
       {...other}
