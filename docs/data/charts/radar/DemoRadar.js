@@ -55,7 +55,7 @@ export default function DemoRadar() {
           '',
           `<RadarChart`,
           '  {/** ... */}',
-          `  shape={${props.shape}}`,
+          `  shape="${props.shape}"`,
           `  divisions={${props.divisions}}`,
           `  radar={{`,
           `    startAngle: ${props.startAngle},`,

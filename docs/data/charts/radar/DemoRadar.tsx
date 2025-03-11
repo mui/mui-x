@@ -22,7 +22,7 @@ export default function DemoRadar() {
         },
         shape: {
           knob: 'radio',
-          options: ['sharp', 'circular'],
+          options: ['sharp', 'circular'] as const,
           defaultValue: 'sharp',
         },
       }}
@@ -33,7 +33,7 @@ export default function DemoRadar() {
             margin={{ top: 20 }}
             series={[{ data: [120, 98, 86, 99, 85, 65] }]}
             divisions={props.divisions}
-            shape={props.shape as 'sharp' | 'circular'}
+            shape={props.shape}
             radar={{
               max: 120,
               startAngle: props.startAngle,
