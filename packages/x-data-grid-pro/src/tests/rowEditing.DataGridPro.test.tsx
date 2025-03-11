@@ -595,6 +595,36 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
+      it('should call processRowUpdate with the old row even if the row is not there anymore', async () => {
+        const testRow = defaultData.rows[0];
+        const otherRows = defaultData.rows.slice(1);
+        const allRows = [testRow, ...otherRows];
+        const testValue = 'testing';
+        const processRowUpdate = spy((newRow, oldRow) => ({ ...oldRow, ...newRow }));
+        const { setProps } = render(
+          <TestCase rows={allRows} processRowUpdate={processRowUpdate} />,
+        );
+        act(() => apiRef.current?.startRowEditMode({ id: testRow.id }));
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: testValue }),
+        );
+
+        // remove row that is being edited
+        setProps({ rows: otherRows });
+        expect(apiRef.current?.getRowsCount()).to.equal(otherRows.length);
+
+        act(() => apiRef.current?.stopRowEditMode({ id: testRow.id }));
+        await act(() => Promise.resolve());
+        // deleted row data is still passed to `processRowUpdate` as `oldRow` parameter
+        expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
+          ...defaultData.rows[0],
+          currencyPair: testValue,
+        });
+        expect(processRowUpdate.lastCall.args[1]).to.deep.equal(testRow);
+        // all rows are there after `processRowUpdate` returns deleted row data
+        expect(apiRef.current?.getRowsCount()).to.equal(allRows.length);
+      });
+
       it('should stay in edit mode if processRowUpdate throws an error', () => {
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
