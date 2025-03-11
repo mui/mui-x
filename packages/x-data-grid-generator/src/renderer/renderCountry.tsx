@@ -37,7 +37,9 @@ const Country = React.memo(function Country(props: CountryProps) {
         },
       }}
     >
-      {useSvgFlag ? null : (
+      {useSvgFlag ? (
+        <LaosFlag />
+      ) : (
         <img
           loading="lazy"
           width="20"
