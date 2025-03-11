@@ -190,15 +190,6 @@ export type PaginationProps = {
   onRowsPerPageChange?: (rowsPerPage: number) => void;
 
   disabled?: boolean;
-
-  getItemAriaLabel?: (type: 'first' | 'last' | 'next' | 'previous') => string;
-  labelRowsPerPage?: React.ReactNode;
-  labelDisplayedRows?: (info: {
-    from: number;
-    to: number;
-    count: number;
-    page: number;
-  }) => React.ReactNode | undefined;
 };
 
 export type PopperProps = {
