@@ -65,6 +65,7 @@ const kzKZPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Күнді таңдаңыз, таңдалған күн ${formattedDate}` : 'Күнді таңдаңыз',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Уақытты таңдаңыз, таңдалған уақыт ${formattedTime}` : 'Уақытты таңдаңыз',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

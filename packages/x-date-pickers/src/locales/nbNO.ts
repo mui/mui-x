@@ -64,6 +64,7 @@ const nbNOPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Velg dato, valgt dato er ${formattedDate}` : 'Velg dato',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Velg tid, valgt tid er ${formattedTime}` : 'Velg tid',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Slett',
 
   // Table labels

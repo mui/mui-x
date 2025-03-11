@@ -64,6 +64,7 @@ const heILPickers: Partial<PickersLocaleText> = {
     formattedDate ? `בחירת תאריך, התאריך שנבחר הוא ${formattedDate}` : 'בחירת תאריך',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `בחירת שעה, השעה שנבחרה היא ${formattedTime}` : 'בחירת שעה',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'נקה ערך',
 
   // Table labels

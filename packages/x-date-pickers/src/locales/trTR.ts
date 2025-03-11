@@ -64,6 +64,7 @@ const trTRPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Tarih seçin, seçilen tarih: ${formattedDate}` : 'Tarih seç',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Saat seçin, seçilen saat: ${formattedTime}` : 'Saat seç',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

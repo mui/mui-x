@@ -64,6 +64,7 @@ const isISPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Velja dagsetningu, valin dagsetning er ${formattedDate}` : 'Velja dagsetningu',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Velja tíma, valinn tími er ${formattedTime}` : 'Velja tíma',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

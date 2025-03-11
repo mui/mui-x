@@ -65,6 +65,7 @@ const beBYPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Абраць дату, абрана дата  ${formattedDate}` : 'Абраць дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Абраць час, абрыны час  ${formattedTime}` : 'Абраць час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

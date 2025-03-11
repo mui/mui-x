@@ -69,6 +69,7 @@ const jaJPPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `時間を選択してください。選択した時間は ${formattedTime} です`
       : '時間を選択してください',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'クリア',
 
   // Table labels

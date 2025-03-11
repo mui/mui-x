@@ -67,6 +67,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
       : 'Válasszon dátumot',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Válasszon időt, a kiválasztott idő: ${formattedTime}` : 'Válasszon időt',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Tartalom ürítése',
 
   // Table labels

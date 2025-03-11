@@ -68,6 +68,7 @@ const frFRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime}`
       : "Choisir l'heure",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Effacer la valeur',
 
   // Table labels

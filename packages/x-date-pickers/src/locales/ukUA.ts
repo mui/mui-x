@@ -64,6 +64,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Оберіть дату, обрана дата  ${formattedDate}` : 'Оберіть дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Оберіть час, обраний час  ${formattedTime}` : 'Оберіть час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Очистити дані',
 
   // Table labels

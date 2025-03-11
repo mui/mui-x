@@ -64,6 +64,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wyczyść',
 
   // Table labels

@@ -67,6 +67,7 @@ const deDEPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime}`
       : 'Uhrzeit auswählen',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wert leeren',
 
   // Table labels
