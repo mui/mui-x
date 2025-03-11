@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -11,6 +13,11 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { useSelector } from '../internals/hooks/useSelector';
+import {
+  selectorGetTreeViewError,
+  selectorIsTreeViewLoading,
+} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -73,6 +80,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props,
   });
+  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
+  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
   const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
@@ -85,6 +94,14 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProps<any, any>,
   });
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (treeViewError) {
+    return <Alert severity="error">{treeViewError.message}</Alert>;
+  }
 
   return (
     <TreeViewProvider value={contextValue}>
@@ -110,8 +127,10 @@ RichTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
@@ -215,7 +234,7 @@ RichTreeView.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -227,7 +246,7 @@ RichTreeView.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -246,14 +265,14 @@ RichTreeView.propTypes = {
   onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

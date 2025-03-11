@@ -19,25 +19,6 @@ export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
-export type CartesianContextState = {
-  /**
-   * Mapping from x-axis key to scaling configuration.
-   */
-  xAxis: DefaultizedAxisConfig<ChartsXAxisProps>;
-  /**
-   * Mapping from y-axis key to scaling configuration.
-   */
-  yAxis: DefaultizedAxisConfig<ChartsYAxisProps>;
-  /**
-   * The x-axes IDs sorted by order they got provided.
-   */
-  xAxisIds: AxisId[];
-  /**
-   * The y-axes IDs sorted by order they got provided.
-   */
-  yAxisIds: AxisId[];
-};
-
 export interface UseChartCartesianAxisParameters {
   /**
    * The configuration of the x-axes.

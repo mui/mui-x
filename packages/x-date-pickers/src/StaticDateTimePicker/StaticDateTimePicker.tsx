@@ -3,14 +3,23 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { renderTimeViewClock } from '../timeViewRenderers';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { PickerValue } from '../internals/models';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { mergeSx } from '../internals/utils/utils';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
+import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { digitalClockClasses } from '../DigitalClock';
 
 type StaticDateTimePickerComponent = ((
   props: StaticDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -30,29 +39,42 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   inProps: StaticDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const defaultizedProps = useDateTimePickerDefaultizedProps<
-    DateOrTimeView,
-    StaticDateTimePickerProps
-  >(inProps, 'MuiStaticDateTimePicker');
+  const defaultizedProps = useDateTimePickerDefaultizedProps<StaticDateTimePickerProps>(
+    inProps,
+    'MuiStaticDateTimePicker',
+  );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
+
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
-    hours: renderTimeViewClock,
-    minutes: renderTimeViewClock,
-    seconds: renderTimeViewClock,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
+
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? defaultizedProps.views.filter((view) => view !== 'meridiem')
+    : defaultizedProps.views;
 
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    views,
     ampmInClock,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     slotProps: {
@@ -67,9 +89,35 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
+    sx: mergeSx(
+      [
+        {
+          [`& .${multiSectionDigitalClockClasses.root}`]: {
+            width: DIALOG_WIDTH,
+          },
+          [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
+            flex: 1,
+            // account for the border on `MultiSectionDigitalClock`
+            maxHeight: VIEW_HEIGHT - 1,
+            [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+              width: 'auto',
+            },
+          },
+          [`& .${digitalClockClasses.root}`]: {
+            width: DIALOG_WIDTH,
+            maxHeight: VIEW_HEIGHT,
+            flex: 1,
+            [`.${digitalClockClasses.item}`]: {
+              justifyContent: 'center',
+            },
+          },
+        },
+      ],
+      defaultizedProps?.sx,
+    ),
   };
 
-  const { renderPicker } = useStaticPicker<DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -257,7 +305,7 @@ StaticDateTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  openTo: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
    */
@@ -324,6 +372,11 @@ StaticDateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -342,6 +395,22 @@ StaticDateTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
@@ -359,7 +428,7 @@ StaticDateTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -368,6 +437,7 @@ StaticDateTimePicker.propTypes = {
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     month: PropTypes.func,
     seconds: PropTypes.func,
