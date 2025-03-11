@@ -10,8 +10,15 @@ interface CountryProps {
 declare const DISABLE_CHANCE_RANDOM: any;
 const useStaticFlag = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
 
-const laosFlagURI =
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNjAwIj48cGF0aCBmaWxsPSIjY2UxMTI2IiBkPSJNMCAwaDkwMHY2MDBIMHoiIC8+PHBhdGggZmlsbD0iIzAwMjg2OCIgZD0iTTAgMTUwaDkwMHYzMDBIMHoiIC8+PGNpcmNsZSByPSIxMjAiIGN5PSIzMDAiIGN4PSI0NTAiIGZpbGw9IiNmZmYiIC8+PC9zdmc+';
+const laosFlag = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <path fill="#ce1126" d="M0 0h900v600H0z" />
+  <path fill="#002868" d="M0 150h900v300H0z" />
+  <circle r="120" cy="300" cx="450" fill="#fff" />
+</svg>
+`;
+
+const staticFlagURI = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(laosFlag)}`;
 
 const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
@@ -33,7 +40,7 @@ const Country = React.memo(function Country(props: CountryProps) {
         loading="lazy"
         width="20"
         src={
-          useStaticFlag ? laosFlagURI : `https://flagcdn.com/w20/${value.code.toLowerCase()}.png`
+          useStaticFlag ? staticFlagURI : `https://flagcdn.com/w20/${value.code.toLowerCase()}.png`
         }
         srcSet={
           useStaticFlag ? undefined : `https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`
