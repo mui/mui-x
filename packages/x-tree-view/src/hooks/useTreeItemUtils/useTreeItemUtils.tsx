@@ -132,7 +132,7 @@ export const useTreeItemUtils = <
     error,
   };
 
-  const handleExpansion = async (event: React.MouseEvent) => {
+  const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -146,7 +146,7 @@ export const useTreeItemUtils = <
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
       // make sure the children selection is propagated again
-      await instance.toggleItemExpansion(event, itemId);
+      instance.setItemExpansion({ event, itemId });
     }
   };
 
@@ -165,10 +165,10 @@ export const useTreeItemUtils = <
       if (event.shiftKey) {
         instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectItem({ event, itemId, keepExistingSelection: true });
+        instance.setItemSelection({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem({ event, itemId, shouldBeSelected: true });
+      instance.setItemSelection({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -177,7 +177,7 @@ export const useTreeItemUtils = <
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem({
+      instance.setItemSelection({
         event,
         itemId,
         keepExistingSelection: multiSelect,

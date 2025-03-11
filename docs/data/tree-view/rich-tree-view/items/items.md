@@ -217,6 +217,16 @@ const childrenIds = apiRef.current.getItemOrderedChildrenIds(
 
 {{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}
 
+### Get an item's parent id
+
+Use the `getParentId()` API method to get the id of the item's parent.
+
+```ts
+publicAPI.getParentId(itemId);
+```
+
+{{"demo": "GetParentIdPublicAPI.js", "defaultCodeOpen": false}}
+
 ### Imperatively disable an item
 
 Use the `setIsItemDisabled` API method to imperatively toggle the items's disabled state.

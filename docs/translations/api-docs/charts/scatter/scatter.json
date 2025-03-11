@@ -9,5 +9,6 @@
       }
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }
 }

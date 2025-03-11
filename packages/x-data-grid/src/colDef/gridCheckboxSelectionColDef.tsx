@@ -20,7 +20,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,
-  getApplyQuickFilterFn: undefined,
+  getApplyQuickFilterFn: () => null,
   display: 'flex',
   valueGetter: (value, row, column, apiRef) => {
     const rowId = gridRowIdSelector(apiRef, row);

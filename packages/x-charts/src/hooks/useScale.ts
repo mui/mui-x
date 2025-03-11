@@ -1,7 +1,7 @@
 'use client';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisId, AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
-import { useXAxis, useYAxis } from './useAxis';
+import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 
 /**
  * For a given scale return a function that map value to their position.
@@ -36,6 +36,22 @@ export function useXScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig
  */
 export function useYScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig[S]['scale'] {
   const axis = useYAxis(axisId);
+
+  return axis.scale;
+}
+
+export function useRotationScale<S extends ScaleName>(
+  identifier?: number | string,
+): AxisScaleConfig[S]['scale'] {
+  const axis = useRotationAxis(identifier);
+
+  return axis.scale;
+}
+
+export function useRadiusScale<S extends ScaleName>(
+  identifier?: number | string,
+): AxisScaleConfig[S]['scale'] {
+  const axis = useRadiusAxis(identifier);
 
   return axis.scale;
 }

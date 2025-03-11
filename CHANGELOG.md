@@ -5,6 +5,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.14
+
+_Mar 7, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀📊 New Pro Chart: It is now possible to create Funnel charts—perfect for visualizing conversions, sales pipelines and more!
+  <img width="418" alt="Screenshot 2025-01-31 at 12 22 31" src="https://github.com/user-attachments/assets/8cd26821-5f11-46bf-a9bb-34d212880a47" />
+- 🎁 The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks.
+- 🛠️ New and improved [Toolbar component](https://next.mui.com/x/react-data-grid/components/toolbar/) for the data grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community member for their valuable contributions:
+@vadimka123.
+
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @noraleonte, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](https://next.mui.com/x/react-data-grid/components/toolbar/#settings-menu) for an example.
+- The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
+- The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
+
+#### `@mui/x-data-grid@8.0.0-alpha.14`
+
+- [DataGrid] Fix `aria-hidden` console error when scrollbar is dragged (#16829) @arminmeh
+- [DataGrid] Fix scroll jump with dynamic row height (#16763) @cherniavskii
+- [DataGrid] New `<Toolbar />` component (#14611) @KenanYusuf
+- [DataGrid] Use new toolbar by default (#16814) @KenanYusuf
+- [DataGrid] Remove the quick filtering on a given column (#16738) @vadimka123
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.14`.
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.14` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- All Date Time Picker variants now use Digital Clock for time editing.
+- Stop passing invalid date to `onChange` when the date is partially filled — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange).
+
+#### `@mui/x-date-pickers@8.0.0-alpha.14`
+
+- [DateTimePicker] Use Digital Clock in all component variants (#16678) @LukasTy
+- [fields] Always use `props.value` as the source of truth when defined (#15875) @flaviendelangle
+- [fields] Fix Fields aria relationship with `helperText` (#16821) @LukasTy
+- [pickers] Add `TValidationProps` generic to the `PickerManager` interface (#16832) @flaviendelangle
+- [pickers] Fix `edge` property setting in different button position cases (#16838) @LukasTy
+- [pickers] Fix typo in JSDoc (#16831) @flaviendelangle
+- [pickers] Refactor the files in the `usePicker` folder (#16680) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.14`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.14`
+
+- [charts] Fix `undefined` behaving differently from missing value for axis size (#16844) @bernardobelchior
+- [charts] Fix x-axis text anchor default when language is RTL (#16836) @bernardobelchior
+- [charts] Add Radar chart (#16406) @alexfauquette
+- [charts] Move series default color generation in the series config (#16752) @alexfauquette
+- [charts] Render axis title within axis size (#16730) @bernardobelchior
+- [charts] Split `defaultizeAxis` function into two (#16745) @bernardobelchior
+- [charts] Warn if axes data don't have enough elements (#16830) @alexfauquette
+- [charts] XAxis: Add defaults for `textAnchor` and `dominantBaseline` based on `angle` (#16817) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.14`, plus:
+
+- [charts] Add Funnel chart (#14804) @JCQuintas
+
+### Tree View
+
+#### Breaking changes
+
+- The `selectItem` method has been renamed `setItemSelection`:
+
+  ```diff
+   const { publicAPI } = useTreeItemUtils();
+  
+   const handleSelectItem() {
+  -  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
+  +  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+   }
+  ```
+
+- The `setItemExpansion` method now receives a single object instead of a list of parameters:
+
+  ```diff
+   const { publicAPI } = useTreeItemUtils();
+  
+   const handleExpandItem() {
+  -  publicAPI.setItemExpansion(event, props.itemId, true)
+  +  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+   }
+  ```
+
+#### `@mui/x-tree-view@8.0.0-alpha.14`
+
+- [TreeView] Clean the expansion and selection API methods (#16795) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.14` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.14`.
+
+### Docs
+
+- [docs] Fix padding package install on mobile (#16794) @oliviertassinari
+- [docs] Typo fixes (#16835) @alexfauquette
+
+### Core
+
+- [code-infra] Fix console warning in telemetry package (#16816) @JCQuintas
+- [code-infra] Split date-picker test files (#16825) @JCQuintas
+- [infra] Replace PR label check workflow with reusable version (#16762) @michelengelen
+- [infra] Update label in priority-support issue template (#16767) @michelengelen
+- [test] Add timeout to flaky screenshot tests (#16852) @LukasTy
+
 ## 8.0.0-alpha.13
 
 _Feb 28, 2025_
