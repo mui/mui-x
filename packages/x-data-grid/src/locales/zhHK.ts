@@ -6,6 +6,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有行',
   noResultsOverlayLabel: '未找到結果。',
+  noColumnsOverlayLabel: '沒有欄目',
+  noColumnsOverlayManageColumns: '管理欄目',
 
   // Density selector toolbar button text
   toolbarDensity: '密度',
@@ -31,6 +33,17 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: '輸入提示詞',
+  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
+  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
+  toolbarPromptControlLabel: '提示詞輸入',
+  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
+  toolbarPromptControlSendActionLabel: '發送',
+  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
+  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重試。',
+
   // Export selector toolbar button text
   toolbarExport: '出口',
   toolbarExportLabel: '出口',
@@ -43,7 +56,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '沒有列',
   columnsManagementShowHideAllText: '顯示/隱藏所有',
   columnsManagementReset: '重置',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',
@@ -110,7 +123,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄目選單`,
   columnMenuShowColumns: '顯示欄目',
   columnMenuManageColumns: '管理欄目',
   columnMenuFilter: '篩選',
