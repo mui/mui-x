@@ -479,4 +479,35 @@ describe('<DataGridPremium /> - Pivoting', () => {
       'Volume',
     ]);
   });
+
+  it('should support derived columns as pivot values', async () => {
+    const derivedColumn: GridColDef = {
+      field: 'total',
+      type: 'number',
+      valueGetter: (value, row) => {
+        return row.price * row.volume;
+      },
+    };
+
+    render(
+      <Test
+        columns={COLUMNS.concat(derivedColumn)}
+        rows={ROWS.slice(0, 4)}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'date-year' }],
+              values: [{ field: 'total', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (1)', '402,144', '']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (1)', '1,415,402', '']);
+  });
 });

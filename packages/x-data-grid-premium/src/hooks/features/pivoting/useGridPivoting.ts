@@ -177,10 +177,6 @@ const getPivotedData = ({
       attributes.valueFormatter = initialColumn.valueFormatter;
     }
 
-    if (initialColumn?.valueGetter) {
-      attributes.valueGetter = initialColumn.valueGetter;
-    }
-
     if (initialColumn?.headerName) {
       attributes.headerName = initialColumn.headerName;
     }
@@ -250,8 +246,12 @@ const getPivotedData = ({
         if (isLastColumnGroupLevel) {
           visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
+            const originalColumn = initialColumns.get(valueField);
+            if (!originalColumn) {
+              return;
+            }
             const valueKey = `${columnGroupPath.join('-')}-${valueField}`;
-            newRow[valueKey] = newRow[valueField];
+            newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
             delete newRow[valueField];
           });
         }
