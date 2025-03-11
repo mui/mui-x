@@ -17,7 +17,6 @@ import {
   ExportedValidateDateTimeRangeProps,
   ValidateDateTimeRangeProps,
 } from '../validation/validateDateTimeRange';
-import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 import { formatRange } from '../internals/utils/date-utils';
 
 export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(

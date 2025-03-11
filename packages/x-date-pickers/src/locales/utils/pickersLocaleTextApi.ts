@@ -1,4 +1,4 @@
-import { PickerRangeValue, TimeViewWithMeridiem } from '../../internals/models';
+import { TimeViewWithMeridiem } from '../../internals/models';
 import { DateView, TimeView, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
