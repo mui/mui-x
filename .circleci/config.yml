@@ -371,8 +371,9 @@ workflows:
             - Checkout
       - test_e2e:
           <<: *default-context
+          name: 'E2E tests'
           requires:
-            - checkout
+            - Checkout
       - test_regressions:
           <<: *default-context
           name: 'Regression tests'
