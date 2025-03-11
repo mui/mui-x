@@ -154,14 +154,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      user.click(pivotSwitch);
+      screen.getByRole('checkbox', { name: 'Pivot' });
     });
 
-    await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      expect(pivotSwitch).to.have.property('checked', true);
-    });
+    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    if (!pivotSwitch.checked) {
+      await user.click(pivotSwitch);
+      await waitFor(() => {
+        expect(pivotSwitch).to.have.property('checked', true);
+      });
+    }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '6,800']);
@@ -193,14 +195,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      user.click(pivotSwitch);
+      screen.getByRole('checkbox', { name: 'Pivot' });
     });
 
-    await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      expect(pivotSwitch).to.have.property('checked', true);
-    });
+    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    if (!pivotSwitch.checked) {
+      await user.click(pivotSwitch);
+      await waitFor(() => {
+        expect(pivotSwitch).to.have.property('checked', true);
+      });
+    }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200', '$192.77']);
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '6,800', '$126.06']);
@@ -232,14 +236,16 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      user.click(pivotSwitch);
+      screen.getByRole('checkbox', { name: 'Pivot' });
     });
 
-    await waitFor(() => {
-      const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' });
-      expect(pivotSwitch).to.have.property('checked', true);
-    });
+    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    if (!pivotSwitch.checked) {
+      await user.click(pivotSwitch);
+      await waitFor(() => {
+        expect(pivotSwitch).to.have.property('checked', true);
+      });
+    }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
