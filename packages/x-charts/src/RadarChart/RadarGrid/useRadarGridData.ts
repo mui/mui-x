@@ -32,5 +32,6 @@ export function useRadarGridData() {
         y,
       };
     }),
+    radius: radiusAxis[metrics[0]].scale.range()[1],
   };
 }

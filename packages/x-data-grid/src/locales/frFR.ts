@@ -124,6 +124,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',

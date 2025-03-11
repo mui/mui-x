@@ -22,6 +22,7 @@ const timeSensitiveSuites = [
   'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
