@@ -331,7 +331,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerPopper' });
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
-  const { open, triggerRef, popupRef, reduceAnimations } = usePickerContext();
+  const { open, triggerRefElement, popupRef, reduceAnimations } = usePickerContext();
   const { dismissViews, getCurrentViewMode, viewContainerRole } = usePickerPrivateContext();
 
   React.useEffect(() => {
@@ -423,7 +423,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
       role: viewContainerRole == null ? undefined : viewContainerRole,
       open,
       placement,
-      anchorEl: triggerRef.current,
+      anchorEl: triggerRefElement,
       onKeyDown: handleKeyDown,
     },
     className: classes.root,

@@ -87,7 +87,7 @@ export const usePicker = <
   /**
    * Refs
    */
-  const triggerRef = React.useRef<HTMLElement>(null);
+  const [triggerRefElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
@@ -277,6 +277,7 @@ export const usePicker = <
       popupRef,
       reduceAnimations,
       triggerRef,
+      triggerRefElement,
       triggerStatus,
       fieldFormat: format ?? '',
       name,
@@ -299,7 +300,7 @@ export const usePicker = <
       name,
       label,
       sx,
-      triggerRef,
+      triggerRefElement,
       triggerStatus,
       timezone,
       state.open,

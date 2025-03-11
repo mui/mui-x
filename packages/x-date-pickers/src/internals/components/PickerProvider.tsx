@@ -167,7 +167,8 @@ export interface PickerContextValue<
    * The ref to attach to the element that triggers the Picker opening.
    * When using a built-in field component, this property is automatically attached to the right element.
    */
-  triggerRef: React.RefObject<any>;
+  triggerRef: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+  triggerRefElement: HTMLElement | null;
   /**
    * The status of the element that triggers the Picker opening.
    * If it is "hidden", the field should not render the UI to open the Picker.
