@@ -1,4 +1,3 @@
-import { urPKCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -193,6 +192,22 @@ const urPKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'کم از کم',
   aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
   aggregationFunctionLabelSize: 'سائز',
+
+  // Pagination
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'پہلے صفحے پر جائیں';
+    }
+    if (type === 'last') {
+      return 'آخری صفحے پر جائیں';
+    }
+    if (type === 'next') {
+      return 'اگلے صفحے پر جائیں';
+    }
+    // if (type === 'previous') {
+    return 'پچھلے صفحے پر جائیں';
+  },
+  paginationRowsPerPage: 'ایک صفحے پر قطاریں:',
 };
 
-export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
+export const urPK: Localization = getGridLocalization(urPKGrid);

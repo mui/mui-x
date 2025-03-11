@@ -1,4 +1,3 @@
-import { huHU as huHUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -192,4 +191,4 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Darabszám',
 };
 
-export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);
+export const huHU: Localization = getGridLocalization(huHUGrid);

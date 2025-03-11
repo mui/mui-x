@@ -1,4 +1,3 @@
-import { bnBD as bnBDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -198,4 +197,4 @@ const bnBDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'মাপ',
 };
 
-export const bnBD: Localization = getGridLocalization(bnBDGrid, bnBDCore);
+export const bnBD: Localization = getGridLocalization(bnBDGrid);

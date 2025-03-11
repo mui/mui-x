@@ -1,4 +1,3 @@
-import { zhTW as zhTWCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -192,4 +191,4 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '尺寸',
 };
 
-export const zhTW: Localization = getGridLocalization(zhTWGrid, zhTWCore);
+export const zhTW: Localization = getGridLocalization(zhTWGrid);

@@ -1,4 +1,3 @@
-import { deDE as deDECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -198,4 +197,4 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Anzahl',
 };
 
-export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
+export const deDE: Localization = getGridLocalization(deDEGrid);

@@ -1,4 +1,3 @@
-import { bgBG as bgBGCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -195,4 +194,4 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'размер',
 };
 
-export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);
+export const bgBG: Localization = getGridLocalization(bgBGGrid);

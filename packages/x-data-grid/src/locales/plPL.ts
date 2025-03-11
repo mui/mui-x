@@ -1,4 +1,3 @@
-import { plPL as plPLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -193,4 +192,4 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'rozmiar',
 };
 
-export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);
+export const plPL: Localization = getGridLocalization(plPLGrid);

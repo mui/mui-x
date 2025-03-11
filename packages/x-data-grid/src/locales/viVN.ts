@@ -1,4 +1,3 @@
-import { viVN as viVNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -195,4 +194,4 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Kích cỡ',
 };
 
-export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
+export const viVN: Localization = getGridLocalization(viVNGrid);

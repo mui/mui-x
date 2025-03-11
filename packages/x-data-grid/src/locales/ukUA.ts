@@ -1,4 +1,3 @@
-import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -228,4 +227,4 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'кількість',
 };
 
-export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
+export const ukUA: Localization = getGridLocalization(ukUAGrid);

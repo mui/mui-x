@@ -1,4 +1,3 @@
-import { roRO as roROCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -198,4 +197,4 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Numărul elementelor',
 };
 
-export const roRO: Localization = getGridLocalization(roROGrid, roROCore);
+export const roRO: Localization = getGridLocalization(roROGrid);

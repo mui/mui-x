@@ -1,4 +1,3 @@
-import { jaJP as jaJPCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -192,4 +191,4 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'サイズ',
 };
 
-export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);
+export const jaJP: Localization = getGridLocalization(jaJPGrid);

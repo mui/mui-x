@@ -1,4 +1,3 @@
-import { heIL as heILCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -195,4 +194,4 @@ const heILGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'גודל',
 };
 
-export const heIL: Localization = getGridLocalization(heILGrid, heILCore);
+export const heIL: Localization = getGridLocalization(heILGrid);

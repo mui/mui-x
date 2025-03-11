@@ -1,4 +1,3 @@
-import { esES as esESCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -198,4 +197,4 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamaño',
 };
 
-export const esES: Localization = getGridLocalization(esESGrid, esESCore);
+export const esES: Localization = getGridLocalization(esESGrid);

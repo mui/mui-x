@@ -1,4 +1,3 @@
-import { skSK as skSKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -223,4 +222,4 @@ const skSKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'počet',
 };
 
-export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
+export const skSK: Localization = getGridLocalization(skSKGrid);

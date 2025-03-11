@@ -1,4 +1,3 @@
-import { trTR as trTRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -193,4 +192,4 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'boyut',
 };
 
-export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
+export const trTR: Localization = getGridLocalization(trTRGrid);

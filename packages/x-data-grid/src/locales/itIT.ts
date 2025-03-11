@@ -1,4 +1,3 @@
-import { itIT as itITCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -197,4 +196,4 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'numero di elementi',
 };
 
-export const itIT: Localization = getGridLocalization(itITGrid, itITCore);
+export const itIT: Localization = getGridLocalization(itITGrid);

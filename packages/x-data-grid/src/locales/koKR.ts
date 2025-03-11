@@ -1,4 +1,3 @@
-import { koKR as koKRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -193,4 +192,4 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '크기',
 };
 
-export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);
+export const koKR: Localization = getGridLocalization(koKRGrid);

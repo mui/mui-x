@@ -13,32 +13,11 @@ import {
 } from '../hooks/features/pagination/gridPaginationSelector';
 
 type PaginationProps = GridSlotProps['basePagination'];
-type LabelDisplayedRowsArgs = Parameters<NonNullable<PaginationProps['labelDisplayedRows']>>[0];
 
 const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>)({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
 });
-
-export type WrappedLabelDisplayedRows = (
-  args: LabelDisplayedRowsArgs & { estimated?: number },
-) => React.ReactNode;
-
-const wrapLabelDisplayedRows = (
-  labelDisplayedRows: WrappedLabelDisplayedRows,
-  estimated?: number,
-) => {
-  return ({ from, to, count, page }: LabelDisplayedRowsArgs) =>
-    labelDisplayedRows({ from, to, count, page, estimated });
-};
-
-const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count, estimated }) => {
-  if (!estimated) {
-    return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  }
-  const estimateLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  return `${from}–${to} of ${count !== -1 ? count : estimateLabel}`;
-};
 
 function GridPagination() {
   const apiRef = useGridApiContext();
@@ -47,7 +26,7 @@ function GridPagination() {
   const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-  const { paginationMode, loading, estimatedRowCount } = rootProps;
+  const { paginationMode, loading } = rootProps;
 
   const disabled = rowCount === -1 && paginationMode === 'server' && loading;
 
@@ -113,12 +92,6 @@ function GridPagination() {
     ? rootProps.pageSizeOptions
     : [];
 
-  const locales = apiRef.current.getLocaleText('MuiTablePagination');
-  const wrappedLabelDisplayedRows = wrapLabelDisplayedRows(
-    locales.labelDisplayedRows || defaultLabelDisplayedRows,
-    estimatedRowCount,
-  );
-
   return (
     <GridPaginationRoot
       as={rootProps.slots.basePagination}
@@ -129,8 +102,6 @@ function GridPagination() {
       onPageChange={handlePageChange}
       onRowsPerPageChange={handlePageSizeChange as any}
       disabled={disabled}
-      {...locales}
-      labelDisplayedRows={wrappedLabelDisplayedRows}
     />
   );
 }

@@ -1,4 +1,3 @@
-import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -224,6 +223,22 @@ const beBYGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мінімум',
   aggregationFunctionLabelMax: 'максімум',
   aggregationFunctionLabelSize: 'памер',
+
+  // Pagination
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перайсці на першую старонку';
+    }
+    if (type === 'last') {
+      return 'Перайсці на апошнюю старонку';
+    }
+    if (type === 'next') {
+      return 'Перайсці на наступную старонку';
+    }
+    // if (type === 'previous') {
+    return 'Перайсці на папярэднюю старонку';
+  },
+  paginationRowsPerPage: 'Радкоў на старонцы:',
 };
 
-export const beBY: Localization = getGridLocalization(beBYGrid, beBYCore);
+export const beBY: Localization = getGridLocalization(beBYGrid);

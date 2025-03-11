@@ -1,4 +1,3 @@
-import { fiFI as fiFICore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -197,4 +196,4 @@ const fiFIGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'koko',
 };
 
-export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);
+export const fiFI: Localization = getGridLocalization(fiFIGrid);

@@ -65,6 +65,7 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export { useMaterialCSSVariables } from './variables';
@@ -183,6 +184,10 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
       };
     }, [disabled]);
 
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const { estimatedRowCount } = rootProps;
+
     return (
       <StyledPagination
         component="div"
@@ -191,6 +196,14 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
             onRowsPerPageChange?.(Number(event.target.value));
           },
         )}
+        labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
+        labelDisplayedRows={(params) =>
+          apiRef.current.getLocaleText('paginationDisplayedRows')({
+            ...params,
+            estimated: estimatedRowCount,
+          })
+        }
+        getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
         {...computedProps}
         {...rest}
         ref={ref}

@@ -1,4 +1,3 @@
-import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -228,4 +227,4 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'счет',
 };
 
-export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);
+export const ruRU: Localization = getGridLocalization(ruRUGrid);

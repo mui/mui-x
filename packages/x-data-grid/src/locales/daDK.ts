@@ -1,4 +1,3 @@
-import { daDK as daDKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -195,4 +194,4 @@ const daDKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
+export const daDK: Localization = getGridLocalization(daDKGrid);

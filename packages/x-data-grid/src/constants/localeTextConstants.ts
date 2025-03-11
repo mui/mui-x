@@ -184,8 +184,28 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   expandDetailPanel: 'Expand',
   collapseDetailPanel: 'Collapse',
 
-  // Used core components translation keys
-  MuiTablePagination: {},
+  // Pagination
+  paginationRowsPerPage: 'Rows per page:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+    }
+    const estimateLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+    return `${from}–${to} of ${count !== -1 ? count : estimateLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Go to first page';
+    }
+    if (type === 'last') {
+      return 'Go to last page';
+    }
+    if (type === 'next') {
+      return 'Go to next page';
+    }
+    // if (type === 'previous') {
+    return 'Go to previous page';
+  },
 
   // Row reordering text
   rowReorderingHeaderName: 'Row reordering',

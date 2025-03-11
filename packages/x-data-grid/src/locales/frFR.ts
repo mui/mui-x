@@ -1,4 +1,3 @@
-import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -197,4 +196,4 @@ const frFRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
-export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
+export const frFR: Localization = getGridLocalization(frFRGrid);

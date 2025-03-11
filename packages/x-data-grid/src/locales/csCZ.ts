@@ -1,4 +1,3 @@
-import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -223,4 +222,4 @@ const csCZGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'počet',
 };
 
-export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);
+export const csCZ: Localization = getGridLocalization(csCZGrid);

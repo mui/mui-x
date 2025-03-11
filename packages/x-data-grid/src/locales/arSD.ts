@@ -1,4 +1,3 @@
-import { arSD as arSDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -195,4 +194,4 @@ const arSDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'الحجم',
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);
+export const arSD: Localization = getGridLocalization(arSDGrid);
