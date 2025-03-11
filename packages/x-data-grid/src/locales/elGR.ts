@@ -203,8 +203,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'μέγιστο',
   aggregationFunctionLabelSize: 'μέγεθος',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

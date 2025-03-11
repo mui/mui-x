@@ -201,8 +201,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'الحد الاقصى',
   aggregationFunctionLabelSize: 'الحجم',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

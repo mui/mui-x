@@ -204,8 +204,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Anzahl',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -198,8 +198,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: '最大値',
   aggregationFunctionLabelSize: 'サイズ',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -201,8 +201,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'размер',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -204,8 +204,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'সর্বোচ্চ',
   aggregationFunctionLabelSize: 'মাপ',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

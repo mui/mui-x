@@ -203,8 +203,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: "Nombre d'éléments",
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -199,8 +199,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'maximum',
   aggregationFunctionLabelSize: 'rozmiar',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

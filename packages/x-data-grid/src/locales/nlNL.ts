@@ -203,8 +203,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'grootte',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

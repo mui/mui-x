@@ -203,8 +203,7 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'massimo',
   aggregationFunctionLabelSize: 'numero di elementi',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

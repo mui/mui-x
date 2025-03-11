@@ -8,6 +8,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: '沒有結果',
   noColumnsOverlayLabel: '沒有欄位',
   noColumnsOverlayManageColumns: '管理欄位',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -196,8 +198,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '尺寸',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

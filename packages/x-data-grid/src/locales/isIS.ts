@@ -201,8 +201,7 @@ const isISGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'stærð',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

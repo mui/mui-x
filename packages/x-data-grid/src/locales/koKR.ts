@@ -199,8 +199,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: '최대값',
   aggregationFunctionLabelSize: '크기',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

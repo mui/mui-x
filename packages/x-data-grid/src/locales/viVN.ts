@@ -201,8 +201,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'Tối đa',
   aggregationFunctionLabelSize: 'Kích cỡ',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -234,8 +234,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

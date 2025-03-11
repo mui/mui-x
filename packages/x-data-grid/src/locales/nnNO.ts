@@ -201,8 +201,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'størrelse',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

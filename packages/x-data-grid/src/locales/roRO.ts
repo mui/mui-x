@@ -204,8 +204,7 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'Maxim',
   aggregationFunctionLabelSize: 'Numărul elementelor',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

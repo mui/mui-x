@@ -201,8 +201,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'størrelse',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

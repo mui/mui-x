@@ -201,8 +201,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
   aggregationFunctionLabelSize: 'سائز',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -204,8 +204,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'máx',
   aggregationFunctionLabelSize: 'tamanho',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

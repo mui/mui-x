@@ -204,8 +204,7 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'máximo',
   aggregationFunctionLabelSize: 'tamaño',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

@@ -203,8 +203,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'antal',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

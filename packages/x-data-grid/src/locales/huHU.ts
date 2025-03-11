@@ -198,8 +198,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Darabszám',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

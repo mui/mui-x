@@ -234,8 +234,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'счет',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',

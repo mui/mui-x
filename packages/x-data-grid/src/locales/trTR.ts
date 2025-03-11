@@ -199,8 +199,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'boyut',
 
-  // Pivot
-  // pivot: 'Pivot',
+  // Pivot panel
   // pivotToggleLabel: 'Pivot',
   // pivotRows: 'Rows',
   // pivotColumns: 'Columns',
