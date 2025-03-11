@@ -145,7 +145,7 @@ function PieArc(props: PieArcProps) {
           filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
           strokeWidth={1}
           strokeLinejoin="round"
-          style={{ '--angle': `${endAngle - startAngle}rad` }}
+          style={{ '--angle': `-${endAngle - startAngle}rad` }}
           {...other}
           {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
         />
