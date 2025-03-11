@@ -23,7 +23,7 @@ export default function DemoRadar() {
         shape: {
           knob: 'radio',
           options: ['sharp', 'circular'] as const,
-          defaultValue: 'sharp',
+          defaultValue: 'circular',
         },
       }}
       renderDemo={(props) => (
