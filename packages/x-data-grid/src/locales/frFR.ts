@@ -123,7 +123,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'faux',
 
   // Column menu text
-  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
+  // columnMenuLabel: 'Column options',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',

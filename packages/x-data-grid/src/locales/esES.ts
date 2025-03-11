@@ -124,7 +124,8 @@ const esESGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'falso',
 
   // Column menu text
-  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
+  // columnMenuLabel: 'Column options',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',

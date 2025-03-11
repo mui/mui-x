@@ -148,7 +148,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'ложь',
 
   // Column menu text
-  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
+  // columnMenuLabel: 'Column options',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'Показать столбцы',
   columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',

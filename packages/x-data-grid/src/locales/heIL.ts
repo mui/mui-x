@@ -123,7 +123,8 @@ const heILGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'לא',
 
   // Column menu text
-  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
+  // columnMenuLabel: 'Column options',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: 'הצג עמודות',
   columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',

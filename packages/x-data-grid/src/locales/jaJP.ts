@@ -122,7 +122,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterValueFalse: '偽',
 
   // Column menu text
-  // columnMenuLabel: (columnName: string) => `${columnName} column options`,
+  // columnMenuLabel: 'Column options',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
   columnMenuShowColumns: '列表示',
   columnMenuManageColumns: '列管理',
   columnMenuFilter: 'フィルター',

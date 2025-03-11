@@ -50,7 +50,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   return (
     <div className={classes.root}>
       <rootProps.slots.baseTooltip
-        title={apiRef.current.getLocaleText('columnMenuLabel')(columnName)}
+        title={apiRef.current.getLocaleText('columnMenuLabel')}
         enterDelay={1000}
         {...rootProps.slotProps?.baseTooltip}
       >
@@ -58,7 +58,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
           ref={iconButtonRef}
           tabIndex={-1}
           className={classes.button}
-          aria-label={apiRef.current.getLocaleText('columnMenuLabel')(columnName)}
+          aria-label={apiRef.current.getLocaleText('columnMenuAriaLabel')(columnName)}
           size="small"
           onClick={handleMenuIconClick}
           aria-haspopup="menu"
