@@ -121,7 +121,7 @@ const initialState = {
 
 export default function GridPivotingRows() {
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 560, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}

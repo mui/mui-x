@@ -44,7 +44,7 @@ const pivotModel = {
 export default function GridPivotingFinancial() {
   return (
     <div style={{ width: '100%' }}>
-      <div style={{ height: 550, width: '100%' }}>
+      <div style={{ height: 560, width: '100%' }}>
         <DataGridPremium
           rows={rows}
           columns={columns}

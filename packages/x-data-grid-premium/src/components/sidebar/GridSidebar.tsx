@@ -46,7 +46,7 @@ const GridSidebarRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   width: 300,
-  minWidth: 180,
+  minWidth: 260,
   maxWidth: 400,
   overflow: 'hidden',
 });

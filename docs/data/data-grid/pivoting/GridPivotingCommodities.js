@@ -19,7 +19,7 @@ export default function GridPivotingCommodities() {
 
   return (
     <div style={{ width: '100%' }}>
-      <div style={{ height: 500, width: '100%' }}>
+      <div style={{ height: 560, width: '100%' }}>
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
