@@ -56,7 +56,7 @@ export default function GridPivotingFinancial() {
           showToolbar
           initialState={{
             pivoting: {
-              enabled: false,
+              enabled: true,
               panelOpen: true,
               model: pivotModel,
             },
