@@ -1103,6 +1103,12 @@
       "class": null
     },
     {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "GridNullIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuFilterIcon",
       "description": "Icon displayed in column menu for filter",
       "default": "GridFilterAltIcon",

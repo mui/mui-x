@@ -371,6 +371,7 @@
   { "name": "GridMultiSelectionApi", "kind": "Interface" },
   { "name": "GridNoColumnsOverlay", "kind": "Variable" },
   { "name": "GridNoRowsOverlay", "kind": "Variable" },
+  { "name": "GridNullIcon", "kind": "Variable" },
   { "name": "gridNumberComparator", "kind": "Variable" },
   { "name": "GridOverlay", "kind": "Variable" },
   { "name": "GridOverlayProps", "kind": "TypeAlias" },
