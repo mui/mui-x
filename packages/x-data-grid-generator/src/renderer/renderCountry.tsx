@@ -34,7 +34,9 @@ const Country = React.memo(function Country(props: CountryProps) {
         },
       }}
     >
-      {(globalThis as any).DISABLE_CHANCE_RANDOM ? null : (
+      {(globalThis as any).DISABLE_CHANCE_RANDOM ? (
+        <LaosFlag />
+      ) : (
         <img
           loading="lazy"
           width="20"
