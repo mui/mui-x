@@ -2,15 +2,17 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
-import { GridSidebarHeader } from '../GridSidebarHeader';
-import { GridSidebarCloseButton } from '../GridSidebarCloseButton';
-import { GridSidebarSearchButton } from '../GridSidebarSearchButton';
-import { GridSidebarSearchField } from '../GridSidebarSearchField';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { gridPivotEnabledSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
+import {
+  GridSidebarHeader,
+  GridSidebarCloseButton,
+  GridSidebarSearchButton,
+  GridSidebarSearchField,
+} from '../sidebar';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
-export interface GridSidebarColumnPanelHeaderProps {
+export interface GridPivotPanelHeaderProps {
   searchState: {
     value: string;
     enabled: boolean;
@@ -46,7 +48,7 @@ const Title = styled('span')({
   marginRight: 'auto',
 });
 
-export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeaderProps) {
+function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const { searchState, onSearchStateChange } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -93,3 +95,5 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
     </GridSidebarHeader>
   );
 }
+
+export { GridPivotPanelHeader };

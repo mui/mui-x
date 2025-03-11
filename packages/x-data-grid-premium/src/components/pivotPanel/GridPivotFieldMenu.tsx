@@ -2,17 +2,13 @@ import * as React from 'react';
 import Menu from '@mui/material/Menu';
 
 import { useGridSelector } from '@mui/x-data-grid-pro';
-import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type {
-  DropPosition,
-  FieldTransferObject,
-  UpdatePivotModel,
-} from './GridSidebarColumnPanelBody';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { gridPivotModelSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
+import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './GridPivotPanelBody';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
-export function GridSidebarColumnPanelPivotMenu(props: {
+function GridPivotFieldMenu(props: {
   field: string;
   modelKey: FieldTransferObject['modelKey'];
   pivotModel: GridPivotModel;
@@ -191,3 +187,5 @@ export function GridSidebarColumnPanelPivotMenu(props: {
     </div>
   );
 }
+
+export { GridPivotFieldMenu };

@@ -5,14 +5,14 @@ import { vars } from '@mui/x-data-grid/internals';
 import {
   gridPivotInitialColumnsSelector,
   gridPivotModelSelector,
-} from '../../../hooks/features/pivoting/gridPivotingSelectors';
-import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
-import { PivotField } from './GridSidebarColumnPanelPivotField';
-import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
-import { useResize } from '../../../hooks/utils/useResize';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+} from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
+import { GridPivotField } from './GridPivotField';
+import { GridSidebarCollapsibleSection } from '../sidebar';
+import { useResize } from '../../hooks/utils/useResize';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 const Container = styled('div')({
   flex: 1,
@@ -124,7 +124,7 @@ export type UpdatePivotModel = (params: {
 
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
-export function GridSidebarColumnPanelBody({
+function GridPivotPanelBody({
   searchState,
 }: {
   searchState: {
@@ -334,7 +334,7 @@ export function GridSidebarColumnPanelBody({
         {availableFields.length > 0 && (
           <FieldList>
             {availableFields.map((field) => (
-              <PivotField
+              <GridPivotField
                 key={field}
                 field={field}
                 modelKey={null}
@@ -347,7 +347,7 @@ export function GridSidebarColumnPanelBody({
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </PivotField>
+              </GridPivotField>
             ))}
           </FieldList>
         )}
@@ -378,7 +378,7 @@ export function GridSidebarColumnPanelBody({
             {pivotModel.rows.length > 0 && (
               <FieldList>
                 {pivotModel.rows.map(({ field, hidden }) => (
-                  <PivotField
+                  <GridPivotField
                     key={field}
                     field={field}
                     modelKey="rows"
@@ -393,7 +393,7 @@ export function GridSidebarColumnPanelBody({
                     onDragEnd={handleDragEnd}
                   >
                     {getColumnName(field)}
-                  </PivotField>
+                  </GridPivotField>
                 ))}
               </FieldList>
             )}
@@ -421,7 +421,7 @@ export function GridSidebarColumnPanelBody({
             {pivotModel.columns.length > 0 && (
               <FieldList>
                 {pivotModel.columns.map(({ field, sort, hidden }) => (
-                  <PivotField
+                  <GridPivotField
                     key={field}
                     field={field}
                     modelKey="columns"
@@ -436,7 +436,7 @@ export function GridSidebarColumnPanelBody({
                     onDragEnd={handleDragEnd}
                   >
                     {getColumnName(field)}
-                  </PivotField>
+                  </GridPivotField>
                 ))}
               </FieldList>
             )}
@@ -464,7 +464,7 @@ export function GridSidebarColumnPanelBody({
             {pivotModel.values.length > 0 && (
               <FieldList>
                 {pivotModel.values.map(({ field, aggFunc, hidden }) => (
-                  <PivotField
+                  <GridPivotField
                     key={field}
                     field={field}
                     modelKey="values"
@@ -480,7 +480,7 @@ export function GridSidebarColumnPanelBody({
                     onDragEnd={handleDragEnd}
                   >
                     {getColumnName(field)}
-                  </PivotField>
+                  </GridPivotField>
                 ))}
               </FieldList>
             )}
@@ -490,3 +490,5 @@ export function GridSidebarColumnPanelBody({
     </Container>
   );
 }
+
+export { GridPivotPanelBody };

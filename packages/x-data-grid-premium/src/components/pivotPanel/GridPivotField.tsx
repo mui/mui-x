@@ -10,18 +10,14 @@ import {
 import Menu from '@mui/material/Menu';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
-import { GridSidebarColumnPanelPivotMenu as PivotMenu } from './GridSidebarColumnPanelPivotMenu';
-import type {
-  DropPosition,
-  FieldTransferObject,
-  UpdatePivotModel,
-} from './GridSidebarColumnPanelBody';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
+import { GridPivotFieldMenu } from './GridPivotFieldMenu';
+import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './GridPivotPanelBody';
 
-type PivotFieldProps = {
+type GridPivotFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   pivotModel: GridPivotModel;
@@ -43,7 +39,7 @@ type PivotFieldProps = {
   | { modelKey: null }
 );
 
-type OwnerState = PivotFieldProps & {
+type OwnerState = GridPivotFieldProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -202,7 +198,7 @@ function AggregationSelect({
   );
 }
 
-export function PivotField(props: PivotFieldProps) {
+function GridPivotField(props: GridPivotFieldProps) {
   const {
     children,
     field,
@@ -378,7 +374,7 @@ export function PivotField(props: PivotFieldProps) {
             onPivotModelChange={onPivotModelChange}
           />
         )}
-        <PivotMenu
+        <GridPivotFieldMenu
           field={field}
           modelKey={props.modelKey}
           pivotModel={pivotModel}
@@ -388,3 +384,5 @@ export function PivotField(props: PivotFieldProps) {
     </PivotFieldRoot>
   );
 }
+
+export { GridPivotField };

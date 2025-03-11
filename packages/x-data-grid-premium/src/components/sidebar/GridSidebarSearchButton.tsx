@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export type GridSidebarSearchButtonProps = GridSlotProps['baseIconButton'];
 
-export function GridSidebarSearchButton(props: GridSidebarSearchButtonProps) {
+function GridSidebarSearchButton(props: GridSidebarSearchButtonProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -20,3 +20,5 @@ export function GridSidebarSearchButton(props: GridSidebarSearchButtonProps) {
     </rootProps.slots.baseIconButton>
   );
 }
+
+export { GridSidebarSearchButton };

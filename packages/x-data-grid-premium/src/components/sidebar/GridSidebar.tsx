@@ -51,7 +51,7 @@ const GridSidebarRoot = styled('div', {
   overflow: 'hidden',
 });
 
-export function GridSidebar(props: GridSidebarProps) {
+function GridSidebar(props: GridSidebarProps) {
   const { className, children, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
@@ -71,3 +71,5 @@ export function GridSidebar(props: GridSidebarProps) {
     </GridSidebarRoot>
   );
 }
+
+export { GridSidebar };

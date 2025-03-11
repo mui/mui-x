@@ -34,7 +34,7 @@ const GridSidebarHeaderRoot = styled('div', {
   borderBottom: `1px solid ${vars.colors.border.base}`,
 });
 
-export function GridSidebarHeader(props: GridSidebarHeaderProps) {
+function GridSidebarHeader(props: GridSidebarHeaderProps) {
   const { className, children, ...other } = props;
   const apiRef = useGridApiContext();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
@@ -52,3 +52,5 @@ export function GridSidebarHeader(props: GridSidebarHeaderProps) {
     </GridSidebarHeaderRoot>
   );
 }
+
+export { GridSidebarHeader };

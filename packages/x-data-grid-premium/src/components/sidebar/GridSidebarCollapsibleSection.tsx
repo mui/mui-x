@@ -46,7 +46,7 @@ const CollapsibleSectionContent = styled('div')({
   overflow: 'hidden',
 });
 
-export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
+function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
   const { title, 'aria-label': ariaLabel, children, ...rest } = props;
   const [open, setOpen] = React.useState(true);
   const id = useId();
@@ -68,3 +68,5 @@ export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSecti
     </CollapsibleSection>
   );
 }
+
+export { GridSidebarCollapsibleSection };

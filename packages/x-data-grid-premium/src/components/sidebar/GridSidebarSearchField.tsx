@@ -7,7 +7,7 @@ export type GridSidebarSearchFieldProps = GridSlotProps['baseTextField'] & {
   onClear: () => void;
 };
 
-export function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
+function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
   const { onClear, ...rest } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -46,3 +46,5 @@ export function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
     />
   );
 }
+
+export { GridSidebarSearchField };
