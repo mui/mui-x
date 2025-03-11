@@ -1,4 +1,3 @@
-import { fiFI as fiFICore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -186,6 +185,34 @@ const fiFIGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Laajenna',
   collapseDetailPanel: 'Tiivistä',
 
+  // Pagination
+  paginationRowsPerPage: 'Rivejä per sivu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Mene ensimmäiselle sivulle';
+    }
+    if (type === 'last') {
+      return 'Mene viimeiselle sivulle';
+    }
+    if (type === 'next') {
+      return 'Mene seuraavalle sivulle';
+    }
+    // if (type === 'previous') {
+    return 'Mene edelliselle sivulle';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rivien uudelleenjärjestely',
 
@@ -198,4 +225,4 @@ const fiFIGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'koko',
 };
 
-export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);
+export const fiFI: Localization = getGridLocalization(fiFIGrid);

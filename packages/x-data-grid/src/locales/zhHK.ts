@@ -1,4 +1,3 @@
-import { zhHK as zhHKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -184,6 +183,33 @@ const zhHKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '擴張',
   collapseDetailPanel: '坍塌',
 
+  // Pagination
+  paginationRowsPerPage: '每頁行數:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一頁';
+    }
+    if (type === 'last') {
+      return '最後一頁';
+    }
+    if (type === 'next') {
+      return '下一頁';
+    }
+    return '上一頁';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '行重新排序',
 
@@ -196,4 +222,4 @@ const zhHKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '尺寸',
 };
 
-export const zhHK = getGridLocalization(zhHKGrid, zhHKCore);
+export const zhHK = getGridLocalization(zhHKGrid);
