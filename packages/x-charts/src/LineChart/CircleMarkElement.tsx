@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useSpringValue } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
@@ -57,11 +57,13 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const [position, api] = useSpring({ to: { x, y }, immediate: skipAnimation }, []);
+  const cx = useSpringValue(x, { immediate: skipAnimation });
+  const cy = useSpringValue(y, { immediate: skipAnimation });
 
   React.useEffect(() => {
-    api.start({ x, y, immediate: skipAnimation });
-  }, [api, x, y, skipAnimation]);
+    cy.start(y, { immediate: skipAnimation });
+    cx.start(x, { immediate: skipAnimation });
+  }, [cy, y, cx, x, skipAnimation]);
 
   const ownerState = {
     id,
@@ -76,8 +78,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     <animated.circle
       {...other}
       // @ts-expect-error
-      cx={position.x}
-      cy={position.y}
+      cx={cx}
+      cy={cy}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
