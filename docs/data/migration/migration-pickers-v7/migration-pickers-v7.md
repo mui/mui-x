@@ -302,7 +302,7 @@ const theme = createTheme({
 ### ⏩ Field editing on mobile Pickers
 
 The field is now editable if rendered inside a mobile Picker.
-Before v8, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
+Before version `v8.x`, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
 The mobile and desktop Pickers now behave similarly:
 
 - clicking on the field allows editing the value with the keyboard
@@ -424,6 +424,24 @@ This change causes a few breaking changes:
   ```
 
 - The button to render a single year is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Year Calendar.
+
+### ⏩ Treat partially filled date as `null` in `onChange`
+
+Before version `v8.x`, entering a partially filled date in the field would fire `onChange` with an invalid date.
+The date now remains `null` until fully filled.
+
+Here are two concrete examples:
+
+#### A user fills a Date Field that has no default value
+
+1. The user enters the month, the rendered value is `01/DD/YYYY`, `onChange` is not fired.
+2. The user enters the day, the rendered value is `01/01/YYYY`, `onChange` is not fired.
+3. The user enters the year, the rendered value is `01/01/2025`, `onChange` is fired with the new date.
+
+#### A user cleans the year of a Date Field and enters a new year
+
+1. The user cleans the year, the rendered value is `01/01/YYYY`, `onChange` is fired with `null`.
+2. The user enters a new year, the rendered value is `01/01/2026`, `onChange` is fired with the new date.
 
 ### ⏩ Update default `closeOnSelect` and Action Bar `actions` values
 
@@ -1253,6 +1271,36 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
    />
   ```
 
+### ⏩ `useClearableField`
+
+This hook has been removed. The custom field component now receives the `clearable` and `onClear` props.
+
+You can remove the `useClearableField` hook from your component and use the new props to conditionally render the clear button:
+
+```diff
+-import { useClearableField } from '@mui/x-date-pickers-pro/hooks';
+
+ function CustomField(props) {
+   const {
+     id,
+     label
+     value,
++    clearable,
++    onClear,
+   } = props;
+-  const processedFieldProps = useClearableField({
+-    ...fieldResponse,
+-    slots,
+-    slotProps,
+-  });
++  {clearable && value && (
++    <IconButton title="Clear" tabIndex={-1} onClick={onClear}>
++      <ClearIcon />
++    </IconButton>
++  )}
+ }
+```
+
 ## Typing breaking changes
 
 ### Do not pass the date object as a generic
@@ -1287,7 +1335,12 @@ The `TSection` generic of the `FieldRef` type has been replaced with the `TValue
 ### ⏩ Removed types
 
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
-If you were using them, you need to replace them with the following code:
+
+:::success
+If you were using them, you can replace them with the examples below.
+
+However, consider looking into your usage to see if you really need those types.
+:::
 
 - `NonEmptyDateRange`
 
@@ -1698,6 +1751,47 @@ If you were using them, you need to replace them with the following code:
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
+
+- `ExportedUseClearableFieldProps`
+
+  ```ts
+  interface ExportedUseClearableFieldProps {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler;
+  }
+  ```
+
+- `UseClearableFieldSlots`
+
+  ```ts
+  interface UseClearableFieldSlots {
+    clearIcon?: React.ElementType;
+    clearButton?: React.ElementType;
+  }
+  ```
+
+- `UseClearableFieldSlotProps`
+
+  ```ts
+  import { SlotComponentProps } from '@mui/utils';
+  import { FieldOwnerState } from '@mui/x-date-pickers/models';
+  import { ClearIcon } from '@mui/x-date-pickers/icons';
+  import IconButton from '@mui/material/IconButton';
+
+  interface UseClearableFieldSlotProps {
+    clearIcon?: SlotComponentProps<typeof ClearIcon, {}, FieldOwnerState>;
+    clearButton?: SlotComponentProps<typeof IconButton, {}, FieldOwnerState>;
+  }
+  ```
+
+- `UseClearableFieldResponse`
+
+  ```ts
+  type UseClearableFieldResponse<TFieldProps extends {}> = Omit<
+    TFieldProps,
+    'clearable' | 'onClear' | 'slots' | 'slotProps'
+  >;
+  ```
 
 ## Theme breaking change
 

@@ -9,6 +9,8 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
+export { GridToolbar } from '../components/toolbarV8/GridToolbar';
+export type { GridToolbarProps } from '../components/toolbarV8/GridToolbar';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';

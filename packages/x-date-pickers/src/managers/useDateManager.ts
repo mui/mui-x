@@ -15,7 +15,7 @@ import {
   ValidateDatePropsToDefault,
   ValidateDateProps,
 } from '../validation/validateDate';
-import { PickerValue } from '../internals/models';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { useUtils } from '../internals/hooks/useUtils';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
@@ -82,8 +82,8 @@ export type UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateValidationError,
-    DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateProps,
+    DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
@@ -93,15 +93,6 @@ export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructur
     >,
     ExportedValidateDateProps {}
 
-interface DateManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateValidationError
-    >,
-    ValidateDateProps {}
-
 type DateManagerFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
 
 interface GetDateFieldInternalPropsDefaultsParameters
@@ -110,4 +101,7 @@ interface GetDateFieldInternalPropsDefaultsParameters
 }
 
 interface GetDateFieldInternalPropsDefaultsReturnValue
-  extends Pick<DateManagerFieldInternalPropsWithDefaults<true>, DateManagerFieldPropsToDefault> {}
+  extends Pick<
+    PickerManagerFieldInternalPropsWithDefaults<UseDateManagerReturnValue<true>>,
+    DateManagerFieldPropsToDefault
+  > {}

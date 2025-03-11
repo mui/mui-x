@@ -9,16 +9,26 @@ import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDateTime } from '../validation';
-import { DateOrTimeView, PickerOwnerState } from '../models';
+import { PickerOwnerState } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { renderTimeViewClock } from '../timeViewRenderers';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { PickerValue } from '../internals/models';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
+import { mergeSx } from '../internals/utils/utils';
+import { digitalClockClasses } from '../DigitalClock';
 
 type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure> &
+  props: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -35,33 +45,44 @@ type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extend
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
-    DateOrTimeView,
-    MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure>
+    MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimePicker');
+
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
-    hours: renderTimeViewClock,
-    minutes: renderTimeViewClock,
-    seconds: renderTimeViewClock,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? false;
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? defaultizedProps.views.filter((view) => view !== 'meridiem')
+    : defaultizedProps.views;
 
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     format: resolveDateTimeFormat(utils, defaultizedProps),
+    views,
     ampmInClock,
     slots: {
       field: DateTimeField,
@@ -82,11 +103,40 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
         hidden: false,
         ...defaultizedProps.slotProps?.tabs,
       },
+      layout: {
+        ...defaultizedProps.slotProps?.layout,
+        sx: mergeSx(
+          [
+            {
+              [`& .${multiSectionDigitalClockClasses.root}`]: {
+                width: DIALOG_WIDTH,
+              },
+              [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
+                flex: 1,
+                // account for the border on `MultiSectionDigitalClock`
+                maxHeight: VIEW_HEIGHT - 1,
+                [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+                  width: 'auto',
+                },
+              },
+              [`& .${digitalClockClasses.root}`]: {
+                width: DIALOG_WIDTH,
+                maxHeight: VIEW_HEIGHT,
+                flex: 1,
+                [`.${digitalClockClasses.item}`]: {
+                  justifyContent: 'center',
+                },
+              },
+            },
+          ],
+          defaultizedProps.slotProps?.layout?.sx,
+        ),
+      },
     },
   };
 
   const { renderPicker } = useMobilePicker<
-    DateOrTimeView,
+    DateOrTimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
@@ -323,7 +373,7 @@ MobileDateTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  openTo: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
    */
@@ -414,6 +464,11 @@ MobileDateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -432,6 +487,22 @@ MobileDateTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
@@ -449,7 +520,7 @@ MobileDateTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -458,6 +529,7 @@ MobileDateTimePicker.propTypes = {
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     month: PropTypes.func,
     seconds: PropTypes.func,

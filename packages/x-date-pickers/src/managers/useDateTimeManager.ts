@@ -16,7 +16,7 @@ import {
   ValidateDateTimeProps,
   ValidateDateTimePropsToDefault,
 } from '../validation/validateDateTime';
-import { PickerValue } from '../internals/models';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { useUtils } from '../internals/hooks/useUtils';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
@@ -100,8 +100,8 @@ export type UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure ext
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeValidationError,
-    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeProps,
+    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeManagerFieldInternalProps<
@@ -116,15 +116,6 @@ export interface DateTimeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeProps,
     AmPmProps {}
-
-interface DateTimeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeValidationError
-    >,
-    ValidateDateTimeProps {}
 
 type DateTimeManagerFieldPropsToDefault =
   | 'format'
@@ -143,6 +134,6 @@ interface GetDateTimeFieldInternalPropsDefaultsParameters
 
 interface GetDateTimeFieldInternalPropsDefaultsReturnValue
   extends Pick<
-    DateTimeManagerFieldInternalPropsWithDefaults<true>,
+    PickerManagerFieldInternalPropsWithDefaults<UseDateTimeManagerReturnValue<true>>,
     DateTimeManagerFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
   > {}

@@ -158,9 +158,8 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       onClick: handleClickOpeningButton,
       'aria-label': openPickerAriaLabel,
       edge:
-        clearButtonPosition === 'start' && openPickerButtonPosition === 'start'
-          ? undefined
-          : openPickerButtonPosition,
+        // open button is always rendered at the edge
+        textFieldProps.variant !== 'standard' ? openPickerButtonPosition : false,
     },
     ownerState,
   });
@@ -187,9 +186,10 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       onClick: onClear,
       disabled: fieldResponse.disabled || fieldResponse.readOnly,
       edge:
-        clearButtonPosition === 'end' && openPickerButtonPosition === 'end'
-          ? undefined
-          : clearButtonPosition,
+        // clear button can only be at the edge if it's position differs from the open button
+        textFieldProps.variant !== 'standard' && clearButtonPosition !== openPickerButtonPosition
+          ? clearButtonPosition
+          : false,
     },
     ownerState,
   });

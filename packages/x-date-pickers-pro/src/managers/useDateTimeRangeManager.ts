@@ -77,8 +77,8 @@ export type UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructur
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError,
-    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeRangeProps,
+    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeRangeManagerFieldInternalProps<
@@ -93,14 +93,4 @@ export interface DateTimeRangeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeRangeProps,
     AmPmProps,
-    RangeFieldSeparatorProps {}
-
-interface DateTimeRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeRangeValidationError
-    >,
-    ValidateDateTimeRangeProps,
     RangeFieldSeparatorProps {}
