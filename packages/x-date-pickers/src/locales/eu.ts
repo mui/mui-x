@@ -63,8 +63,7 @@ const euPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Data aukeratu, aukeratutako data ${formattedDate} da` : 'Data aukeratu',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Ordua aukeratu, aukeratutako ordua ${formattedTime} da` : 'Ordua aukeratu',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Balioa garbitu',
 
   // Table labels

@@ -63,8 +63,7 @@ const bnBDPickers: Partial<PickersLocaleText> = {
     formattedDate ? `তারিখ নির্বাচন করুন, নির্বাচিত তারিখ ${formattedDate}` : 'তারিখ নির্বাচন করুন',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `সময় নির্বাচন করুন, নির্বাচিত সময় ${formattedTime}` : 'সময় নির্বাচন করুন',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'পরিষ্কার',
 
   // Table labels

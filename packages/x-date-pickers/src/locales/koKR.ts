@@ -67,8 +67,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime}입니다.`
       : '시간을 선택하세요',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '지우기',
 
   // Table labels

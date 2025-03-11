@@ -63,8 +63,7 @@ const viVNPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Chọn ngày, ngày đã chọn là ${formattedDate}` : 'Chọn ngày',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Chọn giờ, giờ đã chọn là ${formattedTime}` : 'Chọn giờ',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Xóa giá trị',
 
   // Table labels

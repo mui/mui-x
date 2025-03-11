@@ -57,8 +57,7 @@ const mkPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Избери датум, избраниот датум е ${formattedDate}` : 'Избери датум',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Избери време, избраното време е ${formattedTime}` : 'Избери време',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Избриши',
 
   // Table labels

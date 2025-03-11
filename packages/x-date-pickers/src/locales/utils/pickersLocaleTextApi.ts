@@ -1,4 +1,4 @@
-import { TimeViewWithMeridiem } from '../../internals/models';
+import { PickerRangeValue, TimeViewWithMeridiem } from '../../internals/models';
 import { DateView, TimeView, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
@@ -66,14 +66,7 @@ export interface PickersComponentAgnosticLocaleText {
   // Open picker labels
   openDatePickerDialogue: (formattedDate: string | null) => string;
   openTimePickerDialogue: (formattedTime: string | null) => string;
-  openDateRangePickerDialogue: (
-    formattedDate: string | null,
-    rangePosition: 'start' | 'end',
-  ) => string;
-  openTimeRangePickerDialogue: (
-    formattedTime: string | null,
-    rangePosition: 'start' | 'end',
-  ) => string;
+  openRangePickerDialogue: (formattedRange: string | null) => string;
 
   // Clear button label
   fieldClearLabel: string;

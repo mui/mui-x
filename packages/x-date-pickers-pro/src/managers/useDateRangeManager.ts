@@ -16,7 +16,7 @@ import {
   ExportedValidateDateRangeProps,
   ValidateDateRangeProps,
 } from '../validation/validateDateRange';
-import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -46,22 +46,12 @@ export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends b
 function useOpenPickerButtonAriaLabel() {
   const utils = useUtils();
   const translations = usePickerTranslations();
-  const rangePositionContext = useNullablePickerRangePositionContext();
 
   return React.useCallback(
     (value: PickerRangeValue) => {
-      if (rangePositionContext == null) {
-        return '';
-      }
-
-      const date = rangePositionContext.rangePosition === 'start' ? value[0] : value[1];
-      const formattedValue = utils.isValid(date) ? utils.format(date, 'fullDate') : null;
-      return translations.openDateRangePickerDialogue(
-        formattedValue,
-        rangePositionContext.rangePosition,
-      );
+      return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
     },
-    [rangePositionContext, translations, utils],
+    [translations, utils],
   );
 }
 

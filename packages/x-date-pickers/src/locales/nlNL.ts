@@ -63,8 +63,7 @@ const nlNLPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Kies datum, geselecteerde datum is ${formattedDate}` : 'Kies datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Kies tijd, geselecteerde tijd is ${formattedTime}` : 'Kies tijd',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wissen',
 
   // Table labels

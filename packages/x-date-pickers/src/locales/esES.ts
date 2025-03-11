@@ -63,8 +63,7 @@ const esESPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Elige hora, la hora elegida es ${formattedTime}` : 'Elige hora',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Limpiar valor',
 
   // Table labels

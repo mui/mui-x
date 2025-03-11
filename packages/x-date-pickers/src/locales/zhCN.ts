@@ -61,8 +61,7 @@ const zhCNPickers: Partial<PickersLocaleText> = {
     formattedDate ? `选择日期，已选择${formattedDate}` : '选择日期',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `选择时间，已选择${formattedTime}` : '选择时间',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '清除',
 
   // Table labels

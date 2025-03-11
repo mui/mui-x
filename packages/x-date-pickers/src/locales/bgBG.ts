@@ -63,8 +63,7 @@ const bgBGPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Избери дата, избраната дата е ${formattedDate}` : 'Избери дата',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Избери час, избраният час е ${formattedTime}` : 'Избери час',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Изчисти стойност',
 
   // Table labels

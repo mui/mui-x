@@ -64,8 +64,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Выберите дату, выбрана дата ${formattedDate}` : 'Выберите дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Выберите время, выбрано время ${formattedTime}` : 'Выберите время',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Очистить значение',
 
   // Table labels

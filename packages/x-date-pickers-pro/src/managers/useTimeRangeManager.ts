@@ -17,7 +17,7 @@ import {
   ExportedValidateTimeRangeProps,
   ValidateTimeRangeProps,
 } from '../validation/validateTimeRange';
-import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -49,24 +49,15 @@ function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
   return function useOpenPickerButtonAriaLabel() {
     const utils = useUtils();
     const translations = usePickerTranslations();
-    const rangePositionContext = useNullablePickerRangePositionContext();
 
     return React.useCallback(
       (value: PickerRangeValue) => {
-        if (rangePositionContext == null) {
-          return '';
-        }
-
-        const date = rangePositionContext.rangePosition === 'start' ? value[0] : value[1];
         const formatKey =
           (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
-        const formattedValue = utils.isValid(date) ? utils.format(date, formatKey) : null;
-        return translations.openTimeRangePickerDialogue(
-          formattedValue,
-          rangePositionContext.rangePosition,
-        );
+
+        return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
       },
-      [rangePositionContext, translations, utils],
+      [translations, utils],
     );
   };
 }

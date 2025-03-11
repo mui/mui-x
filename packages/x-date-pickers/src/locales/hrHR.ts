@@ -81,8 +81,7 @@ const hrHRPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Odaberi datum, odabrani datum je ${formattedDate}` : 'Odaberi datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Odaberi vrijeme, odabrano vrijeme je ${formattedTime}` : 'Odaberi vrijeme',
-  // openDateRangePickerDialogue: (formattedDate, rangePosition) => formattedDate ? `Choose ${rangePosition} date, selected start date is ${formattedDate}` : `Choose ${rangePosition} date`,
-  // openTimeRangePickerDialogue: (formattedTime, rangePosition) => formattedTime ? `Choose ${rangePosition} time, selected start time is ${formattedTime}` : `Choose ${rangePosition} time`,
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Izbriši',
 
   // Table labels
