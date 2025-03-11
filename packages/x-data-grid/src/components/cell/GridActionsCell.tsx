@@ -121,7 +121,9 @@ function GridActionsCell(props: GridActionsCellProps) {
   const hideMenu = () => {
     setOpen(false);
   };
-  const toggleMenu = () => {
+  const toggleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     if (open) {
       hideMenu();
     } else {
