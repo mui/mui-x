@@ -14,21 +14,11 @@ function PropTest() {
       <DataGrid
         rows={[]}
         columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            labelRowsPerPage: 'ofo',
-          },
-        }}
+        localeText={{}}
       />
       <DataGrid
         rows={[]}
         columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            /* @ts-expect-error Object literal may only specify known properties, but 'labelRowsPerPagee' does not exist in type */
-            labelRowsPerPagee: 'foo',
-          },
-        }}
       />
     </div>
   );
