@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { animated, SpringValue, to } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -63,17 +63,30 @@ const PieArcRoot = styled(animated.path, {
   // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
+
+  '@keyframes animation': {
+    from: {
+      transform: 'rotate(var(--angle))',
+    },
+    to: {
+      transform: 'rotate(0)',
+    },
+  },
+
+  animation: 'animation 0.2s ease-in',
 }));
+
+const PieArcClipPath = styled('path')({});
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
-    cornerRadius: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
+    cornerRadius: number;
+    endAngle: number;
+    innerRadius: number;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
-    outerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
-    startAngle: SpringValue<number>;
+    outerRadius: number;
+    paddingAngle: number;
+    startAngle: number;
   };
 
 function PieArc(props: PieArcProps) {
@@ -106,33 +119,38 @@ function PieArc(props: PieArcProps) {
 
   const getInteractionItemProps = useInteractionItemProps();
 
+  const d = d3Arc().cornerRadius(cornerRadius)({
+    padAngle: paddingAngle,
+    startAngle,
+    endAngle,
+    innerRadius,
+    outerRadius,
+  })!;
+
   return (
-    <PieArcRoot
-      d={to(
-        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
-        (sA, eA, pA, iR, oR, cR) =>
-          d3Arc().cornerRadius(cR)({
-            padAngle: pA,
-            startAngle: sA,
-            endAngle: eA,
-            innerRadius: iR,
-            outerRadius: oR,
-          })!,
-      )}
-      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
-      // @ts-expect-error
-      onClick={onClick}
-      cursor={onClick ? 'pointer' : 'unset'}
-      ownerState={ownerState}
-      className={classes.root}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
-      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
-      strokeWidth={1}
-      strokeLinejoin="round"
-      {...other}
-      {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
-    />
+    <React.Fragment>
+      <clipPath id={`pie-${id}-arc-clip-path-${dataIndex}`}>
+        <PieArcClipPath d={d} />
+      </clipPath>
+      <g clipPath={`url(#pie-${id}-arc-clip-path-${dataIndex})`}>
+        <PieArcRoot
+          d={d}
+          visibility={startAngle === endAngle ? 'hidden' : 'visible'}
+          onClick={onClick}
+          cursor={onClick ? 'pointer' : 'unset'}
+          ownerState={ownerState}
+          className={classes.root}
+          fill={ownerState.color}
+          opacity={ownerState.isFaded ? 0.3 : 1}
+          filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+          strokeWidth={1}
+          strokeLinejoin="round"
+          style={{ '--angle': `${endAngle - startAngle}rad` }}
+          {...other}
+          {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+        />
+      </g>
+    </React.Fragment>
   );
 }
 
