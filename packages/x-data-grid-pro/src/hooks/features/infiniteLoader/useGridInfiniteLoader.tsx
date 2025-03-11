@@ -63,8 +63,9 @@ export const useGridInfiniteLoader = (
     }
   });
 
+  const virtualScroller = apiRef.current.virtualScrollerRef.current;
+
   React.useEffect(() => {
-    const virtualScroller = apiRef.current.virtualScrollerRef.current;
     if (!isEnabled) {
       return;
     }
@@ -84,7 +85,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [apiRef, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
+  }, [apiRef, virtualScroller, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {
