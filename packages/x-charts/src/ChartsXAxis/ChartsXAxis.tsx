@@ -302,7 +302,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,
-        transform: `${labelStyle?.transform ?? ''} translateY(${position === 'bottom' ? '-1' : 1}lh)`,
       },
     } as Partial<ChartsTextProps>,
     ownerState: {},
@@ -322,15 +321,16 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
 
-  const labelRefPoint = { x: left + width / 2, y: positionSign * axisHeight };
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
 
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(
     0,
-    axisHeight -
-      (label ? getStringSize(label, axisLabelProps.style).height + AXIS_LABEL_TICK_LABEL_GAP : 0) -
-      tickSize -
-      TICK_LABEL_GAP,
+    axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
   );
 
   const tickLabels = isClient
