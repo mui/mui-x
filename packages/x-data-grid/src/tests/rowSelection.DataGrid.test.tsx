@@ -412,7 +412,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       const idText = screen.getByRole('columnheader', { name: 'id' });
       await user.hover(idText);
-      const idMenu = idText.querySelector('button[aria-label="Menu"]')!;
+      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
       await user.click(idMenu);
 
       const filterButton = screen.getByText('Filter');
@@ -439,7 +439,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       const idText = screen.getByRole('columnheader', { name: 'id' });
       await user.hover(idText);
-      const idMenu = idText.querySelector('button[aria-label="Menu"]')!;
+      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
       await user.click(idMenu);
 
       const filterButton = screen.getByText('Filter');

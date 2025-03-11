@@ -1154,18 +1154,19 @@ describe('<DataGrid /> - Rows', () => {
       await user.click(cell);
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.scrollTop = 1000;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(() => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
 
       const focusedRow = getRow(0);
       expect(focusedRow.getAttribute('data-id')).to.equal('0');
       expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
       expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
 
-      const lastRow = getRow(9);
-      expect(lastRow.getAttribute('data-id')).to.equal('9');
-      expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
-      expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
+      const lastRow = 9;
+      await waitFor(() => {
+        expect(getRow(lastRow).getAttribute('data-id')).to.equal('9');
+      });
+      expect(getRow(lastRow).getAttribute('data-rowindex')).to.equal('9');
+      expect(getRow(lastRow).getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
     },
   );
 });
