@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Menu from '@mui/material/Menu';
 import useId from '@mui/utils/useId';
 import { styled } from '@mui/system';
+import { GridMenu } from '../menu/GridMenu';
 import { Toolbar } from './Toolbar';
 import { ToolbarButton } from './ToolbarButton';
 import { FilterPanelTrigger } from '../filterPanel';
@@ -97,35 +97,33 @@ function GridToolbar(props: GridToolbarProps) {
             </ToolbarButton>
           </rootProps.slots.baseTooltip>
 
-          <Menu
-            id={exportMenuId}
-            anchorEl={exportMenuTriggerRef.current}
+          <GridMenu
+            target={exportMenuTriggerRef.current}
             open={exportMenuOpen}
             onClose={closeExportMenu}
-            MenuListProps={{
-              'aria-labelledby': exportMenuTriggerId,
-            }}
           >
-            {!printOptions?.disableToolbarButton && (
-              <ExportPrint
-                render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
-                options={printOptions}
-                onClick={closeExportMenu}
-              >
-                {apiRef.current.getLocaleText('toolbarExportPrint')}
-              </ExportPrint>
-            )}
-            {!csvOptions?.disableToolbarButton && (
-              <ExportCsv
-                render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
-                options={csvOptions}
-                onClick={closeExportMenu}
-              >
-                {apiRef.current.getLocaleText('toolbarExportCSV')}
-              </ExportCsv>
-            )}
-            {additionalExportMenuItems?.(closeExportMenu)}
-          </Menu>
+            <rootProps.slots.baseMenuList id={exportMenuId} aria-labelledby={exportMenuTriggerId}>
+              {!printOptions?.disableToolbarButton && (
+                <ExportPrint
+                  render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
+                  options={printOptions}
+                  onClick={closeExportMenu}
+                >
+                  {apiRef.current.getLocaleText('toolbarExportPrint')}
+                </ExportPrint>
+              )}
+              {!csvOptions?.disableToolbarButton && (
+                <ExportCsv
+                  render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
+                  options={csvOptions}
+                  onClick={closeExportMenu}
+                >
+                  {apiRef.current.getLocaleText('toolbarExportCSV')}
+                </ExportCsv>
+              )}
+              {additionalExportMenuItems?.(closeExportMenu)}
+            </rootProps.slots.baseMenuList>
+          </GridMenu>
         </React.Fragment>
       )}
 

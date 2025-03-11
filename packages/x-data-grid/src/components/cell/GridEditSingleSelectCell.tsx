@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -13,16 +13,17 @@ import {
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export interface GridEditSingleSelectCellProps
-  extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
-   * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @param event The event source of the callback.
+   * @param newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  onValueChange?: (
+    event: Parameters<NonNullable<GridSlotProps['baseSelect']['onOpen']>>[0],
+    newValue: any,
+  ) => Promise<void> | void;
   /**
    * If true, the select opens by default.
    */
@@ -122,7 +123,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   };
 
-  const handleOpen: SelectProps['onOpen'] = (event) => {
+  const handleOpen: GridSlotProps['baseSelect']['onOpen'] = (event) => {
     if (isKeyboardEvent(event) && event.key === 'Enter') {
       return;
     }

@@ -6,9 +6,8 @@ import {
   unstable_capitalize as capitalize,
   unstable_useId as useId,
 } from '@mui/utils';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -44,15 +43,14 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: vars.spacing(0, 1),
 });
 
-// FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
   /**
    * The props used for each slot inside.
    * @default {}
    */
   slotProps?: {
-    button?: Partial<ButtonProps>;
-    tooltip?: Partial<TooltipProps>;
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
     badge?: Partial<BadgeProps>;
   };
 }
