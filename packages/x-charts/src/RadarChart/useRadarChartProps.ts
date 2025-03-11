@@ -6,6 +6,7 @@ import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid/RadarGrid';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -40,7 +41,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     radar,
     width,
     height,
-    margin,
+    margin: defaultizeMargin(margin, { top: 30, bottom: 30, left: 50, right: 50 }),
     colors,
     highlightedItem,
     onHighlightChange,
