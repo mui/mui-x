@@ -123,8 +123,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterValueFalse: '거짓',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: '메뉴',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '열 표시',
   columnMenuManageColumns: '열 관리',
   columnMenuFilter: '필터',

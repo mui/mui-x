@@ -123,8 +123,8 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'غلط',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'فهرست',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'نمایش ستون‌ها',
   columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',

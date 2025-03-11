@@ -123,8 +123,8 @@ const itITGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'falso',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Mostra le colonne',
   columnMenuManageColumns: 'Gestisci colonne',
   columnMenuFilter: 'Filtra',

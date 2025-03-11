@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Column headers', () => {
         </div>,
       );
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -77,7 +77,7 @@ describe('<DataGridPro /> - Column headers', () => {
       }
       const { setProps } = render(<Test />);
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -94,7 +94,7 @@ describe('<DataGridPro /> - Column headers', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -109,7 +109,7 @@ describe('<DataGridPro /> - Column headers', () => {
         </div>,
       );
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(menuIconButton);
       clock.runToLast();
@@ -132,7 +132,7 @@ describe('<DataGridPro /> - Column headers', () => {
       );
 
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
 
       fireEvent.click(menuIconButton);
       clock.runToLast();
@@ -163,7 +163,7 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnToResizeCell = getColumnHeaderCell(1);
 
       const menuIconButton = columnWithMenuCell.querySelector(
-        'button[aria-label="brand column options"]',
+        'button[aria-label="brand column menu"]',
       )!;
 
       fireEvent.click(menuIconButton);
@@ -189,7 +189,7 @@ describe('<DataGridPro /> - Column headers', () => {
       );
 
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
 
       fireEvent.click(menuIconButton);
       clock.runToLast();
@@ -211,7 +211,7 @@ describe('<DataGridPro /> - Column headers', () => {
         </div>,
       );
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
       clock.runToLast(); // Wait for the transition to run
@@ -239,7 +239,7 @@ describe('<DataGridPro /> - Column headers', () => {
       }
       render(<Test />);
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       clock.runToLast();
 
@@ -263,7 +263,7 @@ describe('<DataGridPro /> - Column headers', () => {
       }
       render(<Test />);
       const columnCell = getColumnHeaderCell(0);
-      const menuIconButton = columnCell.querySelector('button[aria-label="brand column options"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       clock.runToLast();
 

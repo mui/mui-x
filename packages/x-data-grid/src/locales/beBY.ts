@@ -146,8 +146,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'няпраўда',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Паказаць слупкі',
   columnMenuManageColumns: 'Кіраваць слупкамі',
   columnMenuFilter: 'Фільтр',

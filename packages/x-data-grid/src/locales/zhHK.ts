@@ -123,8 +123,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   filterValueFalse: '錯誤的',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: '選單',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '顯示欄目',
   columnMenuManageColumns: '管理欄目',
   columnMenuFilter: '篩選',

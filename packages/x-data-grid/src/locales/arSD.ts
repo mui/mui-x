@@ -123,8 +123,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'خاطئ',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'القائمة',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'إظهار الأعمدة',
   columnMenuManageColumns: 'إدارة الأعمدة',
   columnMenuFilter: 'المرشِح',

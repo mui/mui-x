@@ -148,8 +148,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'ні',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показати стовпці',
   columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',

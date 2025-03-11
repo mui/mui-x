@@ -130,8 +130,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'nie',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Zobraziť stĺpce',
   columnMenuManageColumns: 'Spravovať stĺpce',
   columnMenuFilter: 'Filter',

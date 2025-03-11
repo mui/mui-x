@@ -124,8 +124,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'Nein',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',

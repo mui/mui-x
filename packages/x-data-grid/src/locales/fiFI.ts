@@ -123,8 +123,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'epätosi',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Valikko',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Näytä sarakkeet',
   columnMenuManageColumns: 'Hallitse sarakkeita',
   columnMenuFilter: 'Suodata',

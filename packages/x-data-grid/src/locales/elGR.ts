@@ -123,8 +123,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'ψευδές',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Μενού',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   columnMenuManageColumns: 'Διαχείριση στηλών',
   columnMenuFilter: 'Φίλτρο',

@@ -123,8 +123,8 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'غلط',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'مینیو',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'کالم دکھائیں',
   columnMenuManageColumns: 'کالم مینج کریں',
   columnMenuFilter: 'فلٹر',

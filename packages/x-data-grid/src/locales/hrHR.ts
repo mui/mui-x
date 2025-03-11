@@ -130,8 +130,8 @@ const hrHRGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'netačno',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Izbornik',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Prikaži stupce',
   columnMenuManageColumns: 'Upravljanje stupcima',
   columnMenuFilter: 'Filter',

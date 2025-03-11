@@ -568,7 +568,7 @@ describe('<DataGrid /> - Column spanning', () => {
     );
 
     // hide `category` column
-    fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('category column options'));
+    fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('category column menu'));
     fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
     clock.runToLast();
 

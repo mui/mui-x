@@ -122,8 +122,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterValueFalse: 'false',
 
   // Column menu text
-  columnMenuLabel: 'Column options',
-  columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Menu',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Show columns',
   columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',

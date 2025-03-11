@@ -122,8 +122,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterValueFalse: '假',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: '菜单',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '显示',
   columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',

@@ -123,8 +123,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'yanlış',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Sütunları göster',
   columnMenuManageColumns: 'Sütunları yönet',
   columnMenuFilter: 'Filtre Ekle',

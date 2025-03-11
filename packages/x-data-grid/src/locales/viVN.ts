@@ -123,8 +123,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'Không',
 
   // Column menu text
-  // columnMenuLabel: 'Column options',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column options`,
+  columnMenuLabel: 'Danh mục',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Danh sách cột',
   columnMenuManageColumns: 'Quản lý cột',
   columnMenuFilter: 'Bộ lọc',
