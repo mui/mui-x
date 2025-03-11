@@ -124,6 +124,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'মেনু',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'কলাম দেখান',
   columnMenuManageColumns: 'কলাম পরিচালনা করুন',
   columnMenuFilter: 'ফিল্টার',

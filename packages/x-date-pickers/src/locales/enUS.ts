@@ -35,6 +35,7 @@ const enUSPickers: PickersLocaleText = {
   dateTimePickerToolbarTitle: 'Select date & time',
   timePickerToolbarTitle: 'Select time',
   dateRangePickerToolbarTitle: 'Select date range',
+  timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -57,7 +58,8 @@ const enUSPickers: PickersLocaleText = {
     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time',
-
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Clear',
 
   // Table labels

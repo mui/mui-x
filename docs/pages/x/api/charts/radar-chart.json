@@ -39,6 +39,10 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "shape": {
+      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
+      "default": "'sharp'"
+    },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

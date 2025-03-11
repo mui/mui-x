@@ -123,6 +123,7 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Mostra le colonne',
   columnMenuManageColumns: 'Gestisci colonne',
   columnMenuFilter: 'Filtra',

@@ -41,6 +41,7 @@ const isISPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
   timePickerToolbarTitle: 'Velja tíma',
   dateRangePickerToolbarTitle: 'Velja tímabil',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -63,6 +64,7 @@ const isISPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Velja dagsetningu, valin dagsetning er ${formattedDate}` : 'Velja dagsetningu',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Velja tíma, valinn tími er ${formattedTime}` : 'Velja tíma',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

@@ -22,6 +22,11 @@ export interface PickersComponentSpecificLocaleText {
    * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
    */
   dateRangePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `TimeRangePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  timeRangePickerToolbarTitle: string;
 }
 
 export interface PickersComponentAgnosticLocaleText {
@@ -66,6 +71,7 @@ export interface PickersComponentAgnosticLocaleText {
   // Open picker labels
   openDatePickerDialogue: (formattedDate: string | null) => string;
   openTimePickerDialogue: (formattedTime: string | null) => string;
+  openRangePickerDialogue: (formattedRange: string | null) => string;
 
   // Clear button label
   fieldClearLabel: string;

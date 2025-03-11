@@ -123,6 +123,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'القائمة',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'إظهار الأعمدة',
   columnMenuManageColumns: 'إدارة الأعمدة',
   columnMenuFilter: 'المرشِح',

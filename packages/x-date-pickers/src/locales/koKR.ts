@@ -41,6 +41,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: '날짜 & 시간 선택하기',
   timePickerToolbarTitle: '시간 선택하기',
   dateRangePickerToolbarTitle: '날짜 범위 선택하기',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -67,6 +68,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime}입니다.`
       : '시간을 선택하세요',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '지우기',
 
   // Table labels

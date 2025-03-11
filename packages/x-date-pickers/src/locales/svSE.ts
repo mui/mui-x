@@ -41,6 +41,7 @@ const svSEPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Välj datum & tid',
   timePickerToolbarTitle: 'Välj tid',
   dateRangePickerToolbarTitle: 'Välj datumintervall',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -63,6 +64,7 @@ const svSEPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Välj datum, valt datum är ${formattedDate}` : 'Välj datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Välj tid, vald tid är ${formattedTime}` : 'Välj tid',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Rensa värde',
 
   // Table labels
