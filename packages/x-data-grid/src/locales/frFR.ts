@@ -184,6 +184,28 @@ const frFRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Afficher',
   collapseDetailPanel: 'Masquer',
 
+  // Pagination
+  paginationRowsPerPage: 'Lignes par page :',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Aller à la première page';
+    }
+    if (type === 'last') {
+      return 'Aller à la dernière page';
+    }
+    if (type === 'next') {
+      return 'Aller à la page suivante';
+    }
+    // if (type === 'previous') {
+    return 'Aller à la page précédente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Positionnement des lignes',
 

@@ -184,6 +184,28 @@ const faIRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
 
+  // Pagination
+  paginationRowsPerPage: 'تعداد سطرهای هر صفحه:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'رفتن به اولین صفحه';
+    }
+    if (type === 'last') {
+      return 'رفتن به آخرین صفحه';
+    }
+    if (type === 'next') {
+      return 'رفتن به صفحه‌ی بعدی';
+    }
+    // if (type === 'previous') {
+    return 'رفتن به صفحه‌ی قبلی';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'ترتیب مجدد سطر',
 

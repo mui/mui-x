@@ -180,6 +180,28 @@ const koKRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '열기',
   collapseDetailPanel: '접기',
 
+  // Pagination
+  paginationRowsPerPage: '페이지 당 행:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '첫 번째 페이지로 이동';
+    }
+    if (type === 'last') {
+      return '마지막 페이지로 이동';
+    }
+    if (type === 'next') {
+      return '다음 페이지로 이동';
+    }
+    // if (type === 'previous') {
+    return '이전 페이지로 이동';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '행 재배치',
 

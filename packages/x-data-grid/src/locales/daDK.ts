@@ -182,6 +182,28 @@ const daDKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
 
+  // Pagination
+  paginationRowsPerPage: 'Rækker pr side:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå til den første side';
+    }
+    if (type === 'last') {
+      return 'Gå til den sidste side';
+    }
+    if (type === 'next') {
+      return 'Gå til den næste side';
+    }
+    // if (type === 'previous') {
+    return 'Gå til den forrige side';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Omarrangering af rækker',
 

@@ -185,6 +185,28 @@ const roROGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Extindere',
   collapseDetailPanel: 'Restrângere',
 
+  // Pagination
+  paginationRowsPerPage: 'Rânduri pe pagină:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Mergi la prima pagină';
+    }
+    if (type === 'last') {
+      return 'Mergi la ultima pagină';
+    }
+    if (type === 'next') {
+      return 'Mergi la pagina următoare';
+    }
+    // if (type === 'previous') {
+    return 'Mergi la pagina precedentă';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordonare rânduri',
 

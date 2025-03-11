@@ -182,6 +182,28 @@ const viVNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Mở rộng',
   collapseDetailPanel: 'Thu nhỏ',
 
+  // Pagination
+  paginationRowsPerPage: 'Số hàng mỗi trang:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Tới trang đầu tiên';
+    }
+    if (type === 'last') {
+      return 'Tới trang cuối cùng';
+    }
+    if (type === 'next') {
+      return 'Tới trang tiếp theo';
+    }
+    // if (type === 'previous') {
+    return 'Về trang trước đó';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sắp xếp hàng',
 

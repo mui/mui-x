@@ -210,6 +210,28 @@ const skSKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozbaliť',
   collapseDetailPanel: 'Zbaliť',
 
+  // Pagination
+  paginationRowsPerPage: 'Riadkov na stránke:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ísť na prvú stránku';
+    }
+    if (type === 'last') {
+      return 'Ísť na poslednú stránku';
+    }
+    if (type === 'next') {
+      return 'Ísť na ďaľšiu stránku';
+    }
+    // if (type === 'previous') {
+    return 'Ísť na predchádzajúcu stránku';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
 

@@ -180,6 +180,28 @@ const plPLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
 
+  // Pagination
+  paginationRowsPerPage: 'Wierszy na stronę:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Przejdź do pierwszej strony';
+    }
+    if (type === 'last') {
+      return 'Przejdź do ostatniej strony';
+    }
+    if (type === 'next') {
+      return 'Przejdź do następnej strony';
+    }
+    // if (type === 'previous') {
+    return 'Przejdź do poprzedniej strony';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Porządkowanie wierszy',
 

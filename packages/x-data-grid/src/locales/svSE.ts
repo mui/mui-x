@@ -184,6 +184,28 @@ const svSEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandera',
   collapseDetailPanel: 'Kollapsa',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per sida:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå till första sidan';
+    }
+    if (type === 'last') {
+      return 'Gå till sista sidan';
+    }
+    if (type === 'next') {
+      return 'Gå till nästa sida';
+    }
+    // if (type === 'previous') {
+    return 'Gå till föregående sida';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Ordna om rader',
 

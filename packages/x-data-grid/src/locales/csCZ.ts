@@ -210,6 +210,28 @@ const csCZGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozbalit',
   collapseDetailPanel: 'Sbalit',
 
+  // Pagination
+  paginationRowsPerPage: 'Řádků na stránce:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Jít na první stránku';
+    }
+    if (type === 'last') {
+      return 'Jít na poslední stránku';
+    }
+    if (type === 'next') {
+      return 'Jít na další stránku';
+    }
+    // if (type === 'previous') {
+    return 'Jít na předchozí stránku';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Přeuspořádávání řádků',
 

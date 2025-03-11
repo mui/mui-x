@@ -182,6 +182,28 @@ const heILGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 
+  // Pagination
+  paginationRowsPerPage: 'שורות בעמוד:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'לעמוד הראשון';
+    }
+    if (type === 'last') {
+      return 'לעמוד האחרון';
+    }
+    if (type === 'next') {
+      return 'לעמוד הבא';
+    }
+    // if (type === 'previous') {
+    return 'לעמוד הקודם';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'סידור שורות',
 

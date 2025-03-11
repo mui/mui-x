@@ -215,6 +215,28 @@ const ruRUGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
+  // Pagination
+  paginationRowsPerPage: 'Строк на странице:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на первую страницу';
+    }
+    if (type === 'last') {
+      return 'Перейти на последнюю страницу';
+    }
+    if (type === 'next') {
+      return 'Перейти на следующую страницу';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на предыдущую страницу';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Изменение порядка строк',
 

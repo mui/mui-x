@@ -185,6 +185,28 @@ const esESGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Contraer',
 
+  // Pagination
+  paginationRowsPerPage: 'Filas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ir a la primera página';
+    }
+    if (type === 'last') {
+      return 'Ir a la última página';
+    }
+    if (type === 'next') {
+      return 'Ir a la página siguiente';
+    }
+    // if (type === 'previous') {
+    return 'Ir a la página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenar filas',
 

@@ -182,6 +182,28 @@ const isISGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Stækka',
   collapseDetailPanel: 'Minnka',
 
+  // Pagination
+  paginationRowsPerPage: 'Raðir á síðu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Fara á fyrstu síðu';
+    }
+    if (type === 'last') {
+      return 'Fara á síðustu síðu';
+    }
+    if (type === 'next') {
+      return 'Fara á næstu síðu';
+    }
+    // if (type === 'previous') {
+    return 'Fara á fyrri síðu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Endurröðun raða',
 

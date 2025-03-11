@@ -184,6 +184,28 @@ const nlNLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Regels per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ga naar eerste pagina';
+    }
+    if (type === 'last') {
+      return 'Ga naar laatste pagina';
+    }
+    if (type === 'next') {
+      return 'Ga naar volgende pagina';
+    }
+    // if (type === 'previous') {
+    return 'Ga naar vorige pagina';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
 

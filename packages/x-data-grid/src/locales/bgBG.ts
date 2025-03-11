@@ -182,6 +182,28 @@ const bgBGGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
 
+  // Pagination
+  paginationRowsPerPage: 'Редове на страница:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Отиди на първата страница';
+    }
+    if (type === 'last') {
+      return 'Отиди на последната страница';
+    }
+    if (type === 'next') {
+      return 'Отиди на следващата страница';
+    }
+    // if (type === 'previous') {
+    return 'Отиди на предишната страница';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Подредба на редове',
 

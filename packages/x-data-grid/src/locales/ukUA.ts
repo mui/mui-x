@@ -215,6 +215,28 @@ const ukUAGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Показати',
   collapseDetailPanel: 'Приховати',
 
+  // Pagination
+  paginationRowsPerPage: 'Рядків на сторінці:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на першу сторінку';
+    }
+    if (type === 'last') {
+      return 'Перейти на останню сторінку';
+    }
+    if (type === 'next') {
+      return 'Перейти на наступну сторінку';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на попередню сторінку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Порядок рядків',
 

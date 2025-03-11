@@ -184,6 +184,28 @@ const fiFIGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Laajenna',
   collapseDetailPanel: 'Tiivistä',
 
+  // Pagination
+  paginationRowsPerPage: 'Rivejä per sivu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Mene ensimmäiselle sivulle';
+    }
+    if (type === 'last') {
+      return 'Mene viimeiselle sivulle';
+    }
+    if (type === 'next') {
+      return 'Mene seuraavalle sivulle';
+    }
+    // if (type === 'previous') {
+    return 'Mene edelliselle sivulle';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rivien uudelleenjärjestely',
 

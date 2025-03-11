@@ -185,6 +185,28 @@ const deDEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Zeilen pro Seite:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Zur ersten Seite';
+    }
+    if (type === 'last') {
+      return 'Zur letzten Seite';
+    }
+    if (type === 'next') {
+      return 'Zur nächsten Seite';
+    }
+    // if (type === 'previous') {
+    return 'Zur vorherigen Seite';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reihen neu ordnen',
 

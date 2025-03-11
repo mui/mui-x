@@ -213,18 +213,14 @@ const beBYGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгарнуць',
   collapseDetailPanel: 'Згарнуць',
 
-  // Row reordering text
-  rowReorderingHeaderName: 'Змяненне чарговасці радкоў',
-
-  // Aggregation
-  aggregationMenuItemHeader: "Аб'яднанне дадзеных",
-  aggregationFunctionLabelSum: 'сума',
-  aggregationFunctionLabelAvg: 'сярэдняе',
-  aggregationFunctionLabelMin: 'мінімум',
-  aggregationFunctionLabelMax: 'максімум',
-  aggregationFunctionLabelSize: 'памер',
-
   // Pagination
+  paginationRowsPerPage: 'Радкоў на старонцы:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Перайсці на першую старонку';
@@ -238,7 +234,17 @@ const beBYGrid: Partial<GridLocaleText> = {
     // if (type === 'previous') {
     return 'Перайсці на папярэднюю старонку';
   },
-  paginationRowsPerPage: 'Радкоў на старонцы:',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Змяненне чарговасці радкоў',
+
+  // Aggregation
+  aggregationMenuItemHeader: "Аб'яднанне дадзеных",
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'сярэдняе',
+  aggregationFunctionLabelMin: 'мінімум',
+  aggregationFunctionLabelMax: 'максімум',
+  aggregationFunctionLabelSize: 'памер',
 };
 
 export const beBY: Localization = getGridLocalization(beBYGrid);

@@ -182,18 +182,14 @@ const urPKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'پھیلائیں',
   collapseDetailPanel: 'تنگ کریں',
 
-  // Row reordering text
-  rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
-
-  // Aggregation
-  aggregationMenuItemHeader: 'ایگریگیشن',
-  aggregationFunctionLabelSum: 'کل',
-  aggregationFunctionLabelAvg: 'اوسط',
-  aggregationFunctionLabelMin: 'کم از کم',
-  aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
-  aggregationFunctionLabelSize: 'سائز',
-
   // Pagination
+  paginationRowsPerPage: 'ایک صفحے پر قطاریں:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'پہلے صفحے پر جائیں';
@@ -207,7 +203,17 @@ const urPKGrid: Partial<GridLocaleText> = {
     // if (type === 'previous') {
     return 'پچھلے صفحے پر جائیں';
   },
-  paginationRowsPerPage: 'ایک صفحے پر قطاریں:',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'ایگریگیشن',
+  aggregationFunctionLabelSum: 'کل',
+  aggregationFunctionLabelAvg: 'اوسط',
+  aggregationFunctionLabelMin: 'کم از کم',
+  aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
+  aggregationFunctionLabelSize: 'سائز',
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid);

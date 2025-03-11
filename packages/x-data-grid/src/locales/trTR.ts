@@ -180,6 +180,28 @@ const trTRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 
+  // Pagination
+  paginationRowsPerPage: 'Sayfa başına satır:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'İlk sayfaya git';
+    }
+    if (type === 'last') {
+      return 'Son sayfaya git';
+    }
+    if (type === 'next') {
+      return 'Sonraki sayfaya git';
+    }
+    // if (type === 'previous') {
+    return 'Önceki sayfaya git';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Satırı yeniden sırala',
 

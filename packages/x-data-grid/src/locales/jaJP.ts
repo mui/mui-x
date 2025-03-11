@@ -179,6 +179,28 @@ const jaJPGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '展開',
   collapseDetailPanel: '折りたたみ',
 
+  // Pagination
+  paginationRowsPerPage: 'ページあたりの行数:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '最初のページへ';
+    }
+    if (type === 'last') {
+      return '最後のページへ';
+    }
+    if (type === 'next') {
+      return '次のページへ';
+    }
+    // if (type === 'previous') {
+    return '前のページへ';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '行並び替え',
 

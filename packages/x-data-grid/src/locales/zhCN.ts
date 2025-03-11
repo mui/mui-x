@@ -180,6 +180,27 @@ const zhCNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '显示',
   collapseDetailPanel: '折叠',
 
+  // Pagination
+  paginationRowsPerPage: '每页行数:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一页';
+    }
+    if (type === 'last') {
+      return '最后一页';
+    }
+    if (type === 'next') {
+      return '下一页';
+    }
+    return '上一页';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '重新排列行',
 

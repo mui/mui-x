@@ -184,6 +184,28 @@ const itITGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Espandi',
   collapseDetailPanel: 'Comprimi',
 
+  // Pagination
+  paginationRowsPerPage: 'Righe per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Vai alla prima pagina';
+    }
+    if (type === 'last') {
+      return "Vai all'ultima pagina";
+    }
+    if (type === 'next') {
+      return 'Vai alla pagina successiva';
+    }
+    // if (type === 'previous') {
+    return 'Vai alla pagina precedente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Riordinamento righe',
 

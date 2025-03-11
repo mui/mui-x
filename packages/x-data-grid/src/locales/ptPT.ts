@@ -185,6 +185,28 @@ const ptPTGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Colapsar',
 
+  // Pagination
+  paginationRowsPerPage: 'Linhas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => !estimated ? `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}` : `${from}–${to} of ${count !== -1 ? count : estimated && estimated > to ? `around ${estimated}` : `more than ${to}`}`,
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Primeira página';
+    }
+    if (type === 'last') {
+      return 'Última página';
+    }
+    if (type === 'next') {
+      return 'Próxima página';
+    }
+    // if (type === 'previous') {
+    return 'Página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenação de linhas',
 
