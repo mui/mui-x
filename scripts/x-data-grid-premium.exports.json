@@ -487,6 +487,7 @@
   { "name": "GridPipeProcessingLookup", "kind": "Interface" },
   { "name": "GridPivotIcon", "kind": "Variable" },
   { "name": "GridPivotModel", "kind": "Interface" },
+  { "name": "GridPivotPanel", "kind": "Function" },
   { "name": "GridPortalWrapper", "kind": "Function" },
   { "name": "GridPreferencePanelInitialState", "kind": "TypeAlias" },
   { "name": "GridPreferencePanelParams", "kind": "Interface" },
