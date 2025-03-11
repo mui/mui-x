@@ -124,6 +124,7 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Μενού',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   columnMenuManageColumns: 'Διαχείριση στηλών',
   columnMenuFilter: 'Φίλτρο',

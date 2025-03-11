@@ -7,7 +7,7 @@ import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverla
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
 import { RadarMetricLabels } from './RadarMetricLabels';
@@ -158,6 +158,11 @@ RadarChart.propTypes = {
    * An array of [[RadarSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
