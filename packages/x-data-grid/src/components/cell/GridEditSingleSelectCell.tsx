@@ -16,9 +16,9 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
-   * @param event The event source of the callback.
-   * @param newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @param {Event<any>} event The event source of the callback.
+   * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
   onValueChange?: (
     event: Parameters<NonNullable<GridSlotProps['baseSelect']['onOpen']>>[0],
