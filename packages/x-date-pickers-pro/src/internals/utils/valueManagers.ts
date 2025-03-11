@@ -19,7 +19,6 @@ import type {
   TimeRangeValidationError,
   RangePosition,
 } from '../../models';
-import { DEFAULT_RANGE_SEPARATOR } from './date-utils';
 
 type RangePickerValueManager<
   TError extends
@@ -73,7 +72,7 @@ export const rangeValueManager: RangePickerValueManager = {
 };
 
 export const getRangeFieldValueManager = ({
-  dateSeparator = DEFAULT_RANGE_SEPARATOR,
+  dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
 }): FieldValueManager<PickerRangeValue> => ({

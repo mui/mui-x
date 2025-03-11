@@ -1,8 +1,6 @@
 import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
-export const DEFAULT_RANGE_SEPARATOR = ' – ';
-
 export const isRangeValid = (
   utils: MuiPickersAdapter,
   range: PickerRangeValue | null,
