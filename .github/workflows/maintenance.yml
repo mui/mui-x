@@ -20,7 +20,7 @@ permissions: {}
 jobs:
   main:
     runs-on: ubuntu-latest
-    name: Check Merge Conflicts
+    name: Check merge conflicts
     permissions:
       contents: read
       pull-requests: write
