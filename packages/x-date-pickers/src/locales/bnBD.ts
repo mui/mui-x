@@ -41,6 +41,7 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'তারিখ ও সময় নির্বাচন করুন',
   timePickerToolbarTitle: 'সময় নির্বাচন করুন',
   dateRangePickerToolbarTitle: 'তারিখের পরিসীমা নির্বাচন করুন',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
