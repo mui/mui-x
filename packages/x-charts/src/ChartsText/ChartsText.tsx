@@ -42,19 +42,10 @@ function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  const transforms: string[] = [];
-  // if (scaleToFit) {
-  //   const lineWidth = wordsByLines[0].width;
-  //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
-  // }
-  if (angle) {
-    transforms.push(`rotate(${angle}, ${x}, ${y})`);
-  }
-
   return (
     <text
       {...textProps}
-      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
+      transform={angle ? `rotate(${angle}, ${x}, ${y})` : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}

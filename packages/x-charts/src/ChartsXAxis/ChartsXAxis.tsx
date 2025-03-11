@@ -335,7 +335,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const tickLabels = isClient
     ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, axisTickLabelProps.style)
-    : new Map();
+    : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
     <XAxisRoot
@@ -383,7 +383,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         );
       })}
 
-      {label && isClient && (
+      {label && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
