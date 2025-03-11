@@ -6,7 +6,7 @@ permissions: {}
 
 jobs:
   vale:
-    name: Check Write Style
+    name: Check Vale (writing styles)
     runs-on: ubuntu-latest
     permissions:
       contents: read
