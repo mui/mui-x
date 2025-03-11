@@ -3,11 +3,11 @@ import { GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export type GridSidebarSearchFieldProps = GridSlotProps['baseTextField'] & {
+export type GridPivotPanelSearchProps = GridSlotProps['baseTextField'] & {
   onClear: () => void;
 };
 
-function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
+function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   const { onClear, ...rest } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -47,4 +47,4 @@ function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
   );
 }
 
-export { GridSidebarSearchField };
+export { GridPivotPanelSearch };

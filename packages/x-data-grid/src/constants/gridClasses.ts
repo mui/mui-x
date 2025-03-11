@@ -611,6 +611,14 @@ export interface GridClasses {
    */
   shadowScrollArea: string;
   /**
+   * Styles applied to the sidebar element.
+   */
+  sidebar: string;
+  /**
+   * Styles applied to the sidebar header element.
+   */
+  sidebarHeader: string;
+  /**
    * Styles applied to the toolbar container element.
    */
   toolbarContainer: string;
@@ -861,6 +869,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'selectedRowCount',
   'sortIcon',
   'shadowScrollArea',
+  'sidebar',
+  'sidebarHeader',
   'toolbarContainer',
   'toolbarFilterList',
   'toolbarPromptControl',

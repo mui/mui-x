@@ -1233,6 +1233,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidebar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar element"
+    },
+    "sidebarHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar header element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
@@ -1392,6 +1400,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "sidebarCloseIcon": "Icon displayed in the sidebar close button.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",

@@ -71,4 +71,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridDeleteIcon
    */
   pivotMenuRemoveIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in the sidebar close button.
+   * @default GridCloseIcon
+   */
+  sidebarCloseIcon: React.JSXElementConstructor<any>;
 }

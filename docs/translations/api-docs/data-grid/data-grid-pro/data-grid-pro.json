@@ -1163,6 +1163,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidebar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar element"
+    },
+    "sidebarHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar header element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"

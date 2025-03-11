@@ -24,7 +24,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
-import { GridSidebar } from '../components/sidebar/GridSidebar';
+import { GridSidebar } from '../components/sidebar/Sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';

@@ -40,7 +40,6 @@ const ResizeHandle = styled('div')({
 const GridSidebarRoot = styled('div', {
   name: 'DataGrid',
   slot: 'Sidebar',
-  overridesResolver: (_, styles) => styles.sidebar,
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   display: 'flex',

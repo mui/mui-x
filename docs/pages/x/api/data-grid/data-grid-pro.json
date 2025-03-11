@@ -1892,6 +1892,18 @@
       "isGlobal": false
     },
     {
+      "key": "sidebar",
+      "className": "MuiDataGridPro-sidebar",
+      "description": "Styles applied to the sidebar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidebarHeader",
+      "className": "MuiDataGridPro-sidebarHeader",
+      "description": "Styles applied to the sidebar header element.",
+      "isGlobal": false
+    },
+    {
       "key": "sortIcon",
       "className": "MuiDataGridPro-sortIcon",
       "description": "Styles applied to the sort icon element.",

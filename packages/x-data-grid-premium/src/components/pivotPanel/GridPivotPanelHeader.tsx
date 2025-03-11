@@ -2,10 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid/internals';
 import { GridSlotProps, NotRendered, useGridSelector } from '@mui/x-data-grid-pro';
-import { GridSidebarHeader, GridSidebarCloseButton, GridSidebarSearchField } from '../sidebar';
+import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { GridPivotPanelSearch } from './GridPivotPanelSearch';
 
 export interface GridPivotPanelHeaderProps {
   searchState: {
@@ -50,7 +51,7 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
 
   return (
-    <GridSidebarHeader>
+    <SidebarHeader>
       <Header>
         <Switch
           as={rootProps.slots.baseSwitch}
@@ -61,10 +62,15 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           size="small"
           label={<Title>{apiRef.current.getLocaleText('pivot')}</Title>}
         />
-        <GridSidebarCloseButton />
+        <rootProps.slots.baseIconButton
+          {...props}
+          onClick={() => apiRef.current.setPivotPanelOpen(false)}
+        >
+          <rootProps.slots.sidebarCloseIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
       </Header>
       <SearchFieldContainer>
-        <GridSidebarSearchField
+        <GridPivotPanelSearch
           value={searchState.value}
           onClear={() => onSearchStateChange({ value: '', enabled: false })}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -72,7 +78,7 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           }
         />
       </SearchFieldContainer>
-    </GridSidebarHeader>
+    </SidebarHeader>
   );
 }
 

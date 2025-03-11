@@ -1264,6 +1264,12 @@
       "description": "Icon displayed in the pivot menu for removing a field from the pivot.",
       "default": "GridDeleteIcon",
       "class": null
+    },
+    {
+      "name": "sidebarCloseIcon",
+      "description": "Icon displayed in the sidebar close button.",
+      "default": "GridCloseIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -2057,6 +2063,18 @@
       "key": "selectedRowCount",
       "className": "MuiDataGridPremium-selectedRowCount",
       "description": "Styles applied to the footer selected row count element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidebar",
+      "className": "MuiDataGridPremium-sidebar",
+      "description": "Styles applied to the sidebar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidebarHeader",
+      "className": "MuiDataGridPremium-sidebarHeader",
+      "description": "Styles applied to the sidebar header element.",
       "isGlobal": false
     },
     {

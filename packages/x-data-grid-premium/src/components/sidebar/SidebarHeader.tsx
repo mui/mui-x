@@ -5,7 +5,7 @@ import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 
-export type GridSidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
+export type SidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 type OwnerState = DataGridProcessedProps;
 
@@ -19,30 +19,25 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridSidebarHeaderRoot = styled('div', {
+const SidebarHeaderRoot = styled('div', {
   name: 'DataGrid',
   slot: 'SidebarHeader',
-  overridesResolver: (_, styles) => styles.sidebarHeader,
 })<{ ownerState: OwnerState }>({
   position: 'sticky',
   top: 0,
   borderBottom: `1px solid ${vars.colors.border.base}`,
 });
 
-function GridSidebarHeader(props: GridSidebarHeaderProps) {
+function SidebarHeader(props: SidebarHeaderProps) {
   const { className, children, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
   return (
-    <GridSidebarHeaderRoot
-      className={clsx(className, classes.root)}
-      ownerState={rootProps}
-      {...other}
-    >
+    <SidebarHeaderRoot className={clsx(className, classes.root)} ownerState={rootProps} {...other}>
       {children}
-    </GridSidebarHeaderRoot>
+    </SidebarHeaderRoot>
   );
 }
 
-export { GridSidebarHeader };
+export { SidebarHeader };

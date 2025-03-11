@@ -6,6 +6,7 @@ import {
   GridExpandMoreIcon,
   GridExpandLessIcon,
   GridDeleteIcon,
+  GridCloseIcon,
 } from '@mui/x-data-grid';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
@@ -33,6 +34,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   pivotMenuMoveToBottomIcon: GridMoveToBottomIcon,
   pivotMenuCheckIcon: GridCheckIcon,
   pivotMenuRemoveIcon: GridDeleteIcon,
+  sidebarCloseIcon: GridCloseIcon,
 };
 
 const materialSlots = {
