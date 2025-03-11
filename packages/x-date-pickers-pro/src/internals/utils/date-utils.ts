@@ -3,15 +3,15 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 
 export const isRangeValid = (
   utils: MuiPickersAdapter,
-  range: PickerRangeValue | null,
+  range: PickerRangeValue,
 ): range is PickerNonNullableRangeValue => {
-  return Boolean(range && range[0] && range[1] && !utils.isBefore(range[1], range[0]));
+  return utils.isValid(range[0]) && utils.isValid(range[1]) && !utils.isBefore(range[1], range[0]);
 };
 
 export const isWithinRange = (
   utils: MuiPickersAdapter,
   day: PickerValidDate,
-  range: PickerRangeValue | null,
+  range: PickerRangeValue,
 ) => {
   return isRangeValid(utils, range) && utils.isWithinRange(day, range);
 };
@@ -19,7 +19,7 @@ export const isWithinRange = (
 export const isStartOfRange = (
   utils: MuiPickersAdapter,
   day: PickerValidDate,
-  range: PickerRangeValue | null,
+  range: PickerRangeValue,
 ) => {
   return isRangeValid(utils, range) && utils.isSameDay(day, range[0]!);
 };
@@ -27,7 +27,7 @@ export const isStartOfRange = (
 export const isEndOfRange = (
   utils: MuiPickersAdapter,
   day: PickerValidDate,
-  range: PickerRangeValue | null,
+  range: PickerRangeValue,
 ) => {
   return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
 };
