@@ -218,7 +218,7 @@ GridEditSingleSelectCell.propTypes = {
   isValidating: PropTypes.bool,
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
