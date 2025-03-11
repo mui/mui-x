@@ -130,6 +130,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Exibir colunas',
   columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtrar',
