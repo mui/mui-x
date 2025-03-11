@@ -42,6 +42,7 @@ const deDEPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
   timePickerToolbarTitle: 'Uhrzeit auswählen',
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

@@ -41,6 +41,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Вибрати дату і час',
   timePickerToolbarTitle: 'Вибрати час',
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
