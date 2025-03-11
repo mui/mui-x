@@ -520,7 +520,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const editingState = gridEditRowsStateSelector(apiRef);
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const row = prevRowValuesLookup.current[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
