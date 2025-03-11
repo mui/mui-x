@@ -66,7 +66,10 @@ BarChartPlotZoom.propTypes = {
 
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig'
+    > {}
 
 /**
  * Demos:

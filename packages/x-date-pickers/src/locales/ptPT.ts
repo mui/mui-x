@@ -41,6 +41,7 @@ const ptPTPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selecione a data e a hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo de datas',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -63,6 +64,7 @@ const ptPTPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Escolha uma data, a data selecionada é ${formattedDate}` : 'Escolha uma data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Escolha uma hora, a hora selecionada é ${formattedTime}` : 'Escolha uma hora',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Limpar valor',
 
   // Table labels

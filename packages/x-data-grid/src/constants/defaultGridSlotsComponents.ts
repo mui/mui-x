@@ -14,7 +14,6 @@ import {
   GridColumnsManagement,
   GridColumnHeaderSortIcon,
   GridNoColumnsOverlay,
-  GridToolbar,
 } from '../components';
 import { GridCell } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -24,6 +23,7 @@ import { GridPinnedRows } from '../components/GridPinnedRows';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
 import { GridBottomContainer } from '../components/virtualization/GridBottomContainer';
+import { GridToolbar } from '../components/toolbarV8/GridToolbar';
 
 // TODO: camelCase these key. It's a private helper now.
 // Remove then need to call `uncapitalizeObjectKeys`.

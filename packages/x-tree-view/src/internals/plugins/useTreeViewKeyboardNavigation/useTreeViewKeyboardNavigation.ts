@@ -103,7 +103,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
-  const handleItemKeyDown = (
+  const handleItemKeyDown = async (
     event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: string,
   ) => {
@@ -129,7 +129,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem({
+          instance.setItemSelection({
             event,
             itemId,
             keepExistingSelection: params.multiSelect,
@@ -149,14 +149,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
             event.preventDefault();
-            instance.selectItem({ event, itemId, keepExistingSelection: true });
+            instance.setItemSelection({ event, itemId, keepExistingSelection: true });
           } else if (!selectorIsItemSelected(store.value, itemId)) {
-            instance.selectItem({ event, itemId });
+            instance.setItemSelection({ event, itemId });
             event.preventDefault();
           }
         }
@@ -211,7 +211,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
           }
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         }
 
@@ -225,7 +225,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           return;
         }
         if (canToggleItemExpansion(itemId) && selectorIsItemExpanded(store.value, itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else {
           const parent = selectorItemParentId(store.value, itemId);

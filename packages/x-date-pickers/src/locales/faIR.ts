@@ -41,6 +41,7 @@ const faIRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
   timePickerToolbarTitle: 'ساعت را انتخاب کنید',
   dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -67,6 +68,7 @@ const faIRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime} می‌باشد`
       : 'ساعت را انتخاب کنید',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'پاک کردن مقدار',
 
   // Table labels

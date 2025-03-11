@@ -23,6 +23,7 @@ const defaultAlias = {
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
   '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
   '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
+  '@mui/x-telemetry': resolveAliasPath('./packages/x-telemetry/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),

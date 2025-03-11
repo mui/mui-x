@@ -14,6 +14,7 @@ import {
   PieValueType,
   DefaultizedPieValueType,
 } from './pie';
+import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -32,7 +33,7 @@ export interface ChartsSeriesConfig {
     itemIdentifier: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: string };
@@ -41,7 +42,7 @@ export interface ChartsSeriesConfig {
     itemIdentifier: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
@@ -49,7 +50,7 @@ export interface ChartsSeriesConfig {
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
-    cartesian: true;
+    axisType: 'cartesian';
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
@@ -60,6 +61,14 @@ export interface ChartsSeriesConfig {
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
+  radar: {
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    series: DefaultizedRadarSeriesType;
+    seriesProp: RadarSeriesType;
+    itemIdentifier: RadarItemIdentifier;
+    valueType: number;
+    axisType: 'polar';
+  };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
@@ -67,7 +76,16 @@ export type ChartSeriesType = keyof ChartsSeriesConfig;
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { cartesian: true } ? Key : never;
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'cartesian' }
+      ? Key
+      : never;
+  }[ChartSeriesType]
+>;
+
+export type PolarChartSeriesType = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'polar' } ? Key : never;
   }[ChartSeriesType]
 >;
 
@@ -78,11 +96,7 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
-  : ChartsSeriesConfig[T]['seriesInput'];
+export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seriesInput'];
 
 export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;

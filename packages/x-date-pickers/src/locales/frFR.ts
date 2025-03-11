@@ -41,6 +41,7 @@ const frFRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: "Choisir la date et l'heure",
   timePickerToolbarTitle: "Choisir l'heure",
   dateRangePickerToolbarTitle: 'Choisir la plage de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -67,6 +68,7 @@ const frFRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime}`
       : "Choisir l'heure",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Effacer la valeur',
 
   // Table labels

@@ -1,7 +1,11 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import {
+  DataGrid,
+  Toolbar,
+  ToolbarButton,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -38,32 +42,49 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-export default function ReadOnlySortingGrid() {
-  const apiRef = useGridApiRef();
+function CustomToolbar() {
+  const apiRef = useGridApiContext();
 
   return (
-    <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'asc')}>
+    <Toolbar>
+      <ToolbarButton
+        onClick={() => apiRef.current?.sortColumn('firstName', 'asc')}
+        render={<Button />}
+      >
         Ascending
-      </Button>
-      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'desc')}>
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => apiRef.current?.sortColumn('firstName', 'desc')}
+        render={<Button />}
+      >
         Descending
-      </Button>
-      <Button onClick={() => apiRef.current?.sortColumn('firstName', null)}>
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => apiRef.current?.sortColumn('firstName', null)}
+        render={<Button />}
+      >
         None
-      </Button>
-      <Box sx={{ height: 400 }}>
-        <DataGrid
-          apiRef={apiRef}
-          rows={rows}
-          columns={columns}
-          initialState={{
-            sorting: {
-              sortModel: [{ field: 'firstName', sort: 'asc' }],
-            },
-          }}
-        />
-      </Box>
+      </ToolbarButton>
+    </Toolbar>
+  );
+}
+
+export default function ReadOnlySortingGrid() {
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'firstName', sort: 'asc' }],
+          },
+        }}
+        slots={{
+          toolbar: CustomToolbar,
+        }}
+        showToolbar
+      />
     </div>
   );
 }

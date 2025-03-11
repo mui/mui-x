@@ -134,6 +134,12 @@
       "class": null
     },
     {
+      "name": "marker",
+      "description": "The component that renders the marker for a scatter point.",
+      "default": "ScatterMarker",
+      "class": null
+    },
+    {
       "name": "noDataOverlay",
       "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
