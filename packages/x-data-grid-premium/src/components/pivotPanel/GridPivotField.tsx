@@ -4,13 +4,14 @@ import {
   getDataGridUtilityClass,
   gridClasses,
   GridColDef,
+  GridMenu,
   GridSlotProps,
   GridSortDirection,
   NotRendered,
 } from '@mui/x-data-grid';
-import Menu from '@mui/material/Menu';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
+import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -142,6 +143,8 @@ function AggregationSelect({
   const rootProps = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
+  const aggregationMenuTriggerId = useId();
+  const aggregationMenuId = useId();
 
   const availableAggregationFunctions = React.useMemo(
     () =>
@@ -175,27 +178,36 @@ function AggregationSelect({
         size="small"
         variant="outlined"
         ref={aggregationMenuTriggerRef}
-        id="aggregation-menu-trigger"
-        aria-controls="aggregation-menu"
+        id={aggregationMenuTriggerId}
         aria-haspopup="true"
+        aria-controls={aggregationMenuOpen ? aggregationMenuId : undefined}
         aria-expanded={aggregationMenuOpen ? 'true' : undefined}
-        onClick={() => setAggregationMenuOpen(true)}
+        onClick={() => setAggregationMenuOpen(!aggregationMenuOpen)}
       />
-      <Menu
+      <GridMenu
         open={aggregationMenuOpen}
         onClose={() => setAggregationMenuOpen(false)}
-        anchorEl={aggregationMenuTriggerRef.current}
+        target={aggregationMenuTriggerRef.current}
+        position="bottom-start"
       >
-        {availableAggregationFunctions.map((func) => (
-          <rootProps.slots.baseMenuItem
-            key={func}
-            selected={aggFunc === func}
-            onClick={() => handleClick(func)}
-          >
-            {func}
-          </rootProps.slots.baseMenuItem>
-        ))}
-      </Menu>
+        <rootProps.slots.baseMenuList
+          id={aggregationMenuId}
+          aria-labelledby={aggregationMenuTriggerId}
+          autoFocusItem
+          {...rootProps.slotProps?.baseMenuList}
+        >
+          {availableAggregationFunctions.map((func) => (
+            <rootProps.slots.baseMenuItem
+              key={func}
+              selected={aggFunc === func}
+              onClick={() => handleClick(func)}
+              {...rootProps.slotProps?.baseMenuItem}
+            >
+              {func}
+            </rootProps.slots.baseMenuItem>
+          ))}
+        </rootProps.slots.baseMenuList>
+      </GridMenu>
     </React.Fragment>
   );
 }
