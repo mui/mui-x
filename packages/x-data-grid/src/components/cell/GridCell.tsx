@@ -334,10 +334,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
     if (rowSpan > 1) {
       cellStyle.height = `calc(var(--height) * ${rowSpan})`;
-      cellStyle.zIndex = 1;
+      cellStyle.zIndex = 10;
 
       if (isLeftPinned || isRightPinned) {
-        cellStyle.zIndex = 4;
+        cellStyle.zIndex = 40;
       }
     }
 
