@@ -2,11 +2,13 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
   PickerRangeValue,
   UseFieldInternalProps,
   getTimeFieldInternalPropsDefaults,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -15,6 +17,7 @@ import {
   ExportedValidateTimeRangeProps,
   ValidateTimeRangeProps,
 } from '../validation/validateTimeRange';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -22,6 +25,7 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
   const {
     enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
     dateSeparator,
+    ampm,
   } = parameters;
 
   return React.useMemo(
@@ -35,22 +39,32 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
         ...internalProps,
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
-      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        // TODO: Use ampm prop?
-        const ampm = utils.is12HourCycleInCurrentLocale();
-        const formattedValue = utils.isValid(value[0])
-          ? utils.format(value[0], ampm ? 'fullTime12h' : 'fullTime24h')
-          : null;
-        return localeText.openTimePickerDialogue(formattedValue);
-      },
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
-    [enableAccessibleFieldDOMStructure, dateSeparator],
+    [enableAccessibleFieldDOMStructure, dateSeparator, ampm],
   );
 }
 
+function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
+  return function useOpenPickerButtonAriaLabel() {
+    const utils = useUtils();
+    const translations = usePickerTranslations();
+
+    return React.useCallback(
+      (value: PickerRangeValue) => {
+        const formatKey =
+          (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+
+        return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
+      },
+      [translations, utils],
+    );
+  };
+}
+
 export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps {
+  extends RangeFieldSeparatorProps,
+    AmPmProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -59,8 +73,8 @@ export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     TimeRangeValidationError,
-    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateTimeRangeProps,
+    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface TimeRangeManagerFieldInternalProps<
@@ -76,12 +90,3 @@ export interface TimeRangeManagerFieldInternalProps<
     ExportedValidateTimeRangeProps,
     AmPmProps,
     RangeFieldSeparatorProps {}
-
-interface TimeRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      TimeRangeValidationError
-    >,
-    ValidateTimeRangeProps {}

@@ -44,6 +44,7 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
+export { PickersToolbarText } from './components/PickersToolbarText';
 export type {
   PickersToolbarTextProps,
   ExportedPickersToolbarTextProps,
@@ -60,7 +61,12 @@ export type {
 } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
+export {
+  DAY_MARGIN,
+  DIALOG_WIDTH,
+  VIEW_HEIGHT,
+  MULTI_SECTION_CLOCK_SECTION_WIDTH,
+} from './constants/dimensions';
 
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
@@ -84,24 +90,15 @@ export { useNullableFieldPrivateContext } from './hooks/useNullableFieldPrivateC
 export { useNullablePickerContext } from './hooks/useNullablePickerContext';
 export { usePicker } from './hooks/usePicker';
 export type {
-  UsePickerParams,
+  UsePickerParameters,
   UsePickerProps,
-  UsePickerValueFieldResponse,
   PickerViewsRendererProps,
-} from './hooks/usePicker';
-export type {
-  UsePickerValueContextValue,
-  UsePickerValueNonStaticProps,
-  PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue.types';
-export type {
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
   PickerViewRenderer,
-  UsePickerViewsProps,
-} from './hooks/usePicker/usePickerViews';
-export type { UsePickerProviderNonStaticProps } from './hooks/usePicker/usePickerProvider';
+  UsePickerNonStaticProps,
+} from './hooks/usePicker';
 export { usePickerPrivateContext } from './hooks/usePickerPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
@@ -121,11 +118,17 @@ export type {
   PickerManagerFieldInternalProps,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
+  PickerValueManager,
 } from './models/manager';
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
+export type {
+  BaseClockProps,
+  ExportedBaseClockProps,
+  DigitalTimePickerProps,
+  AmPmProps,
+} from './models/props/time';
 export type { ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { FormProps } from './models/formProps';
@@ -160,8 +163,9 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
+export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
@@ -182,8 +186,6 @@ export type {
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
-
-export { isInternalTimeView, isTimeView } from './utils/time-utils';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 

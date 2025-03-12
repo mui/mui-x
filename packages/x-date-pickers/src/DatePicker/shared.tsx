@@ -17,7 +17,7 @@ import {
   DatePickerToolbarProps,
   ExportedDatePickerToolbarProps,
 } from './DatePickerToolbar';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { PickerValue } from '../internals/models';
 import { ValidateDatePropsToDefault } from '../validation/validateDate';

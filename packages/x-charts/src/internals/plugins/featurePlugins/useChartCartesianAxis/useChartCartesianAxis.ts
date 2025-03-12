@@ -7,7 +7,7 @@ import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { defaultizeAxis } from './defaultizeAxis';
+import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
@@ -62,21 +62,14 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       ...prev,
       cartesianAxis: {
         ...prev.cartesianAxis,
-        x: defaultizeAxis(xAxis, dataset, 'x'),
-        y: defaultizeAxis(yAxis, dataset, 'y'),
+        x: defaultizeXAxis(xAxis, dataset),
+        y: defaultizeYAxis(yAxis, dataset),
       },
     }));
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
-
-  // Use a ref to avoid rerendering on every mousemove event.
-  const mousePosition = React.useRef({
-    isInChart: false,
-    x: -1,
-    y: -1,
-  });
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -86,12 +79,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     const removeOnHover = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
-        mousePosition.current = {
-          isInChart: false,
-          x: -1,
-          y: -1,
-        };
-
         instance.cleanInteraction?.();
       }
     });
@@ -107,22 +94,16 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
               : state.event;
           const svgPoint = getSVGPoint(element, target);
 
-          mousePosition.current.x = svgPoint.x;
-          mousePosition.current.y = svgPoint.y;
-
-          if (
-            !instance.isPointInside(svgPoint, { targetElement: state.event.target as SVGElement })
-          ) {
-            if (mousePosition.current.isInChart) {
-              store.update((prev) => ({
-                ...prev,
-                interaction: { item: null, axis: { x: null, y: null } },
-              }));
-              mousePosition.current.isInChart = false;
-            }
+          const isPointInside = instance.isPointInside(svgPoint, {
+            targetElement: state.event.target as SVGElement,
+          });
+          if (!isPointInside) {
+            store.update((prev) => ({
+              ...prev,
+              interaction: { item: null, axis: { x: null, y: null } },
+            }));
             return;
           }
-          mousePosition.current.isInChart = true;
 
           instance.setAxisInteraction?.({
             x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
@@ -149,10 +130,23 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     isInteractionEnabled,
   ]);
 
+  const axisInteractionRef = React.useRef<
+    Record<'x' | 'y', null | { value: number | Date | string; index: number }>
+  >({
+    x: null,
+    y: null,
+  });
+
+  // This avoids re-attaching the event listener on mouse move.
+  React.useEffect(() => {
+    const { x, y } = interactionAxis;
+    axisInteractionRef.current.x = x;
+    axisInteractionRef.current.y = y;
+  }, [interactionAxis]);
+
   React.useEffect(() => {
     const element = svgRef.current;
     const onAxisClick = params.onAxisClick;
-
     if (element === null || !onAxisClick) {
       return () => {};
     }
@@ -164,7 +158,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
-      if (interactionAxis.x === null && interactionAxis.y === null) {
+      if (axisInteractionRef.current.x === null && axisInteractionRef.current.y === null) {
         const svgPoint = getSVGPoint(element, state.event);
 
         const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
@@ -174,10 +168,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           ? xIndex
           : (getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y)?.index ?? null);
       } else {
-        isXAxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
+        isXAxis =
+          axisInteractionRef.current.x !== null && axisInteractionRef.current.x.index !== -1;
         dataIndex = isXAxis
-          ? interactionAxis.x && interactionAxis.x.index
-          : interactionAxis.y && interactionAxis.y.index;
+          ? axisInteractionRef.current.x && axisInteractionRef.current.x.index
+          : axisInteractionRef.current.y && axisInteractionRef.current.y.index;
       }
 
       const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
@@ -220,7 +215,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     xAxisIds,
     yAxisWithScale,
     yAxisIds,
-    interactionAxis,
+    axisInteractionRef,
     usedXAxis,
     usedYAxis,
     instance,
@@ -242,8 +237,8 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
     ...params,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
-    defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
   };
 };
 

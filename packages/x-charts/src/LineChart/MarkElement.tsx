@@ -63,7 +63,7 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -75,12 +75,9 @@ function MarkElement(props: MarkElementProps) {
   const cy = useSpringValue(y, { immediate: skipAnimation });
 
   React.useEffect(() => {
-    cx.start(x);
-  }, [cx, x]);
-
-  React.useEffect(() => {
-    cy.start(y);
-  }, [cy, y]);
+    cy.start(y, { immediate: skipAnimation });
+    cx.start(x, { immediate: skipAnimation });
+  }, [cy, y, cx, x, skipAnimation]);
 
   const ownerState = {
     id,
@@ -104,7 +101,7 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

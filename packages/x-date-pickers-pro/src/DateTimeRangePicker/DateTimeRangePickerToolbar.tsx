@@ -34,8 +34,6 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> |
   return composeClasses(slots, getDateTimeRangePickerToolbarUtilityClass, classes);
 };
 
-type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
-
 export interface DateTimeRangePickerToolbarProps
   extends BaseToolbarProps,
     ExportedDateTimeRangePickerToolbarProps {
@@ -89,7 +87,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const {
     className,
     classes: classesProp,
-    classes: inClasses,
     ampm,
     hidden,
     toolbarFormat,
@@ -99,10 +96,8 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     ...other
   } = props;
 
-  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
-    PickerRangeValue,
-    DateTimeRangeViews
-  >();
+  const { value, setValue, disabled, readOnly, view, setView, views } =
+    usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const { rangePosition, setRangePosition } = usePickerRangePositionContext();
