@@ -191,6 +191,9 @@ importers:
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
+      babel-plugin-transform-inline-environment-variables:
+        specifier: ^0.4.4
+        version: 0.4.4
       babel-plugin-transform-react-remove-prop-types:
         specifier: ^0.4.24
         version: 0.4.24
@@ -4909,6 +4912,9 @@ packages:
     resolution: {integrity: sha512-902o4GiQqI1GqAXfD5rEoz0PJamUfJ3VllpdWaNsFTwdaNjFSFHawvBO+cp5K2j+g2h3bZ4lnM1Xb6yFYGihtA==}
     peerDependencies:
       '@babel/core': ^7.10.0
+
+  babel-plugin-transform-inline-environment-variables@0.4.4:
+    resolution: {integrity: sha512-bJILBtn5a11SmtR2j/3mBOjX4K3weC6cq+NNZ7hG22wCAqpc3qtj/iN7dSe9HDiS46lgp1nHsQgeYrea/RUe+g==}
 
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
@@ -14188,6 +14194,8 @@ snapshots:
       '@babel/core': 7.26.10
       '@babel/template': 7.26.9
       tslib: 2.8.1
+
+  babel-plugin-transform-inline-environment-variables@0.4.4: {}
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
 
