@@ -30,6 +30,9 @@ export function RadarAxisSliceHighlight(props: RadarAxisSliceHighlightProps) {
       {series.map(({ id, color }, seriesIndex) => {
         const { highlighted, next = highlighted, previous = highlighted } = points[seriesIndex];
 
+        const ratioPrev = previous.r / (previous.r + highlighted.r);
+        const ratioNext = next.r / (next.r + highlighted.r);
+
         return (
           <path
             className={classes?.slice}
@@ -37,9 +40,9 @@ export function RadarAxisSliceHighlight(props: RadarAxisSliceHighlightProps) {
             fill={color}
             d={`M
  ${center.cx} ${center.cy}
- L ${(previous.x + highlighted.x) / 2} ${(previous.y + highlighted.y) / 2}
+ L ${previous.x * (1 - ratioPrev) + highlighted.x * ratioPrev} ${previous.y * (1 - ratioPrev) + highlighted.y * ratioPrev}
  L ${highlighted.x} ${highlighted.y}
- L ${(next.x + highlighted.x) / 2} ${(next.y + highlighted.y) / 2}
+ L ${next.x * (1 - ratioNext) + highlighted.x * ratioNext} ${next.y * (1 - ratioNext) + highlighted.y * ratioNext}
  Z
  `}
             pointerEvents="none"
