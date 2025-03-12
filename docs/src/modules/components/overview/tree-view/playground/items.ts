@@ -28,7 +28,7 @@ export type IdType =
   | 'share';
 
 export type ExtendedTreeItemProps = {
-  itemType: ItemType;
+  secondaryLabel: string;
   id: IdType;
   label: string;
 };
@@ -37,43 +37,75 @@ export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   {
     id: 'paper',
     label: 'Paper',
-    itemType: 'vertical_center',
+    secondaryLabel: 'Main container',
     children: [
       {
         id: 'header',
         label: 'Header container',
-        itemType: 'vertical_center',
+        secondaryLabel: 'Top section',
         children: [
           {
             id: 'avatar',
             label: 'Avatar',
-            itemType: 'frame',
-            children: [{ id: 'avatar_initial', label: 'Text Content', itemType: 'text' }],
+            secondaryLabel: 'User profile image',
+            children: [
+              {
+                id: 'avatar_initial',
+                label: 'Text Content',
+                secondaryLabel: 'User initials',
+              },
+            ],
           },
 
-          { id: 'header_title', label: 'Header Title', itemType: 'text' },
-          { id: 'header_caption', label: 'Header Caption', itemType: 'text' },
-          { id: 'action_button', label: 'Action Button', itemType: 'frame' },
+          {
+            id: 'header_title',
+            label: 'Header Title',
+            secondaryLabel: 'Main heading',
+          },
+          {
+            id: 'header_caption',
+            label: 'Header Caption',
+            secondaryLabel: 'Subtitle text',
+          },
+          {
+            id: 'action_button',
+            label: 'Action Button',
+            secondaryLabel: 'Interactive element',
+          },
         ],
       },
       {
         id: 'media',
         label: 'Image',
-        itemType: 'image',
+        secondaryLabel: 'Visual content',
       },
       {
         id: 'content',
         label: 'Content',
-        itemType: 'frame',
-        children: [{ id: 'text_content', label: 'Text Content', itemType: 'text' }],
+        secondaryLabel: 'Main body',
+        children: [
+          {
+            id: 'text_content',
+            label: 'Text Content',
+            secondaryLabel: 'Article body',
+          },
+        ],
       },
       {
         id: 'actions',
         label: 'Action Bar',
-        itemType: 'bottom',
+        secondaryLabel: 'Interactive controls',
         children: [
-          { id: 'favorite', label: 'Icon Button', itemType: 'component' },
-          { id: 'share', label: 'Icon Button', itemType: 'component' },
+          {
+            id: 'favorite',
+            label: 'Icon Button',
+            secondaryLabel: 'Like/favorite function',
+          },
+          {
+            id: 'share',
+            label: 'Icon Button',
+            secondaryLabel: 'Share function',
+          },
         ],
       },
     ],
