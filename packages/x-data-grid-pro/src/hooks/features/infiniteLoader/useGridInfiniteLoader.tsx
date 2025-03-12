@@ -67,10 +67,7 @@ export const useGridInfiniteLoader = (
 
   React.useEffect(() => {
     const virtualScroller = apiRef.current.virtualScrollerRef.current;
-    if (!isEnabled) {
-      return;
-    }
-    if (!virtualScroller) {
+    if (!isEnabled || !isReady || !virtualScroller) {
       return;
     }
     observer.current?.disconnect();
