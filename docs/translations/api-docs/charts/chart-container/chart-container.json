@@ -19,7 +19,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onAxisClick": {
       "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
@@ -38,6 +38,12 @@
         "event": "Mouse event caught at the svg level",
         "scatterItemIdentifier": "Identify which item got clicked"
       }
+    },
+    "radiusAxis": {
+      "description": "The configuration of the radial-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "rotationAxis": {
+      "description": "The configuration of the rotation-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."

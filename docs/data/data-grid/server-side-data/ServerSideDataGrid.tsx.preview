@@ -1,6 +1,6 @@
 <DataGrid
   columns={columns}
-  unstable_dataSource={dataSource}
+  dataSource={dataSource}
   pagination
   initialState={{
     ...initialState,

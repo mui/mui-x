@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import ownerDocument from '@mui/utils/ownerDocument';
 import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';

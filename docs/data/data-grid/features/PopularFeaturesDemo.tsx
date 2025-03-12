@@ -84,7 +84,7 @@ export const featuresSet: Row[] = [
     name: 'Lazy loading',
     description: 'Paginate rows and only fetch what you need.',
     plan: 'Pro',
-    detailPage: '/pagination/',
+    detailPage: '/row-updates/#lazy-loading',
     demo: <LazyLoadingGrid />,
     linkToCode: '/row-updates/#system-LazyLoadingGrid.tsx',
   },
@@ -512,6 +512,7 @@ export default function PopularFeaturesDemo() {
           detailPanelExpandIcon: ArrowDown,
           detailPanelCollapseIcon: ArrowUp,
         }}
+        showToolbar
         slotProps={{
           toolbar: { showQuickFilter: true },
         }}

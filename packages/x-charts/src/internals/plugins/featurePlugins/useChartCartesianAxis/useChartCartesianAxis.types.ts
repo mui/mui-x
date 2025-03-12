@@ -1,7 +1,7 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models';
-import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type {
   AxisDefaultized,
   ScaleName,
   ChartsXAxisProps,
@@ -10,31 +10,13 @@ import {
   AxisConfig,
   ChartsAxisData,
 } from '../../../../models/axis';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { ZoomData, ZoomOptions } from './zoom.types';
-import { UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { ZoomData, ZoomOptions } from './zoom.types';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
-export type DefaultizedAxisConfig<AxisProps> = {
+export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
-};
-
-export type CartesianContextState = {
-  /**
-   * Mapping from x-axis key to scaling configuration.
-   */
-  xAxis: DefaultizedAxisConfig<ChartsXAxisProps>;
-  /**
-   * Mapping from y-axis key to scaling configuration.
-   */
-  yAxis: DefaultizedAxisConfig<ChartsYAxisProps>;
-  /**
-   * The x-axes IDs sorted by order they got provided.
-   */
-  xAxisIds: AxisId[];
-  /**
-   * The y-axes IDs sorted by order they got provided.
-   */
-  yAxisIds: AxisId[];
 };
 
 export interface UseChartCartesianAxisParameters {

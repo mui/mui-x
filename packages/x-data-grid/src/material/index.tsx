@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
@@ -24,6 +25,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
+import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -46,7 +48,6 @@ import {
   GridKeyboardArrowRight,
   GridMoreVertIcon,
   GridRemoveIcon,
-  GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -58,11 +59,13 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export { useMaterialCSSVariables } from './variables';
@@ -74,6 +77,37 @@ const InputAdornment = styled(MUIInputAdornment)({
     marginRight: '-7px',
   },
 });
+
+const FormControlLabel = styled(MUIFormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'fullWidth',
+})<{ fullWidth?: boolean }>(({ theme }) => ({
+  gap: theme.spacing(0.5),
+  margin: 0,
+  [`& .${formControlLabelClasses.label}`]: {
+    fontSize: theme.typography.pxToRem(14),
+  },
+  variants: [
+    {
+      props: { fullWidth: true },
+      style: {
+        width: '100%',
+      },
+    },
+  ],
+}));
+
+const Checkbox = styled(MUICheckbox, {
+  shouldForwardProp: (prop) => prop !== 'density',
+})<{ density?: GridSlotProps['baseCheckbox']['density'] }>(({ theme }) => ({
+  variants: [
+    {
+      props: { density: 'compact' },
+      style: {
+        padding: theme.spacing(0.5),
+      },
+    },
+  ],
+}));
 
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
   const {
@@ -122,6 +156,62 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   );
 });
 
+const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+  [`& .${tablePaginationClasses.selectLabel}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  [`& .${tablePaginationClasses.input}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
+    },
+  },
+})) as typeof MUIPagination;
+
+const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
+  function BasePagination(props, ref) {
+    const { onRowsPerPageChange, disabled, ...rest } = props;
+    const computedProps = React.useMemo(() => {
+      if (!disabled) {
+        return undefined;
+      }
+      return {
+        backIconButtonProps: { disabled: true },
+        nextIconButtonProps: { disabled: true },
+      };
+    }, [disabled]);
+
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const { estimatedRowCount } = rootProps;
+
+    return (
+      <StyledPagination
+        component="div"
+        onRowsPerPageChange={useEventCallback(
+          (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+            onRowsPerPageChange?.(Number(event.target.value));
+          },
+        )}
+        labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
+        labelDisplayedRows={(params) =>
+          apiRef.current.getLocaleText('paginationDisplayedRows')({
+            ...params,
+            estimated: estimatedRowCount,
+          })
+        }
+        getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+        {...computedProps}
+        {...rest}
+        ref={ref}
+      />
+    );
+  },
+);
+
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
@@ -139,7 +229,7 @@ const iconSlots: GridIconSlotsComponent = {
   densityCompactIcon: GridViewHeadlineIcon,
   densityStandardIcon: GridTableRowsIcon,
   densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridSaveAltIcon,
+  exportIcon: GridDownloadIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
   treeDataExpandIcon: GridKeyboardArrowRight,
@@ -149,7 +239,7 @@ const iconSlots: GridIconSlotsComponent = {
   detailPanelCollapseIcon: GridRemoveIcon,
   rowReorderIcon: GridDragIcon,
   quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridCloseIcon,
+  quickFilterClearIcon: GridClearIcon,
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
@@ -177,6 +267,7 @@ const baseSlots: GridBaseSlots = {
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseTooltip: MUITooltip,
+  basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
@@ -191,16 +282,12 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 
 export default materialSlots;
 
-const CHECKBOX_COMPACT = { p: 0.5 };
-
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
   const rippleRef = React.useRef<any>(null);
-
-  const sx = density === 'compact' ? CHECKBOX_COMPACT : undefined;
 
   React.useEffect(() => {
     if (autoFocus) {
@@ -215,38 +302,29 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
 
   if (!label) {
     return (
-      <MUICheckbox
+      <Checkbox
         {...other}
         className={className}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
-        sx={sx}
         touchRippleRef={rippleRef}
       />
     );
   }
 
   return (
-    <MUIFormControlLabel
+    <FormControlLabel
       className={className}
       control={
-        <MUICheckbox
+        <Checkbox
           {...other}
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
-          sx={sx}
           touchRippleRef={rippleRef}
         />
       }
       label={label}
-      sx={(theme) => ({
-        gap: 0.5,
-        margin: 0,
-        width: fullWidth ? '100%' : undefined,
-        [`& .${formControlLabelClasses.label}`]: {
-          fontSize: theme.typography.pxToRem(14),
-        },
-      })}
+      fullWidth={fullWidth}
     />
   );
 }
@@ -481,8 +559,8 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
-      {content}
+    <MUIFocusTrap open disableEnforceFocus>
+      <div tabIndex={-1}>{content}</div>
     </MUIFocusTrap>
   );
 }

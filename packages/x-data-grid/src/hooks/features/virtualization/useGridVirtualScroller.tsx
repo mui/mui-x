@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -41,7 +39,6 @@ import {
   type GridRowId,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
@@ -59,6 +56,7 @@ import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -120,7 +118,7 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+  const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
   const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
@@ -492,12 +490,7 @@ export const useGridVirtualScroller = () => {
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
-      let isSelected: boolean;
-      if (selectedRowsLookup[id] == null) {
-        isSelected = false;
-      } else {
-        isSelected = apiRef.current.isRowSelectable(id);
-      }
+      const isSelected = rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id);
 
       let isFirstVisible = false;
       if (params.position === undefined) {
@@ -723,12 +716,10 @@ export const useGridVirtualScroller = () => {
     getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({
       ref: scrollbarVerticalRef,
-      role: 'presentation',
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
       ref: scrollbarHorizontalRef,
-      role: 'presentation',
       scrollPosition,
     }),
     getScrollAreaProps: () => ({

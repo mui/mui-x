@@ -30,7 +30,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   const params = pickerParams as DescribeValueOptions<'picker', any>;
 
-  const isRangeType = params.type === 'date-range' || params.type === 'date-time-range';
+  const isRangeType =
+    params.type === 'date-range' ||
+    params.type === 'date-time-range' ||
+    params.type === 'time-range';
   const isDesktopRange = params.variant === 'desktop' && isRangeType;
 
   describe('Controlled / uncontrolled value', () => {
@@ -168,6 +171,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange: handleChange,
+        defaultValue: values[0],
       });
       v7Response.selectSection(undefined);
       fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
@@ -258,7 +262,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         expect(fieldRoot).to.have.class(inputBaseClasses.error);
         expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
 
-        if (isRangeType && !params.isSingleInput) {
+        if (isRangeType && params.fieldType === 'multi-input') {
           const fieldRootEnd = getFieldInputRoot(1);
           expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
           expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import { warnOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import {
   LineElement,
@@ -98,8 +99,9 @@ const useAggregatedData = () => {
             );
           }
           if (xData.length < stackedData.length) {
-            throw new Error(
+            warnOnce(
               `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              'error',
             );
           }
         }

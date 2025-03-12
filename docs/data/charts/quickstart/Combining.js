@@ -8,7 +8,6 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import alphabetStock from '../dataset/GOOGL.json';
 
 const series = [
@@ -45,24 +44,23 @@ export default function Combining() {
         <ChartContainer
           series={series}
           height={400}
-          margin={{ top: 10 }}
           xAxis={[
             {
               id: 'date',
               data: alphabetStock.map((day) => new Date(day.date)),
               scaleType: 'band',
               valueFormatter: (value) => value.toLocaleDateString(),
+              height: 40,
             },
           ]}
           yAxis={[
-            {
-              id: 'price',
-              scaleType: 'linear',
-            },
+            { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
             {
               id: 'volume',
               scaleType: 'linear',
+              position: 'right',
               valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
+              width: 50,
             },
           ]}
         >
@@ -71,8 +69,7 @@ export default function Combining() {
           <LinePlot />
           <LineHighlightPlot />
           <ChartsXAxis
-            label="date"
-            position="bottom"
+            label="Date"
             axisId="date"
             tickInterval={(value, index) => {
               return index % 30 === 0;
@@ -83,25 +80,13 @@ export default function Combining() {
           />
           <ChartsYAxis
             label="Price (USD)"
-            position="left"
             axisId="price"
             tickLabelStyle={{ fontSize: 10 }}
-            sx={{
-              [`& .${axisClasses.label}`]: {
-                transform: 'translateX(-5px)',
-              },
-            }}
           />
           <ChartsYAxis
             label="Volume"
-            position="right"
             axisId="volume"
             tickLabelStyle={{ fontSize: 10 }}
-            sx={{
-              [`& .${axisClasses.label}`]: {
-                transform: 'translateX(5px)',
-              },
-            }}
           />
           <ChartsTooltip />
         </ChartContainer>

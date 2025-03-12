@@ -2,10 +2,13 @@ import * as React from 'react';
 import {
   DataGrid,
   GridSlotProps,
-  GridToolbarContainer,
-  GridToolbarFilterButton,
+  Toolbar,
+  ToolbarButton,
+  FilterPanelTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -19,9 +22,13 @@ declare module '@mui/x-data-grid' {
 
 function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton ref={setFilterButtonEl} />
-    </GridToolbarContainer>
+    <Toolbar>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger render={<ToolbarButton />} ref={setFilterButtonEl}>
+          <FilterListIcon fontSize="small" />
+        </FilterPanelTrigger>
+      </Tooltip>
+    </Toolbar>
   );
 }
 
@@ -41,6 +48,7 @@ export default function CustomFilterPanelPosition() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         slotProps={{
           panel: {
             target: filterButtonEl,

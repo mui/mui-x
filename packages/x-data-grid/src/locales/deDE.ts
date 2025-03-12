@@ -1,4 +1,3 @@
-import { deDE as deDECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,8 +5,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Keine Spalten',
+  noColumnsOverlayManageColumns: 'Spalten verwalten',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -116,7 +115,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Größer als oder gleich',
   'headerFilterOperator<': 'Kleiner als',
   'headerFilterOperator<=': 'Kleiner als oder gleich',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Filter löschen',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -125,6 +124,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
@@ -186,6 +186,34 @@ const deDEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Zeilen pro Seite:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Zur ersten Seite';
+    }
+    if (type === 'last') {
+      return 'Zur letzten Seite';
+    }
+    if (type === 'next') {
+      return 'Zur nächsten Seite';
+    }
+    // if (type === 'previous') {
+    return 'Zur vorherigen Seite';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reihen neu ordnen',
 
@@ -198,4 +226,4 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Anzahl',
 };
 
-export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
+export const deDE: Localization = getGridLocalization(deDEGrid);

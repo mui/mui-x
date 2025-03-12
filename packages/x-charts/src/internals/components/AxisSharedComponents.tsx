@@ -13,7 +13,6 @@ export const AxisRoot = styled('g', {
     fill: (theme.vars || theme).palette.text.primary,
   },
   [`& .${axisClasses.label}`]: {
-    ...theme.typography.body1,
     fill: (theme.vars || theme).palette.text.primary,
   },
 

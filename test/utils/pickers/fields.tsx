@@ -114,7 +114,7 @@ export const buildFieldInteractions = <P extends {}>({
         const hasMultipleInputs =
           // @ts-ignore
           Component.render.name.includes('Range') &&
-          allProps.slots?.field?.fieldType !== 'single-input';
+          allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {
           allProps.slotProps.field.unstableStartFieldRef = fieldRef;
         } else {
@@ -260,26 +260,23 @@ export const buildFieldInteractions = <P extends {}>({
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
     keyStrokes,
     selectedSection,
-    skipV7,
     ...props
   }) => {
-    if (!skipV7) {
-      // Test with accessible DOM structure
-      const v7Response = renderWithProps({
-        ...props,
-        enableAccessibleFieldDOMStructure: true,
-      } as any);
-      v7Response.selectSection(selectedSection);
-      keyStrokes.forEach((keyStroke) => {
-        v7Response.pressKey(undefined, keyStroke.value);
-        expectFieldValueV7(
-          v7Response.getSectionsContainer(),
-          keyStroke.expected,
-          (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
-        );
-      });
-      v7Response.unmount();
-    }
+    // Test with accessible DOM structure
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
+    v7Response.selectSection(selectedSection);
+    keyStrokes.forEach((keyStroke) => {
+      v7Response.pressKey(undefined, keyStroke.value);
+      expectFieldValueV7(
+        v7Response.getSectionsContainer(),
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+    v7Response.unmount();
 
     // Test with non-accessible DOM structure
     const v6Response = renderWithProps({

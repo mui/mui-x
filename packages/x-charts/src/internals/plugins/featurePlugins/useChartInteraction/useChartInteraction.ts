@@ -87,40 +87,18 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     },
   );
 
-  const enableVoronoid = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      interaction: {
-        ...prev.interaction,
-        isVoronoiEnabled: true,
-      },
-    }));
-  });
-
-  const disableVoronoid = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      interaction: {
-        ...prev.interaction,
-        isVoronoiEnabled: false,
-      },
-    }));
-  });
-
   return {
     instance: {
       cleanInteraction,
       setItemInteraction,
       removeItemInteraction,
       setAxisInteraction,
-      enableVoronoid,
-      disableVoronoid,
     },
   };
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, axis: { x: null, y: null }, isVoronoiEnabled: false },
+  interaction: { item: null, axis: { x: null, y: null } },
 });
 
 useChartInteraction.params = {};

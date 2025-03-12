@@ -2,11 +2,13 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
   PickerRangeValue,
   UseFieldInternalProps,
   getDateTimeFieldInternalPropsDefaults,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -15,6 +17,7 @@ import {
   ExportedValidateDateTimeRangeProps,
   ValidateDateTimeRangeProps,
 } from '../validation/validateDateTimeRange';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -35,10 +38,21 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
         ...internalProps,
         ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
       }),
-      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: () => '',
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
+  );
+}
+
+function useOpenPickerButtonAriaLabel() {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
+
+  return React.useCallback(
+    (value: PickerRangeValue) => {
+      return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
+    },
+    [translations, utils],
   );
 }
 
@@ -53,8 +67,8 @@ export type UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructur
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError,
-    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeRangeProps,
+    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeRangeManagerFieldInternalProps<
@@ -69,14 +83,4 @@ export interface DateTimeRangeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeRangeProps,
     AmPmProps,
-    RangeFieldSeparatorProps {}
-
-interface DateTimeRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeRangeValidationError
-    >,
-    ValidateDateTimeRangeProps,
     RangeFieldSeparatorProps {}

@@ -12,7 +12,6 @@ export default function AreaBaseline() {
           baseline: 'min',
         },
       ]}
-      width={500}
       height={300}
     />
   );

@@ -16,7 +16,7 @@ export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value
   value: React.ReactNode;
   variant: TypographyProps['variant'];
   classes?: Partial<PickersToolbarButtonClasses>;
-  width?: number;
+  width?: number | string;
 }
 
 const useUtilityClasses = (classes: Partial<PickersToolbarButtonClasses> | undefined) => {

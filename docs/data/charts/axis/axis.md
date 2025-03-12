@@ -68,7 +68,7 @@ The second argument of `valueFormatter` provides some rendering context for adva
 In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
 To distinguish tick and tooltip, it uses the `context.location`.
 
-{{"demo": "FormatterDemoNoSnap.js"}}
+{{"demo": "FormatterDemo.js"}}
 
 #### Using the D3 formatter
 
@@ -112,7 +112,7 @@ They always display the same data, going from -15 to 92, but with different `dom
 By default, the axes' directions are left to right and bottom to top.
 You can change this behavior with the property `reverse`.
 
-{{"demo": "ReverseExampleNoSnap.js"}}
+{{"demo": "ReverseExample.js"}}
 
 ## Grid
 
@@ -191,6 +191,33 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 {{"demo": "TickLabelPosition.js"}}
 
+## Position
+
+The axis position can be customized with the `position` property of the axis configuration.
+Its value can be:
+
+- `'top'` or `'bottom'` for the x-axis.
+- `'left'` or `'right'` for the y-axis.
+- `'none'` to hide the axis.
+
+{{"demo": "ModifyAxisPosition.js"}}
+
+### Hiding axis
+
+To hide an axis, set its `position` to `'none'`.
+The axis is still computed and used for the scaling.
+
+{{"demo": "HidingAxis.js"}}
+
+### Multiple axes on the same side
+
+You can display multiple axes on the same side.
+If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
+
+To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
+
+{{"demo": "MultipleAxes.js"}}
+
 ## Axis customization
 
 You can further customize the axis rendering besides the axis definition.
@@ -198,49 +225,26 @@ You can further customize the axis rendering besides the axis definition.
 ### Fixing overflow issues
 
 If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
-Resolving this can be achieved in two ways:
+You can resolve this by [increasing the size of the overflowing axis](/x/react-charts/styling/#placement).
 
-- Increase the space between the SVG border and the axis by setting the [margin props](/x/react-charts/styling/#placement).
-- Modify the axis label position by:
-  - Using the axis configuration `labelStyle.transform`.
-  - Applying CSS transform to the class name `axisClasses.label`.
-
-In the following demo, the margin is modified to provide more space to the x and y axes.
-The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
+In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 {{"demo": "MarginAndLabelPosition.js"}}
-
-### Position
-
-Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those props can accept three type of value:
-
-- `null` to not display the axis
-- `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
-
-The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
-
-{{"demo": "ModifyAxisPosition.js"}}
-
-### Hiding axis
-
-To hide an axis, set it to `null`.
-For example `leftAxis={null}` hides the left axis.
-
-{{"demo": "HidingAxis.js"}}
 
 ### Rendering
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+When not set, the default values for the properties `textAnchor` and `dominantBaseline` depend on the value of the `angle` property.
+You can test below how the value of `angle` influences them.
+
+{{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition
 

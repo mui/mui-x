@@ -163,7 +163,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": null
     },
@@ -181,7 +181,7 @@
     },
     {
       "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
+      "description": "Icon to display in the button used to clean the value.",
       "default": "ClearIcon",
       "class": null
     },
@@ -215,15 +215,15 @@
       "default": "PickersModalDialogRoot",
       "class": null
     },
-    { "name": "field", "description": "", "class": null },
     {
-      "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input.",
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
       "class": null
     },
     {
-      "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
       "class": null
     },
     {
@@ -253,6 +253,17 @@
       "name": "nextIconButton",
       "description": "Button allowing to switch to the right view.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the Picker.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon to display in the button used to open the Picker.",
       "class": null
     },
     {
@@ -293,8 +304,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

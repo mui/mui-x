@@ -2,10 +2,12 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   PickerRangeValue,
   UseFieldInternalProps,
   getDateFieldInternalPropsDefaults,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -14,6 +16,7 @@ import {
   ExportedValidateDateRangeProps,
   ValidateDateRangeProps,
 } from '../validation/validateDateRange';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -34,10 +37,21 @@ export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends b
         ...internalProps,
         ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
       }),
-      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: () => '',
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
+  );
+}
+
+function useOpenPickerButtonAriaLabel() {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
+
+  return React.useCallback(
+    (value: PickerRangeValue) => {
+      return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
+    },
+    [translations, utils],
   );
 }
 
@@ -51,8 +65,8 @@ export type UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateRangeValidationError,
-    DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateRangeProps,
+    DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateRangeManagerFieldInternalProps<
@@ -67,13 +81,3 @@ export interface DateRangeManagerFieldInternalProps<
     >,
     RangeFieldSeparatorProps,
     ExportedValidateDateRangeProps {}
-
-interface DateRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateRangeValidationError
-    >,
-    ValidateDateRangeProps,
-    RangeFieldSeparatorProps {}

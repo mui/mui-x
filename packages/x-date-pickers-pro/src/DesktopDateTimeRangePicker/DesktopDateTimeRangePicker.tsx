@@ -33,7 +33,7 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
-import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
@@ -144,7 +144,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ampmInClock: true,
     calendars: defaultizedProps.calendars ?? 1,
     slots: {
-      field: MultiInputDateTimeRangeField,
+      field: SingleInputDateTimeRangeField,
       layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
@@ -264,7 +264,7 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

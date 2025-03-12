@@ -31,7 +31,7 @@ describe('useSkipAnimation', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)('should throw an error when parent context not present', function test() {
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X: Could not find the animation ref context.';
