@@ -186,6 +186,12 @@ const pages: MuiPage[] = [
             title: 'Filter Panel',
             planned: true,
           },
+          {
+            pathname: '/x/react-data-grid/components/pivot-panel',
+            title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
         ],
       },
       {
