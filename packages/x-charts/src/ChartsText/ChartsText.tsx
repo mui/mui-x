@@ -32,7 +32,7 @@ function ChartsText(props: ChartsTextProps) {
       startDy = '0em';
       break;
     case 'central':
-      startDy = `${(lines.length - 1) / 2}em`;
+      startDy = `-${(lines.length + 1) / 2}em`;
       break;
     case 'text-top':
       startDy = '1em';
@@ -41,7 +41,7 @@ function ChartsText(props: ChartsTextProps) {
       startDy = `-${lines.length - 0.5}em`;
       break;
     default:
-      startDy = `${lines.length - 1}em`;
+      startDy = `-${lines.length}em`;
       break;
   }
 
