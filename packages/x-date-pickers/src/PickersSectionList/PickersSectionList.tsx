@@ -17,7 +17,7 @@ const underlineStyle = (theme: Theme) => ({
   textDecoration: 'underline transparent',
   textDecorationThickness: '3px',
   textUnderlineOffset: '100%',
-  transition: theme.transitions.create('all', {
+  transition: theme.transitions.create('text-decoration', {
     duration: theme.transitions.duration.standard,
   }),
   [`[data-active-range-position="start"] &[data-range-position="start"],
