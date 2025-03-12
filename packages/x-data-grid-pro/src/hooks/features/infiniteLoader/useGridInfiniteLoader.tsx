@@ -5,6 +5,7 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridVisibleRows,
@@ -37,6 +38,7 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
+  const isReady = useGridSelector(apiRef, gridDimensionsSelector).isReady;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>(null);
@@ -63,9 +65,8 @@ export const useGridInfiniteLoader = (
     }
   });
 
-  const virtualScroller = apiRef.current.virtualScrollerRef.current;
-
   React.useEffect(() => {
+    const virtualScroller = apiRef.current.virtualScrollerRef.current;
     if (!isEnabled) {
       return;
     }
@@ -85,7 +86,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [apiRef, virtualScroller, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
+  }, [apiRef, isReady, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {
