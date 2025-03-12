@@ -5,7 +5,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -232,7 +231,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        dominantBaseline: position === 'bottom' ? 'text-bottom' : 'text-top',
         ...labelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -253,10 +252,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
   const labelRefPoint = {
     x: left + width / 2,
-    y: positionSign * (axisHeight - labelHeight),
+    y: positionSign * axisHeight,
   };
 
   return (

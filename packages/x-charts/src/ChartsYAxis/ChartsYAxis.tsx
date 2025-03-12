@@ -5,7 +5,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
@@ -138,7 +137,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
-        dominantBaseline: 'auto',
+        dominantBaseline: 'text-top',
         ...labelStyle,
       } as Partial<ChartsTextProps>['style'],
     } as Partial<ChartsTextProps>,
@@ -169,11 +168,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
-  const labelRefPoint = {
-    x: positionSign * (axisWidth - labelHeight),
-    y: top + height / 2,
-  };
+  const labelRefPoint = { x: positionSign * axisWidth, y: top + height / 2 };
 
   return (
     <YAxisRoot

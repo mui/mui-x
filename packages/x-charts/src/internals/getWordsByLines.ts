@@ -1,8 +1,8 @@
 import { getStringSize } from './domUtils';
 
-export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
+export type ChartsTextBaseline = 'hanging' | 'central' | 'auto' | 'text-top' | 'text-bottom';
 
-export interface ChartsTextStyle extends React.CSSProperties {
+export interface ChartsTextStyle extends Omit<React.CSSProperties, 'dominantBaseline'> {
   angle?: number;
   /**
    * The text baseline
