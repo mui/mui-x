@@ -58,7 +58,7 @@ The radar chart displays a grid behind the series that can be configured with:
 
 ### Item click 🚧
 
-## Highlight 🚧
+## Highlight
 
 ### Axis Highlight
 
