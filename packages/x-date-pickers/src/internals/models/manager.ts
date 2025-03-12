@@ -66,7 +66,7 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
    */
   emptyValue: TValue;
   /**
-   * Method returning the value to set when clicking the "Today" button
+   * Method returning the value to set when clicking the "Today" button.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {MuiPickersAdapter} utils The adapter.
    * @param {PickersTimezone} timezone The current timezone.
@@ -133,12 +133,12 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
    */
   hasError: (error: TError) => boolean;
   /**
-   * The value identifying no error, used to initialise the error state.
+   * The value identifying no error, used to initialize the error state.
    */
   defaultErrorState: TError;
   /**
      * Return the timezone of the date inside a value.
-     * Throw an error on range picker if both values don't have the same timezone.
+     * When used on a range Picker, throw an error if both values don't have the same timezone.
      * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
      @param {MuiPickersAdapter} utils The utils to manipulate the date.
      @param {TValue} value The current value.

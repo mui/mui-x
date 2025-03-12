@@ -8,7 +8,7 @@ import { DateOrTimeViewWithMeridiem } from '../common';
 import { PickerValidValue } from '../value';
 
 /**
- * Props common to all pickers after applying the default props on each picker.
+ * Props common to all pickers after applying the default props on each Picker.
  */
 export interface BasePickerProps<
   TValue extends PickerValidValue,
@@ -29,7 +29,7 @@ export interface BasePickerProps<
 }
 
 /**
- * Props common to all pickers before applying the default props on each picker.
+ * Props common to all pickers before applying the default props on each Picker.
  */
 export interface BasePickerInputProps<
   TValue extends PickerValidValue,

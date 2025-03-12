@@ -59,7 +59,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}번째 주`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `날짜를 선택하세요. 현재 선택된 날짜는 ${formattedDate}입니다.`
