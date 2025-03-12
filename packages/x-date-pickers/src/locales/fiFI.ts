@@ -59,7 +59,7 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Viikko ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Valitse päivä, valittu päivä on ${formattedDate}` : 'Valitse päivä',
   openTimePickerDialogue: (formattedTime) =>

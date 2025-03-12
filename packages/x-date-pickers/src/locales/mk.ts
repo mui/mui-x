@@ -53,7 +53,7 @@ const mkPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Недела ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Избери датум, избраниот датум е ${formattedDate}` : 'Избери датум',
   openTimePickerDialogue: (formattedTime) =>

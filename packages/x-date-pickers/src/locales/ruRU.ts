@@ -60,7 +60,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Выберите дату, выбрана дата ${formattedDate}` : 'Выберите дату',
   openTimePickerDialogue: (formattedTime) =>

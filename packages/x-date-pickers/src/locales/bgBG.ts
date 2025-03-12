@@ -59,7 +59,7 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Седмица ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Избери дата, избраната дата е ${formattedDate}` : 'Избери дата',
   openTimePickerDialogue: (formattedTime) =>
