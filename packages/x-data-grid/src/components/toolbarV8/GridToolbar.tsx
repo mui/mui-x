@@ -91,7 +91,7 @@ function GridToolbar(props: GridToolbarProps) {
               aria-controls={exportMenuId}
               aria-haspopup="true"
               aria-expanded={exportMenuOpen ? 'true' : undefined}
-              onClick={() => setExportMenuOpen(true)}
+              onClick={() => setExportMenuOpen(!exportMenuOpen)}
             >
               <rootProps.slots.exportIcon fontSize="small" />
             </ToolbarButton>
@@ -101,8 +101,14 @@ function GridToolbar(props: GridToolbarProps) {
             target={exportMenuTriggerRef.current}
             open={exportMenuOpen}
             onClose={closeExportMenu}
+            position="bottom-start"
           >
-            <rootProps.slots.baseMenuList id={exportMenuId} aria-labelledby={exportMenuTriggerId}>
+            <rootProps.slots.baseMenuList
+              id={exportMenuId}
+              aria-labelledby={exportMenuTriggerId}
+              autoFocusItem
+              {...rootProps.slotProps?.baseMenuList}
+            >
               {!printOptions?.disableToolbarButton && (
                 <ExportPrint
                   render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
