@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+} from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function GridPivotingCommodities() {
@@ -10,12 +13,25 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotModel, setPivotModel] = React.useState({
-    rows: [{ field: 'brokerName' }],
-    columns: [{ field: 'commodity', sort: 'asc' }],
-    values: [{ field: 'quantity', aggFunc: 'sum' }],
+    rows: [{ field: 'commodity' }],
+    columns: [{ field: 'maturityDate-year', sort: 'asc' }, { field: 'status' }],
+    values: [
+      { field: 'quantity', aggFunc: 'sum' },
+      { field: 'filledQuantity', aggFunc: 'avg' },
+      { field: 'totalPrice', aggFunc: 'avg' },
+    ],
   });
 
   const [isPivotMode, setIsPivotMode] = React.useState(false);
+
+  const pinnedColumns = React.useMemo(() => {
+    if (isPivotMode) {
+      return {
+        left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
+      };
+    }
+    return undefined;
+  }, [isPivotMode]);
 
   return (
     <div style={{ width: '100%' }}>
@@ -31,6 +47,7 @@ export default function GridPivotingCommodities() {
           loading={loading}
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
+          pinnedColumns={pinnedColumns}
           slotProps={{
             toolbar: {
               showQuickFilter: false,

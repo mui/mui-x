@@ -166,7 +166,7 @@ In the demo below, the `sx` prop is used to make the column groups sticky:
 
 {{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Commodities
+## Advanced demo
 
 {{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
 
