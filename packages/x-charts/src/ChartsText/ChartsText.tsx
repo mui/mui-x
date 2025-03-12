@@ -32,16 +32,16 @@ function ChartsText(props: ChartsTextProps) {
       startDy = '0em';
       break;
     case 'central':
-      startDy = `-${(lines.length + 1) / 2}em`;
+      startDy = `-${(lines.length - 1) / 2}em`;
       break;
     case 'text-top':
-      startDy = '1em';
+      startDy = '0em';
       break;
     case 'text-bottom':
       startDy = `-${lines.length - 0.5}em`;
       break;
     default:
-      startDy = `-${lines.length}em`;
+      startDy = `-${lines.length - 1}em`;
       break;
   }
 
