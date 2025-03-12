@@ -1772,6 +1772,24 @@
       "isGlobal": false
     },
     {
+      "key": "resizablePanelHandle",
+      "className": "MuiDataGridPro-resizablePanelHandle",
+      "description": "Styles applied to resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--horizontal",
+      "className": "MuiDataGridPro-resizablePanelHandle--horizontal",
+      "description": "Styles applied to horizontal resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--vertical",
+      "className": "MuiDataGridPro-resizablePanelHandle--vertical",
+      "description": "Styles applied to vertical resizable panel handles.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiDataGridPro-root",
       "description": "Styles applied to the root element.",

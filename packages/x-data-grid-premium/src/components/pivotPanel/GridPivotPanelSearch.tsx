@@ -30,7 +30,7 @@ const GridPivotPanelSearchContainer = styled('div', {
 });
 
 function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
-  const { onClear, ...rest } = props;
+  const { onClear, ...other } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -66,7 +66,7 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
           },
         }}
         {...rootProps.slotProps?.baseTextField}
-        {...rest}
+        {...other}
       />
     </GridPivotPanelSearchContainer>
   );

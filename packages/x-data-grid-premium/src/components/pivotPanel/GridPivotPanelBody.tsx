@@ -11,8 +11,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotField } from './GridPivotField';
 import { GridSidebarCollapsibleSection } from '../sidebar';
-import { useResize } from '../../hooks/utils/useResize';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 
 const GridPivotPanelBodyRoot = styled('div')({
   flex: 1,
@@ -33,7 +33,7 @@ const GridPivotPanelBodyTop = styled(GridShadowScrollArea)({
   },
 });
 
-const GridPivotPanelBodyBottom = styled('div')({
+const GridPivotPanelBodyBottom = styled(ResizablePanel)({
   position: 'relative',
   minHeight: 158,
   overflow: 'hidden',
@@ -90,23 +90,6 @@ const GridPivotPanelPlaceholder = styled('div')({
   ...vars.typography.body,
 });
 
-const GridPivotPanelResizeHandle = styled('div')({
-  position: 'absolute',
-  zIndex: 2,
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: 6,
-  cursor: 'ns-resize',
-  borderTop: `1px solid ${vars.colors.border.base}`,
-  transition: 'border-top 0.1s ease-in-out',
-  userSelect: 'none',
-  touchAction: 'pan-y',
-  '&:hover': {
-    borderTop: `2px solid ${vars.colors.interactive.selected}`,
-  },
-});
-
 export interface FieldTransferObject {
   field: string;
   modelKey: 'columns' | 'rows' | 'values' | null;
@@ -126,15 +109,6 @@ const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: nul
 
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridApiContext();
-  const { ref: GridPivotPanelResizeHandleRef } = useResize({
-    direction: 'vertical',
-    getInitialSize: (handle) => {
-      return handle.parentElement!.offsetHeight;
-    },
-    onSizeChange: (newSize, handle) => {
-      handle.parentElement!.style.height = `${newSize}px`;
-    },
-  });
   const columns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const fields = React.useMemo(() => columns.map((col) => col.field), [columns]);
   const rootProps = useGridRootProps();
@@ -340,8 +314,8 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
         )}
       </GridPivotPanelBodyTop>
 
-      <GridPivotPanelBodyBottom>
-        <GridPivotPanelResizeHandle ref={GridPivotPanelResizeHandleRef} />
+      <GridPivotPanelBodyBottom direction="vertical">
+        <ResizablePanelHandle />
         <GridPivotPanelScrollArea>
           <GridPivotPanelSection
             title={

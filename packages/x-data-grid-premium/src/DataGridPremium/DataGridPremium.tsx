@@ -24,7 +24,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
-import { GridSidebar } from '../components/sidebar/Sidebar';
+import { Sidebar } from '../components/sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
@@ -71,9 +71,9 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
 
   const sidePanel =
     isPivotingEnabled(props) && pivotSettingsOpen ? (
-      <GridSidebar>
+      <Sidebar>
         <GridPivotPanel />
-      </GridSidebar>
+      </Sidebar>
     ) : null;
 
   return (

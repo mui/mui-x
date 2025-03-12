@@ -40,9 +40,7 @@ type GridPivotFieldProps = {
   | { modelKey: null }
 );
 
-type OwnerState = GridPivotFieldProps & {
-  classes?: DataGridProcessedProps['classes'];
-};
+type OwnerState = GridPivotFieldProps & Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, modelKey } = ownerState;
@@ -58,8 +56,8 @@ const GridPivotFieldRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotField',
   overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['pivotField--sorted']}`]: styles.sorted },
-    styles.root,
+    { [`&.${gridClasses['pivotField--sorted']}`]: styles['pivotField--sorted'] },
+    styles.pivotField,
   ],
   shouldForwardProp: (prop) =>
     prop !== 'dropPosition' && prop !== 'section' && prop !== 'ownerState',

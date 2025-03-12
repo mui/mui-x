@@ -462,6 +462,18 @@ export interface GridClasses {
    */
   virtualScrollerRenderZone: string;
   /**
+   * Styles applied to resizable panel handles.
+   */
+  resizablePanelHandle: string;
+  /**
+   * Styles applied to horizontal resizable panel handles.
+   */
+  'resizablePanelHandle--horizontal': string;
+  /**
+   * Styles applied to vertical resizable panel handles.
+   */
+  'resizablePanelHandle--vertical': string;
+  /**
    * Styles applied to the root element.
    */
   root: string;

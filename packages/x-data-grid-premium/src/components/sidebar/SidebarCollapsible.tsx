@@ -47,12 +47,12 @@ const CollapsibleSectionContent = styled('div')({
 });
 
 function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
-  const { title, 'aria-label': ariaLabel, children, ...rest } = props;
+  const { title, 'aria-label': ariaLabel, children, ...other } = props;
   const [open, setOpen] = React.useState(true);
   const id = useId();
 
   return (
-    <CollapsibleSection {...rest} open={open}>
+    <CollapsibleSection {...other} open={open}>
       <CollapsibleSectionTrigger
         role="button"
         tabIndex={0}

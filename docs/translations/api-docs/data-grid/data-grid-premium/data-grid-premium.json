@@ -1148,6 +1148,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pivot panel switch label"
     },
+    "resizablePanelHandle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resizable panel handles"
+    },
+    "resizablePanelHandle--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "horizontal resizable panel handles"
+    },
+    "resizablePanelHandle--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "vertical resizable panel handles"
+    },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
