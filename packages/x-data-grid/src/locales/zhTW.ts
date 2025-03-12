@@ -6,8 +6,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  noColumnsOverlayLabel: '沒有欄位',
-  noColumnsOverlayManageColumns: '管理欄位',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -31,17 +29,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterPlaceholder: '搜尋…',
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
-
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '輸入提示詞',
-  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
-  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
-  toolbarPromptControlLabel: '提示詞輸入',
-  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
-  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
-  toolbarPromptControlSendActionLabel: '發送',
-  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
-  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重新嘗試。',
 
   // Export selector toolbar button text
   toolbarExport: '匯出',

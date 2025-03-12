@@ -6,8 +6,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '没有数据。',
   noResultsOverlayLabel: '未找到数据。',
-  noColumnsOverlayLabel: '没有列',
-  noColumnsOverlayManageColumns: '管理列',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -31,17 +29,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterPlaceholder: '搜索…',
   toolbarQuickFilterLabel: '搜索',
   toolbarQuickFilterDeleteIconLabel: '清除',
-
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '输入提示词',
-  toolbarPromptControlWithRecordingPlaceholder: '输入或录制提示词',
-  toolbarPromptControlRecordingPlaceholder: '正在录音…',
-  toolbarPromptControlLabel: '提示词输入',
-  toolbarPromptControlRecordButtonDefaultLabel: '录音',
-  toolbarPromptControlRecordButtonActiveLabel: '停止录音',
-  toolbarPromptControlSendActionLabel: '发送',
-  toolbarPromptControlSendActionAriaLabel: '发送提示词',
-  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词重试。',
 
   // Export selector toolbar button text
   toolbarExport: '导出',
