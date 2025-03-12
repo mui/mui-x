@@ -255,10 +255,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       return () => {};
     }
 
+    console.log('ran');
+
     const removeOnWheel = instance.addInteractionListener('wheel', (state) => {
       if (element === null) {
         return;
       }
+      console.log(drawingArea.width);
 
       const point = getSVGPoint(element, state.event);
 
@@ -286,12 +289,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
           if (!option) {
             return zoom;
           }
-
+          console.log(drawingArea.width);
           const centerRatio =
             option.axisDirection === 'x'
               ? getHorizontalCenterRatio(point, drawingArea)
               : getVerticalCenterRatio(point, drawingArea);
-          console.log(drawingArea);
+          console.log(drawingArea.width);
 
           console.log(option.axisDirection, centerRatio);
 
@@ -309,10 +312,17 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
     return () => {
       removeOnWheel();
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
     };
   }, [
     svgRef,
     drawingArea,
+    drawingArea.left,
+    drawingArea.width,
+    drawingArea.top,
+    drawingArea.height,
     isZoomEnabled,
     optionsLookup,
     setIsInteracting,
