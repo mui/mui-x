@@ -60,7 +60,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}. hét`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `Válasszon dátumot, a kiválasztott dátum: ${formattedDate}`
