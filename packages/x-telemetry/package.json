@@ -33,7 +33,7 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@fingerprintjs/fingerprintjs": "^4.6.1",
     "@mui/utils": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/utils",
     "ci-info": "^4.2.0",

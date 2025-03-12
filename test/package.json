@@ -6,7 +6,7 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/material",

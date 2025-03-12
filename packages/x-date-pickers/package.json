@@ -45,7 +45,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@mui/utils": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/utils",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.12",
