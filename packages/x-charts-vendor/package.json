@@ -41,7 +41,7 @@
     "robust-predicates": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.26.9",
+    "@babel/plugin-transform-runtime": "^7.26.10",
     "@types/d3-array": "^3.2.1",
     "@types/d3-format": "^3.0.4",
     "@types/d3-path": "^3.1.1",
