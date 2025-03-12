@@ -72,6 +72,19 @@ With composition you can add this behavior with the `<RadarAxisHighlight axisHig
 
 {{"demo": "DemoRadarAxisHighlight.js" }}
 
+### Series Highlight
+
+To set the highlight on series, use the `highlight` prop with `'series'` value.
+This highlight can be controlled with `highlightedItem` value and `onHighlightChange` callback.
+
+With composition you can pass those props to the `RadarDataProvider`.
+
+{{"demo": "DemoRadarSeriesHighlight.js" }}
+
+### Disabling Highlight
+
+To remove highlight, set the `highlight` prop to `'none'`.
+
 ## Tooltip 🚧
 
 ## Composition 🚧
