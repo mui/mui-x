@@ -55,7 +55,7 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled(animated.path, {
+const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
@@ -73,7 +73,7 @@ const PieArcRoot = styled(animated.path, {
     },
   },
 
-  animation: 'animation 0.2s ease-in',
+  // animation: 'animation 0.2s ease-in',
 }));
 
 const PieArcClipPath = styled('path')({});
@@ -127,29 +127,58 @@ function PieArc(props: PieArcProps) {
     outerRadius,
   })!;
 
+  const [lastD, setLastD] = React.useState(
+    () =>
+      d3Arc().cornerRadius(cornerRadius)({
+        padAngle: paddingAngle,
+        startAngle: (endAngle + startAngle) / 2,
+        endAngle: (endAngle + startAngle) / 2 + 0.00001,
+        innerRadius,
+        outerRadius,
+      })!,
+  );
+  const [newD, setNewD] = React.useState(d);
+  console.log({ startAngle, endAngle, d, lastD });
+
+  // React.useEffect(() => {
+  //  if (d !== newD) {
+  //    setLastD(newD);
+  //    setNewD(d);
+  //  }
+  // }, [d, newD]);
+
   return (
     <React.Fragment>
+      {/*
       <clipPath id={`pie-${id}-arc-clip-path-${dataIndex}`}>
         <PieArcClipPath d={d} />
       </clipPath>
-      <g clipPath={`url(#pie-${id}-arc-clip-path-${dataIndex})`}>
-        <PieArcRoot
-          d={d}
-          visibility={startAngle === endAngle ? 'hidden' : 'visible'}
-          onClick={onClick}
-          cursor={onClick ? 'pointer' : 'unset'}
-          ownerState={ownerState}
-          className={classes.root}
-          fill={ownerState.color}
-          opacity={ownerState.isFaded ? 0.3 : 1}
-          filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
-          strokeWidth={1}
-          strokeLinejoin="round"
-          style={{ '--angle': `-${endAngle - startAngle}rad` }}
-          {...other}
-          {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+*/}
+      {/* <g clipPath={`url(#pie-${id}-arc-clip-path-${dataIndex})`}> */}
+      <PieArcRoot
+        d={lastD}
+        visibility={startAngle === endAngle ? 'hidden' : 'visible'}
+        onClick={onClick}
+        cursor={onClick ? 'pointer' : 'unset'}
+        ownerState={ownerState}
+        className={classes.root}
+        fill={ownerState.color}
+        opacity={ownerState.isFaded ? 0.3 : 1}
+        filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+        strokeWidth={1}
+        strokeLinejoin="round"
+        {...other}
+        {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+      >
+        <animate
+          attributeName="d"
+          dur="0.2s"
+          keyTimes="0;1"
+          values={`${lastD};${newD}`}
+          fill="freeze"
         />
-      </g>
+      </PieArcRoot>
+      {/* </g> */}
     </React.Fragment>
   );
 }
