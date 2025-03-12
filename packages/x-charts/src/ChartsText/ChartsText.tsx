@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
-import { useIsClient } from '../hooks/useIsClient';
+import { useIsHydrationDone } from '../hooks/useIsHydrationDone';
 
 export interface ChartsTextProps
   extends Omit<
@@ -25,11 +25,12 @@ function ChartsText(props: ChartsTextProps) {
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
-  const isClient = useIsClient();
+  const isHydrationDone = useIsHydrationDone();
 
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: isClient && text.includes('\n'), text }),
-    [style, text, isClient],
+    () =>
+      getWordsByLines({ style, needsComputation: isHydrationDone && text.includes('\n'), text }),
+    [style, text, isHydrationDone],
   );
 
   let startDy: number;
