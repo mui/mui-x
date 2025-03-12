@@ -195,7 +195,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
       })
       .finally(() => {
         setLoading(false);
-        apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: false } }));
+        apiRef.current.setLoading(false);
       });
   }, [apiRef, rootProps, onPrompt, examplesFromData, query]);
 
