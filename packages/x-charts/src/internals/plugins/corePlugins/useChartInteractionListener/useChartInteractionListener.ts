@@ -49,20 +49,18 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
   const addInteractionListener: AddInteractionListener = React.useCallback(
     (interaction, callback) => {
-      const listeners = listenersRef.current.get(interaction);
+      let listeners = listenersRef.current.get(interaction);
 
       if (!listeners) {
-        const newSet = new Set<Handler<any>>();
-        newSet.add(callback);
-        listenersRef.current.set(interaction, newSet);
+        listeners = new Set<Handler<any>>();
+        listeners.add(callback);
+        listenersRef.current.set(interaction, listeners);
       } else {
-        listenersRef.current.set(interaction, listeners.add(callback));
+        listeners.add(callback);
       }
 
       return () => {
-        if (listeners) {
-          listeners.delete(callback);
-        }
+        listeners.delete(callback);
       };
     },
     [],
