@@ -28,5 +28,6 @@ export function useRadarGridData() {
         y: cy - r * Math.cos(angle),
       };
     }),
+    radius: radiusAxis[metrics[0]].scale.range()[1],
   };
 }

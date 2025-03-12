@@ -44,7 +44,6 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
-  display: 'flex',
   flexDirection: 'row',
   width: '100%',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,

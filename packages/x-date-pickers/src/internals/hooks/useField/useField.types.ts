@@ -20,7 +20,6 @@ import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditin
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
-import { UseLocalizationContextReturnValue } from '../useUtils';
 
 export interface UseFieldParams<
   TValue extends PickerValidValue,
@@ -35,9 +34,7 @@ export interface UseFieldParams<
   fieldValueManager: FieldValueManager<TValue>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
   valueType: PickerValueType;
-  getOpenPickerButtonAriaLabel: (
-    parameters: UseLocalizationContextReturnValue & { value: TValue },
-  ) => string;
+  getOpenPickerButtonAriaLabel: (value: TValue) => string;
 }
 
 export interface UseFieldInternalProps<
@@ -134,7 +131,7 @@ export interface UseFieldCommonAdditionalProps
     Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>
   > {
   /**
-   * The aria label to set on the button that opens the picker.
+   * The aria label to set on the button that opens the Picker.
    */
   openPickerAriaLabel: string;
 }
@@ -348,7 +345,7 @@ export interface UseFieldState<TValue extends PickerValidValue> {
   lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
-   * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
+   * It is updated whenever we have a valid date (for the Range Pickers we update only the portion of the range that is valid).
    */
   referenceValue: InferNonNullablePickerValue<TValue>;
   /**

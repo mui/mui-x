@@ -24,8 +24,8 @@ import { PickersInputLocaleText } from '../../../locales';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 
 /**
- * Props common to all picker headless implementations.
- * Those props are exposed on all the pickers.
+ * Props common to all Picker headless implementations.
+ * Those props are exposed on all the Pickers.
  */
 export interface UsePickerBaseProps<
   TValue extends PickerValidValue,
@@ -84,7 +84,7 @@ export interface UsePickerBaseProps<
 }
 
 /**
- * Props used to handle the value of non-static pickers.
+ * Props used to handle the value of non-static Pickers.
  */
 export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
   /**
@@ -114,7 +114,7 @@ export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextV
    */
   format?: string;
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
    * @default false
    */
   disableOpenPicker?: boolean;
@@ -159,11 +159,11 @@ export interface UsePickerParameters<
   autoFocusView: boolean;
   viewContainerRole: 'dialog' | 'tooltip' | null;
   /**
-   * A function that intercepts the regular picker rendering.
+   * A function that intercepts the regular Picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
-   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
-   * @param {TView} popperView The current picker view.
-   * @param {any} rendererProps All the props that are being passed down to the renderer.
+   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps>} viewRenderers The `viewRenderers` provided to the Picker component.
+   * @param {TView} popperView The current Picker view.
+   * @param {any} rendererProps All the props being passed down to the renderer.
    * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
    */
   rendererInterceptor?: React.JSXElementConstructor<
@@ -182,7 +182,7 @@ export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
 export interface UsePickerState<TValue extends PickerValidValue> {
   /**
-   * Whether the picker is open.
+   * Whether the Picker is open.
    */
   open: boolean;
   /**
@@ -203,7 +203,7 @@ export interface UsePickerState<TValue extends PickerValidValue> {
    * Then we might want to apply some custom logic.
    *
    * For example, when the component is not controlled and `defaultValue` is defined.
-   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the picker should not.
+   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the Picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
 }
