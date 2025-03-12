@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import { GetWordsByLinesParams } from '../internals/getWordsByLines';
 
 export interface ChartsTextProps
   extends Omit<
@@ -24,51 +24,45 @@ function ChartsText(props: ChartsTextProps) {
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
-  const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
-    [style, text],
-  );
+  const lines = text.split('\n');
 
-  let startDy: number;
+  let startDy: string;
   switch (dominantBaseline) {
     case 'hanging':
-      startDy = 0;
+      startDy = '0em';
       break;
     case 'central':
-      startDy = ((wordsByLines.length - 1) / 2) * -wordsByLines[0].height;
+      startDy = `${(lines.length - 1) / 2}em`;
+      break;
+    case 'text-top':
+      startDy = '1em';
+      break;
+    case 'text-bottom':
+      startDy = `-${lines.length - 0.5}em`;
       break;
     default:
-      startDy = (wordsByLines.length - 1) * -wordsByLines[0].height;
+      startDy = `${lines.length - 1}em`;
       break;
-  }
-
-  const transforms: string[] = [];
-  // if (scaleToFit) {
-  //   const lineWidth = wordsByLines[0].width;
-  //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
-  // }
-  if (angle) {
-    transforms.push(`rotate(${angle}, ${x}, ${y})`);
   }
 
   return (
     <text
       {...textProps}
-      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
+      transform={angle ? `rotate(${angle}, ${x}, ${y})` : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
       style={style}
     >
-      {wordsByLines.map((line, index) => (
+      {lines.map((line, index) => (
         <tspan
           x={x}
-          dy={`${index === 0 ? startDy : wordsByLines[0].height}px`}
+          dy={index === 0 ? startDy : '1em'}
           dominantBaseline={dominantBaseline} // Propagated to fix Safari issue: https://github.com/mui/mui-x/issues/10808
           key={index}
         >
-          {line.text}
+          {line}
         </tspan>
       ))}
     </text>
