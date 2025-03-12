@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
-import { ellipsize } from '../internals/ellipsize';
+import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { useIsClient } from '../hooks/useIsClient';
 import { getStringSize } from '../internals/domUtils';
 import { TickItemType, useTicks } from '../hooks/useTicks';
@@ -80,15 +80,15 @@ function shortenLabels(
           bottomBoundModifier,
       );
 
-      shortenedLabels.set(
-        item,
-        ellipsize(item.formattedValue.toString(), {
+      const doesTextFit = (text: string) =>
+        doesTextFitInRect(text, {
           width: maxWidth,
           height,
           angle,
-          measureText: (text) => getStringSize(text, tickLabelStyle),
-        }),
-      );
+          measureText: (string: string) => getStringSize(string, tickLabelStyle),
+        });
+
+      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
     }
   }
 
