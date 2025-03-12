@@ -57,7 +57,7 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}週`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
   openTimePickerDialogue: (formattedTime) =>

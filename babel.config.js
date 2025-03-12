@@ -93,6 +93,18 @@ module.exports = function getBabelConfig(api) {
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
       },
     ],
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'MUI_VERSION',
+          'MUI_MAJOR_VERSION',
+          'MUI_MINOR_VERSION',
+          'MUI_PATCH_VERSION',
+          'MUI_PRERELEASE',
+        ],
+      },
+    ],
   ];
 
   if (fs.existsSync('./mui-css.config.json')) {
