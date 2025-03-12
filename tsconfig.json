@@ -36,6 +36,7 @@
       "@mui/x-internals": ["./packages/x-internals/src"],
       "@mui/x-internals/*": ["./packages/x-internals/src/*"],
       "@mui/x-telemetry": ["./packages/x-telemetry/src"],
+      "@mui/x-telemetry/package.json": ["./packages/x-telemetry/package.json"],
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
       "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
       "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],

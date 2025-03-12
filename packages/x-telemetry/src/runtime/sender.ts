@@ -1,8 +1,10 @@
+// Absolute import because we can't guarantee relative locations outside of the typescript rootDir
+// eslint-disable-next-line no-restricted-imports
+import packageJson from '@mui/x-telemetry/package.json';
 import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
-import packageJson from '../../package.json';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Priority to the config (e.g. in code, env)
