@@ -1,6 +1,3 @@
-// Absolute import because we can't guarantee relative locations outside of the typescript rootDir
-// eslint-disable-next-line no-restricted-imports
-import packageJson from '@mui/x-telemetry/package.json' with { type: 'json' };
 import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
@@ -59,7 +56,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Telemetry-Client-Version': packageJson.version,
+          'X-Telemetry-Client-Version': process.env.MUI_VERSION ?? '<dev>',
           'X-Telemetry-Node-Env': (process.env.NODE_ENV as any) ?? '<unknown>',
         },
         body: JSON.stringify([eventPayload]),

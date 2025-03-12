@@ -39,7 +39,7 @@ const defaultAlias = {
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),
 };
-
+console.log(process.env.MUI_VERSION);
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
@@ -90,6 +90,18 @@ module.exports = function getBabelConfig(api) {
       {
         mode: 'unsafe-wrap',
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
+      },
+    ],
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'MUI_VERSION',
+          'MUI_MAJOR_VERSION',
+          'MUI_MINOR_VERSION',
+          'MUI_PATCH_VERSION',
+          'MUI_PRERELEASE',
+        ],
       },
     ],
   ];

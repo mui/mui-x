@@ -13,9 +13,6 @@
     "access": "public",
     "directory": "build"
   },
-  "exports": {
-    "./package.json": "./package.json"
-  },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
