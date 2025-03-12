@@ -255,18 +255,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       return () => {};
     }
 
-    const wheelHandler = (event: WheelEvent) => {
+    const removeOnWheel = instance.addInteractionListener('wheel', (state) => {
       if (element === null) {
         return;
       }
 
-      const point = getSVGPoint(element, event);
+      const point = getSVGPoint(element, state.event);
 
       if (!instance.isPointInside(point)) {
         return;
       }
 
-      event.preventDefault();
+      if (!state.last) {
+        state.event.preventDefault();
+      }
+
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
@@ -288,8 +291,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
             option.axisDirection === 'x'
               ? getHorizontalCenterRatio(point, drawingArea)
               : getVerticalCenterRatio(point, drawingArea);
+          console.log(drawingArea);
 
-          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, option.step);
+          console.log(option.axisDirection, centerRatio);
+
+          const { scaleRatio, isZoomIn } = getWheelScaleRatio(state.event, option.step);
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
           if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
@@ -299,7 +305,26 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
           return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
         });
       });
+    });
+
+    return () => {
+      removeOnWheel();
     };
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    setIsInteracting,
+    instance,
+    setZoomDataCallback,
+  ]);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null || !isZoomEnabled) {
+      return () => {};
+    }
 
     function pointerDownHandler(event: PointerEvent) {
       zoomEventCacheRef.current.push(event);
@@ -378,7 +403,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       }
     }
 
-    element.addEventListener('wheel', wheelHandler);
     element.addEventListener('pointerdown', pointerDownHandler);
     element.addEventListener('pointermove', pointerMoveHandler);
     element.addEventListener('pointerup', pointerUpHandler);
@@ -391,7 +415,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     element.addEventListener('touchmove', preventDefault);
 
     return () => {
-      element.removeEventListener('wheel', wheelHandler);
       element.removeEventListener('pointerdown', pointerDownHandler);
       element.removeEventListener('pointermove', pointerMoveHandler);
       element.removeEventListener('pointerup', pointerUpHandler);
@@ -400,9 +423,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       element.removeEventListener('pointerleave', pointerUpHandler);
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
     };
   }, [
     svgRef,

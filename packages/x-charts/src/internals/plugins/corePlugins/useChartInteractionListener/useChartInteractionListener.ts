@@ -10,6 +10,7 @@ import {
 
 type ListenerRef = Map<ChartInteraction, Set<Handler<any>>>;
 
+// TODO: use import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react'
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   svgRef,
 }) => {
@@ -40,6 +41,9 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     },
     {
       target: svgRef,
+      eventOptions: {
+        passive: false,
+      },
     },
   );
 
