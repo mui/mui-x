@@ -33,7 +33,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 0,
   display: 'flex',
   alignItems: 'center',
@@ -122,7 +122,6 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     role: 'toolbar',
     'aria-orientation': 'horizontal',
     className: clsx(classes.root, className),
-    ownerState: rootProps,
     ...other,
     ref,
   });
