@@ -10,7 +10,7 @@ import {
   NotRendered,
 } from '@mui/x-data-grid';
 import composeClasses from '@mui/utils/composeClasses';
-import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
+import { DataGridProcessedProps, GridColumnSortButton, vars } from '@mui/x-data-grid/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
@@ -368,15 +368,10 @@ function GridPivotField(props: GridPivotFieldProps) {
 
       <GridPivotFieldActionContainer>
         {props.modelKey === 'columns' && (
-          // TODO: finalize this functionality
-          // - do we need to define an index here?
-          // - should rootProps.disableColumnSorting, colDef.sortable, and colDef.hideSortIcons be respected in pivot mode?
-          <rootProps.slots.columnHeaderSortIcon
+          <GridColumnSortButton
             field={field}
             direction={props.sort}
-            index={undefined}
             sortingOrder={rootProps.sortingOrder}
-            {...rootProps.slotProps?.columnHeaderSortIcon}
             onClick={handleSort}
           />
         )}

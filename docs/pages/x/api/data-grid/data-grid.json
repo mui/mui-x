@@ -1817,9 +1817,15 @@
       "isGlobal": false
     },
     {
+      "key": "sortButton",
+      "className": "MuiDataGrid-sortButton",
+      "description": "Styles applied to the sort button element.",
+      "isGlobal": false
+    },
+    {
       "key": "sortIcon",
       "className": "MuiDataGrid-sortIcon",
-      "description": "Styles applied to the sort icon element.",
+      "description": "Styles applied to the sort button icon element.",
       "isGlobal": false
     },
     {

@@ -1199,9 +1199,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sidebar header element"
     },
+    "sortButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sort button element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the sort icon element"
+      "nodeName": "the sort button icon element"
     },
     "toolbarContainer": {
       "description": "Styles applied to {{nodeName}}.",

@@ -11,6 +11,7 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridToolbar, GridToolbarDivider } from '../components/toolbarV8/GridToolbar';
 export type { GridToolbarProps } from '../components/toolbarV8/GridToolbar';
+export { GridColumnSortButton } from '../components/GridColumnSortButton';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';

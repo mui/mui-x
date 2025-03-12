@@ -373,7 +373,8 @@ export const GridRootStyles = styled('div', {
       visibility: 'visible',
       width: 'auto',
     },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+    [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton},
+      & .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
       opacity: 0,
       transition: vars.transition(['opacity'], {
         duration: vars.transitions.duration.short,
@@ -442,21 +443,22 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover, & .${c.pivotField}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon},
-        & .${c.pivotField}:not(.${c['pivotField--sorted']}):hover .${c.sortIcon}`]: {
+      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
+        & .${c.pivotField}:not(.${c['pivotField--sorted']}):hover .${c.sortButton},
+        & .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton}:focus`]: {
         opacity: 0.5,
       },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}, & .${c.pivotField}`]: columnHeaderStyles,
+      [`& .${c.columnHeader}`]: columnHeaderStyles,
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
           color: vars.colors.foreground.accent,
         },
       },
-      [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortIcon}`]: {
+      [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton}`]: {
         opacity: 0.5,
       },
     },

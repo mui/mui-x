@@ -34,6 +34,7 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
       onClear();

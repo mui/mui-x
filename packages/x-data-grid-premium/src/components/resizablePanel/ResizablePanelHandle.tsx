@@ -44,7 +44,7 @@ const ResizablePanelHandleRoot = styled('div', {
   top: 0,
   left: 0,
   userSelect: 'none',
-  transition: vars.transition(['border-left-color', 'border-top-color'], {
+  transition: vars.transition(['border-color'], {
     duration: vars.transitions.duration.short,
     easing: vars.transitions.easing.easeInOut,
   }),
