@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#f2bc3d8802b1b0459ee02eb8035f91b85ebe55cd
-        version: https://codeload.github.com/mui/material-ui/tar.gz/f2bc3d8802b1b0459ee02eb8035f91b85ebe55cd(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)
+        specifier: github:mui/material-ui#5d9ef7d77b7d18be8da0b87025359934f36f7864
+        version: https://codeload.github.com/mui/material-ui/tar.gz/5d9ef7d77b7d18be8da0b87025359934f36f7864(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
@@ -3271,8 +3271,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/f2bc3d8802b1b0459ee02eb8035f91b85ebe55cd':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/f2bc3d8802b1b0459ee02eb8035f91b85ebe55cd}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5d9ef7d77b7d18be8da0b87025359934f36f7864':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/5d9ef7d77b7d18be8da0b87025359934f36f7864}
     version: 7.0.0-beta.3
     engines: {pnpm: 9.15.4}
 
@@ -12361,7 +12361,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@types/react': 19.0.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/f2bc3d8802b1b0459ee02eb8035f91b85ebe55cd(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5d9ef7d77b7d18be8da0b87025359934f36f7864(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.4.0(encoding@0.1.13)
       '@netlify/functions': 3.0.1
