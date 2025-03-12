@@ -42,7 +42,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '沒有欄位',
   columnsManagementShowHideAllText: '顯示/隱藏所有',
   columnsManagementReset: '重置',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
@@ -109,7 +109,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄位選單`,
   columnMenuShowColumns: '顯示欄位',
   columnMenuManageColumns: '管理欄位',
   columnMenuFilter: '篩選器',
