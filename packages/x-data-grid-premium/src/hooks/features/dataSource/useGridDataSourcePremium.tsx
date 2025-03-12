@@ -6,6 +6,7 @@ import {
   GridEventLookup,
   GRID_ROOT_GROUP_ID,
   GridValidRowModel,
+  useGridApiEventHandler,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
@@ -43,7 +44,7 @@ export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
-  const { api, strategyProcessor, events, setStrategyAvailability } =
+  const { api, debouncedFetchRows, strategyProcessor, events, setStrategyAvailability } =
     useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, options);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
@@ -108,6 +109,9 @@ export const useGridDataSourcePremium = (
   Object.entries(events).forEach(([event, handler]) => {
     addEventHandler(apiRef, event as keyof GridEventLookup, handler);
   });
+
+  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () => debouncedFetchRows());
+  useGridApiEventHandler(apiRef, 'aggregationModelChange', () => debouncedFetchRows());
 
   React.useEffect(() => {
     setStrategyAvailability();
