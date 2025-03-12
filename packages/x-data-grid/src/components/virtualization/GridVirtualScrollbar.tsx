@@ -37,9 +37,9 @@ const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
 const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
-  zIndex: 6,
+  zIndex: 60,
   '&:hover': {
-    zIndex: 7,
+    zIndex: 70,
   },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
