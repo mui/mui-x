@@ -148,23 +148,19 @@ export const getPivotedData = ({
   pivotColumns = pivotColumns.concat(pivotColumnsIncludedInPivotValues);
 
   const getAttributesFromInitialColumn = (field: string) => {
-    const attributes: Partial<GridColDef> = {};
     const initialColumn = initialColumns.get(field);
     if (!initialColumn) {
-      return attributes;
+      return undefined;
     }
 
-    if (initialColumn?.valueFormatter) {
-      attributes.valueFormatter = initialColumn.valueFormatter;
-    }
-
-    if (initialColumn?.headerName) {
-      attributes.headerName = initialColumn.headerName;
-    }
-
-    if (initialColumn?.renderCell) {
-      attributes.renderCell = initialColumn.renderCell;
-    }
+    const attributes: Partial<GridColDef> = {
+      width: initialColumn.width,
+      minWidth: initialColumn.minWidth,
+      maxWidth: initialColumn.maxWidth,
+      valueFormatter: initialColumn.valueFormatter,
+      headerName: initialColumn.headerName,
+      renderCell: initialColumn.renderCell,
+    };
 
     return attributes;
   };
@@ -275,8 +271,9 @@ export const getPivotedData = ({
             const valueField = pivotValue.field;
             const mapValueKey = `${columnGroup.groupId}${columnGroupIdSeparator}${valueField}`;
             const column: GridColDef = {
-              field: mapValueKey,
               headerName: String(valueField),
+              ...getAttributesFromInitialColumn(pivotValue.field),
+              field: mapValueKey,
               aggregable: false,
               groupable: false,
               filterable: false,
@@ -284,7 +281,6 @@ export const getPivotedData = ({
               editable: false,
               disableReorder: true,
               availableAggregationFunctions: [pivotValue.aggFunc],
-              ...getAttributesFromInitialColumn(pivotValue.field),
             };
             pivotColumns.push(column);
             aggregationModel[mapValueKey] = pivotValue.aggFunc;
