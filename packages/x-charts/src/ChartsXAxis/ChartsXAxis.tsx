@@ -300,7 +300,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
         ...labelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -324,7 +324,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
   const labelRefPoint = {
     x: left + width / 2,
-    y: positionSign * (axisHeight - labelHeight),
+    y: positionSign * axisHeight,
   };
 
   /* If there's an axis title, the tick labels have less space to render  */

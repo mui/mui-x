@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import { useIsClient } from '../hooks/useIsClient';
 
 export interface ChartsTextProps
   extends Omit<
@@ -24,14 +25,17 @@ function ChartsText(props: ChartsTextProps) {
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
+  const isClient = useIsClient();
+
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
-    [style, text],
+    () => getWordsByLines({ style, needsComputation: isClient && text.includes('\n'), text }),
+    [style, text, isClient],
   );
 
   let startDy: number;
   switch (dominantBaseline) {
     case 'hanging':
+    case 'text-before-edge':
       startDy = 0;
       break;
     case 'central':
