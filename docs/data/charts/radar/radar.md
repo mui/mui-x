@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarDataProvider
+components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarDataProvider
 ---
 
 # Charts - Radar 🚧
@@ -59,6 +59,18 @@ The radar chart displays a grid behind the series that can be configured with:
 ### Item click 🚧
 
 ## Highlight 🚧
+
+### Axis Highlight
+
+By default the radar highlight values of a same axis.
+This axis highlight has two visualizations available with the prop `axisHighlightShape`:
+
+- `'points'` Displays points on each highlighted value (best with multiple series).
+- `'slice'` Displays a slice around the highlighted value. (best with a single series).
+
+With composition you can add this behavior with the `<RadarAxisHighlight axisHighlightShape='slice' />` component.
+
+{{"demo": "DemoRadarAxisHighlight.js" }}
 
 ## Tooltip 🚧
 
