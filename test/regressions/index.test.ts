@@ -18,8 +18,11 @@ const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
   'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
@@ -33,7 +36,12 @@ const isConsoleWarningIgnored = (msg?: string) => {
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute) {
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;
@@ -250,7 +258,7 @@ async function main() {
           if (code === 0) {
             resolve();
           } else {
-            reject(code);
+            reject(new Error(`ffmpeg exited with code ${code}`));
           }
         });
       });
@@ -287,5 +295,5 @@ main().catch((error) => {
   // error during setup.
   // Throwing lets mocha hang.
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });

@@ -156,7 +156,7 @@ export interface FieldOwnerState extends PickerOwnerState {
 }
 
 /**
- * Props the prop `slotProps.field` of a picker can receive.
+ * Props the `slotProps.field` of a Picker can receive.
  */
 export type PickerFieldSlotProps<
   TValue extends PickerValidValue,
@@ -171,7 +171,7 @@ export type PickerFieldSlotProps<
   };
 
 /**
- * Props the text field receives when used inside a single input picker.
+ * Props the text field receives when used inside a single input Picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<

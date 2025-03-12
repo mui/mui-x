@@ -86,7 +86,10 @@ const ChartsLegend = consumeSlots(
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
   },
-  function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
+  React.forwardRef(function ChartsLegend(
+    props: ChartsLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const data = useLegend();
     const { direction, onItemClick, className, classes, ...other } = props;
 
@@ -129,7 +132,7 @@ const ChartsLegend = consumeSlots(
         })}
       </RootElement>
     );
-  },
+  }),
 );
 
 ChartsLegend.propTypes = {

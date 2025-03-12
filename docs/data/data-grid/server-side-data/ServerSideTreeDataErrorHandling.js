@@ -69,7 +69,7 @@ export default function ServerSideTreeDataErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -88,8 +88,8 @@ export default function ServerSideTreeDataErrorHandling() {
         <DataGridPro
           {...props}
           treeData
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error) => {
+          dataSource={dataSource}
+          onDataSourceError={(error) => {
             if (error instanceof GridGetRowsError) {
               if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
                 setRootError(error.message);
@@ -100,7 +100,7 @@ export default function ServerSideTreeDataErrorHandling() {
               }
             }
           }}
-          unstable_dataSourceCache={null}
+          dataSourceCache={null}
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}

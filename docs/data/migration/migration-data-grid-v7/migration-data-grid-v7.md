@@ -147,6 +147,7 @@ You have to import it from `@mui/x-license` instead:
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
+- The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
 - The `sanitizeFilterItemValue()` utility is not exported anymore.
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
 
@@ -166,6 +167,28 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
+- The data source feature and its related props are now stable.
+
+  ```diff
+   <DataGridPro
+  -  unstable_dataSource={dataSource}
+  -  unstable_dataSourceCache={cache}
+  -  unstable_lazyLoading
+  -  unstable_lazyLoadingRequestThrottleMs={100}
+  +  dataSource={dataSource}
+  +  dataSourceCache={cache}
+  +  lazyLoading
+  +  lazyLoadingRequestThrottleMs={100}
+   />
+  ```
+
+- The data source API is now stable.
+
+  ```diff
+  - apiRef.current.unstable_dataSource.getRows()
+  + apiRef.current.dataSource.getRows()
+  ```
+
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
 
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
@@ -177,6 +200,7 @@ You have to import it from `@mui/x-license` instead:
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
+- `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
 - The `showToolbar` prop is now required to display the toolbar.
 
@@ -190,6 +214,8 @@ You have to import it from `@mui/x-license` instead:
   -  }}
    />
   ```
+
+- The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
 
 - The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
 
@@ -217,6 +243,8 @@ You have to import it from `@mui/x-license` instead:
   3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
 
   To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
+
+- The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example.
 
 ### Localization
 
@@ -315,7 +343,3 @@ You have to import it from `@mui/x-license` instead:
 <!-- ### Editing
 
 TBD
-
-### Changes to slots
-
-TBD -->

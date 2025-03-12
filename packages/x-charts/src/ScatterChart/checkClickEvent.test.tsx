@@ -31,14 +31,26 @@ const config = {
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  describeSkipIf(isJSDOM)('onItemClick - using vornoid', () => {
+  describeSkipIf(isJSDOM)('onItemClick - using voronoi', () => {
     it('should provide the right context as second argument when clicking svg', () => {
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -80,7 +92,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -104,17 +115,16 @@ describe('ScatterChart - click event', () => {
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 
-  describe('onItemClick - disabling vornoid', () => {
+  describe('onItemClick - disabling voronoi', () => {
     it('should not call onItemClick when clicking the SVG', () => {
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -141,7 +151,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -166,7 +175,7 @@ describe('ScatterChart - click event', () => {
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 });

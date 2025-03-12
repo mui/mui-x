@@ -101,7 +101,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         <DataGrid
           apiRef={apiRef}
           columns={mockServer.columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           pagination
           pageSizeOptions={pageSizeOptions}
@@ -202,7 +202,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
     it('should cache the data using the custom cache', async () => {
       const testCache = new TestCache();
-      render(<TestDataSource unstable_dataSourceCache={testCache} />);
+      render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
@@ -212,10 +212,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     it('should cache the data in the chunks defined by the minimum page size', async () => {
       const testCache = new TestCache();
       render(
-        <TestDataSource
-          unstable_dataSourceCache={testCache}
-          paginationModel={{ page: 0, pageSize: 20 }}
-        />,
+        <TestDataSource dataSourceCache={testCache} paginationModel={{ page: 0, pageSize: 20 }} />,
       );
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
@@ -227,10 +224,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       const testCache = new TestCache();
       const pageChangeSpy = spy();
       render(
-        <TestDataSource
-          unstable_dataSourceCache={testCache}
-          onPaginationModelChange={pageChangeSpy}
-        />,
+        <TestDataSource dataSourceCache={testCache} onPaginationModelChange={pageChangeSpy} />,
       );
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
@@ -263,9 +257,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
     it('should allow to disable the default cache', async () => {
       const pageChangeSpy = spy();
-      render(
-        <TestDataSource unstable_dataSourceCache={null} onPaginationModelChange={pageChangeSpy} />,
-      );
+      render(<TestDataSource dataSourceCache={null} onPaginationModelChange={pageChangeSpy} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
@@ -292,9 +284,9 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   });
 
   describe('Error handling', () => {
-    it('should call `unstable_onDataSourceError` when the data source returns an error', async () => {
+    it('should call `onDataSourceError` when the data source returns an error', async () => {
       const onDataSourceError = spy();
-      render(<TestDataSource unstable_onDataSourceError={onDataSourceError} shouldRequestsFail />);
+      render(<TestDataSource onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
         expect(onDataSourceError.callCount).to.equal(1);
       });

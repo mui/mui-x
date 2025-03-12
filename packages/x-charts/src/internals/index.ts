@@ -20,6 +20,7 @@ export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
+export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartVoronoi';
@@ -43,7 +44,11 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
+export * from './stackSeries';
 export * from './getCurve';
+export * from './consumeSlots';
+export * from './consumeThemeProps';
+export * from './defaultizeMargin';
 
 // contexts
 

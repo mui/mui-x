@@ -52,7 +52,7 @@ function LinkPoints({ seriesId, close }) {
 
 export default function CustomScatter() {
   return (
-    <ScatterChart series={series} width={500} height={300}>
+    <ScatterChart series={series} height={300}>
       <LinkPoints seriesId="s1" />
       <LinkPoints seriesId="s2" close />
     </ScatterChart>

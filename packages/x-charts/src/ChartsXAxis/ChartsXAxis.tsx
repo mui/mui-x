@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -17,6 +19,8 @@ import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useXAxes } from '../hooks/useAxis';
+import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
+import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
   const { classes, position } = ownerState;
@@ -160,9 +164,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     sx,
     offset,
+    height: axisHeight,
   } = defaultizedProps;
 
   const theme = useTheme();
+  const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
@@ -176,6 +182,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const defaultTextAnchor = getDefaultTextAnchor(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+  const defaultDominantBaseline = getDefaultBaseline(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -183,8 +196,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -210,16 +223,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (tickSize + 22),
-  };
-
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
@@ -234,9 +244,21 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
-  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+  // - The position is set to 'none'.
+  if (
+    (ordinalAxis && domain.length === 0) ||
+    (!ordinalAxis && domain.some(isInfinity)) ||
+    position === 'none'
+  ) {
     return null;
   }
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
+
   return (
     <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
@@ -273,6 +295,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
                 text={formattedValue.toString()}
               />

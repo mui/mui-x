@@ -46,7 +46,7 @@ export default function ServerSideDataGridAggregationLazyLoading() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         initialState={{
           ...initialState,
           pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
@@ -54,7 +54,7 @@ export default function ServerSideDataGridAggregationLazyLoading() {
             model: { commodity: 'size', quantity: 'sum' },
           },
         }}
-        unstable_lazyLoading
+        lazyLoading
         aggregationFunctions={aggregationFunctions}
       />
     </div>

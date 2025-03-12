@@ -1,0 +1,15 @@
+{
+  "props": { "seriesId": { "type": { "name": "string" } } },
+  "name": "RadarSeriesArea",
+  "imports": [
+    "import { RadarSeriesArea } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesArea } from '@mui/x-charts';",
+    "import { RadarSeriesArea } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarSeriesArea",
+  "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesArea.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "cssComponent": false
+}
