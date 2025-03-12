@@ -111,7 +111,7 @@ export default function StackOrderDemo() {
                 dominantBaseline: 'hanging',
                 textAnchor: 'start',
               },
-              height: 60,
+              height: 65,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}
