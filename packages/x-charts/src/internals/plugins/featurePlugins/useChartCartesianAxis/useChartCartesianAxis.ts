@@ -71,6 +71,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
+  const mousePosition = React.useRef({
+    isInChart: false,
+  });
+
   React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || !element || params.disableAxisListener) {
@@ -98,12 +102,16 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
             targetElement: state.event.target as SVGElement,
           });
           if (!isPointInside) {
-            store.update((prev) => ({
-              ...prev,
-              interaction: { item: null, axis: { x: null, y: null } },
-            }));
-            return;
+            if (mousePosition.current.isInChart) {
+              store.update((prev) => ({
+                ...prev,
+                interaction: { item: null, axis: { x: null, y: null } },
+              }));
+              mousePosition.current.isInChart = false;
+            }
           }
+
+          mousePosition.current.isInChart = true;
 
           instance.setAxisInteraction?.({
             x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
