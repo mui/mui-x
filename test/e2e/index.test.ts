@@ -523,7 +523,7 @@ async function initializeEnvironment(
 
         await page.hover('div[role="columnheader"][data-field="birthday"]');
         await page.click(
-          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
         await page.keyboard.type('08/04/2024', { delay: 10 });

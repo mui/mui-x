@@ -109,6 +109,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Oszlopok megjelenítése',
   columnMenuManageColumns: 'Oszlopok kezelése',
   columnMenuFilter: 'Szűrők',

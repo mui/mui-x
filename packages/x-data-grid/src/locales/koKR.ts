@@ -109,6 +109,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '메뉴',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '열 표시',
   columnMenuManageColumns: '열 관리',
   columnMenuFilter: '필터',

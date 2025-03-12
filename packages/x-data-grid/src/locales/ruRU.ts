@@ -134,6 +134,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показать столбцы',
   columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',

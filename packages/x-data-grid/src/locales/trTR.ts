@@ -109,6 +109,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Sütunları göster',
   columnMenuManageColumns: 'Sütunları yönet',
   columnMenuFilter: 'Filtre Ekle',
