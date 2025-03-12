@@ -21,7 +21,6 @@ export const useInteractionItemProps = (
 } => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-  const dataRef = React.useRef<SeriesItemIdentifier | null>(null);
 
   const onPointerEnter = React.useCallback(() => {
     instance.setItemInteraction({
