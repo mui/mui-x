@@ -99,8 +99,8 @@ importers:
         specifier: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/material
         version: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/material(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#53bd2094725cf3931e7144e1020315735d0767c8
-        version: https://codeload.github.com/mui/material-ui/tar.gz/53bd2094725cf3931e7144e1020315735d0767c8(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)
+        specifier: github:mui/material-ui#c7ea87096184984b18302f059a7452a38a6aff1d
+        version: https://codeload.github.com/mui/material-ui/tar.gz/c7ea87096184984b18302f059a7452a38a6aff1d(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/utils
         version: https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/utils(@types/react@19.0.10)(react@19.0.0)
@@ -3352,8 +3352,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/53bd2094725cf3931e7144e1020315735d0767c8':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/53bd2094725cf3931e7144e1020315735d0767c8}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c7ea87096184984b18302f059a7452a38a6aff1d':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/c7ea87096184984b18302f059a7452a38a6aff1d}
     version: 7.0.0-beta.3
     engines: {pnpm: 9.15.4}
 
@@ -12493,7 +12493,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@types/react': 19.0.10
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/53bd2094725cf3931e7144e1020315735d0767c8(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c7ea87096184984b18302f059a7452a38a6aff1d(@babel/core@7.26.9)(@types/express@5.0.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.4.0(encoding@0.1.13)
       '@netlify/functions': 3.0.1
