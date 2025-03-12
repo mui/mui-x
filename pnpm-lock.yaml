@@ -724,8 +724,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
@@ -804,8 +804,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../x-charts/build
@@ -992,8 +992,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1095,8 +1095,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
@@ -1169,8 +1169,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
@@ -1234,8 +1234,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1320,8 +1320,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-date-pickers':
         specifier: workspace:*
         version: link:../x-date-pickers/build
@@ -1394,8 +1394,8 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.3
@@ -1417,8 +1417,8 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1449,8 +1449,8 @@ importers:
         specifier: ^4.6.1
         version: 4.6.1
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       ci-info:
         specifier: ^4.2.0
         version: 4.2.0
@@ -1487,8 +1487,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1549,8 +1549,8 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
-        version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
+        specifier: ^7.0.0 || ^7.0.0-beta
+        version: 7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -3383,9 +3383,27 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/types@7.2.23':
+    resolution: {integrity: sha512-y/PyDYyVqccHOgEcYnLHJJusKRcIDhTbRCJXuFyUHRQ/patmvm8z23W1YFpOSfyk27R1UARcL9xI6ftY0Ihu8Q==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   '@mui/utils@5.16.14':
     resolution: {integrity: sha512-wn1QZkRzSmeXD1IguBVvJJHV3s6rxJrfb6YuC9Kk6Noh9f8Fb54nUs5JRkKm+BOerRhj5fLg05Dhx/H3Ofb8Mg==}
     engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@mui/utils@7.0.0-beta.3':
+    resolution: {integrity: sha512-wpyhHEadzRe8gqHACvEqLTiyEMNOBbrNdtPC8kIVPIfFYlwi7F62iC4p2TUpjF/Pu79etWG1K77diKysR/oWYQ==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12430,10 +12448,26 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.10
 
+  '@mui/types@7.2.23(@types/react@19.0.10)':
+    optionalDependencies:
+      '@types/react': 19.0.10
+
   '@mui/utils@5.16.14(@types/react@19.0.10)(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.26.9
       '@mui/types': 7.2.21(@types/react@19.0.10)
+      '@types/prop-types': 15.7.14
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 19.0.0
+      react-is: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.10
+
+  '@mui/utils@7.0.0-beta.3(@types/react@19.0.10)(react@19.0.0)':
+    dependencies:
+      '@babel/runtime': 7.26.9
+      '@mui/types': 7.2.23(@types/react@19.0.10)
       '@types/prop-types': 15.7.14
       clsx: 2.1.1
       prop-types: 15.8.1
