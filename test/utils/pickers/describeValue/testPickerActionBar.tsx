@@ -84,7 +84,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-      it('should call onClose and onChange with the initial value', () => {
+      it('should call onClose and onChange with the initial value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -101,7 +101,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
@@ -145,7 +145,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('confirm action', () => {
-      it('should call onClose and onAccept with the live value', () => {
+      it('should call onClose and onAccept with the live value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -162,7 +162,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         fireEvent.click(screen.getByText(/ok/i));
