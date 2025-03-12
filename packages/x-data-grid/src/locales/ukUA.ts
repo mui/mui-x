@@ -1,4 +1,3 @@
-import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -217,6 +216,34 @@ const ukUAGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Показати',
   collapseDetailPanel: 'Приховати',
 
+  // Pagination
+  paginationRowsPerPage: 'Рядків на сторінці:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на першу сторінку';
+    }
+    if (type === 'last') {
+      return 'Перейти на останню сторінку';
+    }
+    if (type === 'next') {
+      return 'Перейти на наступну сторінку';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на попередню сторінку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Порядок рядків',
 
@@ -229,4 +256,4 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'кількість',
 };
 
-export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
+export const ukUA: Localization = getGridLocalization(ukUAGrid);

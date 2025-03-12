@@ -1,4 +1,3 @@
-import { huHU as huHUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -181,6 +180,34 @@ const huHUGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
 
+  // Pagination
+  paginationRowsPerPage: 'Sorok száma:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Első oldalra';
+    }
+    if (type === 'last') {
+      return 'Utolsó oldalra';
+    }
+    if (type === 'next') {
+      return 'Következő oldalra';
+    }
+    // if (type === 'previous') {
+    return 'Előző oldalra';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sorok újrarendezése',
 
@@ -193,4 +220,4 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Darabszám',
 };
 
-export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);
+export const huHU: Localization = getGridLocalization(huHUGrid);

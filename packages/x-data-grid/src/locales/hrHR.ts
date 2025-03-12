@@ -1,4 +1,3 @@
-import { hrHR as hrHRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -205,6 +204,34 @@ const hrHRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Proširiti',
   collapseDetailPanel: 'Skupiti',
 
+  // Pagination
+  paginationRowsPerPage: 'Redova po stranici:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Idi na prvu stranicu';
+    }
+    if (type === 'last') {
+      return 'Idi na posljednju stranicu';
+    }
+    if (type === 'next') {
+      return 'Idi na sljedeću stranicu';
+    }
+    // if (type === 'previous') {
+    return 'Idi na prethodnu stranicu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Promjena redoslijeda',
 
@@ -217,4 +244,4 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'veličina',
 };
 
-export const hrHR = getGridLocalization(hrHRGrid, hrHRCore);
+export const hrHR = getGridLocalization(hrHRGrid);

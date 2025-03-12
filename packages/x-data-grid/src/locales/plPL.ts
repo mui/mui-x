@@ -1,4 +1,3 @@
-import { plPL as plPLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -182,6 +181,34 @@ const plPLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
 
+  // Pagination
+  paginationRowsPerPage: 'Wierszy na stronę:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Przejdź do pierwszej strony';
+    }
+    if (type === 'last') {
+      return 'Przejdź do ostatniej strony';
+    }
+    if (type === 'next') {
+      return 'Przejdź do następnej strony';
+    }
+    // if (type === 'previous') {
+    return 'Przejdź do poprzedniej strony';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Porządkowanie wierszy',
 
@@ -194,4 +221,4 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'rozmiar',
 };
 
-export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);
+export const plPL: Localization = getGridLocalization(plPLGrid);
