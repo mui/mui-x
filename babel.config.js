@@ -39,7 +39,7 @@ const defaultAlias = {
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),
 };
-console.log(process.env.MUI_VERSION);
+
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
