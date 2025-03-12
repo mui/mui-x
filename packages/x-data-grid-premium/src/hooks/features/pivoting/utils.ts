@@ -16,6 +16,8 @@ import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
 
+const columnGroupIdSeparator = '>->';
+
 export const isPivotingEnabled = (
   props: Pick<DataGridPremiumProcessedProps, 'experimentalFeatures' | 'disablePivoting'>,
 ) => {
@@ -200,7 +202,7 @@ export const getPivotedData = ({
           }
         }
         columnGroupPath.push(String(colValue));
-        const groupId = columnGroupPath.join('-');
+        const groupId = columnGroupPath.join(columnGroupIdSeparator);
 
         if (!columnGroupingModelLookup.has(groupId)) {
           const columnGroup: GridColumnGroupingModel[number] = {
@@ -212,7 +214,7 @@ export const getPivotedData = ({
           if (depth === 0) {
             columnGroupingModel.push(columnGroup);
           } else {
-            const parentGroupId = columnGroupPath.slice(0, -1).join('-');
+            const parentGroupId = columnGroupPath.slice(0, -1).join(columnGroupIdSeparator);
             const parentGroup = columnGroupingModelLookup.get(parentGroupId);
             if (parentGroup) {
               parentGroup.children.push(columnGroup);
@@ -229,7 +231,7 @@ export const getPivotedData = ({
             if (!originalColumn) {
               return;
             }
-            const valueKey = `${columnGroupPath.join('-')}-${valueField}`;
+            const valueKey = `${columnGroupPath.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${valueField}`;
             newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
             delete newRow[valueField];
           });
@@ -253,7 +255,7 @@ export const getPivotedData = ({
         if (visibleValues.length === 0) {
           // If there are no visible values, there are no actual columns added to the data grid, which leads to column groups not being visible.
           // Adding an empty column to each column group ensures that the column groups are visible.
-          const emptyColumnField = `${columnGroup.groupId}-empty`;
+          const emptyColumnField = `${columnGroup.groupId}${columnGroupIdSeparator}empty`;
           const emptyColumn: GridColDef = {
             field: emptyColumnField,
             headerName: '',
@@ -271,7 +273,7 @@ export const getPivotedData = ({
         } else {
           visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
-            const mapValueKey = `${columnGroup.groupId}-${valueField}`;
+            const mapValueKey = `${columnGroup.groupId}${columnGroupIdSeparator}${valueField}`;
             const column: GridColDef = {
               field: mapValueKey,
               headerName: String(valueField),
