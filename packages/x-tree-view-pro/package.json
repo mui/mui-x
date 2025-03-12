@@ -43,7 +43,7 @@
     "directory": "packages/x-tree-view-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@mui/utils": "^5.16.6 || ^6.0.0 || ^7.0.0-alpha",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
