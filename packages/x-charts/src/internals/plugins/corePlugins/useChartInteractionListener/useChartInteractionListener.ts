@@ -44,6 +44,12 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       eventOptions: {
         passive: false,
       },
+      drag: {
+        pointer: {
+          // We can allow customizing the number of pointers
+          buttons: 1,
+        },
+      },
     },
   );
 

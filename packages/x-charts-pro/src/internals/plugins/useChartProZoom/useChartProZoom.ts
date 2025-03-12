@@ -205,6 +205,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         event.preventDefault();
       }
       isDraggingRef.current = true;
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
       setIsInteracting(true);
       touchStartRef.current = {
         x: point.x,
@@ -273,12 +276,15 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
-      setIsInteracting(true);
       // Debounce transition to `isInteractive=false`.
       // Useful because wheel events don't have an "end" event.
-      interactionTimeoutRef.current = window.setTimeout(() => {
-        setIsInteracting(false);
-      }, 166);
+      if (!isDraggingRef.current) {
+        setIsInteracting(true);
+
+        interactionTimeoutRef.current = window.setTimeout(() => {
+          setIsInteracting(false);
+        }, 166);
+      }
 
       setZoomDataCallback((prevZoomData) => {
         return prevZoomData.map((zoom) => {
@@ -327,6 +333,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
     function pointerDownHandler(event: PointerEvent) {
       zoomEventCacheRef.current.push(event);
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
       setIsInteracting(true);
     }
 
