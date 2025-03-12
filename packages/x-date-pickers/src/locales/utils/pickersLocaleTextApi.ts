@@ -3,25 +3,30 @@ import { DateView, TimeView, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
-   * Title displayed in the toolbar of the `DatePicker` and its variants.
-   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   * Title displayed in the toolbar of the Date Picker and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the Picker.
    */
   datePickerToolbarTitle: string;
   /**
-   * Title displayed in the toolbar of the `TimePicker` and its variants.
-   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   * Title displayed in the toolbar of the Time Picker and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the Picker.
    */
   timePickerToolbarTitle: string;
   /**
-   * Title displayed in the toolbar of the `DateTimePicker` and its variants.
-   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   * Title displayed in the toolbar of the Date Time Picker and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the Picker.
    */
   dateTimePickerToolbarTitle: string;
   /**
-   * Title displayed in the toolbar of the `DateRangePicker` and its variants.
-   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   * Title displayed in the toolbar of the Date Range Picker and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the Picker.
    */
   dateRangePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `TimeRangePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  timeRangePickerToolbarTitle: string;
 }
 
 export interface PickersComponentAgnosticLocaleText {
@@ -63,7 +68,7 @@ export interface PickersComponentAgnosticLocaleText {
   // Digital clock labels
   selectViewText: (view: TimeViewWithMeridiem) => string;
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate: string | null) => string;
   openTimePickerDialogue: (formattedTime: string | null) => string;
   openRangePickerDialogue: (formattedRange: string | null) => string;
@@ -112,14 +117,14 @@ export interface PickersLocaleText
 export type PickersInputLocaleText = Partial<PickersLocaleText>;
 
 /**
- * Translations that can be provided directly to the picker components.
+ * Translations that can be provided directly to the Picker components.
  * It contains some generic translations like `toolbarTitle`
  * which will be dispatched to various translations keys in `PickersLocaleText`, depending on the pickers received them.
  */
 export interface PickersInputComponentLocaleText
   extends Partial<PickersComponentAgnosticLocaleText> {
   /**
-   * Title displayed in the toolbar of this picker.
+   * Title displayed in the toolbar of this Picker.
    * Will override the global translation keys like `datePickerToolbarTitle` passed to the `LocalizationProvider`.
    */
   toolbarTitle?: string;

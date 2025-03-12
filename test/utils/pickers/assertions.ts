@@ -1,6 +1,11 @@
 import { expect } from 'chai';
 import { SinonSpy } from 'sinon';
-import { cleanText } from 'test/utils/pickers';
+import {
+  cleanText,
+  isPickerRangeType,
+  PickerComponentType,
+  PickerRangeComponentType,
+} from 'test/utils/pickers';
 
 export const expectFieldValueV7 = (
   fieldSectionsContainer: HTMLDivElement,
@@ -30,13 +35,14 @@ export const expectFieldPlaceholderV6 = (
 };
 
 export function expectPickerChangeHandlerValue(
-  type: 'date' | 'date-time' | 'time' | 'date-range' | 'date-time-range',
+  type: PickerComponentType | PickerRangeComponentType,
   spyCallback: SinonSpy,
   expectedValue: any,
 ) {
-  if (['date-range', 'date-time-range'].includes(type)) {
-    const firstArg = spyCallback.lastCall.firstArg as any[];
-    expect(firstArg).to.deep.equal(expectedValue);
+  if (isPickerRangeType(type)) {
+    spyCallback.lastCall.firstArg.forEach((value, index) => {
+      expect(value).to.deep.equal(expectedValue[index]);
+    });
   } else {
     expect(spyCallback.lastCall.firstArg).to.deep.equal(expectedValue);
   }

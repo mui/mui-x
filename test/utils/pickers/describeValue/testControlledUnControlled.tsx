@@ -29,7 +29,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
   const params = pickerParams as DescribeValueOptions<'picker', any>;
 
-  const isRangeType = params.type === 'date-range' || params.type === 'date-time-range';
+  const isRangeType =
+    params.type === 'date-range' ||
+    params.type === 'date-time-range' ||
+    params.type === 'time-range';
   const isDesktopRange = params.variant === 'desktop' && isRangeType;
 
   describe('Controlled / uncontrolled value', () => {

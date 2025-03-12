@@ -6,6 +6,7 @@ import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internal
 import {
   getExpectedOnChangeCount,
   getFieldInputRoot,
+  isPickerRangeType,
   isPickerSingleInput,
   openPicker,
 } from 'test/utils/pickers';
@@ -20,7 +21,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
   const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
     options;
 
-  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+  const isRangeType = isPickerRangeType(pickerParams.type);
   const viewWrapperRole =
     isPickerSingleInput(options) || pickerParams.variant === 'mobile' ? 'dialog' : 'tooltip';
   const shouldCloseOnSelect =
@@ -253,7 +254,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         expect(onChange.callCount).to.equal(
           initialChangeCount +
             getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
-            (pickerParams.type === 'date-time-range' ? 1 : 0),
+            (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range' ? 1 : 0),
         );
         newValueBis = setNewValue(newValueBis, {
           isOpened: true,

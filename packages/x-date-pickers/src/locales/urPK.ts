@@ -41,6 +41,7 @@ const urPKPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'تاریخ اور وقت منتخب کریں',
   timePickerToolbarTitle: 'وقت منتخب کریں',
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +59,7 @@ const urPKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `ہفتہ ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate}` : 'تاریخ منتخب کریں',
   openTimePickerDialogue: (formattedTime) =>

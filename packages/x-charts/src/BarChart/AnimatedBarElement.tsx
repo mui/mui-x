@@ -17,9 +17,6 @@ export interface BarProps
   ownerState: BarElementOwnerState;
 }
 
-/**
- * @ignore - internal component.
- */
 export function AnimatedBarElement(props: BarProps) {
   const { ownerState, ...other } = props;
 

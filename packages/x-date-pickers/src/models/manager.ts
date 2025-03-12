@@ -5,7 +5,7 @@ import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
 
 /**
- * Object that contains all the necessary methods and properties to adapter a picker or a field for a given value type.
+ * Object that contains all the necessary methods and properties to adapt a Picker or a Field for a given value type.
  * You should never create your own manager.
  * Instead, use the hooks exported from '@mui/x-date-pickers/managers' and '@mui/x-date-pickers-pro/managers'.
  *
@@ -52,12 +52,12 @@ export interface PickerManager<
    */
   validator: Validator<TValue, TError, TValidationProps>;
   /**
-   * Object containing basic methods to interact with the value of the picker or field.
+   * Object containing basic methods to interact with the value of the Picker or Field.
    * This property is not part of the public API and should not be used directly.
    */
   internal_valueManager: PickerValueManager<TValue, TError>;
   /**
-   * Object containing all the necessary methods to interact with the value of the field.
+   * Object containing all the necessary methods to interact with the value of the Field.
    * This property is not part of the public API and should not be used directly.
    */
   internal_fieldValueManager: FieldValueManager<TValue>;
@@ -80,8 +80,8 @@ export interface PickerManager<
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
-   * Returns a hook that creates the aria-label to apply on the button that opens the picker.
-   * @returns {(value: TValue) => string} The method to create the aria-label to apply on the button that opens the picker.
+   * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
+   * @returns {(value: TValue) => string} The method to create the aria-label to apply on the button that opens the Picker.
    */
   internal_useOpenPickerButtonAriaLabel: () => (value: TValue) => string;
 }

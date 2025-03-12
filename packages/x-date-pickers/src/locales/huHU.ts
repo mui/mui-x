@@ -42,6 +42,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Dátum és idő kiválasztása',
   timePickerToolbarTitle: 'Idő kiválasztása',
   dateRangePickerToolbarTitle: 'Dátumhatárok kiválasztása',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,7 +60,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}. hét`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `Válasszon dátumot, a kiválasztott dátum: ${formattedDate}`

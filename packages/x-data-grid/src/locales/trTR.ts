@@ -1,4 +1,3 @@
-import { trTR as trTRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -182,6 +181,34 @@ const trTRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 
+  // Pagination
+  paginationRowsPerPage: 'Sayfa başına satır:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'İlk sayfaya git';
+    }
+    if (type === 'last') {
+      return 'Son sayfaya git';
+    }
+    if (type === 'next') {
+      return 'Sonraki sayfaya git';
+    }
+    // if (type === 'previous') {
+    return 'Önceki sayfaya git';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Satırı yeniden sırala',
 
@@ -194,4 +221,4 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'boyut',
 };
 
-export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
+export const trTR: Localization = getGridLocalization(trTRGrid);

@@ -41,6 +41,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Вибрати дату і час',
   timePickerToolbarTitle: 'Вибрати час',
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +59,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Оберіть дату, обрана дата  ${formattedDate}` : 'Оберіть дату',
   openTimePickerDialogue: (formattedTime) =>

@@ -1,4 +1,3 @@
-import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -186,6 +185,34 @@ const frFRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Afficher',
   collapseDetailPanel: 'Masquer',
 
+  // Pagination
+  paginationRowsPerPage: 'Lignes par page :',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Aller à la première page';
+    }
+    if (type === 'last') {
+      return 'Aller à la dernière page';
+    }
+    if (type === 'next') {
+      return 'Aller à la page suivante';
+    }
+    // if (type === 'previous') {
+    return 'Aller à la page précédente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Positionnement des lignes',
 
@@ -198,4 +225,4 @@ const frFRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
-export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
+export const frFR: Localization = getGridLocalization(frFRGrid);
