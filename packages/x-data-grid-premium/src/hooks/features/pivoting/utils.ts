@@ -102,11 +102,13 @@ export const getPivotedData = ({
   columns,
   pivotModel,
   apiRef,
+  pivotingColDef,
 }: {
   rows: GridRowModel[];
   columns: GridColDef[];
   pivotModel: GridPivotModel;
   apiRef: RefObject<GridApiPremium>;
+  pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
 }): GridPivotingPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
@@ -270,9 +272,14 @@ export const getPivotedData = ({
           visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
             const mapValueKey = `${columnGroup.groupId}${columnGroupIdSeparator}${valueField}`;
+            const overrides =
+              typeof pivotingColDef === 'function'
+                ? pivotingColDef(valueField, columnGroup.groupId.split(columnGroupIdSeparator))
+                : undefined;
             const column: GridColDef = {
               headerName: String(valueField),
               ...getAttributesFromInitialColumn(pivotValue.field),
+              ...overrides,
               field: mapValueKey,
               aggregable: false,
               groupable: false,

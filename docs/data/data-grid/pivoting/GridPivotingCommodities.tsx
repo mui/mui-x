@@ -4,6 +4,7 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridPinnedColumnFields,
   GridPivotModel,
+  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -35,6 +36,15 @@ export default function GridPivotingCommodities() {
     return undefined;
   }, [isPivotMode]);
 
+  const pivotingColDef = React.useCallback<
+    NonNullable<DataGridPremiumProps['pivotingColDef']>
+  >((originalColumnField) => {
+    if (originalColumnField === 'quantity') {
+      return { width: 80 };
+    }
+    return undefined;
+  }, []);
+
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 560, width: '100%' }}>
@@ -50,6 +60,7 @@ export default function GridPivotingCommodities() {
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
           pinnedColumns={pinnedColumns}
+          pivotingColDef={pivotingColDef}
           slotProps={{
             toolbar: {
               showQuickFilter: false,

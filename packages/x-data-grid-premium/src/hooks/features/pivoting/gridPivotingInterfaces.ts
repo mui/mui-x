@@ -54,3 +54,20 @@ export interface GridPivotingApi {
    */
   setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
+
+export type GridPivotingColDefOverrides = Pick<
+  GridColDef,
+  | 'width'
+  | 'flex'
+  | 'headerName'
+  | 'description'
+  | 'align'
+  | 'headerAlign'
+  | 'cellClassName'
+  | 'headerClassName'
+  | 'display'
+  | 'maxWidth'
+  | 'minWidth'
+  | 'resizable'
+  | 'sortingOrder'
+>;

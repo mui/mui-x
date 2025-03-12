@@ -91,6 +91,7 @@ export const useGridPivoting = (
     | 'experimentalFeatures'
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
+    | 'pivotingColDef'
   >,
 ) => {
   const isPivot = useGridSelector(apiRef, gridPivotEnabledSelector);
@@ -156,13 +157,14 @@ export const useGridPivoting = (
             columns,
             pivotModel,
             apiRef: apiRef as RefObject<GridApiPremium>,
+            pivotingColDef: props.pivotingColDef,
           }),
         };
       }
 
       return undefined;
     },
-    [apiRef],
+    [apiRef, props.pivotingColDef],
   );
 
   useOnMount(() => {
