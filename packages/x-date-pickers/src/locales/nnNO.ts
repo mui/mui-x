@@ -59,7 +59,7 @@ const nnNOPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Veke ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vel dato, vald dato er ${formattedDate}` : 'Vel dato',
   openTimePickerDialogue: (formattedTime) =>

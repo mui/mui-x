@@ -90,7 +90,7 @@ export const PickerFieldUIContext = React.createContext<PickerFieldUIContextValu
 });
 
 /**
- * Adds the button to open the picker and the button to clear the value of the field.
+ * Adds the button to open the Picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
 export function PickerFieldUI(props: PickerFieldUIProps) {
@@ -299,7 +299,7 @@ export interface ExportedPickerFieldUIProps {
   clearButtonPosition?: 'start' | 'end';
   /**
    * The position at which the opening button is placed.
-   * If there is no picker to open, the button is not rendered
+   * If there is no Picker to open, the button is not rendered
    * @default 'end'
    */
   openPickerButtonPosition?: 'start' | 'end';
@@ -321,7 +321,7 @@ export interface PickerFieldUIProps {
    */
   fieldResponse: UseFieldResponse<any, any>;
   /**
-   * The component to use to render the picker opening icon if none is provided in the picker's slots.
+   * The component to use to render the Picker opening icon if none is provided in the Picker's slots.
    */
   defaultOpenPickerIcon: React.ElementType;
 }
@@ -333,30 +333,30 @@ export interface PickerFieldUISlots {
    */
   textField?: React.ElementType;
   /**
-   * Component displayed on the start or end input adornment used to open the picker on desktop.
+   * Component displayed on the start or end input adornment used to open the Picker.
    * @default InputAdornment
    */
   inputAdornment?: React.ElementType<InputAdornmentProps>;
-  /**
-   * Icon to display inside the clear button.
-   * @default ClearIcon
-   */
-  clearIcon?: React.ElementType;
   /**
    * Button to clear the value.
    * @default IconButton
    */
   clearButton?: React.ElementType;
+  /**
+   * Icon to display in the button used to clean the value.
+   * @default ClearIcon
+   */
+  clearIcon?: React.ElementType;
 }
 
 export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
   /**
-   * Button to open the picker on desktop.
+   * Button to open the Picker.
    * @default IconButton
    */
   openPickerButton?: React.ElementType<IconButtonProps>;
   /**
-   * Icon displayed in the open picker button on desktop.
+   * Icon to display in the button used to open the Picker.
    */
   openPickerIcon?: React.ElementType;
 }
