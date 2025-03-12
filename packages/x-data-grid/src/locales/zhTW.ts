@@ -1,4 +1,3 @@
-import { zhTW as zhTWCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -181,6 +180,33 @@ const zhTWGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '展開',
   collapseDetailPanel: '摺疊',
 
+  // Pagination
+  paginationRowsPerPage: '每頁數量:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一頁';
+    }
+    if (type === 'last') {
+      return '最後一頁';
+    }
+    if (type === 'next') {
+      return '下一頁';
+    }
+    return '上一頁';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '排序',
 
@@ -193,4 +219,4 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '尺寸',
 };
 
-export const zhTW: Localization = getGridLocalization(zhTWGrid, zhTWCore);
+export const zhTW: Localization = getGridLocalization(zhTWGrid);

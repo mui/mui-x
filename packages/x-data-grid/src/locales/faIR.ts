@@ -1,4 +1,3 @@
-import { faIR as faIRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -186,6 +185,34 @@ const faIRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
 
+  // Pagination
+  paginationRowsPerPage: 'تعداد سطرهای هر صفحه:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'رفتن به اولین صفحه';
+    }
+    if (type === 'last') {
+      return 'رفتن به آخرین صفحه';
+    }
+    if (type === 'next') {
+      return 'رفتن به صفحه‌ی بعدی';
+    }
+    // if (type === 'previous') {
+    return 'رفتن به صفحه‌ی قبلی';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'ترتیب مجدد سطر',
 
@@ -198,4 +225,4 @@ const faIRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'اندازه',
 };
 
-export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
+export const faIR: Localization = getGridLocalization(faIRGrid);

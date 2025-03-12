@@ -60,7 +60,7 @@ const roROPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Săptămâna ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Selectați data, data selectată este ${formattedDate}` : 'Selectați data',
   openTimePickerDialogue: (formattedTime) =>

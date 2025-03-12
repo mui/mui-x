@@ -1,4 +1,3 @@
-import { viVN as viVNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -184,6 +183,34 @@ const viVNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Mở rộng',
   collapseDetailPanel: 'Thu nhỏ',
 
+  // Pagination
+  paginationRowsPerPage: 'Số hàng mỗi trang:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Tới trang đầu tiên';
+    }
+    if (type === 'last') {
+      return 'Tới trang cuối cùng';
+    }
+    if (type === 'next') {
+      return 'Tới trang tiếp theo';
+    }
+    // if (type === 'previous') {
+    return 'Về trang trước đó';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sắp xếp hàng',
 
@@ -196,4 +223,4 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Kích cỡ',
 };
 
-export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
+export const viVN: Localization = getGridLocalization(viVNGrid);

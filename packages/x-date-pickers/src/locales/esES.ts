@@ -59,7 +59,7 @@ const esESPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
   openTimePickerDialogue: (formattedTime) =>

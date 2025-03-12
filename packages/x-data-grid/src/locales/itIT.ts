@@ -1,4 +1,3 @@
-import { itIT as itITCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -186,6 +185,34 @@ const itITGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Espandi',
   collapseDetailPanel: 'Comprimi',
 
+  // Pagination
+  paginationRowsPerPage: 'Righe per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Vai alla prima pagina';
+    }
+    if (type === 'last') {
+      return "Vai all'ultima pagina";
+    }
+    if (type === 'next') {
+      return 'Vai alla pagina successiva';
+    }
+    // if (type === 'previous') {
+    return 'Vai alla pagina precedente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Riordinamento righe',
 
@@ -198,4 +225,4 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'numero di elementi',
 };
 
-export const itIT: Localization = getGridLocalization(itITGrid, itITCore);
+export const itIT: Localization = getGridLocalization(itITGrid);

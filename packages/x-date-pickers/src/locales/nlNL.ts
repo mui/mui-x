@@ -59,7 +59,7 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Kies datum, geselecteerde datum is ${formattedDate}` : 'Kies datum',
   openTimePickerDialogue: (formattedTime) =>
