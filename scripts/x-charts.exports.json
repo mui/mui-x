@@ -267,6 +267,8 @@
   { "name": "PieValueType", "kind": "TypeAlias" },
   { "name": "Position", "kind": "TypeAlias" },
   { "name": "PropsFromSlot", "kind": "TypeAlias" },
+  { "name": "RadarAxisHighlight", "kind": "Function" },
+  { "name": "RadarAxisHighlightProps", "kind": "Interface" },
   { "name": "RadarChartProps", "kind": "Interface" },
   { "name": "RadarDataProviderProps", "kind": "Interface" },
   { "name": "RadarGrid", "kind": "Function" },

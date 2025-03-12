@@ -60,7 +60,7 @@ const skSKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týždeň v roku`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vyberte dátum, vybraný dátum je ${formattedDate}` : 'Vyberte dátum',
   openTimePickerDialogue: (formattedTime) =>
