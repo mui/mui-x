@@ -1,6 +1,6 @@
 // Absolute import because we can't guarantee relative locations outside of the typescript rootDir
 // eslint-disable-next-line no-restricted-imports
-import packageJson from '@mui/x-telemetry/package.json';
+import packageJson from '@mui/x-telemetry/package.json' with { type: 'json' };
 import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
