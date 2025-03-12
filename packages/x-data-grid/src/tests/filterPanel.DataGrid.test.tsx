@@ -512,7 +512,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     // open filter panel
     const columnCell = getColumnHeaderCell(3);
-    const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="country column menu"]')!;
     fireEvent.click(menuIconButton);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
