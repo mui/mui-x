@@ -59,6 +59,8 @@ interface UseRadarAxisHighlightReturnValue {
 interface Point {
   x: number;
   y: number;
+  r: number;
+  angle: number;
   value: number;
 }
 
@@ -110,12 +112,15 @@ export function useRadarAxisHighlight(
     points: radarSeries.map((series) => {
       const value = series.data[highlightedIndex];
 
-      const [x, y] = instance.polar2svg(radiusScale(value)!, angle);
+      const r = radiusScale(value)!;
+      const [x, y] = instance.polar2svg(r, angle);
 
       const retrunedValue: Points = {
         highlighted: {
           x,
           y,
+          r,
+          angle,
           value,
         },
       };
@@ -139,6 +144,8 @@ export function useRadarAxisHighlight(
         retrunedValue.previous = {
           x: px,
           y: py,
+          r: prevR,
+          angle: prevAngle,
           value: prevValue,
         };
       }
@@ -151,6 +158,8 @@ export function useRadarAxisHighlight(
         retrunedValue.next = {
           x: nx,
           y: ny,
+          r: nextR,
+          angle: nextAngle,
           value: nextValue,
         };
       }
