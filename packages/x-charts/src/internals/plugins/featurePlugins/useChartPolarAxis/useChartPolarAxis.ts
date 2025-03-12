@@ -96,8 +96,6 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   // Use a ref to avoid rerendering on every mousemove event.
   const mousePosition = React.useRef({
     isInChart: false,
-    x: -1,
-    y: -1,
   });
 
   React.useEffect(() => {
@@ -106,81 +104,67 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const handleOut = () => {
-      mousePosition.current = {
-        isInChart: false,
-        x: -1,
-        y: -1,
-      };
-
-      instance.cleanInteraction?.();
-    };
-
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
-
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
-
-      // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
-        if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
-          mousePosition.current.isInChart = false;
-        }
-        return;
+    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction?.();
       }
+    });
 
-      // Test if it's in the radar circle
-      const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
-      const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
+    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((interaction) =>
+      instance.addInteractionListener(
+        // We force `as drag` to fix typing
+        interaction as 'drag',
+        (state) => {
+          const target =
+            'targetTouches' in state.event
+              ? (state.event as any as TouchEvent).targetTouches[0]
+              : state.event;
+          const svgPoint = getSVGPoint(element, target);
 
-      if (radiusSquare > maxRadius ** 2) {
-        if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
-          mousePosition.current.isInChart = false;
-        }
-        return;
-      }
+          const isPointInside = instance.isPointInside(svgPoint, {
+            targetElement: state.event.target as SVGElement,
+          });
+          if (!isPointInside) {
+            if (mousePosition.current.isInChart) {
+              store.update((prev) => ({
+                ...prev,
+                interaction: { item: null, axis: { x: null, y: null } },
+              }));
+              mousePosition.current.isInChart = false;
+            }
+          }
 
-      mousePosition.current.isInChart = true;
-      const angle = svg2rotation(svgPoint.x, svgPoint.y);
+          // Test if it's in the radar circle
+          const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
+          const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
 
-      instance.setAxisInteraction?.({
-        x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
-        y: null,
-      });
-    };
+          if (radiusSquare > maxRadius ** 2) {
+            if (mousePosition.current.isInChart) {
+              store.update((prev) => ({
+                ...prev,
+                interaction: { item: null, axis: { x: null, y: null } },
+              }));
+              mousePosition.current.isInChart = false;
+            }
+            return;
+          }
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+          mousePosition.current.isInChart = true;
+          const angle = svg2rotation(svgPoint.x, svgPoint.y);
 
-      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
+          instance.setAxisInteraction?.({
+            x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
+            y: null,
+          });
+        },
+      ),
+    );
 
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerout', handleOut);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerout', handleOut);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      removeOnHover();
+      removeOnMove();
+      removeOnDrag();
     };
   }, [
     svgRef,

@@ -83,6 +83,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     const removeOnHover = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
+        mousePosition.current.isInChart = false;
         instance.cleanInteraction?.();
       }
     });
