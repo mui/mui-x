@@ -263,6 +263,7 @@ export const useFieldState = <
         characterQuery: null,
       }));
     } else {
+      setState((prevState) => ({ ...prevState, characterQuery: null }));
       publishValue(valueManager.emptyValue);
     }
   };
@@ -287,6 +288,7 @@ export const useFieldState = <
         characterQuery: null,
       }));
     } else {
+      setState((prevState) => ({ ...prevState, characterQuery: null }));
       publishValue(fieldValueManager.updateDateInValue(value, activeSection, null));
     }
   };
@@ -437,7 +439,6 @@ export const useFieldState = <
         prevState.referenceValue,
       ),
       tempValueStrAndroid: null,
-      characterQuery: null,
     }));
   }
 
@@ -453,6 +454,7 @@ export const useFieldState = <
       lastSectionsDependencies: { format, isRtl, locale: utils.locale },
       sections,
       tempValueStrAndroid: null,
+      characterQuery: null,
     }));
   }
 
@@ -472,6 +474,7 @@ export const useFieldState = <
       sectionToUpdateOnNextInvalidDateRef.current = null;
     }
   });
+
   React.useEffect(() => {
     if (state.characterQuery != null) {
       const timeout = setTimeout(() => setCharacterQuery(null), QUERY_LIFE_DURATION_MS);
