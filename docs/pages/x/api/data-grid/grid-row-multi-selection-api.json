@@ -4,7 +4,7 @@
   "properties": [
     {
       "name": "getPropagatedRowSelectionModel",
-      "description": "Returns the modified selection model after applying row selection propagation. Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>.",
+      "description": "Returns the modified selection model after applying row selection propagation.<br>Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>.",
       "type": "(inputSelectionModel: GridRowSelectionModel) => GridRowSelectionModel"
     },
     {

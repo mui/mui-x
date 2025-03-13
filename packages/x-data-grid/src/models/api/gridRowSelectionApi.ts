@@ -33,6 +33,7 @@ export interface GridRowSelectionApi {
   /**
    * Updates the selected rows to be those passed to the `rowIds` argument.
    * Any row already selected will be unselected.
+   * 
    * ⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.
    * Pass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.
    * @param {readonly GridRowId[]} rowIds The row ids to select.
@@ -63,6 +64,7 @@ export interface GridRowMultiSelectionApi {
   ) => void;
   /**
    * Returns the modified selection model after applying row selection propagation.
+   * 
    * Use this to achieve proper `rowSelectionPropagation` behavior when setting the selection model using `setRowSelectionModel`.
    * @param {GridRowSelectionModel} inputSelectionModel The selection model to propagate.
    * @returns {GridRowSelectionModel} The modified selection model.

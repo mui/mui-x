@@ -70,7 +70,7 @@
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
     "getPropagatedRowSelectionModel": {
-      "description": "Returns the modified selection model after applying row selection propagation.<br />Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>."
+      "description": "Returns the modified selection model after applying row selection propagation.<br /><br />Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>."
     },
     "getRootDimensions": { "description": "Returns the dimensions of the grid" },
     "getRow": { "description": "Gets the row data with a given id." },
@@ -205,7 +205,7 @@
     },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
-      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.<br />Any row already selected will be unselected.<br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
+      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.<br />Any row already selected will be unselected.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
     },
     "setSortModel": { "description": "Updates the sort model and triggers the sorting of rows." },
     "showColumnMenu": {
