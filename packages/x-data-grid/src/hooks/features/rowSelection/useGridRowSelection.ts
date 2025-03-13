@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { unstable_debounce as debounce } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -459,6 +458,7 @@ export const useGridRowSelection = (
       return propagatedSelectionModel;
     },
     [
+      apiRef,
       tree,
       props.rowSelectionPropagation?.descendants,
       props.rowSelectionPropagation?.parents,
