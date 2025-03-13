@@ -76,7 +76,7 @@ export const useFieldV7TextField = <
 
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
-    // States and derived values
+    // States and derived states
     areAllSectionsEmpty,
     error,
     parsedSelectedSections,

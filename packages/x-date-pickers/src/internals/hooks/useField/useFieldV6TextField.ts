@@ -120,7 +120,7 @@ export const useFieldV6TextField = <
 
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
-    // States and derived values
+    // States and derived states
     activeSectionIndex,
     areAllSectionsEmpty,
     error,
@@ -133,12 +133,14 @@ export const useFieldV6TextField = <
     // Methods to update the states
     clearValue,
     clearActiveSection,
-    getSectionsFromValue,
     setCharacterQuery,
     setSelectedSections,
     setTempAndroidValueStr,
     updateSectionValue,
     updateValueFromValueStr,
+
+    // Utilities methods
+    getSectionsFromValue,
   } = stateResponse;
 
   const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });

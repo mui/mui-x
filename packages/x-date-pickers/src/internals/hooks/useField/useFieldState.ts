@@ -498,7 +498,7 @@ export const useFieldState = <
   }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
-    // States and derived values
+    // States and derived states
     activeSectionIndex,
     areAllSectionsEmpty,
     error,
@@ -513,12 +513,14 @@ export const useFieldState = <
     // Methods to update the states
     clearValue,
     clearActiveSection,
-    getSectionsFromValue,
     setCharacterQuery,
     setSelectedSections,
     setTempAndroidValueStr,
     updateSectionValue,
     updateValueFromValueStr,
+
+    // Utilities methods
+    getSectionsFromValue,
   };
 };
 
@@ -555,7 +557,7 @@ export interface UpdateSectionValueParameters<TValue extends PickerValidValue> {
 }
 
 export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
-  // States and derived values
+  // States and derived states
   activeSectionIndex: number | null;
   areAllSectionsEmpty: boolean;
   error: boolean;
@@ -570,13 +572,15 @@ export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
   // Methods to update the states
   clearValue: () => void;
   clearActiveSection: () => void;
-  getSectionsFromValue: (
-    value: TValue,
-    fallbackSections?: InferFieldSection<TValue>[] | null,
-  ) => InferFieldSection<TValue>[];
   setCharacterQuery: (characterQuery: CharacterEditingQuery | null) => void;
   setSelectedSections: (sections: FieldSelectedSections) => void;
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
   updateSectionValue: (parameters: UpdateSectionValueParameters<TValue>) => void;
   updateValueFromValueStr: (valueStr: string) => void;
+
+  // Utilities methods
+  getSectionsFromValue: (
+    value: TValue,
+    fallbackSections?: InferFieldSection<TValue>[] | null,
+  ) => InferFieldSection<TValue>[];
 }
