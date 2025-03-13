@@ -34,7 +34,7 @@
     "directory": "packages/x-license"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "@mui/x-internals": "workspace:*",
     "@mui/x-telemetry": "workspace:*"

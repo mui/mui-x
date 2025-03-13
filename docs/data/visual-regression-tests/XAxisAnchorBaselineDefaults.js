@@ -2,108 +2,33 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const defaultXAxis = {
-  id: 'angle0',
   scaleType: 'band',
   dataKey: 'code',
-  position: 'bottom',
   height: 45,
 };
+
+const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+
+const xAxes = degrees
+  .map((angle) => ({
+    ...defaultXAxis,
+    position: 'bottom',
+    id: `angle${angle}`,
+    tickLabelStyle: { angle },
+  }))
+  .concat(
+    degrees.map((angle) => ({
+      ...defaultXAxis,
+      id: `top-angle${angle}`,
+      position: 'top',
+      tickLabelStyle: { angle },
+    })),
+  );
 
 export default function XAxisAnchorBaselineDefaults() {
   return (
     <BarChart
-      xAxis={[
-        {
-          ...defaultXAxis,
-          id: 'angle-180',
-          tickLabelStyle: { angle: -180 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle-135',
-          tickLabelStyle: { angle: -135 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle-90',
-          tickLabelStyle: { angle: -90 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle-45',
-          tickLabelStyle: { angle: -45 },
-        },
-        defaultXAxis,
-        {
-          ...defaultXAxis,
-          id: 'angle45',
-          tickLabelStyle: { angle: 45 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle90',
-          tickLabelStyle: { angle: 90 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle135',
-          tickLabelStyle: { angle: 135 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle180',
-          tickLabelStyle: { angle: 180 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle-180',
-          position: 'top',
-          tickLabelStyle: { angle: -180 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle-135',
-          position: 'top',
-          tickLabelStyle: { angle: -135 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle-90',
-          position: 'top',
-          tickLabelStyle: { angle: -90 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle-45',
-          position: 'top',
-          tickLabelStyle: { angle: -45 },
-        },
-        { ...defaultXAxis, id: 'top-angle0', position: 'top' },
-        {
-          ...defaultXAxis,
-          id: 'top-angle45',
-          position: 'top',
-          tickLabelStyle: { angle: 45 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle90',
-          position: 'top',
-          tickLabelStyle: { angle: 90 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle135',
-          position: 'top',
-          tickLabelStyle: { angle: 135 },
-        },
-        {
-          ...defaultXAxis,
-          id: 'top-angle180',
-          position: 'top',
-          tickLabelStyle: { angle: 180 },
-        },
-      ]}
+      xAxis={xAxes}
       // Other props
       width={600}
       height={900}
