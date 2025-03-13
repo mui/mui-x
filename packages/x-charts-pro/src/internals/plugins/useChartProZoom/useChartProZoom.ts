@@ -18,11 +18,11 @@ import {
   getHorizontalCenterRatio,
   getPinchScaleRatio,
   getVerticalCenterRatio,
-  getWheelScaleRatio,
   isSpanValid,
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
+import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
@@ -251,79 +251,17 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     store,
   ]);
 
-  // Add event for chart zoom in/out
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
-      return () => {};
-    }
-
-    const removeOnWheel = instance.addInteractionListener('wheel', (state) => {
-      if (element === null) {
-        return;
-      }
-
-      const point = getSVGPoint(element, state.event);
-
-      if (!instance.isPointInside(point)) {
-        return;
-      }
-
-      if (!state.last) {
-        state.event.preventDefault();
-      }
-
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      // Debounce transition to `isInteractive=false`.
-      // Useful because wheel events don't have an "end" event.
-      if (!isDraggingRef.current) {
-        setIsInteracting(true);
-
-        interactionTimeoutRef.current = window.setTimeout(() => {
-          setIsInteracting(false);
-        }, 166);
-      }
-
-      setZoomDataCallback((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-          const centerRatio =
-            option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
-
-          const { scaleRatio, isZoomIn } = getWheelScaleRatio(state.event, option.step);
-          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
-          }
-
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-        });
-      });
-    });
-
-    return () => {
-      removeOnWheel();
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-    };
-  }, [
-    svgRef,
-    drawingArea,
-    isZoomEnabled,
-    optionsLookup,
+  useZoomOnWheel(
+    {
+      store,
+      instance,
+      svgRef,
+    },
+    interactionTimeoutRef,
+    isDraggingRef,
     setIsInteracting,
-    instance,
     setZoomDataCallback,
-  ]);
+  );
 
   React.useEffect(() => {
     const element = svgRef.current;
