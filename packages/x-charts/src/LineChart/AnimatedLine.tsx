@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { select } from '@mui/x-charts-vendor/d3-selection';
+import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import useForkRef from '@mui/utils/useForkRef';
 import { AppearingMask } from './AppearingMask';
@@ -25,6 +26,15 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
   const [path, setPath] = React.useState<SVGPathElement | null>(null);
 
   React.useLayoutEffect(() => {
+    /* If we're not skipping animation, we need to set the attribute to override React's changes.
+     * Still need to figure out if this is better than asking the user not to pass the `d` prop to the component.
+     * The problem with that is that SSR might not look good. */
+    if (!props.skipAnimation) {
+      path?.setAttribute('d', lastDRef.current);
+    }
+  }, [path, props.d, props.skipAnimation]);
+
+  React.useLayoutEffect(() => {
     // TODO: What if we set skipAnimation to true in the middle of the animation?
     if (path === null || props.skipAnimation) {
       return;
@@ -36,6 +46,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
     transitionRef.current = select(path)
       .transition()
       .duration(DURATION)
+      .ease(easeLinear)
       .attrTween('d', () => (t) => {
         const interpolatedD = stringInterpolator(t);
 
@@ -72,7 +83,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
       <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
         <path
           ref={forkRef}
-          // TODO: Removed `d` prop from the since `useAnimatePath` is handling it. Not sure how this impacts SSR, though.
+          d={d}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
