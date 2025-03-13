@@ -86,8 +86,8 @@ function usePieArcAnimatedProps({
         padAngle: paddingAngle,
         innerRadius,
         outerRadius,
-        startAngle: (startAngle + endAngle) / 2,
-        endAngle: (startAngle + endAngle) / 2,
+        startAngle,
+        endAngle,
       })!,
   );
 
