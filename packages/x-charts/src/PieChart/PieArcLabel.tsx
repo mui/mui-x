@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, SpringValue, to } from '@react-spring/web';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
+import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { select } from '@mui/x-charts-vendor/d3-selection';
+import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
 import { PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
@@ -16,6 +19,8 @@ export interface PieArcLabelClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /** Styles applied to the root element if animation is not skipped. */
+  animate: string;
 }
 
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
@@ -25,6 +30,7 @@ interface PieArcLabelOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  skipAnimation: boolean;
   classes?: Partial<PieArcLabelClasses>;
 }
 
@@ -36,18 +42,25 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'animate',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+      !skipAnimation && 'animate',
+    ],
   };
 
   return composeClasses(slots, getPieArcLabelUtilityClass, classes);
 };
 
-const PieArcLabelRoot = styled(animated.text, {
+const PieArcLabelRoot = styled('text', {
   name: 'MuiPieArcLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -56,49 +69,140 @@ const PieArcLabelRoot = styled(animated.text, {
   textAnchor: 'middle',
   dominantBaseline: 'middle',
   pointerEvents: 'none',
+
+  [`&.${pieArcLabelClasses.animate}`]: {
+    animation: 'animate-opacity 0.2s ease-in',
+
+    '@keyframes animate-opacity': {
+      from: { opacity: 0 },
+    },
+  },
 }));
+
+function getPosition({
+  angle,
+  arcLabelRadius,
+  cornerRadius,
+  paddingAngle,
+}: {
+  angle: number;
+  arcLabelRadius: number;
+  cornerRadius: number;
+  paddingAngle: number;
+}) {
+  return d3Arc().cornerRadius(cornerRadius).centroid({
+    padAngle: paddingAngle,
+    startAngle: angle,
+    endAngle: angle,
+    innerRadius: arcLabelRadius,
+    outerRadius: arcLabelRadius,
+  })!;
+}
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
   Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
-    startAngle: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
-    outerRadius: SpringValue<number>;
-    arcLabelRadius: SpringValue<number>;
-    cornerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
+    startAngle: number;
+    endAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    arcLabelRadius: number;
+    cornerRadius: number;
+    paddingAngle: number;
+    skipAnimation: boolean;
   } & {
     formattedArcLabel?: string | null;
   };
 
-/**
- * Helper to compute label position.
- * It's not an inline function because we need it in interpolation.
- */
-const getLabelPosition =
-  (formattedArcLabel: string | null | undefined, variable: 'x' | 'y') =>
-  (
-    startAngle: number,
-    endAngle: number,
-    padAngle: number,
-    arcLabelRadius: number,
-    cornerRadius: number,
-  ) => {
-    if (!formattedArcLabel) {
-      return 0;
+const DURATION = 200;
+function useAnimateArcLabel(
+  props: Pick<
+    PieArcLabelProps,
+    'paddingAngle' | 'arcLabelRadius' | 'cornerRadius' | 'skipAnimation'
+  > & { angle: number },
+) {
+  const lastValuesRef = React.useRef({
+    paddingAngle: props.paddingAngle,
+    angle: props.angle,
+    arcLabelRadius: props.arcLabelRadius,
+    cornerRadius: props.cornerRadius,
+  });
+  const transitionRef = React.useRef<Transition<SVGTextElement, unknown, null, undefined>>(null);
+  const [element, setElement] = React.useState<SVGTextElement | null>(null);
+
+  React.useLayoutEffect(() => {
+    /* If we're not skipping animation, we need to set the attribute to override React's changes.
+     * Still need to figure out if this is better than asking the user not to pass the `d` prop to the component.
+     * The problem with that is that SSR might not look good. */
+    if (!props.skipAnimation) {
+      const [x, y] = getPosition({
+        angle: props.angle,
+        arcLabelRadius: props.arcLabelRadius,
+        cornerRadius: props.cornerRadius,
+        paddingAngle: props.paddingAngle,
+      });
+
+      element?.setAttribute('x', x.toString());
+      element?.setAttribute('y', y.toString());
     }
-    const [x, y] = d3Arc().cornerRadius(cornerRadius).centroid({
-      padAngle,
-      startAngle,
-      endAngle,
-      innerRadius: arcLabelRadius,
-      outerRadius: arcLabelRadius,
-    })!;
-    if (variable === 'x') {
-      return x;
+  }, [
+    element,
+    props.angle,
+    props.arcLabelRadius,
+    props.cornerRadius,
+    props.paddingAngle,
+    props.skipAnimation,
+  ]);
+
+  React.useLayoutEffect(() => {
+    // TODO: What if we set skipAnimation to true in the middle of the animation?
+    if (element === null || props.skipAnimation) {
+      return undefined;
     }
-    return y;
-  };
+
+    const lastValues = lastValuesRef.current;
+    const interpolateAngle = interpolateNumber(lastValues.angle, props.angle);
+    const interpolatePaddingAngle = interpolateNumber(lastValues.paddingAngle, props.paddingAngle);
+    const interpolateArcLabelRadius = interpolateNumber(
+      lastValues.arcLabelRadius,
+      props.arcLabelRadius,
+    );
+    const interpolateCornerRadius = interpolateNumber(lastValues.cornerRadius, props.cornerRadius);
+
+    const interpolateCentroid = (t: number) => {
+      const angle = interpolateAngle(t);
+      const pA = interpolatePaddingAngle(t);
+      const aLR = interpolateArcLabelRadius(t);
+      const cR = interpolateCornerRadius(t);
+
+      lastValuesRef.current = {
+        angle,
+        paddingAngle: pA,
+        arcLabelRadius: aLR,
+        cornerRadius: cR,
+      };
+
+      return getPosition({ cornerRadius: cR, paddingAngle: pA, angle, arcLabelRadius: aLR })!;
+    };
+
+    transitionRef.current = select(element)
+      .transition()
+      .duration(DURATION)
+      .ease(easeLinear)
+      .attrTween('x', () => (t) => interpolateCentroid(t)[0].toString())
+      .attrTween('y', () => (t) => interpolateCentroid(t)[1].toString());
+
+    return () => interrupt(element);
+  }, [
+    element,
+    props.angle,
+    props.arcLabelRadius,
+    props.cornerRadius,
+    props.paddingAngle,
+    props.skipAnimation,
+  ]);
+
+  return setElement;
+}
 
 function PieArcLabel(props: PieArcLabelProps) {
   const {
@@ -115,7 +219,7 @@ function PieArcLabel(props: PieArcLabelProps) {
     formattedArcLabel,
     isHighlighted,
     isFaded,
-    style,
+    skipAnimation,
     ...other
   } = props;
 
@@ -125,26 +229,24 @@ function PieArcLabel(props: PieArcLabelProps) {
     color,
     isFaded,
     isHighlighted,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
+  const angle = (startAngle + endAngle) / 2;
+  const animationProps = {
+    angle,
+    paddingAngle,
+    arcLabelRadius,
+    cornerRadius,
+    skipAnimation,
+  };
+
+  const ref = useAnimateArcLabel(animationProps);
+  const [x, y] = getPosition(animationProps);
+
   return (
-    // @ts-expect-error
-    <PieArcLabelRoot
-      className={classes.root}
-      {...other}
-      style={{
-        x: to(
-          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
-          getLabelPosition(formattedArcLabel, 'x'),
-        ),
-        y: to(
-          [startAngle, endAngle, paddingAngle, arcLabelRadius, cornerRadius],
-          getLabelPosition(formattedArcLabel, 'y'),
-        ),
-        ...style,
-      }}
-    >
+    <PieArcLabelRoot className={classes.root} {...other} x={x} y={y} ref={ref}>
       {formattedArcLabel}
     </PieArcLabelRoot>
   );

@@ -32,7 +32,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
     if (!props.skipAnimation) {
       path?.setAttribute('d', lastDRef.current);
     }
-  }, [path, props.d, props.skipAnimation]);
+  }, [path, props.skipAnimation]);
 
   React.useLayoutEffect(() => {
     // TODO: What if we set skipAnimation to true in the middle of the animation?
