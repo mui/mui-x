@@ -5,8 +5,26 @@ import {
   GridPinnedColumnFields,
   GridPivotModel,
   DataGridPremiumProps,
+  GridInitialState,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+
+const pivotModel: GridPivotModel = {
+  rows: [{ field: 'commodity' }],
+  columns: [{ field: 'maturityDate-year', sort: 'asc' }, { field: 'status' }],
+  values: [
+    { field: 'quantity', aggFunc: 'sum' },
+    { field: 'filledQuantity', aggFunc: 'avg' },
+    { field: 'totalPrice', aggFunc: 'avg' },
+  ],
+};
+
+const initialState: GridInitialState = {
+  pivoting: {
+    model: pivotModel,
+    panelOpen: true,
+  },
+};
 
 export default function GridPivotingCommodities() {
   const { data, loading } = useDemoData({
@@ -15,26 +33,16 @@ export default function GridPivotingCommodities() {
     editable: true,
   });
 
-  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
-    rows: [{ field: 'commodity' }],
-    columns: [{ field: 'maturityDate-year', sort: 'asc' }, { field: 'status' }],
-    values: [
-      { field: 'quantity', aggFunc: 'sum' },
-      { field: 'filledQuantity', aggFunc: 'avg' },
-      { field: 'totalPrice', aggFunc: 'avg' },
-    ],
-  });
-
-  const [isPivotMode, setIsPivotMode] = React.useState(false);
+  const [pivotEnabled, setPivotEnabled] = React.useState(false);
 
   const pinnedColumns = React.useMemo<GridPinnedColumnFields | undefined>(() => {
-    if (isPivotMode) {
+    if (pivotEnabled) {
       return {
         left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
       };
     }
     return undefined;
-  }, [isPivotMode]);
+  }, [pivotEnabled]);
 
   const pivotingColDef = React.useCallback<
     NonNullable<DataGridPremiumProps['pivotingColDef']>
@@ -52,10 +60,9 @@ export default function GridPivotingCommodities() {
           rows={data.rows}
           columns={data.columns}
           showToolbar
-          pivotModel={pivotModel}
-          onPivotModelChange={setPivotModel}
-          pivotEnabled={isPivotMode}
-          onPivotEnabledChange={setIsPivotMode}
+          pivotEnabled={pivotEnabled}
+          onPivotEnabledChange={setPivotEnabled}
+          initialState={initialState}
           loading={loading}
           columnGroupHeaderHeight={36}
           experimentalFeatures={{ pivoting: true }}
