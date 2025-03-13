@@ -30,7 +30,7 @@ import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
-import { isPivotingEnabled } from '../hooks/features/pivoting/utils';
+import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -70,7 +70,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   }
 
   const sidePanel =
-    isPivotingEnabled(props) && pivotSettingsOpen ? (
+    isPivotingAvailable(props) && pivotSettingsOpen ? (
       <Sidebar>
         <GridPivotPanel />
       </Sidebar>

@@ -18,7 +18,7 @@ import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingI
 
 const columnGroupIdSeparator = '>->';
 
-export const isPivotingEnabled = (
+export const isPivotingAvailable = (
   props: Pick<DataGridPremiumProcessedProps, 'experimentalFeatures' | 'disablePivoting'>,
 ) => {
   return props.experimentalFeatures?.pivoting && !props.disablePivoting;

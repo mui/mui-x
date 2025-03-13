@@ -32,7 +32,7 @@ import {
 import {
   getInitialColumns,
   getPivotedData,
-  isPivotingEnabled as isPivotingEnabledFn,
+  isPivotingAvailable as isPivotingAvailableFn,
 } from './utils';
 
 const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
@@ -44,12 +44,11 @@ export const pivotingStateInitializer: GridStateInitializer<
     | 'pivotModel'
     | 'pivotPanelOpen'
     | 'initialState'
-    | 'experimentalFeatures'
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
   >
 > = (state, props) => {
-  if (!isPivotingEnabledFn(props)) {
+  if (!isPivotingAvailableFn(props)) {
     return {
       ...state,
       pivoting: {
@@ -88,7 +87,6 @@ export const useGridPivoting = (
     | 'onPivotModelChange'
     | 'pivotPanelOpen'
     | 'onPivotPanelOpenChange'
-    | 'experimentalFeatures'
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
     | 'pivotingColDef'
@@ -100,7 +98,7 @@ export const useGridPivoting = (
     undefined,
   );
 
-  const isPivotingEnabled = isPivotingEnabledFn(props);
+  const isPivotingAvailable = isPivotingAvailableFn(props);
 
   apiRef.current.registerControlState({
     stateId: 'pivotModel',
@@ -168,7 +166,7 @@ export const useGridPivoting = (
   );
 
   useOnMount(() => {
-    if (!isPivotingEnabled || !isPivot) {
+    if (!isPivotingAvailable || !isPivot) {
       return undefined;
     }
 
@@ -205,18 +203,18 @@ export const useGridPivoting = (
   });
 
   useEnhancedEffect(() => {
-    if (!isPivotingEnabled) {
+    if (!isPivotingAvailable) {
       return;
     }
     if (!isPivot && exportedStateRef.current) {
       apiRef.current.restoreState(exportedStateRef.current);
       exportedStateRef.current = null;
     }
-  }, [isPivot, apiRef, isPivotingEnabled]);
+  }, [isPivot, apiRef, isPivotingAvailable]);
 
   const setPivotModel = React.useCallback<GridPivotingApi['setPivotModel']>(
     (callback) => {
-      if (!isPivotingEnabled) {
+      if (!isPivotingAvailable) {
         return;
       }
       apiRef.current.setState((state) => {
@@ -239,12 +237,12 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState, isPivotingEnabled],
+    [apiRef, computePivotingState, isPivotingAvailable],
   );
 
   const setPivotEnabled = React.useCallback<GridPivotingApi['setPivotEnabled']>(
     (callback) => {
-      if (!isPivotingEnabled) {
+      if (!isPivotingAvailable) {
         return;
       }
       apiRef.current.setState((state) => {
@@ -277,12 +275,12 @@ export const useGridPivoting = (
         return newState;
       });
     },
-    [apiRef, computePivotingState, getInitialData, isPivotingEnabled],
+    [apiRef, computePivotingState, getInitialData, isPivotingAvailable],
   );
 
   const setPivotPanelOpen = React.useCallback<GridPivotingApi['setPivotPanelOpen']>(
     (callback) => {
-      if (!isPivotingEnabled) {
+      if (!isPivotingAvailable) {
         return;
       }
       apiRef.current.setState((state) => ({
@@ -294,17 +292,17 @@ export const useGridPivoting = (
         },
       }));
     },
-    [apiRef, isPivotingEnabled],
+    [apiRef, isPivotingAvailable],
   );
 
   const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (menuItems) => {
-      if (isPivotingEnabled) {
+      if (isPivotingAvailable) {
         return [...menuItems, 'columnMenuPivotItem'];
       }
       return menuItems;
     },
-    [isPivotingEnabled],
+    [isPivotingAvailable],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
