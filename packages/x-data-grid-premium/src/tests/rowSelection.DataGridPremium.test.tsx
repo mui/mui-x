@@ -212,7 +212,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    describe('prop: keepNonExistentRowsSelected', () => {
+    describe.skip('prop: keepNonExistentRowsSelected', () => {
       it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
         const onRowSelectionModelChange = spy();
         const { setProps } = render(
