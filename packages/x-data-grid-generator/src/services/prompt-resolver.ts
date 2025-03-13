@@ -9,7 +9,7 @@ export const mockPromptResolver = (_: string, query: string) => {
       if (resolved) {
         resolve(resolved);
       } else {
-        reject(new Error('Unknown query'));
+        reject(new Error(`Unsupported query "${query}"`));
       }
     }, 1000);
   });
