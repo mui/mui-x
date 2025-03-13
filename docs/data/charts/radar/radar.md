@@ -79,6 +79,12 @@ This highlight can be controlled with `highlightedItem` value and `onHighlightCh
 
 With composition you can pass those props to the `RadarDataProvider`.
 
+This demo shows a controlled highlight.
+Notice the impact of the series order in the highlight interaction.
+The UK series is the last item of the `series` prop.
+Such that its area renders on top of the others.
+Otherwise, the other area would catch the pointer event, making it impossible to highlight it.
+
 {{"demo": "DemoRadarSeriesHighlight.js" }}
 
 ### Disabling Highlight
@@ -96,6 +102,6 @@ If you miss some element or explanation, please open an issue describing what yo
 
 In this example, we uses `RadarSeriesArea` and `RadarSeriesMarks` to modify the order of the elements:
 all the marks are on top of all the path.
-Additionaly, we apply different properties based on the series id.
+Additionally, we apply different properties based on the series id.
 
 {{"demo": "CompositionExample.js" }}
