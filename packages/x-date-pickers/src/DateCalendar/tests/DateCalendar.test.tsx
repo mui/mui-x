@@ -138,9 +138,7 @@ describe('<DateCalendar />', () => {
       );
       fireEvent.click(screen.getByRole('radio', { name: '2020' }));
 
-      if (process.env.VITEST !== 'true') {
-        // Finish the transition to the day view
-      } else {
+      if (process.env.VITEST === 'true') {
         await screen.findByRole('gridcell', { name: '1' });
       }
 

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { testSkipIf, isJSDOM, isVitest } from 'test/utils/skipIf';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -79,7 +79,7 @@ describe('<AdapterMomentHijri />', () => {
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
-        testSkipIf(isVitest && !isJSDOM)('should have well formatted value', () => {
+        testSkipIf(!isJSDOM)('should have well formatted value', () => {
           const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
