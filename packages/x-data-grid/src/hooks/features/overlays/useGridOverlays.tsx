@@ -9,6 +9,7 @@ import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverla
 import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
 import type { GridOverlayType } from '../../../components/base/GridOverlays';
 import { gridVisibleColumnDefinitionsSelector } from '..';
+import { gridPivotEnabledSelector } from '../pivoting';
 
 /**
  * Uses the grid state to determine which overlay to display.
@@ -24,12 +25,12 @@ export const useGridOverlays = () => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const noRows = totalRowCount === 0 && pinnedRowsCount === 0;
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
+  const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
 
   const showNoRowsOverlay = !loading && noRows;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
   const showNoColumnsOverlay = !loading && visibleColumns.length === 0;
-  const showEmptyPivotOverlay =
-    showNoRowsOverlay && (rootProps.experimentalFeatures as any)?.pivoting;
+  const showEmptyPivotOverlay = showNoRowsOverlay && pivotEnabled;
 
   let overlayType: GridOverlayType | 'emptyPivotOverlay' = null;
   let loadingOverlayVariant: GridLoadingOverlayVariant | null = null;
