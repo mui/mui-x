@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useTimeout from '@mui/utils/useTimeout';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
@@ -11,6 +12,8 @@ import {
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
   SectionOrdering,
+  UseFieldForwardedProps,
+  CharacterEditingQuery,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -29,6 +32,7 @@ import {
   InferFieldSection,
   PickerManager,
 } from '../../../models';
+import { useValidation } from '../../../validation';
 import { useControlledValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
@@ -36,17 +40,21 @@ import {
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
 
+const QUERY_LIFE_DURATION_MS = 5000;
+
 export const useFieldState = <
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
 >(
   params: UseFieldStateParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
     TError,
-    TValidationProps
+    TValidationProps,
+    TForwardedProps
   >,
 ): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
@@ -75,6 +83,7 @@ export const useFieldState = <
       timezone: timezoneProp,
       enableAccessibleFieldDOMStructure = true,
     },
+    forwardedProps: { error: errorProp },
   } = params;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
@@ -90,6 +99,24 @@ export const useFieldState = <
   React.useEffect(() => {
     valueRef.current = value;
   }, [value]);
+
+  const { hasValidationError } = useValidation({
+    props: internalPropsWithDefaults,
+    validator,
+    timezone,
+    value,
+    onError: internalPropsWithDefaults.onError,
+  });
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
 
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
@@ -135,6 +162,7 @@ export const useFieldState = <
       lastValue: value,
       lastSectionsDependencies: { format, isRtl, locale: utils.locale },
       tempValueStrAndroid: null,
+      characterQuery: null,
     };
 
     const granularity = getSectionTypeGranularity(sections);
@@ -232,6 +260,7 @@ export const useFieldState = <
         ...prevState,
         sections: prevState.sections.map((section) => ({ ...section, value: '' })),
         tempValueStrAndroid: null,
+        characterQuery: null,
       }));
     } else {
       publishValue(valueManager.emptyValue);
@@ -255,6 +284,7 @@ export const useFieldState = <
         ...prevState,
         sections: setSectionValue(activeSectionIndex, ''),
         tempValueStrAndroid: null,
+        characterQuery: null,
       }));
     } else {
       publishValue(fieldValueManager.updateDateInValue(value, activeSection, null));
@@ -370,7 +400,11 @@ export const useFieldState = <
   };
 
   const setTempAndroidValueStr = (tempValueStrAndroid: string | null) =>
-    setState((prev) => ({ ...prev, tempValueStrAndroid }));
+    setState((prevState) => ({ ...prevState, tempValueStrAndroid }));
+
+  const setCharacterQuery = useEventCallback((newCharacterQuery: CharacterEditingQuery | null) => {
+    setState((prevState) => ({ ...prevState, characterQuery: newCharacterQuery }));
+  });
 
   // If `prop.value` changes, we update the state to reflect the new value
   if (value !== state.lastValue) {
@@ -403,6 +437,7 @@ export const useFieldState = <
         prevState.referenceValue,
       ),
       tempValueStrAndroid: null,
+      characterQuery: null,
     }));
   }
 
@@ -421,11 +456,43 @@ export const useFieldState = <
     }));
   }
 
+  if (state.characterQuery != null && !error && activeSectionIndex == null) {
+    setCharacterQuery(null);
+  }
+
+  if (
+    state.characterQuery != null &&
+    state.sections[state.characterQuery.sectionIndex]?.type !== state.characterQuery.sectionType
+  ) {
+    setCharacterQuery(null);
+  }
+
   React.useEffect(() => {
     if (sectionToUpdateOnNextInvalidDateRef.current != null) {
       sectionToUpdateOnNextInvalidDateRef.current = null;
     }
   });
+  React.useEffect(() => {
+    if (state.characterQuery != null) {
+      const timeout = setTimeout(() => setCharacterQuery(null), QUERY_LIFE_DURATION_MS);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    return () => {};
+  }, [state.characterQuery, setCharacterQuery]);
+
+  // If `tempValueStrAndroid` is still defined for some section when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && activeSectionIndex != null) {
+      clearActiveSection();
+    }
+  }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,
@@ -433,6 +500,7 @@ export const useFieldState = <
     activeSectionIndex,
     parsedSelectedSections,
     setSelectedSections,
+    setCharacterQuery,
     clearValue,
     clearActiveSection,
     updateSectionValue,
@@ -444,6 +512,7 @@ export const useFieldState = <
     timezone,
     sectionOrder,
     areAllSectionsEmpty,
+    error,
   };
 };
 
@@ -452,6 +521,7 @@ interface UseFieldStateParameters<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
 > {
   manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
   internalPropsWithDefaults: UseFieldInternalProps<
@@ -460,6 +530,7 @@ interface UseFieldStateParameters<
     TError
   > &
     TValidationProps;
+  forwardedProps: TForwardedProps;
 }
 
 export interface UpdateSectionValueParameters<TValue extends PickerValidValue> {
@@ -485,6 +556,7 @@ export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
   setSelectedSections: (sections: FieldSelectedSections) => void;
   clearValue: () => void;
   clearActiveSection: () => void;
+  setCharacterQuery: (characterQuery: CharacterEditingQuery | null) => void;
   updateSectionValue: (params: UpdateSectionValueParameters<TValue>) => void;
   updateValueFromValueStr: (valueStr: string) => void;
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
@@ -497,4 +569,5 @@ export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
   timezone: PickersTimezone;
   sectionOrder: SectionOrdering;
   areAllSectionsEmpty: boolean;
+  error: boolean;
 }

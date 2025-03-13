@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
-import { InferFieldSection } from '../../../models';
+import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
+import { FieldSectionType, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
 import { PickerValidValue } from '../../models';
+import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown';
+import { useFieldState } from './useFieldState';
+import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 
 type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
   /**
@@ -75,146 +80,94 @@ export const addPositionPropertiesToSections = <TValue extends PickerValidValue>
   return newSections;
 };
 
-export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
+export const useFieldV6TextField = <
+  TValue extends PickerValidValue,
+  TError,
+  TValidationProps extends {},
+  TFieldInternalProps extends {},
+  TForwardedProps extends UseFieldForwardedProps<false>,
+>(
+  parameters: UseFieldParameters<
+    TValue,
+    false,
+    TError,
+    TValidationProps,
+    TFieldInternalProps,
+    TForwardedProps
+  >,
+): UseFieldReturnValue<false, TForwardedProps> => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const {
-    manager: { internal_valueManager: valueManager, internal_fieldValueManager: fieldValueManager },
+    manager,
+    internalProps,
+    forwardedProps,
+    skipContextFieldRefAssignment,
+    manager: {
+      internal_valueManager: valueManager,
+      internal_fieldValueManager: fieldValueManager,
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
+    },
     forwardedProps: {
       onFocus,
       onClick,
       onPaste,
       onBlur,
+      onKeyDown,
+      onClear,
+      clearable,
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalPropsWithDefaults: { readOnly = false, disabled = false, focused },
-    stateResponse: {
-      parsedSelectedSections,
-      activeSectionIndex,
-      state,
-      updateSectionValue,
-      updateValueFromValueStr,
-      clearActiveSection,
-      clearValue,
-      setTempAndroidValueStr,
-      setSelectedSections,
-      getSectionsFromValue,
-      localizedDigits,
-      areAllSectionsEmpty,
-    },
-    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
-  } = params;
+  } = parameters;
+
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+    skipContextFieldRefAssignment,
+  });
+  const {
+    readOnly = false,
+    disabled = false,
+    autoFocus = false,
+    focused,
+    unstableFieldRef,
+  } = internalPropsWithDefaults;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
+
+  const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
+  const {
+    state,
+    value,
+    parsedSelectedSections,
+    activeSectionIndex,
+    updateSectionValue,
+    updateValueFromValueStr,
+    clearActiveSection,
+    clearValue,
+    setTempAndroidValueStr,
+    setSelectedSections,
+    getSectionsFromValue,
+    localizedDigits,
+    areAllSectionsEmpty,
+    setCharacterQuery,
+    sectionOrder,
+    error,
+  } = stateResponse;
+
+  const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });
+  const openPickerAriaLabel = useOpenPickerButtonAriaLabel(value);
 
   const sections = React.useMemo(
     () => addPositionPropertiesToSections(state.sections, localizedDigits, isRtl),
     [state.sections, localizedDigits, isRtl],
   );
 
-  const interactions = React.useMemo<UseFieldTextFieldInteractions>(
-    () => ({
-      syncSelectionToDOM: () => {
-        if (!inputRef.current) {
-          return;
-        }
-
-        if (parsedSelectedSections == null) {
-          if (inputRef.current.scrollLeft) {
-            // Ensure that input content is not marked as selected.
-            // setting selection range to 0 causes issues in Safari.
-            // https://bugs.webkit.org/show_bug.cgi?id=224425
-            inputRef.current.scrollLeft = 0;
-          }
-          return;
-        }
-
-        // On multi input range pickers we want to update selection range only for the active input
-        // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
-        // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
-        if (inputRef.current !== getActiveElement(document)) {
-          return;
-        }
-
-        // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
-        const currentScrollTop = inputRef.current.scrollTop;
-
-        if (parsedSelectedSections === 'all') {
-          inputRef.current.select();
-        } else {
-          const selectedSection = sections[parsedSelectedSections];
-          const selectionStart =
-            selectedSection.type === 'empty'
-              ? selectedSection.startInInput - selectedSection.startSeparator.length
-              : selectedSection.startInInput;
-          const selectionEnd =
-            selectedSection.type === 'empty'
-              ? selectedSection.endInInput + selectedSection.endSeparator.length
-              : selectedSection.endInInput;
-
-          if (
-            selectionStart !== inputRef.current.selectionStart ||
-            selectionEnd !== inputRef.current.selectionEnd
-          ) {
-            if (inputRef.current === getActiveElement(document)) {
-              inputRef.current.setSelectionRange(selectionStart, selectionEnd);
-            }
-          }
-          clearTimeout(selectionSyncTimeoutRef.current);
-          selectionSyncTimeoutRef.current = setTimeout(() => {
-            // handle case when the selection is not updated correctly
-            // could happen on Android
-            if (
-              inputRef.current &&
-              inputRef.current === getActiveElement(document) &&
-              // The section might loose all selection, where `selectionStart === selectionEnd`
-              // https://github.com/mui/mui-x/pull/13652
-              inputRef.current.selectionStart === inputRef.current.selectionEnd &&
-              (inputRef.current.selectionStart !== selectionStart ||
-                inputRef.current.selectionEnd !== selectionEnd)
-            ) {
-              interactions.syncSelectionToDOM();
-            }
-          });
-        }
-
-        // Even reading this variable seems to do the trick, but also setting it just to make use of it
-        inputRef.current.scrollTop = currentScrollTop;
-      },
-      getActiveSectionIndexFromDOM: () => {
-        const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-        const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
-        if (browserStartIndex === 0 && browserEndIndex === 0) {
-          return null;
-        }
-
-        const nextSectionIndex =
-          browserStartIndex <= sections[0].startInInput
-            ? 1 // Special case if browser index is in invisible characters at the beginning.
-            : sections.findIndex(
-                (section) =>
-                  section.startInInput - section.startSeparator.length > browserStartIndex,
-              );
-        return nextSectionIndex === -1 ? sections.length - 1 : nextSectionIndex - 1;
-      },
-      focusField: (newSelectedSection = 0) => {
-        if (getActiveElement(document) === inputRef.current) {
-          return;
-        }
-        inputRef.current?.focus();
-        setSelectedSections(newSelectedSection);
-      },
-      setSelectedSections: (newSelectedSections) => setSelectedSections(newSelectedSections),
-      isFieldFocused: () => inputRef.current === getActiveElement(document),
-    }),
-    [inputRef, parsedSelectedSections, sections, setSelectedSections],
-  );
-
-  const syncSelectionFromDOM = () => {
+  function syncSelectionFromDOM() {
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     let nextSectionIndex: number;
     if (browserStartIndex <= sections[0].startInInput) {
@@ -230,7 +183,15 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     }
     const sectionIndex = nextSectionIndex === -1 ? sections.length - 1 : nextSectionIndex - 1;
     setSelectedSections(sectionIndex);
-  };
+  }
+
+  function focusField(newSelectedSection: number | FieldSectionType = 0) {
+    if (getActiveElement(document) === inputRef.current) {
+      return;
+    }
+    inputRef.current?.focus();
+    setSelectedSections(newSelectedSection);
+  }
 
   const handleInputFocus = useEventCallback((event: React.FocusEvent) => {
     onFocus?.(event);
@@ -293,7 +254,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
         (activeSection.contentType === 'digit' && digitsOnly) ||
         (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
-        resetCharacterQuery();
+        setCharacterQuery(null);
         updateSectionValue({
           section: activeSection,
           newSectionValue: pastedValue,
@@ -308,7 +269,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       }
     }
 
-    resetCharacterQuery();
+    setCharacterQuery(null);
     updateValueFromValueStr(pastedValue);
   });
 
@@ -324,7 +285,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
     const targetValue = event.target.value;
     if (targetValue === '') {
-      resetCharacterQuery();
       clearValue();
       return;
     }
@@ -398,7 +358,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       if (isAndroid()) {
         setTempAndroidValueStr(valueStr);
       }
-      resetCharacterQuery();
       clearActiveSection();
 
       return;
@@ -406,6 +365,31 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
     applyCharacterEditing({ keyPressed, sectionIndex: activeSectionIndex });
   });
+
+  const handleClear = useEventCallback((event: React.MouseEvent, ...args) => {
+    event.preventDefault();
+    onClear?.(event, ...(args as []));
+    clearValue();
+
+    if (!isFieldFocused(inputRef)) {
+      // setSelectedSections is called internally
+      focusField(0);
+    } else {
+      setSelectedSections(sectionOrder.startIndex);
+    }
+  });
+
+  const handleContainerKeyDown = useFieldHandleContainerKeyDown({
+    manager,
+    internalPropsWithDefaults,
+    stateResponse,
+  });
+  const wrappedHandleContainerKeyDown = useEventCallback(
+    (event: React.KeyboardEvent<HTMLSpanElement>) => {
+      onKeyDown?.(event);
+      handleContainerKeyDown(event);
+    },
+  );
 
   const placeholder = React.useMemo(() => {
     if (inPlaceholder !== undefined) {
@@ -445,6 +429,78 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEnhancedEffect(() => {
+    function syncSelectionToDOM() {
+      if (!inputRef.current) {
+        return;
+      }
+
+      if (parsedSelectedSections == null) {
+        if (inputRef.current.scrollLeft) {
+          // Ensure that input content is not marked as selected.
+          // setting selection range to 0 causes issues in Safari.
+          // https://bugs.webkit.org/show_bug.cgi?id=224425
+          inputRef.current.scrollLeft = 0;
+        }
+        return;
+      }
+
+      // On multi input range pickers we want to update selection range only for the active input
+      // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
+      if (inputRef.current !== getActiveElement(document)) {
+        return;
+      }
+
+      // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
+      const currentScrollTop = inputRef.current.scrollTop;
+
+      if (parsedSelectedSections === 'all') {
+        inputRef.current.select();
+      } else {
+        const selectedSection = sections[parsedSelectedSections];
+        const selectionStart =
+          selectedSection.type === 'empty'
+            ? selectedSection.startInInput - selectedSection.startSeparator.length
+            : selectedSection.startInInput;
+        const selectionEnd =
+          selectedSection.type === 'empty'
+            ? selectedSection.endInInput + selectedSection.endSeparator.length
+            : selectedSection.endInInput;
+
+        if (
+          selectionStart !== inputRef.current.selectionStart ||
+          selectionEnd !== inputRef.current.selectionEnd
+        ) {
+          if (inputRef.current === getActiveElement(document)) {
+            inputRef.current.setSelectionRange(selectionStart, selectionEnd);
+          }
+        }
+        clearTimeout(selectionSyncTimeoutRef.current);
+        selectionSyncTimeoutRef.current = setTimeout(() => {
+          // handle case when the selection is not updated correctly
+          // could happen on Android
+          if (
+            inputRef.current &&
+            inputRef.current === getActiveElement(document) &&
+            // The section might loose all selection, where `selectionStart === selectionEnd`
+            // https://github.com/mui/mui-x/pull/13652
+            inputRef.current.selectionStart === inputRef.current.selectionEnd &&
+            (inputRef.current.selectionStart !== selectionStart ||
+              inputRef.current.selectionEnd !== selectionEnd)
+          ) {
+            syncSelectionToDOM();
+          }
+        });
+      }
+
+      // Even reading this variable seems to do the trick, but also setting it just to make use of it
+      inputRef.current.scrollTop = currentScrollTop;
+    }
+
+    syncSelectionToDOM();
+  });
+
   const inputMode = React.useMemo(() => {
     if (activeSectionIndex == null) {
       return 'text';
@@ -460,25 +516,56 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
-  return {
-    interactions,
-    returnedValue: {
-      // Forwarded
-      readOnly,
-      onBlur: handleContainerBlur,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onPaste: handleInputPaste,
-      inputRef: handleRef,
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
 
-      // Additional
-      enableAccessibleFieldDOMStructure: false,
-      placeholder,
-      inputMode,
-      autoComplete: 'off',
-      value: shouldShowPlaceholder ? '' : valueStr,
-      onChange: handleInputChange,
-      focused,
+      const nextSectionIndex =
+        browserStartIndex <= sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? sections.length - 1 : nextSectionIndex - 1;
     },
+    setSelectedSections: (newSelectedSections) => setSelectedSections(newSelectedSections),
+    focusField,
+    isFieldFocused: () => isFieldFocused(inputRef),
+  }));
+
+  return {
+    // Forwarded
+    ...forwardedProps,
+    error,
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
+    onBlur: handleContainerBlur,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onPaste: handleInputPaste,
+    onKeyDown: wrappedHandleContainerKeyDown,
+    onClear: handleClear,
+    inputRef: handleRef,
+
+    // Additional
+    enableAccessibleFieldDOMStructure: false,
+    placeholder,
+    inputMode,
+    autoComplete: 'off',
+    value: shouldShowPlaceholder ? '' : valueStr,
+    onChange: handleInputChange,
+    focused,
+    disabled,
+    readOnly,
+    autoFocus,
+    openPickerAriaLabel,
   };
 };
+
+function isFieldFocused(inputRef: React.RefObject<HTMLInputElement | null>) {
+  return inputRef.current === getActiveElement(document);
+}

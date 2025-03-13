@@ -6,155 +6,167 @@ import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
 import {
   FieldSectionsBoundaries,
-  UseFieldTextField,
-  UseFieldTextFieldInteractions,
+  UseFieldForwardedProps,
+  UseFieldParameters,
+  UseFieldReturnValue,
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
+import { FieldSectionType } from '../../../models';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
+import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown';
+import { useFieldState } from './useFieldState';
+import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
+import { PickerValidValue } from '../../models';
 
-export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
+export const useFieldV7TextField = <
+  TValue extends PickerValidValue,
+  TError,
+  TValidationProps extends {},
+  TFieldInternalProps extends {},
+  TForwardedProps extends UseFieldForwardedProps<true>,
+>(
+  parameters: UseFieldParameters<
+    TValue,
+    true,
+    TError,
+    TValidationProps,
+    TFieldInternalProps,
+    TForwardedProps
+  >,
+): UseFieldReturnValue<true, TForwardedProps> => {
+  const translations = usePickerTranslations();
+  const utils = useUtils();
+  const id = useId();
+
   const {
-    manager: { internal_fieldValueManager: fieldValueManager },
-    internalPropsWithDefaults: {
-      disabled,
-      readOnly = false,
-      autoFocus = false,
-      focused: focusedProp,
+    manager,
+    forwardedProps,
+    internalProps,
+    skipContextFieldRefAssignment,
+    manager: {
+      internal_fieldValueManager: fieldValueManager,
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     },
     forwardedProps: {
-      sectionListRef: inSectionListRef,
+      sectionListRef: sectionListRefProp,
       onBlur,
       onClick,
       onFocus,
       onInput,
       onPaste,
+      onKeyDown,
+      onClear,
+      clearable,
     },
-    stateResponse: {
-      setSelectedSections,
-      parsedSelectedSections,
-      state,
-      clearActiveSection,
-      clearValue,
-      updateSectionValue,
-      updateValueFromValueStr,
-      sectionOrder,
-      sectionsValueBoundaries,
-      areAllSectionsEmpty,
-    },
-    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
-  } = params;
+  } = parameters;
+
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+    skipContextFieldRefAssignment,
+  });
+  const {
+    disabled = false,
+    readOnly = false,
+    autoFocus = false,
+    focused: focusedProp,
+    unstableFieldRef,
+  } = internalPropsWithDefaults;
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
-  const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const translations = usePickerTranslations();
-  const utils = useUtils();
-  const id = useId();
+  const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
 
+  const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
+  const {
+    state,
+    value,
+    setSelectedSections,
+    parsedSelectedSections,
+    clearActiveSection,
+    clearValue,
+    setCharacterQuery,
+    updateSectionValue,
+    updateValueFromValueStr,
+    sectionOrder,
+    sectionsValueBoundaries,
+    areAllSectionsEmpty,
+    error,
+  } = stateResponse;
+
+  const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });
+  const openPickerAriaLabel = useOpenPickerButtonAriaLabel(value);
   const [focused, setFocused] = React.useState(false);
 
-  const interactions = React.useMemo<UseFieldTextFieldInteractions>(
-    () => ({
-      syncSelectionToDOM: () => {
-        if (!sectionListRef.current) {
-          return;
-        }
+  function syncSelectionToDOM() {
+    if (!sectionListRef.current) {
+      return;
+    }
 
-        const selection = document.getSelection();
-        if (!selection) {
-          return;
-        }
+    const selection = document.getSelection();
+    if (!selection) {
+      return;
+    }
 
-        if (parsedSelectedSections == null) {
-          // If the selection contains an element inside the field, we reset it.
-          if (
-            selection.rangeCount > 0 &&
-            sectionListRef.current.getRoot().contains(selection.getRangeAt(0).startContainer)
-          ) {
-            selection.removeAllRanges();
-          }
-
-          if (focused) {
-            sectionListRef.current.getRoot().blur();
-          }
-          return;
-        }
-
-        // On multi input range pickers we want to update selection range only for the active input
-        if (!sectionListRef.current.getRoot().contains(getActiveElement(document))) {
-          return;
-        }
-
-        const range = new window.Range();
-
-        let target: HTMLElement;
-        if (parsedSelectedSections === 'all') {
-          target = sectionListRef.current.getRoot();
-        } else {
-          const section = state.sections[parsedSelectedSections];
-          if (section.type === 'empty') {
-            target = sectionListRef.current.getSectionContainer(parsedSelectedSections);
-          } else {
-            target = sectionListRef.current.getSectionContent(parsedSelectedSections);
-          }
-        }
-
-        range.selectNodeContents(target);
-        target.focus();
+    if (parsedSelectedSections == null) {
+      // If the selection contains an element inside the field, we reset it.
+      if (
+        selection.rangeCount > 0 &&
+        sectionListRef.current.getRoot().contains(selection.getRangeAt(0).startContainer)
+      ) {
         selection.removeAllRanges();
-        selection.addRange(range);
-      },
-      getActiveSectionIndexFromDOM: () => {
-        const activeElement = getActiveElement(document) as HTMLElement | undefined;
-        if (
-          !activeElement ||
-          !sectionListRef.current ||
-          !sectionListRef.current.getRoot().contains(activeElement)
-        ) {
-          return null;
-        }
+      }
 
-        return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
-      },
-      focusField: (newSelectedSections = 0) => {
-        if (
-          !sectionListRef.current ||
-          // if the field is already focused, we don't need to focus it again
-          interactions.getActiveSectionIndexFromDOM() != null
-        ) {
-          return;
-        }
+      if (focused) {
+        sectionListRef.current.getRoot().blur();
+      }
+      return;
+    }
 
-        const newParsedSelectedSections = parseSelectedSections(
-          newSelectedSections,
-          state.sections,
-        ) as number;
+    // On multi input range pickers we want to update selection range only for the active input
+    if (!sectionListRef.current.getRoot().contains(getActiveElement(document))) {
+      return;
+    }
 
-        setFocused(true);
-        sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
-      },
-      setSelectedSections: (newSelectedSections) => {
-        if (!sectionListRef.current) {
-          return;
-        }
+    const range = new window.Range();
 
-        const newParsedSelectedSections = parseSelectedSections(
-          newSelectedSections,
-          state.sections,
-        );
-        const newActiveSectionIndex =
-          newParsedSelectedSections === 'all' ? 0 : newParsedSelectedSections;
-        setFocused(newActiveSectionIndex !== null);
-        setSelectedSections(newSelectedSections);
-      },
-      isFieldFocused: () => {
-        const activeElement = getActiveElement(document);
-        return !!sectionListRef.current && sectionListRef.current.getRoot().contains(activeElement);
-      },
-    }),
-    [parsedSelectedSections, setSelectedSections, state.sections, focused],
-  );
+    let target: HTMLElement;
+    if (parsedSelectedSections === 'all') {
+      target = sectionListRef.current.getRoot();
+    } else {
+      const section = state.sections[parsedSelectedSections];
+      if (section.type === 'empty') {
+        target = sectionListRef.current.getSectionContainer(parsedSelectedSections);
+      } else {
+        target = sectionListRef.current.getSectionContent(parsedSelectedSections);
+      }
+    }
+
+    range.selectNodeContents(target);
+    target.focus();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function focusField(newSelectedSections: number | FieldSectionType = 0) {
+    if (
+      !sectionListRef.current ||
+      // if the field is already focused, we don't need to focus it again
+      getActiveSectionIndex(sectionListRef) != null
+    ) {
+      return;
+    }
+
+    const newParsedSelectedSections = parseSelectedSections(
+      newSelectedSections,
+      state.sections,
+    ) as number;
+
+    setFocused(true);
+    sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
+  }
 
   /**
    * If a section content has been updated with a value we don't want to keep,
@@ -169,7 +181,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
     sectionListRef.current.getSectionContent(sectionIndex).innerHTML =
       section.value || section.placeholder;
-    interactions.syncSelectionToDOM();
+    syncSelectionToDOM();
   });
 
   const handleContainerClick = useEventCallback((event: React.MouseEvent, ...args) => {
@@ -232,10 +244,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           `${section.startSeparator}${section.value || section.placeholder}${section.endSeparator}`,
       )
       .join('');
-    interactions.syncSelectionToDOM();
+    syncSelectionToDOM();
 
     if (keyPressed.length === 0 || keyPressed.charCodeAt(0) === 10) {
-      resetCharacterQuery();
       clearValue();
       setSelectedSections('all');
     } else if (keyPressed.length > 1) {
@@ -260,7 +271,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
     const pastedValue = event.clipboardData.getData('text');
     event.preventDefault();
-    resetCharacterQuery();
+    setCharacterQuery(null);
     updateValueFromValueStr(pastedValue);
   });
 
@@ -339,7 +350,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
 
       if (isValidPastedValue) {
-        resetCharacterQuery();
+        setCharacterQuery(null);
         updateSectionValue({
           section: activeSection,
           newSectionValue: pastedValue,
@@ -348,7 +359,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       }
       // If the pasted value corresponds to a single section, but not the expected type, we skip the modification
       else if (!lettersOnly && !digitsOnly) {
-        resetCharacterQuery();
+        setCharacterQuery(null);
         updateValueFromValueStr(pastedValue);
       }
     },
@@ -386,7 +397,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return;
       }
 
-      resetCharacterQuery();
       revertDOMSectionChange(sectionIndex);
       clearActiveSection();
       return;
@@ -401,20 +411,30 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     revertDOMSectionChange(sectionIndex);
   });
 
-  useEnhancedEffect(() => {
-    if (!focused || !sectionListRef.current) {
-      return;
-    }
+  const handleClear = useEventCallback((event: React.MouseEvent, ...args) => {
+    event.preventDefault();
+    onClear?.(event, ...(args as []));
+    clearValue();
 
-    if (parsedSelectedSections === 'all') {
-      sectionListRef.current.getRoot().focus();
-    } else if (typeof parsedSelectedSections === 'number') {
-      const domElement = sectionListRef.current.getSectionContent(parsedSelectedSections);
-      if (domElement) {
-        domElement.focus();
-      }
+    if (!isFieldFocused(sectionListRef)) {
+      // setSelectedSections is called internally
+      focusField(0);
+    } else {
+      setSelectedSections(sectionOrder.startIndex);
     }
-  }, [parsedSelectedSections, focused]);
+  });
+
+  const handleContainerKeyDown = useFieldHandleContainerKeyDown({
+    manager,
+    internalPropsWithDefaults,
+    stateResponse,
+  });
+  const wrappedHandleContainerKeyDown = useEventCallback(
+    (event: React.KeyboardEvent<HTMLSpanElement>) => {
+      onKeyDown?.(event);
+      handleContainerKeyDown(event);
+    },
+  );
 
   const sectionBoundaries = React.useMemo(() => {
     return state.sections.reduce((acc, next) => {
@@ -523,29 +543,88 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return {
-    interactions,
-    returnedValue: {
-      // Forwarded
-      autoFocus,
-      readOnly,
-      focused: focusedProp ?? focused,
-      sectionListRef: handleSectionListRef,
-      onBlur: handleContainerBlur,
-      onClick: handleContainerClick,
-      onFocus: handleContainerFocus,
-      onInput: handleContainerInput,
-      onPaste: handleContainerPaste,
+  useEnhancedEffect(() => {
+    if (!focused || !sectionListRef.current) {
+      return;
+    }
 
-      // Additional
-      enableAccessibleFieldDOMStructure: true,
-      elements,
-      // TODO v7: Try to set to undefined when there is a section selected.
-      tabIndex: parsedSelectedSections === 0 ? -1 : 0,
-      contentEditable: isContainerEditable,
-      value: valueStr,
-      onChange: handleValueStrChange,
-      areAllSectionsEmpty,
+    if (parsedSelectedSections === 'all') {
+      sectionListRef.current.getRoot().focus();
+    } else if (typeof parsedSelectedSections === 'number') {
+      const domElement = sectionListRef.current.getSectionContent(parsedSelectedSections);
+      if (domElement) {
+        domElement.focus();
+      }
+    }
+  }, [parsedSelectedSections, focused]);
+
+  useEnhancedEffect(() => {
+    syncSelectionToDOM();
+  });
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => getActiveSectionIndex(sectionListRef),
+    setSelectedSections: (newSelectedSections) => {
+      if (!sectionListRef.current) {
+        return;
+      }
+
+      const newParsedSelectedSections = parseSelectedSections(newSelectedSections, state.sections);
+      const newActiveSectionIndex =
+        newParsedSelectedSections === 'all' ? 0 : newParsedSelectedSections;
+      setFocused(newActiveSectionIndex !== null);
+      setSelectedSections(newSelectedSections);
     },
+    focusField,
+    isFieldFocused: () => isFieldFocused(sectionListRef),
+  }));
+
+  return {
+    // Forwarded
+    ...forwardedProps,
+    error,
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
+    focused: focusedProp ?? focused,
+    sectionListRef: handleSectionListRef,
+    onBlur: handleContainerBlur,
+    onClick: handleContainerClick,
+    onFocus: handleContainerFocus,
+    onInput: handleContainerInput,
+    onPaste: handleContainerPaste,
+    onKeyDown: wrappedHandleContainerKeyDown,
+    onClear: handleClear,
+
+    // Additional
+    enableAccessibleFieldDOMStructure: true,
+    elements,
+    // TODO v7: Try to set to undefined when there is a section selected.
+    tabIndex: parsedSelectedSections === 0 ? -1 : 0,
+    contentEditable: isContainerEditable,
+    value: valueStr,
+    onChange: handleValueStrChange,
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    autoFocus,
+    openPickerAriaLabel,
   };
 };
+
+function getActiveSectionIndex(sectionListRef: React.RefObject<PickersSectionListRef | null>) {
+  const activeElement = getActiveElement(document) as HTMLElement | undefined;
+  if (
+    !activeElement ||
+    !sectionListRef.current ||
+    !sectionListRef.current.getRoot().contains(activeElement)
+  ) {
+    return null;
+  }
+
+  return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
+}
+
+function isFieldFocused(sectionListRef: React.RefObject<PickersSectionListRef | null>) {
+  const activeElement = getActiveElement(document);
+  return !!sectionListRef.current && sectionListRef.current.getRoot().contains(activeElement);
+}

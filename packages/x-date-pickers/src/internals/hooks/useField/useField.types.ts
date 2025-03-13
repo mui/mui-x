@@ -12,8 +12,6 @@ import {
   InferFieldSection,
   PickerManager,
 } from '../../../models';
-import type { UseFieldStateReturnValue } from './useFieldState';
-import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
@@ -139,12 +137,11 @@ export interface UseFieldCommonForwardedProps
 }
 
 export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  UseFieldCommonForwardedProps &
-    (TEnableAccessibleFieldDOMStructure extends false
-      ? UseFieldV6ForwardedProps
-      : UseFieldV7ForwardedProps);
+  TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps;
 
-export interface UseFieldV6ForwardedProps {
+export interface UseFieldV6ForwardedProps extends UseFieldCommonForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
   onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
@@ -164,7 +161,7 @@ interface UseFieldV6AdditionalProps
   focused?: boolean;
 }
 
-export interface UseFieldV7ForwardedProps {
+export interface UseFieldV7ForwardedProps extends UseFieldCommonForwardedProps {
   focused?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
   onBlur?: React.FocusEventHandler;
@@ -185,7 +182,7 @@ interface UseFieldV7AdditionalProps {
   focused: boolean;
 }
 
-export type UseFieldResponse<
+export type UseFieldReturnValue<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
@@ -364,6 +361,10 @@ export interface UseFieldState<TValue extends PickerValidValue> {
    * The property below allows us to set the first `onChange` value into state waiting for the second one.
    */
   tempValueStrAndroid: string | null;
+  /**
+   * The current query when editing the field using letters or digits.
+   */
+  characterQuery: CharacterEditingQuery | null;
 }
 
 export type SectionNeighbors = {
@@ -394,50 +395,8 @@ export type SectionOrdering = {
   endIndex: number;
 };
 
-export interface UseFieldTextFieldInteractions {
-  /**
-   * Select the correct sections in the DOM according to the sections currently selected in state.
-   */
-  syncSelectionToDOM: () => void;
-  /**
-   * Returns the index of the active section (the first focused section).
-   * If no section is active, returns `null`.
-   * @returns {number | null} The index of the active section.
-   */
-  getActiveSectionIndexFromDOM: () => number | null;
-  /**
-   * Focuses the field.
-   * @param {number | FieldSectionType} newSelectedSection The section to select once focused.
-   */
-  focusField: (newSelectedSection?: number | FieldSectionType) => void;
-  setSelectedSections: (newSelectedSections: FieldSelectedSections) => void;
-  isFieldFocused: () => boolean;
-}
-
-export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
-  TValue extends PickerValidValue,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
->(
-  params: UseFieldTextFieldParameters<TValue, TEnableAccessibleFieldDOMStructure, TForwardedProps>,
-) => {
-  interactions: UseFieldTextFieldInteractions;
-  returnedValue: TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
-    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
-};
-
-interface UseFieldTextFieldParameters<
-  TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
-> {
-  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, any, any, any>;
-  forwardedProps: TForwardedProps;
-  internalPropsWithDefaults: UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>;
-  stateResponse: UseFieldStateReturnValue<TValue>;
-  characterEditingResponse: UseFieldCharacterEditingReturnValue;
+export interface CharacterEditingQuery {
+  value: string;
+  sectionIndex: number;
+  sectionType: FieldSectionType;
 }

@@ -3,7 +3,7 @@ export type {
   FieldValueManager,
   UseFieldInternalProps,
   UseFieldParameters as UseFieldParams,
-  UseFieldResponse,
+  UseFieldReturnValue as UseFieldResponse,
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './useField.types';

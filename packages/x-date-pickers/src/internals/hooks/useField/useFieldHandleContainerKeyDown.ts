@@ -15,7 +15,6 @@ import {
   getLetterEditingOptions,
   removeLocalizedDigits,
 } from './useField.utils';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 
 export function useFieldHandleContainerKeyDown<TValue extends PickerValidValue>(
   parameters: UseFieldOnKeyDownParameters<TValue>,
@@ -39,7 +38,6 @@ export function useFieldHandleContainerKeyDown<TValue extends PickerValidValue>(
       activeSectionIndex,
       sectionsValueBoundaries,
     },
-    characterEditingResponse: { resetCharacterQuery },
   } = parameters;
 
   return useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
@@ -107,7 +105,6 @@ export function useFieldHandleContainerKeyDown<TValue extends PickerValidValue>(
         } else {
           clearActiveSection();
         }
-        resetCharacterQuery();
         break;
       }
 
@@ -266,7 +263,6 @@ function adjustSectionValue<TValue extends PickerValidValue>(
 interface UseFieldOnKeyDownParameters<TValue extends PickerValidValue> {
   manager: PickerManager<TValue, any, any, any, any>;
   stateResponse: UseFieldStateReturnValue<TValue>;
-  characterEditingResponse: UseFieldCharacterEditingReturnValue;
   internalPropsWithDefaults: UseFieldInternalProps<TValue, any, any> & { minutesStep?: number };
 }
 
