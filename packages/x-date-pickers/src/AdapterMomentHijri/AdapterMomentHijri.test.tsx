@@ -23,8 +23,7 @@ describe('<AdapterMomentHijri />', () => {
   });
 
   describe('Adapter localization', () => {
-    // TODO: All Hijri tests are failing on vitest browser (2024-11)
-    testSkipIf(isVitest && !isJSDOM)('Formatting', () => {
+    testSkipIf(!isJSDOM)('Formatting', () => {
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
