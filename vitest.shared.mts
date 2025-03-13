@@ -56,6 +56,7 @@ export default defineConfig({
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
     browser: {
+      isolate: false,
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
