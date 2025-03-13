@@ -1,216 +1,90 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
 import {
-  UseFieldParams,
+  UseFieldParameters,
   UseFieldResponse,
   UseFieldCommonForwardedProps,
-  UseFieldInternalProps,
-  AvailableAdjustKeyCode,
   UseFieldTextField,
   UseFieldForwardedProps,
   UseFieldCommonAdditionalProps,
 } from './useField.types';
-import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import { PickerValidValue } from '../../models';
+import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
+import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown';
 
 export const useField = <
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TValidationProps extends {},
+  TFieldInternalProps extends {},
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
-    minutesStep?: number;
-  },
 >(
-  params: UseFieldParams<
+  params: UseFieldParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    TError,
+    TValidationProps,
+    TFieldInternalProps,
+    TForwardedProps
   >,
 ): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
-  const utils = useUtils();
-
   const {
+    manager,
     internalProps,
-    internalProps: {
-      unstableFieldRef,
-      minutesStep,
-      enableAccessibleFieldDOMStructure = true,
-      disabled = false,
-      readOnly = false,
-      autoFocus = false,
-    },
+    forwardedProps,
+    skipContextFieldRefAssignment,
+    manager: { validator, internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel },
     forwardedProps: { onKeyDown, error, clearable, onClear },
-    fieldValueManager,
-    validator,
-    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
-  const isRtl = useRtl();
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+    skipContextFieldRefAssignment,
+  });
 
-  const stateResponse = useFieldState(params);
+  const {
+    unstableFieldRef,
+    enableAccessibleFieldDOMStructure = true,
+    disabled = false,
+    readOnly = false,
+    autoFocus = false,
+  } = internalPropsWithDefaults;
+
+  const stateResponse = useFieldState({ manager, internalPropsWithDefaults });
   const {
     state,
     value,
     activeSectionIndex,
-    parsedSelectedSections,
     setSelectedSections,
     clearValue,
     clearActiveSection,
-    updateSectionValue,
-    setTempAndroidValueStr,
-    sectionsValueBoundaries,
-    localizedDigits,
     timezone,
+    areAllSectionsEmpty,
+    sectionOrder,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing({
-    sections: state.sections,
-    updateSectionValue,
-    sectionsValueBoundaries,
-    localizedDigits,
-    setTempAndroidValueStr,
-    timezone,
-  });
-
+  const characterEditingResponse = useFieldCharacterEditing({ stateResponse });
   const { resetCharacterQuery } = characterEditingResponse;
-
-  const areAllSectionsEmpty = React.useMemo(
-    () => state.sections.every((section) => section.value === ''),
-    [state.sections],
-  );
 
   const useFieldTextField = (
     enableAccessibleFieldDOMStructure ? useFieldV7TextField : useFieldV6TextField
   ) as UseFieldTextField<TEnableAccessibleFieldDOMStructure>;
 
-  const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRtl && !enableAccessibleFieldDOMStructure),
-    [state.sections, isRtl, enableAccessibleFieldDOMStructure],
-  );
-
   const { returnedValue, interactions } = useFieldTextField({
-    ...params,
-    ...stateResponse,
-    ...characterEditingResponse,
-    areAllSectionsEmpty,
-    sectionOrder,
-  });
-
-  const handleContainerKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
-    onKeyDown?.(event);
-
-    if (disabled) {
-      return;
-    }
-    // eslint-disable-next-line default-case
-    switch (true) {
-      // Select all
-      case (event.ctrlKey || event.metaKey) &&
-        String.fromCharCode(event.keyCode) === 'A' &&
-        !event.shiftKey &&
-        !event.altKey: {
-        // prevent default to make sure that the next line "select all" while updating
-        // the internal state at the same time.
-        event.preventDefault();
-        setSelectedSections('all');
-        break;
-      }
-
-      // Move selection to next section
-      case event.key === 'ArrowRight': {
-        event.preventDefault();
-
-        if (parsedSelectedSections == null) {
-          setSelectedSections(sectionOrder.startIndex);
-        } else if (parsedSelectedSections === 'all') {
-          setSelectedSections(sectionOrder.endIndex);
-        } else {
-          const nextSectionIndex = sectionOrder.neighbors[parsedSelectedSections].rightIndex;
-          if (nextSectionIndex !== null) {
-            setSelectedSections(nextSectionIndex);
-          }
-        }
-        break;
-      }
-
-      // Move selection to previous section
-      case event.key === 'ArrowLeft': {
-        event.preventDefault();
-
-        if (parsedSelectedSections == null) {
-          setSelectedSections(sectionOrder.endIndex);
-        } else if (parsedSelectedSections === 'all') {
-          setSelectedSections(sectionOrder.startIndex);
-        } else {
-          const nextSectionIndex = sectionOrder.neighbors[parsedSelectedSections].leftIndex;
-          if (nextSectionIndex !== null) {
-            setSelectedSections(nextSectionIndex);
-          }
-        }
-        break;
-      }
-
-      // Reset the value of the selected section
-      case event.key === 'Delete': {
-        event.preventDefault();
-
-        if (readOnly) {
-          break;
-        }
-
-        if (parsedSelectedSections == null || parsedSelectedSections === 'all') {
-          clearValue();
-        } else {
-          clearActiveSection();
-        }
-        resetCharacterQuery();
-        break;
-      }
-
-      // Increment / decrement the selected section value
-      case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
-        event.preventDefault();
-
-        if (readOnly || activeSectionIndex == null) {
-          break;
-        }
-
-        // if all sections are selected, mark the currently editing one as selected
-        if (parsedSelectedSections === 'all') {
-          setSelectedSections(activeSectionIndex);
-        }
-
-        const activeSection = state.sections[activeSectionIndex];
-
-        const newSectionValue = adjustSectionValue(
-          utils,
-          timezone,
-          activeSection,
-          event.key as AvailableAdjustKeyCode,
-          sectionsValueBoundaries,
-          localizedDigits,
-          fieldValueManager.getDateFromSection(value, activeSection),
-          { minutesStep },
-        );
-
-        updateSectionValue({
-          section: activeSection,
-          newSectionValue,
-          shouldGoToNextSection: false,
-        });
-        break;
-      }
-    }
+    manager,
+    internalPropsWithDefaults,
+    forwardedProps,
+    stateResponse,
+    characterEditingResponse,
   });
 
   useEnhancedEffect(() => {
@@ -218,11 +92,11 @@ export const useField = <
   });
 
   const { hasValidationError } = useValidation({
-    props: internalProps,
+    props: internalPropsWithDefaults,
     validator,
     timezone,
     value,
-    onError: internalProps.onError,
+    onError: internalPropsWithDefaults.onError,
   });
 
   const inputError = React.useMemo(() => {
@@ -273,16 +147,29 @@ export const useField = <
     }
   });
 
+  const handleContainerKeyDown = useFieldHandleContainerKeyDown({
+    manager,
+    internalPropsWithDefaults,
+    stateResponse,
+    characterEditingResponse,
+  });
+
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
+    onKeyDown?.(event);
+    handleContainerKeyDown(event);
+  });
+
   const commonForwardedProps: Required<UseFieldCommonForwardedProps> = {
-    onKeyDown: handleContainerKeyDown,
+    onKeyDown: handleKeyDown,
     onClear: handleClearValue,
     error: inputError,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const getOpenPickerButtonAriaLabel = useOpenPickerButtonAriaLabel();
   const openPickerAriaLabel = React.useMemo(
-    () => getOpenDialogAriaText(value),
-    [getOpenDialogAriaText, value],
+    () => getOpenPickerButtonAriaLabel(value),
+    [getOpenPickerButtonAriaLabel, value],
   );
 
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {

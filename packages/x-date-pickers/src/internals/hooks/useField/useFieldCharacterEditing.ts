@@ -1,13 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  FieldSectionType,
-  FieldSection,
-  PickersTimezone,
-  InferFieldSection,
-} from '../../../models';
+import { FieldSectionType, FieldSection, InferFieldSection } from '../../../models';
 import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -19,31 +13,11 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UpdateSectionValueParams } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { PickerValidValue } from '../../models';
 
-interface CharacterEditingQuery {
-  value: string;
-  sectionIndex: number;
-  sectionType: FieldSectionType;
-}
-
-export interface ApplyCharacterEditingParams {
-  keyPressed: string;
-  sectionIndex: number;
-}
-
-interface UseFieldCharacterEditingParams<TValue extends PickerValidValue> {
-  sections: InferFieldSection<TValue>[];
-  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  localizedDigits: string[];
-  setTempAndroidValueStr: (newValue: string | null) => void;
-  timezone: PickersTimezone;
-}
-
-export interface UseFieldCharacterEditingResponse {
-  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
+export interface UseFieldCharacterEditingReturnValue {
+  applyCharacterEditing: (params: ApplyCharacterEditingParameters) => void;
   resetCharacterQuery: () => void;
 }
 
@@ -54,7 +28,7 @@ export interface UseFieldCharacterEditingResponse {
  * If it returns `null`, then the section value is not updated and the focus does not move.
  */
 type CharacterEditingApplier = (
-  params: ApplyCharacterEditingParams,
+  params: ApplyCharacterEditingParameters,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 
 /**
@@ -90,13 +64,15 @@ const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
  * 2. The letter editing when the user presses another key
  */
 export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
-  sections,
-  updateSectionValue,
-  sectionsValueBoundaries,
-  localizedDigits,
-  setTempAndroidValueStr,
-  timezone,
-}: UseFieldCharacterEditingParams<TValue>): UseFieldCharacterEditingResponse => {
+  stateResponse: {
+    state,
+    timezone,
+    updateSectionValue,
+    sectionsValueBoundaries,
+    localizedDigits,
+    setTempAndroidValueStr,
+  },
+}: UseFieldCharacterEditingParameters<TValue>): UseFieldCharacterEditingReturnValue => {
   const utils = useUtils();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
@@ -104,10 +80,10 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   const resetQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
+    if (query != null && state.sections[query.sectionIndex]?.type !== query.sectionType) {
       resetQuery();
     }
-  }, [sections, query, resetQuery]);
+  }, [state.sections, query, resetQuery]);
 
   React.useEffect(() => {
     if (query != null) {
@@ -122,12 +98,12 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   }, [query, resetQuery]);
 
   const applyQuery = (
-    { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
+    { keyPressed, sectionIndex }: ApplyCharacterEditingParameters,
     getFirstSectionValueMatchingWithQuery: QueryApplier<TValue>,
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
-    const activeSection = sections[sectionIndex];
+    const activeSection = state.sections[sectionIndex];
 
     // The current query targets the section being editing
     // We can try to concatenate the value
@@ -397,8 +373,8 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
     );
   };
 
-  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
-    const section = sections[params.sectionIndex];
+  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParameters) => {
+    const section = state.sections[params.sectionIndex];
     const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
     const response = isNumericEditing
       ? applyNumericEditing({
@@ -423,3 +399,18 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
     resetCharacterQuery: resetQuery,
   };
 };
+
+interface CharacterEditingQuery {
+  value: string;
+  sectionIndex: number;
+  sectionType: FieldSectionType;
+}
+
+export interface ApplyCharacterEditingParameters {
+  keyPressed: string;
+  sectionIndex: number;
+}
+
+interface UseFieldCharacterEditingParameters<TValue extends PickerValidValue> {
+  stateResponse: UseFieldStateReturnValue<TValue>;
+}

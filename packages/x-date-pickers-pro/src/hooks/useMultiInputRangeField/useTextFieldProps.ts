@@ -15,7 +15,6 @@ import {
   RangePosition,
   useField,
   UseFieldInternalProps,
-  useFieldInternalPropsWithDefaults,
   UseFieldResponse,
   useNullableFieldPrivateContext,
   useNullablePickerContext,
@@ -153,26 +152,11 @@ export function useTextFieldProps<
   };
 
   const splittedProps = useSplitFieldProps(allProps, valueType);
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+  const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField({
     manager,
+    forwardedProps: splittedProps.forwardedProps,
     internalProps: splittedProps.internalProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  });
-
-  const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    typeof splittedProps.forwardedProps,
-    typeof internalPropsWithDefaults
-  >({
-    forwardedProps: splittedProps.forwardedProps,
-    internalProps: internalPropsWithDefaults,
-    valueManager: manager.internal_valueManager,
-    fieldValueManager: manager.internal_fieldValueManager,
-    validator: manager.validator,
-    valueType: manager.valueType,
-    // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-    getOpenPickerButtonAriaLabel: () => '',
   }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, typeof allProps>;
 
   React.useEffect(() => {

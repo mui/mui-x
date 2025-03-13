@@ -6,12 +6,11 @@ import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
-  UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
-  UseFieldForwardedProps,
+  SectionOrdering,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -20,14 +19,15 @@ import {
   getDateFromDateSections,
   parseSelectedSections,
   getLocalizedDigits,
+  getSectionOrder,
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import {
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
-  InferError,
   InferFieldSection,
+  PickerManager,
 } from '../../../models';
 import { useControlledValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -36,66 +36,33 @@ import {
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
 
-export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
-  /**
-   * The section on which we want to apply the new value.
-   */
-  section: InferFieldSection<TValue>;
-  /**
-   * Value to apply to the active section.
-   */
-  newSectionValue: string;
-  /**
-   * If `true`, the focus will move to the next section.
-   */
-  shouldGoToNextSection: boolean;
-}
-
-export interface UseFieldStateResponse<TValue extends PickerValidValue> {
-  state: UseFieldState<TValue>;
-  value: TValue;
-  activeSectionIndex: number | null;
-  parsedSelectedSections: FieldParsedSelectedSections;
-  setSelectedSections: (sections: FieldSelectedSections) => void;
-  clearValue: () => void;
-  clearActiveSection: () => void;
-  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
-  updateValueFromValueStr: (valueStr: string) => void;
-  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  getSectionsFromValue: (
-    value: TValue,
-    fallbackSections?: InferFieldSection<TValue>[] | null,
-  ) => InferFieldSection<TValue>[];
-  localizedDigits: string[];
-  timezone: PickersTimezone;
-}
-
 export const useFieldState = <
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
+  TError,
+  TValidationProps extends {},
 >(
-  params: UseFieldParams<
+  params: UseFieldStateParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    TError,
+    TValidationProps
   >,
-): UseFieldStateResponse<TValue> => {
+): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
   const translations = usePickerTranslations();
   const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
   const {
-    valueManager,
-    fieldValueManager,
-    valueType,
-    validator,
-    internalProps,
-    internalProps: {
+    manager: {
+      validator,
+      valueType,
+      internal_valueManager: valueManager,
+      internal_fieldValueManager: fieldValueManager,
+    },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: {
       value: valueProp,
       defaultValue,
       referenceDate: referenceDateProp,
@@ -175,7 +142,7 @@ export const useFieldState = <
       referenceDate: referenceDateProp,
       value,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps,
+      props: internalPropsWithDefaults as GetDefaultReferenceDateProps,
       granularity,
       timezone,
     });
@@ -205,13 +172,23 @@ export const useFieldState = <
 
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, isRtl && !enableAccessibleFieldDOMStructure),
+    [state.sections, isRtl, enableAccessibleFieldDOMStructure],
+  );
+
+  const areAllSectionsEmpty = React.useMemo(
+    () => state.sections.every((section) => section.value === ''),
+    [state.sections],
+  );
+
   const publishValue = (newValue: TValue) => {
-    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+    const context: FieldChangeHandlerContext<TError> = {
       validationError: validator({
         adapter,
         value: newValue,
         timezone,
-        props: internalProps,
+        props: internalPropsWithDefaults,
       }),
     };
 
@@ -314,7 +291,7 @@ export const useFieldState = <
     section,
     newSectionValue,
     shouldGoToNextSection,
-  }: UpdateSectionValueParams<TValue>) => {
+  }: UpdateSectionValueParameters<TValue>) => {
     timeoutToUpdateSectionValueOnNextInvalidDate.clear();
     timeoutToCleanActiveDateSectionsIfValueNull.clear();
 
@@ -465,5 +442,59 @@ export const useFieldState = <
     sectionsValueBoundaries,
     localizedDigits,
     timezone,
+    sectionOrder,
+    areAllSectionsEmpty,
   };
 };
+
+interface UseFieldStateParameters<
+  TValue extends PickerValidValue,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TValidationProps extends {},
+> {
+  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  > &
+    TValidationProps;
+}
+
+export interface UpdateSectionValueParameters<TValue extends PickerValidValue> {
+  /**
+   * The section on which we want to apply the new value.
+   */
+  section: InferFieldSection<TValue>;
+  /**
+   * Value to apply to the active section.
+   */
+  newSectionValue: string;
+  /**
+   * If `true`, the focus will move to the next section.
+   */
+  shouldGoToNextSection: boolean;
+}
+
+export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
+  state: UseFieldState<TValue>;
+  value: TValue;
+  activeSectionIndex: number | null;
+  parsedSelectedSections: FieldParsedSelectedSections;
+  setSelectedSections: (sections: FieldSelectedSections) => void;
+  clearValue: () => void;
+  clearActiveSection: () => void;
+  updateSectionValue: (params: UpdateSectionValueParameters<TValue>) => void;
+  updateValueFromValueStr: (valueStr: string) => void;
+  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries;
+  getSectionsFromValue: (
+    value: TValue,
+    fallbackSections?: InferFieldSection<TValue>[] | null,
+  ) => InferFieldSection<TValue>[];
+  localizedDigits: string[];
+  timezone: PickersTimezone;
+  sectionOrder: SectionOrdering;
+  areAllSectionsEmpty: boolean;
+}

@@ -16,7 +16,13 @@ import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
-    internalProps: { disabled, readOnly = false, autoFocus = false, focused: focusedProp },
+    manager: { internal_fieldValueManager: fieldValueManager },
+    internalPropsWithDefaults: {
+      disabled,
+      readOnly = false,
+      autoFocus = false,
+      focused: focusedProp,
+    },
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -25,19 +31,19 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       onInput,
       onPaste,
     },
-    fieldValueManager,
-    applyCharacterEditing,
-    resetCharacterQuery,
-    setSelectedSections,
-    parsedSelectedSections,
-    state,
-    clearActiveSection,
-    clearValue,
-    updateSectionValue,
-    updateValueFromValueStr,
-    sectionOrder,
-    areAllSectionsEmpty,
-    sectionsValueBoundaries,
+    stateResponse: {
+      setSelectedSections,
+      parsedSelectedSections,
+      state,
+      clearActiveSection,
+      clearValue,
+      updateSectionValue,
+      updateValueFromValueStr,
+      sectionOrder,
+      sectionsValueBoundaries,
+      areAllSectionsEmpty,
+    },
+    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
   } = params;
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);

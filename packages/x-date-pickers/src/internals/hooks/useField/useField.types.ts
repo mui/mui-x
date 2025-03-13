@@ -9,32 +9,28 @@ import {
   PickerValidDate,
   FieldRef,
   OnErrorProps,
-  InferError,
   InferFieldSection,
-  PickerValueType,
+  PickerManager,
 } from '../../../models';
-import type { PickerValueManager } from '../../models';
-import type { Validator } from '../../../validation';
-import type { UseFieldStateResponse } from './useFieldState';
-import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
+import type { UseFieldStateReturnValue } from './useFieldState';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
 
-export interface UseFieldParams<
+export interface UseFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TValidationProps extends {},
+  TFieldInternalProps extends {},
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
 > {
+  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
   forwardedProps: TForwardedProps;
-  internalProps: TInternalProps;
-  valueManager: PickerValueManager<TValue, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue>;
-  validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
-  valueType: PickerValueType;
-  getOpenPickerButtonAriaLabel: (value: TValue) => string;
+  internalProps: TFieldInternalProps;
+  skipContextFieldRefAssignment?: boolean;
 }
 
 export interface UseFieldInternalProps<
@@ -370,14 +366,6 @@ export interface UseFieldState<TValue extends PickerValidValue> {
   tempValueStrAndroid: string | null;
 }
 
-export type AvailableAdjustKeyCode =
-  | 'ArrowUp'
-  | 'ArrowDown'
-  | 'PageUp'
-  | 'PageDown'
-  | 'Home'
-  | 'End';
-
 export type SectionNeighbors = {
   [sectionIndex: number]: {
     /**
@@ -431,16 +419,8 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
-    minutesStep?: number;
-  },
 >(
-  params: UseFieldTextFieldParams<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
+  params: UseFieldTextFieldParameters<TValue, TEnableAccessibleFieldDOMStructure, TForwardedProps>,
 ) => {
   interactions: UseFieldTextFieldInteractions;
   returnedValue: TEnableAccessibleFieldDOMStructure extends false
@@ -448,21 +428,16 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
 };
 
-interface UseFieldTextFieldParams<
+interface UseFieldTextFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
-> extends UseFieldParams<
-      TValue,
-      TEnableAccessibleFieldDOMStructure,
-      TForwardedProps,
-      TInternalProps
-    >,
-    UseFieldStateResponse<TValue>,
-    UseFieldCharacterEditingResponse {
-  areAllSectionsEmpty: boolean;
-  sectionOrder: SectionOrdering;
+> {
+  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, any, any, any>;
+  forwardedProps: TForwardedProps;
+  internalPropsWithDefaults: UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>;
+  stateResponse: UseFieldStateReturnValue<TValue>;
+  characterEditingResponse: UseFieldCharacterEditingReturnValue;
 }

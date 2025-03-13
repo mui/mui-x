@@ -81,6 +81,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const {
+    manager: { internal_valueManager: valueManager, internal_fieldValueManager: fieldValueManager },
     forwardedProps: {
       onFocus,
       onClick,
@@ -89,23 +90,22 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false, disabled = false, focused },
-    parsedSelectedSections,
-    activeSectionIndex,
-    state,
-    fieldValueManager,
-    valueManager,
-    applyCharacterEditing,
-    resetCharacterQuery,
-    updateSectionValue,
-    updateValueFromValueStr,
-    clearActiveSection,
-    clearValue,
-    setTempAndroidValueStr,
-    setSelectedSections,
-    getSectionsFromValue,
-    areAllSectionsEmpty,
-    localizedDigits,
+    internalPropsWithDefaults: { readOnly = false, disabled = false, focused },
+    stateResponse: {
+      parsedSelectedSections,
+      activeSectionIndex,
+      state,
+      updateSectionValue,
+      updateValueFromValueStr,
+      clearActiveSection,
+      clearValue,
+      setTempAndroidValueStr,
+      setSelectedSections,
+      getSectionsFromValue,
+      localizedDigits,
+      areAllSectionsEmpty,
+    },
+    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
