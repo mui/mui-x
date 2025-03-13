@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { AnimationData, CompletedBarData, MaskData } from './types';
-import { BarClipPath } from './BarClipPath';
+import { CompletedBarData, MaskData } from './types';
+import { BarClipPath, barClipPathClasses } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
@@ -209,36 +209,52 @@ const useAggregatedData = (): {
   };
 };
 
-const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
-  ...(layout === 'vertical'
-    ? {
-        y: yOrigin,
-        x,
-        height: 0,
-        width,
-      }
-    : {
-        y,
-        x: xOrigin,
-        height,
-        width: 0,
-      }),
-});
-
-const enterStyle = ({ x, width, y, height }: AnimationData) => ({
-  y,
-  x,
-  height,
-  width,
-});
+const ANIMATION_DURATION = '0.5s';
 
 const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  [`& .${barElementClasses.root}.${barElementClasses.vertical}`]: {
+    transition: `opacity 0.2s ease-in, fill 0.2s ease-in, height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growHeight': {
+      from: { height: 0, y: 'calc(var(--y) + var(--height))' },
+      to: {},
+    },
+
+    animation: `growHeight ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barClipPathClasses.root}.${barClipPathClasses.vertical}`]: {
+    transition: `height ${ANIMATION_DURATION} ease-in, y ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growClipPathHeight': {
+      from: { height: 0, y: 'calc(var(--y) + var(--height))' },
+      to: {},
+    },
+
+    animation: `growClipPathHeight ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barElementClasses.root}.${barElementClasses.horizontal}`]: {
+    transition: `opacity 0.2s ease-in, fill 0.2s ease-in, width ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growWidth': {
+      from: { width: 0 },
+      to: {},
+    },
+
+    animation: `growWidth ${ANIMATION_DURATION} ease`,
+  },
+  [`& .${barClipPathClasses.root}.${barClipPathClasses.horizontal}`]: {
+    transition: `width ${ANIMATION_DURATION} ease-in`,
+
+    '@keyframes growClipPathWidth': {
+      from: { width: 0 },
+      to: {},
+    },
+
+    animation: `growClipPathWidth ${ANIMATION_DURATION} ease`,
   },
 });
 
@@ -260,45 +276,49 @@ function BarPlot(props: BarPlotProps) {
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
-  const transition = useTransition(completedData, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: leaveStyle,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
-
-  const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
-    keys: (v) => v.id,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: leaveStyle,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
-
   return (
     <BarPlotRoot>
       {!withoutBorderRadius &&
-        maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
-          return (
-            <BarClipPath
-              maskId={id}
-              borderRadius={borderRadius}
-              hasNegative={hasNegative}
-              hasPositive={hasPositive}
-              layout={layout}
-              style={style}
-            />
-          );
-        })}
-      {transition((style, { seriesId, dataIndex, color, maskId }) => {
+        masksData.map(({ id, hasPositive, hasNegative, layout, x, y, width, height }) => (
+          <BarClipPath
+            key={id}
+            className={clsx(
+              barClipPathClasses.root,
+              layout === 'horizontal' ? barClipPathClasses.horizontal : barClipPathClasses.vertical,
+            )}
+            maskId={id}
+            borderRadius={borderRadius}
+            hasNegative={hasNegative}
+            hasPositive={hasPositive}
+            layout={layout}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            style={{
+              // @ts-expect-error TypeScript is unable to infer the correct type for CSS variables
+              '--y': `${y}px`,
+              '--height': `${height}px`,
+            }}
+          />
+        ))}
+      {completedData.map(({ x, y, width, height, dataIndex, color, seriesId, maskId, layout }) => {
         const barElement = (
           <BarElement
+            key={`${seriesId}-${dataIndex}`}
             id={seriesId}
             dataIndex={dataIndex}
             color={color}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            layout={layout ?? 'vertical'}
+            style={{
+              // @ts-expect-error TypeScript is unable to infer the correct type for CSS variables
+              '--y': `${y}px`,
+              '--height': `${height}px`,
+            }}
             {...other}
             onClick={
               onItemClick &&
@@ -306,7 +326,6 @@ function BarPlot(props: BarPlotProps) {
                 onItemClick(event, { type: 'bar', seriesId, dataIndex });
               })
             }
-            style={style}
           />
         );
 

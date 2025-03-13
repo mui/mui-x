@@ -18,6 +18,10 @@ export interface BarElementClasses {
   highlighted: string;
   /** Styles applied to the root element if it is faded. */
   faded: string;
+  /** Styles applied to the root element if it is horizontal. */
+  horizontal: string;
+  /** Styles applied to the root element if it is vertical. */
+  vertical: string;
 }
 
 export type BarElementClassKey = keyof BarElementClasses;
@@ -28,6 +32,7 @@ export interface BarElementOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  layout: 'horizontal' | 'vertical';
   classes?: Partial<BarElementClasses>;
 }
 
@@ -39,12 +44,20 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
   'root',
   'highlighted',
   'faded',
+  'horizontal',
+  'vertical',
 ]);
 
 const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
+  const { classes, id, isHighlighted, isFaded, layout } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+      layout === 'vertical' ? 'vertical' : 'horizontal',
+    ],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);
@@ -85,6 +98,7 @@ function BarElement(props: BarElementProps) {
     slotProps,
     style,
     onClick,
+    layout,
     ...other
   } = props;
   const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
@@ -100,6 +114,7 @@ function BarElement(props: BarElementProps) {
     color,
     isFaded,
     isHighlighted,
+    layout,
   };
 
   const classes = useUtilityClasses(ownerState);
