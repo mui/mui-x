@@ -91,7 +91,7 @@ function usePieArcAnimatedProps({
       })!,
   );
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const lastStartAngle = lastAngles.current.startAngle;
     const lastEndAngle = lastAngles.current.endAngle;
 
