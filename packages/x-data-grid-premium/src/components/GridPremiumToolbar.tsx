@@ -5,13 +5,14 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
+import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const additionalItems = rootProps.experimentalFeatures?.pivoting ? (
+  const additionalItems = isPivotingAvailable(rootProps) ? (
     <React.Fragment>
       <GridToolbarDivider />
       <PivotPanelTrigger
