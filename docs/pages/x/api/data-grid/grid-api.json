@@ -133,6 +133,13 @@
       "required": true,
       "isProPlan": true
     },
+    "getPropagatedRowSelectionModel": {
+      "type": {
+        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+      },
+      "required": true,
+      "isProPlan": true
+    },
     "getRootDimensions": { "type": { "description": "() =&gt; GridDimensions" }, "required": true },
     "getRow": {
       "type": {

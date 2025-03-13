@@ -3,6 +3,11 @@
   "description": "",
   "properties": [
     {
+      "name": "getPropagatedRowSelectionModel",
+      "description": "Returns the modified selection model after applying row selection propagation. Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>.",
+      "type": "(inputSelectionModel: GridRowSelectionModel) => GridRowSelectionModel"
+    },
+    {
       "name": "selectRowRange",
       "description": "Change the selection state of all the selectable rows in a range.",
       "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"

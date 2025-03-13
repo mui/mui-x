@@ -422,6 +422,51 @@ export const useGridRowSelection = (
     ],
   );
 
+  const getPropagatedRowSelectionModel = React.useCallback<
+    GridRowMultiSelectionApi['getPropagatedRowSelectionModel']
+  >(
+    (inputSelectionModel) => {
+      if (
+        !isNestedData ||
+        !applyAutoSelection ||
+        (inputSelectionModel.ids.size === 0 && inputSelectionModel.type === 'include')
+      ) {
+        return inputSelectionModel;
+      }
+      const propagatedSelectionModel: GridRowSelectionModel = {
+        type: inputSelectionModel.type,
+        ids: new Set(inputSelectionModel.ids),
+      };
+
+      const selectionManager = createRowSelectionManager(propagatedSelectionModel);
+
+      const addRow = (rowId: GridRowId) => {
+        selectionManager.select(rowId);
+      };
+
+      for (const id of inputSelectionModel.ids) {
+        findRowsToSelect(
+          apiRef,
+          tree,
+          id,
+          props.rowSelectionPropagation?.descendants ?? false,
+          props.rowSelectionPropagation?.parents ?? false,
+          addRow,
+          selectionManager,
+        );
+      }
+
+      return propagatedSelectionModel;
+    },
+    [
+      tree,
+      props.rowSelectionPropagation?.descendants,
+      props.rowSelectionPropagation?.parents,
+      isNestedData,
+      applyAutoSelection,
+    ],
+  );
+
   const selectRowRange = React.useCallback<GridRowMultiSelectionApi['selectRowRange']>(
     (
       {
@@ -462,6 +507,7 @@ export const useGridRowSelection = (
   const selectionPrivateApi: GridRowMultiSelectionApi = {
     selectRows,
     selectRowRange,
+    getPropagatedRowSelectionModel,
   };
 
   useGridApiMethod(apiRef, selectionPublicApi, 'public');
@@ -474,8 +520,9 @@ export const useGridRowSelection = (
   /*
    * EVENTS
    */
-  const syncSelectionState = React.useCallback(
-    (sortModelUpdated = false, selection = gridRowSelectionStateSelector(apiRef)) => {
+  const removeOutdatedSelection = React.useCallback(
+    (sortModelUpdated = false) => {
+      const currentSelection = gridRowSelectionStateSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
@@ -487,13 +534,13 @@ export const useGridRowSelection = (
       };
 
       const newSelectionModel = {
-        type: selection.type,
-        ids: new Set(selection.ids),
+        type: currentSelection.type,
+        ids: new Set(currentSelection.ids),
       };
       const selectionManager = createRowSelectionManager(newSelectionModel);
 
       let hasChanged = false;
-      for (const id of selection.ids) {
+      for (const id of currentSelection.ids) {
         if (isNonExistent(id)) {
           if (props.keepNonExistentRowsSelected) {
             continue;
@@ -502,7 +549,7 @@ export const useGridRowSelection = (
           hasChanged = true;
           continue;
         }
-        if (!applyAutoSelection) {
+        if (!props.rowSelectionPropagation?.parents) {
           continue;
         }
         const node = tree[id];
@@ -526,7 +573,7 @@ export const useGridRowSelection = (
       // Example: A parent whose de-selected children are filtered out should now be selected
       const shouldReapplyPropagation =
         isNestedData &&
-        applyAutoSelection &&
+        props.rowSelectionPropagation?.parents &&
         (newSelectionModel.ids.size > 0 ||
           // In case of exclude selection, newSelectionModel.ids.size === 0 means all rows are selected
           newSelectionModel.type === 'exclude');
@@ -557,17 +604,12 @@ export const useGridRowSelection = (
     [
       apiRef,
       isNestedData,
-      applyAutoSelection,
+      props.rowSelectionPropagation?.parents,
       props.keepNonExistentRowsSelected,
       props.filterMode,
       tree,
       getRowsToBeSelected,
     ],
-  );
-
-  const debouncedSyncSelectionState = React.useMemo(
-    () => debounce(syncSelectionState, 0),
-    [syncSelectionState],
   );
 
   const handleSingleRowSelection = React.useCallback(
@@ -796,18 +838,30 @@ export const useGridRowSelection = (
       apiRef.current.setRowSelectionModel(propRowSelectionModel);
       return;
     }
-    debouncedSyncSelectionState(false, propRowSelectionModel);
+
+    const newSelectionModel = apiRef.current.getPropagatedRowSelectionModel(propRowSelectionModel);
+
+    if (
+      newSelectionModel.type !== propRowSelectionModel.type ||
+      newSelectionModel.ids.size !== propRowSelectionModel.ids.size ||
+      !Array.from(propRowSelectionModel.ids).every((id) => newSelectionModel.ids.has(id))
+    ) {
+      apiRef.current.setRowSelectionModel(newSelectionModel);
+      return;
+    }
+
+    apiRef.current.setRowSelectionModel(propRowSelectionModel);
   });
 
   useGridApiEventHandler(
     apiRef,
     'sortedRowsSet',
-    runIfRowSelectionIsEnabled(() => debouncedSyncSelectionState(true)),
+    runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
   );
   useGridApiEventHandler(
     apiRef,
     'filteredRowsSet',
-    runIfRowSelectionIsEnabled(() => debouncedSyncSelectionState(false)),
+    runIfRowSelectionIsEnabled(() => removeOutdatedSelection()),
   );
   useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
   useGridApiEventHandler(
@@ -876,6 +930,6 @@ export const useGridRowSelection = (
   }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    runIfRowSelectionIsEnabled(debouncedSyncSelectionState);
-  }, [debouncedSyncSelectionState, runIfRowSelectionIsEnabled]);
+    runIfRowSelectionIsEnabled(removeOutdatedSelection);
+  }, [removeOutdatedSelection, runIfRowSelectionIsEnabled]);
 };
