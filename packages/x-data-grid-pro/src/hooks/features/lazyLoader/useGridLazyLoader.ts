@@ -25,7 +25,7 @@ export const useGridLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'
+    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
   >,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
