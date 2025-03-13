@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useTransition } from '@react-spring/web';
-import type { AreaElementOwnerState } from './AreaElement';
-import { useStringInterpolator } from '../internals/useStringInterpolator';
+import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
+import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
+import { select } from '@mui/x-charts-vendor/d3-selection';
+import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
+import useForkRef from '@mui/utils/useForkRef';
 import { AppearingMask } from './AppearingMask';
+import type { AreaElementOwnerState } from './AreaElement';
 
 export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: AreaElementOwnerState;
@@ -14,6 +17,48 @@ export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'
    * @default false
    */
   skipAnimation?: boolean;
+}
+
+const DURATION = 200;
+function useAnimateAreaPath(props: Pick<AnimatedAreaProps, 'd' | 'skipAnimation'>) {
+  const lastDRef = React.useRef(props.d);
+  const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
+  const [path, setPath] = React.useState<SVGPathElement | null>(null);
+
+  React.useLayoutEffect(() => {
+    /* If we're not skipping animation, we need to set the attribute to override React's changes.
+     * Still need to figure out if this is better than asking the user not to pass the `d` prop to the component.
+     * The problem with that is that SSR might not look good. */
+    if (!props.skipAnimation) {
+      path?.setAttribute('d', lastDRef.current);
+    }
+  }, [path, props.skipAnimation]);
+
+  React.useLayoutEffect(() => {
+    // TODO: What if we set skipAnimation to true in the middle of the animation?
+    if (path === null || props.skipAnimation) {
+      return undefined;
+    }
+
+    const lastD = lastDRef.current;
+    const stringInterpolator = interpolateString(lastD, props.d);
+
+    transitionRef.current = select(path)
+      .transition()
+      .duration(DURATION)
+      .ease(easeLinear)
+      .attrTween('d', () => (t) => {
+        const interpolatedD = stringInterpolator(t);
+
+        lastDRef.current = interpolatedD;
+
+        return interpolatedD;
+      });
+
+    return () => interrupt(path);
+  }, [path, props.d, props.skipAnimation]);
+
+  return setPath;
 }
 
 /**
@@ -26,25 +71,18 @@ export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'
  *
  * - [AreaElement API](https://mui.com/x/api/charts/animated-area/)
  */
-function AnimatedArea(props: AnimatedAreaProps) {
-  const { d, skipAnimation, ownerState, ...other } = props;
+const AnimatedArea = React.forwardRef<SVGPathElement, AnimatedAreaProps>(
+  function AnimatedArea(props, ref) {
+    const { d, skipAnimation, ownerState, ...other } = props;
 
-  const stringInterpolator = useStringInterpolator(d);
+    const animateRef = useAnimateAreaPath(props);
+    const forkRef = useForkRef(ref, animateRef);
 
-  const transitionChange = useTransition([stringInterpolator], {
-    from: skipAnimation ? undefined : { value: 0 },
-    to: { value: 1 },
-    enter: { value: 1 },
-    reset: false,
-    immediate: skipAnimation,
-  });
-
-  return (
-    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
-      {transitionChange((style, interpolator) => (
-        <animated.path
-          // @ts-expect-error
-          d={style.value.to(interpolator)}
+    return (
+      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
+        <path
+          ref={forkRef}
+          d={d}
           fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           filter={
             // eslint-disable-next-line no-nested-ternary
@@ -58,10 +96,10 @@ function AnimatedArea(props: AnimatedAreaProps) {
           stroke="none"
           {...other}
         />
-      ))}
-    </AppearingMask>
-  );
-}
+      </AppearingMask>
+    );
+  },
+);
 
 AnimatedArea.propTypes = {
   // ----------------------------- Warning --------------------------------
