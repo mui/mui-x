@@ -43,6 +43,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
   const radarDataProviderProps: RadarDataProviderProps = {
     series,
     radar,
+    highlight,
     width,
     height,
     margin: defaultizeMargin(margin, { top: 30, bottom: 30, left: 50, right: 50 }),
