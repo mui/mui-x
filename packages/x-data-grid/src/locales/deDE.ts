@@ -8,7 +8,6 @@ const deDEGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Keine Spalten',
   noColumnsOverlayManageColumns: 'Spalten verwalten',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',

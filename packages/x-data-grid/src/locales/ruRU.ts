@@ -28,7 +28,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Нет столбцов',
   noColumnsOverlayManageColumns: 'Управление столбцами',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',

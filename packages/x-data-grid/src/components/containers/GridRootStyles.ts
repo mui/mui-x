@@ -446,9 +446,10 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
-        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus`]: {
-        opacity: 0.5,
-      },
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
+        {
+          opacity: 0.5,
+        },
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader}`]: columnHeaderStyles,

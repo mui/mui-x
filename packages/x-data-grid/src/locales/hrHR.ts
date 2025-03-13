@@ -8,7 +8,6 @@ const hrHRGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: 'Nema stupaca',
   noColumnsOverlayManageColumns: 'Upravljaj stupcima',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Gustoća',

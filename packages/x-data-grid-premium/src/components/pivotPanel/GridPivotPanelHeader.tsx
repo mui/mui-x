@@ -11,7 +11,10 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import {
+  gridPivotEnabledSelector,
+  gridPivotModelSelector,
+} from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotPanelSearch } from './GridPivotPanelSearch';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
@@ -67,6 +70,9 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const rootProps = useGridRootProps();
   const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
   const classes = useUtilityClasses(rootProps);
+  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
+  const isEmptyPivot =
+    !pivotModel.columns.length && !pivotModel.rows.length && !pivotModel.values.length;
 
   return (
     <SidebarHeader>
@@ -88,7 +94,12 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           {...rootProps.slotProps?.baseSwitch}
         />
         <rootProps.slots.baseIconButton
-          onClick={() => apiRef.current.setPivotPanelOpen(false)}
+          onClick={() => {
+            apiRef.current.setPivotPanelOpen(false);
+            if (isEmptyPivot) {
+              apiRef.current.setPivotEnabled(false);
+            }
+          }}
           aria-label={apiRef.current.getLocaleText('pivotCloseButton')}
           {...rootProps.slotProps?.baseIconButton}
         >

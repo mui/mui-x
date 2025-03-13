@@ -8,7 +8,6 @@ const zhHKGrid: Partial<GridLocaleText> = {
   noColumnsOverlayLabel: '沒有欄目',
   noColumnsOverlayManageColumns: '管理欄目',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
-  // emptyPivotOverlayManagePivot: 'Manage pivot',
 
   // Density selector toolbar button text
   toolbarDensity: '密度',
