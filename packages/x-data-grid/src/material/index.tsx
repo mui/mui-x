@@ -80,8 +80,8 @@ const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
-  shouldForwardProp: (prop) => prop !== 'fullWidth',
-})<{ fullWidth?: boolean }>(({ theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'fullWidth' && prop !== 'truncate',
+})<{ fullWidth?: boolean; truncate?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   margin: 0,
   [`& .${formControlLabelClasses.label}`]: {
@@ -99,6 +99,17 @@ const FormControlLabel = styled(MUIFormControlLabel, {
       style: {
         justifyContent: 'space-between',
         width: '100%',
+      },
+    },
+    {
+      props: { truncate: true },
+      style: {
+        overflow: 'hidden',
+        [`& .${formControlLabelClasses.label}`]: {
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        },
       },
     },
   ],
@@ -337,6 +348,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       }
       label={label}
       fullWidth={fullWidth}
+      truncate={truncate}
     />
   );
 }
