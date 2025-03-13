@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { timer as d3Timer } from '@mui/x-charts-vendor/d3-timer';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
+import { select } from '@mui/x-charts-vendor/d3-selection';
+import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
+import { useRef } from 'react';
 import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
 
@@ -17,39 +19,43 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 }
 
 const DURATION = 200;
-function useLineAnimatedProps(
-  props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>,
-): Pick<React.ComponentProps<'path'>, 'd'> {
+function useLineAnimatedProps(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
   const lastValues = React.useRef({ d: props.d });
-  const [d, setD] = React.useState<React.ComponentProps<'path'>['d']>(props.d);
+  const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
+  const lastPath = useRef<SVGPathElement>(null);
 
-  React.useEffect(() => {
-    if (props.skipAnimation) {
-      return;
-    }
+  // TODO: What if we set skipAnimation to true in the middle of the animation?
+  const animate: React.RefCallback<SVGPathElement> = React.useCallback(
+    (path) => {
+      if (path === null || props.skipAnimation) {
+        const lastPathElement = lastPath.current;
 
-    const lastD = lastValues.current.d;
-    const stringInterpolator = interpolateString(lastD, props.d);
+        if (lastPathElement) {
+          interrupt(lastPathElement);
+        }
 
-    const timer = d3Timer((elapsed) => {
-      if (elapsed > DURATION) {
-        timer.stop();
+        return;
       }
 
-      const progress = Math.min(elapsed / DURATION, 1);
+      lastPath.current = path;
+      const lastD = lastValues.current.d;
+      const stringInterpolator = interpolateString(lastD, props.d);
 
-      const interpolatedD = stringInterpolator(progress);
+      transitionRef.current = select(path)
+        .transition()
+        .duration(DURATION)
+        .attrTween('d', () => (t) => {
+          const interpolatedD = stringInterpolator(t);
 
-      lastValues.current = { d: interpolatedD };
+          lastValues.current = { d: interpolatedD };
 
-      setD(interpolatedD);
-    });
+          return interpolatedD;
+        });
+    },
+    [props.d, props.skipAnimation],
+  );
 
-    // eslint-disable-next-line consistent-return
-    return () => timer.stop();
-  }, [props.d, props.skipAnimation]);
-
-  return { d };
+  return animate;
 }
 
 /**
@@ -62,26 +68,35 @@ function useLineAnimatedProps(
  *
  * - [AnimatedLine API](https://mui.com/x/api/charts/animated-line/)
  */
-function AnimatedLine(props: AnimatedLineProps) {
-  const { d, skipAnimation, ownerState, ...other } = props;
+const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
+  function AnimatedLine(props, ref) {
+    const { d, skipAnimation, ownerState, ...other } = props;
 
-  const { d: animatedD } = useLineAnimatedProps(props);
+    const animateRef = useLineAnimatedProps(props);
 
-  return (
-    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
-      <path
-        d={animatedD}
-        stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
-        strokeWidth={2}
-        strokeLinejoin="round"
-        fill="none"
-        filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
-        opacity={ownerState.isFaded ? 0.3 : 1}
-        {...other}
-      />
-    </AppearingMask>
-  );
-}
+    return (
+      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+        <path
+          ref={(newRef) => {
+            if (typeof ref === 'function') {
+              ref?.(newRef);
+            }
+
+            animateRef(newRef);
+          }}
+          d={d}
+          stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
+          strokeWidth={2}
+          strokeLinejoin="round"
+          fill="none"
+          filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+          opacity={ownerState.isFaded ? 0.3 : 1}
+          {...other}
+        />
+      </AppearingMask>
+    );
+  },
+);
 
 AnimatedLine.propTypes = {
   // ----------------------------- Warning --------------------------------
