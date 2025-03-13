@@ -239,7 +239,7 @@ export const useFieldState = <
     sectionIndex: number;
     value: string;
   } | null>(null);
-  const timeoutToUpdateSectionValueOnNextInvalidDate = useTimeout();
+  const updateSectionValueOnNextInvalidDateTimeout = useTimeout();
   const setSectionUpdateToApplyOnNextInvalidDate = (newSectionValue: string) => {
     if (activeSectionIndex == null) {
       return;
@@ -249,7 +249,7 @@ export const useFieldState = <
       sectionIndex: activeSectionIndex,
       value: newSectionValue,
     };
-    timeoutToUpdateSectionValueOnNextInvalidDate.start(0, () => {
+    updateSectionValueOnNextInvalidDateTimeout.start(0, () => {
       sectionToUpdateOnNextInvalidDateRef.current = null;
     });
   };
@@ -318,14 +318,14 @@ export const useFieldState = <
     publishValue(newValue);
   };
 
-  const timeoutToCleanActiveDateSectionsIfValueNull = useTimeout();
+  const cleanActiveDateSectionsIfValueNullTimeout = useTimeout();
   const updateSectionValue = ({
     section,
     newSectionValue,
     shouldGoToNextSection,
   }: UpdateSectionValueParameters<TValue>) => {
-    timeoutToUpdateSectionValueOnNextInvalidDate.clear();
-    timeoutToCleanActiveDateSectionsIfValueNull.clear();
+    updateSectionValueOnNextInvalidDateTimeout.clear();
+    cleanActiveDateSectionsIfValueNullTimeout.clear();
 
     const activeDate = fieldValueManager.getDateFromSection(value, section);
 
@@ -358,7 +358,7 @@ export const useFieldState = <
       );
 
       if (activeDate == null) {
-        timeoutToCleanActiveDateSectionsIfValueNull.start(0, () => {
+        cleanActiveDateSectionsIfValueNullTimeout.start(0, () => {
           if (valueRef.current === value) {
             setState((prevState) => ({
               ...prevState,
@@ -475,17 +475,14 @@ export const useFieldState = <
     }
   });
 
+  const cleanCharacterQueryTimeout = useTimeout();
   React.useEffect(() => {
     if (state.characterQuery != null) {
-      const timeout = setTimeout(() => setCharacterQuery(null), QUERY_LIFE_DURATION_MS);
-
-      return () => {
-        clearTimeout(timeout);
-      };
+      cleanCharacterQueryTimeout.start(QUERY_LIFE_DURATION_MS, () => setCharacterQuery(null));
     }
 
     return () => {};
-  }, [state.characterQuery, setCharacterQuery]);
+  }, [state.characterQuery, setCharacterQuery, cleanCharacterQueryTimeout]);
 
   // If `tempValueStrAndroid` is still defined for some section when running `useEffect`,
   // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.

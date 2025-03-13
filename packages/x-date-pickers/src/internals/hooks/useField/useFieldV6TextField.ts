@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useTimeout from '@mui/utils/useTimeout';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
 import { FieldSectionType, InferFieldSection } from '../../../models';
@@ -76,8 +77,8 @@ export const useFieldV6TextField = <
   >,
 ): UseFieldReturnValue<false, TForwardedProps> => {
   const isRtl = useRtl();
-  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const focusTimeout = useTimeout();
+  const selectionSyncTimeout = useTimeout();
 
   const {
     manager,
@@ -182,8 +183,7 @@ export const useFieldV6TextField = <
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
-    clearTimeout(focusTimeoutRef.current);
-    focusTimeoutRef.current = setTimeout(() => {
+    focusTimeout.start(0, () => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (!input || input !== inputRef.current) {
         return;
@@ -406,11 +406,6 @@ export const useFieldV6TextField = <
     if (inputRef.current && inputRef.current === getActiveElement(document)) {
       setSelectedSections('all');
     }
-
-    return () => {
-      clearTimeout(focusTimeoutRef.current);
-      clearTimeout(selectionSyncTimeoutRef.current);
-    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEnhancedEffect(() => {
@@ -460,8 +455,7 @@ export const useFieldV6TextField = <
             inputRef.current.setSelectionRange(selectionStart, selectionEnd);
           }
         }
-        clearTimeout(selectionSyncTimeoutRef.current);
-        selectionSyncTimeoutRef.current = setTimeout(() => {
+        selectionSyncTimeout.start(0, () => {
           // handle case when the selection is not updated correctly
           // could happen on Android
           if (

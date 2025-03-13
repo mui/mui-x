@@ -2,6 +2,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useTimeout from '@mui/utils/useTimeout';
 import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
 import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
@@ -182,6 +183,7 @@ export const useFieldV7TextField = <
     syncSelectionToDOM();
   });
 
+  const containerClickTimeout = useTimeout();
   const handleContainerClick = useEventCallback((event: React.MouseEvent, ...args) => {
     // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
     // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
@@ -193,7 +195,7 @@ export const useFieldV7TextField = <
     onClick?.(event, ...(args as []));
 
     if (parsedSelectedSections === 'all') {
-      setTimeout(() => {
+      containerClickTimeout.start(0, () => {
         const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
 
         if (cursorPosition === 0) {
