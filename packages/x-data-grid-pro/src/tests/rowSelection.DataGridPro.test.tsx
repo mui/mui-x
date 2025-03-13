@@ -797,7 +797,7 @@ describe('<DataGridPro /> - Row selection', () => {
       );
     }
 
-    it('should auto select parents when controlling row selection model', async () => {
+    it('should auto select parents when controlling row selection model', () => {
       const onRowSelectionModelChange = spy();
       render(
         <SelectionPropagationGrid
@@ -806,9 +806,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      await waitFor(() => {
-        expect(onRowSelectionModelChange.callCount).to.equal(reactMajor < 19 ? 2 : 1); // Dev mode calls twice on React 18
-      });
+      expect(onRowSelectionModelChange.callCount).to.equal(reactMajor < 19 ? 2 : 1); // Dev mode calls twice on React 18
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
