@@ -20,6 +20,11 @@ export default function DemoRadar() {
           min: 0,
           max: 20,
         },
+        shape: {
+          knob: 'radio',
+          options: ['sharp', 'circular'],
+          defaultValue: 'circular',
+        },
       }}
       renderDemo={(props) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
@@ -28,6 +33,7 @@ export default function DemoRadar() {
             margin={{ top: 20 }}
             series={[{ data: [120, 98, 86, 99, 85, 65] }]}
             divisions={props.divisions}
+            shape={props.shape}
             radar={{
               max: 120,
               startAngle: props.startAngle,
@@ -49,6 +55,7 @@ export default function DemoRadar() {
           '',
           `<RadarChart`,
           '  {/** ... */}',
+          `  shape="${props.shape}"`,
           `  divisions={${props.divisions}}`,
           `  radar={{`,
           `    startAngle: ${props.startAngle},`,

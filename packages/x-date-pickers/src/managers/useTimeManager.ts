@@ -16,6 +16,8 @@ import {
   ValidateTimePropsToDefault,
 } from '../validation/validateTime';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -34,15 +36,27 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
         ...internalProps,
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value)
-          ? utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h')
-          : null;
-        return localeText.openTimePickerDialogue(formattedValue);
-      },
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
     [ampm, enableAccessibleFieldDOMStructure],
   );
+}
+
+function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
+  return function useOpenPickerButtonAriaLabel() {
+    const utils = useUtils();
+    const translations = usePickerTranslations();
+
+    return React.useCallback(
+      (value: PickerValue) => {
+        const formatKey =
+          (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+        const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
+        return translations.openTimePickerDialogue(formattedValue);
+      },
+      [translations, utils],
+    );
+  };
 }
 
 /**

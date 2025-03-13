@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../../ChartContainer';
 import { RadarSeriesType } from '../../models/seriesType/radar';
-import { AxisConfig, ChartsRadiusAxisProps, ChartsRotationAxisProps } from '../../models/axis';
+import { PolarAxisConfig, ChartsRadiusAxisProps, ChartsRotationAxisProps } from '../../models/axis';
 import { ChartDataProvider } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import {
@@ -15,14 +15,22 @@ import {
   useChartHighlight,
   UseChartHighlightSignature,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import {
+  useChartInteraction,
+  UseChartInteractionSignature,
+} from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { radarSeriesConfig } from '../seriesConfig';
 import { DEFAULT_MARGINS } from '../../constants';
 import { RadarConfig } from './radar.types';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
-const RADAR_PLUGINS = [useChartPolarAxis, useChartHighlight] as const;
+const RADAR_PLUGINS = [useChartPolarAxis, useChartInteraction, useChartHighlight] as const;
 
-type RadarPluginSignatures = [UseChartPolarAxisSignature, UseChartHighlightSignature];
+type RadarPluginSignatures = [
+  UseChartPolarAxisSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+];
 
 export interface RadarDataProviderProps
   extends Omit<
@@ -38,6 +46,11 @@ export interface RadarDataProviderProps
    * The configuration of the radar scales.
    */
   radar: RadarConfig;
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight?: 'axis' | 'series' | 'none';
 }
 
 function RadarDataProvider(props: RadarDataProviderProps) {
@@ -53,27 +66,27 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     skipAnimation,
     margin,
     radar,
+    highlight,
     ...other
   } = props;
 
-  const rotationAxes: AxisConfig<'point', number | string, ChartsRotationAxisProps>[] =
-    React.useMemo(
-      () =>
-        [
-          {
-            id: 'radar-rotation-axis',
-            scaleType: 'point',
-            data: radar.metrics.map((metric) =>
-              typeof metric === 'string' ? metric : metric.name,
-            ),
-            startAngle: radar.startAngle,
-            endAngle: radar.startAngle !== undefined ? radar.startAngle + 360 : undefined,
-          },
-        ] as const,
-      [radar],
-    );
+  const rotationAxes: PolarAxisConfig<'point', string, ChartsRotationAxisProps>[] = React.useMemo(
+    () => [
+      {
+        id: 'radar-rotation-axis',
+        scaleType: 'point',
+        data: radar.metrics.map((metric) => (typeof metric === 'string' ? metric : metric.name)),
+        startAngle: radar.startAngle,
+        endAngle: radar.startAngle !== undefined ? radar.startAngle + 360 : undefined,
+        labelGap: radar.labelGap,
+        valueFormatter: (name, { location }) =>
+          radar.labelFormatter?.(name, { location: location as 'tick' | 'tooltip' }) ?? name,
+      },
+    ],
+    [radar],
+  );
 
-  const radiusAxis: AxisConfig<'linear', any, ChartsRadiusAxisProps>[] = React.useMemo(
+  const radiusAxis: PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>[] = React.useMemo(
     () =>
       radar.metrics.map((m) => {
         const { name, min = 0, max = radar.max } = typeof m === 'string' ? { name: m } : m;
@@ -93,9 +106,12 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     () =>
       series.map((s) => ({
         type: 'radar' as const,
+        highlightScope:
+          s.highlightScope ??
+          (highlight === 'series' ? { highlight: 'series', fade: 'global' } : undefined),
         ...s,
       })),
-    [series],
+    [series, highlight],
   );
 
   const defaultizedMargin = React.useMemo(
@@ -141,9 +157,20 @@ RadarDataProvider.propTypes = {
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight: PropTypes.oneOf(['axis', 'none', 'series']),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -182,6 +209,8 @@ RadarDataProvider.propTypes = {
    * The configuration of the radar scales.
    */
   radar: PropTypes.shape({
+    labelFormatter: PropTypes.func,
+    labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),

@@ -1,4 +1,3 @@
-import { esES as esESCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -125,6 +124,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menú',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
@@ -186,6 +186,34 @@ const esESGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Contraer',
 
+  // Pagination
+  paginationRowsPerPage: 'Filas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ir a la primera página';
+    }
+    if (type === 'last') {
+      return 'Ir a la última página';
+    }
+    if (type === 'next') {
+      return 'Ir a la página siguiente';
+    }
+    // if (type === 'previous') {
+    return 'Ir a la página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenar filas',
 
@@ -198,4 +226,4 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamaño',
 };
 
-export const esES: Localization = getGridLocalization(esESGrid, esESCore);
+export const esES: Localization = getGridLocalization(esESGrid);

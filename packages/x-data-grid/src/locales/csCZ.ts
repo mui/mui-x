@@ -1,4 +1,3 @@
-import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -131,6 +130,7 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Zobrazit sloupce',
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
@@ -211,6 +211,34 @@ const csCZGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozbalit',
   collapseDetailPanel: 'Sbalit',
 
+  // Pagination
+  paginationRowsPerPage: 'Řádků na stránce:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Jít na první stránku';
+    }
+    if (type === 'last') {
+      return 'Jít na poslední stránku';
+    }
+    if (type === 'next') {
+      return 'Jít na další stránku';
+    }
+    // if (type === 'previous') {
+    return 'Jít na předchozí stránku';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Přeuspořádávání řádků',
 
@@ -223,4 +251,4 @@ const csCZGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'počet',
 };
 
-export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);
+export const csCZ: Localization = getGridLocalization(csCZGrid);
