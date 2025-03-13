@@ -12,9 +12,10 @@ import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/R
 import { RadarSeriesPlot } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
+import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
 
-export interface RadarChartSlots {}
-export interface RadarChartSlotProps {}
+export interface RadarChartSlots extends ChartsTooltipSlots {}
+export interface RadarChartSlotProps extends ChartsTooltipSlotProps {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
@@ -54,6 +55,8 @@ const RadarChart = React.forwardRef(function RadarChart(
     children,
   } = useRadarChartProps(props);
 
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
   return (
     <RadarDataProvider {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
@@ -64,6 +67,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarSeriesPlot />
           {highlight === 'axis' && <RadarAxisHighlight {...radarAxisHighlight} />}
           <ChartsOverlay {...overlayProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
       </ChartsWrapper>

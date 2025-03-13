@@ -1,0 +1,13 @@
+<Box sx={{ maxWidth: 300 }}>
+  <RadarChart
+    {...radarChartsParams}
+    slotProps={{ tooltip: { trigger: 'axis' } }}
+  />
+</Box>
+<Box sx={{ maxWidth: 300 }}>
+  <RadarChart
+    {...radarChartsParams}
+    highlight="series"
+    slotProps={{ tooltip: { trigger: 'item' } }}
+  />
+</Box>

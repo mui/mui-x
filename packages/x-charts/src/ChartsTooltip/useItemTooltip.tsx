@@ -9,11 +9,14 @@ import {
 import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import { ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
-import { TooltipGetter } from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
+import {
+  TooltipGetter,
+  TooltipGetterAxesConfig,
+} from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
 
 export interface ItemTooltip<T extends ChartSeriesType> {
   identifier: ChartItemIdentifier<T>;
@@ -26,7 +29,11 @@ export interface ItemTooltip<T extends ChartSeriesType> {
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 
-export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipReturnValue<T> | null {
+export function useItemTooltip<T extends ChartSeriesType>():
+  | (T extends 'radar'
+      ? (ItemTooltip<T> & { axisFormattedValue?: string })[]
+      : UseItemTooltipReturnValue<T>)
+  | null {
   const store = useStore();
   const identifier = useSelector(store, selectorChartsInteractionItem);
   const seriesConfig = useSelector(store, selectorChartSeriesConfig);
@@ -36,12 +43,16 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
+  const { rotationAxis, rotationAxisIds } = useRotationAxes();
+  const { radiusAxis, radiusAxisIds } = useRadiusAxes();
 
   const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
   const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
   const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
+  const rotationAxisId = (series as any).rotationAxisId ?? rotationAxisIds[0];
+  const radiusAxisId = (series as any).radiusAxisId ?? radiusAxisIds[0];
 
-  if (!identifier || identifier.dataIndex === undefined) {
+  if (!identifier) {
     return null;
   }
 
@@ -56,8 +67,25 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
       zAxisId && zAxis[zAxisId],
     ) ?? (() => '');
 
+  const axesConfig: TooltipGetterAxesConfig = {};
+
+  if (xAxisId !== undefined) {
+    axesConfig.x = xAxis[xAxisId];
+  }
+  if (yAxisId !== undefined) {
+    axesConfig.y = yAxis[yAxisId];
+  }
+
+  if (rotationAxisId !== undefined) {
+    axesConfig.rotation = rotationAxis[rotationAxisId];
+  }
+  if (radiusAxisId !== undefined) {
+    axesConfig.radius = radiusAxis[radiusAxisId];
+  }
+
   return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<T>)({
     series: itemSeries,
+    axesConfig,
     getColor,
     identifier,
   });

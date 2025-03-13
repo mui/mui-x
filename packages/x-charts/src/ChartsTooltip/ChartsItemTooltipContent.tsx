@@ -30,6 +30,46 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   if (!tooltipData) {
     return null;
   }
+
+  if (Array.isArray(tooltipData)) {
+    const { markType: seriesMarkType, color: seriesColor, label: seriesLabel } = tooltipData[0];
+    return (
+      <ChartsTooltipPaper sx={sx} className={classes.paper}>
+        <ChartsTooltipTable className={classes.table}>
+          <thead>
+            <ChartsTooltipRow className={classes.row}>
+              <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                <ChartsLabelMark
+                  type={seriesMarkType}
+                  color={seriesColor}
+                  className={classes.mark}
+                />
+              </ChartsTooltipCell>
+              <ChartsTooltipCell colSpan={2} className={clsx(classes.cell, classes.axisValueCell)}>
+                {seriesLabel}
+              </ChartsTooltipCell>
+            </ChartsTooltipRow>
+          </thead>
+          <tbody>
+            {tooltipData.map(({ color, formattedValue, markType, axisFormattedValue }) => (
+              <ChartsTooltipRow className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                  <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                  {axisFormattedValue}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                  {formattedValue}
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            ))}
+          </tbody>
+        </ChartsTooltipTable>
+      </ChartsTooltipPaper>
+    );
+  }
+
   const { color, label, formattedValue, markType } = tooltipData;
 
   return (

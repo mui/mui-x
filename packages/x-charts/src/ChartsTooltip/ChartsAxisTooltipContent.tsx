@@ -12,7 +12,6 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { useAxisTooltip } from './useAxisTooltip';
-import { useXAxis, useYAxis } from '../hooks';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
 export interface ChartsAxisTooltipContentProps {
@@ -26,8 +25,6 @@ export interface ChartsAxisTooltipContentProps {
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { classes: propClasses, sx } = props;
   const tooltipData = useAxisTooltip();
-  const xAxis = useXAxis();
-  const yAxis = useYAxis();
 
   const classes = useUtilityClasses(propClasses);
 
@@ -35,14 +32,12 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
     return null;
   }
 
-  const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tooltipData;
-
-  const axis = axisDirection === 'x' ? xAxis : yAxis;
+  const { mainAxis, axisValue, axisFormattedValue, seriesItems } = tooltipData;
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
-        {axisValue != null && !axis.hideTooltip && (
+        {axisValue != null && !mainAxis.hideTooltip && (
           <thead>
             <ChartsTooltipRow className={classes.row}>
               <ChartsTooltipCell colSpan={3} className={clsx(classes.cell, classes.axisValueCell)}>

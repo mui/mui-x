@@ -2,32 +2,50 @@
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
-import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartsSeriesConfig,
+  PolarChartSeriesType,
+} from '../models/seriesType/config';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
-import { useXAxes, useXAxis, useYAxes, useYAxis } from '../hooks/useAxis';
+import {
+  useRadiusAxes,
+  useRadiusAxis,
+  useRotationAxes,
+  useRotationAxis,
+  useXAxes,
+  useXAxis,
+  useYAxes,
+  useYAxis,
+} from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { ChartsLabelMarkProps } from '../ChartsLabel';
+import { isPolarSeriesType } from '../internals/isPolar';
+import { AxisDefaultized, PolarAxisDefaultized } from '../models/axis';
 
 export interface UseAxisTooltipReturnValue<
-  SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,
+  SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
+    | CartesianChartSeriesType
+    | PolarChartSeriesType,
   AxisValueT extends string | number | Date = string | number | Date,
 > {
-  axisDirection: 'x' | 'y';
+  axisDirection: SeriesT extends CartesianChartSeriesType ? 'x' | 'y' : 'rotation' | 'radius';
+  mainAxis: SeriesT extends CartesianChartSeriesType ? AxisDefaultized : PolarAxisDefaultized;
   dataIndex: number;
   seriesItems: SeriesItem<SeriesT>[];
   axisValue: AxisValueT;
   axisFormattedValue: string;
 }
 
-interface SeriesItem<T extends CartesianChartSeriesType> {
+interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
   value: ChartsSeriesConfig[T]['valueType'];
@@ -39,21 +57,50 @@ interface SeriesItem<T extends CartesianChartSeriesType> {
 export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
+  const defaultRotationAxis = useRotationAxis();
+  const defaultRadiusAxis = useRadiusAxis();
 
-  const xAxisHasData = defaultXAxis.data !== undefined && defaultXAxis.data.length !== 0;
+  const isPolarChart = defaultRotationAxis !== undefined || defaultRadiusAxis !== undefined;
+  const xAxisHasData = defaultXAxis?.data !== undefined && defaultXAxis?.data.length !== 0;
+  const rotationAxisHasData =
+    defaultRotationAxis?.data !== undefined && defaultRotationAxis?.data.length !== 0;
+
+  // eslint-disable-next-line no-nested-ternary
+  const axisDirection = isPolarChart
+    ? rotationAxisHasData
+      ? 'rotation'
+      : 'radius'
+    : xAxisHasData
+      ? 'x'
+      : 'y';
+
+  // eslint-disable-next-line no-nested-ternary
+  const mainAxis = isPolarChart
+    ? rotationAxisHasData
+      ? defaultRotationAxis
+      : defaultRadiusAxis
+    : xAxisHasData
+      ? defaultXAxis
+      : defaultYAxis;
 
   const store = useStore();
+
   const axisData = useSelector(
     store,
-    xAxisHasData ? selectorChartsInteractionXAxis : selectorChartsInteractionYAxis,
+    (isPolarChart ? rotationAxisHasData : xAxisHasData)
+      ? selectorChartsInteractionXAxis
+      : selectorChartsInteractionYAxis,
   );
 
   const series = useSeries();
 
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
-
   const { zAxis, zAxisIds } = useZAxes();
+
+  const { rotationAxis } = useRotationAxes();
+  const { radiusAxis } = useRadiusAxes();
+
   const colorProcessors = useColorProcessor();
 
   if (axisData === null) {
@@ -61,57 +108,77 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
   }
 
   const { index: dataIndex, value: axisValue } = axisData;
-
-  const USED_AXIS_ID = xAxisHasData ? defaultXAxis.id : defaultYAxis.id;
-  const usedAxis = xAxisHasData ? defaultXAxis : defaultYAxis;
+  const USED_AXIS_ID = mainAxis.id;
 
   const relevantSeries = Object.keys(series)
-    .filter(isCartesianSeriesType)
-    .flatMap(<SeriesT extends CartesianChartSeriesType>(seriesType: SeriesT) => {
-      const seriesOfType = series[seriesType];
-      if (!seriesOfType) {
-        return [];
-      }
-      return seriesOfType.seriesOrder.map((seriesId) => {
-        const seriesToAdd = seriesOfType.series[seriesId]!;
-
-        const providedXAxisId = seriesToAdd.xAxisId;
-        const providedYAxisId = seriesToAdd.yAxisId;
-
-        const axisKey = xAxisHasData ? providedXAxisId : providedYAxisId;
-
-        // Test if the series uses the default axis
-        if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-          const xAxisId = providedXAxisId ?? defaultXAxis.id;
-          const yAxisId = providedYAxisId ?? defaultYAxis.id;
-          const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
-
-          const color =
-            colorProcessors[seriesType]?.(
-              seriesToAdd,
-              xAxis[xAxisId],
-              yAxis[yAxisId],
-              zAxisId ? zAxis[zAxisId] : undefined,
-            )(dataIndex) ?? '';
-
-          const value = seriesToAdd.data[dataIndex] ?? null;
-          const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
-            dataIndex,
-          });
-          const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
-
-          return {
-            seriesId,
-            color,
-            value,
-            formattedValue,
-            formattedLabel,
-            markType: seriesToAdd.labelMarkType,
-          };
+    .filter((s) => isCartesianSeriesType(s) || isPolarSeriesType(s))
+    .flatMap(
+      <SeriesT extends CartesianChartSeriesType | PolarChartSeriesType>(seriesType: SeriesT) => {
+        const seriesOfType = series[seriesType];
+        if (!seriesOfType) {
+          return [];
         }
-        return undefined;
-      });
-    })
+        return seriesOfType.seriesOrder.map((seriesId) => {
+          const seriesToAdd = seriesOfType.series[seriesId]!;
+
+          const providedXAxisId: string | undefined = (seriesToAdd as any).xAxisId;
+          const providedYAxisId: string | undefined = (seriesToAdd as any).yAxisId;
+          const providedRotationAxisId: string | undefined = (seriesToAdd as any).rotationAxisId;
+          const providedRadiusAxisId: string | undefined = (seriesToAdd as any).radiusAxisId;
+
+          let axisKey: string | undefined;
+          switch (axisDirection) {
+            case 'x':
+              axisKey = providedXAxisId;
+              break;
+            case 'y':
+              axisKey = providedYAxisId;
+              break;
+            case 'rotation':
+              axisKey = providedRotationAxisId;
+              break;
+            case 'radius':
+              axisKey = providedRadiusAxisId;
+              break;
+            default:
+              break;
+          }
+
+          // Test if the series uses the default axis
+          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+            const xAxisId = providedXAxisId ?? defaultXAxis?.id;
+            const yAxisId = providedYAxisId ?? defaultYAxis?.id;
+            const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
+            const rotationAxisId = providedRotationAxisId ?? defaultRotationAxis?.id;
+            const radiusAxisId = providedRadiusAxisId ?? defaultRadiusAxis?.id;
+
+            const color =
+              colorProcessors[seriesType]?.(
+                seriesToAdd,
+                xAxis[xAxisId] ?? rotationAxis[rotationAxisId],
+                yAxis[yAxisId] ?? radiusAxis[radiusAxisId],
+                zAxisId ? zAxis[zAxisId] : undefined,
+              )(dataIndex) ?? '';
+
+            const value = seriesToAdd.data[dataIndex] ?? null;
+            const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
+              dataIndex,
+            });
+            const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
+
+            return {
+              seriesId,
+              color,
+              value,
+              formattedValue,
+              formattedLabel,
+              markType: seriesToAdd.labelMarkType,
+            };
+          }
+          return undefined;
+        });
+      },
+    )
     .filter(function truthy<T>(
       item: T,
     ): item is T extends false | '' | 0 | null | undefined ? never : T {
@@ -119,17 +186,18 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
     });
 
   const axisFormatter =
-    usedAxis.valueFormatter ??
+    mainAxis.valueFormatter ??
     ((v: string | number | Date) =>
-      usedAxis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
+      mainAxis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
 
   const axisFormattedValue = axisFormatter(axisValue, {
     location: 'tooltip',
-    scale: usedAxis.scale,
+    scale: mainAxis.scale,
   });
 
   return {
-    axisDirection: xAxisHasData ? 'x' : 'y',
+    axisDirection,
+    mainAxis,
     dataIndex,
     seriesItems: relevantSeries,
     axisValue,

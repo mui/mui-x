@@ -91,7 +91,16 @@ Otherwise, the other area would catch the pointer event, making it impossible to
 
 To remove highlight, set the `highlight` prop to `'none'`.
 
-## Tooltip 🚧
+## Tooltip
+
+Like other chart, the radar chart [tooltip](/x/react-charts/tooltip/) can be customized with slots.
+The `slots.tooltip.trigger` allows to switch between:
+
+- `'item'`—when the user's mouse hovers over a radar area, the tooltip displays data about this series.
+- `'axis'`—the user's mouse position is associated with a metric. The tooltip displays data about all series along this specific metric.
+- `'none'`—disable the tooltip.
+
+{{"demo": "RadarTooltip.js" }}
 
 ## Composition 🚧
 
