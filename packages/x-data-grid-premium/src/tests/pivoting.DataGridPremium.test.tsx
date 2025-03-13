@@ -7,8 +7,12 @@ import {
   GridColDef,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
-import { getColumnHeadersTextContent, getColumnValues, getRowValues } from 'test/utils/helperFn';
-import useTimeout from '@mui/utils/useTimeout';
+import {
+  getColumnHeadersTextContent,
+  getColumnValues,
+  getRowValues,
+  sleep,
+} from 'test/utils/helperFn';
 
 const ROWS = [
   {
@@ -283,18 +287,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
   });
 
   it('should render in pivot mode when mounted with pivoting enabled and async data loading', async () => {
-    function Component() {
-      const [loading, setLoading] = React.useState(true);
-      const [rows, setRows] = React.useState<any[]>([]);
-      const fetchTimeout = useTimeout();
-
-      React.useEffect(() => {
-        fetchTimeout.start(500, () => {
-          setRows(ROWS);
-          setLoading(false);
-        });
-      }, [fetchTimeout]);
-
+    function Component({ loading, rows }: { loading: boolean; rows: any[] }) {
       return (
         <Test
           loading={loading}
@@ -316,7 +309,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
       );
     }
 
-    render(<Component />);
+    const { setProps } = render(<Component loading rows={[]} />);
+
+    await sleep(500);
+    setProps({ loading: false, rows: ROWS });
 
     await waitFor(() => {
       expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
