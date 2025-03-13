@@ -7,9 +7,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { interpolate as d3Interpolate } from '@mui/x-charts-vendor/d3-interpolate';
-import type { Transition } from '@mui/x-charts-vendor/d3-transition';
-import { interrupt } from '@mui/x-charts-vendor/d3-transition';
-import { select } from '@mui/x-charts-vendor/d3-selection';
+import { timer as d3Timer } from '@mui/x-charts-vendor/d3-timer';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
 
@@ -70,6 +68,66 @@ const PieArcRoot = styled('path', {
 
 const DURATION = 500;
 
+function usePieArcAnimatedProps({
+  startAngle,
+  endAngle,
+  cornerRadius,
+  paddingAngle,
+  innerRadius,
+  outerRadius,
+}: PieArcProps): Pick<React.ComponentProps<'path'>, 'd'> {
+  const lastAngles = React.useRef({
+    startAngle: (startAngle + endAngle) / 2,
+    endAngle: (startAngle + endAngle) / 2,
+  });
+  const [d, setD] = React.useState<React.ComponentProps<'path'>['d']>(
+    () =>
+      d3Arc().cornerRadius(cornerRadius)({
+        padAngle: paddingAngle,
+        innerRadius,
+        outerRadius,
+        startAngle: (startAngle + endAngle) / 2,
+        endAngle: (startAngle + endAngle) / 2,
+      })!,
+  );
+
+  React.useLayoutEffect(() => {
+    const lastStartAngle = lastAngles.current.startAngle;
+    const lastEndAngle = lastAngles.current.endAngle;
+
+    const interpolateStartAngle = d3Interpolate(lastStartAngle, startAngle);
+    const interpolateEndAngle = d3Interpolate(lastEndAngle, endAngle);
+    const arc = d3Arc()
+      .cornerRadius(cornerRadius)
+      .padAngle(paddingAngle)
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius)
+      .startAngle((startAngle + endAngle) / 2)
+      .endAngle((startAngle + endAngle) / 2);
+
+    const timer = d3Timer((elapsed) => {
+      if (elapsed > DURATION) {
+        timer.stop();
+      }
+
+      const progress = Math.min(elapsed / DURATION, 1);
+
+      const sA = interpolateStartAngle(progress);
+      const eA = interpolateEndAngle(progress);
+      arc.startAngle(sA).endAngle(eA);
+
+      lastAngles.current = { startAngle: sA, endAngle: eA };
+
+      // @ts-expect-error it seems that the types are wrong since the function accepts no arguments.
+      setD(arc());
+    });
+
+    return () => timer.stop();
+  }, [cornerRadius, endAngle, innerRadius, outerRadius, paddingAngle, startAngle]);
+
+  return { d };
+}
+
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: number;
@@ -106,60 +164,14 @@ function PieArc(props: PieArcProps) {
     isFaded,
     isHighlighted,
   };
-  const svgRef = React.useRef<SVGPathElement>(null);
+  const { d } = usePieArcAnimatedProps(props);
   const classes = useUtilityClasses(ownerState);
-  const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
-  const lastAngles = React.useRef({
-    startAngle: (startAngle + endAngle) / 2,
-    endAngle: (startAngle + endAngle) / 2,
-  });
 
   const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
 
-  React.useLayoutEffect(() => {
-    const svg = svgRef.current;
-    if (!svg) {
-      return;
-    }
-
-    const lastStartAngle = lastAngles.current.startAngle;
-    const lastEndAngle = lastAngles.current.endAngle;
-
-    const interpolateStartAngle = d3Interpolate(lastStartAngle, startAngle);
-    const interpolateEndAngle = d3Interpolate(lastEndAngle, endAngle);
-    transitionRef.current = select(svg)
-      .transition()
-      .duration(DURATION)
-      .attrTween('d', () => {
-        const arc = d3Arc()
-          .cornerRadius(cornerRadius)
-          .padAngle(paddingAngle)
-          .innerRadius(innerRadius)
-          .outerRadius(outerRadius)
-          .startAngle((startAngle + endAngle) / 2)
-          .endAngle((startAngle + endAngle) / 2);
-
-        return (t) => {
-          const sA = interpolateStartAngle(t);
-          const eA = interpolateEndAngle(t);
-          arc.startAngle(sA).endAngle(eA);
-
-          lastAngles.current = { startAngle: sA, endAngle: eA };
-
-          // @ts-expect-error it seems that the types are wrong since the function accepts no arguments.
-          return arc();
-        };
-      });
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      interrupt(svg);
-    };
-  }, [cornerRadius, endAngle, innerRadius, outerRadius, paddingAngle, startAngle]);
-
   return (
     <PieArcRoot
-      ref={svgRef}
+      d={d}
       visibility={startAngle === endAngle ? 'hidden' : 'visible'}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
