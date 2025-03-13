@@ -1,11 +1,15 @@
 <DataGridPremium
+  apiRef={apiRef}
   columns={columns}
   dataSource={dataSource}
+  dataSourceCache={null}
   pagination
-  initialState={initialStateWithPagination}
+  initialState={initialStateUpdated}
   pageSizeOptions={[10, 20, 50]}
   slots={{
     toolbar: ToolbarWithPromptInput,
   }}
   showToolbar
+  aggregationFunctions={aggregationFunctions}
+  onDataSourceError={console.error}
 />

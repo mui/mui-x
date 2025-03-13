@@ -6,6 +6,7 @@ import {
   Toolbar,
   ToolbarButton,
   ColumnsPanelTrigger,
+  useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import Badge from '@mui/material/Badge';
@@ -13,8 +14,30 @@ import Tooltip from '@mui/material/Tooltip';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Box from '@mui/material/Box';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 function ToolbarWithPromptInput() {
+  const apiRef = useGridApiContext();
+  const [prompt, setPrompt] = React.useState('');
+
+  const handleChange = React.useCallback(
+    async (event: SelectChangeEvent<string>) => {
+      const selectedPrompt = event.target.value;
+      setPrompt(selectedPrompt);
+      if (selectedPrompt) {
+        apiRef.current.setLoading(true);
+        const result = await mockPromptResolver(
+          apiRef.current.getPromptContext(),
+          selectedPrompt,
+        );
+        apiRef.current.applyPromptResult(result);
+        apiRef.current.setLoading(false);
+      }
+    },
+    [apiRef],
+  );
+
   return (
     <Toolbar
       render={
@@ -52,9 +75,35 @@ function ToolbarWithPromptInput() {
             )}
           />
         </Tooltip>
+        <div style={{ flex: 1 }} />
+        <Select
+          autoWidth
+          displayEmpty
+          size="small"
+          value={prompt}
+          onChange={handleChange}
+        >
+          <MenuItem value="">
+            <em>Choose a prompt</em>
+          </MenuItem>
+          <MenuItem value="sort by name">Sort by name</MenuItem>
+          <MenuItem value="sort by company name and employee name">
+            Sort by company name and employee name
+          </MenuItem>
+          <MenuItem value="show people from the EU">
+            Show people from the EU
+          </MenuItem>
+          <MenuItem value="order companies by amount of people">
+            Order companies by amount of people
+          </MenuItem>
+        </Select>
       </Box>
 
-      <GridToolbarPromptControl onPrompt={mockPromptResolver} allowDataSampling />
+      <GridToolbarPromptControl
+        onPrompt={mockPromptResolver}
+        allowDataSampling
+        onError={console.error}
+      />
     </Toolbar>
   );
 }
