@@ -1,36 +1,30 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
+import { css } from '@mui/x-internals/css';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isOverflown } from '../../utils/domUtils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { composeGridStyles } from '../../utils/composeGridStyles';
+import { vars } from '../../constants/cssVariables';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['columnHeaderTitle'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
 const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ColumnHeaderTitle',
-  overridesResolver: (props, styles) => styles.columnHeaderTitle,
-})<{ ownerState: OwnerState }>({
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  fontWeight: 'var(--unstable_DataGrid-headWeight)',
-  lineHeight: 'normal',
+  slot: 'columnHeaderTitle',
+})<{ ownerState: OwnerState }>({});
+
+const styles = css('MuiDataGrid-columnHeaderTitle', {
+  root: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontWeight: vars.typography.fontWeight.medium,
+    lineHeight: 'normal',
+  },
 });
 
 const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -39,7 +33,7 @@ const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<H
     // See https://github.com/mui/mui-x/pull/14482
     const { className, 'aria-label': ariaLabel, ...other } = props;
     const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+    const classes = composeGridStyles(styles, rootProps.classes);
 
     return (
       <GridColumnHeaderTitleRoot
