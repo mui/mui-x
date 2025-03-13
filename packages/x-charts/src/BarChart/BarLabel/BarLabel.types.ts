@@ -7,6 +7,7 @@ export interface BarLabelOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  skipAnimation: boolean;
   classes?: Partial<BarLabelClasses>;
 }
 
