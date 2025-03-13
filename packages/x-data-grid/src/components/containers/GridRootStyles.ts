@@ -367,13 +367,13 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
-    [`& .${c['pivotField--sorted']} .${c.iconButtonContainer},
+    [`& .${c['pivotPanelField--sorted']} .${c.iconButtonContainer},
       & .${c['columnHeader--sorted']} .${c.iconButtonContainer},
       & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]: {
       visibility: 'visible',
       width: 'auto',
     },
-    [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton},
+    [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton},
       & .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
       opacity: 0,
       transition: vars.transition(['opacity'], {
@@ -445,8 +445,8 @@ export const GridRootStyles = styled('div', {
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
-        & .${c.pivotField}:not(.${c['pivotField--sorted']}):hover .${c.sortButton},
-        & .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton}:focus`]: {
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus`]: {
         opacity: 0.5,
       },
     },
@@ -458,7 +458,7 @@ export const GridRootStyles = styled('div', {
           color: vars.colors.foreground.accent,
         },
       },
-      [`& .${c.pivotField}:not(.${c['pivotField--sorted']}) .${c.sortButton}`]: {
+      [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
         opacity: 0.5,
       },
     },
