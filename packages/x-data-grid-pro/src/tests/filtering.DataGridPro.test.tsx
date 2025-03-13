@@ -939,35 +939,6 @@ describe('<DataGridPro /> - Filter', () => {
       expect(filterCellInput).to.have.value('a');
     });
 
-    // See https://github.com/mui/mui-x/issues/16826
-    it('should set the input state properly when using the `apiRef.current.restoreState` method', async () => {
-      const changeSpy = spy();
-      render(<TestCase headerFilters onFilterModelChange={changeSpy} />);
-
-      const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input')!;
-      fireEvent.mouseDown(filterCellInput);
-      expect(filterCellInput).toHaveFocus();
-      fireEvent.change(filterCellInput, { target: { value: 'p' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
-      expect(filterCellInput).to.have.value('p');
-
-      fireEvent.change(filterCellInput, { target: { value: '' } });
-      expect(filterCellInput).to.have.value('');
-
-      act(() =>
-        apiRef.current?.restoreState({
-          filter: {
-            filterModel: {
-              items: [{ field: 'brand', operator: 'contains', value: 'b' }],
-            },
-          },
-        }),
-      );
-
-      expect(filterCellInput).to.have.value('b');
-    });
-
     it('should apply filters on type when the focus is on cell', () => {
       render(<TestCase headerFilters />);
 

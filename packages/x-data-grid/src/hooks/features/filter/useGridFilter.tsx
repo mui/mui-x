@@ -35,6 +35,7 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
+import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -354,6 +355,13 @@ export const useGridFilter = (
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const filterModelToExport = gridFilterModelSelector(apiRef);
+
+      // Remove the additional `fromInput` property from the filter model
+      filterModelToExport.items.forEach((item) => {
+        if ((item as ItemPlusTag).fromInput) {
+          delete (item as ItemPlusTag).fromInput;
+        }
+      });
 
       const shouldExportFilterModel =
         // Always export if the `exportOnlyDirtyModels` property is not activated

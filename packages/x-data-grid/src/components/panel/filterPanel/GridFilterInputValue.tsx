@@ -11,7 +11,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -34,7 +34,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
     sanitizeFilterItemValue(item.value),
   );
-  const lastValue = React.useRef<string | undefined>(filterValueState);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -60,14 +59,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    const sanitizedValue = sanitizeFilterItemValue(item.value);
-    if (
-      itemPlusTag.fromInput !== id ||
-      item.value == null ||
-      sanitizedValue !== lastValue.current
-    ) {
-      setFilterValueState(sanitizedValue);
-      lastValue.current = sanitizedValue;
+    if (itemPlusTag.fromInput !== id || item.value == null) {
+      setFilterValueState(sanitizeFilterItemValue(item.value));
     }
   }, [id, item]);
 
