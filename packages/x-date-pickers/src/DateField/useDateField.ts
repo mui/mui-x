@@ -1,7 +1,6 @@
 'use client';
 import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
-import { useSplitFieldProps } from '../hooks';
 import { useDateManager } from '../managers';
 
 export const useDateField = <
@@ -11,6 +10,5 @@ export const useDateField = <
   props: TAllProps,
 ) => {
   const manager = useDateManager(props);
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-  return useField({ manager, forwardedProps, internalProps });
+  return useField({ manager, props });
 };

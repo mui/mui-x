@@ -1,9 +1,4 @@
-import {
-  UseFieldParameters,
-  UseFieldReturnValue,
-  UseFieldCommonForwardedProps,
-  UseFieldForwardedProps,
-} from './useField.types';
+import { UseFieldParameters, UseFieldReturnValue, UseFieldProps } from './useField.types';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import { PickerValidValue } from '../../models';
@@ -14,22 +9,19 @@ export const useField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TFieldInternalProps extends { enableAccessibleFieldDOMStructure?: boolean },
-  TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
   parameters: UseFieldParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
     TError,
     TValidationProps,
-    TFieldInternalProps,
-    TForwardedProps
+    TProps
   >,
-): UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+): UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TProps> => {
   const fieldPrivateContext = useNullableFieldPrivateContext();
   const enableAccessibleFieldDOMStructure =
-    parameters.internalProps.enableAccessibleFieldDOMStructure ??
+    parameters.props.enableAccessibleFieldDOMStructure ??
     fieldPrivateContext?.enableAccessibleFieldDOMStructure ??
     true;
 

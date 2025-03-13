@@ -5,9 +5,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useTimeout from '@mui/utils/useTimeout';
 import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
-import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
+import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { FieldSectionType } from '../../../models';
+import { useSplitFieldProps } from '../../../hooks';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
@@ -21,43 +22,37 @@ export const useFieldV7TextField = <
   TValue extends PickerValidValue,
   TError,
   TValidationProps extends {},
-  TFieldInternalProps extends {},
-  TForwardedProps extends UseFieldForwardedProps<true>,
+  TProps extends UseFieldProps<true>,
 >(
-  parameters: UseFieldParameters<
-    TValue,
-    true,
-    TError,
-    TValidationProps,
-    TFieldInternalProps,
-    TForwardedProps
-  >,
-): UseFieldReturnValue<true, TForwardedProps> => {
+  parameters: UseFieldParameters<TValue, true, TError, TValidationProps, TProps>,
+): UseFieldReturnValue<true, TProps> => {
   const translations = usePickerTranslations();
   const utils = useUtils();
   const id = useId();
 
   const {
+    props,
     manager,
-    forwardedProps,
-    internalProps,
     skipContextFieldRefAssignment,
     manager: {
+      valueType,
       internal_fieldValueManager: fieldValueManager,
       internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     },
-    forwardedProps: {
-      sectionListRef: sectionListRefProp,
-      onBlur,
-      onClick,
-      onFocus,
-      onInput,
-      onPaste,
-      onKeyDown,
-      onClear,
-      clearable,
-    },
   } = parameters;
+
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, valueType);
+  const {
+    sectionListRef: sectionListRefProp,
+    onBlur,
+    onClick,
+    onFocus,
+    onInput,
+    onPaste,
+    onKeyDown,
+    onClear,
+    clearable,
+  } = forwardedProps;
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
@@ -591,7 +586,6 @@ export const useFieldV7TextField = <
     onPaste: handleContainerPaste,
     onKeyDown: wrappedHandleContainerKeyDown,
     onClear: handleClear,
-
     // Additional
     enableAccessibleFieldDOMStructure: true,
     elements,

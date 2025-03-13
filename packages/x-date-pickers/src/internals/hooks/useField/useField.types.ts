@@ -11,7 +11,9 @@ import {
   OnErrorProps,
   InferFieldSection,
   PickerManager,
+  PickerValueType,
 } from '../../../models';
+import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
@@ -21,13 +23,11 @@ export interface UseFieldParameters<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TFieldInternalProps extends {},
-  TForwardedProps extends UseFieldCommonForwardedProps &
+  TProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
 > {
   manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
-  forwardedProps: TForwardedProps;
-  internalProps: TFieldInternalProps;
+  props: TProps;
   skipContextFieldRefAssignment?: boolean;
 }
 
@@ -184,9 +184,8 @@ interface UseFieldV7AdditionalProps {
 
 export type UseFieldReturnValue<
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
-> = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
-  Required<UseFieldCommonForwardedProps> &
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+> = Omit<TProps, InternalPropNames<PickerValueType>> &
   UseFieldCommonAdditionalProps &
   (TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
@@ -400,3 +399,9 @@ export interface CharacterEditingQuery {
   sectionIndex: number;
   sectionType: FieldSectionType;
 }
+
+export type UseFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
+      enableAccessibleFieldDOMStructure?: boolean;
+    };

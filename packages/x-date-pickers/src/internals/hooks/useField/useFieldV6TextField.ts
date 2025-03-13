@@ -4,7 +4,8 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import useForkRef from '@mui/utils/useForkRef';
-import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
+import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
+import { useSplitFieldProps } from '../../../hooks';
 import { FieldSectionType, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
@@ -64,44 +65,38 @@ export const useFieldV6TextField = <
   TValue extends PickerValidValue,
   TError,
   TValidationProps extends {},
-  TFieldInternalProps extends {},
-  TForwardedProps extends UseFieldForwardedProps<false>,
+  TProps extends UseFieldProps<false>,
 >(
-  parameters: UseFieldParameters<
-    TValue,
-    false,
-    TError,
-    TValidationProps,
-    TFieldInternalProps,
-    TForwardedProps
-  >,
-): UseFieldReturnValue<false, TForwardedProps> => {
+  parameters: UseFieldParameters<TValue, false, TError, TValidationProps, TProps>,
+): UseFieldReturnValue<false, TProps> => {
   const isRtl = useRtl();
   const focusTimeout = useTimeout();
   const selectionSyncTimeout = useTimeout();
 
   const {
+    props,
     manager,
-    internalProps,
-    forwardedProps,
     skipContextFieldRefAssignment,
     manager: {
+      valueType,
       internal_valueManager: valueManager,
       internal_fieldValueManager: fieldValueManager,
       internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     },
-    forwardedProps: {
-      onFocus,
-      onClick,
-      onPaste,
-      onBlur,
-      onKeyDown,
-      onClear,
-      clearable,
-      inputRef: inputRefProp,
-      placeholder: inPlaceholder,
-    },
   } = parameters;
+
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, valueType);
+  const {
+    onFocus,
+    onClick,
+    onPaste,
+    onBlur,
+    onKeyDown,
+    onClear,
+    clearable,
+    inputRef: inputRefProp,
+    placeholder: inPlaceholder,
+  } = forwardedProps;
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,

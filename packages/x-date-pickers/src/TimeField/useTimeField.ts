@@ -1,8 +1,7 @@
 'use client';
 import { useField } from '../internals/hooks/useField';
-import { UseTimeFieldProps } from './TimeField.types';
-import { useSplitFieldProps } from '../hooks';
 import { useTimeManager } from '../managers';
+import { UseTimeFieldProps } from './TimeField.types';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -11,6 +10,5 @@ export const useTimeField = <
   props: TAllProps,
 ) => {
   const manager = useTimeManager(props);
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
-  return useField({ manager, forwardedProps, internalProps });
+  return useField({ manager, props });
 };

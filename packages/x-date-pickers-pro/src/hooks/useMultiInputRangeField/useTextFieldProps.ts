@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
@@ -151,11 +150,9 @@ export function useTextFieldProps<
     onChange: handleChange,
   };
 
-  const splittedProps = useSplitFieldProps(allProps, valueType);
   const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField({
     manager,
-    forwardedProps: splittedProps.forwardedProps,
-    internalProps: splittedProps.internalProps,
+    props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
   }) as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
 
