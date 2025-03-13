@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useTransition } from '@react-spring/web';
-import type { LineElementOwnerState } from './LineElement';
-import { useStringInterpolator } from '../internals/useStringInterpolator';
+import { timer as d3Timer } from '@mui/x-charts-vendor/d3-timer';
+import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { AppearingMask } from './AppearingMask';
+import type { LineElementOwnerState } from './LineElement';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: LineElementOwnerState;
@@ -14,6 +14,42 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
    * @default false
    */
   skipAnimation?: boolean;
+}
+
+const DURATION = 200;
+function useLineAnimatedProps(
+  props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>,
+): Pick<React.ComponentProps<'path'>, 'd'> {
+  const lastValues = React.useRef({ d: props.d });
+  const [d, setD] = React.useState<React.ComponentProps<'path'>['d']>(props.d);
+
+  React.useEffect(() => {
+    if (props.skipAnimation) {
+      return;
+    }
+
+    const lastD = lastValues.current.d;
+    const stringInterpolator = interpolateString(lastD, props.d);
+
+    const timer = d3Timer((elapsed) => {
+      if (elapsed > DURATION) {
+        timer.stop();
+      }
+
+      const progress = Math.min(elapsed / DURATION, 1);
+
+      const interpolatedD = stringInterpolator(progress);
+
+      lastValues.current = { d: interpolatedD };
+
+      setD(interpolatedD);
+    });
+
+    // eslint-disable-next-line consistent-return
+    return () => timer.stop();
+  }, [props.d, props.skipAnimation]);
+
+  return { d };
 }
 
 /**
@@ -29,31 +65,20 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
 
-  const stringInterpolator = useStringInterpolator(d);
-
-  const transitionChange = useTransition([stringInterpolator], {
-    from: skipAnimation ? undefined : { value: 0 },
-    to: { value: 1 },
-    enter: { value: 1 },
-    reset: false,
-    immediate: skipAnimation,
-  });
+  const { d: animatedD } = useLineAnimatedProps(props);
 
   return (
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
-      {transitionChange((style, interpolator) => (
-        <animated.path
-          // @ts-expect-error
-          d={style.value.to(interpolator)}
-          stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
-          strokeWidth={2}
-          strokeLinejoin="round"
-          fill="none"
-          filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
-          opacity={ownerState.isFaded ? 0.3 : 1}
-          {...other}
-        />
-      ))}
+      <path
+        d={animatedD}
+        stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
+        strokeWidth={2}
+        strokeLinejoin="round"
+        fill="none"
+        filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+        opacity={ownerState.isFaded ? 0.3 : 1}
+        {...other}
+      />
     </AppearingMask>
   );
 }
