@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { select } from '@mui/x-charts-vendor/d3-selection';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
-import { useRef } from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
@@ -20,8 +19,8 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 }
 
 const DURATION = 200;
-function useLineAnimatedProps(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
-  const lastValues = React.useRef({ d: props.d });
+function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
+  const lastDRef = React.useRef(props.d);
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
   const [path, setPath] = React.useState<SVGPathElement | null>(null);
 
@@ -31,7 +30,7 @@ function useLineAnimatedProps(props: Pick<AnimatedLineProps, 'd' | 'skipAnimatio
       return;
     }
 
-    const lastD = lastValues.current.d;
+    const lastD = lastDRef.current;
     const stringInterpolator = interpolateString(lastD, props.d);
 
     transitionRef.current = select(path)
@@ -40,7 +39,7 @@ function useLineAnimatedProps(props: Pick<AnimatedLineProps, 'd' | 'skipAnimatio
       .attrTween('d', () => (t) => {
         const interpolatedD = stringInterpolator(t);
 
-        lastValues.current = { d: interpolatedD };
+        lastDRef.current = interpolatedD;
 
         return interpolatedD;
       });
@@ -66,13 +65,14 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
   function AnimatedLine(props, ref) {
     const { d, skipAnimation, ownerState, ...other } = props;
 
-    const animateRef = useLineAnimatedProps(props);
+    const animateRef = useAnimatePath(props);
     const forkRef = useForkRef(ref, animateRef);
 
     return (
       <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
         <path
           ref={forkRef}
+          // TODO: Removed `d` prop from the since `useAnimatePath` is handling it. Not sure how this impacts SSR, though.
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
