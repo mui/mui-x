@@ -23,7 +23,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns visibility', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 

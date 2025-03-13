@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
   };
 
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 

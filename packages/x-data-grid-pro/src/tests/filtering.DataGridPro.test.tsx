@@ -11,7 +11,6 @@ import {
   GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   useGridApiRef,
   DataGridPro,
   GetColumnForNewFilterArgs,
@@ -31,10 +30,8 @@ import {
 } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
 describe('<DataGridPro /> - Filter', () => {
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -405,7 +402,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(apiRef.current?.state.filter.filterModel.items).to.have.length(0);
     // clicking on `remove all` should close the panel when no filters
     fireEvent.click(removeButton);
-    clock.tick(100);
+
     expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
   });
 
@@ -505,7 +502,9 @@ describe('<DataGridPro /> - Filter', () => {
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
     const input = getSelectInput(
       screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+        // https://github.com/testing-library/dom-testing-library/issues/846
+        // This error doesn't happen in vitest
+        isJSDOM && process.env.VITEST !== 'true' ? 1 : 0
       ],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
@@ -514,7 +513,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal([]);
   });
 
-  it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', () => {
+  it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', async () => {
     const onFilterModelChange = spy();
     render(
       <TestCase
@@ -536,8 +535,11 @@ describe('<DataGridPro /> - Filter', () => {
     );
     expect(onFilterModelChange.callCount).to.equal(0);
     fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
-    clock.tick(500);
-    expect(onFilterModelChange.callCount).to.equal(1);
+
+    await waitFor(() => {
+      expect(onFilterModelChange.callCount).to.equal(1);
+    });
+
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
   });
 
@@ -641,7 +643,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest expandedRows', () => {
+  it('should show the latest expandedRows', async () => {
     render(
       <TestCase
         initialState={{
@@ -655,8 +657,10 @@ describe('<DataGridPro /> - Filter', () => {
 
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
-    clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
 
     expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
     expect(gridExpandedSortedRowEntriesSelector(apiRef)[0].model).to.deep.equal({
@@ -726,7 +730,7 @@ describe('<DataGridPro /> - Filter', () => {
       const initialScrollPosition = window.scrollY;
       expect(initialScrollPosition).not.to.equal(0);
       act(() => apiRef.current?.hidePreferences());
-      clock.tick(100);
+
       act(() => apiRef.current?.showPreferences(GridPreferencePanelsValue.filters));
       expect(window.scrollY).to.equal(initialScrollPosition);
     },
@@ -939,7 +943,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(filterCellInput).to.have.value('a');
     });
 
-    it('should apply filters on type when the focus is on cell', () => {
+    it('should apply filters on type when the focus is on cell', async () => {
       render(<TestCase headerFilters />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -949,11 +953,13 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.mouseDown(filterCellInput);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
     });
 
-    it('should call `onFilterModelChange` when filters are updated', () => {
+    it('should call `onFilterModelChange` when filters are updated', async () => {
       const onFilterModelChange = spy();
       render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
 
@@ -961,8 +967,10 @@ describe('<DataGridPro /> - Filter', () => {
       const filterCellInput = filterCell.querySelector('input')!;
       fireEvent.click(filterCell);
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(onFilterModelChange.callCount).to.equal(1);
+
+      await waitFor(() => {
+        expect(onFilterModelChange.callCount).to.equal(1);
+      });
     });
 
     it('should allow to change the operator from operator menu', () => {
@@ -1222,7 +1230,6 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should allow temporary invalid values while updating the number filter', async () => {
-      clock.restore();
       const changeSpy = spy();
       const { user } = render(
         <TestCase
@@ -1269,7 +1276,6 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should allow to navigate to the header filter cell when there are no rows', async () => {
-      clock.restore();
       const { user } = render(
         <TestCase
           headerFilters
@@ -1358,8 +1364,11 @@ describe('<DataGridPro /> - Filter', () => {
         },
       };
       render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
-      // For JSDom, the first hidden combo is also found which we are not interested in
-      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[
+        // For JSDom, the first hidden combo is also found which we are not interested in
+        // This error doesn't happen in vitest
+        isJSDOM && process.env.VITEST !== 'true' ? 1 : 0
+      ];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

@@ -464,7 +464,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
       // Using a fake clock also affects `requestAnimationFrame`
-      // Calling clock.tick() should call the callback passed, but it doesn't work
+      // Calling
       stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
       stub(window, 'cancelAnimationFrame');
 

@@ -45,7 +45,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Aggregation', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -392,7 +392,6 @@ describe('<DataGridPremium /> - Aggregation', () => {
       render(<Test />);
 
       act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
     });
@@ -403,7 +402,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
+
       fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
       fireUserEvent.mousePress(
         within(
@@ -412,7 +411,6 @@ describe('<DataGridPremium /> - Aggregation', () => {
           }),
         ).getByText('max'),
       );
-      clock.runToLast();
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
@@ -557,7 +555,6 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
     });
