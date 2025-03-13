@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridToolbar, GridToolbarDivider, GridToolbarProps } from '@mui/x-data-grid/internals';
-import { ToolbarButton } from '@mui/x-data-grid';
+import { GridToolbar, GridToolbarDivider, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
+import { ToolbarButton } from '@mui/x-data-grid-pro';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

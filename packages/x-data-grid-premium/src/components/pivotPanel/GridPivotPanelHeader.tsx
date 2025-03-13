@@ -1,25 +1,26 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
 import {
   GridSlotProps,
   NotRendered,
   useGridSelector,
   getDataGridUtilityClass,
 } from '@mui/x-data-grid-pro';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotPanelSearch } from './GridPivotPanelSearch';
+import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export interface GridPivotPanelHeaderProps {
   searchValue: string;
   onSearchValueChange: (value: string) => void;
 }
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridPremiumProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -34,7 +35,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const GridPivotPanelHeaderRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'PivotPanelHeader',
 })<{ ownerState: OwnerState }>({
   display: 'flex',
@@ -46,14 +47,14 @@ const GridPivotPanelHeaderRoot = styled('div', {
 });
 
 const GridPivotPanelSwitch = styled(NotRendered<GridSlotProps['baseSwitch']>, {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'PivotPanelSwitch',
 })<{ ownerState: OwnerState }>({
   marginRight: 'auto',
 });
 
 const GridPivotPanelSwitchLabel = styled('span', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'PivotPanelSwitchLabel',
 })<{ ownerState: OwnerState }>({
   ...vars.typography.large,

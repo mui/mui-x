@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { vars } from '@mui/x-data-grid/internals';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const CollapsibleTriggerRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'CollapsibleTrigger',
 })<{ ownerState: OwnerState }>({
   display: 'flex',
@@ -39,7 +39,7 @@ const CollapsibleTriggerRoot = styled('div', {
 });
 
 const CollapsibleIcon = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'CollapsibleIcon',
 })<{ ownerState: OwnerState }>(({ ownerState }) => ({
   display: 'flex',

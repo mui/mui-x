@@ -1625,15 +1625,57 @@
       "isGlobal": false
     },
     {
-      "key": "pivotField",
-      "className": "MuiDataGrid-pivotField",
-      "description": "Styles applied to the pivot field.",
+      "key": "pivotPanelAvailableFields",
+      "className": "MuiDataGrid-pivotPanelAvailableFields",
+      "description": "Styles applied to the pivot panel available fields.",
       "isGlobal": false
     },
     {
-      "key": "pivotField--sorted",
-      "className": "MuiDataGrid-pivotField--sorted",
-      "description": "Styles applied to the pivot field when sorted.",
+      "key": "pivotPanelBody",
+      "className": "MuiDataGrid-pivotPanelBody",
+      "description": "Styles applied to the pivot panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField",
+      "className": "MuiDataGrid-pivotPanelField",
+      "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--sorted",
+      "className": "MuiDataGrid-pivotPanelField--sorted",
+      "description": "Styles applied to the pivot panel field when sorted.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldActionContainer",
+      "className": "MuiDataGrid-pivotPanelFieldActionContainer",
+      "description": "Styles applied to the pivot panel field action container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldCheckbox",
+      "className": "MuiDataGrid-pivotPanelFieldCheckbox",
+      "description": "Styles applied to the pivot panel field checkbox.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldDragIcon",
+      "className": "MuiDataGrid-pivotPanelFieldDragIcon",
+      "description": "Styles applied to the pivot panel field drag icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldList",
+      "className": "MuiDataGrid-pivotPanelFieldList",
+      "description": "Styles applied to the pivot panel field list.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldName",
+      "className": "MuiDataGrid-pivotPanelFieldName",
+      "description": "Styles applied to the pivot panel field name.",
       "isGlobal": false
     },
     {
@@ -1643,9 +1685,39 @@
       "isGlobal": false
     },
     {
+      "key": "pivotPanelPlaceholder",
+      "className": "MuiDataGrid-pivotPanelPlaceholder",
+      "description": "Styles applied to the pivot panel placeholder.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelScrollArea",
+      "className": "MuiDataGrid-pivotPanelScrollArea",
+      "description": "Styles applied to the pivot panel scroll area.",
+      "isGlobal": false
+    },
+    {
       "key": "pivotPanelSearchContainer",
       "className": "MuiDataGrid-pivotPanelSearchContainer",
       "description": "Styles applied to the pivot panel search container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSection",
+      "className": "MuiDataGrid-pivotPanelSection",
+      "description": "Styles applied to the pivot panel section.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSections",
+      "className": "MuiDataGrid-pivotPanelSections",
+      "description": "Styles applied to the pivot panel sections.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSectionTitle",
+      "className": "MuiDataGrid-pivotPanelSectionTitle",
+      "description": "Styles applied to the pivot panel section title.",
       "isGlobal": false
     },
     {

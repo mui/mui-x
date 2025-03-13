@@ -739,29 +739,77 @@ export interface GridClasses {
    */
   'pinnedRows--bottom': string;
   /**
+   * Styles applied to the pivot panel available fields.
+   */
+  pivotPanelAvailableFields: string;
+  /**
+   * Styles applied to the pivot panel body.
+   */
+  pivotPanelBody: string;
+  /**
+   * Styles applied to the pivot panel field.
+   */
+  pivotPanelField: string;
+  /**
+   * Styles applied to the pivot panel field action container.
+   */
+  pivotPanelFieldActionContainer: string;
+  /**
+   * Styles applied to the pivot panel field checkbox.
+   */
+  pivotPanelFieldCheckbox: string;
+  /**
+   * Styles applied to the pivot panel field drag icon.
+   */
+  pivotPanelFieldDragIcon: string;
+  /**
+   * Styles applied to the pivot panel field list.
+   */
+  pivotPanelFieldList: string;
+  /**
+   * Styles applied to the pivot panel field name.
+   */
+  pivotPanelFieldName: string;
+  /**
+   * Styles applied to the pivot panel field when sorted.
+   */
+  'pivotPanelField--sorted': string;
+  /**
    * Styles applied to the pivot panel header.
    */
   pivotPanelHeader: string;
+  /**
+   * Styles applied to the pivot panel placeholder.
+   */
+  pivotPanelPlaceholder: string;
+  /**
+   * Styles applied to the pivot panel scroll area.
+   */
+  pivotPanelScrollArea: string;
   /**
    * Styles applied to the pivot panel search container.
    */
   pivotPanelSearchContainer: string;
   /**
-   * Styles applied to the pivot panel switch label.
+   * Styles applied to the pivot panel section.
    */
-  pivotPanelSwitchLabel: string;
+  pivotPanelSection: string;
+  /**
+   * Styles applied to the pivot panel section title.
+   */
+  pivotPanelSectionTitle: string;
+  /**
+   * Styles applied to the pivot panel sections.
+   */
+  pivotPanelSections: string;
   /**
    * Styles applied to the pivot panel switch.
    */
   pivotPanelSwitch: string;
   /**
-   * Styles applied to the pivot field.
+   * Styles applied to the pivot panel switch label.
    */
-  pivotField: string;
-  /**
-   * Styles applied to the pivot field when sorted.
-   */
-  'pivotField--sorted': string;
+  pivotPanelSwitchLabel: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -856,8 +904,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'panelContent',
   'panelFooter',
   'paper',
-  'pivotField',
-  'pivotField--sorted',
   'editBooleanCell',
   'editInputCell',
   'filler',
@@ -951,10 +997,21 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
+  'pivotPanelAvailableFields',
+  'pivotPanelField',
+  'pivotPanelField--sorted',
+  'pivotPanelFieldActionContainer',
+  'pivotPanelFieldCheckbox',
+  'pivotPanelFieldDragIcon',
+  'pivotPanelFieldList',
+  'pivotPanelFieldName',
   'pivotPanelHeader',
+  'pivotPanelPlaceholder',
+  'pivotPanelScrollArea',
   'pivotPanelSearchContainer',
+  'pivotPanelSection',
+  'pivotPanelSectionTitle',
+  'pivotPanelSections',
   'pivotPanelSwitch',
   'pivotPanelSwitchLabel',
-  'pivotField',
-  'pivotField--sorted',
 ]);

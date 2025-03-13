@@ -943,22 +943,70 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
     },
-    "pivotField": {
+    "pivotPanelAvailableFields": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pivot field"
+      "nodeName": "the pivot panel available fields"
     },
-    "pivotField--sorted": {
+    "pivotPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel body"
+    },
+    "pivotPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field"
+    },
+    "pivotPanelField--sorted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the pivot field",
+      "nodeName": "the pivot panel field",
       "conditions": "sorted"
+    },
+    "pivotPanelFieldActionContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field action container"
+    },
+    "pivotPanelFieldCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field checkbox"
+    },
+    "pivotPanelFieldDragIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field drag icon"
+    },
+    "pivotPanelFieldList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field list"
+    },
+    "pivotPanelFieldName": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field name"
     },
     "pivotPanelHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pivot panel header"
     },
+    "pivotPanelPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel placeholder"
+    },
+    "pivotPanelScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel scroll area"
+    },
     "pivotPanelSearchContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pivot panel search container"
+    },
+    "pivotPanelSection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section"
+    },
+    "pivotPanelSections": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel sections"
+    },
+    "pivotPanelSectionTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section title"
     },
     "pivotPanelSwitch": {
       "description": "Styles applied to {{nodeName}}.",

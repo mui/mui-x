@@ -1,14 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps } from '@mui/x-data-grid/internals';
-import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
+import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
+import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridPremiumProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -21,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const SidebarRoot = styled(ResizablePanel, {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'Sidebar',
 })<{ ownerState: OwnerState }>({
   display: 'flex',

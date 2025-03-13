@@ -37,7 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const GridColumnSortButtonRoot = styled(NotRendered<GridSlotProps['baseIconButton']>, {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'SortButton',
 })<{ ownerState: OwnerState }>({
   transition: vars.transition(['opacity'], {

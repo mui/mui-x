@@ -28,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const ResizablePanelRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'ResizablePanel',
 })<{ ownerState: OwnerState }>({
   position: 'relative',

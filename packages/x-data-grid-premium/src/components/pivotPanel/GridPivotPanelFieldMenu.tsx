@@ -8,6 +8,13 @@ import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './Grid
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
+interface GridPivotPanelFieldMenuProps {
+  field: string;
+  modelKey: FieldTransferObject['modelKey'];
+  pivotModel: GridPivotModel;
+  updatePivotModel: UpdatePivotModel;
+}
+
 type MenuAction = {
   key: 'up' | 'down' | 'top' | 'bottom' | 'rows' | 'columns' | 'values' | null;
   label: string;
@@ -19,12 +26,7 @@ type MenuDivider = {
   divider: true;
 };
 
-function GridPivotFieldMenu(props: {
-  field: string;
-  modelKey: FieldTransferObject['modelKey'];
-  pivotModel: GridPivotModel;
-  updatePivotModel: UpdatePivotModel;
-}) {
+function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
   const { field, modelKey, updatePivotModel } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
@@ -158,7 +160,7 @@ function GridPivotFieldMenu(props: {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <rootProps.slots.baseIconButton
         size="small"
         {...rootProps.slotProps?.baseIconButton}
@@ -206,8 +208,8 @@ function GridPivotFieldMenu(props: {
           )}
         </rootProps.slots.baseMenuList>
       </GridMenu>
-    </div>
+    </React.Fragment>
   );
 }
 
-export { GridPivotFieldMenu };
+export { GridPivotPanelFieldMenu };

@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { GridSlotProps, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export type GridPivotPanelSearchProps = GridSlotProps['baseTextField'] & {
   onClear: () => void;
 };
-type OwnerState = DataGridProcessedProps;
+
+type OwnerState = DataGridPremiumProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -22,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const GridPivotPanelSearchContainer = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'PivotPanelSearchContainer',
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(0, 1, 1),

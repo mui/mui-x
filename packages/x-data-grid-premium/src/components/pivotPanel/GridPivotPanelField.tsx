@@ -10,16 +10,16 @@ import {
   NotRendered,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { DataGridProcessedProps, GridColumnSortButton, vars } from '@mui/x-data-grid/internals';
+import { GridColumnSortButton, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
-import { GridPivotFieldMenu } from './GridPivotFieldMenu';
+import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
 import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './GridPivotPanelBody';
 
-type GridPivotFieldProps = {
+type GridPivotPanelFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   pivotModel: GridPivotModel;
@@ -41,32 +41,34 @@ type GridPivotFieldProps = {
   | { modelKey: null }
 );
 
-type OwnerState = GridPivotFieldProps & Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = GridPivotPanelFieldProps &
+  Pick<DataGridPremiumProcessedProps, 'classes'> & {
+    dropPosition: DropPosition;
+    section: FieldTransferObject['modelKey'];
+  };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, modelKey } = ownerState;
   const sorted = modelKey === 'columns' && ownerState.sort;
   const slots = {
-    root: ['pivotField', sorted && 'pivotField--sorted'],
+    root: ['pivotPanelField', sorted && 'pivotPanelField--sorted'],
+    name: ['pivotPanelFieldName'],
+    actionContainer: ['pivotPanelFieldActionContainer'],
+    dragIcon: ['pivotPanelFieldDragIcon'],
+    checkbox: ['pivotPanelFieldCheckbox'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridPivotFieldRoot = styled('div', {
+const GridPivotPanelFieldRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'PivotField',
+  slot: 'PivotPanelField',
   overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['pivotField--sorted']}`]: styles['pivotField--sorted'] },
-    styles.pivotField,
+    { [`&.${gridClasses['pivotPanelField--sorted']}`]: styles['pivotPanelField--sorted'] },
+    styles.pivotPanelField,
   ],
-  shouldForwardProp: (prop) =>
-    prop !== 'dropPosition' && prop !== 'section' && prop !== 'ownerState',
-})<{
-  ownerState: OwnerState;
-  dropPosition: DropPosition;
-  section: FieldTransferObject['modelKey'];
-}>({
+})<{ ownerState: OwnerState }>({
   flexShrink: 0,
   position: 'relative',
   padding: vars.spacing(0, 1, 0, 2),
@@ -97,19 +99,28 @@ const GridPivotFieldRoot = styled('div', {
   },
 });
 
-const GridPivotFieldName = styled('span')({
+const GridPivotPanelFieldName = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'PivotPanelFieldName',
+})<{ ownerState: OwnerState }>({
   flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 });
 
-const GridPivotFieldActionContainer = styled('div')({
+const GridPivotPanelFieldActionContainer = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'PivotPanelFieldActionContainer',
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
 });
 
-const GridPivotFieldDragIcon = styled('div')({
+const GridPivotPanelFieldDragIcon = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'PivotPanelFieldDragIcon',
+})<{ ownerState: OwnerState }>({
   position: 'absolute',
   left: -1,
   width: 16,
@@ -122,7 +133,10 @@ const GridPivotFieldDragIcon = styled('div')({
   },
 });
 
-const GridPivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
+const GridPivotPanelFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
+  name: 'MuiDataGrid',
+  slot: 'PivotPanelFieldCheckbox',
+})<{ ownerState: OwnerState }>({
   flex: 1,
   position: 'relative',
   margin: vars.spacing(0, 0, 0, -1),
@@ -212,7 +226,7 @@ function AggregationSelect({
   );
 }
 
-function GridPivotField(props: GridPivotFieldProps) {
+function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const {
     children,
     field,
@@ -224,19 +238,19 @@ function GridPivotField(props: GridPivotFieldProps) {
     onDragEnd,
   } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
-
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
+  const section = props.modelKey;
+  const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
+  const classes = useUtilityClasses(ownerState);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
-      const data: FieldTransferObject = { field, modelKey: props.modelKey };
+      const data: FieldTransferObject = { field, modelKey: section };
       event.dataTransfer.setData('text/plain', JSON.stringify(data));
       event.dataTransfer.dropEffect = 'move';
-      onDragStart(props.modelKey);
+      onDragStart(section);
     },
-    [field, onDragStart, props.modelKey],
+    [field, onDragStart, section],
   );
 
   const getDropPosition = React.useCallback((event: React.DragEvent): DropPosition => {
@@ -281,15 +295,15 @@ function GridPivotField(props: GridPivotFieldProps) {
           targetField: field,
           targetFieldPosition: position,
           originSection,
-          targetSection: props.modelKey,
+          targetSection: section,
         });
       }
     },
-    [getDropPosition, updatePivotModel, field, props.modelKey],
+    [getDropPosition, updatePivotModel, field, section],
   );
 
   const handleSort = () => {
-    const currentSort = props.modelKey === 'columns' ? props.sort : null;
+    const currentSort = section === 'columns' ? props.sort : null;
     let newValue: GridSortDirection;
 
     if (currentSort === 'asc') {
@@ -317,11 +331,11 @@ function GridPivotField(props: GridPivotFieldProps) {
   };
 
   const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.modelKey) {
+    if (section) {
       onPivotModelChange((prev) => {
         return {
           ...prev,
-          [props.modelKey]: prev[props.modelKey].map((col) => {
+          [section]: prev[section].map((col) => {
             if (col.field === field) {
               return { ...col, hidden: !event.target.checked };
             }
@@ -332,10 +346,10 @@ function GridPivotField(props: GridPivotFieldProps) {
     }
   };
 
-  const hideable = props.modelKey !== null;
+  const hideable = section !== null;
 
   return (
-    <GridPivotFieldRoot
+    <GridPivotPanelFieldRoot
       ownerState={ownerState}
       className={classes.root}
       onDragOver={handleDragOver}
@@ -343,16 +357,16 @@ function GridPivotField(props: GridPivotFieldProps) {
       onDrop={handleDrop}
       onDragStart={handleDragStart}
       onDragEnd={onDragEnd}
-      dropPosition={dropPosition}
-      section={props.modelKey}
       draggable="true"
     >
-      <GridPivotFieldDragIcon>
+      <GridPivotPanelFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
         <slots.columnReorderIcon fontSize="small" />
-      </GridPivotFieldDragIcon>
+      </GridPivotPanelFieldDragIcon>
 
       {hideable ? (
-        <GridPivotFieldCheckbox
+        <GridPivotPanelFieldCheckbox
+          ownerState={ownerState}
+          className={classes.checkbox}
           as={rootProps.slots.baseCheckbox}
           size="small"
           density="compact"
@@ -363,11 +377,16 @@ function GridPivotField(props: GridPivotFieldProps) {
           label={children}
         />
       ) : (
-        <GridPivotFieldName>{children}</GridPivotFieldName>
+        <GridPivotPanelFieldName ownerState={ownerState} className={classes.name}>
+          {children}
+        </GridPivotPanelFieldName>
       )}
 
-      <GridPivotFieldActionContainer>
-        {props.modelKey === 'columns' && (
+      <GridPivotPanelFieldActionContainer
+        ownerState={ownerState}
+        className={classes.actionContainer}
+      >
+        {section === 'columns' && (
           <GridColumnSortButton
             field={field}
             direction={props.sort}
@@ -375,7 +394,7 @@ function GridPivotField(props: GridPivotFieldProps) {
             onClick={handleSort}
           />
         )}
-        {props.modelKey === 'values' && (
+        {section === 'values' && (
           <AggregationSelect
             aggFunc={props.aggFunc}
             field={field}
@@ -383,15 +402,15 @@ function GridPivotField(props: GridPivotFieldProps) {
             onPivotModelChange={onPivotModelChange}
           />
         )}
-        <GridPivotFieldMenu
+        <GridPivotPanelFieldMenu
           field={field}
-          modelKey={props.modelKey}
+          modelKey={section}
           pivotModel={pivotModel}
           updatePivotModel={updatePivotModel}
         />
-      </GridPivotFieldActionContainer>
-    </GridPivotFieldRoot>
+      </GridPivotPanelFieldActionContainer>
+    </GridPivotPanelFieldRoot>
   );
 }
 
-export { GridPivotField };
+export { GridPivotPanelField };

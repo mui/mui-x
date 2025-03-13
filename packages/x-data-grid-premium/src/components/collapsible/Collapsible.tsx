@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { vars } from '@mui/x-data-grid/internals';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const CollapsibleRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'Collapsible',
 })<{ ownerState: OwnerState }>(({ ownerState }) => ({
   display: 'flex',

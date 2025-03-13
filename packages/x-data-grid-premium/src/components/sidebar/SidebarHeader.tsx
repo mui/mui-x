@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
-import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
+import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type SidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridPremiumProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -20,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const SidebarHeaderRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'SidebarHeader',
 })<{ ownerState: OwnerState }>({
   position: 'sticky',

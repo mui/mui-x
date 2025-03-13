@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { vars } from '@mui/x-data-grid/internals';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const ResizablePanelHandleRoot = styled('div', {
-  name: 'DataGrid',
+  name: 'MuiDataGrid',
   slot: 'ResizablePanelHandle',
   overridesResolver: (props, styles) => [
     {
