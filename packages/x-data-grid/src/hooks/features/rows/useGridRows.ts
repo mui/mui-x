@@ -220,9 +220,6 @@ export const useGridRows = (
 
   const setLoading = React.useCallback<GridRowApi['setLoading']>(
     (loading) => {
-      if (loading === props.loading) {
-        return;
-      }
       logger.debug(`Setting loading to ${loading}`);
       apiRef.current.setState((state) => ({
         ...state,
@@ -230,7 +227,7 @@ export const useGridRows = (
       }));
       apiRef.current.caches.rows.loadingPropBeforePartialUpdates = loading;
     },
-    [props.loading, apiRef, logger],
+    [apiRef, logger],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
