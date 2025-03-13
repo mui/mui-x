@@ -14,10 +14,20 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "applyPromptResult": {
+      "type": { "description": "(result: PromptResponse) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "applySorting": { "type": { "description": "() =&gt; void" }, "required": true },
     "autosizeColumns": {
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
+    },
+    "collectSampleData": {
+      "type": { "description": "(sampleCount?: number) =&gt; Record&lt;string, any[]&gt;" },
+      "required": true,
+      "isPremiumPlan": true
     },
     "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
