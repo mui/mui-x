@@ -4,12 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
-import {
-  FieldSectionsBoundaries,
-  UseFieldForwardedProps,
-  UseFieldParameters,
-  UseFieldReturnValue,
-} from './useField.types';
+import { UseFieldForwardedProps, UseFieldParameters, UseFieldReturnValue } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { FieldSectionType } from '../../../models';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
@@ -82,13 +77,13 @@ export const useFieldV7TextField = <
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
     // States and derived values
-    state,
-    value,
-    parsedSelectedSections,
-    sectionsValueBoundaries,
-    sectionOrder,
     areAllSectionsEmpty,
     error,
+    parsedSelectedSections,
+    sectionOrder,
+    sectionsValueBoundaries,
+    state,
+    value,
 
     // Methods to update the states
     clearValue,
@@ -439,21 +434,16 @@ export const useFieldV7TextField = <
     },
   );
 
-  const sectionBoundaries = React.useMemo(() => {
-    return state.sections.reduce((acc, next) => {
-      acc[next.type] = sectionsValueBoundaries[next.type]({
-        currentDate: null,
-        contentType: next.contentType,
-        format: next.format,
-      });
-      return acc;
-    }, {} as FieldSectionsBoundaries);
-  }, [sectionsValueBoundaries, state.sections]);
-
   const isContainerEditable = parsedSelectedSections === 'all';
   const elements = React.useMemo<PickersSectionElement[]>(() => {
     return state.sections.map((section, index) => {
       const isEditable = !isContainerEditable && !disabled && !readOnly;
+      const sectionBoundaries = sectionsValueBoundaries[section.type]({
+        currentDate: fieldValueManager.getDateFromSection(value, section),
+        contentType: section.contentType,
+        format: section.format,
+      });
+
       return {
         container: {
           'data-sectionindex': index,
@@ -467,8 +457,8 @@ export const useFieldV7TextField = <
           'aria-labelledby': `${id}-${section.type}`,
           'aria-readonly': readOnly,
           'aria-valuenow': getSectionValueNow(section, utils),
-          'aria-valuemin': sectionBoundaries[section.type].minimum,
-          'aria-valuemax': sectionBoundaries[section.type].maximum,
+          'aria-valuemin': sectionBoundaries.minimum,
+          'aria-valuemax': sectionBoundaries.maximum,
           'aria-valuetext': section.value
             ? getSectionValueText(section, utils)
             : translations.empty,
@@ -497,20 +487,22 @@ export const useFieldV7TextField = <
       };
     });
   }, [
-    state.sections,
+    disabled,
+    fieldValueManager,
+    getInputContainerClickHandler,
     getInputContentFocusHandler,
-    handleInputContentPaste,
     handleInputContentDragOver,
     handleInputContentInput,
-    getInputContainerClickHandler,
     handleInputContentMouseUp,
-    disabled,
-    readOnly,
+    handleInputContentPaste,
+    id,
     isContainerEditable,
+    readOnly,
+    sectionsValueBoundaries,
+    state.sections,
     translations,
     utils,
-    sectionBoundaries,
-    id,
+    value,
   ]);
 
   const handleValueStrChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {

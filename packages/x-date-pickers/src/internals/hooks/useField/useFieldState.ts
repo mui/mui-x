@@ -499,16 +499,16 @@ export const useFieldState = <
 
   return {
     // States and derived values
-    state,
-    value,
     activeSectionIndex,
-    parsedSelectedSections,
-    sectionsValueBoundaries,
-    localizedDigits,
-    timezone,
-    sectionOrder,
     areAllSectionsEmpty,
     error,
+    localizedDigits,
+    parsedSelectedSections,
+    sectionOrder,
+    sectionsValueBoundaries,
+    state,
+    timezone,
+    value,
 
     // Methods to update the states
     clearValue,
@@ -556,16 +556,16 @@ export interface UpdateSectionValueParameters<TValue extends PickerValidValue> {
 
 export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
   // States and derived values
-  state: UseFieldState<TValue>;
-  value: TValue;
   activeSectionIndex: number | null;
-  parsedSelectedSections: FieldParsedSelectedSections;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  localizedDigits: string[];
-  timezone: PickersTimezone;
-  sectionOrder: SectionOrdering;
   areAllSectionsEmpty: boolean;
   error: boolean;
+  localizedDigits: string[];
+  parsedSelectedSections: FieldParsedSelectedSections;
+  sectionOrder: SectionOrdering;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries;
+  state: UseFieldState<TValue>;
+  timezone: PickersTimezone;
+  value: TValue;
 
   // Methods to update the states
   clearValue: () => void;

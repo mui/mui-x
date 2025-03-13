@@ -121,14 +121,14 @@ export const useFieldV6TextField = <
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
     // States and derived values
-    state,
-    value,
     activeSectionIndex,
-    parsedSelectedSections,
-    localizedDigits,
-    sectionOrder,
     areAllSectionsEmpty,
     error,
+    localizedDigits,
+    parsedSelectedSections,
+    sectionOrder,
+    state,
+    value,
 
     // Methods to update the states
     clearValue,

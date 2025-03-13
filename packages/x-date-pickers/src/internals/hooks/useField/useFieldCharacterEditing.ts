@@ -29,9 +29,9 @@ const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
 export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   stateResponse: {
     // States and derived values
-    state,
-    sectionsValueBoundaries,
     localizedDigits,
+    sectionsValueBoundaries,
+    state,
     timezone,
 
     // Methods to update the states
