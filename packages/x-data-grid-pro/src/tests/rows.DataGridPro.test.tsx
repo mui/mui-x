@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, act, fireEvent, waitFor, reactMajor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { vi } from 'vitest';
@@ -399,7 +399,9 @@ describe('<DataGridPro /> - Rows', () => {
           await vi.advanceTimersByTimeAsync(10);
         });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-        expect(vi.getTimerCount()).to.equal(1);
+        // React 18 seems to render twice
+        const timerCount = reactMajor < 19 ? 2 : 1;
+        expect(vi.getTimerCount()).to.equal(timerCount);
 
         await act(async () => {
           await vi.advanceTimersByTimeAsync(100);
