@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.10",
-    "@mui/utils": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/utils",
+    "@mui/utils": "7.0.0-beta.4",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@react-spring/rafz": "^9.7.5",
@@ -69,8 +69,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.3",
-    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/material",
-    "@mui/system": "https://pkg.csb.dev/mui/material-ui/commit/53bd2094/@mui/system",
+    "@mui/material": "7.0.0-beta.4",
+    "@mui/system": "7.0.0-beta.4",
     "@react-spring/core": "^9.7.5",
     "@react-spring/shared": "^9.7.5",
     "@types/prop-types": "^15.7.14",
