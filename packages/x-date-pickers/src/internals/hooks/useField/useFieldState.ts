@@ -49,7 +49,7 @@ export const useFieldState = <
   TValidationProps extends {},
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  params: UseFieldStateParameters<
+  parameters: UseFieldStateParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
     TError,
@@ -84,7 +84,7 @@ export const useFieldState = <
       enableAccessibleFieldDOMStructure = true,
     },
     forwardedProps: { error: errorProp },
-  } = params;
+  } = parameters;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'a field component',
@@ -495,24 +495,27 @@ export const useFieldState = <
   }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
+    // States and derived values
     state,
     value,
     activeSectionIndex,
     parsedSelectedSections,
-    setSelectedSections,
-    setCharacterQuery,
-    clearValue,
-    clearActiveSection,
-    updateSectionValue,
-    updateValueFromValueStr,
-    setTempAndroidValueStr,
-    getSectionsFromValue,
     sectionsValueBoundaries,
     localizedDigits,
     timezone,
     sectionOrder,
     areAllSectionsEmpty,
     error,
+
+    // Methods to update the states
+    clearValue,
+    clearActiveSection,
+    getSectionsFromValue,
+    setCharacterQuery,
+    setSelectedSections,
+    setTempAndroidValueStr,
+    updateSectionValue,
+    updateValueFromValueStr,
   };
 };
 
@@ -549,25 +552,28 @@ export interface UpdateSectionValueParameters<TValue extends PickerValidValue> {
 }
 
 export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
+  // States and derived values
   state: UseFieldState<TValue>;
   value: TValue;
   activeSectionIndex: number | null;
   parsedSelectedSections: FieldParsedSelectedSections;
-  setSelectedSections: (sections: FieldSelectedSections) => void;
-  clearValue: () => void;
-  clearActiveSection: () => void;
-  setCharacterQuery: (characterQuery: CharacterEditingQuery | null) => void;
-  updateSectionValue: (params: UpdateSectionValueParameters<TValue>) => void;
-  updateValueFromValueStr: (valueStr: string) => void;
-  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  getSectionsFromValue: (
-    value: TValue,
-    fallbackSections?: InferFieldSection<TValue>[] | null,
-  ) => InferFieldSection<TValue>[];
   localizedDigits: string[];
   timezone: PickersTimezone;
   sectionOrder: SectionOrdering;
   areAllSectionsEmpty: boolean;
   error: boolean;
+
+  // Methods to update the states
+  clearValue: () => void;
+  clearActiveSection: () => void;
+  getSectionsFromValue: (
+    value: TValue,
+    fallbackSections?: InferFieldSection<TValue>[] | null,
+  ) => InferFieldSection<TValue>[];
+  setCharacterQuery: (characterQuery: CharacterEditingQuery | null) => void;
+  setSelectedSections: (sections: FieldSelectedSections) => void;
+  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
+  updateSectionValue: (parameters: UpdateSectionValueParameters<TValue>) => void;
+  updateValueFromValueStr: (valueStr: string) => void;
 }

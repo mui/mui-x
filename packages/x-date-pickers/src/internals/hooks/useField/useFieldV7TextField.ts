@@ -81,19 +81,22 @@ export const useFieldV7TextField = <
 
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
+    // States and derived values
     state,
     value,
-    setSelectedSections,
     parsedSelectedSections,
-    clearActiveSection,
-    clearValue,
-    setCharacterQuery,
-    updateSectionValue,
-    updateValueFromValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
+    sectionOrder,
     areAllSectionsEmpty,
     error,
+
+    // Methods to update the states
+    clearValue,
+    clearActiveSection,
+    setCharacterQuery,
+    setSelectedSections,
+    updateSectionValue,
+    updateValueFromValueStr,
   } = stateResponse;
 
   const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });

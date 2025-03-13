@@ -13,27 +13,6 @@ import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 
-type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
-  /**
-   * Start index of the section in the format
-   */
-  start: number;
-  /**
-   * End index of the section in the format
-   */
-  end: number;
-  /**
-   * Start index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  startInInput: number;
-  /**
-   * End index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  endInInput: number;
-};
-
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
 export const addPositionPropertiesToSections = <TValue extends PickerValidValue>(
@@ -141,22 +120,25 @@ export const useFieldV6TextField = <
 
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
+    // States and derived values
     state,
     value,
-    parsedSelectedSections,
     activeSectionIndex,
+    parsedSelectedSections,
+    localizedDigits,
+    sectionOrder,
+    areAllSectionsEmpty,
+    error,
+
+    // Methods to update the states
+    clearValue,
+    clearActiveSection,
+    getSectionsFromValue,
+    setCharacterQuery,
+    setSelectedSections,
+    setTempAndroidValueStr,
     updateSectionValue,
     updateValueFromValueStr,
-    clearActiveSection,
-    clearValue,
-    setTempAndroidValueStr,
-    setSelectedSections,
-    getSectionsFromValue,
-    localizedDigits,
-    areAllSectionsEmpty,
-    setCharacterQuery,
-    sectionOrder,
-    error,
   } = stateResponse;
 
   const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });
@@ -569,3 +551,24 @@ export const useFieldV6TextField = <
 function isFieldFocused(inputRef: React.RefObject<HTMLInputElement | null>) {
   return inputRef.current === getActiveElement(document);
 }
+
+type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
+  /**
+   * Start index of the section in the format
+   */
+  start: number;
+  /**
+   * End index of the section in the format
+   */
+  end: number;
+  /**
+   * Start index of the section value in the input.
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
+   */
+  startInInput: number;
+  /**
+   * End index of the section value in the input.
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
+   */
+  endInInput: number;
+};

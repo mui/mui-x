@@ -28,13 +28,16 @@ const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
  */
 export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   stateResponse: {
+    // States and derived values
     state,
-    timezone,
-    updateSectionValue,
     sectionsValueBoundaries,
     localizedDigits,
-    setTempAndroidValueStr,
+    timezone,
+
+    // Methods to update the states
     setCharacterQuery,
+    setTempAndroidValueStr,
+    updateSectionValue,
   },
 }: UseFieldCharacterEditingParameters<TValue>): UseFieldCharacterEditingReturnValue => {
   const utils = useUtils();

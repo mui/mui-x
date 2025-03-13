@@ -25,18 +25,21 @@ export function useFieldHandleContainerKeyDown<TValue extends PickerValidValue>(
     manager: { internal_fieldValueManager: fieldValueManager },
     internalPropsWithDefaults: { minutesStep, disabled, readOnly },
     stateResponse: {
+      // States and derived values
       state,
       value,
-      timezone,
-      setSelectedSections,
-      parsedSelectedSections,
-      sectionOrder,
-      localizedDigits,
-      clearActiveSection,
-      clearValue,
-      updateSectionValue,
       activeSectionIndex,
+      parsedSelectedSections,
       sectionsValueBoundaries,
+      localizedDigits,
+      timezone,
+      sectionOrder,
+
+      // Methods to update the states
+      clearValue,
+      clearActiveSection,
+      setSelectedSections,
+      updateSectionValue,
     },
   } = parameters;
 

@@ -15,7 +15,7 @@ import {
   RangePosition,
   useField,
   UseFieldInternalProps,
-  UseFieldResponse,
+  UseFieldReturnValue,
   useNullableFieldPrivateContext,
   useNullablePickerContext,
   usePickerPrivateContext,
@@ -157,7 +157,7 @@ export function useTextFieldProps<
     forwardedProps: splittedProps.forwardedProps,
     internalProps: splittedProps.internalProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+  }) as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
