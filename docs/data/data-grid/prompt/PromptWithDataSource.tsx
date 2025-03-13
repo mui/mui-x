@@ -7,6 +7,10 @@ import {
   ColumnsPanelTrigger,
   FilterPanelTrigger,
   GridDataSource,
+  useGridApiContext,
+  GridGetRowsResponse,
+  useGridApiRef,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useMockServer } from '@mui/x-data-grid-generator';
 import Badge from '@mui/material/Badge';
@@ -14,6 +18,8 @@ import Tooltip from '@mui/material/Tooltip';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Box from '@mui/material/Box';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const VISIBLE_FIELDS = [
   'name',
@@ -27,7 +33,35 @@ const VISIBLE_FIELDS = [
   'isAdmin',
 ];
 
+const aggregationFunctions = {
+  sum: { columnTypes: ['number'] },
+  avg: { columnTypes: ['number'] },
+  min: { columnTypes: ['number', 'date', 'dateTime'] },
+  max: { columnTypes: ['number', 'date', 'dateTime'] },
+  size: {},
+};
+
 function ToolbarWithPromptInput() {
+  const apiRef = useGridApiContext();
+  const [prompt, setPrompt] = React.useState('');
+
+  const handleChange = React.useCallback(
+    async (event: SelectChangeEvent<string>) => {
+      const selectedPrompt = event.target.value;
+      setPrompt(selectedPrompt);
+      if (selectedPrompt) {
+        apiRef.current.setLoading(true);
+        const result = await mockPromptResolver(
+          apiRef.current.getPromptContext(),
+          selectedPrompt,
+        );
+        apiRef.current.applyPromptResult(result);
+        apiRef.current.setLoading(false);
+      }
+    },
+    [apiRef],
+  );
+
   return (
     <Toolbar
       render={
@@ -65,15 +99,48 @@ function ToolbarWithPromptInput() {
             )}
           />
         </Tooltip>
+        <div style={{ flex: 1 }} />
+        <Select
+          autoWidth
+          displayEmpty
+          size="small"
+          value={prompt}
+          onChange={handleChange}
+        >
+          <MenuItem value="">
+            <em>Choose a prompt</em>
+          </MenuItem>
+          <MenuItem value="sort by name">Sort by name</MenuItem>
+          <MenuItem value="sort by company name and employee name">
+            Sort by company name and employee name
+          </MenuItem>
+          <MenuItem value="show people from the EU">
+            Show people from the EU
+          </MenuItem>
+          <MenuItem value="order companies by amount of people">
+            Order companies by amount of people
+          </MenuItem>
+        </Select>
       </Box>
-      <GridToolbarPromptControl onPrompt={mockPromptResolver} allowDataSampling />
+      <GridToolbarPromptControl
+        onPrompt={mockPromptResolver}
+        allowDataSampling
+        onError={console.error}
+      />
     </Toolbar>
   );
 }
 
 export default function PromptWithDataSource() {
-  const { columns, initialState, fetchRows } = useMockServer(
-    { dataSet: 'Employee', visibleFields: VISIBLE_FIELDS, maxColumns: 16 },
+  const apiRef = useGridApiRef();
+  const { columns, initialState, fetchRows } = useMockServer<GridGetRowsResponse>(
+    {
+      dataSet: 'Employee',
+      visibleFields: VISIBLE_FIELDS,
+      maxColumns: 16,
+      rowGrouping: true,
+      rowLength: 10000,
+    },
     { useCursorPagination: false },
   );
 
@@ -84,6 +151,9 @@ export default function PromptWithDataSource() {
           paginationModel: JSON.stringify(params.paginationModel),
           filterModel: JSON.stringify(params.filterModel),
           sortModel: JSON.stringify(params.sortModel),
+          groupKeys: JSON.stringify(params.groupKeys),
+          groupFields: JSON.stringify(params.groupFields),
+          aggregationModel: JSON.stringify(params.aggregationModel),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -91,35 +161,43 @@ export default function PromptWithDataSource() {
         return {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
+          aggregateRow: getRowsResponse.aggregateRow,
         };
       },
+      getGroupKey: (row) => row.group,
+      getChildrenCount: (row) => row.descendantCount,
+      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
     }),
     [fetchRows],
   );
 
-  const initialStateWithPagination = React.useMemo(
-    () => ({
+  const initialStateUpdated = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
       ...initialState,
       pagination: {
         paginationModel: { pageSize: 10, page: 0 },
         rowCount: 0,
       },
-    }),
-    [initialState],
-  );
+    },
+  });
 
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
+        apiRef={apiRef}
         columns={columns}
         dataSource={dataSource}
+        dataSourceCache={null}
         pagination
-        initialState={initialStateWithPagination}
+        initialState={initialStateUpdated}
         pageSizeOptions={[10, 20, 50]}
         slots={{
           toolbar: ToolbarWithPromptInput,
         }}
         showToolbar
+        aggregationFunctions={aggregationFunctions}
+        onDataSourceError={console.error}
       />
     </div>
   );

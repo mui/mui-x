@@ -26,6 +26,10 @@ In a real-world scenario, you should replace this with your own API.
 - `show people from the EU`
 - `order companies by amount of people`
 
+ In supported browsers, the prompt can be entered using voice.
+ 
+ You can also use the dropdown in the custom toolbar to choose a prompt from the list of supported prompts for the demos.
+
   :::
 
 ## Custom examples
@@ -50,8 +54,8 @@ An example of combining prompt toolbar with the [Server-side data](/x/react-data
 
 ## Integration with MUI's API
 
-To integrate with MUI's API, an API key would be needed.
-As the key cannot be exposed to the client, a small proxy server could be used that would receive prompt processing requests, add the `x-api-key` header, and pass the request further to the MUI's API.
+To integrate with MUI's API, an API key is needed.
+To avoid exposing the API key to the client, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's API.
 
 This is an example of a Fastify proxy for the prompt requests
 
