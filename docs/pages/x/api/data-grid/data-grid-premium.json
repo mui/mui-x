@@ -1284,6 +1284,12 @@
       "description": "Icon displayed in the sidebar close button.",
       "default": "GridCloseIcon",
       "class": null
+    },
+    {
+      "name": "collapsibleIcon",
+      "description": "Icon displayed in the collapsible to indicate if it is open or closed.",
+      "default": "GridExpandMoreIcon",
+      "class": "MuiDataGridPremium-collapsibleIcon"
     }
   ],
   "classes": [
@@ -1459,6 +1465,24 @@
       "key": "checkboxInput",
       "className": "MuiDataGridPremium-checkboxInput",
       "description": "Styles applied to the selection checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsible",
+      "className": "MuiDataGridPremium-collapsible",
+      "description": "Styles applied to the collapsible element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsiblePanel",
+      "className": "MuiDataGridPremium-collapsiblePanel",
+      "description": "Styles applied to the collapsible panel element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleTrigger",
+      "className": "MuiDataGridPremium-collapsibleTrigger",
+      "description": "Styles applied to the collapsible trigger element.",
       "isGlobal": false
     },
     {

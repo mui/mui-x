@@ -76,4 +76,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridCloseIcon
    */
   sidebarCloseIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in the collapsible to indicate if it is open or closed.
+   * @default GridExpandMoreIcon
+   */
+  collapsibleIcon: React.JSXElementConstructor<any>;
 }

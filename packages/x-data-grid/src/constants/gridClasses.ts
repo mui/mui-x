@@ -127,6 +127,22 @@ export interface GridClasses {
    */
   columnHeader: string;
   /**
+   * Styles applied to the collapsible element.
+   */
+  collapsible: string;
+  /**
+   * Styles applied to the collapsible icon element.
+   */
+  collapsibleIcon: string;
+  /**
+   * Styles applied to the collapsible trigger element.
+   */
+  collapsibleTrigger: string;
+  /**
+   * Styles applied to the collapsible panel element.
+   */
+  collapsiblePanel: string;
+  /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
   'columnHeader--alignCenter': string;
@@ -786,6 +802,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cellSkeleton',
   'cellOffsetLeft',
   'checkboxInput',
+  'collapsible',
+  'collapsibleTrigger',
+  'collapsibleIcon',
+  'collapsiblePanel',
   'columnHeader',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',

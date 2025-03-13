@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { GridSlotProps } from '@mui/x-data-grid';
+import { GridSlotProps, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/system';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
-import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

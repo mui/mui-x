@@ -832,6 +832,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
+    "collapsible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible element"
+    },
+    "collapsiblePanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible panel element"
+    },
+    "collapsibleTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible trigger element"
+    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
@@ -1374,6 +1386,7 @@
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
+    "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",

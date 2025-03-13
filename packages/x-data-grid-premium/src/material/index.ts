@@ -20,6 +20,7 @@ import {
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
+  collapsibleIcon: GridExpandMoreIcon,
   columnMenuUngroupIcon: GridWorkspacesIcon,
   columnMenuGroupIcon: GridGroupWorkIcon,
   columnMenuAggregationIcon: GridFunctionsIcon,

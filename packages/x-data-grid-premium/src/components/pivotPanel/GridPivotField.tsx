@@ -8,7 +8,7 @@ import {
   GridSlotProps,
   GridSortDirection,
   NotRendered,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps, GridColumnSortButton, vars } from '@mui/x-data-grid/internals';
 import useId from '@mui/utils/useId';

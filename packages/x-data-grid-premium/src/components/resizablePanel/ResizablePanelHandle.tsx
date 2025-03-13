@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
-import { getDataGridUtilityClass, gridClasses, useGridRootProps } from '@mui/x-data-grid';
+import { vars } from '@mui/x-data-grid/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
 import { useResize } from '../../hooks/utils/useResize';
 import { useResizablePanelContext } from './ResizablePanelContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export type ResizablePanelHandleProps = React.HTMLAttributes<HTMLDivElement>;
 
 type OwnerState = { direction: 'horizontal' | 'vertical' } & Pick<
-  DataGridProcessedProps,
+  DataGridPremiumProcessedProps,
   'classes'
 >;
 

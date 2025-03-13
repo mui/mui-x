@@ -754,6 +754,22 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
+    "collapsible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible element"
+    },
+    "collapsibleIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible icon element"
+    },
+    "collapsiblePanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible panel element"
+    },
+    "collapsibleTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible trigger element"
+    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"

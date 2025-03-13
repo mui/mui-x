@@ -1280,6 +1280,30 @@
       "isGlobal": false
     },
     {
+      "key": "collapsible",
+      "className": "MuiDataGridPro-collapsible",
+      "description": "Styles applied to the collapsible element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleIcon",
+      "className": "MuiDataGridPro-collapsibleIcon",
+      "description": "Styles applied to the collapsible icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsiblePanel",
+      "className": "MuiDataGridPro-collapsiblePanel",
+      "description": "Styles applied to the collapsible panel element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleTrigger",
+      "className": "MuiDataGridPro-collapsibleTrigger",
+      "description": "Styles applied to the collapsible trigger element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader",
       "className": "MuiDataGridPro-columnHeader",
       "description": "Styles applied to the column header element.",
