@@ -37,7 +37,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
   React.useLayoutEffect(() => {
     // TODO: What if we set skipAnimation to true in the middle of the animation?
     if (path === null || props.skipAnimation) {
-      return;
+      return undefined;
     }
 
     const lastD = lastDRef.current;
@@ -55,7 +55,6 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
         return interpolatedD;
       });
 
-    // eslint-disable-next-line consistent-return
     return () => interrupt(path);
   }, [path, props.d, props.skipAnimation]);
 
