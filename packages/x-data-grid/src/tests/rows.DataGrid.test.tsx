@@ -1087,27 +1087,27 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should allow to update one row at the time', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
     it('should allow adding rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
-      act(() => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('should allow to delete rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
-      act(() => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
+      await act(() => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
@@ -1154,7 +1154,7 @@ describe('<DataGrid /> - Rows', () => {
       await user.click(cell);
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      await act(() => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
+      await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
 
       const focusedRow = getRow(0);
       expect(focusedRow.getAttribute('data-id')).to.equal('0');
@@ -1162,7 +1162,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
 
       const lastRow = 9;
-      await waitFor(() => {
+      await waitFor(async () => {
         expect(getRow(lastRow).getAttribute('data-id')).to.equal('9');
       });
       expect(getRow(lastRow).getAttribute('data-rowindex')).to.equal('9');
