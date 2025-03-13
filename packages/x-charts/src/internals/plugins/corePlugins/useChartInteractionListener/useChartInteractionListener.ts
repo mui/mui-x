@@ -10,6 +10,8 @@ import {
 
 type ListenerRef = Map<ChartInteraction, Set<Handler<any>>>;
 
+const preventDefault = (event: Event) => event.preventDefault();
+
 // TODO: use import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react'
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   svgRef,
@@ -50,6 +52,13 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           buttons: 1,
         },
       },
+      pinch: {
+        scaleBounds: {
+          min: 0.1,
+          max: 2,
+        },
+        rubberband: true,
+      },
     },
   );
 
@@ -74,9 +83,18 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
   React.useEffect(() => {
     const ref = listenersRef.current;
+    const svg = svgRef.current;
+
+    // Disable gesture on safari
+    svg?.addEventListener('gesturestart', preventDefault);
+    svg?.addEventListener('gesturechange', preventDefault);
+    svg?.addEventListener('gestureend', preventDefault);
 
     return () => {
       ref.clear();
+      svg?.removeEventListener('gesturestart', preventDefault);
+      svg?.removeEventListener('gesturechange', preventDefault);
+      svg?.removeEventListener('gestureend', preventDefault);
     };
   }, [svgRef]);
 

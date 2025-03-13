@@ -13,16 +13,8 @@ import {
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
-import {
-  getDiff,
-  getHorizontalCenterRatio,
-  getPinchScaleRatio,
-  getVerticalCenterRatio,
-  isSpanValid,
-  preventDefault,
-  zoomAtPoint,
-} from './useChartProZoom.utils';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
+import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
@@ -43,7 +35,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const pluginData = { store, instance, svgRef };
 
   // Manage controlled state
 
@@ -125,8 +117,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   // Add events
   const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const eventPrevDiff = React.useRef<number>(0);
   const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
   // Add event for chart panning
@@ -252,133 +242,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   ]);
 
   useZoomOnWheel(
-    {
-      store,
-      instance,
-      svgRef,
-    },
+    pluginData,
     interactionTimeoutRef,
     isDraggingRef,
     setIsInteracting,
     setZoomDataCallback,
   );
 
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
-      return () => {};
-    }
-
-    function pointerDownHandler(event: PointerEvent) {
-      zoomEventCacheRef.current.push(event);
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      setIsInteracting(true);
-    }
-
-    function pointerMoveHandler(event: PointerEvent) {
-      if (element === null) {
-        return;
-      }
-
-      const index = zoomEventCacheRef.current.findIndex(
-        (cachedEv) => cachedEv.pointerId === event.pointerId,
-      );
-      zoomEventCacheRef.current[index] = event;
-
-      // Not a pinch gesture
-      if (zoomEventCacheRef.current.length !== 2) {
-        return;
-      }
-
-      const firstEvent = zoomEventCacheRef.current[0];
-      const curDiff = getDiff(zoomEventCacheRef.current);
-
-      setZoomDataCallback((prevZoomData) => {
-        const newZoomData = prevZoomData.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-
-          const { scaleRatio, isZoomIn } = getPinchScaleRatio(
-            curDiff,
-            eventPrevDiff.current,
-            option.step,
-          );
-
-          // If the scale ratio is 0, it means the pinch gesture is not valid.
-          if (scaleRatio === 0) {
-            return zoom;
-          }
-
-          const point = getSVGPoint(element, firstEvent);
-
-          const centerRatio =
-            option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
-
-          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
-          }
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-        });
-        eventPrevDiff.current = curDiff;
-        return newZoomData;
-      });
-    }
-
-    function pointerUpHandler(event: PointerEvent) {
-      zoomEventCacheRef.current.splice(
-        zoomEventCacheRef.current.findIndex(
-          (cachedEvent) => cachedEvent.pointerId === event.pointerId,
-        ),
-        1,
-      );
-
-      if (zoomEventCacheRef.current.length < 2) {
-        eventPrevDiff.current = 0;
-      }
-
-      if (event.type === 'pointerup' || event.type === 'pointercancel') {
-        setIsInteracting(false);
-      }
-    }
-
-    element.addEventListener('pointerdown', pointerDownHandler);
-    element.addEventListener('pointermove', pointerMoveHandler);
-    element.addEventListener('pointerup', pointerUpHandler);
-    element.addEventListener('pointercancel', pointerUpHandler);
-    element.addEventListener('pointerout', pointerUpHandler);
-    element.addEventListener('pointerleave', pointerUpHandler);
-
-    // Prevent zooming the entire page on touch devices
-    element.addEventListener('touchstart', preventDefault);
-    element.addEventListener('touchmove', preventDefault);
-
-    return () => {
-      element.removeEventListener('pointerdown', pointerDownHandler);
-      element.removeEventListener('pointermove', pointerMoveHandler);
-      element.removeEventListener('pointerup', pointerUpHandler);
-      element.removeEventListener('pointercancel', pointerUpHandler);
-      element.removeEventListener('pointerout', pointerUpHandler);
-      element.removeEventListener('pointerleave', pointerUpHandler);
-      element.removeEventListener('touchstart', preventDefault);
-      element.removeEventListener('touchmove', preventDefault);
-    };
-  }, [
-    svgRef,
-    drawingArea,
-    isZoomEnabled,
-    optionsLookup,
-    setIsInteracting,
-    instance,
-    setZoomDataCallback,
-  ]);
+  useZoomOnPinch(pluginData, interactionTimeoutRef, setIsInteracting, setZoomDataCallback);
 
   return {
     publicAPI: {

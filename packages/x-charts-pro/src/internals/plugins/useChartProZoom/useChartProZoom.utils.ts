@@ -103,35 +103,6 @@ export function getWheelScaleRatio(event: WheelEvent, step: number) {
 }
 
 /**
- * Get the scale ratio and if it's a zoom in or out from a pinch gesture.
- */
-export function getPinchScaleRatio(curDiff: number, prevDiff: number, step: number) {
-  const scaledStep = step / 1000;
-  let scaleRatio: number = 0;
-  let isZoomIn: boolean = false;
-
-  const hasMoved = prevDiff > 0;
-
-  if (hasMoved && curDiff > prevDiff) {
-    // The distance between the two pointers has increased
-    scaleRatio = 1 + scaledStep;
-    isZoomIn = true;
-  }
-  if (hasMoved && curDiff < prevDiff) {
-    // The distance between the two pointers has decreased
-    scaleRatio = 1 - scaledStep;
-    isZoomIn = false;
-  }
-
-  return { scaleRatio, isZoomIn };
-}
-
-export function getDiff(eventCache: PointerEvent[]) {
-  const [firstEvent, secondEvent] = eventCache;
-  return Math.hypot(firstEvent.pageX - secondEvent.pageX, firstEvent.pageY - secondEvent.pageY);
-}
-
-/**
  * Get the ratio of the point in the horizontal center of the area.
  */
 export function getHorizontalCenterRatio(
@@ -140,10 +111,6 @@ export function getHorizontalCenterRatio(
 ) {
   const { left, width } = area;
   return (point.x - left) / width;
-}
-
-export function preventDefault(event: TouchEvent) {
-  event.preventDefault();
 }
 
 export function getVerticalCenterRatio(
