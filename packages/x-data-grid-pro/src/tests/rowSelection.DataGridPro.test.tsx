@@ -3,14 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { getCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
-import {
-  createRenderer,
-  screen,
-  act,
-  reactMajor,
-  fireEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
