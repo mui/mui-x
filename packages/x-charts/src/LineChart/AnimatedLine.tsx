@@ -5,6 +5,7 @@ import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { select } from '@mui/x-charts-vendor/d3-selection';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { useRef } from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
 
@@ -22,40 +23,33 @@ const DURATION = 200;
 function useLineAnimatedProps(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
   const lastValues = React.useRef({ d: props.d });
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
-  const lastPath = useRef<SVGPathElement>(null);
+  const [path, setPath] = React.useState<SVGPathElement | null>(null);
 
-  // TODO: What if we set skipAnimation to true in the middle of the animation?
-  const animate: React.RefCallback<SVGPathElement> = React.useCallback(
-    (path) => {
-      if (path === null || props.skipAnimation) {
-        const lastPathElement = lastPath.current;
+  React.useLayoutEffect(() => {
+    // TODO: What if we set skipAnimation to true in the middle of the animation?
+    if (path === null || props.skipAnimation) {
+      return;
+    }
 
-        if (lastPathElement) {
-          interrupt(lastPathElement);
-        }
+    const lastD = lastValues.current.d;
+    const stringInterpolator = interpolateString(lastD, props.d);
 
-        return;
-      }
+    transitionRef.current = select(path)
+      .transition()
+      .duration(DURATION)
+      .attrTween('d', () => (t) => {
+        const interpolatedD = stringInterpolator(t);
 
-      lastPath.current = path;
-      const lastD = lastValues.current.d;
-      const stringInterpolator = interpolateString(lastD, props.d);
+        lastValues.current = { d: interpolatedD };
 
-      transitionRef.current = select(path)
-        .transition()
-        .duration(DURATION)
-        .attrTween('d', () => (t) => {
-          const interpolatedD = stringInterpolator(t);
+        return interpolatedD;
+      });
 
-          lastValues.current = { d: interpolatedD };
+    // eslint-disable-next-line consistent-return
+    return () => interrupt(path);
+  }, [path, props.d, props.skipAnimation]);
 
-          return interpolatedD;
-        });
-    },
-    [props.d, props.skipAnimation],
-  );
-
-  return animate;
+  return setPath;
 }
 
 /**
@@ -73,18 +67,12 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
     const { d, skipAnimation, ownerState, ...other } = props;
 
     const animateRef = useLineAnimatedProps(props);
+    const forkRef = useForkRef(ref, animateRef);
 
     return (
       <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
         <path
-          ref={(newRef) => {
-            if (typeof ref === 'function') {
-              ref?.(newRef);
-            }
-
-            animateRef(newRef);
-          }}
-          d={d}
+          ref={forkRef}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
