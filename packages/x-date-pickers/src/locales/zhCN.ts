@@ -39,6 +39,7 @@ const zhCNPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: '选择日期和时间',
   timePickerToolbarTitle: '选择时间',
   dateRangePickerToolbarTitle: '选择时间范围',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -56,11 +57,12 @@ const zhCNPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}周`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `选择日期，已选择${formattedDate}` : '选择日期',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `选择时间，已选择${formattedTime}` : '选择时间',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '清除',
 
   // Table labels

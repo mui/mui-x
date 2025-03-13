@@ -4,7 +4,7 @@ import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ALL_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartContainerPropsReturnValue<
@@ -81,7 +81,7 @@ export const useChartContainerProps = <
     width,
     height,
     seriesConfig,
-    plugins: plugins ?? ALL_PLUGINS,
+    plugins: plugins ?? DEFAULT_PLUGINS,
   } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {

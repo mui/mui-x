@@ -7,9 +7,10 @@ import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverla
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 
 export interface RadarChartSlots {}
@@ -18,7 +19,13 @@ export interface RadarChartSlotProps {}
 export interface RadarChartProps
   extends RadarDataProviderProps,
     RadarGridProps,
+    Partial<RadarAxisHighlightProps>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight?: 'axis' | 'series' | 'none';
   /**
    * If `true`, the legend is not rendered.
    */
@@ -45,8 +52,10 @@ const RadarChart = React.forwardRef(function RadarChart(
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
+    radarAxisHighlight,
     overlayProps,
     legendProps,
+    highlight,
     children,
   } = useRadarChartProps(props);
 
@@ -58,6 +67,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesPlot />
+          {highlight === 'axis' && <RadarAxisHighlight {...radarAxisHighlight} />}
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -74,7 +84,18 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
+  /**
+   * Switch between different axis highlight visualization.
+   * - points: display points on each highlighted value. Recommended for radar with multiple series.
+   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
+   * The default value is computed depending on the number of series provided.
+   */
+  axisHighlightShape: PropTypes.oneOf(['points', 'slice']),
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -82,6 +103,12 @@ RadarChart.propTypes = {
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
   /**
    * The number of divisions in the radar grid.
    * @default 5
@@ -95,6 +122,11 @@ RadarChart.propTypes = {
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight: PropTypes.oneOf(['axis', 'none', 'series']),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -158,6 +190,11 @@ RadarChart.propTypes = {
    * An array of [[RadarSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

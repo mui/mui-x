@@ -10,7 +10,7 @@ import { useNullablePickerContext } from '../internals/hooks/useNullablePickerCo
 interface UseParsedFormatParameters {
   /**
    * Format to parse.
-   * @default the format provided by the picker.
+   * @default the format provided by the Picker.
    */
   format?: string;
 }

@@ -104,7 +104,7 @@ function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
 
   return (
     <PieArcRoot
@@ -131,7 +131,7 @@ function PieArc(props: PieArcProps) {
       strokeWidth={1}
       strokeLinejoin="round"
       {...other}
-      {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

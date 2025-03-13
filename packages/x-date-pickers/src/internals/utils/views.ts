@@ -1,8 +1,7 @@
-import { DateOrTimeView } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
 
-export const areViewsEqual = <TView extends DateOrTimeView>(
-  views: ReadonlyArray<DateOrTimeView>,
+export const areViewsEqual = <TView extends DateOrTimeViewWithMeridiem>(
+  views: ReadonlyArray<DateOrTimeViewWithMeridiem>,
   expectedViews: TView[],
 ): views is ReadonlyArray<TView> => {
   if (views.length !== expectedViews.length) {

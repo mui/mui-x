@@ -91,7 +91,7 @@
       "typeDescriptions": { "newValue": "The new selected sections." }
     },
     "openPickerButtonPosition": {
-      "description": "The position at which the opening button is placed. If there is no picker to open, the button is not rendered"
+      "description": "The position at which the opening button is placed. If there is no Picker to open, the button is not rendered"
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
