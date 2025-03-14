@@ -42,12 +42,10 @@ export const usePanOnDrag = (
     }
 
     const removeOnDrag = instance.addInteractionListener('drag', (state) => {
-      if (element === null) {
-        return;
+      if (state.pinching || element === null || touchStartRef.current === null) {
+        return state.cancel();
       }
-      if (touchStartRef.current == null) {
-        return;
-      }
+
       const point = getSVGPoint(element, state.event);
       const movementX = point.x - touchStartRef.current.x;
       const movementY = (point.y - touchStartRef.current.y) * -1;
@@ -88,12 +86,14 @@ export const usePanOnDrag = (
         };
       });
       setZoomDataCallback(newZoomData);
+      return undefined;
     });
 
     const removeOnDragStart = instance.addInteractionListener('dragStart', (state) => {
       const point = getSVGPoint(element, state.event);
-      if (!instance.isPointInside(point)) {
-        return;
+
+      if (state.pinching || !instance.isPointInside(point)) {
+        return state.cancel();
       }
 
       if (interactionTimeoutRef.current) {
@@ -105,10 +105,17 @@ export const usePanOnDrag = (
         y: point.y,
         zoomData: store.getSnapshot().zoom.zoomData,
       };
+
+      return undefined;
     });
 
-    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
+    const removeOnDragEnd = instance.addInteractionListener('dragEnd', (state) => {
+      if (state.pinching) {
+        return state.cancel();
+      }
+
       setIsInteracting(false);
+      return undefined;
     });
 
     return () => {
