@@ -34,6 +34,13 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const radius = getRadius(t);
 
+  const fontBody = t.vars
+    ? (t.vars as any)?.font.body2
+    : `${t.typography.body2.fontWeight} ${t.typography.body2.fontSize} / ${t.typography.body2.lineHeight} ${t.typography.body2.fontFamily}`;
+  const fontSmall = t.vars
+    ? (t.vars as any)?.font.caption
+    : `${t.typography.caption.fontWeight} ${t.typography.caption.fontSize} / ${t.typography.caption.lineHeight} ${t.typography.caption.fontFamily}`;
+
   const k = vars.keys;
 
   return {
@@ -67,8 +74,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.fontWeight.regular]: t.typography.fontWeightRegular as string,
     [k.typography.fontWeight.medium]: t.typography.fontWeightMedium as string,
     [k.typography.fontWeight.bold]: t.typography.fontWeightBold as string,
-    [k.typography.font.body]: (t.vars as any).font.body2,
-    [k.typography.font.small]: (t.vars as any).font.caption,
+    [k.typography.font.body]: fontBody,
+    [k.typography.font.small]: fontSmall,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
