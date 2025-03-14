@@ -4,6 +4,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 import { HighlightItemData } from '@mui/x-charts/context';
+import Box from '@mui/material/Box';
 
 function valueFormatter(v: number | null) {
   if (v === null) {
@@ -25,7 +26,7 @@ export default function DemoRadarSeriesHighlight() {
     }
   };
   return (
-    <Stack spacing={2} alignItems={'center'}>
+    <Stack sx={{ width: '100%' }} spacing={2} alignItems={'center'}>
       <ToggleButtonGroup
         value={highlightedItem?.seriesId ?? null}
         exclusive
@@ -44,14 +45,16 @@ export default function DemoRadarSeriesHighlight() {
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
-      <RadarChart
-        height={300}
-        highlight="series"
-        highlightedItem={highlightedItem}
-        onHighlightChange={setHighlightedItem}
-        series={series}
-        radar={radar}
-      />
+      <Box sx={{ width: '100%' }}>
+        <RadarChart
+          height={300}
+          highlight="series"
+          highlightedItem={highlightedItem}
+          onHighlightChange={setHighlightedItem}
+          series={series}
+          radar={radar}
+        />
+      </Box>
     </Stack>
   );
 }
