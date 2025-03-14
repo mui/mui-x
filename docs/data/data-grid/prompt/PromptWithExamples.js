@@ -33,16 +33,15 @@ function ToolbarWithPromptInput() {
   const apiRef = useGridApiContext();
   const [prompt, setPrompt] = React.useState('');
 
+  const context = React.useMemo(() => apiRef.current.getPromptContext(), [apiRef]);
+
   const handleChange = React.useCallback(
     async (event) => {
       const selectedPrompt = event.target.value;
       setPrompt(selectedPrompt);
       if (selectedPrompt) {
         apiRef.current.setLoading(true);
-        const result = await mockPromptResolver(
-          apiRef.current.getPromptContext(),
-          selectedPrompt,
-        );
+        const result = await mockPromptResolver(context, selectedPrompt);
         apiRef.current.applyPromptResult(result);
         apiRef.current.setLoading(false);
       }
