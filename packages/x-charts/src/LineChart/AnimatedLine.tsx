@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useTransition } from '@react-spring/web';
-import type { LineElementOwnerState } from './LineElement';
-import { useStringInterpolator } from '../internals/useStringInterpolator';
+import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
+import { select } from '@mui/x-charts-vendor/d3-selection';
+import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
+import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
+import useForkRef from '@mui/utils/useForkRef';
 import { AppearingMask } from './AppearingMask';
+import type { LineElementOwnerState } from './LineElement';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: LineElementOwnerState;
@@ -14,6 +17,47 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
    * @default false
    */
   skipAnimation?: boolean;
+}
+
+const DURATION = 200;
+function useAnimatePath(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
+  const lastDRef = React.useRef(props.d);
+  const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
+  const [path, setPath] = React.useState<SVGPathElement | null>(null);
+  React.useLayoutEffect(() => {
+    /* If we're not skipping animation, we need to set the attribute to override React's changes.
+     * Still need to figure out if this is better than asking the user not to pass the `d` prop to the component.
+     * The problem with that is that SSR might not look good. */
+    if (!props.skipAnimation) {
+      path?.setAttribute('d', lastDRef.current);
+    }
+  }, [path, props.skipAnimation]);
+
+  React.useLayoutEffect(() => {
+    // TODO: What if we set skipAnimation to true in the middle of the animation?
+    if (path === null || props.skipAnimation) {
+      return undefined;
+    }
+
+    const lastD = lastDRef.current;
+    const stringInterpolator = interpolateString(lastD, props.d);
+
+    transitionRef.current = select(path)
+      .transition()
+      .duration(DURATION)
+      .ease(easeLinear)
+      .attrTween('d', () => (t) => {
+        const interpolatedD = stringInterpolator(t);
+
+        lastDRef.current = interpolatedD;
+
+        return interpolatedD;
+      });
+
+    return () => interrupt(path);
+  }, [path, props.d, props.skipAnimation]);
+
+  return setPath;
 }
 
 /**
@@ -26,25 +70,18 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  *
  * - [AnimatedLine API](https://mui.com/x/api/charts/animated-line/)
  */
-function AnimatedLine(props: AnimatedLineProps) {
-  const { d, skipAnimation, ownerState, ...other } = props;
+const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
+  function AnimatedLine(props, ref) {
+    const { d, skipAnimation, ownerState, ...other } = props;
 
-  const stringInterpolator = useStringInterpolator(d);
+    const animateRef = useAnimatePath(props);
+    const forkRef = useForkRef(ref, animateRef);
 
-  const transitionChange = useTransition([stringInterpolator], {
-    from: skipAnimation ? undefined : { value: 0 },
-    to: { value: 1 },
-    enter: { value: 1 },
-    reset: false,
-    immediate: skipAnimation,
-  });
-
-  return (
-    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
-      {transitionChange((style, interpolator) => (
-        <animated.path
-          // @ts-expect-error
-          d={style.value.to(interpolator)}
+    return (
+      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+        <path
+          ref={forkRef}
+          d={d}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
@@ -53,10 +90,10 @@ function AnimatedLine(props: AnimatedLineProps) {
           opacity={ownerState.isFaded ? 0.3 : 1}
           {...other}
         />
-      ))}
-    </AppearingMask>
-  );
-}
+      </AppearingMask>
+    );
+  },
+);
 
 AnimatedLine.propTypes = {
   // ----------------------------- Warning --------------------------------
