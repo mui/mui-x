@@ -200,7 +200,13 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.24"
+    "@types/node": "^20.17.24",
+    "@mui/lab>@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/lab>@mui/system": "^7.0.0 || ^7.0.0-beta",
+    "@mui/base>@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/private-theming>@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/system>@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/joy>@mui/utils": "^7.0.0 || ^7.0.0-beta"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
@@ -209,7 +215,14 @@
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
+      "jss-plugin-rule-value-function": "patches/jss-plugin-rule-value-function.patch",
+      "jss-plugin-global": "patches/jss-plugin-global.patch",
+      "jss-plugin-nested": "patches/jss-plugin-nested.patch",
+      "jss-plugin-camel-case": "patches/jss-plugin-camel-case.patch",
+      "jss-plugin-default-unit": "patches/jss-plugin-default-unit.patch",
+      "jss-plugin-vendor-prefixer": "patches/jss-plugin-vendor-prefixer.patch",
+      "jss-plugin-props-sort": "patches/jss-plugin-props-sort.patch"
     }
   }
 }
