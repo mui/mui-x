@@ -187,9 +187,8 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
-  skipAnimation: PropTypes.bool,
+  skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
