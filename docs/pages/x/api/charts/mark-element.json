@@ -8,7 +8,7 @@
       },
       "required": true
     },
-    "skipAnimation": { "type": { "name": "bool" }, "required": true }
+    "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
   "imports": [

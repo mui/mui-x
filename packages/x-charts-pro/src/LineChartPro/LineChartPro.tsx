@@ -112,7 +112,7 @@ MarkPlotZoom.propTypes = {
   /**
    * If `true`, animations are skipped.
    */
-  skipAnimation: PropTypes.bool.isRequired,
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
