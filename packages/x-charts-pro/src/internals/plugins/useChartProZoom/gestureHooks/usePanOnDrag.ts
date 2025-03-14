@@ -29,8 +29,6 @@ export const usePanOnDrag = (
     [optionsLookup],
   );
 
-  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const isDraggingRef = React.useRef(false);
   const touchStartRef = React.useRef<{
     x: number;
     y: number;
@@ -42,8 +40,9 @@ export const usePanOnDrag = (
     if (element === null || !isPanEnabled) {
       return () => {};
     }
+
     const removeOnDrag = instance.addInteractionListener('drag', (state) => {
-      if (element === null || !isDraggingRef.current || panningEventCacheRef.current.length > 1) {
+      if (element === null) {
         return;
       }
       if (touchStartRef.current == null) {
@@ -92,16 +91,11 @@ export const usePanOnDrag = (
     });
 
     const removeOnDragStart = instance.addInteractionListener('dragStart', (state) => {
-      panningEventCacheRef.current.push(state.event);
       const point = getSVGPoint(element, state.event);
       if (!instance.isPointInside(point)) {
         return;
       }
-      // If there is only one pointer, prevent selecting text
-      if (panningEventCacheRef.current.length === 1) {
-        state.event.preventDefault();
-      }
-      isDraggingRef.current = true;
+
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
@@ -113,16 +107,8 @@ export const usePanOnDrag = (
       };
     });
 
-    const removeOnDragEnd = instance.addInteractionListener('dragEnd', (state) => {
-      panningEventCacheRef.current.splice(
-        panningEventCacheRef.current.findIndex(
-          (cachedEvent) => cachedEvent.pointerId === state.event.pointerId,
-        ),
-        1,
-      );
+    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
       setIsInteracting(false);
-      isDraggingRef.current = false;
-      touchStartRef.current = null;
     });
 
     return () => {
@@ -133,7 +119,6 @@ export const usePanOnDrag = (
   }, [
     instance,
     svgRef,
-    isDraggingRef,
     setIsInteracting,
     isPanEnabled,
     optionsLookup,
