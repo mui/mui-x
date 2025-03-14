@@ -54,7 +54,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
       ?.scrollWidth ?? 1;
   const title =
     apiRef.current.getLocaleText('columnMenuLabel') +
-    (titleWidth && titleWidth < neededWidth / 2 ? ` (${columnName})` : '');
+    (titleWidth !== undefined && titleWidth < neededWidth / 2 ? ` (${columnName})` : '');
 
   return (
     <div className={classes.root} ref={divRef}>
