@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { animated, useSpringValue } from '@react-spring/web';
+import { styled, useTheme } from '@mui/material/styles';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
 import {
   UseChartCartesianAxisSignature,
@@ -25,6 +24,12 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      */
     dataIndex: number;
   };
+
+const Circle = styled('circle')({
+  [`&.${markElementClasses.animate}`]: {
+    transition: 'cx 0.2s ease-in, cy 0.2s ease-in',
+  },
+});
 
 /**
  * The line mark element that only render circle for performance improvement.
@@ -60,29 +65,21 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const cx = useSpringValue(x, { immediate: skipAnimation });
-  const cy = useSpringValue(y, { immediate: skipAnimation });
-
-  React.useEffect(() => {
-    cy.start(y, { immediate: skipAnimation });
-    cx.start(x, { immediate: skipAnimation });
-  }, [cy, y, cx, x, skipAnimation]);
-
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <animated.circle
+    <Circle
       {...other}
-      // @ts-expect-error
-      cx={cx}
-      cy={cy}
+      cx={x}
+      cy={y}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
