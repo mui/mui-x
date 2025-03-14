@@ -5,16 +5,14 @@ import {
   NotRendered,
   useGridSelector,
   getDataGridUtilityClass,
+  gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import {
-  gridPivotEnabledSelector,
-  gridPivotModelSelector,
-} from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotPanelSearch } from './GridPivotPanelSearch';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
@@ -70,9 +68,8 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const rootProps = useGridRootProps();
   const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
   const classes = useUtilityClasses(rootProps);
-  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
-  const isEmptyPivot =
-    !pivotModel.columns.length && !pivotModel.rows.length && !pivotModel.values.length;
+  const rows = useGridSelector(apiRef, gridRowCountSelector);
+  const isEmptyPivot = pivotEnabled && rows === 0;
 
   return (
     <SidebarHeader>
