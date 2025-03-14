@@ -10,31 +10,31 @@ overrides:
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
-    hash: 7wlacyoi44skuhtzjdjwgtjyxe
+    hash: 779d8690d607924781aaf4f896bfbd209a78755ddd5b9ebbea5ebce3b2919ba0
     path: patches/babel-plugin-replace-imports@1.0.2.patch
   jss-plugin-camel-case:
-    hash: dn4dx2pmglu4fhpk7sxflof4k4
+    hash: 5169bb1d0f5426b82168adbda88b04842fea846d331d04cc8494fb516e2ae62a
     path: patches/jss-plugin-camel-case.patch
   jss-plugin-default-unit:
-    hash: wicmfeqmrpmgyhbozxevveu57q
+    hash: e3b68f921c0c90bfa04d6f8f1416360de94ec572b6d156602eed09b13eeefeff
     path: patches/jss-plugin-default-unit.patch
   jss-plugin-global:
-    hash: 4octzbopz7dgjcnaiirlssjdzu
+    hash: 1b64f353090664f0303bb039d86e1e14b798f39e6cf5c446314c569764fe9449
     path: patches/jss-plugin-global.patch
   jss-plugin-nested:
-    hash: oazaed55cw2lbjn6hce4fbx6bi
+    hash: c6ffa2f33a974c5efeefcc3c4b946aa034a43333b3b2d2a2af00cadd010a1b4e
     path: patches/jss-plugin-nested.patch
   jss-plugin-props-sort:
-    hash: dgjawuqfydnv7rfvawnm7oee7y
+    hash: 49c50f079d94ca0c3638a29bd628b453b0f1cded62e86d4eb12297b0041abc8d
     path: patches/jss-plugin-props-sort.patch
   jss-plugin-rule-value-function:
-    hash: d564szbdio4gccutjp2ztbpx2i
+    hash: 1636167a1901cf849a2f64b76c478ece9db3be05d213241cbe99f23718b4b6ea
     path: patches/jss-plugin-rule-value-function.patch
   jss-plugin-vendor-prefixer:
-    hash: 6amkmkeyoomuaio2l75visek7m
+    hash: 1eee2964ab6991107d92b04af98d0045acaae0b8222231906a9eed61f5045915
     path: patches/jss-plugin-vendor-prefixer.patch
   karma-mocha@2.0.1:
-    hash: r6idlcdpax26bbzwxyjicxb5ra
+    hash: 36adf1bb2aef29d1947f8f19edc79e671a4a2b188fbc6cbf2d8b28b680648420
     path: patches/karma-mocha@2.0.1.patch
 
 importers:
@@ -208,7 +208,7 @@ importers:
         version: 0.3.0
       babel-plugin-replace-imports:
         specifier: ^1.0.2
-        version: 1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe)
+        version: 1.0.2(patch_hash=779d8690d607924781aaf4f896bfbd209a78755ddd5b9ebbea5ebce3b2919ba0)
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
@@ -331,7 +331,7 @@ importers:
         version: 3.2.0
       karma-mocha:
         specifier: ^2.0.1
-        version: 2.0.1(patch_hash=r6idlcdpax26bbzwxyjicxb5ra)
+        version: 2.0.1(patch_hash=36adf1bb2aef29d1947f8f19edc79e671a4a2b188fbc6cbf2d8b28b680648420)
       karma-parallel:
         specifier: ^0.3.1
         version: 0.3.1(karma@6.4.4)
@@ -451,7 +451,7 @@ importers:
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/docs':
         specifier: 7.0.0-beta.4
-        version: 7.0.0-beta.4(cdo452shxpyo5s63zsurm2xua4)
+        version: 7.0.0-beta.4(7554dba240192789bc0cff7b502fd71d)
       '@mui/icons-material':
         specifier: 7.0.0-beta.4
         version: 7.0.0-beta.4(@mui/material@7.0.0-beta.4(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
@@ -12145,7 +12145,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@7.0.0-beta.4': {}
 
-  '@mui/docs@7.0.0-beta.4(cdo452shxpyo5s63zsurm2xua4)':
+  '@mui/docs@7.0.0-beta.4(7554dba240192789bc0cff7b502fd71d)':
     dependencies:
       '@babel/runtime': 7.26.10
       '@mui/base': 7.0.0-beta.4(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -12373,13 +12373,13 @@ snapshots:
       csstype: 3.1.3
       hoist-non-react-statics: 3.3.2
       jss: 10.10.0
-      jss-plugin-camel-case: 10.10.0(patch_hash=dn4dx2pmglu4fhpk7sxflof4k4)
-      jss-plugin-default-unit: 10.10.0(patch_hash=wicmfeqmrpmgyhbozxevveu57q)
-      jss-plugin-global: 10.10.0(patch_hash=4octzbopz7dgjcnaiirlssjdzu)
-      jss-plugin-nested: 10.10.0(patch_hash=oazaed55cw2lbjn6hce4fbx6bi)
-      jss-plugin-props-sort: 10.10.0(patch_hash=dgjawuqfydnv7rfvawnm7oee7y)
-      jss-plugin-rule-value-function: 10.10.0(patch_hash=d564szbdio4gccutjp2ztbpx2i)
-      jss-plugin-vendor-prefixer: 10.10.0(patch_hash=6amkmkeyoomuaio2l75visek7m)
+      jss-plugin-camel-case: 10.10.0(patch_hash=5169bb1d0f5426b82168adbda88b04842fea846d331d04cc8494fb516e2ae62a)
+      jss-plugin-default-unit: 10.10.0(patch_hash=e3b68f921c0c90bfa04d6f8f1416360de94ec572b6d156602eed09b13eeefeff)
+      jss-plugin-global: 10.10.0(patch_hash=1b64f353090664f0303bb039d86e1e14b798f39e6cf5c446314c569764fe9449)
+      jss-plugin-nested: 10.10.0(patch_hash=c6ffa2f33a974c5efeefcc3c4b946aa034a43333b3b2d2a2af00cadd010a1b4e)
+      jss-plugin-props-sort: 10.10.0(patch_hash=49c50f079d94ca0c3638a29bd628b453b0f1cded62e86d4eb12297b0041abc8d)
+      jss-plugin-rule-value-function: 10.10.0(patch_hash=1636167a1901cf849a2f64b76c478ece9db3be05d213241cbe99f23718b4b6ea)
+      jss-plugin-vendor-prefixer: 10.10.0(patch_hash=1eee2964ab6991107d92b04af98d0045acaae0b8222231906a9eed61f5045915)
       prop-types: 15.8.1
       react: 19.0.0
     optionalDependencies:
@@ -14222,7 +14222,7 @@ snapshots:
 
   babel-plugin-react-remove-properties@0.3.0: {}
 
-  babel-plugin-replace-imports@1.0.2(patch_hash=7wlacyoi44skuhtzjdjwgtjyxe):
+  babel-plugin-replace-imports@1.0.2(patch_hash=779d8690d607924781aaf4f896bfbd209a78755ddd5b9ebbea5ebce3b2919ba0):
     dependencies:
       lodash.isempty: 4.4.0
       lodash.isfunction: 3.0.9
@@ -17137,34 +17137,34 @@ snapshots:
       ms: 2.1.3
       semver: 7.7.1
 
-  jss-plugin-camel-case@10.10.0(patch_hash=dn4dx2pmglu4fhpk7sxflof4k4):
+  jss-plugin-camel-case@10.10.0(patch_hash=5169bb1d0f5426b82168adbda88b04842fea846d331d04cc8494fb516e2ae62a):
     dependencies:
       '@babel/runtime': 7.26.10
       hyphenate-style-name: 1.1.0
       jss: 10.10.0
 
-  jss-plugin-default-unit@10.10.0(patch_hash=wicmfeqmrpmgyhbozxevveu57q):
+  jss-plugin-default-unit@10.10.0(patch_hash=e3b68f921c0c90bfa04d6f8f1416360de94ec572b6d156602eed09b13eeefeff):
     dependencies:
       '@babel/runtime': 7.26.10
       jss: 10.10.0
 
-  jss-plugin-global@10.10.0(patch_hash=4octzbopz7dgjcnaiirlssjdzu):
+  jss-plugin-global@10.10.0(patch_hash=1b64f353090664f0303bb039d86e1e14b798f39e6cf5c446314c569764fe9449):
     dependencies:
       '@babel/runtime': 7.26.10
       jss: 10.10.0
 
-  jss-plugin-nested@10.10.0(patch_hash=oazaed55cw2lbjn6hce4fbx6bi):
+  jss-plugin-nested@10.10.0(patch_hash=c6ffa2f33a974c5efeefcc3c4b946aa034a43333b3b2d2a2af00cadd010a1b4e):
     dependencies:
       '@babel/runtime': 7.26.10
       jss: 10.10.0
       tiny-warning: 1.0.3
 
-  jss-plugin-props-sort@10.10.0(patch_hash=dgjawuqfydnv7rfvawnm7oee7y):
+  jss-plugin-props-sort@10.10.0(patch_hash=49c50f079d94ca0c3638a29bd628b453b0f1cded62e86d4eb12297b0041abc8d):
     dependencies:
       '@babel/runtime': 7.26.10
       jss: 10.10.0
 
-  jss-plugin-rule-value-function@10.10.0(patch_hash=d564szbdio4gccutjp2ztbpx2i):
+  jss-plugin-rule-value-function@10.10.0(patch_hash=1636167a1901cf849a2f64b76c478ece9db3be05d213241cbe99f23718b4b6ea):
     dependencies:
       '@babel/runtime': 7.26.10
       jss: 10.10.0
@@ -17176,7 +17176,7 @@ snapshots:
       jss: 10.10.0
       tiny-warning: 1.0.3
 
-  jss-plugin-vendor-prefixer@10.10.0(patch_hash=6amkmkeyoomuaio2l75visek7m):
+  jss-plugin-vendor-prefixer@10.10.0(patch_hash=1eee2964ab6991107d92b04af98d0045acaae0b8222231906a9eed61f5045915):
     dependencies:
       '@babel/runtime': 7.26.10
       css-vendor: 2.0.8
@@ -17242,7 +17242,7 @@ snapshots:
     dependencies:
       which: 1.3.1
 
-  karma-mocha@2.0.1(patch_hash=r6idlcdpax26bbzwxyjicxb5ra):
+  karma-mocha@2.0.1(patch_hash=36adf1bb2aef29d1947f8f19edc79e671a4a2b188fbc6cbf2d8b28b680648420):
     dependencies:
       minimist: 1.2.8
 
