@@ -7,7 +7,7 @@ import { AnimationContext } from './AnimationContext';
  *
  * @returns {boolean|undefined} whether to skip animations
  */
-export function useSkipAnimation(skipAnimation?: boolean): boolean {
+export function useSkipAnimation(skipAnimation?: boolean): boolean | undefined {
   const { isInitialized, data } = React.useContext(AnimationContext);
 
   if (!isInitialized) {
@@ -19,5 +19,5 @@ export function useSkipAnimation(skipAnimation?: boolean): boolean {
     );
   }
 
-  return skipAnimation || data.skipAnimation || false;
+  return skipAnimation || data.skipAnimation;
 }
