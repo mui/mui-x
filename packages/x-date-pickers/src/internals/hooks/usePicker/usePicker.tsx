@@ -87,7 +87,7 @@ export const usePicker = <
   /**
    * Refs
    */
-  const triggerRef = React.useRef<HTMLElement>(null);
+  const [triggerElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
@@ -299,7 +299,6 @@ export const usePicker = <
       name,
       label,
       sx,
-      triggerRef,
       triggerStatus,
       timezone,
       state.open,
@@ -313,20 +312,21 @@ export const usePicker = <
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
     () => ({
       dismissViews,
+      ownerState,
       hasUIView,
       getCurrentViewMode,
-      ownerState,
       rootRefObject,
       labelId,
+      triggerElement,
       viewContainerRole,
     }),
     [
       dismissViews,
+      ownerState,
       hasUIView,
       getCurrentViewMode,
-      ownerState,
-      rootRefObject,
       labelId,
+      triggerElement,
       viewContainerRole,
     ],
   );

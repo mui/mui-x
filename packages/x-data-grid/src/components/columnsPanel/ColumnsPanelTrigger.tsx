@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
   gridPreferencePanelStateSelector,
@@ -54,6 +56,8 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.columns;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
@@ -84,7 +88,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
         onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
-        ref,
+        ref: handleRef,
       },
       state,
     );
