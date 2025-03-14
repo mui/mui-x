@@ -24,7 +24,6 @@ export const useZoomOnWheel = (
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   interactionTimeoutRef: React.RefObject<number | undefined>,
-  isDraggingRef: React.RefObject<boolean>,
   setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
@@ -59,7 +58,7 @@ export const useZoomOnWheel = (
       }
       // Debounce transition to `isInteractive=false`.
       // Useful because wheel events don't have an "end" event.
-      if (!isDraggingRef.current) {
+      if (!state.dragging) {
         setIsInteracting(true);
 
         // Ref is passed in.
@@ -107,6 +106,5 @@ export const useZoomOnWheel = (
     instance,
     setZoomDataCallback,
     interactionTimeoutRef,
-    isDraggingRef,
   ]);
 };
