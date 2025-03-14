@@ -23,8 +23,7 @@ export interface UseFieldParameters<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
 > {
   manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
   props: TProps;

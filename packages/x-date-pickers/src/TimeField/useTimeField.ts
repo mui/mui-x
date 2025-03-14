@@ -5,9 +5,9 @@ import { UseTimeFieldProps } from './TimeField.types';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  props: TAllProps,
+  props: TProps,
 ) => {
   const manager = useTimeManager(props);
   return useField({ manager, props });

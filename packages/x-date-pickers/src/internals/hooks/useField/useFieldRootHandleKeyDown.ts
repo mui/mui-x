@@ -16,8 +16,11 @@ import {
   removeLocalizedDigits,
 } from './useField.utils';
 
-export function useFieldHandleContainerKeyDown<TValue extends PickerValidValue>(
-  parameters: UseFieldOnKeyDownParameters<TValue>,
+/**
+ * Returns the `onKeyDown` handler to pass to the root element of the field.
+ */
+export function useFieldRootHandleKeyDown<TValue extends PickerValidValue>(
+  parameters: UseFieldRootHandleKeyDownParameters<TValue>,
 ) {
   const utils = useUtils();
 
@@ -263,7 +266,7 @@ function adjustSectionValue<TValue extends PickerValidValue>(
   return adjustLetterSection();
 }
 
-interface UseFieldOnKeyDownParameters<TValue extends PickerValidValue> {
+interface UseFieldRootHandleKeyDownParameters<TValue extends PickerValidValue> {
   manager: PickerManager<TValue, any, any, any, any>;
   stateResponse: UseFieldStateReturnValue<TValue>;
   internalPropsWithDefaults: UseFieldInternalProps<TValue, any, any> & { minutesStep?: number };

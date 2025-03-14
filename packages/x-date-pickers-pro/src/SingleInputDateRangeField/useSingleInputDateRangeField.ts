@@ -5,9 +5,9 @@ import { useDateRangeManager } from '../managers';
 
 export const useSingleInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  props: TAllProps,
+  props: TProps,
 ) => {
   const manager = useDateRangeManager(props);
   return useField({ manager, props });

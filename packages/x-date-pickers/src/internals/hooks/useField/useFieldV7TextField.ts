@@ -13,7 +13,7 @@ import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSe
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown';
+import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 import { PickerValidValue } from '../../models';
@@ -42,6 +42,12 @@ export const useFieldV7TextField = <
   } = parameters;
 
   const { internalProps, forwardedProps } = useSplitFieldProps(props, valueType);
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+    skipContextFieldRefAssignment,
+  });
+
   const {
     sectionListRef: sectionListRefProp,
     onBlur,
@@ -54,11 +60,6 @@ export const useFieldV7TextField = <
     clearable,
   } = forwardedProps;
 
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    manager,
-    internalProps,
-    skipContextFieldRefAssignment,
-  });
   const {
     disabled = false,
     readOnly = false,
@@ -419,7 +420,7 @@ export const useFieldV7TextField = <
     }
   });
 
-  const handleContainerKeyDown = useFieldHandleContainerKeyDown({
+  const handleContainerKeyDown = useFieldRootHandleKeyDown({
     manager,
     internalPropsWithDefaults,
     stateResponse,

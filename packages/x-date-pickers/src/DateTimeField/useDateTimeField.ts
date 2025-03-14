@@ -5,9 +5,9 @@ import { useDateTimeManager } from '../managers';
 
 export const useDateTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  props: TAllProps,
+  props: TProps,
 ) => {
   const manager = useDateTimeManager(props);
   return useField({ manager, props });

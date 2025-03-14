@@ -11,7 +11,7 @@ import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
 import { PickerValidValue } from '../../models';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { useFieldHandleContainerKeyDown } from './useFieldHandleContainerKeyDown';
+import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 
@@ -86,6 +86,12 @@ export const useFieldV6TextField = <
   } = parameters;
 
   const { internalProps, forwardedProps } = useSplitFieldProps(props, valueType);
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+    skipContextFieldRefAssignment,
+  });
+
   const {
     onFocus,
     onClick,
@@ -98,11 +104,6 @@ export const useFieldV6TextField = <
     placeholder: inPlaceholder,
   } = forwardedProps;
 
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    manager,
-    internalProps,
-    skipContextFieldRefAssignment,
-  });
   const {
     readOnly = false,
     disabled = false,
@@ -358,7 +359,7 @@ export const useFieldV6TextField = <
     }
   });
 
-  const handleContainerKeyDown = useFieldHandleContainerKeyDown({
+  const handleContainerKeyDown = useFieldRootHandleKeyDown({
     manager,
     internalPropsWithDefaults,
     stateResponse,

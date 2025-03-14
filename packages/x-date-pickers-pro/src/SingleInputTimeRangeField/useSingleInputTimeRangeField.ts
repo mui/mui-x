@@ -5,9 +5,9 @@ import { useTimeRangeManager } from '../managers';
 
 export const useSingleInputTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseSingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseSingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  props: TAllProps,
+  props: TProps,
 ) => {
   const manager = useTimeRangeManager(props);
   return useField({ manager, props });
