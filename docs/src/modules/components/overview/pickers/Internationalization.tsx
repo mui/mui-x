@@ -21,9 +21,9 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
-import InfoCard from './InfoCard';
+import InfoCard from '../InfoCard';
 import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
-import ConfigToggleButtons from './ConfigToggleButtons';
+import ConfigToggleButtons from '../ConfigToggleButtons';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

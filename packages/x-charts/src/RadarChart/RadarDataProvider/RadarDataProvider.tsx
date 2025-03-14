@@ -46,6 +46,11 @@ export interface RadarDataProviderProps
    * The configuration of the radar scales.
    */
   radar: RadarConfig;
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight?: 'axis' | 'series' | 'none';
 }
 
 function RadarDataProvider(props: RadarDataProviderProps) {
@@ -61,6 +66,7 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     skipAnimation,
     margin,
     radar,
+    highlight,
     ...other
   } = props;
 
@@ -100,9 +106,12 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     () =>
       series.map((s) => ({
         type: 'radar' as const,
+        highlightScope:
+          s.highlightScope ??
+          (highlight === 'series' ? { highlight: 'series', fade: 'global' } : undefined),
         ...s,
       })),
-    [series],
+    [series, highlight],
   );
 
   const defaultizedMargin = React.useMemo(
@@ -157,6 +166,11 @@ RadarDataProvider.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight: PropTypes.oneOf(['axis', 'none', 'series']),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
