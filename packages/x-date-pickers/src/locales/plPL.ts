@@ -41,6 +41,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Wybierz datę i czas',
   timePickerToolbarTitle: 'Wybierz czas',
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +59,12 @@ const plPLPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tydzień ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wyczyść',
 
   // Table labels

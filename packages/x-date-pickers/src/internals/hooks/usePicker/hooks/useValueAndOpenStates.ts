@@ -54,7 +54,7 @@ export function useValueAndOpenStates<
           [
             `MUI X: A component is changing the ${
               isValueControlled ? '' : 'un'
-            }controlled value of a picker to be ${isValueControlled ? 'un' : ''}controlled.`,
+            }controlled value of a Picker to be ${isValueControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
             `Decide between using a controlled or uncontrolled value` +
               'for the lifetime of the component.',
@@ -69,7 +69,7 @@ export function useValueAndOpenStates<
       if (!isValueControlled && defaultValue !== defaultValueProp) {
         console.error(
           [
-            `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
+            `MUI X: A component is changing the defaultValue of an uncontrolled Picker after being initialized. ` +
               `To suppress this warning opt to use a controlled value.`,
           ].join('\n'),
         );

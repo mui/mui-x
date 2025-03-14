@@ -40,7 +40,7 @@ describe('<MobileDatePicker /> - Describe Value', () => {
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 
-      // Close the picker to return to the initial state
+      // Close the Picker to return to the initial state
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });

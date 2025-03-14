@@ -1,9 +1,22 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "seriesId": {
       "description": "The id of the series to display. If undefined all series are displayed."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the series element",
+      "conditions": "it is faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the series element",
+      "conditions": "it is highlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
 }

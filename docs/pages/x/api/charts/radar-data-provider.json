@@ -15,7 +15,15 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
+    "highlight": {
+      "type": {
+        "name": "enum",
+        "description": "'axis'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series'"
+      },
+      "default": "'axis'"
+    },
     "highlightedItem": {
       "type": {
         "name": "shape",

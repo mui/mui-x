@@ -33,6 +33,6 @@ export const useSingleInputDateTimeRangeField = <
     fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
-    getOpenPickerButtonAriaLabel: manager.internal_getOpenPickerButtonAriaLabel,
+    getOpenPickerButtonAriaLabel: manager.internal_useOpenPickerButtonAriaLabel(),
   });
 };

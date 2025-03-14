@@ -1,4 +1,3 @@
-import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -149,6 +148,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показать столбцы',
   columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
@@ -216,6 +216,34 @@ const ruRUGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
+  // Pagination
+  paginationRowsPerPage: 'Строк на странице:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на первую страницу';
+    }
+    if (type === 'last') {
+      return 'Перейти на последнюю страницу';
+    }
+    if (type === 'next') {
+      return 'Перейти на следующую страницу';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на предыдущую страницу';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Изменение порядка строк',
 
@@ -228,4 +256,4 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'счет',
 };
 
-export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);
+export const ruRU: Localization = getGridLocalization(ruRUGrid);

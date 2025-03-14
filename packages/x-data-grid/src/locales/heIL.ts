@@ -1,4 +1,3 @@
-import { heIL as heILCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -124,6 +123,7 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'תפריט',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'הצג עמודות',
   columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',
@@ -183,6 +183,34 @@ const heILGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 
+  // Pagination
+  paginationRowsPerPage: 'שורות בעמוד:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'לעמוד הראשון';
+    }
+    if (type === 'last') {
+      return 'לעמוד האחרון';
+    }
+    if (type === 'next') {
+      return 'לעמוד הבא';
+    }
+    // if (type === 'previous') {
+    return 'לעמוד הקודם';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'סידור שורות',
 
@@ -195,4 +223,4 @@ const heILGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'גודל',
 };
 
-export const heIL: Localization = getGridLocalization(heILGrid, heILCore);
+export const heIL: Localization = getGridLocalization(heILGrid);
