@@ -30,10 +30,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 }) => {
   const { zoomData: paramsZoomData, onZoomChange } = params;
 
-  const pluginData = { store, instance, svgRef };
-
   // Manage controlled state
-
   useEnhancedEffect(() => {
     if (paramsZoomData === undefined) {
       return undefined;
@@ -112,6 +109,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   // Add events
   const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
+  const pluginData = { store, instance, svgRef };
 
   usePanOnDrag(pluginData, interactionTimeoutRef, setIsInteracting, setZoomDataCallback);
 
