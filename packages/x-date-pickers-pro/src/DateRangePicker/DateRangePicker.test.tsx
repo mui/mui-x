@@ -10,47 +10,50 @@ import {
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals/components/PickerPopper';
 
 describe('<DateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   const { renderWithProps } = buildFieldInteractions({
     render,
-    clock,
     Component: DateRangePicker,
   });
 
-  it('should not use the mobile picker by default', () => {
-    // Test with accessible DOM structure
-    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+  const originalMatchMedia = window.matchMedia;
+
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+  });
+
+  it('should not use the mobile picker by default with accessible DOM structure', async () => {
+    window.matchMedia = stubMatchMedia(true);
+
+    renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
+  });
 
-    unmount();
+  it('should not use the mobile picker by default with non-accessible DOM structure', async () => {
+    window.matchMedia = stubMatchMedia(true);
 
-    // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
-    const originalMatchMedia = window.matchMedia;
+  it('should use the mobile picker when `useMediaQuery` returns `false` with accessible DOM structure', async () => {
     window.matchMedia = stubMatchMedia(false);
 
     // Test with accessible DOM structure
-    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
+  });
 
-    unmount();
+  it('should use the mobile picker when `useMediaQuery` returns `false` with non-accessible DOM structure', async () => {
+    window.matchMedia = stubMatchMedia(false);
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
-
-    window.matchMedia = originalMatchMedia;
   });
 });

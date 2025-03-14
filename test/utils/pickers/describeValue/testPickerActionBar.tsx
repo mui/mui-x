@@ -9,6 +9,7 @@ import {
   expectPickerChangeHandlerValue,
   isPickerRangeType,
 } from 'test/utils/pickers';
+import { vi } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
@@ -222,6 +223,14 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
+      beforeEach(() => {
+        vi.setSystemTime(new Date(2020, 0, 1));
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();

@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -22,7 +23,7 @@ describe('<AdapterMomentHijri />', () => {
   });
 
   describe('Adapter localization', () => {
-    it('Formatting', () => {
+    testSkipIf(!isJSDOM)('Formatting', () => {
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
@@ -62,15 +63,13 @@ describe('<AdapterMomentHijri />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-hijri',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
@@ -80,7 +79,7 @@ describe('<AdapterMomentHijri />', () => {
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
-        it('should have well formatted value', () => {
+        testSkipIf(!isJSDOM)('should have well formatted value', () => {
           const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -175,7 +175,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
-    apiRef.current?.dataSource.fetchRows(firstChildId);
+
+    await act(() => apiRef.current?.dataSource.fetchRows(firstChildId));
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
