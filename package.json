@@ -200,13 +200,7 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.24",
-    "@mui/lab>@mui/utils": "^7.0.0 || ^7.0.0-beta",
-    "@mui/lab>@mui/system": "^7.0.0 || ^7.0.0-beta",
-    "@mui/base>@mui/utils": "^7.0.0 || ^7.0.0-beta",
-    "@mui/private-theming>@mui/utils": "^7.0.0 || ^7.0.0-beta",
-    "@mui/system>@mui/utils": "^7.0.0 || ^7.0.0-beta",
-    "@mui/joy>@mui/utils": "^7.0.0 || ^7.0.0-beta"
+    "@types/node": "^20.17.24"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
