@@ -236,7 +236,7 @@ export type InputProps = {
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
   slotProps?: {
-    input?: React.InputHTMLAttributes<HTMLInputElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
 };
 
