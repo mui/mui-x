@@ -22,7 +22,7 @@ export interface MarkElementOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<MarkElementClasses>;
-  skipAnimation: boolean;
+  skipAnimation?: boolean;
 }
 
 export function getMarkElementUtilityClass(slot: string) {
@@ -44,7 +44,7 @@ export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
       `series-${id}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
-      !skipAnimation && 'animate',
+      skipAnimation ? undefined : 'animate',
     ],
   };
 

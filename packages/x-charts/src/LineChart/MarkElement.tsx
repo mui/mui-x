@@ -33,7 +33,7 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * If `true`, animations are skipped.
      * @default false
      */
-    skipAnimation: boolean;
+    skipAnimation?: boolean;
     /**
      * The shape of the marker.
      */
