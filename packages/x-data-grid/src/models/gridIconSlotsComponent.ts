@@ -155,6 +155,11 @@ export interface GridIconSlotsComponent {
    */
   columnMenuSortDescendingIcon: React.JSXElementConstructor<any>;
   /**
+   * Icon displayed in column menu for unsort
+   * @default null
+   */
+  columnMenuUnsortIcon: React.JSXElementConstructor<any> | null;
+  /**
    * Icon displayed in column menu for filter
    * @default GridFilterAltIcon
    */
