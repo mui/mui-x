@@ -35,6 +35,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const divRef = React.useRef<HTMLDivElement>(null);
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,11 +47,19 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   );
 
   const columnName = colDef.headerName ?? colDef.field;
+  const titleWidth =
+    divRef.current?.parentElement?.firstElementChild?.firstElementChild?.clientWidth;
+  const neededWidth =
+    divRef.current?.parentElement?.firstElementChild?.firstElementChild?.firstElementChild
+      ?.scrollWidth ?? 1;
+  const title =
+    apiRef.current.getLocaleText('columnMenuLabel') +
+    (titleWidth && titleWidth < neededWidth / 2 ? ` (${columnName})` : '');
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} ref={divRef}>
       <rootProps.slots.baseTooltip
-        title={apiRef.current.getLocaleText('columnMenuLabel')}
+        title={title}
         enterDelay={1000}
         {...rootProps.slotProps?.baseTooltip}
       >
