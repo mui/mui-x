@@ -162,15 +162,17 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
       }
     });
 
-    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((eventName) => {
-      return instance.addInteractionListener(eventName as 'drag', (state) => {
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
         const closestPoint = getClosestPoint(state.event);
 
         if (closestPoint === 'outside-chart') {
@@ -192,16 +194,16 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           dataIndex,
         });
 
+        // @ts-expect-error tap doesn't exist on move.
         if (state.tap && onItemClick) {
           onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
         }
-      });
-    });
+      },
+    );
 
     return () => {
-      removeOnHover();
-      removeOnMove();
-      removeOnDrag();
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 

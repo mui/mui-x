@@ -41,7 +41,7 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+    const panHandler = instance.addInteractionListener('drag', (state) => {
       if (state.pinching) {
         return state.cancel();
       }
@@ -94,7 +94,7 @@ export const usePanOnDrag = (
       return undefined;
     });
 
-    const removeOnDragStart = instance.addInteractionListener('dragStart', (state) => {
+    const panStartHandler = instance.addInteractionListener('dragStart', (state) => {
       const point = getSVGPoint(element, state.event);
 
       if (interactionTimeoutRef.current) {
@@ -110,15 +110,14 @@ export const usePanOnDrag = (
       return undefined;
     });
 
-    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
+    const panEndHandler = instance.addInteractionListener('dragEnd', () => {
       setIsInteracting(false);
-      return undefined;
     });
 
     return () => {
-      removeOnDragStart();
-      removeOnDrag();
-      removeOnDragEnd();
+      panHandler.cleanup();
+      panStartHandler.cleanup();
+      panEndHandler.cleanup();
     };
   }, [
     instance,

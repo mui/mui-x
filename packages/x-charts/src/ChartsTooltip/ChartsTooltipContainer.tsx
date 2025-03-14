@@ -83,17 +83,14 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
 
   React.useEffect(() => {
-    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((eventName) => {
-      return instance.addInteractionListener(eventName as 'drag', (state) => {
-        // eslint-disable-next-line react-compiler/react-compiler
-        positionRef.current = { x: state.event.clientX, y: state.event.clientY };
-        popperRef.current?.update();
-      });
+    const positionHandler = instance.addMultipleInteractionListeners(['move', 'drag'], (state) => {
+      // eslint-disable-next-line react-compiler/react-compiler
+      positionRef.current = { x: state.event.clientX, y: state.event.clientY };
+      popperRef.current?.update();
     });
 
     return () => {
-      removeOnMove();
-      removeOnDrag();
+      positionHandler.cleanup();
     };
   }, [positionRef, instance]);
 

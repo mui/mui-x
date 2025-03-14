@@ -104,67 +104,65 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
         mousePosition.current.isInChart = false;
         instance.cleanInteraction?.();
       }
     });
 
-    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((interaction) =>
-      instance.addInteractionListener(
-        // We force `as drag` to fix typing
-        interaction as 'drag',
-        (state) => {
-          const target =
-            'targetTouches' in state.event
-              ? (state.event as any as TouchEvent).targetTouches[0]
-              : state.event;
-          const svgPoint = getSVGPoint(element, target);
+    // Move is mouse, Drag is both mouse and touch.
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        const target =
+          'targetTouches' in state.event
+            ? (state.event as any as TouchEvent).targetTouches[0]
+            : state.event;
+        const svgPoint = getSVGPoint(element, target);
 
-          const isPointInside = instance.isPointInside(svgPoint, {
-            targetElement: state.event.target as SVGElement,
-          });
-          if (!isPointInside) {
-            if (mousePosition.current.isInChart) {
-              store.update((prev) => ({
-                ...prev,
-                interaction: { item: null, axis: { x: null, y: null } },
-              }));
-              mousePosition.current.isInChart = false;
-            }
+        const isPointInside = instance.isPointInside(svgPoint, {
+          targetElement: state.event.target as SVGElement,
+        });
+        if (!isPointInside) {
+          if (mousePosition.current.isInChart) {
+            store.update((prev) => ({
+              ...prev,
+              interaction: { item: null, axis: { x: null, y: null } },
+            }));
+            mousePosition.current.isInChart = false;
           }
+        }
 
-          // Test if it's in the radar circle
-          const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
-          const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
+        // Test if it's in the radar circle
+        const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
+        const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
 
-          if (radiusSquare > maxRadius ** 2) {
-            if (mousePosition.current.isInChart) {
-              store.update((prev) => ({
-                ...prev,
-                interaction: { item: null, axis: { x: null, y: null } },
-              }));
-              mousePosition.current.isInChart = false;
-            }
-            return;
+        if (radiusSquare > maxRadius ** 2) {
+          if (mousePosition.current.isInChart) {
+            store.update((prev) => ({
+              ...prev,
+              interaction: { item: null, axis: { x: null, y: null } },
+            }));
+            mousePosition.current.isInChart = false;
           }
+          return;
+        }
 
-          mousePosition.current.isInChart = true;
-          const angle = svg2rotation(svgPoint.x, svgPoint.y);
+        mousePosition.current.isInChart = true;
+        const angle = svg2rotation(svgPoint.x, svgPoint.y);
 
-          instance.setAxisInteraction?.({
-            x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
-            y: null,
-          });
-        },
-      ),
+        instance.setAxisInteraction?.({
+          x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
+          y: null,
+        });
+      },
     );
 
     return () => {
-      removeOnHover();
-      removeOnMove();
-      removeOnDrag();
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [
     svgRef,

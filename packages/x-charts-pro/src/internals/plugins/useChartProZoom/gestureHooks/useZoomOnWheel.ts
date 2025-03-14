@@ -38,7 +38,7 @@ export const useZoomOnWheel = (
       return () => {};
     }
 
-    const removeOnWheel = instance.addInteractionListener('wheel', (state) => {
+    const zoomOnWheelHandler = instance.addInteractionListener('wheel', (state) => {
       if (element === null) {
         return;
       }
@@ -92,7 +92,7 @@ export const useZoomOnWheel = (
     });
 
     return () => {
-      removeOnWheel();
+      zoomOnWheelHandler.cleanup();
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }

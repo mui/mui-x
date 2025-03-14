@@ -21,7 +21,8 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+    // Hover event is triggered when the mouse is moved over/out the chart.
+    const positionOnHoverHandler = instance.addInteractionListener('hover', (state) => {
       if (state.hovering) {
         setMousePosition({
           x: state.event.clientX,
@@ -31,7 +32,9 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
         });
       }
     });
-    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+
+    // Drag event is triggered by mobile touch or mouse drag.
+    const positionOnDragHandler = instance.addInteractionListener('drag', (state) => {
       setMousePosition({
         x: state.event.clientX,
         y: state.event.clientY,
@@ -41,8 +44,8 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
     });
 
     return () => {
-      removeOnHover();
-      removeOnDrag();
+      positionOnHoverHandler.cleanup();
+      positionOnDragHandler.cleanup();
     };
   }, [instance]);
 
@@ -57,25 +60,26 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
+    const removePointerHandler = instance.addInteractionListener('dragEnd', () => {
       // TODO: We can check and only close when it is not a tap with `!state.tap`
       // This would allow users to click/tap on the chart to display the tooltip.
       setPointerType(null);
     });
 
-    const [removeOnMoveStart, removeOnDragStart] = ['moveStart', 'dragStart'].map((interaction) => {
-      return instance.addInteractionListener(interaction as 'dragStart', (state) => {
+    // Move is mouse, Drag is both mouse and touch.
+    const setPointerHandler = instance.addMultipleInteractionListeners(
+      ['moveStart', 'dragStart'],
+      (state) => {
         setPointerType({
           height: state.event.height,
           pointerType: state.event.pointerType as PointerType['pointerType'],
         });
-      });
-    });
+      },
+    );
 
     return () => {
-      removeOnMoveStart();
-      removeOnDragEnd();
-      removeOnDragStart();
+      removePointerHandler.cleanup();
+      setPointerHandler.cleanup();
     };
   }, [instance]);
 

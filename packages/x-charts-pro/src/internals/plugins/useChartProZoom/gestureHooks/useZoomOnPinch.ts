@@ -37,14 +37,14 @@ export const useZoomOnPinch = (
       return () => {};
     }
 
-    const removePinchStart = instance.addInteractionListener('pinchStart', () => {
+    const zoomStartHandler = instance.addInteractionListener('pinchStart', () => {
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
       setIsInteracting(true);
     });
 
-    const removePinch = instance.addInteractionListener('pinch', (state) => {
+    const zoomHandler = instance.addInteractionListener('pinch', (state) => {
       if (element === null) {
         return;
       }
@@ -86,14 +86,14 @@ export const useZoomOnPinch = (
       });
     });
 
-    const removePinchEnd = instance.addInteractionListener('pinchEnd', () => {
+    const zoomEndHandler = instance.addInteractionListener('pinchEnd', () => {
       setIsInteracting(false);
     });
 
     return () => {
-      removePinchStart();
-      removePinch();
-      removePinchEnd();
+      zoomStartHandler.cleanup();
+      zoomHandler.cleanup();
+      zoomEndHandler.cleanup();
     };
   }, [
     svgRef,

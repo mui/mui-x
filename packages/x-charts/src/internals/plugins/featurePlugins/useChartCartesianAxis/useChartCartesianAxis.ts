@@ -81,51 +81,49 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const removeOnHover = instance.addInteractionListener('hover', (state) => {
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
         mousePosition.current.isInChart = false;
         instance.cleanInteraction?.();
       }
     });
 
-    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((interaction) =>
-      instance.addInteractionListener(
-        // We force `as drag` to fix typing
-        interaction as 'drag',
-        (state) => {
-          const target =
-            'targetTouches' in state.event
-              ? (state.event as any as TouchEvent).targetTouches[0]
-              : state.event;
-          const svgPoint = getSVGPoint(element, target);
+    // Move is mouse, Drag is both mouse and touch.
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        const target =
+          'targetTouches' in state.event
+            ? (state.event as any as TouchEvent).targetTouches[0]
+            : state.event;
+        const svgPoint = getSVGPoint(element, target);
 
-          const isPointInside = instance.isPointInside(svgPoint, {
-            targetElement: state.event.target as SVGElement,
-          });
-          if (!isPointInside) {
-            if (mousePosition.current.isInChart) {
-              store.update((prev) => ({
-                ...prev,
-                interaction: { item: null, axis: { x: null, y: null } },
-              }));
-              mousePosition.current.isInChart = false;
-            }
+        const isPointInside = instance.isPointInside(svgPoint, {
+          targetElement: state.event.target as SVGElement,
+        });
+        if (!isPointInside) {
+          if (mousePosition.current.isInChart) {
+            store.update((prev) => ({
+              ...prev,
+              interaction: { item: null, axis: { x: null, y: null } },
+            }));
+            mousePosition.current.isInChart = false;
           }
+        }
 
-          mousePosition.current.isInChart = true;
+        mousePosition.current.isInChart = true;
 
-          instance.setAxisInteraction?.({
-            x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
-            y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
-          });
-        },
-      ),
+        instance.setAxisInteraction?.({
+          x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
+          y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
+        });
+      },
     );
 
     return () => {
-      removeOnHover();
-      removeOnMove();
-      removeOnDrag();
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [
     svgRef,
@@ -160,7 +158,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+    const axisClickHandler = instance.addInteractionListener('drag', (state) => {
       if (!state.tap) {
         return;
       }
@@ -214,7 +212,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     });
 
     return () => {
-      removeOnDrag();
+      axisClickHandler.cleanup();
     };
   }, [
     params.onAxisClick,

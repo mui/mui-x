@@ -5,6 +5,7 @@ import { ChartPlugin } from '../../models';
 import {
   UseChartInteractionListenerSignature,
   AddInteractionListener,
+  AddMultipleInteractionListeners,
   ChartInteraction,
 } from './useChartInteractionListener.types';
 
@@ -75,11 +76,24 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         listeners.add(callback);
       }
 
-      return () => {
-        listeners.delete(callback);
+      return {
+        cleanup: () => listeners.delete(callback),
       };
     },
     [],
+  );
+
+  const addMultipleInteractionListeners: AddMultipleInteractionListeners = React.useCallback(
+    (interactions, callback) => {
+      const cleanups = interactions.map((interaction) =>
+        // @ts-expect-error Overriding the type because the type of the callback is not inferred
+        addInteractionListener(interaction, callback),
+      );
+      return {
+        cleanup: () => cleanups.forEach((cleanup) => cleanup.cleanup()),
+      };
+    },
+    [addInteractionListener],
   );
 
   React.useEffect(() => {
@@ -102,6 +116,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
   return {
     instance: {
       addInteractionListener,
+      addMultipleInteractionListeners,
     },
   };
 };
