@@ -16,7 +16,6 @@ import {
 import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
-import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
 
 export interface UseFieldParameters<
   TValue extends PickerValidValue,
@@ -119,76 +118,75 @@ export interface UseFieldInternalProps<
   focused?: boolean;
 }
 
-export interface UseFieldCommonAdditionalProps
-  extends Required<
-    Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>
-  > {
-  /**
-   * The aria label to set on the button that opens the Picker.
-   */
-  openPickerAriaLabel: string;
-}
-
-export interface UseFieldCommonForwardedProps
-  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
-  onKeyDown?: React.KeyboardEventHandler;
-  error?: boolean;
-}
-
 export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps;
+    ? {
+        clearable?: boolean;
+        error?: boolean;
+        placeholder?: string;
+        inputRef?: React.Ref<HTMLInputElement>;
+        onClick?: React.MouseEventHandler;
+        onFocus?: React.FocusEventHandler;
+        onKeyDown?: React.KeyboardEventHandler;
+        onBlur?: React.FocusEventHandler;
+        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+        onClear?: React.MouseEventHandler;
+      }
+    : {
+        clearable?: boolean;
+        error?: boolean;
+        focused?: boolean;
+        sectionListRef?: React.Ref<PickersSectionListRef>;
+        onClick?: React.MouseEventHandler;
+        onKeyDown?: React.KeyboardEventHandler;
+        onFocus?: React.FocusEventHandler;
+        onBlur?: React.FocusEventHandler;
+        onInput?: React.FormEventHandler<HTMLDivElement>;
+        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+        onClear?: React.MouseEventHandler;
+      };
 
-export interface UseFieldV6ForwardedProps extends UseFieldCommonForwardedProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-  onBlur?: React.FocusEventHandler;
-  onClick?: React.MouseEventHandler;
-  onFocus?: React.FocusEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
-  placeholder?: string;
-}
-
-interface UseFieldV6AdditionalProps
-  extends Required<
-    Pick<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
-    >
-  > {
-  enableAccessibleFieldDOMStructure: false;
-  focused?: boolean;
-}
-
-export interface UseFieldV7ForwardedProps extends UseFieldCommonForwardedProps {
-  focused?: boolean;
-  sectionListRef?: React.Ref<PickersSectionListRef>;
-  onBlur?: React.FocusEventHandler;
-  onClick?: React.MouseEventHandler;
-  onFocus?: React.FocusEventHandler;
-  onInput?: React.FormEventHandler<HTMLDivElement>;
-  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
-}
-
-interface UseFieldV7AdditionalProps {
-  enableAccessibleFieldDOMStructure: true;
-  elements: PickersSectionElement[];
-  tabIndex: number | undefined;
-  contentEditable: boolean;
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  areAllSectionsEmpty: boolean;
-  focused: boolean;
-}
+type UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TEnableAccessibleFieldDOMStructure extends false
+    ? {
+        /**
+         * The aria label to set on the button that opens the Picker.
+         */
+        openPickerAriaLabel: string;
+        enableAccessibleFieldDOMStructure: false;
+        focused: boolean | undefined;
+        inputMode: 'text' | 'numeric';
+        placeholder: string;
+        value: string;
+        onChange: React.ChangeEventHandler<HTMLInputElement>;
+        autoComplete: 'off';
+      }
+    : {
+        /**
+         * The aria label to set on the button that opens the Picker.
+         */
+        openPickerAriaLabel: string;
+        enableAccessibleFieldDOMStructure: true;
+        elements: PickersSectionElement[];
+        tabIndex: number | undefined;
+        contentEditable: boolean;
+        value: string;
+        onChange: React.ChangeEventHandler<HTMLInputElement>;
+        areAllSectionsEmpty: boolean;
+        focused: boolean;
+      };
 
 export type UseFieldReturnValue<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
-> = Omit<TProps, InternalPropNames<PickerValueType>> &
-  UseFieldCommonAdditionalProps &
-  (TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
-    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
+> =
+  // Some internal props are returned with a default value applied.
+  Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
+    // All the forwarded props the useField hooks is able to handled are returned with a default value applied.
+    Required<UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
+    // Some additional props are generated internally and returned.
+    UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure> &
+    Omit<TProps, InternalPropNames<PickerValueType>>;
 
 export type FieldSectionValueBoundaries<SectionType extends FieldSectionType> = {
   minimum: number;
@@ -400,7 +398,6 @@ export interface CharacterEditingQuery {
 }
 
 export type UseFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
-      enableAccessibleFieldDOMStructure?: boolean;
-    };
+  UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
+    enableAccessibleFieldDOMStructure?: boolean;
+  };

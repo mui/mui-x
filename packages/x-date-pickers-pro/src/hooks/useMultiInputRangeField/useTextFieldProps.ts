@@ -154,7 +154,7 @@ export function useTextFieldProps<
     manager,
     props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  }) as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+  }) as unknown as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
