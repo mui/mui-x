@@ -122,7 +122,7 @@ MarkElement.propTypes = {
   /**
    * If `true`, animations are skipped.
    */
-  skipAnimation: PropTypes.bool.isRequired,
+  skipAnimation: PropTypes.bool,
 } as any;
 
 export { MarkElement };

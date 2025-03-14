@@ -1,6 +1,5 @@
 {
   "props": {
-    "skipAnimation": { "type": { "name": "bool" }, "required": true },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -8,6 +7,7 @@
         "describedArgs": ["event", "lineItemIdentifier"]
       }
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
