@@ -42,6 +42,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
   dateRangePickerToolbarTitle: 'Выбрать период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,7 +60,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Выберите дату, выбрана дата ${formattedDate}` : 'Выберите дату',
   openTimePickerDialogue: (formattedTime) =>

@@ -1,4 +1,3 @@
-import { nbNO as nbNOCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -184,6 +183,34 @@ const nbNOGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per side:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå til første side';
+    }
+    if (type === 'last') {
+      return 'Gå til siste side';
+    }
+    if (type === 'next') {
+      return 'Gå til neste side';
+    }
+    // if (type === 'previous') {
+    return 'Gå til forrige side';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Radreorganisering',
 
@@ -196,4 +223,4 @@ const nbNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);
+export const nbNO: Localization = getGridLocalization(nbNOGrid);

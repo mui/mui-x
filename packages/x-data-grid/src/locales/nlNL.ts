@@ -1,4 +1,3 @@
-import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -186,6 +185,34 @@ const nlNLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Regels per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ga naar eerste pagina';
+    }
+    if (type === 'last') {
+      return 'Ga naar laatste pagina';
+    }
+    if (type === 'next') {
+      return 'Ga naar volgende pagina';
+    }
+    // if (type === 'previous') {
+    return 'Ga naar vorige pagina';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
 
@@ -198,4 +225,4 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'grootte',
 };
 
-export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
+export const nlNL: Localization = getGridLocalization(nlNLGrid);

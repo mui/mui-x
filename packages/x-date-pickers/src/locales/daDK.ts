@@ -42,6 +42,7 @@ const daDKPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vælg dato & tidspunkt',
   timePickerToolbarTitle: 'Vælg tidspunkt',
   dateRangePickerToolbarTitle: 'Vælg datointerval',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,7 +60,7 @@ const daDKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Uge ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vælg dato, valgte dato er ${formattedDate}` : 'Vælg dato',
   openTimePickerDialogue: (formattedTime) =>

@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarDataProvider
+components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarDataProvider
 ---
 
 # Charts - Radar 🚧
@@ -58,7 +58,38 @@ The radar chart displays a grid behind the series that can be configured with:
 
 ### Item click 🚧
 
-## Highlight 🚧
+## Highlight
+
+### Axis Highlight
+
+By default the radar highlight values of a same axis.
+This axis highlight has two visualizations available with the prop `axisHighlightShape`:
+
+- `'points'` Displays points on each highlighted value (best with multiple series).
+- `'slice'` Displays a slice around the highlighted value. (best with a single series).
+
+With composition you can add this behavior with the `<RadarAxisHighlight axisHighlightShape='slice' />` component.
+
+{{"demo": "DemoRadarAxisHighlight.js" }}
+
+### Series Highlight
+
+To set the highlight on series, use the `highlight` prop with `'series'` value.
+This highlight can be controlled with `highlightedItem` value and `onHighlightChange` callback.
+
+With composition you can pass those props to the `RadarDataProvider`.
+
+This demo shows a controlled highlight.
+Notice the impact of the series order in the highlight interaction.
+The UK series is the last item of the `series` prop.
+Such that its area renders on top of the others.
+Otherwise, the other area would catch the pointer event, making it impossible to highlight it.
+
+{{"demo": "DemoRadarSeriesHighlight.js" }}
+
+### Disabling Highlight
+
+To remove highlight, set the `highlight` prop to `'none'`.
 
 ## Tooltip 🚧
 
@@ -71,6 +102,6 @@ If you miss some element or explanation, please open an issue describing what yo
 
 In this example, we uses `RadarSeriesArea` and `RadarSeriesMarks` to modify the order of the elements:
 all the marks are on top of all the path.
-Additionaly, we apply different properties based on the series id.
+Additionally, we apply different properties based on the series id.
 
 {{"demo": "CompositionExample.js" }}

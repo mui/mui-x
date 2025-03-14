@@ -92,6 +92,8 @@
   { "name": "digitalClockClasses", "kind": "Variable" },
   { "name": "DigitalClockClasses", "kind": "Interface" },
   { "name": "DigitalClockClassKey", "kind": "TypeAlias" },
+  { "name": "DigitalClockItem", "kind": "Variable" },
+  { "name": "DigitalClockItemProps", "kind": "Interface" },
   { "name": "DigitalClockProps", "kind": "Interface" },
   { "name": "DigitalClockSlotProps", "kind": "Interface" },
   { "name": "DigitalClockSlots", "kind": "Interface" },

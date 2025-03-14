@@ -41,6 +41,7 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'তারিখ ও সময় নির্বাচন করুন',
   timePickerToolbarTitle: 'সময় নির্বাচন করুন',
   dateRangePickerToolbarTitle: 'তারিখের পরিসীমা নির্বাচন করুন',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +59,7 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `সপ্তাহ ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `তারিখ নির্বাচন করুন, নির্বাচিত তারিখ ${formattedDate}` : 'তারিখ নির্বাচন করুন',
   openTimePickerDialogue: (formattedTime) =>

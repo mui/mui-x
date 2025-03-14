@@ -43,7 +43,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.17
+    - image: cimg/node:20.19
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -56,16 +56,6 @@ default-job: &default-job
 default-context: &default-context
   context:
     - org-global
-
-test-react-18-context: &test-react-18-context
-  <<: *default-context
-  react-version: ^18.0.0
-  filters:
-    branches:
-      only:
-        - master
-        - /^v.*\.x$/
-        - next
 
 commands:
   install_js:
@@ -80,10 +70,6 @@ commands:
         description: The version of React to use.
 
     steps:
-      - run:
-          name: Set npm registry public signing keys
-          command: |
-            echo "export COREPACK_INTEGRITY_KEYS='$(curl https://registry.npmjs.org/-/npm/v1/keys | jq -c '{npm: .keys}')'" >> $BASH_ENV
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -106,19 +92,18 @@ commands:
             pnpm --version
       - when:
           condition:
-            not:
-              equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies without frozen lockfile
-                command: pnpm install --no-frozen-lockfile
-      - when:
-          condition:
             equal: [stable, << parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies
                 command: pnpm install
+      - unless:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
 
       - run:
           name: Resolve React version
@@ -421,16 +406,22 @@ workflows:
           <<: *default-context
           name: test_types_additional
   test-react-18:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
       - test_unit:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_unit_react_18
+          react-version: ^18
       - test_browser:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_browser_react_18
+          react-version: ^18
       - test_regressions:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_regressions_react_18
+          react-version: ^18
       - test_e2e:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_e2e_react_18
+          react-version: ^18

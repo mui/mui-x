@@ -7,6 +7,7 @@ import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
+import { RadarAxisHighlightProps } from './RadarAxisHighlight';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -34,12 +35,15 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     hideLegend,
     divisions,
     shape,
+    axisHighlightShape,
+    highlight = 'axis',
     ...other
   } = props;
 
   const radarDataProviderProps: RadarDataProviderProps = {
     series,
     radar,
+    highlight,
     width,
     height,
     margin: defaultizeMargin(margin, { top: 30, bottom: 30, left: 50, right: 50 }),
@@ -66,13 +70,19 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const radarGrid: RadarGridProps = { divisions, shape };
 
+  const radarAxisHighlight: RadarAxisHighlightProps = {
+    axisHighlightShape: axisHighlightShape ?? (series.length > 1 ? 'points' : 'slice'),
+  };
+
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 
   return {
+    highlight,
     chartsWrapperProps,
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
+    radarAxisHighlight,
     overlayProps,
     legendProps,
     children,

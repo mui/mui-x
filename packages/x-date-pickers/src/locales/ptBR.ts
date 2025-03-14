@@ -41,6 +41,7 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selecione data e hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +59,7 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) => {
     return formattedDate
       ? `Escolha uma data, data selecionada ${formattedDate}`
