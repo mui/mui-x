@@ -51,6 +51,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           // We can allow customizing the number of pointers
           buttons: 1,
         },
+        // filterTaps: true,
       },
       pinch: {
         scaleBounds: {

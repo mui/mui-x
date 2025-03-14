@@ -169,45 +169,33 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       }
     });
 
-    const removeOnMove = instance.addInteractionListener('move', (state) => {
-      const closestPoint = getClosestPoint(state.event);
-
-      if (closestPoint === 'outside-chart') {
-        instance.cleanInteraction?.();
-        instance.clearHighlight?.();
-        return;
-      }
-
-      if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        instance.removeItemInteraction?.();
-        instance.clearHighlight?.();
-        return;
-      }
-
-      const { seriesId, dataIndex } = closestPoint;
-
-      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
-      instance.setHighlight?.({
-        seriesId,
-        dataIndex,
-      });
-    });
-
-    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
-      if (state.tap) {
-        if (!onItemClick) {
-          return;
-        }
+    const [removeOnMove, removeOnDrag] = ['move', 'drag'].map((eventName) => {
+      return instance.addInteractionListener(eventName as 'drag', (state) => {
         const closestPoint = getClosestPoint(state.event);
 
-        if (typeof closestPoint === 'string') {
-          // No point fond for any reason
+        if (closestPoint === 'outside-chart') {
+          instance.cleanInteraction?.();
+          instance.clearHighlight?.();
+          return;
+        }
+
+        if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
+          instance.removeItemInteraction?.();
+          instance.clearHighlight?.();
           return;
         }
 
         const { seriesId, dataIndex } = closestPoint;
-        onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
-      }
+        instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+        instance.setHighlight?.({
+          seriesId,
+          dataIndex,
+        });
+
+        if (state.tap && onItemClick) {
+          onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
+        }
+      });
     });
 
     return () => {

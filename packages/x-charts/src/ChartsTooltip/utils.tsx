@@ -29,13 +29,20 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
           height: state.event.height,
           pointerType: state.event.pointerType as MousePosition['pointerType'],
         });
-      } else if (state.event.pointerType !== 'mouse') {
-        setMousePosition(null);
       }
+    });
+    const removeOnDrag = instance.addInteractionListener('drag', (state) => {
+      setMousePosition({
+        x: state.event.clientX,
+        y: state.event.clientY,
+        height: state.event.height,
+        pointerType: state.event.pointerType as MousePosition['pointerType'],
+      });
     });
 
     return () => {
       removeOnHover();
+      removeOnDrag();
     };
   }, [instance]);
 
@@ -47,26 +54,28 @@ type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
 export function usePointerType(): null | PointerType {
   const { instance } = useChartContext();
 
-  // Use a ref to avoid rerendering on every mousemove event.
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const removeOnMoveEnd = instance.addInteractionListener('moveEnd', (state) => {
-      if (state.event.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
+    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
+      // TODO: We can check and only close when it is not a tap with `!state.tap`
+      // This would allow users to click/tap on the chart to display the tooltip.
+      setPointerType(null);
     });
 
-    const removeOnMoveStart = instance.addInteractionListener('moveStart', (state) => {
-      setPointerType({
-        height: state.event.height,
-        pointerType: state.event.pointerType as PointerType['pointerType'],
+    const [removeOnMoveStart, removeOnDragStart] = ['moveStart', 'dragStart'].map((interaction) => {
+      return instance.addInteractionListener(interaction as 'dragStart', (state) => {
+        setPointerType({
+          height: state.event.height,
+          pointerType: state.event.pointerType as PointerType['pointerType'],
+        });
       });
     });
 
     return () => {
-      removeOnMoveEnd();
       removeOnMoveStart();
+      removeOnDragEnd();
+      removeOnDragStart();
     };
   }, [instance]);
 

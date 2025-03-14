@@ -42,8 +42,12 @@ export const usePanOnDrag = (
     }
 
     const removeOnDrag = instance.addInteractionListener('drag', (state) => {
-      if (state.pinching || element === null || touchStartRef.current === null) {
+      if (state.pinching) {
         return state.cancel();
+      }
+
+      if (element === null || touchStartRef.current === null) {
+        return undefined;
       }
 
       const point = getSVGPoint(element, state.event);
@@ -85,16 +89,13 @@ export const usePanOnDrag = (
           end: newMaxPercent,
         };
       });
+      // TODO: fix max update issue
       setZoomDataCallback(newZoomData);
       return undefined;
     });
 
     const removeOnDragStart = instance.addInteractionListener('dragStart', (state) => {
       const point = getSVGPoint(element, state.event);
-
-      if (state.pinching || !instance.isPointInside(point)) {
-        return state.cancel();
-      }
 
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
@@ -109,11 +110,7 @@ export const usePanOnDrag = (
       return undefined;
     });
 
-    const removeOnDragEnd = instance.addInteractionListener('dragEnd', (state) => {
-      if (state.pinching) {
-        return state.cancel();
-      }
-
+    const removeOnDragEnd = instance.addInteractionListener('dragEnd', () => {
       setIsInteracting(false);
       return undefined;
     });
