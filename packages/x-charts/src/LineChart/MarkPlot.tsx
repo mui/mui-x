@@ -154,7 +154,7 @@ function MarkPlot(props: MarkPlotProps) {
                       color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      skipAnimation={skipAnimation}
+                      skipAnimation={skipAnimation ?? false}
                       onClick={
                         onItemClick &&
                         ((event) =>
