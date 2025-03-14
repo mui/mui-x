@@ -35,11 +35,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const radius = getRadius(t);
 
   const fontBody = t.vars
-    ? (t.vars as any)?.font.body2
-    : `${t.typography.body2.fontWeight} ${t.typography.body2.fontSize} / ${t.typography.body2.lineHeight} ${t.typography.body2.fontFamily}`;
+    ? ((t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2))
+    : formatFont(t.typography.body2);
   const fontSmall = t.vars
-    ? (t.vars as any)?.font.caption
-    : `${t.typography.caption.fontWeight} ${t.typography.caption.fontSize} / ${t.typography.caption.lineHeight} ${t.typography.caption.fontFamily}`;
+    ? ((t.vars as any)?.font?.caption ?? formatFont(t.typography.caption))
+    : formatFont(t.typography.caption);
 
   const k = vars.keys;
 
@@ -117,4 +117,8 @@ function setOpacity(color: string, opacity: number) {
 
 function removeOpacity(color: string) {
   return setOpacity(color, 1);
+}
+
+function formatFont(font: React.CSSProperties) {
+  return `${font.fontWeight} ${font.fontSize} / ${font.lineHeight} ${font.fontFamily}`;
 }
