@@ -24,7 +24,7 @@ export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses
 
 const AnimatedRect = styled('rect')({
   [`&.${appearingMaskClasses.animate}`]: {
-    animation: 'animate-width 0.5s ease-in',
+    animation: 'animate-width 300ms ease-in',
   },
 
   '@keyframes animate-width': {
