@@ -1046,7 +1046,7 @@
     {
       "name": "columnMenuUnsortIcon",
       "description": "Icon displayed in column menu for unsort",
-      "default": "GridNullIcon",
+      "default": "null",
       "class": null
     },
     {

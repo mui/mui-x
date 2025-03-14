@@ -72,7 +72,13 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
       {sortingOrder.includes(null) && sortDirection != null ? (
         <rootProps.slots.baseMenuItem
           onClick={onSortMenuItemClick}
-          iconStart={<rootProps.slots.columnMenuUnsortIcon fontSize="small" />}
+          iconStart={
+            rootProps.slots.columnMenuUnsortIcon ? (
+              <rootProps.slots.columnMenuUnsortIcon fontSize="small" />
+            ) : (
+              <span />
+            )
+          }
         >
           {apiRef.current.getLocaleText('columnMenuUnsort')}
         </rootProps.slots.baseMenuItem>
