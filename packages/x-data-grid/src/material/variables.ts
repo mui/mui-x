@@ -23,42 +23,44 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const backgroundBackdrop = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
+  const backgroundOverlay =
+    t.palette.mode === 'dark'
+      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
+      : (t.vars || t).palette.background.paper;
 
   const selectedColor = t.vars
     ? `rgb(${t.vars.palette.primary.mainChannel})`
     : t.palette.primary.main;
 
+  const radius = getRadius(t);
+
   const k = vars.keys;
 
   return {
-    [k.spacingUnit]: t.spacing(1),
+    [k.spacingUnit]: t.vars ? ((t.vars as any).spacing ?? t.spacing(1)) : t.spacing(1),
 
     [k.colors.border.base]: borderColor,
     [k.colors.background.base]: backgroundBase,
-    [k.colors.background.overlay]:
-      t.palette.mode === 'dark'
-        ? `color-mix(in srgb, ${t.palette.background.paper} 95%, #fff)`
-        : t.palette.background.paper,
+    [k.colors.background.overlay]: backgroundOverlay,
     [k.colors.background.backdrop]: backgroundBackdrop,
-    [k.colors.foreground.base]: t.palette.text.primary,
-    [k.colors.foreground.muted]: t.palette.text.secondary,
-    [k.colors.foreground.accent]: t.palette.primary.dark,
-    [k.colors.foreground.disabled]: t.palette.text.disabled,
+    [k.colors.foreground.base]: (t.vars || t).palette.text.primary,
+    [k.colors.foreground.muted]: (t.vars || t).palette.text.secondary,
+    [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
+    [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
 
-    [k.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
-    [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: removeOpacity(t.palette.primary.main),
-    [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [k.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
-    [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
+    [k.colors.interactive.hover]: removeOpacity((t.vars || t).palette.action.hover),
+    [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
+    [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
+    [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
+    [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
+    [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
     [k.colors.interactive.selected]: selectedColor,
-    [k.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
+    [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,
     [k.cell.background.pinned]: backgroundPinned,
 
-    [k.radius.base]:
-      typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,
+    [k.radius.base]: radius,
 
     [k.typography.fontFamily.base]: t.typography.fontFamily as string,
     [k.typography.fontWeight.light]: t.typography.fontWeightLight as string,
@@ -83,12 +85,21 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.transitions.duration.base]: `${t.transitions.duration.short}ms`,
     [k.transitions.duration.long]: `${t.transitions.duration.standard}ms`,
 
-    [k.shadows.base]: t.shadows[2],
-    [k.shadows.overlay]: t.shadows[8],
+    [k.shadows.base]: (t.vars || t).shadows[2],
+    [k.shadows.overlay]: (t.vars || t).shadows[8],
 
-    [k.zIndex.panel]: t.zIndex.modal,
-    [k.zIndex.menu]: t.zIndex.modal,
+    [k.zIndex.panel]: (t.vars || t).zIndex.modal,
+    [k.zIndex.menu]: (t.vars || t).zIndex.modal,
   };
+}
+
+function getRadius(theme: Theme) {
+  if (theme.vars) {
+    return theme.vars.shape.borderRadius;
+  }
+  return typeof theme.shape.borderRadius === 'number'
+    ? `${theme.shape.borderRadius}px`
+    : theme.shape.borderRadius;
 }
 
 function getBorderColor(theme: Theme) {
