@@ -240,6 +240,9 @@
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
+    "unstable_replaceRowsWithSkeleton": {
+      "description": "Replace a set of rows with skeleton rows."
+    },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },
     "unstable_setVirtualization": { "description": "Enable/disable virtualization." },
