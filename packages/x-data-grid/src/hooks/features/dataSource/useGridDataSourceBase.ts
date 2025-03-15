@@ -3,7 +3,6 @@ import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { warnOnce } from '@mui/x-internals/warning';
-
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
@@ -121,9 +120,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         const getRowsResponse = await getRows(fetchParams);
 
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
-        cacheResponses.forEach((response, key) => {
-          cache.set(key, response);
-        });
+        cacheResponses.forEach((response, key) => cache.set(key, response));
 
         if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
