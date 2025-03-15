@@ -18,7 +18,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
