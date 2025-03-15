@@ -13,6 +13,8 @@ import { getValueOptions, getVisibleRows } from '@mui/x-data-grid-pro/internals'
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { PromptResponse } from './gridPromptInterfaces';
 
+const MAX_SAMPLE_COUNT = 20;
+
 export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
@@ -24,7 +26,7 @@ export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
 
       columns.forEach((column) => {
         columnExamples[column.field] = Array.from({
-          length: Math.min(sampleCount, rows.length),
+          length: Math.min(sampleCount, rows.length, MAX_SAMPLE_COUNT),
         }).map(() => {
           const row = rows[Math.floor(Math.random() * rows.length)];
           if (column.valueGetter) {
