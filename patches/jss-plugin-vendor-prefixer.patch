@@ -1,0 +1,21 @@
+diff --git a/dist/jss-plugin-vendor-prefixer.esm.js b/dist/jss-plugin-vendor-prefixer.esm.mjs
+similarity index 100%
+rename from dist/jss-plugin-vendor-prefixer.esm.js
+rename to dist/jss-plugin-vendor-prefixer.esm.mjs
+diff --git a/package.json b/package.json
+index 976a041c8fa2b555deda0494481a9ff328eb1b79..460650c5803b14cef1c6c501339de001452be23e 100644
+--- a/package.json
++++ b/package.json
+@@ -23,6 +23,12 @@
+     "src",
+     "!*.test.*"
+   ],
++  "exports": {
++    ".": {
++      "import": "./dist/jss-plugin-vendor-prefixer.esm.mjs",
++      "require": "./dist/jss-plugin-vendor-prefixer.cjs.js"
++    }
++  },
+   "keywords": [
+     "cssinjs",
+     "jss",
