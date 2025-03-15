@@ -12,7 +12,7 @@ import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useXAxis } from '../hooks';
+import { useRotationAxis, useXAxis } from '../hooks';
 import {
   selectorChartsInteractionItemIsDefined,
   selectorChartsInteractionXAxisIsDefined,
@@ -65,6 +65,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
   const xAxis = useXAxis();
+  const rotationAxis = useRotationAxis();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
@@ -74,7 +75,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     store,
     // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
-      ? axisHasData(xAxis)
+      ? axisHasData(xAxis ?? rotationAxis)
         ? selectorChartsInteractionXAxisIsDefined
         : selectorChartsInteractionYAxisIsDefined
       : selectorChartsInteractionItemIsDefined,
