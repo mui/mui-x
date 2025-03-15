@@ -44,16 +44,13 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
   );
 }
 
-function useOpenPickerButtonAriaLabel() {
+function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
   const utils = useUtils();
   const translations = usePickerTranslations();
 
-  return React.useCallback(
-    (value: PickerRangeValue) => {
-      return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
-    },
-    [translations, utils],
-  );
+  return React.useMemo(() => {
+    return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
+  }, [value, translations, utils]);
 }
 
 export interface UseDateTimeRangeManagerParameters<

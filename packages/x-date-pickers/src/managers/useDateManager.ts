@@ -42,17 +42,14 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
   );
 }
 
-function useOpenPickerButtonAriaLabel() {
+function useOpenPickerButtonAriaLabel(value: PickerValue) {
   const utils = useUtils();
   const translations = usePickerTranslations();
 
-  return React.useCallback(
-    (value: PickerValue) => {
-      const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
-      return translations.openDatePickerDialogue(formattedValue);
-    },
-    [translations, utils],
-  );
+  return React.useMemo(() => {
+    const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+    return translations.openDatePickerDialogue(formattedValue);
+  }, [value, translations, utils]);
 }
 
 /**
