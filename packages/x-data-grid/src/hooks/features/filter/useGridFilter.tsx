@@ -357,10 +357,8 @@ export const useGridFilter = (
       const filterModelToExport = gridFilterModelSelector(apiRef);
 
       // Remove the additional `fromInput` property from the filter model
-      filterModelToExport.items.forEach((item) => {
-        if ((item as ItemPlusTag).fromInput) {
-          delete (item as ItemPlusTag).fromInput;
-        }
+      filterModelToExport.items.forEach((item: ItemPlusTag) => {
+        delete item.fromInput;
       });
 
       const shouldExportFilterModel =
