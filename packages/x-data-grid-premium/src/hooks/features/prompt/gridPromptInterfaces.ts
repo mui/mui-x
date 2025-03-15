@@ -40,16 +40,16 @@ export interface GridPromptApi {
    * If the number of rows in the grid is less than the sample count, all rows are used.
    * @returns {Record<string, any[]>} The sample data.
    */
-  collectSampleData: (sampleCount?: number) => Record<string, any[]>;
+  unstable_collectSampleData: (sampleCount?: number) => Record<string, any[]>;
   /**
    * Get the context for the prompt.
    * @param {Record<string, any[]>} examples Column examples to be used to make the context more detailed and the response more accurate.
    * @returns {string} The context for the prompt.
    */
-  getPromptContext: (examples?: Record<string, any[]>) => string;
+  unstable_getPromptContext: (examples?: Record<string, any[]>) => string;
   /**
    * Use the prompt processing result to update all relevant parts of the grid state.
    * @param {PromptResponse} result The result of the prompt.
    */
-  applyPromptResult: (result: PromptResponse) => void;
+  unstable_applyPromptResult: (result: PromptResponse) => void;
 }
