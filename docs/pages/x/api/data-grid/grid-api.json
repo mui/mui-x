@@ -14,20 +14,10 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "applyPromptResult": {
-      "type": { "description": "(result: PromptResponse) =&gt; void" },
-      "required": true,
-      "isPremiumPlan": true
-    },
     "applySorting": { "type": { "description": "() =&gt; void" }, "required": true },
     "autosizeColumns": {
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
-    },
-    "collectSampleData": {
-      "type": { "description": "(sampleCount?: number) =&gt; Record&lt;string, any[]&gt;" },
-      "required": true,
-      "isPremiumPlan": true
     },
     "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
@@ -499,6 +489,21 @@
       "type": { "description": "(field: string) =&gt; void" },
       "required": true,
       "isProPlan": true
+    },
+    "unstable_applyPromptResult": {
+      "type": { "description": "(result: PromptResponse) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "unstable_collectSampleData": {
+      "type": { "description": "(sampleCount?: number) =&gt; Record&lt;string, any[]&gt;" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "unstable_getPromptContext": {
+      "type": { "description": "(examples?: Record&lt;string, any[]&gt;) =&gt; string" },
+      "required": true,
+      "isPremiumPlan": true
     },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
