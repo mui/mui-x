@@ -518,7 +518,13 @@ export const useGridRowEditing = (
 
       const editingState = gridEditRowsStateSelector(apiRef);
       const row = prevRowValuesLookup.current[id];
-
+      
+      // If the row no longer exists (e.g., it has been removed from the grid), we cannot proceed with any row update.
+      if (!row) {
+        finishRowEditMode();
+        return;
+      }
+      
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
         (fieldProps) => fieldProps.isProcessingProps,
       );
