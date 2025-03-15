@@ -1,5 +1,5 @@
 export * from './GridFilterForm';
-export * from './GridFilterInputValue';
+export { GridFilterInputValue, type GridTypeFilterInputValueProps } from './GridFilterInputValue';
 export * from './GridFilterInputDate';
 export * from './GridFilterInputSingleSelect';
 export * from './GridFilterInputBoolean';
