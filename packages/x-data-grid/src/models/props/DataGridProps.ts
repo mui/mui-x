@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -39,6 +38,11 @@ import type {
   GridGetRowsError,
   GridUpdateRowError,
 } from '../../hooks/features/dataSource/gridDataSourceError';
+
+type CommonProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 export interface GridExperimentalFeatures {
   /**
