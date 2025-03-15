@@ -31,14 +31,13 @@ export interface GridRowSelectionApi {
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
-   * Updates the selected rows to be those passed to the `rowIds` argument.
-   * Any row already selected will be unselected.
+   * Sets the new row selection model.
    *
    * ⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.
    * Pass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.
-   * @param {readonly GridRowId[]} rowIds The row ids to select.
+   * @param {gridRowSelectionModel} rowSelectionModel The new row selection model
    */
-  setRowSelectionModel: (rowIds: GridRowSelectionModel) => void;
+  setRowSelectionModel: (rowSelectionModel: GridRowSelectionModel) => void;
 }
 
 export interface GridRowMultiSelectionApi {
