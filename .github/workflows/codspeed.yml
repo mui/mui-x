@@ -46,8 +46,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-pro..." build
+        env:
+          NODE_ENV: production
       - name: Run benchmarks
         uses: CodSpeedHQ/action@63ae6025a0ffee97d7736a37c9192dbd6ed4e75f
+        env:
+          NODE_ENV: production
         with:
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}

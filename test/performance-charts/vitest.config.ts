@@ -6,6 +6,7 @@ const isCI = process.env.CI === 'true';
 
 export default defineConfig({
   plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
+  mode: 'production',
   test: {
     setupFiles: ['./setup.ts'],
     environment: 'jsdom',

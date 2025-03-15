@@ -1,9 +1,9 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
+
 import { options } from '../utils/options';
+import { directRender } from '../utils/directRender';
 
 describe('BarChart', () => {
   const dataLength = 150;
@@ -18,7 +18,7 @@ describe('BarChart', () => {
   bench(
     'BarChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const { unmount, findByText } = directRender(
         <BarChart
           xAxis={[
             {
@@ -38,7 +38,7 @@ describe('BarChart', () => {
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
 
-      cleanup();
+      unmount();
     },
     options,
   );

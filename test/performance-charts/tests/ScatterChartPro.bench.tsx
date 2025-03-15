@@ -1,9 +1,8 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
+import { directRender } from '../utils/directRender';
 
 describe('ScatterChartPro', () => {
   const dataLength = 50;
@@ -17,7 +16,7 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount',
     async () => {
-      const { findByText } = render(
+      const { unmount, findByText } = directRender(
         <ScatterChartPro
           xAxis={[
             {
@@ -40,7 +39,7 @@ describe('ScatterChartPro', () => {
 
       await findByText('60', { ignore: 'span' });
 
-      cleanup();
+      unmount();
     },
     options,
   );
