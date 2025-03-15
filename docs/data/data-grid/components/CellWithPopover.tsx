@@ -5,7 +5,7 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 
 export default function CellWithPopover() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 4,
@@ -31,6 +31,7 @@ export default function CellWithPopover() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         slotProps={{
           cell: {
             onMouseEnter: handlePopoverOpen,

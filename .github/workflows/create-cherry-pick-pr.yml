@@ -1,0 +1,28 @@
+name: Create cherry-pick PR
+on:
+  pull_request_target:
+    branches: [master, next, 'v[0-9]+.x']
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'A target branch passed from the caller workflow'
+        required: true
+        type: string
+      pr_number:
+        description: 'The PR number to cherry-pick from'
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  create_pr:
+    name: Create cherry-pick PR
+    uses: mui/mui-public/.github/workflows/prs_create-cherry-pick-pr.yml@master
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      target_branch: ${{ inputs.target_branch }}
+      pr_number: ${{ inputs.pr_number }}

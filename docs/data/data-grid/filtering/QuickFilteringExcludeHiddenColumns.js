@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['title', 'company', 'director', 'year', 'cinematicUniverse'];
@@ -75,7 +75,7 @@ export default function QuickFilteringExcludeHiddenColumns() {
           disableColumnFilter
           disableColumnSelector
           disableDensitySelector
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
               showQuickFilter: true,

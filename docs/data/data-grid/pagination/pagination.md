@@ -25,7 +25,7 @@ For the Pro and Premium Data Grid, pagination is disabled by default; use the `p
 
 ## Size of the page
 
-The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
+The Data Grid (MIT license) is limited to pages of up to 100 rows.
 If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
@@ -41,10 +41,10 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option. Define `value` as `-1` to display all results.
 
   ```jsx
-  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
@@ -100,8 +100,16 @@ const [paginationModel, setPaginationModel] = React.useState({
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the data grid.
+This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
+
+:::warning
+If you enable server-side pagination with no other server-side features, then the Data Grid will only be provided with partial data for filtering and sorting.
+To be able to work with the entire dataset, you must also implement [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side sorting](/x/react-data-grid/sorting/#server-side-sorting).
+The demo below does exactly that.
+:::
+
+{{"demo": "ServerPaginationFilterSortGrid.js", "bg": "inline"}}
 
 In general, the server-side pagination could be categorized into two types:
 
@@ -235,10 +243,12 @@ The following example demonstrates how to show the estimated row count in the pa
 ```jsx
 const labelDisplayedRows = ({ from, to, count, estimated }) => {
   if (!estimated) {
-    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`,
+    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
   }
-  return `${from}–${to} od ${count !== -1 ? count : `više nego ${estimated > to ? estimated : to}`}`;
-}
+  const estimateLabel =
+    estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
+  return `${from}–${to} od ${count !== -1 ? count : estimateLabel}`;
+};
 
 <DataGrid
   {...data}
@@ -247,7 +257,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
       labelDisplayedRows,
     },
   }}
-/>
+/>;
 ```
 
 For more information, see the [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.

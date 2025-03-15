@@ -1,5 +1,11 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
+import {
+  GRID_TREE_DATA_GROUPING_FIELD,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+} from '../../../internals/constants';
+import { isGroupingColumn } from '../../../internals/utils/gridRowGroupingUtils';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -11,12 +17,10 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
@@ -26,12 +30,19 @@ import {
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
-import {
-  enrichPageRowsWithPinnedRows,
-  getLeftColumnIndex,
-  getRightColumnIndex,
-  findNonRowSpannedCell,
-} from './utils';
+import { getLeftColumnIndex, getRightColumnIndex, findNonRowSpannedCell } from './utils';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { createSelectorMemoized } from '../../../utils/createSelector';
+import { gridVisibleRowsSelector } from '../pagination';
+import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+
+const gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized(
+  gridVisibleRowsSelector,
+  gridPinnedRowsSelector,
+  (visibleRows, pinnedRows) => {
+    return (pinnedRows.top || []).concat(visibleRows.rows, pinnedRows.bottom || []);
+  },
+);
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -43,7 +54,7 @@ import {
  * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'pagination'
@@ -52,16 +63,16 @@ export const useGridKeyboardNavigation = (
     | 'experimentalFeatures'
     | 'signature'
     | 'headerFilters'
+    | 'unstable_listView'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
   const isRtl = useRtl();
+  const listView = props.unstable_listView;
 
-  const currentPageRows = React.useMemo(
-    () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
-    [apiRef, initialCurrentPageRows],
-  );
+  const getCurrentPageRows = React.useCallback(() => {
+    return gridVisibleRowsWithPinnedRowsSelector(apiRef);
+  }, [apiRef]);
 
   const headerFilteringEnabled = props.signature !== 'DataGrid' && props.headerFilters;
 
@@ -88,7 +99,9 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
-      const field = gridVisibleColumnFieldsSelector(apiRef)[colIndex];
+      const field = listView
+        ? gridListColumnSelector(apiRef)!.field
+        : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
@@ -102,7 +115,7 @@ export const useGridKeyboardNavigation = (
       });
       apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },
-    [apiRef, logger],
+    [apiRef, logger, listView],
   );
 
   const goToHeader = React.useCallback(
@@ -137,9 +150,9 @@ export const useGridKeyboardNavigation = (
 
   const getRowIdFromIndex = React.useCallback(
     (rowIndex: number) => {
-      return currentPageRows[rowIndex]?.id;
+      return getCurrentPageRows()[rowIndex]?.id;
     },
-    [currentPageRows],
+    [getCurrentPageRows],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
@@ -156,6 +169,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const currentPageRows = getCurrentPageRows();
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
@@ -167,13 +181,12 @@ export const useGridKeyboardNavigation = (
 
       switch (event.key) {
         case 'ArrowDown': {
-          if (firstRowIndexInPage !== null) {
-            if (headerFilteringEnabled) {
-              goToHeaderFilter(colIndexBefore, event);
-            } else {
-              goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
-            }
+          if (headerFilteringEnabled) {
+            goToHeaderFilter(colIndexBefore, event);
+          } else if (firstRowIndexInPage !== null) {
+            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
           }
+
           break;
         }
 
@@ -257,7 +270,7 @@ export const useGridKeyboardNavigation = (
     },
     [
       apiRef,
-      currentPageRows.length,
+      getCurrentPageRows,
       headerFilteringEnabled,
       goToHeaderFilter,
       goToCell,
@@ -277,6 +290,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const currentPageRows = getCurrentPageRows();
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = 0;
@@ -365,15 +379,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [
-      apiRef,
-      currentPageRows.length,
-      goToHeaderFilter,
-      isRtl,
-      goToHeader,
-      goToCell,
-      getRowIdFromIndex,
-    ],
+    [apiRef, getCurrentPageRows, goToHeaderFilter, isRtl, goToHeader, goToCell, getRowIdFromIndex],
   );
 
   const handleColumnGroupHeaderKeyDown = React.useCallback<
@@ -388,6 +394,7 @@ export const useGridKeyboardNavigation = (
 
       const { fields, depth, maxDepth } = params;
 
+      const currentPageRows = getCurrentPageRows();
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const currentColIndex = apiRef.current.getColumnIndex(currentField);
       const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
@@ -467,7 +474,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows.length, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
+    [apiRef, getCurrentPageRows, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
@@ -493,20 +500,25 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const currentPageRows = getCurrentPageRows();
       if (currentPageRows.length === 0) {
         return;
       }
 
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
+      const getColumnIndexFn = listView ? () => 0 : apiRef.current.getColumnIndex;
       const colIndexBefore = (params as GridCellParams).field
-        ? apiRef.current.getColumnIndex((params as GridCellParams).field)
+        ? getColumnIndexFn((params as GridCellParams).field)
         : 0;
       const rowIndexBefore = currentPageRows.findIndex((row) => row.id === params.id);
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const visibleColumns = listView
+        ? [gridListColumnSelector(apiRef)]
+        : gridVisibleColumnDefinitionsSelector(apiRef);
+      const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -578,8 +590,7 @@ export const useGridKeyboardNavigation = (
           const colDef = (params as GridCellParams).colDef;
           if (
             colDef &&
-            // `GRID_TREE_DATA_GROUPING_FIELD` from the Pro package
-            colDef.field === '__tree_data_group__'
+            (colDef.field === GRID_TREE_DATA_GROUPING_FIELD || isGroupingColumn(colDef.field))
           ) {
             break;
           }
@@ -642,13 +653,14 @@ export const useGridKeyboardNavigation = (
     },
     [
       apiRef,
-      currentPageRows,
+      getCurrentPageRows,
       isRtl,
       goToCell,
       getRowIdFromIndex,
       headerFilteringEnabled,
       goToHeaderFilter,
       goToHeader,
+      listView,
     ],
   );
 

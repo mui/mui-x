@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Editing
+components: RichTreeView, TreeItem
 githubLabel: 'component: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -45,14 +45,14 @@ Use the `onItemLabelChange` prop to trigger an action when the label of an item 
 
 ## Change the default behavior
 
-By default, blurring the tree item saves the new value if there is one.
-To modify this behavior, use the `slotProps` of the `TreeItem2`.
+By default, blurring the Tree Item saves the new value if there is one.
+To modify this behavior, use the `slotProps` of the Tree Item.
 
 {{"demo": "CustomBehavior.js"}}
 
 ## Validation
 
-You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItem2Utils`.
+You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItemUtils`.
 
 {{"demo": "Validation.js"}}
 
@@ -85,7 +85,7 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change the label of an item
 
-Use the `setItemExpansion` API method to change the expansion of an item.
+Use the `updateItemLabel()` API method to imperatively update the label of an item.
 
 ```ts
 apiRef.current.updateItemLabel(
@@ -97,3 +97,28 @@ apiRef.current.updateItemLabel(
 ```
 
 {{"demo": "ApiMethodUpdateItemLabel.js"}}
+
+## Editing lazy loaded children
+
+To store the updated item labels on your server use the `onItemLabelChange` callback function.
+
+Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually.
+
+```tsx
+const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {
+  // update your cache here
+};
+
+<RichTreeViewPro
+  items={[]}
+  onItemLabelChange={handleItemLabelChange}
+  isItemEditable
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+  {...otherProps}
+/>;
+```
+
+Visit the dedicated page for [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-label-editing) to read more.

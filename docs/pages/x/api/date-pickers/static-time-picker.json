@@ -55,6 +55,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -66,7 +67,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -118,7 +119,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": null
     },

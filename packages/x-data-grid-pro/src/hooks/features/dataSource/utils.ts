@@ -1,13 +1,8 @@
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from '@mui/x-data-grid';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
-
-export const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
-  if (modeProp === 'server') {
-    fn();
-  }
-};
 
 export enum RequestStatus {
   QUEUED,
@@ -33,7 +28,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+    privateApiRef: RefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.api = privateApiRef.current;
@@ -92,7 +87,7 @@ export class NestedDataManager {
   };
 
   public clearPendingRequest = (id: GridRowId) => {
-    this.api.unstable_dataSource.setChildrenLoading(id, false);
+    this.api.dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };

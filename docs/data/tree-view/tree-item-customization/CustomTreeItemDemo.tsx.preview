@@ -1,0 +1,8 @@
+<RichTreeView
+  defaultExpandedItems={['1']}
+  items={ITEMS}
+  slots={{ item: CustomTreeItem }}
+  defaultSelectedItems="1.1"
+  checkboxSelection
+  isItemEditable={(item) => Boolean(item?.editable)}
+/>

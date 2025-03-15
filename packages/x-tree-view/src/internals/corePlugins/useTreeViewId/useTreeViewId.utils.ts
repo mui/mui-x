@@ -7,7 +7,7 @@ export const createTreeViewDefaultId = () => {
 };
 
 /**
- * Generate the id attribute (i.e.: the `id` attribute passed to the DOM element) of a tree item.
+ * Generate the id attribute (i.e.: the `id` attribute passed to the DOM element) of a Tree Item.
  * If the user explicitly defined an id attribute, it will be returned.
  * Otherwise, the method creates a unique id for the item based on the Tree View id attribute and the item `itemId`
  * @param {object} params The parameters to determine the id attribute of the item.

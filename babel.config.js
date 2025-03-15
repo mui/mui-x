@@ -22,6 +22,7 @@ const defaultAlias = {
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
   '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
   '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
+  '@mui/x-telemetry': resolveAliasPath('./packages/x-telemetry/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
@@ -39,10 +40,6 @@ const defaultAlias = {
   packages: resolveAliasPath('./packages'),
 };
 
-const productionPlugins = [
-  ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
-];
-
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
@@ -52,7 +49,7 @@ module.exports = function getBabelConfig(api) {
       '@babel/preset-env',
       {
         bugfixes: true,
-        browserslistEnv: process.env.BABEL_ENV || process.env.NODE_ENV,
+        browserslistEnv: api.env() || process.env.NODE_ENV,
         debug: process.env.MUI_BUILD_VERBOSE === 'true',
         modules: useESModules ? false : 'commonjs',
         shippedProposals: api.env('modern'),
@@ -67,14 +64,9 @@ module.exports = function getBabelConfig(api) {
     '@babel/preset-typescript',
   ];
 
-  const usesAliases =
-    // in this config:
-    api.env(['coverage', 'development', 'test', 'benchmark']) ||
-    process.env.NODE_ENV === 'test' ||
-    // in webpack config:
-    api.env(['regressions']);
-
-  const outFileExtension = '.js';
+  // Essentially only replace in production builds.
+  // When aliasing we want to keep the original extension
+  const outFileExtension = process.env.MUI_OUT_FILE_EXTENSION || null;
 
   /** @type {babel.PluginItem[]} */
   const plugins = [
@@ -100,36 +92,48 @@ module.exports = function getBabelConfig(api) {
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
       },
     ],
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'MUI_VERSION',
+          'MUI_MAJOR_VERSION',
+          'MUI_MINOR_VERSION',
+          'MUI_PATCH_VERSION',
+          'MUI_PRERELEASE',
+        ],
+      },
+    ],
   ];
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
-    // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v4 by default.
+    // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
     plugins.push([
       'babel-plugin-replace-imports',
       {
         test: /date-fns/i,
-        replacer: 'date-fns-v4',
+        replacer: 'date-fns-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsV3/',
+        filenameIncludes: 'src/AdapterDateFnsV2/',
       },
     ]);
     plugins.push([
       'babel-plugin-replace-imports',
       {
         test: /date-fns-jalali/i,
-        replacer: 'date-fns-jalali-v3',
+        replacer: 'date-fns-jalali-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+        filenameIncludes: 'src/AdapterDateFnsJalaliV2/',
       },
       'replace-date-fns-jalali-imports',
     ]);
   }
 
   if (process.env.NODE_ENV === 'production') {
-    plugins.push(...productionPlugins);
+    if (!process.env.E2E_BUILD) {
+      plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
+    }
 
     if (process.env.BABEL_ENV) {
       plugins.push([
@@ -150,9 +154,7 @@ module.exports = function getBabelConfig(api) {
     plugins.push([
       '@mui/internal-babel-plugin-resolve-imports',
       {
-        // Don't replace the extension when we're using aliases.
-        // Essentially only replace in production builds.
-        outExtension: usesAliases ? null : outFileExtension,
+        outExtension: outFileExtension,
       },
     ]);
   }

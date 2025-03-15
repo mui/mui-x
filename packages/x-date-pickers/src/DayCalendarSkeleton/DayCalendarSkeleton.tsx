@@ -26,8 +26,7 @@ export interface DayCalendarSkeletonProps extends HTMLDivProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-const useUtilityClasses = (ownerState: DayCalendarSkeletonProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefined) => {
   const slots = {
     root: ['root'],
     week: ['week'],
@@ -59,14 +58,11 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
   overridesResolver: (props, styles) => styles.daySkeleton,
-})<{ ownerState: { day: number } }>({
+})({
   margin: `0 ${DAY_MARGIN}px`,
-  variants: [
-    {
-      props: { day: 0 },
-      style: { visibility: 'hidden' },
-    },
-  ],
+  '&[data-day-in-month="0"]': {
+    visibility: 'hidden',
+  },
 });
 
 const monthMap = [
@@ -92,22 +88,22 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
     name: 'MuiDayCalendarSkeleton',
   });
 
-  const { className, ...other } = props;
+  const { className, classes: classesProp, ...other } = props;
 
-  const classes = useUtilityClasses(other);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <DayCalendarSkeletonRoot className={clsx(classes.root, className)} {...other}>
       {monthMap.map((week, index) => (
         <DayCalendarSkeletonWeek key={index} className={classes.week}>
-          {week.map((day, index2) => (
+          {week.map((dayInMonth, index2) => (
             <DayCalendarSkeletonDay
               key={index2}
               variant="circular"
               width={DAY_SIZE}
               height={DAY_SIZE}
               className={classes.daySkeleton}
-              ownerState={{ day }}
+              data-day-in-month={dayInMonth}
             />
           ))}
         </DayCalendarSkeletonWeek>

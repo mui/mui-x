@@ -4,9 +4,9 @@ import InstallationInstructions from './InstallationInstructions';
 // #default-branch-switch
 
 const packages = {
-  Community: '@mui/x-data-grid',
-  Pro: '@mui/x-data-grid-pro',
-  Premium: '@mui/x-data-grid-premium',
+  Community: '@mui/x-data-grid@next',
+  Pro: '@mui/x-data-grid-pro@next',
+  Premium: '@mui/x-data-grid-premium@next',
 };
 
 export default function DataGridInstallationInstructions() {

@@ -16,11 +16,10 @@ export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value
   value: React.ReactNode;
   variant: TypographyProps['variant'];
   classes?: Partial<PickersToolbarButtonClasses>;
-  width?: number;
+  width?: number | string;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarButtonProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersToolbarButtonClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -43,17 +42,26 @@ export const PickersToolbarButton = React.forwardRef(function PickersToolbarButt
   ref: React.Ref<HTMLButtonElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarButton' });
-  const { align, className, selected, typographyClassName, value, variant, width, ...other } =
-    props;
+  const {
+    align,
+    className,
+    classes: classesProp,
+    selected,
+    typographyClassName,
+    value,
+    variant,
+    width,
+    ...other
+  } = props;
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <PickersToolbarButtonRoot
-      data-mui-test="toolbar-button"
+      data-testid="toolbar-button"
       variant="text"
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       {...(width ? { sx: { width } } : {})}
       {...other}
     >

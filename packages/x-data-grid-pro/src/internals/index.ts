@@ -33,7 +33,6 @@ export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorde
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
-export { TREE_DATA_STRATEGY } from '../hooks/features/treeData/gridTreeDataUtils';
 export {
   useGridRowPinning,
   rowPinningStateInitializer,
@@ -44,10 +43,13 @@ export {
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
+export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
+export { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourcePro';
+export { useGridDataSourceBasePro } from '../hooks/features/dataSource/useGridDataSourceBasePro';
 export {
-  useGridDataSource,
-  dataSourceStateInitializer,
-} from '../hooks/features/dataSource/useGridDataSource';
+  gridDataSourceErrorSelector,
+  gridDataSourceLoadingIdSelector,
+} from '../hooks/features/dataSource/gridDataSourceSelector';
 
 export type {
   GridExperimentalProFeatures,
@@ -60,5 +62,7 @@ export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
 export { insertNodeInTree, removeNodeFromTree, getVisibleRowsLookup } from '../utils/tree/utils';
 export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';
+
+export { skipSorting, skipFiltering } from '../hooks/features/serverSideTreeData/utils';
 
 export * from './propValidation';

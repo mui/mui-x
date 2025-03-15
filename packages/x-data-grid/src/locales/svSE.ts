@@ -1,4 +1,3 @@
-import { svSE as svSECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Inga rader',
   noResultsOverlayLabel: 'Inga resultat funna.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
@@ -31,6 +32,17 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Sök',
   toolbarQuickFilterDeleteIconLabel: 'Rensa',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportera',
   toolbarExportLabel: 'Exportera',
@@ -42,7 +54,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',
   columnsManagementShowHideAllText: 'Visa/Dölj alla',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Återställ',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
@@ -58,9 +71,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'innehåller',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'innehåller inte',
   filterOperatorEquals: 'lika med',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'inte lika med',
   filterOperatorStartsWith: 'börjar med',
   filterOperatorEndsWith: 'slutar med',
   filterOperatorIs: 'är',
@@ -81,9 +94,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Innehåller',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Innehåller inte',
   headerFilterOperatorEquals: 'Lika med',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Inte lika med',
   headerFilterOperatorStartsWith: 'Börjar med',
   headerFilterOperatorEndsWith: 'Slutar med',
   headerFilterOperatorIs: 'Är',
@@ -101,6 +114,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Större eller lika med',
   'headerFilterOperator<': 'Mindre än',
   'headerFilterOperator<=': 'Mindre eller lika med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'något',
@@ -109,6 +123,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Visa kolumner',
   columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
@@ -170,6 +185,34 @@ const svSEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandera',
   collapseDetailPanel: 'Kollapsa',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per sida:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå till första sidan';
+    }
+    if (type === 'last') {
+      return 'Gå till sista sidan';
+    }
+    if (type === 'next') {
+      return 'Gå till nästa sida';
+    }
+    // if (type === 'previous') {
+    return 'Gå till föregående sida';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Ordna om rader',
 
@@ -182,4 +225,4 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'antal',
 };
 
-export const svSE: Localization = getGridLocalization(svSEGrid, svSECore);
+export const svSE: Localization = getGridLocalization(svSEGrid);

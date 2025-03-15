@@ -9,7 +9,8 @@
       "dayjs/plugin/utc.d.ts",
       "mocha",
       "moment-timezone"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "include": ["e2e/**/*", "e2e-website/**/*", "regressions/**/*"],
   "exclude": ["regressions/build/**/*", "regressions/screenshots/**/*"]

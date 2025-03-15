@@ -1,6 +1,7 @@
 import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 
 export type PieItemId = string | number;
 
@@ -8,13 +9,18 @@ export type PieValueType = {
   /**
    * A unique identifier of the pie slice.
    */
-  id: PieItemId;
+  id?: PieItemId;
   value: number;
   /**
    * The label to display on the tooltip, arc, or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend' | 'arc') => string);
   color?: string;
+  /**
+   * Defines the mark type for the pie item.
+   * @default 'circle'
+   */
+  labelMarkType?: ChartsLabelMarkProps['type'];
 };
 
 export type DefaultizedPieValueType = PieValueType &
@@ -24,7 +30,7 @@ export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number)
 
 export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData> {
   type: 'pie';
-  data: TData[];
+  data: Readonly<TData[]>;
   /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.

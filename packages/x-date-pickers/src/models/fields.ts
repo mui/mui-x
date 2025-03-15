@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import { SxProps } from '@mui/material/styles';
-import type { BaseFieldProps } from '../internals/models/fields';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
-  UseClearableFieldSlotProps,
-  UseClearableFieldSlots,
-} from '../hooks/useClearableField';
-import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
-import type { UseFieldResponse } from '../internals/hooks/useField';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { PickerValidDate } from './pickers';
+import {
+  BaseSingleInputFieldProps,
+  FieldRangeSection,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../internals/models';
+import { PickerOwnerState } from './pickers';
+import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -26,8 +25,6 @@ export type FieldSectionType =
   | 'empty';
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
-
-export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export interface FieldSection {
   /**
@@ -92,12 +89,22 @@ export interface FieldSection {
   endSeparator: string;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
+// If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
+type IsAny<T> = boolean extends (T extends never ? true : false) ? true : false;
+
+export type InferFieldSection<TValue extends PickerValidValue> =
+  IsAny<TValue> extends true
+    ? FieldSection
+    : TValue extends PickerRangeValue
+      ? FieldRangeSection
+      : FieldSection;
+
+export interface FieldRef<TValue extends PickerValidValue> {
   /**
    * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
+   * @returns {InferFieldSection<TValue>[]} The sections of the current value.
    */
-  getSections: () => TSection[];
+  getSections: () => InferFieldSection<TValue>[];
   /**
    * Returns the index of the active section (the first focused section).
    * If no section is active, returns `null`.
@@ -123,68 +130,57 @@ export interface FieldRef<TSection extends FieldSection> {
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
-interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
-  ref?: React.Ref<HTMLDivElement>;
-  sx?: SxProps<any>;
-  label?: React.ReactNode;
-  id?: string;
-  name?: string;
-  onKeyDown?: React.KeyboardEventHandler;
-  onBlur?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  inputProps?: {
-    'aria-label'?: string;
-  };
-  slots?: UseClearableFieldSlots;
-  slotProps?: UseClearableFieldSlotProps & {
-    textField?: {};
-  };
+export interface FieldOwnerState extends PickerOwnerState {
+  /**
+   * `true` if the field is disabled, `false` otherwise.
+   */
+  isFieldDisabled: boolean;
+  /**
+   * `true` if the field is read-only, `false` otherwise.
+   */
+  isFieldReadOnly: boolean;
+  /**
+   * `true` if the field is required, `false` otherwise.
+   */
+  isFieldRequired: boolean;
+  /**
+   * The direction of the field.
+   * Is equal to "ltr" when the field is in left-to-right direction.
+   * Is equal to "rtl" when the field is in right-to-left direction.
+   */
+  fieldDirection: 'ltr' | 'rtl';
 }
-
-interface BaseForwardedV6SingleInputFieldProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
-interface BaseForwardedV7SingleInputFieldProps {
-  sectionListRef?: React.Ref<PickersSectionListRef>;
-}
-
-type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  BaseForwardedCommonSingleInputFieldProps &
-    (TEnableAccessibleFieldDOMStructure extends false
-      ? BaseForwardedV6SingleInputFieldProps
-      : BaseForwardedV7SingleInputFieldProps);
 
 /**
- * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field,
- * not what users can pass using the `props.slotProps.field`.
+ * Props the `slotProps.field` of a Picker can receive.
  */
-export type BaseSingleInputFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+export type PickerFieldSlotProps<
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> = BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError> &
-  BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
+> = ExportedPickerFieldUIProps &
+  Pick<
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
+    'shouldRespectLeadingZeros' | 'readOnly'
+  > &
+  React.HTMLAttributes<HTMLDivElement> & {
+    ref?: React.Ref<HTMLDivElement>;
+  };
 
 /**
- * Props the text field receives when used with a single input picker.
+ * Props the text field receives when used inside a single input Picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<
-    TEnableAccessibleFieldDOMStructure,
-    BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
-  >
+> = Omit<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
 >;
 
 /**

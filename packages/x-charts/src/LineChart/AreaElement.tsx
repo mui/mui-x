@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
 import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../context';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -101,7 +101,7 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -121,7 +121,7 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },

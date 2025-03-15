@@ -23,7 +23,7 @@ export interface GridControlledStateEventLookupPro {
    * Fired when the open detail panels are changed.
    * @ignore - do not document.
    */
-  detailPanelsExpandedRowIdsChange: { params: GridRowId[] };
+  detailPanelsExpandedRowIdsChange: { params: Set<GridRowId> };
   /**
    * Fired when the pinned columns is changed.
    * @ignore - do not document.
@@ -42,6 +42,7 @@ export interface GridEventLookupPro {
   rowOrderChange: { params: GridRowOrderChangeParams };
   /**
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
+   * Used to trigger `onFetchRows`.
    */
   fetchRows: { params: GridFetchRowsParams };
 }

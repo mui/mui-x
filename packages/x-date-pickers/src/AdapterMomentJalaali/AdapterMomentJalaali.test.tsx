@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import moment from 'moment';
-import jMoment from 'moment-jalaali';
+import jMoment, { Moment } from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
@@ -35,14 +35,13 @@ describe('<AdapterMomentJalaali />', () => {
       const adapter = new AdapterMomentJalaali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
-      expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
     });

@@ -6,14 +6,7 @@
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
-    "labelFontSize": {
-      "type": { "name": "number" },
-      "default": "14",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
-    },
     "labelStyle": { "type": { "name": "object" } },
-    "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -21,12 +14,6 @@
       "additionalInfo": { "slotsApi": true }
     },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
-    "tickFontSize": {
-      "type": { "name": "number" },
-      "default": "12",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
-    },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
       "default": "'auto'"
@@ -35,6 +22,7 @@
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
       "default": "'auto'"
     },
+    "tickLabelMinGap": { "type": { "name": "number" }, "default": "4" },
     "tickLabelPlacement": {
       "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
       "default": "'middle'"
@@ -122,7 +110,7 @@
     {
       "key": "tickLabel",
       "className": "MuiChartsXAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

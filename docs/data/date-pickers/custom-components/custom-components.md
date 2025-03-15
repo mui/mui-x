@@ -14,7 +14,7 @@ For example, available Date Picker slots can be found [here](/x/api/date-pickers
 :::
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Action bar
@@ -34,8 +34,8 @@ You can override the actions displayed by passing the `actions` prop to the `act
       actions: ['clear'],
     },
     // The actions will be different between desktop and mobile
-    actionBar: ({ wrapperVariant }) => ({
-      actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+    actionBar: ({ variant }) => ({
+      actions: variant === 'desktop' ? [] : ['clear'],
     }),
   }}
 />

@@ -1,0 +1,8 @@
+<DataGridPro
+  apiRef={apiRef}
+  columns={columns}
+  onRowClick={onRowClick}
+  rows={rows}
+  getDetailPanelHeight={getDetailPanelHeight}
+  getDetailPanelContent={getDetailPanelContent}
+/>

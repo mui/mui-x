@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
@@ -53,7 +53,7 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
   /**
    * The API of the grid.
    */
-  apiRef: React.MutableRefObject<Api>;
+  apiRef: RefObject<Api>;
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
@@ -149,7 +149,7 @@ export interface GridPrintExportOptions extends GridExportOptions {
   /**
    * Provide Print specific styles to the print window.
    */
-  pageStyle?: string | Function;
+  pageStyle?: string | (() => string);
   /**
    * Function that returns the list of row ids to export in the order they should be exported.
    * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].

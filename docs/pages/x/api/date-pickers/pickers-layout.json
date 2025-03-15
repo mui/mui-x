@@ -1,10 +1,6 @@
 {
   "props": {
-    "isRtl": { "type": { "name": "bool" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -28,7 +24,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": "MuiPickersLayout-actionBar"
     },
@@ -50,7 +46,7 @@
     },
     {
       "name": "toolbar",
-      "description": "Custom component for the toolbar.\nIt is placed above the picker views.",
+      "description": "Custom component for the toolbar.\nIt is placed above the Picker views.",
       "class": "MuiPickersLayout-toolbar"
     }
   ],

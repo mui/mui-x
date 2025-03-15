@@ -1,4 +1,3 @@
-import { koKR as koKRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '행이 없습니다.',
   noResultsOverlayLabel: '결과값이 없습니다.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',
@@ -30,6 +31,18 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '검색',
   toolbarQuickFilterDeleteIconLabel: '초기화',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: '프롬프트 입력…',
+  toolbarPromptControlWithRecordingPlaceholder: '프롬프트 입력 또는 녹음…',
+  toolbarPromptControlRecordingPlaceholder: '녹음 중…',
+  toolbarPromptControlLabel: '프롬프트 입력',
+  toolbarPromptControlRecordButtonDefaultLabel: '녹음',
+  toolbarPromptControlRecordButtonActiveLabel: '녹음 정지',
+  toolbarPromptControlSendActionLabel: '전송',
+  toolbarPromptControlSendActionAriaLabel: '프롬프트 전송',
+  toolbarPromptControlErrorMessage:
+    '요청을 처리하는 동안 오류가 발생했습니다. 다른 프롬프트로 다시 시도하십시오.',
+
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
@@ -38,14 +51,15 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Excel로 내보내기',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: '검색',
+  columnsManagementNoColumns: '열이 없습니다.',
+  columnsManagementShowHideAllText: '모두 보기/숨기기',
+  columnsManagementReset: '초기화',
+  columnsManagementDeleteIconLabel: '제거',
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: '모두 삭제',
   filterPanelDeleteIconLabel: '삭제',
   filterPanelLogicOperator: '논리 연산자',
   filterPanelOperator: '연산자',
@@ -57,9 +71,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '포함하는',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '포함하지 않는',
   filterOperatorEquals: '값이 같은',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '값이 다른',
   filterOperatorStartsWith: '시작하는',
   filterOperatorEndsWith: '끝나는',
   filterOperatorIs: '~인',
@@ -71,35 +85,36 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '값이 없는',
   filterOperatorIsNotEmpty: '값이 있는',
   filterOperatorIsAnyOf: '값 중 하나인',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorContains: '포함하는',
+  headerFilterOperatorDoesNotContain: '포함하지 않는',
+  headerFilterOperatorEquals: '값이 같은',
+  headerFilterOperatorDoesNotEqual: '값이 다른',
+  headerFilterOperatorStartsWith: '시작하는',
+  headerFilterOperatorEndsWith: '끝나는',
+  headerFilterOperatorIs: '~인',
+  headerFilterOperatorNot: '~아닌',
+  headerFilterOperatorAfter: '더 이후',
+  headerFilterOperatorOnOrAfter: '이후',
+  headerFilterOperatorBefore: '더 이전',
+  headerFilterOperatorOnOrBefore: '이전',
+  headerFilterOperatorIsEmpty: '값이 없는',
+  headerFilterOperatorIsNotEmpty: '값이 있는',
+  headerFilterOperatorIsAnyOf: '값 중 하나인',
+  'headerFilterOperator=': '값이 같은',
+  'headerFilterOperator!=': '값이 다른',
+  'headerFilterOperator>': '더 큰',
+  'headerFilterOperator>=': '같거나 더 큰',
+  'headerFilterOperator<': '더 작은',
+  'headerFilterOperator<=': '같거나 더 작은',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: '아무값',
@@ -108,8 +123,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '메뉴',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '열 표시',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '열 관리',
   columnMenuFilter: '필터',
   columnMenuHideColumn: '열 숨기기',
   columnMenuUnsort: '정렬 해제',
@@ -165,6 +181,34 @@ const koKRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '열기',
   collapseDetailPanel: '접기',
 
+  // Pagination
+  paginationRowsPerPage: '페이지 당 행:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '첫 번째 페이지로 이동';
+    }
+    if (type === 'last') {
+      return '마지막 페이지로 이동';
+    }
+    if (type === 'next') {
+      return '다음 페이지로 이동';
+    }
+    // if (type === 'previous') {
+    return '이전 페이지로 이동';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '행 재배치',
 
@@ -177,4 +221,4 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '크기',
 };
 
-export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);
+export const koKR: Localization = getGridLocalization(koKRGrid);

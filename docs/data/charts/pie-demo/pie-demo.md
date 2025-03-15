@@ -32,6 +32,6 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 {{"demo": "PieChartWithCenterLabel.js"}}
 
-## OnSeriesItemClick
+## Pie chart with custom mark in legend and tooltip
 
-{{"demo": "OnSeriesItemClick.js"}}
+{{"demo": "PieChartWithCustomLegendAndTooltip.js"}}

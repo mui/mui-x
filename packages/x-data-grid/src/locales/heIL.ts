@@ -1,4 +1,3 @@
-import { heIL as heILCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const heILGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'אין שורות',
   noResultsOverlayLabel: 'לא נמצאו תוצאות.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'צפיפות',
@@ -31,6 +32,17 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'חיפוש',
   toolbarQuickFilterDeleteIconLabel: 'ניקוי',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'הקלד ערך…',
+  toolbarPromptControlWithRecordingPlaceholder: 'הקלד או הקלט ערך…',
+  toolbarPromptControlRecordingPlaceholder: 'ממתין להנחיה…',
+  toolbarPromptControlLabel: 'הזן ערך',
+  toolbarPromptControlRecordButtonDefaultLabel: 'הקלטה',
+  toolbarPromptControlRecordButtonActiveLabel: 'הפסק הקלטה',
+  toolbarPromptControlSendActionLabel: 'שלח',
+  toolbarPromptControlSendActionAriaLabel: 'שלח ערך',
+  toolbarPromptControlErrorMessage: 'התרחשה שגיאה בזמן העיבוד של הבקשה. נסה שוב עם ערך אחר בבקשה.',
+
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
   toolbarExportLabel: 'ייצוא',
@@ -43,6 +55,7 @@ const heILGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'אין עמודות',
   columnsManagementShowHideAllText: 'הצג/הסתר הכל',
   columnsManagementReset: 'אתחול',
+  columnsManagementDeleteIconLabel: 'נקה',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
@@ -58,9 +71,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'מכיל',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'לא מכיל',
   filterOperatorEquals: 'שווה',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'לא שווה',
   filterOperatorStartsWith: 'מתחיל ב-',
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
@@ -81,9 +94,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'לא מכיל',
   headerFilterOperatorEquals: 'שווה',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'לא שווה',
   headerFilterOperatorStartsWith: 'מתחיל ב-',
   headerFilterOperatorEndsWith: 'נגמר ב-',
   headerFilterOperatorIs: 'הינו',
@@ -101,6 +114,7 @@ const heILGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'גדול שווה ל-',
   'headerFilterOperator<': 'קטן מ-',
   'headerFilterOperator<=': 'קטן שווה ל-',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'כל ערך',
@@ -109,6 +123,7 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'תפריט',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'הצג עמודות',
   columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',
@@ -168,6 +183,34 @@ const heILGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 
+  // Pagination
+  paginationRowsPerPage: 'שורות בעמוד:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'לעמוד הראשון';
+    }
+    if (type === 'last') {
+      return 'לעמוד האחרון';
+    }
+    if (type === 'next') {
+      return 'לעמוד הבא';
+    }
+    // if (type === 'previous') {
+    return 'לעמוד הקודם';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'סידור שורות',
 
@@ -180,4 +223,4 @@ const heILGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'גודל',
 };
 
-export const heIL: Localization = getGridLocalization(heILGrid, heILCore);
+export const heIL: Localization = getGridLocalization(heILGrid);

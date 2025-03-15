@@ -1,0 +1,16 @@
+<Button
+  onClick={() => {
+    apiRef.current?.dataSource.cache.clear();
+  }}
+>
+  Clear cache
+</Button>
+
+<div style={{ height: 400, position: 'relative' }}>
+  <DataGridPremium
+    columns={columns}
+    dataSource={dataSource}
+    apiRef={apiRef}
+    initialState={initialState}
+  />
+</div>

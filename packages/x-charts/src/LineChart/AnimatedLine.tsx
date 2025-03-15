@@ -2,27 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, useTransition } from '@react-spring/web';
-import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { styled } from '@mui/material/styles';
 import type { LineElementOwnerState } from './LineElement';
 import { useStringInterpolator } from '../internals/useStringInterpolator';
 import { AppearingMask } from './AppearingMask';
-
-export const LineElementPath = styled(animated.path, {
-  name: 'MuiLineElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
-  strokeWidth: 2,
-  strokeLinejoin: 'round',
-  fill: 'none',
-  stroke:
-    (ownerState.gradientId && `url(#${ownerState.gradientId})`) ||
-    (ownerState.isHighlighted && d3Color(ownerState.color)!.brighter(0.5).formatHex()) ||
-    ownerState.color,
-  transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
-  opacity: ownerState.isFaded ? 0.3 : 1,
-}));
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: LineElementOwnerState;
@@ -50,7 +32,7 @@ function AnimatedLine(props: AnimatedLineProps) {
   const stringInterpolator = useStringInterpolator(d);
 
   const transitionChange = useTransition([stringInterpolator], {
-    from: { value: 0 },
+    from: skipAnimation ? undefined : { value: 0 },
     to: { value: 1 },
     enter: { value: 1 },
     reset: false,
@@ -60,7 +42,17 @@ function AnimatedLine(props: AnimatedLineProps) {
   return (
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
       {transitionChange((style, interpolator) => (
-        <LineElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
+        <animated.path
+          // @ts-expect-error
+          d={style.value.to(interpolator)}
+          stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
+          strokeWidth={2}
+          strokeLinejoin="round"
+          fill="none"
+          filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+          opacity={ownerState.isFaded ? 0.3 : 1}
+          {...other}
+        />
       ))}
     </AppearingMask>
   );

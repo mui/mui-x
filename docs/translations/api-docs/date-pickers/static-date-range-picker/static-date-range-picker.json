@@ -22,7 +22,9 @@
     "disableAutoMonthSwitching": {
       "description": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date."
     },
-    "disabled": { "description": "If <code>true</code>, the picker and text field are disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableDragEditing": {
       "description": "If <code>true</code>, editing dates by dragging is disabled."
     },
@@ -87,6 +89,9 @@
     "rangePosition": {
       "description": "The position in the currently edited date range. Used when the component position is controlled."
     },
+    "readOnly": {
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+    },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
@@ -122,7 +127,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",

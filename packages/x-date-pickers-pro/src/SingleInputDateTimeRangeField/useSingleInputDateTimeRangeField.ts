@@ -1,49 +1,38 @@
 'use client';
-import * as React from 'react';
-import { useField, useDefaultizedDateTimeField } from '@mui/x-date-pickers/internals';
+import {
+  useField,
+  useFieldInternalPropsWithDefaults,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateTimeRange } from '../validation';
-import { RangeFieldSection, DateRange } from '../models';
+import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseSingleInputDateTimeRangeFieldProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure
-  >,
+  TAllProps extends UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    TDate,
-    UseSingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const manager = useDateTimeRangeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
-  );
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
+    PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateTimeRange,
-    valueType: 'date-time',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
+    getOpenPickerButtonAriaLabel: manager.internal_useOpenPickerButtonAriaLabel(),
   });
 };

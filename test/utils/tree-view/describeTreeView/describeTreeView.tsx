@@ -5,7 +5,6 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
@@ -114,14 +113,12 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
     return getUtils(result);
   };
 
-  const createRendererForComponentWithItemsProp = (
-    TreeViewComponent: typeof RichTreeView,
-    TreeItemComponent: typeof TreeItem | typeof TreeItem2,
-  ) => {
+  const createRendererForComponentWithItemsProp = (TreeViewComponent: typeof RichTreeView) => {
     const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
       items: rawItems,
       withErrorBoundary,
       slotProps,
+      slots,
       ...other
     }) => {
       const items = rawItems as readonly DescribeTreeViewItem[];
@@ -131,7 +128,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
         <TreeViewComponent
           items={items}
           apiRef={apiRef}
-          slots={{ item: TreeItemComponent }}
+          slots={{ item: TreeItem, ...slots }}
           slotProps={{
             ...slotProps,
             item: (ownerState) =>
@@ -172,10 +169,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
     };
   };
 
-  const createRenderersForComponentWithJSXItems = (
-    TreeViewComponent: typeof SimpleTreeView,
-    TreeItemComponent: typeof TreeItem | typeof TreeItem2,
-  ) => {
+  const createRenderersForComponentWithJSXItems = (TreeViewComponent: typeof SimpleTreeView) => {
     const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
       items: rawItems,
       withErrorBoundary,
@@ -184,7 +178,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       ...other
     }) => {
       const items = rawItems as readonly DescribeTreeViewItem[];
-      const Item = slots?.item ?? TreeItemComponent;
+      const Item = slots?.item ?? TreeItem;
       const apiRef = { current: undefined };
 
       const renderItem = (item: DescribeTreeViewItem) => (
@@ -223,69 +217,30 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   };
 
   describe(message, () => {
-    describe('RichTreeView + TreeItem', () => {
+    describe('RichTreeView', () => {
       testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeView, TreeItem),
-        setup: 'RichTreeView + TreeItem',
+        ...createRendererForComponentWithItemsProp(RichTreeView),
         treeViewComponentName: 'RichTreeView',
-        treeItemComponentName: 'TreeItem',
         TreeViewComponent: RichTreeView,
         TreeItemComponent: TreeItem,
       });
     });
 
-    describe('RichTreeView + TreeItem2', () => {
+    describe('RichTreeViewPro', () => {
       testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeView, TreeItem2),
-        setup: 'RichTreeView + TreeItem2',
-        treeViewComponentName: 'RichTreeView',
-        treeItemComponentName: 'TreeItem2',
-        TreeViewComponent: RichTreeView,
-        TreeItemComponent: TreeItem2,
-      });
-    });
-
-    describe('RichTreeViewPro + TreeItem', () => {
-      testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem),
-        setup: 'RichTreeViewPro + TreeItem',
+        ...createRendererForComponentWithItemsProp(RichTreeViewPro),
         treeViewComponentName: 'RichTreeViewPro',
-        treeItemComponentName: 'TreeItem',
         TreeViewComponent: RichTreeViewPro,
         TreeItemComponent: TreeItem,
       });
     });
 
-    describe('RichTreeViewPro + TreeItem2', () => {
+    describe('SimpleTreeView', () => {
       testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeViewPro, TreeItem2),
-        setup: 'RichTreeViewPro + TreeItem2',
-        treeViewComponentName: 'RichTreeViewPro',
-        treeItemComponentName: 'TreeItem2',
-        TreeViewComponent: RichTreeViewPro,
-        TreeItemComponent: TreeItem2,
-      });
-    });
-
-    describe('SimpleTreeView + TreeItem', () => {
-      testRunner({
-        ...createRenderersForComponentWithJSXItems(SimpleTreeView, TreeItem),
-        setup: 'SimpleTreeView + TreeItem',
+        ...createRenderersForComponentWithJSXItems(SimpleTreeView),
         treeViewComponentName: 'SimpleTreeView',
-        treeItemComponentName: 'TreeItem',
         TreeViewComponent: SimpleTreeView,
         TreeItemComponent: TreeItem,
-      });
-    });
-
-    describe('SimpleTreeView + TreeItem2', () => {
-      testRunner({
-        ...createRenderersForComponentWithJSXItems(SimpleTreeView, TreeItem2),
-        setup: 'SimpleTreeView + TreeItem2',
-        treeViewComponentName: 'SimpleTreeView',
-        treeItemComponentName: 'TreeItem2',
-        TreeViewComponent: SimpleTreeView,
-        TreeItemComponent: TreeItem2,
       });
     });
   });
@@ -303,13 +258,10 @@ type DescribeTreeView = {
 };
 
 /**
- * Describe tests for the Tree View that will be executed with the following setups:
- * - RichTreeView + TreeItem
- * - RichTreeView + TreeItem2
- * - RichTreeViewPro + TreeItem
- * - RichTreeViewPro + TreeItem2
- * - SimpleTreeView + TreeItem
- * - SimpleTreeView + TreeItem2
+ * Describe tests for the Tree View that will be executed with the following Tree View components:
+ * - RichTreeView
+ * - RichTreeViewPro
+ * - SimpleTreeView
  *
  * Is used as follows:
  *
@@ -325,7 +277,7 @@ type DescribeTreeView = {
  * ```
  *
  * Several things to note:
- * - The `render` function takes an array of items, even for `SimpleTreeView`
+ * - The `render` function takes an array of items, even for Simple Tree View
  * - Except for `items`, all the other properties passed to `render` will be forwarded to the Tree View as props
  * - If an item has no label, its `id` will be used as the label
  */

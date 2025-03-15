@@ -1,4 +1,3 @@
-import { trTR as trTRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
   noResultsOverlayLabel: 'Sonuç bulunamadı.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Yoğunluk',
@@ -30,6 +31,18 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Bir istem yazın…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Bir istem yazın veya kaydedin…',
+  toolbarPromptControlRecordingPlaceholder: 'İstem dinleniyor…',
+  toolbarPromptControlLabel: 'İstem girişi',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Kaydet',
+  toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
+  toolbarPromptControlSendActionLabel: 'Gönder',
+  toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
+  toolbarPromptControlErrorMessage:
+    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
+
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
@@ -42,6 +55,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Kolon yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
+  columnsManagementDeleteIconLabel: 'Temizle',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -57,9 +71,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'içerir',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'içermiyor',
   filterOperatorEquals: 'eşittir',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'eşit değil',
   filterOperatorStartsWith: 'ile başlar',
   filterOperatorEndsWith: 'ile biter',
   filterOperatorIs: 'eşittir',
@@ -80,9 +94,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'İçermez',
   headerFilterOperatorEquals: 'Şuna eşittir',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Eşit değildir',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
   headerFilterOperatorIs: 'Eşittir',
@@ -100,6 +114,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Büyük veya eşit',
   'headerFilterOperator<': 'Küçüktür',
   'headerFilterOperator<=': 'Küçük veya eşit',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'herhangi',
@@ -108,6 +123,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Sütunları göster',
   columnMenuManageColumns: 'Sütunları yönet',
   columnMenuFilter: 'Filtre Ekle',
@@ -165,6 +181,34 @@ const trTRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 
+  // Pagination
+  paginationRowsPerPage: 'Sayfa başına satır:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'İlk sayfaya git';
+    }
+    if (type === 'last') {
+      return 'Son sayfaya git';
+    }
+    if (type === 'next') {
+      return 'Sonraki sayfaya git';
+    }
+    // if (type === 'previous') {
+    return 'Önceki sayfaya git';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Satırı yeniden sırala',
 
@@ -177,4 +221,4 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'boyut',
 };
 
-export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
+export const trTR: Localization = getGridLocalization(trTRGrid);

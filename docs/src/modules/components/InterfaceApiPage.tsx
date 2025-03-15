@@ -60,7 +60,7 @@ interface ApiPageProps {
   /**
    * The localStorage key used to save the user layout for each section.
    * It's useful to dave different preferences on different pages.
-   * For example, the data grid has a different key that the core.
+   * For example, the Data Grid has a different key that the core.
    */
   layoutStorageKey?: LayoutStorageKeys;
 }

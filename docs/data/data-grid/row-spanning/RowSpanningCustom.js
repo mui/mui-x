@@ -12,7 +12,7 @@ export default function RowSpanningCustom() {
         showColumnVerticalBorder
         disableRowSelectionOnClick
         hideFooter
-        unstable_rowSpanning
+        rowSpanning
         sx={{
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent',
@@ -59,14 +59,14 @@ const columns = [
 const rows = [
   {
     id: 1,
-    name: 'George Floyd',
+    name: 'Andrew Clark',
     designation: 'React Engineer',
     department: 'Engineering',
     age: 25,
   },
   {
     id: 2,
-    name: 'George Floyd',
+    name: 'Andrew Clark',
     designation: 'Technical Interviewer',
     department: 'Human resource',
     age: 25,

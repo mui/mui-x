@@ -24,7 +24,7 @@ const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily
 
 export const getExpectedOnChangeCount = (
   componentFamily: PickerComponentFamily,
-  params: OpenPickerParams,
+  params: OpenPickerParams & { variant: 'desktop' | 'mobile' },
 ) => {
   if (componentFamily === 'digital-clock') {
     return getChangeCountForComponentFamily(componentFamily);
@@ -53,22 +53,34 @@ export const getExpectedOnChangeCount = (
     // but does not have meridiem control
     return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
   }
+  if (componentFamily === 'picker' && params.type === 'time-range') {
+    return getChangeCountForComponentFamily('multi-section-digital-clock');
+  }
   return getChangeCountForComponentFamily(componentFamily);
 };
 
-export const getDateOffset = <TDate extends PickerValidDate>(
-  adapter: MuiPickersAdapter<TDate>,
-  date: TDate,
-) => {
+export const getDateOffset = (adapter: MuiPickersAdapter, date: PickerValidDate) => {
   const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
   const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
   return cleanUtcHour * 60;
 };
 
-export const formatFullTimeValue = <TDate extends PickerValidDate>(
-  adapter: MuiPickersAdapter<TDate>,
-  value: TDate,
-) => {
+export const formatFullTimeValue = (adapter: MuiPickersAdapter, value: PickerValidDate) => {
   const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
   return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
+};
+
+export const isPickerRangeType = (type: OpenPickerParams['type']) =>
+  type === 'date-range' || type === 'date-time-range' || type === 'time-range';
+
+export const isPickerSingleInput = (parameters: OpenPickerParams) => {
+  if (
+    parameters.type === 'date-range' ||
+    parameters.type === 'date-time-range' ||
+    parameters.type === 'time-range'
+  ) {
+    return parameters.fieldType === 'single-input';
+  }
+
+  return true;
 };

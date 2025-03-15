@@ -40,7 +40,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 
   const barLabelTransition = useTransition(bars, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: leaveStyle,
+    from: skipAnimation ? undefined : leaveStyle,
     leave: null,
     enter: enterStyle,
     update: enterStyle,

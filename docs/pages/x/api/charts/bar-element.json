@@ -23,6 +23,18 @@
   ],
   "classes": [
     {
+      "key": "faded",
+      "className": "MuiBarElement-faded",
+      "description": "Styles applied to the root element if it is faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiBarElement-highlighted",
+      "description": "Styles applied to the root element if it is highlighted.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiBarElement-root",
       "description": "Styles applied to the root element.",

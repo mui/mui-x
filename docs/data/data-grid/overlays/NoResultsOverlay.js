@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function NoResultsOverlay() {
@@ -23,7 +23,7 @@ export default function NoResultsOverlay() {
             },
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           toolbar: {
             showQuickFilter: true,

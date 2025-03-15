@@ -9,7 +9,7 @@ type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 
 
 export const projectTreeSettings: ProjectSettings = {
   output: {
-    apiManifestPath: path.join(process.cwd(), 'docs/data/tree-view-component-api-pages.ts'),
+    apiManifestPath: path.join(process.cwd(), 'docs/data/treeViewApiPages.ts'),
   },
   onWritingManifestFile: (
     builds: PromiseSettledResult<ComponentReactApi | HookReactApi | null | never[]>[],
@@ -33,8 +33,8 @@ export const projectTreeSettings: ProjectSettings = {
 
     return `import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
-export default apiPages;
+const treeViewApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default treeViewApiPages;
 `;
   },
   typeScriptProjects: [

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -17,6 +18,7 @@ import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -52,8 +54,8 @@ function scrollIntoView(dimensions: {
  * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination'>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
 ): void => {
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
@@ -63,9 +65,11 @@ export const useGridScroll = (
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = props.unstable_listView
+        ? [gridListColumnSelector(apiRef)!]
+        : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
@@ -103,7 +107,7 @@ export const useGridScroll = (
         });
       }
       if (params.rowIndex !== undefined) {
-        const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+        const rowsMeta = gridRowsMetaSelector(apiRef);
         const page = gridPageSelector(apiRef);
         const pageSize = gridPageSizeSelector(apiRef);
 
@@ -139,7 +143,14 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows],
+    [
+      logger,
+      apiRef,
+      virtualScrollerRef,
+      props.pagination,
+      visibleSortedRows,
+      props.unstable_listView,
+    ],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(

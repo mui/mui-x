@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';

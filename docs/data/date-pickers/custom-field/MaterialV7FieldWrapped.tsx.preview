@@ -1,8 +1,2 @@
-<DateField
-  enableAccessibleFieldDOMStructure
-  slots={{ textField: MyPickersTextField }}
-/>
-<DatePicker
-  enableAccessibleFieldDOMStructure
-  slots={{ textField: MyPickersTextField }}
-/>
+<DateField slots={{ textField: MyPickersTextField }} />
+<DatePicker slots={{ textField: MyPickersTextField }} />

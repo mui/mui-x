@@ -3,7 +3,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function RowPinningWithPagination() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 20,
@@ -28,6 +28,7 @@ export default function RowPinningWithPagination() {
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         rows={rowsData.rows}
         pinnedRows={rowsData.pinnedRows}
         initialState={{

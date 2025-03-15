@@ -10,7 +10,9 @@
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
     },
-    "curve": { "description": "" },
+    "curve": {
+      "description": "The type of curve to use for the line.<br />Read more about curves at <a href=\"https://mui.com/x/react-charts/lines/#interpolation\">line interpolation</a>."
+    },
     "data": { "description": "Data associated to the line." },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "disableHighlight": {
@@ -20,6 +22,12 @@
     "id": { "description": "" },
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "shape": {
+      "description": "The shape of the mark elements.<br />Using &#39;circle&#39; renders a <code>&amp;lt;circle /&amp;gt;</code> element, while all other options render a <code>&amp;lt;path /&amp;gt;</code> instead. The path causes a small decrease in performance."
     },
     "showMark": {
       "description": "Define which items of the series should display a mark.<br />If can be a boolean that applies to all items.<br />Or a callback that gets some item properties and returns true if the item should be displayed."
@@ -31,12 +39,13 @@
     "stackOrder": {
       "description": "The order in which series&#39; of the same group are stacked together."
     },
+    "strictStepCurve": {
+      "description": "If <code>true</code>, step curve starts and end at the first and last point.<br />By default the line is extended to fill the space before and after."
+    },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
-    "xAxisKey": { "description": "The id of the x-axis used to render the series." },
-    "yAxisId": { "description": "The id of the y-axis used to render the series." },
-    "yAxisKey": { "description": "The id of the y-axis used to render the series." }
+    "yAxisId": { "description": "The id of the y-axis used to render the series." }
   }
 }

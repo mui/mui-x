@@ -10,7 +10,7 @@ The handler is a method that's called with three arguments:
 
 1. the parameters containing the information related to the event
 2. the `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. the `GridCallbackDetails` containing the `GridApi`—only if `DataGridPro` or `DataGridPremium` is being used
+3. the `GridCallbackDetails` containing the `GridApi`—only if Data Grid Pro or Data Grid Premium is being used
 
 For example, here is an event handler for the `rowClick` event:
 

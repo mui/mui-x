@@ -3,10 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
-    "closeOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
@@ -69,6 +66,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -86,7 +84,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -138,8 +136,20 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display in the button used to clean the value.",
+      "default": "ClearIcon",
       "class": null
     },
     {
@@ -151,6 +161,12 @@
     {
       "name": "field",
       "description": "Component used to enter the date with the keyboard.",
+      "class": null
+    },
+    {
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
       "class": null
     },
     {
@@ -183,6 +199,17 @@
       "class": null
     },
     {
+      "name": "openPickerButton",
+      "description": "Button to open the Picker.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon to display in the button used to open the Picker.",
+      "class": null
+    },
+    {
       "name": "previousIconButton",
       "description": "Button allowing to switch to the left view.",
       "default": "IconButton",
@@ -202,8 +229,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

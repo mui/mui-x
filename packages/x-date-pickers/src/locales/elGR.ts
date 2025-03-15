@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'μεσημβρία',
 };
 
-const elGRPickers: Partial<PickersLocaleText<any>> = {
+const elGRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Προηγούμενος μήνας',
   nextMonth: 'Επόμενος μήνας',
@@ -41,10 +41,11 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Επιλέξτε ημερομηνία και ώρα',
   timePickerToolbarTitle: 'Επιλέξτε ώρα',
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Επιλέξτε ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Επιλέξτε ${views[view]}. ${!formattedTime ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
@@ -58,15 +59,14 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Εβδομάδα ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate ?? utils.format(value, 'fullDate')}`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate}`
       : 'Επιλέξτε ημερομηνία',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Επιλέξτε ώρα',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime}` : 'Επιλέξτε ώρα',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels
@@ -84,14 +84,14 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Χρόνος',
+  month: 'Μήνας',
+  day: 'Ημέρα',
+  weekDay: 'Καθημερινή',
+  hours: 'Ώρες',
+  minutes: 'Λεπτά',
+  seconds: 'Δευτερόλεπτα',
+  meridiem: 'Προ Μεσημβρίας',
 
   // Common
   // empty: 'Empty',

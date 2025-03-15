@@ -6,7 +6,7 @@ const test = base.extend<TestFixture>({});
 
 test.describe('DataGrid docs', () => {
   test('should have correct link with hash in the TOC', async ({ page }) => {
-    await page.goto(`/x/react-data-grid/getting-started/`);
+    await page.goto(`/x/react-data-grid/quickstart/`);
 
     const anchors = page.locator('[aria-label="Page table of contents"] ul a');
 
@@ -15,7 +15,7 @@ test.describe('DataGrid docs', () => {
 
     await expect(firstAnchor).toHaveAttribute(
       'href',
-      `/x/react-data-grid/getting-started/#${kebabCase(textContent || '')}`,
+      `/x/react-data-grid/quickstart/#${kebabCase(textContent || '')}`,
     );
   });
 
@@ -90,13 +90,13 @@ test.describe('DataGrid docs', () => {
   //     }
   //   };
   //   test('should have correct link when searching component', async ({ page }) => {
-  //     await page.goto(`/x/react-data-grid/getting-started/`);
+  //     await page.goto(`/x/react-data-grid/quickstart/`);
 
   //     await retryToggleSearch(page);
 
   //     await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
 
-  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data grid - Components")').first();
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")').first();
   //     await anchor.waitFor();
 
   //     await expect(anchor).toHaveAttribute(
@@ -106,7 +106,7 @@ test.describe('DataGrid docs', () => {
   //   });
 
   //   test('should have correct link when searching API', async ({ page }) => {
-  //     await page.goto(`/x/react-data-grid/getting-started/`);
+  //     await page.goto(`/x/react-data-grid/quickstart/`);
 
   //     await retryToggleSearch(page);
 
@@ -122,7 +122,7 @@ test.describe('DataGrid docs', () => {
   //   });
 
   //   test('should have correct link when searching pro API', async ({ page }) => {
-  //     await page.goto(`/x/react-data-grid/getting-started/`);
+  //     await page.goto(`/x/react-data-grid/quickstart/`);
 
   //     await retryToggleSearch(page);
 

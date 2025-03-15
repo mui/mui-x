@@ -5,7 +5,7 @@ import { ConvertPluginsIntoSignatures } from '../models';
 
 /**
  * Internal plugins that create the tools used by the other plugins.
- * These plugins are used by the tree view components.
+ * These plugins are used by the Tree View components.
  */
 export const TREE_VIEW_CORE_PLUGINS = [
   useTreeViewInstanceEvents,

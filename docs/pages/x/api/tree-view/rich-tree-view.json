@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -20,12 +20,7 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, labelEditing?: bool }"
-      }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
@@ -53,7 +48,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
@@ -76,7 +74,7 @@
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
@@ -109,6 +107,10 @@
       }
     },
     "selectedItems": { "type": { "name": "any" } },
+    "selectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -136,12 +138,6 @@
       "class": "MuiRichTreeView-root"
     },
     {
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem.",
-      "class": null
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -153,7 +149,13 @@
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
+    },
+    {
+      "name": "item",
+      "description": "Custom component to render a Tree Item.",
+      "default": "TreeItem.",
       "class": null
     }
   ],
@@ -164,6 +166,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/RichTreeView/RichTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/quickstart/\">Tree View - Quickstart</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/editing/\">Rich Tree View - Label editing</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
   "cssComponent": false
 }

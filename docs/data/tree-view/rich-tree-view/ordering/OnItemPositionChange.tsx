@@ -52,10 +52,6 @@ export default function OnItemPositionChange() {
         <RichTreeViewPro
           items={MUI_X_PRODUCTS}
           itemsReordering
-          experimentalFeatures={{
-            indentationAtItemLevel: true,
-            itemsReordering: true,
-          }}
           defaultExpandedItems={['grid', 'pickers']}
           onItemPositionChange={(params) => setLastReorder(params)}
         />

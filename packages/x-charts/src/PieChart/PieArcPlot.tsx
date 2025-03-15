@@ -9,13 +9,12 @@ import {
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { defaultTransitionConfig } from './dataTransform/transition';
+import { getDefaultTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -92,10 +91,9 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultTransitionConfig,
+    ...getDefaultTransitionConfig(skipAnimation),
     immediate: skipAnimation,
   });
-  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -112,10 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
-            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
-            ...style
           },
           item,
           _,
@@ -129,11 +125,9 @@ function PieArcPlot(props: PieArcPlotProps) {
               innerRadius={iR}
               outerRadius={oR}
               cornerRadius={cR}
-              style={style}
               id={id}
               color={item.color}
               dataIndex={index}
-              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
               onClick={
@@ -171,9 +165,13 @@ PieArcPlot.propTypes = {
       color: PropTypes.string.isRequired,
       endAngle: PropTypes.number.isRequired,
       formattedValue: PropTypes.string.isRequired,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

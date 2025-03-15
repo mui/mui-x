@@ -8,8 +8,6 @@ import {
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
-  GridSlots,
-  GridToolbar,
   GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -1112,11 +1110,24 @@ describe('<DataGrid /> - Filter', () => {
     };
 
     const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
+    const TRUTHY_ROWS = ['true'];
+    const FALSY_ROWS = ['undefined', 'null', 'false'];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(['true']);
+      expect(getRows({ operator: 'is', value: 'TRUE' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'True' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: true })).to.deep.equal(TRUTHY_ROWS);
+
+      expect(getRows({ operator: 'is', value: 'FALSE' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'False' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'false' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: false })).to.deep.equal(FALSY_ROWS);
+
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
   });
 
@@ -1427,7 +1438,8 @@ describe('<DataGrid /> - Filter', () => {
               type: 'number',
             },
           ]}
-          slots={{ toolbar: GridToolbarFilterButton as GridSlots['toolbar'] }}
+          slots={{ toolbar: GridToolbarFilterButton }}
+          showToolbar
         />,
       );
 
@@ -1491,7 +1503,8 @@ describe('<DataGrid /> - Filter', () => {
                 ] as GridFilterOperator<any, string>[],
               },
             ]}
-            slots={{ toolbar: GridToolbarFilterButton as GridSlots['toolbar'] }}
+            slots={{ toolbar: GridToolbarFilterButton }}
+            showToolbar
           />
         </div>,
       );
@@ -1531,9 +1544,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
           />
         </div>
       );

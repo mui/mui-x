@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'メリディム',
 };
 
-const jaJPPickers: Partial<PickersLocaleText<any>> = {
+const jaJPPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '先月',
   nextMonth: '来月',
@@ -42,10 +42,11 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '日時を選択',
   timePickerToolbarTitle: '時間を選択',
   dateRangePickerToolbarTitle: '日付の範囲を選択',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view] ?? view}を選択してください ${!formattedTime && (time === null || !utils.isValid(time)) ? '時間が選択されていません' : `選択した時間は ${formattedTime ?? utils.format(time, 'fullTime')} です`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view] ?? view}を選択してください ${!formattedTime ? '時間が選択されていません' : `選択した時間は ${formattedTime} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
@@ -59,15 +60,16 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}週目`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `日付を選択してください。選択した日付は ${formattedDate ?? utils.format(value, 'fullDate')} です`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `日付を選択してください。選択した日付は ${formattedDate} です`
       : '日付を選択してください',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `時間を選択してください。選択した時間は ${formattedTime ?? utils.format(value, 'fullTime')} です`
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime
+      ? `時間を選択してください。選択した時間は ${formattedTime} です`
       : '時間を選択してください',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'クリア',
 
   // Table labels

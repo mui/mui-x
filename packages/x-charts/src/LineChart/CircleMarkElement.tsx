@@ -2,19 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import { warnOnce } from '@mui/x-internals/warning';
-import { animated, useSpring } from '@react-spring/web';
-import { InteractionContext } from '../context/InteractionProvider';
+import { animated, useSpringValue } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
-    /**
-     * The shape of the marker.
-     */
-    shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -48,31 +45,30 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
-    shape,
     ...other
   } = props;
 
-  if (shape !== 'circle') {
-    warnOnce(
-      [
-        `MUI X: The mark element of your line chart have shape "${shape}" which is not supported when using \`experimentalRendering=true\`.`,
-        'Only "circle" are supported with `experimentalRendering`.',
-      ].join('\n'),
-      'error',
-    );
-  }
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
-  const { axis } = React.useContext(InteractionContext);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
+  const store = useStore();
+  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+
+  const cx = useSpringValue(x, { immediate: skipAnimation });
+  const cy = useSpringValue(y, { immediate: skipAnimation });
+
+  React.useEffect(() => {
+    cy.start(y, { immediate: skipAnimation });
+    cx.start(x, { immediate: skipAnimation });
+  }, [cy, y, cx, x, skipAnimation]);
+
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
     isFaded,
     color,
   };
@@ -81,8 +77,9 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   return (
     <animated.circle
       {...other}
-      cx={position.x}
-      cy={position.y}
+      // @ts-expect-error
+      cx={cx}
+      cy={cy}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
@@ -90,7 +87,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

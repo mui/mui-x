@@ -62,7 +62,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
       warnOnce([
-        'MUI X: The `SimpleTreeView` component does not support the `items` prop.',
+        'MUI X: The Simple Tree View component does not support the `items` prop.',
         'If you want to add items, you need to pass them as JSX children.',
         'Check the documentation for more details: https://mui.com/x/react-tree-view/simple-tree-view/items/.',
       ]);
@@ -112,12 +112,14 @@ SimpleTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
     }),
   }),
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -167,9 +169,7 @@ SimpleTreeView.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures: PropTypes.shape({
-    indentationAtItemLevel: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -187,40 +187,40 @@ SimpleTreeView.propTypes = {
    */
   multiSelect: PropTypes.bool,
   /**
-   * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * Callback fired when Tree Items are expanded/collapsed.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
-   * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * Callback fired when a Tree Item is expanded or collapsed.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when a given tree item is focused.
+   * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
-   * Callback fired when a tree item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * Callback fired when a Tree Item is selected or deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * Callback fired when Tree Items are selected/deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
@@ -230,6 +230,26 @@ SimpleTreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selectedItems: PropTypes.any,
+  /**
+   * When `selectionPropagation.descendants` is set to `true`.
+   *
+   * - Selecting a parent selects all its descendants automatically.
+   * - Deselecting a parent deselects all its descendants automatically.
+   *
+   * When `selectionPropagation.parents` is set to `true`.
+   *
+   * - Selecting all the descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Only works when `multiSelect` is `true`.
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   *
+   * @default { parents: false, descendants: false }
+   */
+  selectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
   /**
    * The props used for each component slot.
    */

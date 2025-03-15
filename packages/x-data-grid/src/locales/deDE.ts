@@ -1,4 +1,3 @@
-import { deDE as deDECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
+  noColumnsOverlayLabel: 'Keine Spalten',
+  noColumnsOverlayManageColumns: 'Spalten verwalten',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -31,6 +32,18 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
+  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
+  toolbarPromptControlLabel: 'Prompteingabe',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
+  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
+  toolbarPromptControlSendActionLabel: 'Senden',
+  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
+  toolbarPromptControlErrorMessage:
+    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
@@ -43,6 +56,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
+  columnsManagementDeleteIconLabel: 'Löschen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
@@ -58,9 +72,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'enthält',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'enthält nicht',
   filterOperatorEquals: 'ist gleich',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'ist ungleich',
   filterOperatorStartsWith: 'beginnt mit',
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
@@ -81,9 +95,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Enthält',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Enthält nicht',
   headerFilterOperatorEquals: 'Gleich',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Ungleich',
   headerFilterOperatorStartsWith: 'Beginnt mit',
   headerFilterOperatorEndsWith: 'Endet mit',
   headerFilterOperatorIs: 'Ist',
@@ -101,6 +115,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Größer als oder gleich',
   'headerFilterOperator<': 'Kleiner als',
   'headerFilterOperator<=': 'Kleiner als oder gleich',
+  headerFilterClear: 'Filter löschen',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -109,6 +124,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
@@ -170,6 +186,34 @@ const deDEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Zeilen pro Seite:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Zur ersten Seite';
+    }
+    if (type === 'last') {
+      return 'Zur letzten Seite';
+    }
+    if (type === 'next') {
+      return 'Zur nächsten Seite';
+    }
+    // if (type === 'previous') {
+    return 'Zur vorherigen Seite';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reihen neu ordnen',
 
@@ -182,4 +226,4 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Anzahl',
 };
 
-export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
+export const deDE: Localization = getGridLocalization(deDEGrid);

@@ -34,20 +34,21 @@ describe('<StaticDateRangePicker />', () => {
     componentFamily: 'static-picker',
     views: ['day'],
     variant: 'mobile',
+    fieldType: 'no-input',
   }));
 
   it('allows disabling dates', () => {
     render(
       <StaticDateRangePicker
         minDate={adapterToUse.date('2005-01-01')}
-        shouldDisableDate={isWeekend}
+        shouldDisableDate={isWeekend as any}
         defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
       />,
     );
 
     expect(
       screen
-        .getAllByMuiTest('DateRangePickerDay')
+        .getAllByTestId('DateRangePickerDay')
         .filter((day) => day.getAttribute('disabled') !== undefined),
     ).to.have.length(31);
   });

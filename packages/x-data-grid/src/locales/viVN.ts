@@ -1,4 +1,3 @@
-import { viVN as viVNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -31,6 +32,17 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Tìm kiếm',
   toolbarQuickFilterDeleteIconLabel: 'Xóa tìm kiếm',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
@@ -43,6 +55,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Không có cột',
   columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
   columnsManagementReset: 'Đặt lại',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
@@ -57,21 +70,21 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelInputPlaceholder: 'Lọc giá trị',
 
   // Filter operators text
-  filterOperatorContains: 'Chứa',
-  // filterOperatorDoesNotContain: 'does not contain',
-  filterOperatorEquals: 'Bằng',
-  // filterOperatorDoesNotEqual: 'does not equal',
-  filterOperatorStartsWith: 'Bắt đầu bằng',
-  filterOperatorEndsWith: 'Kết thúc bằng',
-  filterOperatorIs: 'Là',
-  filterOperatorNot: 'Không là',
-  filterOperatorAfter: 'Trước',
+  filterOperatorContains: 'chứa',
+  filterOperatorDoesNotContain: 'không chứa',
+  filterOperatorEquals: 'bằng',
+  filterOperatorDoesNotEqual: 'không bằng',
+  filterOperatorStartsWith: 'bắt đầu với',
+  filterOperatorEndsWith: 'kết thúc với',
+  filterOperatorIs: 'là',
+  filterOperatorNot: 'không phải là',
+  filterOperatorAfter: 'sau',
   filterOperatorOnOrAfter: 'bằng hoặc sau',
-  filterOperatorBefore: 'Sau',
+  filterOperatorBefore: 'trước',
   filterOperatorOnOrBefore: 'bằng hoặc trước',
-  filterOperatorIsEmpty: 'Rỗng',
-  filterOperatorIsNotEmpty: 'Khác rỗng',
-  filterOperatorIsAnyOf: 'Bất kỳ',
+  filterOperatorIsEmpty: 'rỗng',
+  filterOperatorIsNotEmpty: 'khác rỗng',
+  filterOperatorIsAnyOf: 'là một trong',
   'filterOperator=': '=',
   'filterOperator!=': '!=',
   'filterOperator>': '>',
@@ -81,26 +94,27 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Chứa',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Không chứa',
   headerFilterOperatorEquals: 'Bằng',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Không bằng',
   headerFilterOperatorStartsWith: 'Bắt đầu với',
   headerFilterOperatorEndsWith: 'Kết thúc với',
-  headerFilterOperatorIs: 'là',
-  headerFilterOperatorNot: 'Không là',
+  headerFilterOperatorIs: 'Là',
+  headerFilterOperatorNot: 'Không phải là',
   headerFilterOperatorAfter: 'Sau',
-  headerFilterOperatorOnOrAfter: 'Đang hoặc sau',
+  headerFilterOperatorOnOrAfter: 'Bằng hoặc sau',
   headerFilterOperatorBefore: 'Trước',
-  headerFilterOperatorOnOrBefore: 'Đang hoặc trước',
+  headerFilterOperatorOnOrBefore: 'Bằng hoặc trước',
   headerFilterOperatorIsEmpty: 'Rỗng',
   headerFilterOperatorIsNotEmpty: 'Khác rỗng',
-  headerFilterOperatorIsAnyOf: 'Bất kỳ',
+  headerFilterOperatorIsAnyOf: 'Là một trong',
   'headerFilterOperator=': 'Bằng',
   'headerFilterOperator!=': 'Khác',
   'headerFilterOperator>': 'Lớn hơn',
   'headerFilterOperator>=': 'Lớn hơn hoặc bằng',
   'headerFilterOperator<': 'Nhỏ hơn',
   'headerFilterOperator<=': 'Nhỏ hơn hoặc bằng',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',
@@ -109,6 +123,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Danh mục',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Danh sách cột',
   columnMenuManageColumns: 'Quản lý cột',
   columnMenuFilter: 'Bộ lọc',
@@ -168,6 +183,34 @@ const viVNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Mở rộng',
   collapseDetailPanel: 'Thu nhỏ',
 
+  // Pagination
+  paginationRowsPerPage: 'Số hàng mỗi trang:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Tới trang đầu tiên';
+    }
+    if (type === 'last') {
+      return 'Tới trang cuối cùng';
+    }
+    if (type === 'next') {
+      return 'Tới trang tiếp theo';
+    }
+    // if (type === 'previous') {
+    return 'Về trang trước đó';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sắp xếp hàng',
 
@@ -180,4 +223,4 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Kích cỡ',
 };
 
-export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
+export const viVN: Localization = getGridLocalization(viVNGrid);

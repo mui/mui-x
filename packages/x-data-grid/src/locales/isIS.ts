@@ -1,4 +1,3 @@
-import { isIS as isISCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const isISGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Engar raðir',
   noResultsOverlayLabel: 'Engar niðurstöður',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Þéttleiki',
@@ -31,6 +32,17 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Leita',
   toolbarQuickFilterDeleteIconLabel: 'Eyða',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Flytja út',
   toolbarExportLabel: 'Flytja út',
@@ -43,6 +55,7 @@ const isISGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Bæta síu',
@@ -101,6 +114,7 @@ const isISGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Stærra en eða jafnt og',
   'headerFilterOperator<': 'Minna en',
   'headerFilterOperator<=': 'Minna en eða jafnt og',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvað sem er',
@@ -109,6 +123,7 @@ const isISGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Valmynd',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Sýna dálka',
   columnMenuManageColumns: 'Stjórna dálkum',
   columnMenuFilter: 'Síur',
@@ -168,6 +183,34 @@ const isISGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Stækka',
   collapseDetailPanel: 'Minnka',
 
+  // Pagination
+  paginationRowsPerPage: 'Raðir á síðu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Fara á fyrstu síðu';
+    }
+    if (type === 'last') {
+      return 'Fara á síðustu síðu';
+    }
+    if (type === 'next') {
+      return 'Fara á næstu síðu';
+    }
+    // if (type === 'previous') {
+    return 'Fara á fyrri síðu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Endurröðun raða',
 
@@ -180,4 +223,4 @@ const isISGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'stærð',
 };
 
-export const isIS: Localization = getGridLocalization(isISGrid, isISCore);
+export const isIS: Localization = getGridLocalization(isISGrid);

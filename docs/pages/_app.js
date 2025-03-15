@@ -8,6 +8,7 @@ import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
@@ -22,17 +23,19 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
-import config from '../config';
+import * as config from '../config';
 
+// Enable telemetry for internal purposes
+muiXTelemetrySettings.enableTelemetry();
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch
-    // Use the "latest" npm tag for the master git branch
-    // Use the "next" npm tag for the next git branch
-    return 'latest';
+    // Use the "next" tag for the master git branch after we start working on the next major version
+    // Once the major release is finished we can go back to "latest"
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -53,7 +56,7 @@ ponyfillGlobal.muiDocConfig = {
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
-    const output = {
+    return {
       ...versions,
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
@@ -68,7 +71,6 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       exceljs: 'latest',
     };
-    return output;
   },
   postProcessImport,
 };
@@ -206,17 +208,41 @@ function AppWrapper(props) {
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+    const productIdSubpathMap = {
+      introduction: '/x/introduction',
+      'x-data-grid': '/x/react-data-grid',
+      'x-date-pickers': '/x/react-date-pickers',
+      'x-charts': '/x/react-charts',
+      'x-tree-view': '/x/react-tree-view',
+    };
+
+    const getVersionOptions = (id, versions) =>
+      versions.map((version) => {
+        if (version === process.env.LIB_VERSION) {
+          return {
+            current: true,
+            text: `v${version}`,
+            href: `${languagePrefix}${productIdSubpathMap[id]}/`,
+          };
+        }
+        if (version === 'v7') {
+          // #default-branch-switch
+          return {
+            text: version,
+            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+          };
+        }
+        return {
+          text: version,
+          href: `https://${version}.mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+        };
+      });
 
     let productIdentifier = {
       metadata: '',
       name: 'MUI X',
       versions: [
-        {
-          text: `v${process.env.LIB_VERSION}`,
-          current: true,
-        },
-        { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/introduction/` },
-        { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
+        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -226,12 +252,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          {
-            text: `v${process.env.DATA_GRID_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-data-grid/` },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
+          ...getVersionOptions('x-data-grid', [process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -240,14 +261,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          {
-            text: `v${process.env.DATE_PICKERS_VERSION}`,
-            current: true,
-          },
-          {
-            text: 'v6',
-            href: `https://v6.mui.com${languagePrefix}/x/react-date-pickers/`,
-          },
+          ...getVersionOptions('x-date-pickers', [process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -258,23 +272,14 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [
-          {
-            text: `v${process.env.CHARTS_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-charts/` },
-        ],
+        versions: getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v7', 'v6']),
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          {
-            text: `v${process.env.TREE_VIEW_VERSION}`,
-            current: true,
-          },
+          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v7']),
           {
             text: 'v6',
             href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,

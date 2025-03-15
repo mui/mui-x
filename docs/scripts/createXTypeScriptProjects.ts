@@ -140,6 +140,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridColDef',
       'GridSingleSelectColDef',
       'GridActionsColDef',
+      'GridListColDef',
       'GridCsvExportOptions',
       'GridPrintExportOptions',
       'GridExcelExportOptions',
@@ -151,11 +152,12 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
 
       // Aggregation
       'GridAggregationFunction',
+      'GridAggregationFunctionDataSource',
     ],
   },
   {
     folder: 'charts',
-    packages: ['x-charts'],
+    packages: ['x-charts', 'x-charts-pro'],
     documentedInterfaces: [
       'BarSeriesType',
       'LineSeriesType',

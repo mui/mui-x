@@ -1,4 +1,3 @@
-import { nnNO as nnNOCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const nnNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fann ingen resultat.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tettheit',
@@ -31,6 +32,17 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Søk',
   toolbarQuickFilterDeleteIconLabel: 'Slett',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksporter',
   toolbarExportLabel: 'Eksporter',
@@ -43,6 +55,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
@@ -101,6 +114,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'nokon',
@@ -109,6 +123,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
@@ -168,6 +183,34 @@ const nnNOGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kolaps',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per side:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå til første side';
+    }
+    if (type === 'last') {
+      return 'Gå til siste side';
+    }
+    if (type === 'next') {
+      return 'Gå til neste side';
+    }
+    // if (type === 'previous') {
+    return 'Gå til førre side';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Radreorganisering',
 
@@ -180,4 +223,4 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const nnNO: Localization = getGridLocalization(nnNOGrid, nnNOCore);
+export const nnNO: Localization = getGridLocalization(nnNOGrid);

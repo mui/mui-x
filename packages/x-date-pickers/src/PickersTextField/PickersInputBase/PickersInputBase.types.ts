@@ -65,5 +65,6 @@ export interface PickersInputBaseProps
    */
   slotProps?: {
     root?: any;
+    input?: any;
   };
 }

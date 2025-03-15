@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import Badge from '@mui/material/Badge';
 import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -80,9 +79,9 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   return (
     <GridIconButtonContainer>
       {index != null && (
-        <Badge badgeContent={index} color="default" overlap="circular">
+        <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
           {iconButton}
-        </Badge>
+        </rootProps.slots.baseBadge>
       )}
 
       {index == null && iconButton}

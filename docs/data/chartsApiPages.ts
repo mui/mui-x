@@ -1,0 +1,267 @@
+import type { MuiPage } from 'docs/src/MuiPage';
+
+const chartsApiPages: MuiPage[] = [
+  {
+    pathname: '/x/api/charts/animated-area',
+    title: 'AnimatedArea',
+  },
+  {
+    pathname: '/x/api/charts/animated-line',
+    title: 'AnimatedLine',
+  },
+  {
+    pathname: '/x/api/charts/area-element',
+    title: 'AreaElement',
+  },
+  {
+    pathname: '/x/api/charts/area-plot',
+    title: 'AreaPlot',
+  },
+  {
+    pathname: '/x/api/charts/bar-chart',
+    title: 'BarChart',
+  },
+  {
+    pathname: '/x/api/charts/bar-chart-pro',
+    title: 'BarChartPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/bar-element',
+    title: 'BarElement',
+  },
+  {
+    pathname: '/x/api/charts/bar-label',
+    title: 'BarLabel',
+  },
+  {
+    pathname: '/x/api/charts/bar-plot',
+    title: 'BarPlot',
+  },
+  {
+    pathname: '/x/api/charts/chart-container',
+    title: 'ChartContainer',
+  },
+  {
+    pathname: '/x/api/charts/chart-container-pro',
+    title: 'ChartContainerPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/chart-data-provider',
+    title: 'ChartDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/chart-data-provider-pro',
+    title: 'ChartDataProviderPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-axis',
+    title: 'ChartsAxis',
+  },
+  {
+    pathname: '/x/api/charts/charts-axis-highlight',
+    title: 'ChartsAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/charts-axis-tooltip-content',
+    title: 'ChartsAxisTooltipContent',
+  },
+  {
+    pathname: '/x/api/charts/charts-clip-path',
+    title: 'ChartsClipPath',
+  },
+  {
+    pathname: '/x/api/charts/charts-grid',
+    title: 'ChartsGrid',
+  },
+  {
+    pathname: '/x/api/charts/charts-item-tooltip-content',
+    title: 'ChartsItemTooltipContent',
+  },
+  {
+    pathname: '/x/api/charts/charts-legend',
+    title: 'ChartsLegend',
+  },
+  {
+    pathname: '/x/api/charts/charts-reference-line',
+    title: 'ChartsReferenceLine',
+  },
+  {
+    pathname: '/x/api/charts/charts-surface',
+    title: 'ChartsSurface',
+  },
+  {
+    pathname: '/x/api/charts/charts-text',
+    title: 'ChartsText',
+  },
+  {
+    pathname: '/x/api/charts/charts-tooltip',
+    title: 'ChartsTooltip',
+  },
+  {
+    pathname: '/x/api/charts/charts-tooltip-container',
+    title: 'ChartsTooltipContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-x-axis',
+    title: 'ChartsXAxis',
+  },
+  {
+    pathname: '/x/api/charts/charts-y-axis',
+    title: 'ChartsYAxis',
+  },
+  {
+    pathname: '/x/api/charts/continuous-color-legend',
+    title: 'ContinuousColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/gauge',
+    title: 'Gauge',
+  },
+  {
+    pathname: '/x/api/charts/gauge-container',
+    title: 'GaugeContainer',
+  },
+  {
+    pathname: '/x/api/charts/heatmap',
+    title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-plot',
+    title: 'HeatmapPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip',
+    title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/line-chart',
+    title: 'LineChart',
+  },
+  {
+    pathname: '/x/api/charts/line-chart-pro',
+    title: 'LineChartPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/line-element',
+    title: 'LineElement',
+  },
+  {
+    pathname: '/x/api/charts/line-highlight-element',
+    title: 'LineHighlightElement',
+  },
+  {
+    pathname: '/x/api/charts/line-highlight-plot',
+    title: 'LineHighlightPlot',
+  },
+  {
+    pathname: '/x/api/charts/line-plot',
+    title: 'LinePlot',
+  },
+  {
+    pathname: '/x/api/charts/mark-element',
+    title: 'MarkElement',
+  },
+  {
+    pathname: '/x/api/charts/mark-plot',
+    title: 'MarkPlot',
+  },
+  {
+    pathname: '/x/api/charts/pie-arc',
+    title: 'PieArc',
+  },
+  {
+    pathname: '/x/api/charts/pie-arc-label',
+    title: 'PieArcLabel',
+  },
+  {
+    pathname: '/x/api/charts/pie-arc-label-plot',
+    title: 'PieArcLabelPlot',
+  },
+  {
+    pathname: '/x/api/charts/pie-arc-plot',
+    title: 'PieArcPlot',
+  },
+  {
+    pathname: '/x/api/charts/piecewise-color-legend',
+    title: 'PiecewiseColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/pie-chart',
+    title: 'PieChart',
+  },
+  {
+    pathname: '/x/api/charts/pie-plot',
+    title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-axis-highlight',
+    title: 'RadarAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
+  },
+  {
+    pathname: '/x/api/charts/radar-data-provider',
+    title: 'RadarDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-area',
+    title: 'RadarSeriesArea',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-marks',
+    title: 'RadarSeriesMarks',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/scatter',
+    title: 'Scatter',
+  },
+  {
+    pathname: '/x/api/charts/scatter-chart',
+    title: 'ScatterChart',
+  },
+  {
+    pathname: '/x/api/charts/scatter-chart-pro',
+    title: 'ScatterChartPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/scatter-plot',
+    title: 'ScatterPlot',
+  },
+  {
+    pathname: '/x/api/charts/spark-line-chart',
+    title: 'SparkLineChart',
+  },
+];
+export default chartsApiPages;

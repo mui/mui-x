@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  DataGridProps,
-  GridFilterModel,
-  GridToolbar,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridFilterModel } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -64,7 +59,7 @@ const usePersistedFilterModel = () => {
 };
 
 export default function FilteringLocalStorage() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -85,7 +80,8 @@ export default function FilteringLocalStorage() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{ toolbar: GridToolbar }}
+        loading={loading}
+        showToolbar
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
       />

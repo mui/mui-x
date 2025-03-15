@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   BaseDateTimePickerProps,
   BaseDateTimePickerSlots,
@@ -8,30 +9,26 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView, PickerValidDate } from '../models';
 
-export interface StaticDateTimePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimePickerSlots<TDate>,
-    UseStaticPickerSlots<TDate, DateOrTimeView> {}
+export interface StaticDateTimePickerSlots extends BaseDateTimePickerSlots, UseStaticPickerSlots {}
 
-export interface StaticDateTimePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateTimePickerSlotProps<TDate>,
-    UseStaticPickerSlotProps<TDate, DateOrTimeView> {}
+export interface StaticDateTimePickerSlotProps
+  extends BaseDateTimePickerSlotProps,
+    UseStaticPickerSlotProps {}
 
-export interface StaticDateTimePickerProps<TDate extends PickerValidDate>
-  extends BaseDateTimePickerProps<TDate, DateOrTimeView>,
+export interface StaticDateTimePickerProps
+  extends BaseDateTimePickerProps,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticDateTimePickerSlots<TDate>;
+  slots?: StaticDateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDateTimePickerSlotProps<TDate>;
+  slotProps?: StaticDateTimePickerSlotProps;
   /**
    * Years rendered per row.
    * @default `4` when `displayStaticWrapperAs === 'desktop'`, `3` otherwise.

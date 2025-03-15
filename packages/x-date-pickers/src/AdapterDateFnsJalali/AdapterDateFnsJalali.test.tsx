@@ -8,8 +8,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { enUS } from 'date-fns/locale';
-import faIR from 'date-fns-jalali/locale/fa-IR';
-import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
+import { faIR } from 'date-fns-jalali/locale/fa-IR';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 
 describe('<AdapterDateFnsJalali />', () => {
@@ -26,14 +25,13 @@ describe('<AdapterDateFnsJalali />', () => {
       const adapter = new AdapterDateFnsJalali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Date;
 
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
       expectDate('fullDate', '12-ام بهمن 1398');
       expectDate('keyboardDate', '1398/11/12');
-      expectDate('keyboardDateTime', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime12h', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime24h', '1398/11/12 23:44');
     });
@@ -50,17 +48,11 @@ describe('<AdapterDateFnsJalali />', () => {
         placeholder: 'YYYY/MM/DD hh:mm aa',
         value: '1397/02/25 09:35 ق.ظ.',
       },
-      faJalaliIR: {
-        // Not sure about what's the difference between this and fa-IR
-        placeholder: 'YYYY/MM/DD hh:mm aa',
-        value: '1397/02/25 09:35 ق.ظ.',
-      },
     };
 
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeObject = {
         faIR,
-        faJalaliIR,
         enUS,
       }[localeKey];
 

@@ -17,7 +17,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
+The component is built using the `SingleInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
 
 Check-out their documentation page for more information:
 
@@ -25,7 +25,7 @@ Check-out their documentation page for more information:
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-range-picker/#props).
-Some [MultiInputDateRangeField props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
+Some [SingleInputDateRangeField props](/x/api/date-pickers/single-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
@@ -46,10 +46,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopDateRangePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
 
 - The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
 
@@ -67,9 +67,13 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateRangePickers.js"}}
+
+:::success
+The `name` prop is not available when using the Date Range Picker with the Multi Input Date Range Field.
+:::
 
 ## Customization
 
@@ -83,15 +87,14 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
-### Use a single input field
+### Use a multi input field
 
-You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
-In such case the Picker component can pass the `name` prop to the input.
+You can pass the `MultiInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
 
-{{"demo": "SingleInputDateRangePicker.js"}}
+{{"demo": "MultiInputDateRangePicker.js"}}
 
 :::info
-You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Add shortcuts
@@ -114,12 +117,9 @@ See the [Validation](/x/react-date-pickers/validation/) documentation page for m
 
 ## Month Range Picker 🚧
 
-The Month Range Picker allows setting a range of months.
-
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This component isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4995) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
+
+The Month Range Picker would let users select a range of months.

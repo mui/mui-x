@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Popoludnie',
 };
 
-const skSKPickers: Partial<PickersLocaleText<any>> = {
+const skSKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Ďalší mesiac',
   nextMonth: 'Predchádzajúci mesiac',
@@ -42,10 +42,11 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Vyberte dátum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view] ?? view} vybraný. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view] ?? view} vybraný. ${!formattedTime ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} hodín`,
   minutesClockNumberText: (minutes) => `${minutes} minút`,
   secondsClockNumberText: (seconds) => `${seconds} sekúnd`,
@@ -59,15 +60,12 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týždeň v roku`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Vyberte dátum, vybraný dátum je ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Vyberte dátum',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Vyberte čas',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Vyberte dátum, vybraný dátum je ${formattedDate}` : 'Vyberte dátum',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Vyberte čas, vybraný čas je ${formattedTime}` : 'Vyberte čas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

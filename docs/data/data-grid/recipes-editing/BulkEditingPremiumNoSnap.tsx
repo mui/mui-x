@@ -60,7 +60,7 @@ export default function BulkEditingPremiumNoSnap() {
               label="Discard changes"
               disabled={unsavedChangesRef.current.unsavedRows[id] === undefined}
               onClick={() => {
-                apiRef.current.updateRows([
+                apiRef.current?.updateRows([
                   unsavedChangesRef.current.rowsBeforeChange[id],
                 ]);
                 delete unsavedChangesRef.current.rowsBeforeChange[id];
@@ -82,7 +82,7 @@ export default function BulkEditingPremiumNoSnap() {
                   unsavedChangesRef.current.rowsBeforeChange[id] = row;
                 }
                 setHasUnsavedRows(true);
-                apiRef.current.updateRows([row]); // to trigger row render
+                apiRef.current?.updateRows([row]); // to trigger row render
               }}
             />,
           ];
@@ -107,7 +107,7 @@ export default function BulkEditingPremiumNoSnap() {
 
   const discardChanges = React.useCallback(() => {
     setHasUnsavedRows(false);
-    apiRef.current.updateRows(
+    apiRef.current?.updateRows(
       Object.values(unsavedChangesRef.current.rowsBeforeChange),
     );
     unsavedChangesRef.current = {
@@ -129,7 +129,7 @@ export default function BulkEditingPremiumNoSnap() {
         unsavedChangesRef.current.unsavedRows,
       ).filter((row) => row._action === 'delete');
       if (rowsToDelete.length > 0) {
-        apiRef.current.updateRows(rowsToDelete);
+        apiRef.current?.updateRows(rowsToDelete);
       }
 
       setHasUnsavedRows(false);

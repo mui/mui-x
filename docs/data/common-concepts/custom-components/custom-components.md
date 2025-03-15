@@ -7,11 +7,11 @@
 A slot is a part of a component that can be [overridden](/x/common-concepts/custom-components/#how-to-override-a-slot) and/or [customized](/x/common-concepts/custom-components/#how-to-customize-a-slot).
 
 Some of those slots allow you to provide your own UI primitives to the MUI X components.
-This is the role of all the `baseXXX` component on the `DataGrid` component (`baseButton`, `baseSelect`, ...).
-These slots receive props that should be as generic as possible so that it is easy to interface any other design system.
+This is the role of all the `baseXXX` component on the Data Grid component (`baseButton`, `baseSelect`, ...).
+These slots receive props that should be as generic as possible so they can integrate well with any other design system.
 
 Other slots allow you to override parts of the MUI X UI components with a custom UI built specifically for this component.
-This is the role of slots like `calendarHeader` on the `DateCalendar` component or `item` on the `RichTreeView` component.
+This is the role of slots like `calendarHeader` on the `DateCalendar` component or `item` on the Rich Tree View component.
 These slots receive props specific to this part of the UI and will most likely not be re-use throughout your application.
 
 ## Basic usage
@@ -105,7 +105,7 @@ you can declare your component using the `PropsFromSlot` interface:
 ```tsx
 function CustomCalendarHeader({
   currentMonth,
-}: PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>) {
+}: PropsFromSlot<DateCalendarSlots['calendarHeader']>) {
   return <div>{currentMonth?.format('MM-DD-YYYY')}</div>;
 }
 ```
@@ -129,7 +129,7 @@ import { DateCalendarSlots } from '@mui/x-date-pickers';
 type ToolbarProps = PropsFromSlot<GridSlots['toolbar']>;
 
 // Most of the picker slots interfaces need to receive the date type as a generic.
-type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>;
+type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots['calendarHeader']>;
 ```
 
 :::
@@ -140,7 +140,7 @@ If you are passing additional props to your slot, you can add them to the props 
 
 ```ts
 interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']> {
+  extends PropsFromSlot<DateCalendarSlots['calendarHeader']> {
   displayWeekNumber: boolean;
   setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
 }
@@ -178,14 +178,13 @@ function MyApp() {
     <DateCalendar
       displayWeekNumber={displayWeekNumber}
       slots={{
-        calendarHeader:
-          CustomCalendarHeader as DateCalendarSlots<Dayjs>['calendarHeader'],
+        calendarHeader: CustomCalendarHeader as DateCalendarSlots['calendarHeader'],
       }}
       slotProps={{
         calendarHeader: {
           displayWeekNumber,
           setDisplayWeekNumber,
-        } as DateCalendarSlotProps<Dayjs>['calendarHeader'],
+        } as DateCalendarSlotProps['calendarHeader'],
       }}
     />
   );
@@ -196,7 +195,7 @@ function MyApp() {
 
 ### Using module augmentation
 
-If you are using one of the data grid packages,
+If you are using one of the Data Grid packages,
 you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
 
 ```ts
@@ -225,6 +224,7 @@ function MyApp() {
       slotProps={{
         toolbar: { name, setName },
       }}
+      showToolbar
     />
   );
 }

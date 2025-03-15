@@ -11,7 +11,7 @@ This prop has the same format as the returned value of `apiRef.current.exportSta
 The `initialState` can only be used to set the initial value of the state.
 The Data Grid will not react if you change the `initialState` value later on.
 
-If you need to fully control specific models, use the control props instead (for example [`prop.filterModel`](/x/react-data-grid/filtering/#controlled-filters) or [`prop.sortModel`](https://mui.com/x/react-data-grid/sorting/#controlled-sort-model)).
+If you need to fully control specific models, use the control props instead (for example [`prop.filterModel`](/x/react-data-grid/filtering/#controlled-filters) or [`prop.sortModel`](/x/react-data-grid/sorting/#controlled-sort-model)).
 You can find more information on the corresponding feature documentation page.
 :::
 
@@ -26,35 +26,26 @@ Do not access state values directly.
 The state itself is not considered a public API and its structure can change.
 :::
 
-The `@mui/x-data-grid-pro` package exposes a set of state selectors that take the `apiRef.current.state` as an argument and return a value.
+Data Grid packages expose a set of state selectors that take the `apiRef` as an argument and return a value.
 You can use them to get data from the state without worrying about its internal structure.
 
 ### Direct selector access
 
-The simplest way to use a selector is to call it as a function with `apiRef` as its first argument:
+The way to use a selector is to call it as a function with `apiRef` as its first argument:
 
 ```tsx
 const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
 :::warning
-Calling with `apiRef.current.state` also works, but may cause side effects when multiple Data Grid instances are present on a single page.
-If you still need to call it with the state, don't forget to pass the instance ID as the example:
-
-```tsx
-const paginationModel = gridPaginationModelSelector(
-  apiRef.current.state,
-  apiRef.current.instanceId,
-);
-```
-
+To make the developer experience better, selectors are typed to allow `apiRef` to reference a `null` value, but they throw an error if called before the state is initialized. Use selectors after the initialization in a `useEffect()` hook or in an event handler.
 :::
 
 {{"demo": "DirectSelector.js", "bg": "inline"}}
 
 ### With useGridSelector
 
-If you only need to access the state value in the render of your components, use the `useGridSelector` hook.
+If you only need to access the state value in the render of your components, use the `useGridSelector()` hook.
 This hook ensures there is a reactive binding such that when the state changes, the component in which this hook is used is re-rendered.
 
 ```tsx

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -46,7 +47,7 @@ const baselineProps: DataGridPremiumProps = {
 describe('<DataGridPremium /> - Aggregation', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -390,7 +391,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
@@ -401,7 +402,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
       fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
       fireUserEvent.mousePress(
@@ -555,7 +556,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
@@ -595,7 +596,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       act(() =>
-        apiRef.current.updateColumns([
+        apiRef.current?.updateColumns([
           { field: 'id', availableAggregationFunctions: ['min', 'max'] },
         ]),
       );
@@ -879,6 +880,25 @@ describe('<DataGridPremium /> - Aggregation', () => {
           }),
         ).to.equal(7);
       });
+    });
+  });
+
+  describe('"no rows" overlay', () => {
+    it('should display "no rows" overlay and not show aggregation footer when there are no rows', () => {
+      render(
+        <Test
+          rows={[]}
+          initialState={{
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      // Check for "no rows" overlay
+      expect(screen.queryByText('No rows')).not.to.equal(null);
+
+      // Ensure aggregation footer is not present
+      expect(getColumnValues(0)).to.deep.equal([]);
     });
   });
 });

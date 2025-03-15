@@ -1,12 +1,12 @@
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
 import { DescribeJalaliAdapterParams } from './describeJalaliAdapter.types';
 
-function innerJalaliDescribeAdapter<TDate extends PickerValidDate>(
-  Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
+function innerJalaliDescribeAdapter(
+  Adapter: new (...args: any) => MuiPickersAdapter,
   params: DescribeJalaliAdapterParams,
 ) {
   const adapter = new Adapter();

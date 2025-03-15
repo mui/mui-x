@@ -13,6 +13,7 @@ export default function CSSCustomization() {
         },
         '& .MuiAreaElement-series-Germany': {
           fill: "url('#myGradient')",
+          filter: 'none', // Remove the default filtering
         },
       }}
       xAxis={[
@@ -20,7 +21,14 @@ export default function CSSCustomization() {
           id: 'Years',
           dataKey: 'date',
           scaleType: 'time',
+          min: new Date(1990, 0, 1),
+          max: new Date(2018, 0, 1),
           valueFormatter: (date) => date.getFullYear().toString(),
+        },
+      ]}
+      yAxis={[
+        {
+          width: 60,
         },
       ]}
       series={[
@@ -46,8 +54,6 @@ export default function CSSCustomization() {
           showMark: false,
         },
       ]}
-      margin={{ left: 60, top: 10, right: 20 }}
-      width={600}
       height={300}
     >
       <defs>

@@ -15,7 +15,7 @@
       }
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the tree view renders a checkbox at the left of its label that allows selecting it."
+      "description": "If <code>true</code>, the Tree View renders a checkbox at the left of its label that allows selecting it."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
@@ -55,11 +55,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
-    "isItemEditable": {
-      "description": "Determines if a given item is editable or not. Make sure to also enable the <code>labelEditing</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  /&gt;</code>. By default, the items are not editable."
-    },
+    "isItemEditable": { "description": "Determine if a given item can be edited." },
     "isItemReorderable": {
-      "description": "Used to determine if a given item can be reordered.",
+      "description": "Determine if a given item can be reordered.",
       "typeDescriptions": {
         "itemId": "The id of the item to check.",
         "boolean": "<code>true</code> if the item can be reordered."
@@ -69,35 +67,35 @@
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "itemsReordering": {
-      "description": "If <code>true</code>, the reordering of items is enabled. Make sure to also enable the <code>itemsReordering</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering /&gt;</code>."
+      "description": "If <code>true</code>, the reordering of items is enabled."
     },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
     "onExpandedItemsChange": {
-      "description": "Callback fired when tree items are expanded/collapsed.",
+      "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemIds": "The ids of the expanded items."
       }
     },
     "onItemClick": {
-      "description": "Callback fired when the <code>content</code> slot of a given tree item is clicked.",
+      "description": "Callback fired when the <code>content</code> slot of a given Tree Item is clicked.",
       "typeDescriptions": {
         "event": "The DOM event that triggered the change.",
         "itemId": "The id of the focused item."
       }
     },
     "onItemExpansionToggle": {
-      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "description": "Callback fired when a Tree Item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
     "onItemFocus": {
-      "description": "Callback fired when a given tree item is focused.",
+      "description": "Callback fired when a given Tree Item is focused.",
       "typeDescriptions": {
         "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item."
@@ -111,7 +109,7 @@
       }
     },
     "onItemPositionChange": {
-      "description": "Callback fired when a tree item is moved in the tree.",
+      "description": "Callback fired when a Tree Item is moved in the tree.",
       "typeDescriptions": {
         "params": "The params describing the item re-ordering.",
         "params.itemId": "The id of the item moved.",
@@ -120,22 +118,25 @@
       }
     },
     "onItemSelectionToggle": {
-      "description": "Callback fired when a tree item is selected or deselected.",
+      "description": "Callback fired when a Tree Item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
     },
     "onSelectedItemsChange": {
-      "description": "Callback fired when tree items are selected/deselected.",
+      "description": "Callback fired when Tree Items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },
     "selectedItems": {
       "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "selectionPropagation": {
+      "description": "When <code>selectionPropagation.descendants</code> is set to <code>true</code>.<br>- Selecting a parent selects all its descendants automatically. - Deselecting a parent deselects all its descendants automatically.<br>When <code>selectionPropagation.parents</code> is set to <code>true</code>.<br>- Selecting all the descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Only works when <code>multiSelect</code> is <code>true</code>. On the &lt;SimpleTreeView /&gt;, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)"
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -146,9 +147,9 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
-    "endIcon": "The default icon displayed next to an end item. This is applied to all tree items and can be overridden by the TreeItem <code>icon</code> slot prop.",
+    "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
     "expandIcon": "The default icon used to expand the item.",
-    "item": "Custom component for the item.",
+    "item": "Custom component to render a Tree Item.",
     "root": "Element rendered at the root."
   }
 }

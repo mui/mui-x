@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const mkPickers: Partial<PickersLocaleText<any>> = {
+const mkPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Предходен месец',
   nextMonth: 'Следен месец',
@@ -35,10 +35,11 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Избери датум и време',
   timePickerToolbarTitle: 'Избери време',
   dateRangePickerToolbarTitle: 'Избери временски опсег',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Select ${view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Нема избрано време' : `Избраното време е ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Select ${view}. ${!formattedTime ? 'Нема избрано време' : `Избраното време е ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,
@@ -52,15 +53,12 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Недела ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Избери датум, избраниот датум е ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Избери датум',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Избери време, избраното време е ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Избери време',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Избери датум, избраниот датум е ${formattedDate}` : 'Избери датум',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Избери време, избраното време е ${formattedTime}` : 'Избери време',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Избриши',
 
   // Table labels

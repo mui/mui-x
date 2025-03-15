@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'méridien',
 };
 
-const frFRPickers: Partial<PickersLocaleText<any>> = {
+const frFRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mois précédent',
   nextMonth: 'Mois suivant',
@@ -41,10 +41,11 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: "Choisir la date et l'heure",
   timePickerToolbarTitle: "Choisir l'heure",
   dateRangePickerToolbarTitle: 'Choisir la plage de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Choix des ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Aucune heure choisie' : `L'heure choisie est ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Choix des ${views[view]}. ${!formattedTime ? 'Aucune heure choisie' : `L'heure choisie est ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} heures`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,
@@ -58,15 +59,16 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semaine ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Choisir la date, la date sélectionnée est ${formattedDate ?? utils.format(value, 'fullDate')}`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `Choisir la date, la date sélectionnée est ${formattedDate}`
       : 'Choisir la date',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
+  openTimePickerDialogue: (formattedTime) =>
     formattedTime
-      ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime}`
       : "Choisir l'heure",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Effacer la valeur',
 
   // Table labels

@@ -1,18 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../validation';
-import { DateRange } from '../models';
 
-type StaticDateRangePickerComponent = (<TDate extends PickerValidDate>(
-  props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateRangePickerComponent = ((
+  props: StaticDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -25,17 +23,18 @@ type StaticDateRangePickerComponent = (<TDate extends PickerValidDate>(
  *
  * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
-const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
-  TDate extends PickerValidDate,
->(inProps: StaticDateRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const defaultizedProps = useDateRangePickerDefaultizedProps<
-    TDate,
-    StaticDateRangePickerProps<TDate>
-  >(inProps, 'MuiStaticDateRangePicker');
+const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
+  inProps: StaticDateRangePickerProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const defaultizedProps = useDateRangePickerDefaultizedProps<StaticDateRangePickerProps>(
+    inProps,
+    'MuiStaticDateRangePicker',
+  );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
-  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };
@@ -57,12 +56,12 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
     },
   };
 
-  const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
+  const { renderPicker } = useStaticRangePicker<'day', typeof props>({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
     validator: validateDateRange,
-    ref,
   });
 
   return renderPicker();
@@ -93,9 +92,9 @@ StaticDateRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -115,7 +114,8 @@ StaticDateRangePicker.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -208,8 +208,7 @@ StaticDateRangePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -222,6 +221,11 @@ StaticDateRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -244,8 +248,7 @@ StaticDateRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */

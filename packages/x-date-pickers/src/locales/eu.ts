@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridianoa',
 };
 
-const euPickers: Partial<PickersLocaleText<any>> = {
+const euPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Azken hilabetea',
   nextMonth: 'Hurrengo hilabetea',
@@ -41,10 +41,11 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Data eta ordua aukeratu',
   timePickerToolbarTitle: 'Ordua aukeratu',
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Aukeratu ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${formattedTime ?? utils.format(time, 'fullTime')} da`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Aukeratu ${views[view]}. ${!formattedTime ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${formattedTime} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,
@@ -58,15 +59,12 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} astea`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Data aukeratu, aukeratutako data ${formattedDate ?? utils.format(value, 'fullDate')} da`
-      : 'Data aukeratu',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Ordua aukeratu, aukeratutako ordua ${formattedTime ?? utils.format(value, 'fullTime')} da`
-      : 'Ordua aukeratu',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Data aukeratu, aukeratutako data ${formattedDate} da` : 'Data aukeratu',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Ordua aukeratu, aukeratutako ordua ${formattedTime} da` : 'Ordua aukeratu',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Balioa garbitu',
 
   // Table labels

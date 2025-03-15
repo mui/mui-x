@@ -5,7 +5,8 @@ import {
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { useHighlighted } from '../../context';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { deg2rad } from '../../internals/angleConversion';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -18,6 +19,7 @@ export interface AnimatedObject {
 }
 
 export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+  dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
 }
@@ -41,7 +43,7 @@ export function useTransformData(
     cornerRadius: baseCornerRadius = 0,
   } = series;
 
-  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlighted();
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
@@ -59,7 +61,7 @@ export function useTransformData(
         };
         const paddingAngle = Math.max(
           0,
-          (Math.PI * (attributesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+          deg2rad(attributesOverride.paddingAngle ?? basePaddingAngle),
         );
         const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
 
@@ -77,6 +79,7 @@ export function useTransformData(
         return {
           ...item,
           ...attributesOverride,
+          dataIndex: itemIndex,
           isFaded,
           isHighlighted,
           paddingAngle,

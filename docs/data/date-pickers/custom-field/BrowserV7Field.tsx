@@ -1,22 +1,17 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import { CalendarIcon, ClearIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputPickersTextFieldProps,
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+  DatePicker,
+  DatePickerFieldProps,
+  DatePickerProps,
+} from '@mui/x-date-pickers/DatePicker';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -36,115 +31,103 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
-    Omit<
-      React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
-    > {}
-
-const BrowserTextField = React.forwardRef(
-  (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
-
-      // Should be passed to the PickersSectionList component
-      elements,
-      sectionListRef,
-      contentEditable,
-      onFocus,
-      onBlur,
-      tabIndex,
-      onInput,
-      onPaste,
-      onKeyDown,
-
-      // Can be passed to a hidden <input /> element
-      onChange,
-      value,
-
-      // Can be used to render a custom label
-      label,
-
-      // Can be used to style the component
-      areAllSectionsEmpty,
-      disabled,
-      readOnly,
-      focused,
-      error,
-
-      InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
-
-      // The rest can be passed to the root element
-      ...other
-    } = props;
-
-    const handleRef = useForkRef(InputPropsRef, ref);
-
-    return (
-      <BrowserFieldRoot ref={handleRef} {...other}>
-        {startAdornment}
-        <BrowserFieldContent>
-          <PickersSectionList
-            elements={elements}
-            sectionListRef={sectionListRef}
-            contentEditable={contentEditable}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            tabIndex={tabIndex}
-            onInput={onInput}
-            onPaste={onPaste}
-            onKeyDown={onKeyDown}
-          />
-        </BrowserFieldContent>
-        {endAdornment}
-      </BrowserFieldRoot>
-    );
+const BrowserIconButton = styled('button', {
+  name: 'BrowserField',
+  slot: 'IconButton',
+})({
+  backgroundColor: 'transparent',
+  border: 0,
+  cursor: 'pointer',
+  '&:hover, &:focus': {
+    backgroundColor: 'rgba(0, 0, 0, 0.04)',
   },
-);
+});
 
-interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      true,
-      DateValidationError
-    > {}
+function BrowserDateField(props: DatePickerFieldProps) {
+  const fieldResponse = useDateField<true, typeof props>(props);
 
-const BrowserDateField = React.forwardRef(
-  (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...textFieldProps } = props;
+  const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
 
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
-      ...textFieldProps,
-      enableAccessibleFieldDOMStructure: true,
-    });
+    // Should be passed to the PickersSectionList component
+    elements,
+    sectionListRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
 
-    /* If you don't need a clear button, you can skip the use of this hook */
-    const processedFieldProps = useClearableField({
-      ...fieldResponse,
-      slots,
-      slotProps,
-    });
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
 
-    return <BrowserTextField ref={ref} {...processedFieldProps} />;
-  },
-);
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
 
-const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
-    return (
-      <DatePicker
-        ref={ref}
-        {...props}
-        slots={{ field: BrowserDateField, ...props.slots }}
-      />
-    );
-  },
-);
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
+
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    focused,
+    error,
+
+    // The rest can be passed to the root element
+    ...other
+  } = fieldResponse;
+
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+
+  return (
+    <BrowserFieldRoot {...other} ref={handleRef}>
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionListRef={sectionListRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
+        />
+      </BrowserFieldContent>
+      {clearable && value && (
+        <BrowserIconButton
+          type="button"
+          title="Clear"
+          tabIndex={-1}
+          onClick={onClear}
+          sx={{ marginLeft: 1 }}
+        >
+          <ClearIcon fontSize="small" />
+        </BrowserIconButton>
+      )}
+      <BrowserIconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        sx={{ marginLeft: 1 }}
+        aria-label={openPickerAriaLabel}
+      >
+        <CalendarIcon />
+      </BrowserIconButton>
+    </BrowserFieldRoot>
+  );
+}
+
+function BrowserDatePicker(props: DatePickerProps) {
+  return (
+    <DatePicker {...props} slots={{ field: BrowserDateField, ...props.slots }} />
+  );
+}
 
 export default function BrowserV7Field() {
   return (

@@ -53,7 +53,7 @@ Pie series shape is described by multiple properties:
 - `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
 - `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
 
-{{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
 
 The following properties accept percentage string (for example `'50%'`).
 
@@ -79,7 +79,7 @@ Arcs with angles smaller than the value (in deg) will not have labels.
 ## Highlight
 
 Pie series can get `highlightScope` property to manage element highlighting.
-Its behavior is described in the [dedicated page](/x/react-charts/tooltip/#highlighting-series).
+Its behavior is described in the [dedicated page](/x/react-charts/highlighting/#highlighting-series).
 
 When elements are highlighted or faded they can be customized with dedicated CSS classes: `.MuiPieArc-faded` and `.MuiPieArc-highlighted`.
 
@@ -103,23 +103,23 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "PieClickNoSnap.js"}}
+{{"demo": "PieClick.js"}}
 
 ## Animation
 
 To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
 When set to `true` it skips animation powered by `@react-spring/web`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 ```jsx
 // For a single component chart
 <PieChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <PiePlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "PieAnimation.js"}}

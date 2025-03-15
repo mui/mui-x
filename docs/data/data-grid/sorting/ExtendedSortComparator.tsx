@@ -38,7 +38,7 @@ const nameAdminSortComparator: GridComparatorFn = (v1, v2, param1, param2) => {
 };
 
 export default function ExtendedSortComparator() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -72,6 +72,7 @@ export default function ExtendedSortComparator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         initialState={{
           ...data.initialState,

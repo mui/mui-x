@@ -9,7 +9,7 @@ export default function CustomSlotPropsCallback() {
       <DatePicker
         slotProps={{
           openPickerIcon: (ownerState) => ({
-            color: ownerState.open ? 'secondary' : 'primary',
+            color: ownerState.isPickerOpen ? 'secondary' : 'primary',
           }),
         }}
       />

@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridParamsApi } from '../../../models/api/gridParamsApi';
+import { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
@@ -10,6 +11,10 @@ import {
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { gridRowNodeSelector } from './gridRowsSelector';
+import { getRowValue as getRowValueFn } from './gridRowsUtils';
 
 export class MissingRowIdError extends Error {}
 
@@ -21,7 +26,10 @@ export class MissingRowIdError extends Error {}
  * TODO: Impossible priority - useGridEditing also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+export function useGridParamsApi(
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: DataGridProcessedProps,
+) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
@@ -48,22 +56,12 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     [apiRef],
   );
 
-  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
-    (id, field) => {
-      const colDef = apiRef.current.getColumn(field);
-      const row = apiRef.current.getRow(id);
-      const rowNode = apiRef.current.getRowNode(id);
-
-      if (!row || !rowNode) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
-      }
-
+  const getCellParamsForRow = React.useCallback<GridParamsPrivateApi['getCellParamsForRow']>(
+    (id, field, row, { cellMode, colDef, hasFocus, rowNode, tabIndex }) => {
       const rawValue = row[field];
       const value = colDef?.valueGetter
         ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
         : rawValue;
-      const cellFocus = gridFocusCellSelector(apiRef);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
       const params: GridCellParams<any, any, any, any> = {
         id,
@@ -71,13 +69,13 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         row,
         rowNode,
         colDef,
-        cellMode: apiRef.current.getCellMode(id, field),
-        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
-        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
+        cellMode,
+        hasFocus,
+        tabIndex,
         value,
         formattedValue: value,
         isEditable: false,
-        api: {} as any,
+        api: null as any,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
@@ -87,6 +85,33 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       return params;
     },
     [apiRef],
+  );
+
+  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
+    (id, field) => {
+      const row = apiRef.current.getRow(id);
+      const rowNode = gridRowNodeSelector(apiRef, id);
+
+      if (!row || !rowNode) {
+        throw new MissingRowIdError(`No row with id #${id} found`);
+      }
+
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
+      const cellMode = apiRef.current.getCellMode(id, field);
+
+      return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
+        colDef:
+          props.unstable_listView && props.unstable_listColumn?.field === field
+            ? gridListColumnSelector(apiRef)!
+            : apiRef.current.getColumn(field),
+        rowNode,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
+        cellMode,
+      });
+    },
+    [apiRef, props.unstable_listView, props.unstable_listColumn?.field],
   );
 
   const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
@@ -108,16 +133,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
   );
 
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
-    (row, colDef) => {
-      const field = colDef.field;
-
-      if (!colDef || !colDef.valueGetter) {
-        return row[field];
-      }
-
-      const value = row[colDef.field];
-      return colDef.valueGetter(value as never, row, colDef, apiRef);
-    },
+    (row, colDef) => getRowValueFn(row, colDef, apiRef),
     [apiRef],
   );
 
@@ -175,5 +191,10 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     getColumnHeaderElement,
   };
 
+  const paramsPrivateApi: GridParamsPrivateApi = {
+    getCellParamsForRow,
+  };
+
   useGridApiMethod(apiRef, paramsApi, 'public');
+  useGridApiMethod(apiRef, paramsPrivateApi, 'private');
 }

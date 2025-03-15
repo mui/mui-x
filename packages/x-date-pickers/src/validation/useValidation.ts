@@ -3,25 +3,22 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
-import { OnErrorProps, PickersTimezone, PickerValidDate } from '../models';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
+import { OnErrorProps, PickersTimezone } from '../models';
+import type { PickerValueManager } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 
-export type Validator<TValue, TDate extends PickerValidDate, TError, TValidationProps> = {
+export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
-    adapter: MuiPickersAdapterContextValue<TDate>;
+    adapter: MuiPickersAdapterContextValue;
     value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
   }): TError;
-  valueManager: PickerValueManager<TValue, TDate, any>;
+  valueManager: PickerValueManager<TValue, any>;
 };
 
-interface UseValidationOptions<
-  TValue,
-  TDate extends PickerValidDate,
-  TError,
-  TValidationProps extends {},
-> extends OnErrorProps<TValue, TError> {
+interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidationProps extends {}>
+  extends OnErrorProps<TValue, TError> {
   /**
    * The value to validate.
    */
@@ -36,7 +33,7 @@ interface UseValidationOptions<
    * It is recommended to only use the validator exported by the MUI X packages,
    * otherwise you may have inconsistent behaviors between the field and the views.
    */
-  validator: Validator<TValue, TDate, TError, TValidationProps>;
+  validator: Validator<TValue, TError, TValidationProps>;
   /**
    * The validation props, they differ depending on the component.
    * For example, the `validateTime` function supports `minTime`, `maxTime`, etc.
@@ -44,7 +41,7 @@ interface UseValidationOptions<
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TValue, TError> {
+export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */
@@ -58,7 +55,7 @@ interface UseValidationReturnValue<TValue, TError> {
   /**
    * Get the validation error for a new value.
    * This can be used to validate the value in a change handler before updating the state.
-   * @template TValue The value type.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} newValue The value to validate.
    * @returns {TError} The validation error associated to the new value.
    */
@@ -67,27 +64,21 @@ interface UseValidationReturnValue<TValue, TError> {
 
 /**
  * Utility hook to check if a given value is valid based on the provided validation props.
- * @template TDate
- * @template TValue The value type. It will be either the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+ * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
  * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
- * @param {UseValidationOptions<TValue, TDate, TError, TValidationProps>} options The options to configure the hook.
+ * @param {UseValidationOptions<TValue, TError, TValidationProps>} options The options to configure the hook.
  * @param {TValue} options.value The value to validate.
  * @param {PickersTimezone} options.timezone The timezone to use for the validation.
- * @param {Validator<TValue, TDate, TError, TValidationProps>} options.validator The validator function to use.
+ * @param {Validator<TValue, TError, TValidationProps>} options.validator The validator function to use.
  * @param {TValidationProps} options.props The validation props, they differ depending on the component.
  * @param {(error: TError, value: TValue) => void} options.onError Callback fired when the error associated with the current value changes.
  */
-export function useValidation<
-  TValue,
-  TDate extends PickerValidDate,
-  TError,
-  TValidationProps extends {},
->(
-  options: UseValidationOptions<TValue, TDate, TError, TValidationProps>,
+export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
+  options: UseValidationOptions<TValue, TError, TValidationProps>,
 ): UseValidationReturnValue<TValue, TError> {
   const { props, validator, value, timezone, onError } = options;
 
-  const adapter = useLocalizationContext<TDate>();
+  const adapter = useLocalizationContext();
   const previousValidationErrorRef = React.useRef<TError | null>(
     validator.valueManager.defaultErrorState,
   );

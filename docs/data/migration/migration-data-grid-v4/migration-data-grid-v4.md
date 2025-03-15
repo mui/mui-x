@@ -10,7 +10,7 @@ productId: x-data-grid
 
 This is a reference guide for upgrading your site from MUI X v4 to v5.
 MUI X v5 is fully compatible with Material UI v5 and MUI System v5 and can be used with Material UI v4 and MUI System v4 with some additional steps.
-Most breaking changes are renaming of CSS classes or variables to improve the consistency of the data grid.
+Most breaking changes are renaming of CSS classes or variables to improve the consistency of the Data Grid.
 
 ## Migrating MUI Core from v4
 
@@ -88,7 +88,7 @@ export default function DataGridDemo() {
 ```
 
 **Done!** Now, you can render any dependencies that rely on Material UI v5 without upgrading from v4, and they will both run seamlessly alongside.
-For example, the following interactive demo shows how these steps tie together with the data grid:
+For example, the following interactive demo shows how these steps tie together with the Data Grid:
 
 {{"demo": "CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
@@ -126,7 +126,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 
 ### Module augmentation
 
-- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
+- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using Data Grid and Data Grid Pro together.
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
 
@@ -370,7 +370,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   +   */
   +  value: GridCellValue;
   +  /**
-  +   * GridApi that lets you manipulate the data grid.
+  +   * GridApi that lets you manipulate the Data Grid.
   +   */
   +  api: any;
   +}

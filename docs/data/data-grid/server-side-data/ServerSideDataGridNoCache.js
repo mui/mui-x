@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
@@ -38,6 +38,7 @@ export default function ServerSideDataGridNoCache() {
       ...initialState,
       pagination: {
         paginationModel: { pageSize: 10, page: 0 },
+        rowCount: 0,
       },
     }),
     [initialState],
@@ -45,11 +46,11 @@ export default function ServerSideDataGridNoCache() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         initialState={initialStateWithPagination}
         columns={columns}
-        unstable_dataSource={dataSource}
-        unstable_dataSourceCache={null}
+        dataSource={dataSource}
+        dataSourceCache={null}
         pagination
         pageSizeOptions={pageSizeOptions}
       />

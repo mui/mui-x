@@ -1,7 +1,6 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import composeClasses from '@mui/utils/composeClasses';
 
 export interface ChartsTooltipClasses {
   /** Styles applied to the root element. */
@@ -22,6 +21,8 @@ export interface ChartsTooltipClasses {
   labelCell: string;
   /** Styles applied to the valueCell element. */
   valueCell: string;
+  /** Styles applied to the axisValueCell element. Only available for axis tooltip. */
+  axisValueCell: string;
 }
 
 export type ChartsTooltipClassKey = keyof Omit<
@@ -35,5 +36,33 @@ export function getChartsTooltipUtilityClass(slot: string) {
 }
 export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses(
   'MuiChartsTooltip',
-  ['root', 'paper', 'table', 'row', 'cell', 'mark', 'markCell', 'labelCell', 'valueCell'],
+  [
+    'root',
+    'paper',
+    'table',
+    'row',
+    'cell',
+    'mark',
+    'markCell',
+    'labelCell',
+    'valueCell',
+    'axisValueCell',
+  ],
 );
+
+export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
+  const slots = {
+    root: ['root'],
+    paper: ['paper'],
+    table: ['table'],
+    row: ['row'],
+    cell: ['cell'],
+    mark: ['mark'],
+    markCell: ['markCell'],
+    labelCell: ['labelCell'],
+    valueCell: ['valueCell'],
+    axisValueCell: ['axisValueCell'],
+  };
+
+  return composeClasses(slots, getChartsTooltipUtilityClass, classes);
+};

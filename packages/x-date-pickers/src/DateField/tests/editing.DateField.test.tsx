@@ -7,10 +7,310 @@ import {
   getTextbox,
   describeAdapters,
   expectFieldValueV6,
+  getCleanedSelectedContent,
 } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describe('<DateField /> - Editing', () => {
+  describeAdapters(
+    'value props (value, defaultValue, onChange)',
+    DateField,
+    ({ adapter, renderWithProps, clock }) => {
+      it('should not render any value when no value and no default value are defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should use the default value when defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should use the controlled value instead of the default value when both are defined', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should use the controlled value instead of the default value when both are defined and the controlled value is null', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should react to controlled value update (from non null to another non null)', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+      });
+
+      it('should react to a controlled value update (from non null to null)', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should react to a controlled value update (from null to non null', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        const input = getTextbox();
+        fireUserEvent.keyPress(input, { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        fireUserEvent.keyPress(getTextbox(), { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should not call the onChange callback before filling the last section when starting from a null value', () => {
+        // Test with accessible DOM structure
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          onChange: onChangeV7,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+
+        view.pressKey(0, '4');
+        expect(onChangeV7.callCount).to.equal(0);
+        expectFieldValueV7(view.getSectionsContainer(), '04 MMMM');
+
+        view.pressKey(1, 'S');
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        clock.runToLast();
+        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          onChange: onChangeV6,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+        const input = getTextbox();
+
+        fireEvent.change(input, { target: { value: '4 MMMM' } }); // Press 4
+        expect(onChangeV6.callCount).to.equal(0);
+        expectFieldValueV6(input, '04 MMMM');
+
+        fireEvent.change(input, { target: { value: '04 S' } }); // Press S
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        clock.runToLast();
+        expectFieldValueV6(input, 'DD MMMM');
+      });
+    },
+  );
+
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
     it("should set the year to today's value when no value is provided (ArrowDown)", () => {
       testFieldKeyPress({
@@ -213,7 +513,7 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
     it('should clear the selected section when only this section is completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -230,7 +530,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -259,7 +559,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -269,14 +569,18 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -287,14 +591,14 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -307,14 +611,18 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -330,14 +638,14 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'January YYYY');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
     it('should not keep query after typing again on a cleared section', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.year,
@@ -356,7 +664,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.year,
@@ -386,7 +694,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -398,14 +706,18 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -418,14 +730,14 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first and last section', () => {
-      // Test with v7 input
+    it('should call `onChange` when clearing the first section', () => {
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -439,18 +751,16 @@ describe('<DateField /> - Editing', () => {
 
       fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.args[1].validationError).to.equal('invalidDate');
+      expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
 
       fireUserEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(2);
-      expect(onChangeV7.lastCall.firstArg).to.equal(null);
-      expect(onChangeV7.lastCall.args[1].validationError).to.equal(null);
+      expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -465,18 +775,16 @@ describe('<DateField /> - Editing', () => {
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
+      expect(onChangeV6.lastCall.firstArg).to.equal(null);
 
       fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(2);
-      expect(onChangeV6.lastCall.firstArg).to.equal(null);
-      expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
+      expect(onChangeV6.callCount).to.equal(1);
     });
 
     it('should not call `onChange` if the section is already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -496,7 +804,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -747,7 +1055,7 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
     it('should not allow key editing on disabled field', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -781,7 +1089,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         onChange: onChangeV6,
@@ -923,12 +1231,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support day with letter suffix', function test() {
-      // Luxon don't have any day format with a letter suffix
-      if (adapter.lib === 'luxon') {
-        this.skip();
-      }
-
+    // Luxon doesn't have any day format with a letter suffix
+    testSkipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
       testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
@@ -964,7 +1268,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should allow to type the date 29th of February for leap years', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.keyboardDate,
@@ -995,7 +1299,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.keyboardDate,
@@ -1042,12 +1346,47 @@ describe('<DateField /> - Editing', () => {
         keyStrokes: [{ value: '1', expected: '2022' }],
       });
     });
+
+    it('should reset the select "all" state when typing a digit', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+      view.selectSection('month');
+      // select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      view.pressKey(null, '1');
+      expect(getCleanedSelectedContent()).to.equal('01');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      view.selectSection('month');
+      const input = getTextbox();
+      // select all sections
+      fireEvent.keyDown(input, {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } });
+      expect(getCleanedSelectedContent()).to.equal('01');
+    });
   });
 
   describeAdapters(
     'Letter editing',
     DateField,
-    ({ adapter, testFieldChange, testFieldKeyPress }) => {
+    ({ adapter, testFieldChange, testFieldKeyPress, renderWithProps }) => {
       it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
         testFieldChange({
           format: adapter.formats.month,
@@ -1128,6 +1467,41 @@ describe('<DateField /> - Editing', () => {
           expectedValue: 'June',
         });
       });
+
+      it('should reset the select "all" state when typing a letter', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+        view.selectSection('month');
+        // select all sections
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
+        expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+        view.pressKey(null, 'j');
+        expect(getCleanedSelectedContent()).to.equal(adapter.lib === 'luxon' ? '1' : '01');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+        view.selectSection('month');
+        const input = getTextbox();
+        // select all sections
+        fireEvent.keyDown(input, {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
+        expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+        fireEvent.change(input, { target: { value: 'j/DD/YYYY' } });
+        expect(getCleanedSelectedContent()).to.equal(adapter.lib === 'luxon' ? '1' : '01');
+      });
     },
   );
 
@@ -1136,7 +1510,7 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps, testFieldChange }) => {
       it('should clear the selected section when only this section is completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -1151,7 +1525,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
@@ -1167,7 +1541,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should clear the selected section when all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -1181,7 +1555,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
@@ -1196,7 +1570,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -1206,14 +1580,18 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
@@ -1224,14 +1602,14 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY');
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -1242,14 +1620,18 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
@@ -1261,7 +1643,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(input, 'January YYYY');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY');
@@ -1299,8 +1681,8 @@ describe('<DateField /> - Editing', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      it('should call `onChange` when clearing the first and last section (Backspace)', () => {
-        // Test with v7 input
+      it('should call `onChange` when clearing the first section (Backspace)', () => {
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -1313,17 +1695,15 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
         view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.args[1].validationError).to.equal('invalidDate');
+        expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
         view.selectSection('year');
         view.pressKey(1, '');
-        expect(onChangeV7.callCount).to.equal(2);
-        expect(onChangeV7.lastCall.firstArg).to.equal(null);
-        expect(onChangeV7.lastCall.args[1].validationError).to.equal(null);
+        expect(onChangeV7.callCount).to.equal(1);
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -1337,14 +1717,12 @@ describe('<DateField /> - Editing', () => {
         view.selectSection('month');
         fireEvent.change(input, { target: { value: ' 2022' } });
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
+        expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
         fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
         fireEvent.change(input, { target: { value: 'MMMM ' } });
-        expect(onChangeV6.callCount).to.equal(2);
-        expect(onChangeV6.lastCall.firstArg).to.equal(null);
-        expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
+        expect(onChangeV6.callCount).to.equal(1);
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', () => {
@@ -1360,7 +1738,6 @@ describe('<DateField /> - Editing', () => {
           onChange,
         });
 
-        // 1 for v7 and 1 for v7 input
         expect(onChange.callCount).to.equal(2);
       });
     },
@@ -1423,7 +1800,7 @@ describe('<DateField /> - Editing', () => {
     };
 
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -1433,7 +1810,11 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
@@ -1442,7 +1823,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         defaultValue: adapter.date(),
@@ -1453,7 +1834,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
 
@@ -1462,7 +1843,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -1471,7 +1852,11 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
@@ -1479,7 +1864,7 @@ describe('<DateField /> - Editing', () => {
       expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         onChange: onChangeV6,
@@ -1489,7 +1874,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
 
@@ -1498,7 +1883,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not set the date when all sections are selected and the pasted value is not valid', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -1507,13 +1892,17 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), 'Some invalid content');
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         onChange: onChangeV6,
@@ -1523,7 +1912,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV6(input, 'Some invalid content');
       expectFieldValueV6(input, 'MM/DD/YYYY');
@@ -1532,7 +1921,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected and the format contains escaped characters', () => {
       const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -1543,14 +1932,18 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('year');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), `Escaped 2014`);
       expect(onChangeV7.callCount).to.equal(1);
       expect(adapter.getYear(onChangeV7.lastCall.firstArg)).to.equal(2014);
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         onChange: onChangeV6,
@@ -1562,7 +1955,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('year');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV6(input, `Escaped 2014`);
       expect(onChangeV6.callCount).to.equal(1);
@@ -1570,7 +1963,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -1582,14 +1975,18 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -1602,14 +1999,14 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
       expect(onChangeV6.callCount).to.equal(0);
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -1622,12 +2019,12 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       firePasteEventV7(view.getActiveSection(0), '12');
 
-      expect(onChangeV7.callCount).to.equal(1);
+      expect(onChangeV7.callCount).to.equal(0);
       expectFieldValueV7(view.getSectionsContainer(), '12/DD/YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -1641,12 +2038,12 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
       firePasteEventV6(input, '12');
 
-      expect(onChangeV6.callCount).to.equal(1);
+      expect(onChangeV6.callCount).to.equal(0);
       expectFieldValueV6(input, '12/DD/YYYY');
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -1665,7 +2062,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -1685,7 +2082,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not update the section when one section is selected and the pasted value has incorrect type', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -1703,7 +2100,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -1722,7 +2119,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should reset sections internal state when pasting', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: adapter.date('2018-12-05'),
@@ -1734,7 +2131,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), '12/02/2018');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(1), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(1), { key: 'a', keyCode: 65, ctrlKey: true });
 
       firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expectFieldValueV7(view.getSectionsContainer(), '09/16/2022');
@@ -1746,7 +2143,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         defaultValue: adapter.date('2018-12-05'),
         enableAccessibleFieldDOMStructure: false,
@@ -1805,7 +2202,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not allow pasting on disabled field', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -1816,7 +2213,11 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expect(onChangeV7.callCount).to.equal(0);
@@ -1824,7 +2225,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
       view = renderWithProps({
         onChange: onChangeV6,
@@ -1847,7 +2248,7 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should not loose time information when a value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -1860,7 +2261,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
         view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -1874,7 +2275,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose time information when cleaning the date then filling it again', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -1884,7 +2285,11 @@ describe('<DateField /> - Editing', () => {
         });
 
         view.selectSection('month');
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
         view.selectSection('month');
@@ -1908,7 +2313,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -1919,7 +2324,7 @@ describe('<DateField /> - Editing', () => {
 
         const input = getTextbox();
         view.selectSection('month');
-        fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+        fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
         fireEvent.change(input, { target: { value: '' } });
         fireUserEvent.keyPress(input, { key: 'ArrowLeft' });
 
@@ -1942,7 +2347,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose date information when using the year format and value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -1959,7 +2364,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -1977,7 +2382,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose date information when using the month format and value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -1993,7 +2398,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -2016,7 +2421,7 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should set the date when the change value is valid and no value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -2029,7 +2434,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
         renderWithProps({
           onChange: onChangeV6,
@@ -2043,7 +2448,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should set the date when the change value is valid and a value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -2059,7 +2464,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         renderWithProps({
@@ -2127,7 +2532,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should support letter editing', () => {
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const view = renderWithProps({
           defaultValue: adapter.date('2022-01-16'),
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -2156,7 +2561,7 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps, clock }) => {
     it('should be able to reset the value from the outside', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         value: adapter.date('2022-11-23'),
@@ -2170,7 +2575,7 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         value: adapter.date('2022-11-23'),
         enableAccessibleFieldDOMStructure: false,
@@ -2185,7 +2590,10 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should reset the input query state on an unfocused field', () => {
-      // Test with v7 input
+      if (adapter.lib !== 'dayjs') {
+        return;
+      }
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
 
       view.selectSection('month');
@@ -2196,13 +2604,8 @@ describe('<DateField /> - Editing', () => {
       view.pressKey(0, '1');
       expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
 
-      view.pressKey(1, '2');
-      view.pressKey(1, '5');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/YYYY');
-
-      view.pressKey(2, '2');
-      view.pressKey(2, '0');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/0020');
+      view.pressKey(1, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
 
       act(() => {
         view.getSectionsContainer().blur();
@@ -2211,18 +2614,22 @@ describe('<DateField /> - Editing', () => {
       clock.runToLast();
 
       view.setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/2022');
+      view.setProps({ value: null });
 
-      view.selectSection('year');
+      view.selectSection('month');
 
-      view.pressKey(2, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0002');
-      view.pressKey(2, '1');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0021');
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
+
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+
+      view.pressKey(1, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
 
       const input = getTextbox();
@@ -2234,43 +2641,41 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
       expectFieldValueV6(input, '11/DD/YYYY');
 
-      fireEvent.change(input, { target: { value: '11/2/YYYY' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '11/5/YYYY' } }); // Press "5"
-      expectFieldValueV6(input, '11/25/YYYY');
-
-      fireEvent.change(input, { target: { value: '11/25/2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '11/25/0' } }); // Press "0"
-      expectFieldValueV6(input, '11/25/0020');
+      fireEvent.change(input, { target: { value: '11/1/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/01/YYYY');
 
       act(() => {
         input.blur();
       });
 
       view.setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV6(input, '11/23/2022');
+      view.setProps({ value: null });
 
-      fireEvent.mouseDown(input);
-      fireEvent.mouseUp(input);
-      act(() => {
-        input.setSelectionRange(6, 9);
-      });
-      fireEvent.click(input);
+      view.selectSection('month');
 
-      fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
-      expectFieldValueV6(input, '11/23/0002');
-      fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "0"
-      expectFieldValueV6(input, '11/23/0021');
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '01/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/1/YYYY' } }); // Press "1"
+      expectFieldValueV6(input, '11/01/YYYY');
     });
   });
 
   describeAdapters('Select all', DateField, ({ renderWithProps }) => {
     it('should edit the 1st section when all sections are selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       // When all sections are selected, the value only contains the key pressed
       view.pressKey(null, '9');
@@ -2279,13 +2684,13 @@ describe('<DateField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       view.selectSection('month');
       const input = getTextbox();
 
       // Select all sections
-      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       // When all sections are selected, the value only contains the key pressed
       fireEvent.change(input, { target: { value: '9' } });

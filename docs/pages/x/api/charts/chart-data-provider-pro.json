@@ -1,0 +1,26 @@
+{
+  "props": {
+    "colors": { "type": { "name": "any" }, "default": "rainbowSurgePalette" },
+    "dataset": { "type": { "name": "any" } },
+    "height": { "type": { "name": "any" } },
+    "id": { "type": { "name": "any" } },
+    "margin": { "type": { "name": "any" } },
+    "series": { "type": { "name": "any" } },
+    "skipAnimation": { "type": { "name": "any" } },
+    "width": { "type": { "name": "any" } }
+  },
+  "name": "ChartDataProviderPro",
+  "imports": [
+    "import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';",
+    "import { ChartDataProviderPro } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiChartDataProviderPro",
+  "forwardsRefTo": "SVGSVGElement",
+  "filename": "/packages/x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
+  "cssComponent": false
+}

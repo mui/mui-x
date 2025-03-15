@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
@@ -13,7 +14,7 @@ export interface GridColumnHeadersProps
   ref?: React.Ref<HTMLDivElement>;
 }
 
-const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
+const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
       className,
@@ -48,7 +49,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
     });
 
     return (
-      <GridBaseColumnHeaders ref={ref} {...other} {...getInnerProps()}>
+      <GridBaseColumnHeaders {...other} {...getInnerProps()} ref={ref}>
         {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
       </GridBaseColumnHeaders>

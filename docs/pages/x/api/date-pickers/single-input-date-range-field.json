@@ -2,6 +2,10 @@
   "props": {
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
+    "clearButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "color": {
       "type": {
         "name": "enum",
@@ -77,7 +81,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
+        "type": "function(day: PickerValidDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
       }

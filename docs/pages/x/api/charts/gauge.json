@@ -6,19 +6,18 @@
     },
     "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "endAngle": { "type": { "name": "number" }, "default": "360" },
     "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
     "innerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'80%'"
     },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "object Depends on the charts type."
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
     },
     "outerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },

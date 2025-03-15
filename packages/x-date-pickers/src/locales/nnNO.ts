@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiem',
 };
 
-const nnNOPickers: Partial<PickersLocaleText<any>> = {
+const nnNOPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Forrige månad',
   nextMonth: 'Neste månad',
@@ -41,10 +41,11 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Vel dato & klokkeslett',
   timePickerToolbarTitle: 'Vel klokkeslett',
   dateRangePickerToolbarTitle: 'Vel datoperiode',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Vel ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Vel ${timeViews[view]}. ${!formattedTime ? 'Ingen tid vald' : `Vald tid er ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} timar`,
   minutesClockNumberText: (minutes) => `${minutes} minuttar`,
   secondsClockNumberText: (seconds) => `${seconds} sekundar`,
@@ -58,15 +59,12 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Veke ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Vel dato, vald dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Vel dato',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Vel tid, vald tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Vel tid',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Vel dato, vald dato er ${formattedDate}` : 'Vel dato',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Vel tid, vald tid er ${formattedTime}` : 'Vel tid',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Fjern verdi',
 
   // Table labels

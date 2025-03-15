@@ -1,4 +1,3 @@
-import { jaJP as jaJPCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '行がありません。',
   noResultsOverlayLabel: '結果がありません。',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: '行間隔',
@@ -30,6 +31,17 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '検索',
   toolbarQuickFilterDeleteIconLabel: 'クリア',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',
@@ -41,7 +53,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: '検索',
   columnsManagementNoColumns: 'カラムなし',
   columnsManagementShowHideAllText: 'すべて表示/非表示',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'リセット',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
@@ -57,9 +70,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '...を含む',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '...を含まない',
   filterOperatorEquals: '...に等しい',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '...に等しくない',
   filterOperatorStartsWith: '...で始まる',
   filterOperatorEndsWith: '...で終わる',
   filterOperatorIs: '...である',
@@ -80,9 +93,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '含む',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '含まない',
   headerFilterOperatorEquals: '等しい',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '等しくない',
   headerFilterOperatorStartsWith: 'で始まる',
   headerFilterOperatorEndsWith: 'で終わる',
   headerFilterOperatorIs: 'である',
@@ -100,6 +113,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '以上',
   'headerFilterOperator<': '未満',
   'headerFilterOperator<=': '以下',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'いずれか',
@@ -108,6 +122,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'メニュー',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '列表示',
   columnMenuManageColumns: '列管理',
   columnMenuFilter: 'フィルター',
@@ -165,6 +180,34 @@ const jaJPGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '展開',
   collapseDetailPanel: '折りたたみ',
 
+  // Pagination
+  paginationRowsPerPage: 'ページあたりの行数:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '最初のページへ';
+    }
+    if (type === 'last') {
+      return '最後のページへ';
+    }
+    if (type === 'next') {
+      return '次のページへ';
+    }
+    // if (type === 'previous') {
+    return '前のページへ';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '行並び替え',
 
@@ -177,4 +220,4 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'サイズ',
 };
 
-export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);
+export const jaJP: Localization = getGridLocalization(jaJPGrid);

@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
-import { HighlightScope } from '../context';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -42,9 +41,15 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      `data-index-${dataIndex}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+    ],
   };
 
   return composeClasses(slots, getPieArcUtilityClass, classes);
@@ -55,19 +60,15 @@ const PieArcRoot = styled(animated.path, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
+  // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,
-  strokeWidth: 1,
-  strokeLinejoin: 'round',
+  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
 }));
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;
-    /**
-     * @deprecated Use the `isFaded` or `isHighlighted` props instead.
-     */
-    highlightScope?: Partial<HighlightScope>;
     innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
     outerRadius: SpringValue<number>;
@@ -90,7 +91,6 @@ function PieArc(props: PieArcProps) {
     outerRadius,
     paddingAngle,
     startAngle,
-    highlightScope,
     ...other
   } = props;
 
@@ -104,7 +104,7 @@ function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
 
   return (
     <PieArcRoot
@@ -120,12 +120,18 @@ function PieArc(props: PieArcProps) {
           })!,
       )}
       visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
+      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
+      fill={ownerState.color}
+      opacity={ownerState.isFaded ? 0.3 : 1}
+      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      strokeWidth={1}
+      strokeLinejoin="round"
       {...other}
-      {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }
@@ -137,15 +143,6 @@ PieArc.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  /**
-   * @deprecated Use the `isFaded` or `isHighlighted` props instead.
-   */
-  highlightScope: PropTypes.shape({
-    fade: PropTypes.oneOf(['global', 'none', 'series']),
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlight: PropTypes.oneOf(['item', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,

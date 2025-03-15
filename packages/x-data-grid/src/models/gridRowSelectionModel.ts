@@ -1,5 +1,8 @@
 import { GridRowId } from './gridRows';
 
-export type GridInputRowSelectionModel = readonly GridRowId[] | GridRowId;
+export type GridRowSelectionPropagation = {
+  descendants?: boolean;
+  parents?: boolean;
+};
 
-export type GridRowSelectionModel = readonly GridRowId[];
+export type GridRowSelectionModel = { type: 'include' | 'exclude'; ids: Set<GridRowId> };

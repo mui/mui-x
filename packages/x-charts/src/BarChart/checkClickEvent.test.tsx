@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
@@ -11,9 +12,11 @@ const config = {
     { x: 'B', v1: 1, v2: 1 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //
@@ -23,22 +26,29 @@ const config = {
 // | X X X X
 // ---A---B-
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onAxisClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -81,62 +91,61 @@ describe('BarChart - click event', () => {
       });
     });
 
-    it('should provide the right context as second argument with layout="horizontal"', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-      const onAxisClick = spy();
-      render(
-        <div
-          style={{
-            margin: -8, // Removes the body default margins
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            layout="horizontal"
-            series={[
-              { dataKey: 'v1', id: 's1' },
-              { dataKey: 'v2', id: 's2' },
-            ]}
-            yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            onAxisClick={onAxisClick}
-          />
-        </div>,
-      );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)(
+      'should provide the right context as second argument with layout="horizontal"',
+      () => {
+        const onAxisClick = spy();
+        render(
+          <div
+            style={{
+              width: 400,
+              height: 400,
+            }}
+          >
+            <BarChart
+              {...config}
+              layout="horizontal"
+              series={[
+                { dataKey: 'v1', id: 's1' },
+                { dataKey: 'v2', id: 's2' },
+              ]}
+              yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+              onAxisClick={onAxisClick}
+            />
+          </div>,
+        );
+        const svg = document.querySelector<HTMLElement>('svg')!;
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 60,
-        clientY: 198,
-      });
-      fireEvent.click(svg);
+        firePointerEvent(svg, 'pointermove', {
+          clientX: 60,
+          clientY: 198,
+        });
+        fireEvent.click(svg);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
-        dataIndex: 0,
-        axisValue: 'A',
-        seriesValues: { s1: 4, s2: 2 },
-      });
+        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+          dataIndex: 0,
+          axisValue: 'A',
+          seriesValues: { s1: 4, s2: 2 },
+        });
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 60,
-        clientY: 201,
-      });
-      fireEvent.click(svg);
+        firePointerEvent(svg, 'pointermove', {
+          clientX: 60,
+          clientY: 201,
+        });
+        fireEvent.click(svg);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
-        dataIndex: 1,
-        axisValue: 'B',
-        seriesValues: { s1: 1, s2: 1 },
-      });
-    });
+        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+          dataIndex: 1,
+          axisValue: 'B',
+          seriesValues: { s1: 1, s2: 1 },
+        });
+      },
+    );
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <BarChart
           {...config}
@@ -155,16 +164,12 @@ describe('BarChart - click event', () => {
       ).to.deep.equal(['pointer', 'pointer', 'pointer', 'pointer']);
     });
 
-    it('should provide the right context as second argument', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}

@@ -147,14 +147,21 @@ Those will fix the chart's size to the given value (in px).
 
 ### Placement
 
-At the core of chart layout is the drawing area which corresponds to the space available to represent data.
+There are two concepts to consider when defining the placement of a chart:
 
-This space can be defined with the `margin` prop and its properties `top`, `bottom`, `left`, and `right`.
-Those values define the space between the SVG border and the drawing area.
+- **`margin`**: The space between the SVG border and the axis or drawing area.
+- **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has its own size.
 
-You might want to modify those values to leave more space for your axis ticks or reduce them to provide more space for the data.
+The axes have a default size.
+To update it, use the `xAxis` and `yAxis` configuration as follows:
 
-{{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+- **`x-axis`**: Uses the `height` prop to define the space taken by the axis.
+- **`y-axis`**: Uses the `width` prop instead.
+
+Axes only take up space in the side they are positioned.
+If the axis is not be displayed (`position: 'none'`), they will not take up any space, regardless of their size.
+
+{{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
 
 ### CSS
 
@@ -164,3 +171,13 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Gradients and patterns
+
+It is possible to use gradients and patterns to fill the charts.
+This can be done by passing your gradient or pattern definition as children of the chart component.
+
+Note that the gradient or pattern defined that way is only usable for SVG.
+So a direct definition like `color: "url(#Pattern)'` would cause undefined colors in HTML elements.
+
+{{"demo": "GradientTooltip.js"}}

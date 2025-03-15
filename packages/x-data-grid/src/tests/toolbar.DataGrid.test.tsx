@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar, GridColumnsManagementProps } from '@mui/x-data-grid';
+import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -39,18 +39,13 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-          />
+          <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
       fireEvent.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -71,9 +66,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             initialState={{
               columns: {
                 columnVisibilityModel: { id: false, brand: false },
@@ -83,7 +76,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
@@ -94,16 +87,11 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should keep the focus on the switch after toggling a column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-          />
+          <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
-      const button = screen.getByRole('button', { name: 'Select columns' });
+      const button = screen.getByRole('button', { name: 'Columns' });
       act(() => button.focus());
       fireEvent.click(button);
 
@@ -140,9 +128,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             slotProps={{
               columnsManagement: {
                 searchPredicate: columnSearchPredicate,
@@ -152,9 +138,9 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
 
-      const searchInput = document.querySelector('input[type="text"]')!;
+      const searchInput = document.querySelector('input[type="search"]')!;
       fireEvent.change(searchInput, { target: { value: 'test' } });
 
       expect(document.querySelector('[role="tooltip"] [name="id"]')).not.to.equal(null);

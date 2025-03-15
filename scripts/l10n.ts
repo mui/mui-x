@@ -144,7 +144,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, for example MuiTablePagination
+        // Ignore translations for Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -225,8 +225,9 @@ function injectTranslations(
 
       const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
       const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
+      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`;
 
-      lines.push(`${comment}${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`);
+      lines.push(...content.split('\n').map((line) => `${comment}${line}`));
     });
   });
 

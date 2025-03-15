@@ -20,18 +20,21 @@ const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] = ({
 const getDetailPanelHeight: DataGridProProps['getDetailPanelHeight'] = () => 50;
 
 export default function DetailPanelOneExpandedRow() {
-  const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState<
-    GridRowId[]
-  >([]);
-
-  const handleDetailPanelExpandedRowIdsChange = React.useCallback(
-    (newIds: GridRowId[]) => {
-      setDetailPanelExpandedRowIds(
-        newIds.length > 1 ? [newIds[newIds.length - 1]] : newIds,
-      );
-    },
-    [],
+  const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState(
+    () => new Set<GridRowId>(),
   );
+
+  const handleDetailPanelExpandedRowIdsChange = React.useCallback<
+    NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
+  >((newIds) => {
+    if (newIds.size > 1) {
+      const newSet = new Set();
+      const newIdsArray = Array.from(newIds);
+      newSet.add(newIdsArray[newIdsArray.length - 1]);
+    } else {
+      setDetailPanelExpandedRowIds(newIds);
+    }
+  }, []);
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>

@@ -1,48 +1,29 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
-import {
-  PropValidator,
-  propValidatorsDataGrid,
-  validateProps,
-} from '../internals/utils/propValidation';
+import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
 };
-let propValidators: PropValidator<DataGridProcessedProps>[];
 
-if (process.env.NODE_ENV !== 'production') {
-  propValidators = [
-    ...propValidatorsDataGrid,
-    // Only validate in MIT version
-    (props) =>
-      (props.columns &&
-        props.columns.some((column) => column.resizable) &&
-        [
-          `MUI X: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n')) ||
-      undefined,
-  ];
-}
-
-const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -50,7 +31,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
-    validateProps(props, propValidators);
+    validateProps(props, propValidatorsDataGrid);
   }
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -58,13 +39,9 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...props.slotProps?.root}
         ref={ref}
-        {...props.forwardedProps}
-      >
-        <GridHeader />
-        <GridBody />
-        <GridFooterPlaceholder />
-      </GridRoot>
+      />
     </GridContextProvider>
   );
 });
@@ -77,8 +54,8 @@ interface DataGridComponent {
 }
 
 /**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGrid](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
@@ -94,7 +71,7 @@ DataGridRaw.propTypes = {
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.
@@ -129,6 +106,7 @@ DataGridRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
@@ -177,6 +155,21 @@ DataGridRaw.propTypes = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * The data source object.
+   */
+  dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -285,11 +278,6 @@ DataGridRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
-  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
@@ -323,6 +311,8 @@ DataGridRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -364,14 +354,6 @@ DataGridRaw.propTypes = {
     }),
     PropTypes.bool,
   ]),
-  /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -478,6 +460,12 @@ DataGridRaw.propTypes = {
    */
   onColumnHeaderClick: PropTypes.func,
   /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu: PropTypes.func,
+  /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -539,6 +527,11 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
   /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
@@ -699,6 +692,7 @@ DataGridRaw.propTypes = {
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
+   * @param {{ rowId: GridRowId }} params Additional parameters.
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
@@ -728,13 +722,6 @@ DataGridRaw.propTypes = {
    */
   rowModesModel: PropTypes.object,
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   */
-  rowPositionsDebounceMs: PropTypes.number,
-  /**
    * Set of rows of type [[GridRowsProp]].
    * @default []
    */
@@ -747,16 +734,20 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
@@ -771,6 +762,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * Overridable components props dynamically passed to the component at rendering.
    */
@@ -809,8 +805,11 @@ DataGridRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
    * @default false
    */
-  unstable_rowSpanning: PropTypes.bool,
+  virtualizeColumnsWithAutoRowHeight: PropTypes.bool,
 } as any;

@@ -11,7 +11,6 @@ import {
   RichTreeViewPluginSlots,
   RichTreeViewPluginSlotProps,
 } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   UseTreeViewExpansionSignature,
   TreeViewPlugin,
@@ -19,6 +18,7 @@ import {
   useTreeView,
   TreeViewProvider,
   ConvertPluginsIntoSignatures,
+  RichTreeViewItems,
 } from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
@@ -86,7 +86,7 @@ type TreeViewPluginSignatures = ConvertPluginsIntoSignatures<
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
   props: TreeViewProps<R, Multiple>,
 ) {
-  const { getRootProps, contextValue, instance } = useTreeView<
+  const { getRootProps, contextValue } = useTreeView<
     TreeViewPluginSignatures,
     typeof props
   >({
@@ -94,23 +94,10 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
     props,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    children: itemChildren,
-    ...itemProps
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <TreeItem key={itemProps.itemId} {...itemProps}>
-        {itemChildren?.map(renderItem)}
-      </TreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
       <RichTreeViewRoot {...getRootProps()}>
-        {itemsToRender.map(renderItem)}
+        <RichTreeViewItems slots={undefined} slotProps={undefined} />
       </RichTreeViewRoot>
     </TreeViewProvider>
   );

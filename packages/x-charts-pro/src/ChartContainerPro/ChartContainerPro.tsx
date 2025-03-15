@@ -1,73 +1,75 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
-import {
-  ChartsAxesGradients,
-  DrawingProvider,
-  InteractionProvider,
-  PluginProvider,
-  SeriesProvider,
-} from '@mui/x-charts/internals';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { CartesianProviderPro } from '../context/CartesianProviderPro';
-import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
+import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
+import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataProviderPro';
 
-const releaseInfo = getReleaseInfo();
+export type ChartContainerProProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
 
-export interface ChartContainerProProps extends ChartContainerProps, ZoomProps {}
+type ChartContainerProComponent = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProProps<TSeries, TSignatures> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
 
-const ChartContainerPro = React.forwardRef(function ChartContainer(
-  props: ChartContainerProProps,
-  ref,
-) {
-  const {
-    zoomProviderProps,
-    drawingProviderProps,
-    seriesProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    cartesianProviderProps,
-    chartsSurfaceProps,
-    pluginProviderProps,
-    children,
-  } = useChartContainerProProps(props, ref);
-
-  useLicenseVerifier('x-charts-pro', releaseInfo);
+/**
+ * It sets up the data providers as well as the `<svg>` for the chart.
+ *
+ * This is a combination of both the `ChartDataProviderPro` and `ChartsSurface` components.
+ *
+ * Demos:
+ *
+ * - [Composition](https://mui.com/x/api/charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ *
+ * @example
+ * ```jsx
+ * <ChartContainerPro
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *    <BarPlot />
+ *    <ChartsXAxis axisId="x-axis" />
+ * </ChartContainerPro>
+ * ```
+ */
+const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartContainerProProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <ZoomProvider {...zoomProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProviderPro {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProviderPro>
-          </SeriesProvider>
-        </ZoomProvider>
-      </PluginProvider>
-    </DrawingProvider>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+    </ChartDataProviderPro>
   );
-});
+}) as unknown as ChartContainerProComponent;
 
+// @ts-expect-error the type coercion breaks the prop types
 ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -87,21 +89,36 @@ ChartContainerPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px.
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -122,32 +139,27 @@ ChartContainerPro.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins: PropTypes.arrayOf(PropTypes.object),
-  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
-   * The width of the chart in px.
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -187,11 +199,11 @@ ChartContainerPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -206,7 +218,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -274,11 +285,11 @@ ChartContainerPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -293,7 +304,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -359,16 +369,6 @@ ChartContainerPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
-    }),
-  ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

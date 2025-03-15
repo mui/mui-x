@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -40,7 +40,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each other.
 
-{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -100,7 +100,7 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 {{"demo": "ColorScale.js"}}
 
-### Border Radius
+### Border radius
 
 To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
@@ -117,7 +117,7 @@ Or you can pass `'value'` to display the raw value of the bar.
 
 {{"demo": "BarLabel.js"}}
 
-### Custom Labels
+### Custom labels
 
 You can display, change, or hide labels based on conditional logic.
 To do so, provide a function to the `barLabel`.
@@ -143,7 +143,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "BarClickNoSnap.js"}}
+{{"demo": "BarClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
@@ -159,14 +159,10 @@ If you're using composition, you can get those click event as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
-// ...
-
-<ChartContainer>
+<ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
-  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Animation
@@ -174,16 +170,16 @@ import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
 To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
 When set to `true` it skips animation powered by `@react-spring/web`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 ```jsx
 // For a single component chart
 <BarChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <BarPlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}

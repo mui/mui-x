@@ -1,7 +1,7 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
+components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsGrid
 ---
 
 # Charts - Lines
@@ -109,7 +109,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClickNoSnap.js"}}
+{{"demo": "LineClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onAxisClick` and the others:
@@ -125,15 +125,11 @@ If you're using composition, you can get those click event as follow.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
-// ...
-
-<ChartContainer>
+<ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
-  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Styling
@@ -168,12 +164,20 @@ For now, ordinal config is not supported for line chart.
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`, `'bumpX'` and `'bumpY'`.
 
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
+
+#### Expanding steps
+
+To simplify the composition of line and chart, the step interpolations (when `curve` property is `'step'`, `'stepBefore'`, or `'stepAfter'`) expand to cover the full band width.
+
+You can disable this behavior with `strictStepCurve` series property.
+
+{{"demo": "ExpandingStep.js"}}
 
 ### Baseline
 
@@ -235,7 +239,7 @@ sx={{
 To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
 When set to `true` it skips animation powered by `@react-spring/web`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 :::warning
 If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
@@ -249,10 +253,10 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}

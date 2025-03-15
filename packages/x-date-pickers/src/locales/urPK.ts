@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'میریڈیم',
 };
 
-const urPKPickers: Partial<PickersLocaleText<any>> = {
+const urPKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'پچھلا مہینہ',
   nextMonth: 'اگلا مہینہ',
@@ -41,10 +41,11 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'تاریخ اور وقت منتخب کریں',
   timePickerToolbarTitle: 'وقت منتخب کریں',
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view]} منتخب کریں ${!formattedTime && (time === null || !utils.isValid(time)) ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view]} منتخب کریں ${!formattedTime ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
@@ -58,15 +59,12 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `ہفتہ ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'تاریخ منتخب کریں',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'وقت منتخب کریں',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate}` : 'تاریخ منتخب کریں',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime}` : 'وقت منتخب کریں',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

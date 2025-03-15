@@ -10,7 +10,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'мерыдыем',
 };
 
-const beBYPickers: Partial<PickersLocaleText<any>> = {
+const beBYPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Папярэдні месяц',
   nextMonth: 'Наступны месяц',
@@ -42,10 +42,11 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Абраць дату і час',
   timePickerToolbarTitle: 'Абраць час',
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Абярыце ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Час не абраны' : `Абраны час ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Абярыце ${views[view]}. ${!formattedTime ? 'Час не абраны' : `Абраны час ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -59,15 +60,12 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тыдзень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Абраць дату, абрана дата  ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Абраць дату',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Абраць час, абрыны час  ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Абраць час',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Абраць дату, абрана дата  ${formattedDate}` : 'Абраць дату',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Абраць час, абрыны час  ${formattedTime}` : 'Абраць час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

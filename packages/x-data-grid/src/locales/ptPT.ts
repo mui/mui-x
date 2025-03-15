@@ -1,4 +1,3 @@
-import { ptPT as ptPTCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nenhuma linha',
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
@@ -31,6 +32,18 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Claro',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Digite um prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
+  toolbarPromptControlLabel: 'Entrada de prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +56,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sem colunas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Repor',
+  columnsManagementDeleteIconLabel: 'Limpar',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
@@ -101,6 +115,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Melhor que ou igual a',
   'headerFilterOperator<': 'Menor que',
   'headerFilterOperator<=': 'Menos que ou igual a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualquer',
@@ -109,6 +124,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Mostrar colunas',
   columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtro',
@@ -170,6 +186,34 @@ const ptPTGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Colapsar',
 
+  // Pagination
+  paginationRowsPerPage: 'Linhas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Primeira página';
+    }
+    if (type === 'last') {
+      return 'Última página';
+    }
+    if (type === 'next') {
+      return 'Próxima página';
+    }
+    // if (type === 'previous') {
+    return 'Página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenação de linhas',
 
@@ -182,4 +226,4 @@ const ptPTGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamanho',
 };
 
-export const ptPT = getGridLocalization(ptPTGrid, ptPTCore);
+export const ptPT = getGridLocalization(ptPTGrid);

@@ -1,57 +1,85 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
-import { SxProps } from '@mui/system';
-import { TreeItemContentProps } from './TreeItemContent';
+import { SlotComponentProps } from '@mui/utils/types';
+import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
-import { TreeViewItemId } from '../models';
-import { SlotComponentPropsFromProps } from '../internals/models';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
-import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
-import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
-import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
-import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
-import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
-import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
+import { TreeViewCancellableEventHandler } from '../models';
 
-export interface TreeItemSlots {
+export interface TreeItemSlots extends TreeItemIconSlots {
   /**
-   * The icon used to collapse the item.
+   * The component that renders the root.
+   * @default TreeItemRoot
    */
-  collapseIcon?: React.ElementType;
+  root?: React.ElementType;
   /**
-   * The icon used to expand the item.
+   * The component that renders the content of the item.
+   * (e.g.: everything related to this item, not to its children).
+   * @default TreeItemContent
    */
-  expandIcon?: React.ElementType;
+  content?: React.ElementType;
   /**
-   * The icon displayed next to an end item.
-   */
-  endIcon?: React.ElementType;
-  /**
-   * The icon to display next to the tree item's label.
-   */
-  icon?: React.ElementType;
-  /**
-   * The component that animates the appearance / disappearance of the item's children.
-   * @default TreeItem2Group
+   * The component that renders the children of the item.
+   * @default TreeItemGroupTransition
    */
   groupTransition?: React.ElementType;
-}
-
-export interface TreeItemSlotProps {
-  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
-  expandIcon?: SlotComponentProps<'svg', {}, {}>;
-  endIcon?: SlotComponentProps<'svg', {}, {}>;
-  icon?: SlotComponentProps<'svg', {}, {}>;
-  groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
-}
-
-export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
-   * The content of the component.
+   * The component that renders the icon.
+   * @default TreeItemIconContainer
    */
-  children?: React.ReactNode;
+  iconContainer?: React.ElementType;
+  /**
+   * The component that renders the item checkbox for selection.
+   * @default TreeItemCheckbox
+   */
+  checkbox?: React.ElementType;
+  /**
+   * The component that renders the item label.
+   * @default TreeItemLabel
+   */
+  label?: React.ElementType;
+  /**
+   * The component that renders the input to edit the label when the item is editable and is currently being edited.
+   * @default TreeItemLabelInput
+   */
+  labelInput?: React.ElementType;
+  /**
+   * The component that renders the overlay when an item reordering is ongoing.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component.
+   * @default TreeItemDragAndDropOverlay
+   */
+  dragAndDropOverlay?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an error state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemErrorContainer
+   */
+  errorIcon?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an loading state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemLoadingContainer
+   */
+  loadingIcon?: React.ElementType;
+}
+
+export interface TreeItemSlotProps extends TreeItemIconSlotProps {
+  root?: SlotComponentProps<'li', {}, {}>;
+  content?: SlotComponentProps<'div', {}, {}>;
+  groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
+  iconContainer?: SlotComponentProps<'div', {}, {}>;
+  checkbox?: SlotComponentProps<'button', {}, {}>;
+  label?: SlotComponentProps<'div', {}, {}>;
+  labelInput?: SlotComponentProps<'input', {}, {}>;
+  dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
+  errorIcon?: SlotComponentProps<'div', {}, {}>;
+  loadingIcon?: SlotComponentProps<'div', {}, {}>;
+}
+
+export interface TreeItemProps
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
+    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -68,63 +96,18 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   slotProps?: TreeItemSlotProps;
   /**
-   * The component used to render the content of the item.
-   * @default TreeItemContent
-   */
-  ContentComponent?: React.JSXElementConstructor<TreeItemContentProps>;
-  /**
-   * Props applied to ContentComponent.
-   */
-  ContentProps?: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> };
-  /**
-   * If `true`, the item is disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
    */
   onFocus?: null;
   /**
-   * The tree item label.
+   * Callback fired when the item root is blurred.
    */
-  label?: React.ReactNode;
+  onBlur?: TreeViewCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
   /**
-   * The id of the item.
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
    */
-  itemId: TreeViewItemId;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Callback fired when a key of the keyboard is pressed on the item.
-   */
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
-export interface TreeItemOwnerState extends TreeItemProps {
-  expanded: boolean;
-  focused: boolean;
-  selected: boolean;
-  disabled: boolean;
-  indentationAtItemLevel: boolean;
-}
-
-/**
- * Plugins that need to be present in the Tree View in order for `TreeItem` to work correctly.
- */
-export type TreeItemMinimalPlugins = readonly [
-  UseTreeViewIconsSignature,
-  UseTreeViewSelectionSignature,
-  UseTreeViewItemsSignature,
-  UseTreeViewFocusSignature,
-  UseTreeViewExpansionSignature,
-  UseTreeViewKeyboardNavigationSignature,
-];
-
-/**
- * Plugins that `TreeItem` can use if they are present, but are not required.
- */
-export type TreeItemOptionalPlugins = readonly [];
+export interface TreeItemOwnerState extends Omit<TreeItemProps, 'disabled'>, UseTreeItemStatus {}

@@ -1,4 +1,3 @@
-import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
@@ -31,6 +32,17 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Recherche',
   toolbarQuickFilterDeleteIconLabel: 'Supprimer',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
@@ -43,6 +55,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Pas de colonnes',
   columnsManagementShowHideAllText: 'Afficher/masquer toutes',
   columnsManagementReset: 'Réinitialiser',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
@@ -58,9 +71,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contient',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'ne contient pas',
   filterOperatorEquals: 'est égal à',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: "n'est pas égal à",
   filterOperatorStartsWith: 'commence par',
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
@@ -81,9 +94,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contient',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Ne contient pas',
   headerFilterOperatorEquals: 'Est égal à',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: "N'est pas égal à",
   headerFilterOperatorStartsWith: 'Commence par',
   headerFilterOperatorEndsWith: 'Se termine par',
   headerFilterOperatorIs: 'Est',
@@ -101,6 +114,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Est supérieur ou égal à',
   'headerFilterOperator<': 'Est inférieur à',
   'headerFilterOperator<=': 'Est inférieur ou égal à',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -109,6 +123,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
@@ -170,6 +185,34 @@ const frFRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Afficher',
   collapseDetailPanel: 'Masquer',
 
+  // Pagination
+  paginationRowsPerPage: 'Lignes par page :',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Aller à la première page';
+    }
+    if (type === 'last') {
+      return 'Aller à la dernière page';
+    }
+    if (type === 'next') {
+      return 'Aller à la page suivante';
+    }
+    // if (type === 'previous') {
+    return 'Aller à la page précédente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Positionnement des lignes',
 
@@ -182,4 +225,4 @@ const frFRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
-export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
+export const frFR: Localization = getGridLocalization(frFRGrid);

@@ -19,6 +19,7 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
+    "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
@@ -40,7 +41,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "forceUpdate": { "type": { "description": "() =&gt; void" }, "required": true },
     "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" }, "required": true },
     "getAllGroupDetails": {
       "type": { "description": "() =&gt; GridColumnGroupLookup" },
@@ -112,7 +112,7 @@
       "isPremiumPlan": true
     },
     "getExpandedDetailPanels": {
-      "type": { "description": "() =&gt; GridRowId[]" },
+      "type": { "description": "() =&gt; Set&lt;GridRowId&gt;" },
       "required": true,
       "isProPlan": true
     },
@@ -246,7 +246,6 @@
       "isPremiumPlan": true
     },
     "resetRowHeights": { "type": { "description": "() =&gt; void" }, "required": true },
-    "resize": { "type": { "description": "() =&gt; void" }, "required": true },
     "restoreState": {
       "type": { "description": "(stateToRestore: InitialState) =&gt; void" },
       "required": true
@@ -336,7 +335,7 @@
       "required": true
     },
     "setExpandedDetailPanels": {
-      "type": { "description": "(ids: GridRowId[]) =&gt; void" },
+      "type": { "description": "(ids: Set&lt;GridRowId&gt;) =&gt; void" },
       "required": true,
       "isProPlan": true
     },
@@ -395,7 +394,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowIds: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {
@@ -464,11 +463,6 @@
     },
     "unpinColumn": {
       "type": { "description": "(field: string) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
-    "unstable_dataSource": {
-      "type": { "description": "GridDataSourceApiBase" },
       "required": true,
       "isProPlan": true
     },

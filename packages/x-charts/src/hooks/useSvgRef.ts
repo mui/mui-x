@@ -1,18 +1,22 @@
 'use client';
 import * as React from 'react';
-import { SvgContext } from '../context/DrawingProvider';
+import { useChartContext } from '../context/ChartProvider';
 
-export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
-  const { isInitialized, data } = React.useContext(SvgContext);
+/**
+ * Get the ref for the SVG element.
+ * @returns The SVG ref.
+ */
+export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
+  const context = useChartContext();
 
-  if (!isInitialized) {
+  if (!context) {
     throw new Error(
       [
         'MUI X: Could not find the svg ref context.',
-        'It looks like you rendered your component outside of a ChartsContainer parent component.',
+        'It looks like you rendered your component outside of a ChartContainer parent component.',
       ].join('\n'),
     );
   }
 
-  return data as React.MutableRefObject<SVGSVGElement>;
+  return context.svgRef;
 }

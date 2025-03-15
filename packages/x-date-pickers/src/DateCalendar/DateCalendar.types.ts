@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -10,15 +11,9 @@ import {
 } from '../PickersCalendarHeader';
 import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
 import { DateCalendarClasses } from './dateCalendarClasses';
-import {
-  BaseDateValidationProps,
-  YearValidationProps,
-  MonthValidationProps,
-  DayValidationProps,
-} from '../internals/models/validation';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import {
   ExportedYearCalendarProps,
   YearCalendarSlots,
@@ -29,10 +24,13 @@ import {
   MonthCalendarSlots,
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
+import { ExportedValidateDateProps } from '../validation/validateDate';
+import { FormProps } from '../internals/models/formProps';
+import { PickerValue } from '../internals/models';
 
-export interface DateCalendarSlots<TDate extends PickerValidDate>
+export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
-    DayCalendarSlots<TDate>,
+    DayCalendarSlots,
     MonthCalendarSlots,
     YearCalendarSlots {
   /**
@@ -40,36 +38,24 @@ export interface DateCalendarSlots<TDate extends PickerValidDate>
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
    * @default PickersCalendarHeader
    */
-  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps>;
 }
 
-export interface DateCalendarSlotProps<TDate extends PickerValidDate>
-  extends PickersCalendarHeaderSlotProps<TDate>,
-    DayCalendarSlotProps<TDate>,
+export interface DateCalendarSlotProps
+  extends PickersCalendarHeaderSlotProps,
+    DayCalendarSlotProps,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, PickerOwnerState>;
 }
 
-export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
-  extends ExportedDayCalendarProps<TDate>,
+export interface ExportedDateCalendarProps
+  extends ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
-    BaseDateValidationProps<TDate>,
-    DayValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    TimezoneProps {
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
+    ExportedValidateDateProps,
+    TimezoneProps,
+    FormProps {
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
@@ -78,41 +64,39 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading?: () => React.ReactNode;
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
-  onYearChange?: (year: TDate) => void;
+  onYearChange?: (year: PickerValidDate) => void;
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
-  onMonthChange?: (month: TDate) => void;
+  onMonthChange?: (month: PickerValidDate) => void;
 }
 
-export interface DateCalendarProps<TDate extends PickerValidDate>
-  extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
+export interface DateCalendarProps
+  extends ExportedDateCalendarProps,
+    ExportedUseViewsOptions<PickerValue, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -126,20 +110,20 @@ export interface DateCalendarProps<TDate extends PickerValidDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateCalendarSlots<TDate>;
+  slots?: DateCalendarSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateCalendarSlotProps<TDate>;
+  slotProps?: DateCalendarSlotProps;
 }
 
-export type DateCalendarDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
-  DateCalendarProps<TDate>,
+export type DateCalendarDefaultizedProps = DefaultizedProps<
+  DateCalendarProps,
   | 'views'
   | 'openTo'
   | 'loading'
   | 'reduceAnimations'
   | 'renderLoading'
-  | keyof BaseDateValidationProps<TDate>
+  | keyof BaseDateValidationProps
 >;

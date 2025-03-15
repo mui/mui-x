@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "TreeItemDragAndDropOverlay",
+  "imports": [
+    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';",
+    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view';",
+    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiTreeItemDragAndDropOverlay",
+  "filename": "/packages/x-tree-view/src/TreeItemDragAndDropOverlay/TreeItemDragAndDropOverlay.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

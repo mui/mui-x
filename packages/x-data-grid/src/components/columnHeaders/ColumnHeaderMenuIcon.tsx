@@ -11,7 +11,7 @@ export interface ColumnHeaderMenuIconProps {
   columnMenuId: string;
   columnMenuButtonId: string;
   open: boolean;
-  iconButtonRef: React.RefObject<HTMLButtonElement>;
+  iconButtonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 type OwnerState = ColumnHeaderMenuIconProps & {
@@ -45,6 +45,8 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
     [apiRef, colDef.field],
   );
 
+  const columnName = colDef.headerName ?? colDef.field;
+
   return (
     <div className={classes.root}>
       <rootProps.slots.baseTooltip
@@ -56,7 +58,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
           ref={iconButtonRef}
           tabIndex={-1}
           className={classes.button}
-          aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+          aria-label={apiRef.current.getLocaleText('columnMenuAriaLabel')(columnName)}
           size="small"
           onClick={handleMenuIconClick}
           aria-haspopup="menu"

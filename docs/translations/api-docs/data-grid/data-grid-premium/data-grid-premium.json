@@ -51,6 +51,8 @@
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
+    "dataSource": { "description": "Data source object." },
+    "dataSourceCache": { "description": "Data source cache object." },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded."
     },
@@ -169,7 +171,9 @@
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
-    "getRowId": { "description": "Return the id of a given GridRowModel." },
+    "getRowId": {
+      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+    },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
@@ -187,7 +191,7 @@
     "groupingColDef": { "description": "The grouping column used by the tree data." },
     "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
-      "description": "If <code>true</code>, enables the data grid filtering on header feature."
+      "description": "If <code>true</code>, the header filters feature is enabled."
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {
@@ -204,9 +208,6 @@
     },
     "ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export."
-    },
-    "indeterminateCheckboxAction": {
-      "description": "If <code>select</code>, a group header checkbox in indeterminate state (like &quot;Select All&quot; checkbox) will select all the rows under it. If <code>deselect</code>, it will deselect all the rows under it. Works only if <code>checkboxSelection</code> is enabled."
     },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins."
@@ -237,6 +238,12 @@
     },
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
+    },
+    "lazyLoading": {
+      "description": "Used together with <code>dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
+    },
+    "lazyLoadingRequestThrottleMs": {
+      "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
@@ -330,6 +337,13 @@
         "details": "Additional details for this callback."
       }
     },
+    "onColumnHeaderContextMenu": {
+      "description": "Callback fired when a contextmenu event comes from a column header element.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnHeaderParams.",
+        "event": "The event object."
+      }
+    },
     "onColumnHeaderDoubleClick": {
       "description": "Callback fired when a double click event comes from a column header element.",
       "typeDescriptions": {
@@ -400,6 +414,10 @@
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
+    },
+    "onDataSourceError": {
+      "description": "Callback fired when a data source request fails.",
+      "typeDescriptions": { "error": "The data source error object." }
     },
     "onDensityChange": {
       "description": "Callback fired when the density changes.",
@@ -589,6 +607,7 @@
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
         "oldRow": "Row object with the old values.",
+        "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
     },
@@ -603,24 +622,27 @@
     "rowGroupingModel": { "description": "Set the row grouping model of the grid." },
     "rowHeight": { "description": "Sets the height in pixel of a row in the Data Grid." },
     "rowModesModel": { "description": "Controls the modes of the rows." },
-    "rowPositionsDebounceMs": {
-      "description": "The milliseconds delay to wait after measuring the row height before recalculating row positions. Setting it to a lower value could be useful when using dynamic row height, but might reduce performance when displaying a large number of rows."
-    },
     "rowReordering": { "description": "If <code>true</code>, the reordering of rows is enabled." },
     "rows": { "description": "Set of rows of type GridRowsProp." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
+    "rowSelectionPropagation": {
+      "description": "When <code>rowSelectionPropagation.descendants</code> is set to <code>true</code>. - Selecting a parent selects all its filtered descendants automatically. - Deselecting a parent row deselects all its filtered descendants automatically.<br>When <code>rowSelectionPropagation.parents</code> is set to <code>true</code> - Selecting all the filtered descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Works with tree data and row grouping on the client-side only."
+    },
     "rowsLoadingMode": {
-      "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;"
+      "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading."
     },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
+    },
+    "rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "scrollEndThreshold": {
-      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
+      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."
@@ -628,6 +650,7 @@
     "showColumnVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
+    "showToolbar": { "description": "If <code>true</code>, the toolbar is displayed." },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
     },
@@ -650,8 +673,14 @@
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
     },
-    "unstable_rowSpanning": {
-      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
+    "unstable_listColumn": {
+      "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
+    },
+    "unstable_listView": {
+      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
+    },
+    "virtualizeColumnsWithAutoRowHeight": {
+      "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."
     }
   },
   "classDescriptions": {
@@ -683,6 +712,10 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the aggregation label in the column header",
       "conditions": "aggregated"
+    },
+    "aggregationRowOverlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the aggregation row overlay wrapper"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -816,6 +849,10 @@
       "nodeName": "the column group header cell",
       "conditions": "not empty"
     },
+    "columnHeader--filter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter cell"
+    },
     "columnHeader--filtered": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -859,6 +896,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header&#39;s draggable container element"
     },
+    "columnHeaderFilterInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter input element"
+    },
+    "columnHeaderFilterOperatorLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter operator label element"
+    },
     "columnHeaderTitle": {
       "description": "Styles applied to the column header&#39;s title element;"
     },
@@ -894,6 +939,10 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
+    "columnsManagementEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management empty text element"
+    },
     "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management footer element"
@@ -905,6 +954,14 @@
     "columnsManagementRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management row element"
+    },
+    "columnsManagementScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management scroll area element"
+    },
+    "columnsManagementSearchInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management search input element"
     },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1045,10 +1102,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumns": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned columns"
-    },
     "pinnedRows": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned rows container"
@@ -1060,10 +1113,6 @@
     "pinnedRows--top": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
-    },
-    "pinnedRowsRenderZone": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "pinned rows render zones"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1178,6 +1227,27 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
+    "toolbarPromptControl": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control element"
+    },
+    "toolbarPromptControl--recording": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the toolbar prompt control element",
+      "conditions": "recording"
+    },
+    "toolbarPromptControlRecordButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control record button element"
+    },
+    "toolbarPromptControlRecordingIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control recording indicator element"
+    },
+    "toolbarPromptControlSendButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control send button element"
+    },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the grouping column of the tree data"
@@ -1213,20 +1283,28 @@
     }
   },
   "slotDescriptions": {
+    "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
+    "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
-    "baseChip": "The custom Chip component used in the grid.",
-    "baseFormControl": "The custom FormControl component used in the grid.",
+    "baseCircularProgress": "The custom CircularProgress component used in the grid.",
+    "baseDivider": "The custom Divider component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
-    "baseInputAdornment": "The custom InputAdornment component used in the grid.",
-    "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "baseInput": "The custom Input component used in the grid.",
+    "baseLinearProgress": "The custom LinearProgress component used in the grid.",
+    "baseMenuItem": "The custom MenuItem component used in the grid.",
+    "baseMenuList": "The custom MenuList component used in the grid.",
+    "basePagination": "The custom Pagination component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
+    "baseSkeleton": "The custom Skeleton component used in the grid.",
+    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
@@ -1245,6 +1323,7 @@
     "columnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
     "columnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
     "columnMenuUngroupIcon": "Icon displayed in column menu for ungrouping",
+    "columnMenuUnsortIcon": "Icon displayed in column menu for unsort",
     "columnReorderIcon": "Icon displayed on the column reorder button.",
     "columnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
     "columnSelectorIcon": "Icon displayed on the column menu selector tab.",
@@ -1272,7 +1351,9 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
@@ -1283,7 +1364,9 @@
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
-    "toolbar": "Toolbar component rendered inside the Header component.",
+    "toolbar": "Toolbar component rendered in the grid header.",
+    "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
+    "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }

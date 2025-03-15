@@ -13,17 +13,15 @@ const data = Array.from({ length: 200 }, () => ({
 const params = {
   series: [{ data }],
   height: 300,
+  margin: 12,
 };
 export default function ModifyAxisPosition() {
   return (
     <Box sx={{ width: '100%', maxWidth: 500 }}>
       <ScatterChart
         {...params}
-        leftAxis={null}
-        bottomAxis={null}
-        topAxis={{}}
-        rightAxis={{}}
-        margin={{ top: 30, bottom: 10 }}
+        xAxis={[{ position: 'top' }]}
+        yAxis={[{ position: 'right' }]}
       />
     </Box>
   );

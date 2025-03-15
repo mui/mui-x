@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'بعد از ظهر',
 };
 
-const faIRPickers: Partial<PickersLocaleText<any>> = {
+const faIRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'ماه گذشته',
   nextMonth: 'ماه آینده',
@@ -41,10 +41,11 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
   timePickerToolbarTitle: 'ساعت را انتخاب کنید',
   dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime ?? utils.format(time, 'fullTime')} می باشد`}`,
+  clockLabelText: (view, formattedTime) =>
+    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime} می باشد`}`,
   hoursClockNumberText: (hours) => `${hours} ساعت‌ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه‌ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه‌ها`,
@@ -58,15 +59,16 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate ?? utils.format(value, 'fullDate')} می‌باشد`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate} می‌باشد`
       : 'تاریخ را انتخاب کنید',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime ?? utils.format(value, 'fullTime')} می‌باشد`
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime
+      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime} می‌باشد`
       : 'ساعت را انتخاب کنید',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'پاک کردن مقدار',
 
   // Table labels

@@ -1,4 +1,3 @@
-import { esES as esESCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
   noResultsOverlayLabel: 'Resultados no encontrados',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidad',
@@ -31,6 +32,18 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Escriba un prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Escriba o grabe un prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Esperando por un prompt…',
+  toolbarPromptControlLabel: 'Introduzca un prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Grabar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar de grabar',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocurrió un error mientras se procesaba la petición. Por favor, intente de nuevo con otro prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +56,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
   columnsManagementReset: 'Restablecer',
+  columnsManagementDeleteIconLabel: 'Limpiar',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
@@ -58,9 +72,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'no contiene',
   filterOperatorEquals: 'es igual',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'es diferente a',
   filterOperatorStartsWith: 'comienza con',
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
@@ -81,9 +95,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'No contiene',
   headerFilterOperatorEquals: 'Es igual a',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Es diferente a',
   headerFilterOperatorStartsWith: 'Comienza con',
   headerFilterOperatorEndsWith: 'Termina con',
   headerFilterOperatorIs: 'Es',
@@ -101,6 +115,7 @@ const esESGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Es mayor o igual que',
   'headerFilterOperator<': 'Es menor que',
   'headerFilterOperator<=': 'Es menor o igual que',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'cualquiera',
@@ -109,6 +124,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menú',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
@@ -170,6 +186,34 @@ const esESGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Contraer',
 
+  // Pagination
+  paginationRowsPerPage: 'Filas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ir a la primera página';
+    }
+    if (type === 'last') {
+      return 'Ir a la última página';
+    }
+    if (type === 'next') {
+      return 'Ir a la página siguiente';
+    }
+    // if (type === 'previous') {
+    return 'Ir a la página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordenar filas',
 
@@ -182,4 +226,4 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamaño',
 };
 
-export const esES: Localization = getGridLocalization(esESGrid, esESCore);
+export const esES: Localization = getGridLocalization(esESGrid);

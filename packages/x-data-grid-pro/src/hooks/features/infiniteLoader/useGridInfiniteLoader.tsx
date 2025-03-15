@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   useGridApiOptionHandler,
@@ -6,7 +7,12 @@ import {
   useGridApiMethod,
   gridDimensionsSelector,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
+import {
+  useGridVisibleRows,
+  GridInfiniteLoaderPrivateApi,
+  useTimeout,
+  gridHorizontalScrollbarHeightSelector,
+} from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
 import { GridRowScrollEndParams } from '../../../models';
@@ -26,15 +32,17 @@ const InfiniteLoadingTriggerElement = styled('div')({
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
+  const isReady = useGridSelector(apiRef, gridDimensionsSelector).isReady;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
-  const observer = React.useRef<IntersectionObserver>();
+  const observer = React.useRef<IntersectionObserver>(null);
+  const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
@@ -57,20 +65,15 @@ export const useGridInfiniteLoader = (
     }
   });
 
-  const virtualScroller = apiRef.current.virtualScrollerRef.current;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const marginBottom =
-    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-
   React.useEffect(() => {
-    if (!isEnabled) {
-      return;
-    }
-    if (!virtualScroller) {
+    const virtualScroller = apiRef.current.virtualScrollerRef.current;
+    if (!isEnabled || !isReady || !virtualScroller) {
       return;
     }
     observer.current?.disconnect();
+
+    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
+    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
 
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
@@ -80,7 +83,18 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
+  }, [apiRef, isReady, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
+
+  const updateTarget = (node: HTMLElement | null) => {
+    if (triggerElement.current !== node) {
+      observer.current?.disconnect();
+
+      triggerElement.current = node;
+      if (triggerElement.current) {
+        observer.current?.observe(triggerElement.current);
+      }
+    }
+  };
 
   const triggerRef = React.useCallback(
     (node: HTMLElement | null) => {
@@ -89,16 +103,17 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      if (triggerElement.current !== node) {
-        observer.current?.disconnect();
-
-        triggerElement.current = node;
-        if (triggerElement.current) {
-          observer.current?.observe(triggerElement.current);
-        }
-      }
+      // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
+      // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
+      // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
+      // https://www.w3.org/TR/intersection-observer/#event-loop
+      // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
+      // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
+      // Related to
+      // https://github.com/mui/mui-x/issues/14116
+      updateTargetTimeout.start(0, () => updateTarget(node));
     },
-    [isEnabled],
+    [isEnabled, updateTargetTimeout],
   );
 
   const getInfiniteLoadingTriggerElement = React.useCallback<

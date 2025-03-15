@@ -1,3 +1,4 @@
+import type { MakeRequired } from '@mui/x-internals/types';
 import { Validator } from './useValidation';
 import {
   BaseDateValidationProps,
@@ -5,22 +6,37 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/models/validation';
-import { DateValidationError, PickerValidDate } from '../models';
+import { DateValidationError } from '../models';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { PickerValue } from '../internals/models';
 
-export interface ValidateDateProps<TDate extends PickerValidDate>
-  extends DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {}
+/**
+ * Validation props used by the Date Picker, Date Field and Date Calendar components.
+ */
+export interface ExportedValidateDateProps
+  extends DayValidationProps,
+    MonthValidationProps,
+    YearValidationProps,
+    BaseDateValidationProps {}
 
-export const validateDate: Validator<
-  any | null,
-  any,
-  DateValidationError,
-  ValidateDateProps<any>
-> = ({ props, value, timezone, adapter }): DateValidationError => {
+/**
+ * Validation props as received by the validateDate method.
+ */
+export interface ValidateDateProps
+  extends MakeRequired<ExportedValidateDateProps, ValidateDatePropsToDefault> {}
+
+/**
+ * Name of the props that should be defaulted before being passed to the validateDate method.
+ */
+export type ValidateDatePropsToDefault = keyof BaseDateValidationProps;
+
+export const validateDate: Validator<PickerValue, DateValidationError, ValidateDateProps> = ({
+  props,
+  value,
+  timezone,
+  adapter,
+}): DateValidationError => {
   if (value === null) {
     return null;
   }

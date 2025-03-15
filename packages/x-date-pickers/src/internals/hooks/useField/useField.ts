@@ -17,51 +17,42 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { PickerValidDate, FieldSection } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
+import { PickerValidValue } from '../../models';
 
 export const useField = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
+  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
     minutesStep?: number;
   },
 >(
   params: UseFieldParams<
     TValue,
-    TDate,
-    TSection,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
 ): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const {
     internalProps,
     internalProps: {
       unstableFieldRef,
       minutesStep,
-      enableAccessibleFieldDOMStructure = false,
+      enableAccessibleFieldDOMStructure = true,
       disabled = false,
       readOnly = false,
+      autoFocus = false,
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
-    valueManager,
     validator,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -69,6 +60,7 @@ export const useField = <
   const stateResponse = useFieldState(params);
   const {
     state,
+    value,
     activeSectionIndex,
     parsedSelectedSections,
     setSelectedSections,
@@ -81,7 +73,7 @@ export const useField = <
     timezone,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing<TDate, TSection>({
+  const characterEditingResponse = useFieldCharacterEditing({
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
@@ -92,10 +84,9 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
-    utils,
-    state.value,
-    valueManager.emptyValue,
+  const areAllSectionsEmpty = React.useMemo(
+    () => state.sections.every((section) => section.value === ''),
+    [state.sections],
   );
 
   const useFieldTextField = (
@@ -125,7 +116,7 @@ export const useField = <
     switch (true) {
       // Select all
       case (event.ctrlKey || event.metaKey) &&
-        event.key.toLowerCase() === 'a' &&
+        String.fromCharCode(event.keyCode) === 'A' &&
         !event.shiftKey &&
         !event.altKey: {
         // prevent default to make sure that the next line "select all" while updating
@@ -194,12 +185,12 @@ export const useField = <
           break;
         }
 
+        // if all sections are selected, mark the currently editing one as selected
+        if (parsedSelectedSections === 'all') {
+          setSelectedSections(activeSectionIndex);
+        }
+
         const activeSection = state.sections[activeSectionIndex];
-        const activeDateManager = fieldValueManager.getActiveDateManager(
-          utils,
-          state,
-          activeSection,
-        );
 
         const newSectionValue = adjustSectionValue(
           utils,
@@ -208,12 +199,12 @@ export const useField = <
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           localizedDigits,
-          activeDateManager.date,
+          fieldValueManager.getDateFromSection(value, activeSection),
           { minutesStep },
         );
 
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue,
           shouldGoToNextSection: false,
         });
@@ -230,7 +221,7 @@ export const useField = <
     props: internalProps,
     validator,
     timezone,
-    value: state.value,
+    value,
     onError: internalProps.onError,
   });
 
@@ -289,9 +280,16 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText(value),
+    [getOpenDialogAriaText, value],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    autoFocus,
+    openPickerAriaLabel,
   };
 
   return {

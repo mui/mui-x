@@ -1,32 +1,28 @@
 import * as React from 'react';
-import type { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
+import { TreeViewSelectionPropagation, TreeViewCancellableEventHandler } from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
    * Select or deselect an item.
-   * @param {object} params The params of the method.
-   * @param {React.SyntheticEvent} params.event The DOM event that triggered the change.
-   * @param {string} params.itemId The id of the item to select or deselect.
-   * @param {boolean} params.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
-   * @param {boolean | undefined} params.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's new selection status will be the opposite of its current one.
+   * @param {object} parameters The parameters of the method.
+   * @param {string} parameters.itemId The id of the item to select or deselect.
+   * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
+   * @param {boolean} parameters.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
+   * @param {boolean | undefined} parameters.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's selection status will be toggled.
    */
-  selectItem: (params: {
-    event: React.SyntheticEvent;
+  setItemSelection: (parameters: {
     itemId: string;
-    keepExistingSelection?: boolean;
+    event?: React.SyntheticEvent;
     shouldBeSelected?: boolean;
+    keepExistingSelection?: boolean;
   }) => void;
 }
 
 export interface UseTreeViewSelectionInstance extends UseTreeViewSelectionPublicAPI {
-  /**
-   * Check if an item is selected.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is selected, `false` otherwise.
-   */
-  isItemSelected: (itemId: string) => boolean;
   /**
    * Select all the navigable items in the tree.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
@@ -90,28 +86,45 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   multiSelect?: Multiple;
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection?: boolean;
   /**
-   * Callback fired when tree items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * When `selectionPropagation.descendants` is set to `true`.
+   *
+   * - Selecting a parent selects all its descendants automatically.
+   * - Deselecting a parent deselects all its descendants automatically.
+   *
+   * When `selectionPropagation.parents` is set to `true`.
+   *
+   * - Selecting all the descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Only works when `multiSelect` is `true`.
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   *
+   * @default { parents: false, descendants: false }
+   */
+  selectionPropagation?: TreeViewSelectionPropagation;
+  /**
+   * Callback fired when Tree Items are selected/deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange?: (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemIds: TreeViewSelectionValue<Multiple>,
   ) => void;
   /**
-   * Callback fired when a tree item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * Callback fired when a Tree Item is selected or deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle?: (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string,
     isSelected: boolean,
   ) => void;
@@ -119,13 +132,23 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelectedItems' | 'multiSelect' | 'checkboxSelection'
+  | 'disableSelection'
+  | 'defaultSelectedItems'
+  | 'multiSelect'
+  | 'checkboxSelection'
+  | 'selectionPropagation'
 >;
+
+export interface UseTreeViewSelectionState {
+  selection: {
+    selectedItemsMap: Map<string, true>;
+  };
+}
 
 interface UseTreeViewSelectionContextValue {
   selection: Pick<
     UseTreeViewSelectionDefaultizedParameters<boolean>,
-    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+    'multiSelect' | 'checkboxSelection' | 'disableSelection' | 'selectionPropagation'
   >;
 }
 
@@ -136,9 +159,22 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewSelectionPublicAPI;
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
+  state: UseTreeViewSelectionState;
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,
     UseTreeViewItemsSignature,
   ];
 }>;
+
+export interface UseTreeItemCheckboxSlotPropsFromSelection {
+  visible?: boolean;
+  checked?: boolean;
+  disabled?: boolean;
+  tabIndex?: -1;
+  onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
+}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
+}

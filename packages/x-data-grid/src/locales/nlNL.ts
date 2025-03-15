@@ -1,4 +1,3 @@
-import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
   noResultsOverlayLabel: 'Geen resultaten gevonden.',
+  noColumnsOverlayLabel: 'Geen kolommen',
+  noColumnsOverlayManageColumns: 'Kolommen beheren',
 
   // Density selector toolbar button text
   toolbarDensity: 'Grootte',
@@ -31,6 +32,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Zoeken',
   toolbarQuickFilterDeleteIconLabel: 'Wissen',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporteren',
   toolbarExportLabel: 'Exporteren',
@@ -43,6 +55,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Geen kolommen',
   columnsManagementShowHideAllText: 'Toon/Verberg Alle',
   columnsManagementReset: 'Reset',
+  columnsManagementDeleteIconLabel: 'Verwijderen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
@@ -58,9 +71,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'bevat',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'bevat niet',
   filterOperatorEquals: 'gelijk aan',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'niet gelijk aan',
   filterOperatorStartsWith: 'begint met',
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
@@ -81,9 +94,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Bevat',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Bevat niet',
   headerFilterOperatorEquals: 'Gelijk aan',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Niet gelijk aan',
   headerFilterOperatorStartsWith: 'Begint met',
   headerFilterOperatorEndsWith: 'Eindigt met',
   headerFilterOperatorIs: 'Is',
@@ -101,6 +114,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Is groter dan of gelijk aan',
   'headerFilterOperator<': 'Is kleiner dan',
   'headerFilterOperator<=': 'Is kleiner dan of gelijk aan',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'alles',
@@ -109,6 +123,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Toon kolommen',
   columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
@@ -170,6 +185,34 @@ const nlNLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Regels per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ga naar eerste pagina';
+    }
+    if (type === 'last') {
+      return 'Ga naar laatste pagina';
+    }
+    if (type === 'next') {
+      return 'Ga naar volgende pagina';
+    }
+    // if (type === 'previous') {
+    return 'Ga naar vorige pagina';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
 
@@ -182,4 +225,4 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'grootte',
 };
 
-export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
+export const nlNL: Localization = getGridLocalization(nlNLGrid);

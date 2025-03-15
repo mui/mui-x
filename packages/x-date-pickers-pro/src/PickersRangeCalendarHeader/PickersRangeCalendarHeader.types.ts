@@ -4,8 +4,7 @@ import {
   PickersCalendarHeaderProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
 
-export interface PickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
-  extends PickersCalendarHeaderProps<TDate> {
+export interface PickersRangeCalendarHeaderProps extends PickersCalendarHeaderProps {
   /**
    * The number of calendars rendered.
    */
@@ -13,12 +12,12 @@ export interface PickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
   /**
    * Month used for this header.
    */
-  month: TDate;
+  month: PickerValidDate;
   /**
    * Index of the month used for this header.
    */
   monthIndex: number;
 }
 
-export interface ExportedPickersRangeCalendarHeaderProps<TDate extends PickerValidDate>
-  extends ExportedPickersCalendarHeaderProps<TDate> {}
+export interface ExportedPickersRangeCalendarHeaderProps
+  extends ExportedPickersCalendarHeaderProps {}

@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { shouldForwardProp } from '@mui/system/createStyled';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;
   shrink: boolean;
   label: React.ReactNode;
-  ownerState: any;
-}
-
-interface OutlineOwnerState extends OutlineProps {
-  withLabel: boolean;
 }
 
 const OutlineRoot = styled('fieldset', {
   name: 'MuiPickersOutlinedInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
-})<{ ownerState: OutlineOwnerState }>(({ theme }) => {
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -39,18 +37,21 @@ const OutlineRoot = styled('fieldset', {
       : borderColor,
   };
 });
+
 const OutlineLabel = styled('span')(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
 }));
 
-const OutlineLegend = styled('legend')<{ ownerState: any }>(({ theme }) => ({
+const OutlineLegend = styled('legend', {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
+})<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap
   width: 'auto', // Fix conflict with bootstrap
   overflow: 'hidden', // Fix Horizontal scroll when label too long
   variants: [
     {
-      props: { withLabel: false },
+      props: { inputHasLabel: false },
       style: {
         padding: 0,
         lineHeight: '11px', // sync with `height` in `legend` styles
@@ -61,7 +62,7 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ theme }) => ({
       },
     },
     {
-      props: { withLabel: true },
+      props: { inputHasLabel: true },
       style: {
         display: 'block', // Fix conflict with normalize.css and sanitize.css
         padding: 0,
@@ -84,7 +85,7 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ theme }) => ({
       },
     },
     {
-      props: { withLabel: true, notched: true },
+      props: { inputHasLabel: true, notched: true },
       style: {
         maxWidth: '100%',
         transition: theme.transitions.create('max-width', {
@@ -102,16 +103,13 @@ const OutlineLegend = styled('legend')<{ ownerState: any }>(({ theme }) => ({
  */
 export default function Outline(props: OutlineProps) {
   const { children, className, label, notched, shrink, ...other } = props;
-  const withLabel = label != null && label !== '';
-  const ownerState = {
-    ...props,
-    withLabel,
-  };
+  const ownerState = usePickerTextFieldOwnerState();
+
   return (
     <OutlineRoot aria-hidden className={className} {...other} ownerState={ownerState}>
-      <OutlineLegend ownerState={ownerState}>
+      <OutlineLegend ownerState={ownerState} notched={notched}>
         {/* Use the nominal use case of the legend, avoid rendering artefacts. */}
-        {withLabel ? (
+        {label ? (
           <OutlineLabel>{label}</OutlineLabel>
         ) : (
           // notranslate needed while Google Translate will not fix zero-width space issue

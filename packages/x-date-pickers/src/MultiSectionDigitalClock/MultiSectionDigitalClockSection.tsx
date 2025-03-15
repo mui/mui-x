@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
@@ -18,6 +19,11 @@ import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
+import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { FormProps } from '../internals/models/formProps';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -26,20 +32,25 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
   slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
-export interface MultiSectionDigitalClockSectionProps<TValue>
-  extends ExportedMultiSectionDigitalClockSectionProps {
+export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
+  extends FormProps,
+    ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
-  items: MultiSectionDigitalClockOption<TValue>[];
-  onChange: (value: TValue) => void;
+  items: MultiSectionDigitalClockOption<TSectionValue>[];
+  onChange: (value: TSectionValue) => void;
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
 }
 
-const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
-  const { classes } = ownerState;
+interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
+}
+
+const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     item: ['item'],
@@ -52,44 +63,42 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
-  ({ theme }) => ({
-    maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-    width: 56,
-    padding: 0,
-    overflow: 'hidden',
-    '@media (prefers-reduced-motion: no-preference)': {
-      scrollBehavior: 'auto',
-    },
-    '@media (pointer: fine)': {
-      '&:hover': {
-        overflowY: 'auto',
-      },
-    },
-    '@media (pointer: none), (pointer: coarse)': {
+})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
+  maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
+  width: 56,
+  padding: 0,
+  overflow: 'hidden',
+  '@media (prefers-reduced-motion: no-preference)': {
+    scrollBehavior: 'auto',
+  },
+  '@media (pointer: fine)': {
+    '&:hover': {
       overflowY: 'auto',
     },
-    '&:not(:first-of-type)': {
-      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-    },
-    '&::after': {
-      display: 'block',
-      content: '""',
-      // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-      height: 'calc(100% - 40px - 6px)',
-    },
-    variants: [
-      {
-        props: { alreadyRendered: true },
-        style: {
-          '@media (prefers-reduced-motion: no-preference)': {
-            scrollBehavior: 'smooth',
-          },
+  },
+  '@media (pointer: none), (pointer: coarse)': {
+    overflowY: 'auto',
+  },
+  '&:not(:first-of-type)': {
+    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&::after': {
+    display: 'block',
+    content: '""',
+    // subtracting the height of one item, extra margin and borders to make sure the max height is correct
+    height: 'calc(100% - 40px - 6px)',
+  },
+  variants: [
+    {
+      props: { hasDigitalClockAlreadyBeenRendered: true },
+      style: {
+        '@media (prefers-reduced-motion: no-preference)': {
+          scrollBehavior: 'smooth',
         },
       },
-    ],
-  }),
-);
+    },
+  ],
+}));
 
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
@@ -122,16 +131,17 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   },
 }));
 
-type MultiSectionDigitalClockSectionComponent = <TValue>(
-  props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
+type MultiSectionDigitalClockSectionComponent = <TSectionValue extends number | string>(
+  props: MultiSectionDigitalClockSectionProps<TSectionValue> &
+    React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 export const MultiSectionDigitalClockSection = React.forwardRef(
-  function MultiSectionDigitalClockSection<TValue>(
-    inProps: MultiSectionDigitalClockSectionProps<TValue>,
+  function MultiSectionDigitalClockSection<TSectionValue extends number | string>(
+    inProps: MultiSectionDigitalClockSectionProps<TSectionValue>,
     ref: React.Ref<HTMLUListElement>,
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
@@ -147,6 +157,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       autoFocus,
       onChange,
       className,
+      classes: classesProp,
       disabled,
       readOnly,
       items,
@@ -157,11 +168,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       ...other
     } = props;
 
-    const ownerState = React.useMemo(
-      () => ({ ...props, alreadyRendered: !!containerRef.current }),
-      [props],
-    );
-    const classes = useUtilityClasses(ownerState);
+    const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+    const ownerState: MultiSectionDigitalClockSectionOwnerState = {
+      ...pickerOwnerState,
+      hasDigitalClockAlreadyBeenRendered: !!containerRef.current,
+    };
+
+    const classes = useUtilityClasses(classesProp);
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
@@ -187,6 +200,36 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      switch (event.key) {
+        case 'PageUp': {
+          const newIndex = getFocusedListItemIndex(containerRef.current!) - 5;
+          const children = containerRef.current!.children;
+          const newFocusedIndex = Math.max(0, newIndex);
+
+          const childToFocus = children[newFocusedIndex];
+          if (childToFocus) {
+            (childToFocus as HTMLElement).focus();
+          }
+          event.preventDefault();
+          break;
+        }
+        case 'PageDown': {
+          const newIndex = getFocusedListItemIndex(containerRef.current!) + 5;
+          const children = containerRef.current!.children;
+          const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+          const childToFocus = children[newFocusedIndex];
+          if (childToFocus) {
+            (childToFocus as HTMLElement).focus();
+          }
+          event.preventDefault();
+          break;
+        }
+        default:
+      }
+    };
+
     return (
       <MultiSectionDigitalClockSectionRoot
         ref={handleRef}
@@ -194,6 +237,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         ownerState={ownerState}
         autoFocusItem={autoFocus && active}
         role="listbox"
+        onKeyDown={handleKeyDown}
         {...other}
       >
         {items.map((option, index) => {

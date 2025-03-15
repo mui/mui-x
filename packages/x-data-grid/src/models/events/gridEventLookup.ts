@@ -89,6 +89,13 @@ export interface GridColumnHeaderEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
+   * Fired when the user attempts to open a context menu in the column header.
+   */
+  columnHeaderContextMenu: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a column header is double-clicked.
    */
   columnHeaderDoubleClick: {
@@ -382,6 +389,7 @@ export interface GridControlledStateReasonLookup {
     | 'restoreState'
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
+  rows: 'addSkeletonRows';
 }
 
 export interface GridEventLookup
@@ -391,6 +399,10 @@ export interface GridEventLookup
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
+  /**
+   * Fired when rootElementRef.current becomes available.
+   */
+  rootMount: { params: HTMLElement };
   /**
    * Fired when the grid is unmounted.
    */
@@ -542,7 +554,12 @@ export interface GridEventLookup
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
    */
-  virtualScrollerContentSizeChange: {};
+  virtualScrollerContentSizeChange: {
+    params: {
+      columnsTotalWidth: number;
+      contentHeight: number;
+    };
+  };
   /**
    * Fired when the content is scrolled by the mouse wheel.
    * It's attached to the "mousewheel" event.

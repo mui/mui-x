@@ -7,6 +7,7 @@ import {
   isSingleSelectColDef,
 } from '../components/panel/filterPanel/filterPanelUtils';
 import { isObject } from '../utils/utils';
+import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 
 const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';
@@ -26,8 +27,7 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   valueFormatter(value, row, colDef, apiRef) {
-    // const { id, field, value, api } = params;
-    const rowId = apiRef.current.getRowId(row);
+    const rowId = gridRowIdSelector(apiRef, row);
 
     if (!isSingleSelectColDef(colDef)) {
       return '';

@@ -9,6 +9,7 @@ import {
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describeTreeView<
   [
@@ -178,6 +179,19 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('1');
       });
 
+      it('should not change focus if ctrl is pressed', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+        });
+
+        act(() => {
+          view.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowRight', ctrlKey: true });
+        expect(view.getFocusedItemId()).to.equal('1');
+      });
+
       it('should move the focus to the first child if the focus is on an open item', () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -230,6 +244,19 @@ describeTreeView<
         });
         fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowLeft' });
         expect(view.isItemExpanded('1')).to.equal(false);
+      });
+
+      it('should not change focus if ctrl is pressed', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+        });
+
+        act(() => {
+          view.getItemRoot('1.1').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('1.1'), { key: 'ArrowLeft', ctrlKey: true });
+        expect(view.getFocusedItemId()).to.equal('1.1');
       });
 
       it("should move focus to the item's parent if the focus is on a child item that is a leaf", () => {
@@ -1018,7 +1045,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '3', '4']);
         });
 
@@ -1032,7 +1063,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
@@ -1050,7 +1085,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3', '4']);
         });
       });
@@ -1131,35 +1170,34 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
-    it('should work with ReactElement label', function test() {
-      // Only the SimpleTreeView can have React Element labels.
-      if (treeViewComponentName !== 'SimpleTreeView') {
-        this.skip();
-      }
+    // Only the SimpleTreeView can have React Element labels.
+    testSkipIf(treeViewComponentName !== 'SimpleTreeView')(
+      'should work with ReactElement label',
+      () => {
+        const view = render({
+          items: [
+            { id: '1', label: <span>one</span> },
+            { id: '2', label: <span>two</span> },
+            { id: '3', label: <span>three</span> },
+            { id: '4', label: <span>four</span> },
+          ],
+        });
 
-      const view = render({
-        items: [
-          { id: '1', label: <span>one</span> },
-          { id: '2', label: <span>two</span> },
-          { id: '3', label: <span>three</span> },
-          { id: '4', label: <span>four</span> },
-        ],
-      });
+        act(() => {
+          view.getItemRoot('1').focus();
+        });
+        expect(view.getFocusedItemId()).to.equal('1');
 
-      act(() => {
-        view.getItemRoot('1').focus();
-      });
-      expect(view.getFocusedItemId()).to.equal('1');
+        fireEvent.keyDown(view.getItemRoot('1'), { key: 't' });
+        expect(view.getFocusedItemId()).to.equal('2');
 
-      fireEvent.keyDown(view.getItemRoot('1'), { key: 't' });
-      expect(view.getFocusedItemId()).to.equal('2');
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
+        expect(view.getFocusedItemId()).to.equal('4');
 
-      fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
-      expect(view.getFocusedItemId()).to.equal('4');
-
-      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
-      expect(view.getFocusedItemId()).to.equal('1');
-    });
+        fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+        expect(view.getFocusedItemId()).to.equal('1');
+      },
+    );
 
     it('should work after adding / removing items', () => {
       const view = render({

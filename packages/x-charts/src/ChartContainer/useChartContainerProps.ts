@@ -1,102 +1,92 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { CartesianProviderProps } from '../context/CartesianProvider';
-import type { SeriesProviderProps } from '../context/SeriesProvider';
-import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
-import type { ChartContainerProps } from './ChartContainer';
-import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
-import { useDefaultizeAxis } from './useDefaultizeAxis';
-import { PluginProviderProps } from '../context/PluginProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { ChartDataProviderProps } from '../ChartDataProvider';
+import type { ChartContainerProps } from './ChartContainer';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export const useChartContainerProps = (
-  props: ChartContainerProps,
-  ref: React.ForwardedRef<unknown>,
-) => {
+export type UseChartContainerPropsReturnValue<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> = {
+  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
+  children: React.ReactNode;
+};
+
+export const useChartContainerProps = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProps<TSeries, TSignatures>,
+  ref: React.Ref<SVGSVGElement>,
+): UseChartContainerPropsReturnValue<TSeries, TSignatures> => {
   const {
     width,
     height,
-    series,
     margin,
+    children,
+    series,
+    colors,
+    dataset,
+    desc,
+    onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
+    disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
+    sx,
+    title,
     xAxis,
     yAxis,
     zAxis,
-    colors,
-    dataset,
-    sx,
+    rotationAxis,
+    radiusAxis,
+    skipAnimation,
+    seriesConfig,
+    plugins,
+    ...other
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
+
+  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
     desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
-    children,
-    ...other
-  } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
+    sx,
+    ref,
+    ...other,
+  };
 
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
-
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
-
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    width,
-    height,
+  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
     margin,
-    svgRef,
-  };
-
-  const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
-    plugins,
-  };
-
-  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
     series,
     colors,
     dataset,
-  };
-
-  const cartesianProviderProps: Omit<CartesianProviderProps, 'children'> = {
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    dataset,
-  };
-
-  const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-    dataset,
-  };
-
-  const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
+    disableAxisListener,
     highlightedItem,
     onHighlightChange,
-  };
-
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...other,
+    onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
+    xAxis,
+    yAxis,
+    zAxis,
+    rotationAxis,
+    radiusAxis,
+    skipAnimation,
     width,
     height,
-    ref: chartSurfaceRef,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-  };
+    seriesConfig,
+    plugins: plugins ?? DEFAULT_PLUGINS,
+  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {
-    children,
-    drawingProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
+    chartDataProviderProps,
     chartsSurfaceProps,
-    pluginProviderProps,
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
+    children,
   };
 };

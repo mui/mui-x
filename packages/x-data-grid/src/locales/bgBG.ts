@@ -1,4 +1,3 @@
-import { bgBG as bgBGCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -30,6 +31,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
@@ -38,10 +50,11 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Търсене',
+  columnsManagementNoColumns: 'Няма колони',
+  columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
+  columnsManagementReset: 'Нулирай',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
@@ -57,9 +70,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'съдържа',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не съдържа',
   filterOperatorEquals: 'равно',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не е равно',
   filterOperatorStartsWith: 'започва с',
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
@@ -80,9 +93,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Не съдържа',
   headerFilterOperatorEquals: 'Равнo',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
   headerFilterOperatorIs: 'Равно е на',
@@ -100,6 +113,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'По-голямо или равно на',
   'headerFilterOperator<': 'По-малко от',
   'headerFilterOperator<=': 'По-малко или равно на',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'всякакви',
@@ -108,6 +122,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Покажи колоните',
   columnMenuManageColumns: 'Управление на колони',
   columnMenuFilter: 'Филтри',
@@ -168,6 +183,34 @@ const bgBGGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
 
+  // Pagination
+  paginationRowsPerPage: 'Редове на страница:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Отиди на първата страница';
+    }
+    if (type === 'last') {
+      return 'Отиди на последната страница';
+    }
+    if (type === 'next') {
+      return 'Отиди на следващата страница';
+    }
+    // if (type === 'previous') {
+    return 'Отиди на предишната страница';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Подредба на редове',
 
@@ -180,4 +223,4 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'размер',
 };
 
-export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);
+export const bgBG: Localization = getGridLocalization(bgBGGrid);

@@ -22,7 +22,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   },
   {
     id: 'pickers',
-    label: 'Date and time pickers',
+    label: 'Date and Time pickers',
     children: [
       {
         id: 'pickers-community',
@@ -50,7 +50,6 @@ export default function EditLeaves() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         apiRef={apiRef}
-        experimentalFeatures={{ labelEditing: true }}
         isItemEditable={(item) =>
           apiRef.current!.getItemOrderedChildrenIds(item.id).length === 0
         }

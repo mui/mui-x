@@ -4,16 +4,23 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickersLayoutProps } from './PickersLayout.types';
-import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
+import { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout.types';
+import {
+  pickersLayoutClasses,
+  getPickersLayoutUtilityClass,
+  PickersLayoutClasses,
+} from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
+import { PickerValidValue } from '../internals/models';
+import { usePickerContext } from '../hooks/usePickerContext';
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
-  const { isLandscape, classes } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersLayoutClasses> | undefined,
+  ownerState: PickerLayoutOwnerState,
+) => {
+  const { pickerOrientation } = ownerState;
   const slots = {
-    root: ['root', isLandscape && 'landscape'],
+    root: ['root', pickerOrientation === 'landscape' && 'landscape'],
     contentWrapper: ['contentWrapper'],
   };
 
@@ -24,14 +31,14 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersLayoutProps<any, any, any> }>({
+})<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 1,
@@ -41,7 +48,7 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
-      props: { isLandscape: true, isRtl: true },
+      props: { pickerOrientation: 'landscape', layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 3,
@@ -49,7 +56,7 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
-      props: { isLandscape: false },
+      props: { pickerOrientation: 'portrait' },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
         [`& .${pickersLayoutClasses.shortcuts}`]: {
@@ -59,7 +66,7 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
-      props: { isLandscape: false, isRtl: true },
+      props: { pickerOrientation: 'portrait', layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
           gridColumn: 3,
@@ -73,19 +80,15 @@ export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
   overridesResolver: (props, styles) => styles.contentWrapper,
-})({
-  gridColumn: 2,
+})<{ ownerState: PickerLayoutOwnerState }>({
+  gridColumn: '2 / 4',
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersLayoutComponent = (<TValue extends PickerValidValue>(
+  props: PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -97,29 +100,29 @@ type PickersLayoutComponent = (<
  *
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
-const PickersLayout = React.forwardRef(function PickersLayout<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
+const PickersLayout = React.forwardRef(function PickersLayout<TValue extends PickerValidValue>(
+  inProps: PickersLayoutProps<TValue>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, wrapperVariant } = props;
+  const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
+  const { orientation, variant } = usePickerContext();
+  const { sx, className, classes: classesProp } = props;
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, classes.root)}
-      ownerState={props}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
     >
-      {isLandscape ? shortcuts : toolbar}
-      {isLandscape ? toolbar : shortcuts}
-      <PickersLayoutContentWrapper className={classes.contentWrapper}>
-        {wrapperVariant === 'desktop' ? (
+      {orientation === 'landscape' ? shortcuts : toolbar}
+      {orientation === 'landscape' ? toolbar : shortcuts}
+      <PickersLayoutContentWrapper className={classes.contentWrapper} ownerState={ownerState}>
+        {variant === 'desktop' ? (
           <React.Fragment>
             {content}
             {tabs}
@@ -147,28 +150,6 @@ PickersLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: PropTypes.bool.isRequired,
-  isValid: PropTypes.func.isRequired,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
-  onSelectShortcut: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-  onViewChange: PropTypes.func.isRequired,
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -187,12 +168,6 @@ PickersLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { PickersLayout };

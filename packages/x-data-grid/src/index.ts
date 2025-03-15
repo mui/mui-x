@@ -9,6 +9,7 @@ export * from './DataGrid';
 
 export * from './components';
 export * from './constants';
+export * from './constants/dataGridPropsDefaultValues';
 export * from './hooks';
 export * from './models';
 export * from './context';
@@ -16,20 +17,27 @@ export * from './colDef';
 export * from './utils';
 
 export type { DataGridProps, GridExperimentalFeatures } from './models/props/DataGridProps';
-export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExport';
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 export { GridColumnHeaders } from './components/GridColumnHeaders';
 export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
 /**
- * Reexportable components.
+ * Reexportable exports.
  */
 export {
   GridColumnMenu,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexportable';
+
+export type {
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridDataSource,
+} from './models/gridDataSource';
+
+export type { GridDataSourceApiBase, GridDataSourceApi } from './hooks/features/dataSource/models';
 
 /**
  * The full grid API.
@@ -39,11 +47,11 @@ export {
 export type GridApi = GridApiCommunity;
 
 /**
- * The state of `DataGrid`.
+ * The state of Data Grid.
  */
 export type GridState = GridStateCommunity;
 
 /**
- * The initial state of `DataGrid`.
+ * The initial state of Data Grid.
  */
 export type GridInitialState = GridInitialStateCommunity;

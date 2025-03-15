@@ -1,43 +1,35 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
-import { useField } from '../internals/hooks/useField';
+import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseDateTimeFieldProps } from './DateTimeField.types';
-import { validateDateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { FieldSection, PickerValidDate } from '../models';
-import { useDefaultizedDateTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { useDateTimeManager } from '../managers';
+import { PickerValue } from '../internals/models';
 
 export const useDateTimeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    TDate,
-    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const manager = useDateTimeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateDateTime,
-    valueType: 'date-time',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
+    getOpenPickerButtonAriaLabel: manager.internal_useOpenPickerButtonAriaLabel(),
   });
 };
