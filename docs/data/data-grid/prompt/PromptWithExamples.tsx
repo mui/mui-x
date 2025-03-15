@@ -33,7 +33,10 @@ function ToolbarWithPromptInput() {
   const apiRef = useGridApiContext();
   const [prompt, setPrompt] = React.useState('');
 
-  const context = React.useMemo(() => apiRef.current.getPromptContext(), [apiRef]);
+  const context = React.useMemo(
+    () => apiRef.current.unstable_getPromptContext(),
+    [apiRef],
+  );
 
   const handleChange = React.useCallback(
     async (event: SelectChangeEvent<string>) => {
@@ -42,11 +45,11 @@ function ToolbarWithPromptInput() {
       if (selectedPrompt) {
         apiRef.current.setLoading(true);
         const result = await mockPromptResolver(context, selectedPrompt);
-        apiRef.current.applyPromptResult(result);
+        apiRef.current.unstable_applyPromptResult(result);
         apiRef.current.setLoading(false);
       }
     },
-    [apiRef],
+    [apiRef, context],
   );
 
   return (
