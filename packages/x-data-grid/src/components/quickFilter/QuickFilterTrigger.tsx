@@ -1,16 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
 import { QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
-export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
+export type QuickFilterTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridSlotProps['baseIconButton'], QuickFilterState>;
+  render?: RenderProp<GridSlotProps['baseButton'], QuickFilterState>;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -18,8 +19,8 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
 };
 
 /**
- * A button that resets the filter value.
- * It renders the `baseIconButton` slot.
+ * A button that opens the quick filter.
+ * It renders the `baseButton` slot.
  *
  * Demos:
  *
@@ -27,29 +28,39 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
  *
  * API:
  *
- * - [QuickFilterClear API](https://mui.com/x/api/data-grid/quick-filter-clear/)
+ * - [QuickFilterTrigger API](https://mui.com/x/api/data-grid/quick-filter-trigger/)
  */
-const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
-  function QuickFilterClear(props, ref) {
+const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps>(
+  function QuickFilterTrigger(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, clearValue } = useQuickFilterContext();
+    const { state, onExpandedChange, triggerRef } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+    const handleRef = useForkRef(triggerRef, ref);
+
+    const isFirstRender = React.useRef(true);
+    React.useEffect(() => {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+      } else if (!state.expanded) {
+        triggerRef.current?.focus();
+      }
+    }, [state.expanded, triggerRef]);
 
     const element = useGridComponentRenderer(
-      rootProps.slots.baseIconButton,
+      rootProps.slots.baseButton,
       render,
       {
-        ...rootProps.slotProps?.baseIconButton,
-        onClick: clearValue,
+        ...rootProps.slotProps?.baseButton,
+        onClick: () => onExpandedChange(!state.expanded),
         className: resolvedClassName,
         ...other,
-        ref,
+        ref: handleRef,
       },
       state,
     );
 
-    if (!state.expanded) {
+    if (state.expanded) {
       return null;
     }
 
@@ -57,7 +68,7 @@ const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
   },
 );
 
-QuickFilterClear.propTypes = {
+QuickFilterTrigger.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -88,13 +99,27 @@ QuickFilterClear.propTypes = {
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
+   * @default 'primary'
    */
-  color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  color: PropTypes.oneOf([
+    'error',
+    'info',
+    'inherit',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+  ]),
   component: PropTypes.elementType,
   /**
    * If `true`, the component is disabled.
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, no elevation is used.
+   * @default false
+   */
+  disableElevation: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple is disabled.
    * @default false
@@ -114,12 +139,9 @@ QuickFilterClear.propTypes = {
    */
   disableTouchRipple: PropTypes.bool,
   /**
-   * If given, uses a negative margin to counteract the padding on one
-   * side (this is often helpful for aligning the left or right
-   * side of the icon with content above or below, without ruining the border
-   * size and shape).
+   * Element placed after the children.
    */
-  edge: PropTypes.oneOf(['end', 'start', false]),
+  endIcon: PropTypes.node,
   /**
    * If `true`, the base button will have a keyboard focus ripple.
    * @default false
@@ -134,7 +156,16 @@ QuickFilterClear.propTypes = {
    * if needed.
    */
   focusVisibleClassName: PropTypes.string,
-  label: PropTypes.string,
+  /**
+   * If `true`, the button will take up the full width of its container.
+   * @default false
+   */
+  fullWidth: PropTypes.bool,
+  /**
+   * The URL to link to when the button is clicked.
+   * If defined, an `a` element will be used as the root node.
+   */
+  href: PropTypes.string,
   /**
    * The component used to render a link when the `href` prop is provided.
    * @default 'a'
@@ -154,6 +185,10 @@ QuickFilterClear.propTypes = {
    * `small` is equivalent to the dense button styling.
    */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
+  /**
+   * Element placed before the children.
+   */
+  startIcon: PropTypes.node,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -172,6 +207,11 @@ QuickFilterClear.propTypes = {
    * A ref that points to the `TouchRipple` element.
    */
   touchRippleRef: PropTypes.any,
+  /**
+   * The variant to use.
+   * @default 'text'
+   */
+  variant: PropTypes.oneOf(['contained', 'outlined', 'text']),
 } as any;
 
-export { QuickFilterClear };
+export { QuickFilterTrigger };

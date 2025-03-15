@@ -10,6 +10,7 @@ import {
   ExportPrint,
   QuickFilterControl,
   QuickFilterClear,
+  QuickFilterTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
@@ -86,6 +87,15 @@ function CustomToolbar() {
       </Menu>
 
       <QuickFilter>
+        <QuickFilterTrigger
+          render={(triggerProps) => (
+            <Tooltip title="Search">
+              <ToolbarButton sx={{ ml: 'auto' }} {...triggerProps} color="default">
+                <SearchIcon fontSize="small" />
+              </ToolbarButton>
+            </Tooltip>
+          )}
+        />
         <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
@@ -101,7 +111,7 @@ function CustomToolbar() {
                     <SearchIcon fontSize="small" />
                   </InputAdornment>
                 ),
-                endAdornment: other.value ? (
+                endAdornment: (
                   <InputAdornment position="end">
                     <QuickFilterClear
                       edge="end"
@@ -112,7 +122,7 @@ function CustomToolbar() {
                       <CancelIcon fontSize="small" />
                     </QuickFilterClear>
                   </InputAdornment>
-                ) : null,
+                ),
               }}
             />
           )}
