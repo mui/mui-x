@@ -31,7 +31,7 @@ const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
 })<{ ownerState: OwnerState }>({
-  ...vars.typography.body,
+  font: vars.typography.font.body,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',

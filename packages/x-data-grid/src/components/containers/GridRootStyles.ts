@@ -252,7 +252,7 @@ export const GridRootStyles = styled('div', {
     borderRadius: 'var(--unstable_DataGrid-radius)',
     backgroundColor: vars.colors.background.base,
     color: vars.colors.foreground.base,
-    ...vars.typography.body,
+    font: vars.typography.font.body,
     outline: 'none',
     height: '100%',
     display: 'flex',
