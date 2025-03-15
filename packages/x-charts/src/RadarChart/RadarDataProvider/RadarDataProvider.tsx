@@ -20,11 +20,11 @@ import {
   UseChartInteractionSignature,
 } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { radarSeriesConfig } from '../seriesConfig';
-import { DEFAULT_MARGINS } from '../../constants';
 import { RadarConfig } from './radar.types';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const RADAR_PLUGINS = [useChartPolarAxis, useChartInteraction, useChartHighlight] as const;
+const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };
 
 type RadarPluginSignatures = [
   UseChartPolarAxisSignature,
@@ -115,7 +115,7 @@ function RadarDataProvider(props: RadarDataProviderProps) {
   );
 
   const defaultizedMargin = React.useMemo(
-    () => defaultizeMargin(margin, DEFAULT_MARGINS),
+    () => defaultizeMargin(margin, DEFAULT_RADAR_MARGIN),
     [margin],
   );
 

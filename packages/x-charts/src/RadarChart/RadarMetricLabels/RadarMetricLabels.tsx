@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useRadarMetricData } from './useRadarMetricData';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../../ChartsText/defaultTextPlacement';
+import { ChartsText } from '../../ChartsText';
 
 function RadarMetricLabels() {
   const { corners } = useRadarMetricData();
@@ -11,18 +12,22 @@ function RadarMetricLabels() {
   return (
     <React.Fragment>
       {corners.map(({ x, y, angle, label }, i) => (
-        <text
+        <ChartsText
           key={i}
           x={x}
           y={y}
           fontSize={14}
           fill={(theme.vars || theme).palette.text.primary}
           stroke="none"
-          textAnchor={getDefaultTextAnchor(180 + angle)}
-          dominantBaseline={getDefaultBaseline(180 + angle)}
-        >
-          {label}
-        </text>
+          text={label}
+          style={{
+            ...theme.typography.caption,
+            fontSize: 12,
+            lineHeight: 1.25,
+            textAnchor: getDefaultTextAnchor(180 + angle),
+            dominantBaseline: getDefaultBaseline(180 + angle),
+          }}
+        />
       ))}
     </React.Fragment>
   );

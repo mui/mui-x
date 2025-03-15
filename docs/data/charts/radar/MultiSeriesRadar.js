@@ -28,7 +28,7 @@ export default function MultiSeriesRadar() {
         },
       ]}
       radar={{
-        metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other industry', 'Cement'],
+        metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other\nindustry', 'Cement'],
       }}
     />
   );
