@@ -2,18 +2,20 @@
 title: Data Grid - Prompt
 ---
 
-# Data Grid - Prompt [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Data Grid - Prompt [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
 
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
-To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on. Check [licensing page](/x/introduction/licensing/) for more information.
+To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on.
+Check [licensing page](/x/introduction/licensing/) for more information.
 :::
 
-The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
+The prompt feature allows users to interact with the Data Grid component using natural language.
+Type commands like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
-To increase the accuracy of the prompt processing, the user should provide example values for the available columns.
-This can be done in following ways.
+To increase the accuracy of the prompt processing, provide example values for the available columns.
+This can be done in the following ways.
 
 :::info
 Prompt demos use a utility function `mockPromptResolver` to simulate the API that resolves the user prompts.
@@ -26,11 +28,11 @@ In a real-world scenario, you should replace this with your own API.
 - `show people from the EU`
 - `order companies by amount of people`
 
- In supported browsers, the prompt can be entered using voice.
- 
- You can also use the dropdown in the custom toolbar to choose a prompt from the list of supported prompts for the demos.
+In supported browsers, the prompt can be entered using voice.
 
-  :::
+You can also use the dropdown in the custom toolbar to choose a prompt from the list of supported prompts for the demos.
+
+:::
 
 ## Custom examples
 
@@ -54,7 +56,7 @@ An example of combining prompt toolbar with the [Server-side data](/x/react-data
 
 ## Integration with MUI's API
 
-To integrate with MUI's API, an API key is needed.
+To integrate with MUI's API, you need an API key.
 To avoid exposing the API key to the client, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's API.
 
 This is an example of a Fastify proxy for the prompt requests
