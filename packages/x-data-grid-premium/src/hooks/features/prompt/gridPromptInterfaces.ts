@@ -35,7 +35,8 @@ export interface GridPromptApi {
   /**
    * Collects sample data from the grid that can be used to improve the prompt context.
    * It takes random values for all columns but from different rows to make the samples more random.
-   * @param {number} sampleCount The number of samples (randomized rows) to collect. Default is 5.
+   * @param {number} sampleCount The number of samples (randomized rows) to collect.
+   * Default is 5. Maximum is 20.
    * If the number of rows in the grid is less than the sample count, all rows are used.
    * @returns {Record<string, any[]>} The sample data.
    */
