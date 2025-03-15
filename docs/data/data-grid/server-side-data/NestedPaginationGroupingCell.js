@@ -1,26 +1,25 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
 import {
   getDataGridUtilityClass,
   useGridSelector,
   useGridRootProps,
+  gridDataSourceLoadingIdSelector,
+  gridDataSourceErrorSelector,
+  useGridApiContext,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
-import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { useGridSelectorV8, createSelectorV8 } from '@mui/x-data-grid/internals';
+import {
+  useGridPrivateApiContext,
+  createSelector,
+} from '@mui/x-data-grid-pro/internals';
+import useEventCallback from '@mui/utils/useEventCallback';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export const gridDataSourceStateSelector = (state) => state.dataSource;
-
-export const gridDataSourceLoadingIdSelector = createSelectorV8(
-  gridDataSourceStateSelector,
-  (dataSource, id) => dataSource.loading[id] ?? false,
-);
-
-export const gridDataSourceErrorSelector = createSelectorV8(
-  gridDataSourceStateSelector,
-  (dataSource, id) => dataSource.errors[id],
+const gridRowSelector = createSelector(
+  gridRowsLookupSelector,
+  (lookup, id) => lookup[id],
 );
 
 const useUtilityClasses = (ownerState) => {
@@ -36,21 +35,18 @@ const useUtilityClasses = (ownerState) => {
 };
 
 function GridTreeDataGroupingCellIcon(props) {
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootProps.classes });
   const { rowNode, id, field, descendantCount, row, nestedLevelRef } = props;
 
-  const isDataLoading = useGridSelectorV8(
-    apiRef,
-    gridDataSourceLoadingIdSelector,
-    id,
-  );
-  const error = useGridSelectorV8(apiRef, gridDataSourceErrorSelector, id);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const expanded = rowNode.childrenExpanded || row.expanded;
 
-  const handleClick = (event) => {
+  const handleClick = useEventCallback((event) => {
+    apiRef.current?.setRows([]);
     if (!expanded) {
       props.setExpandedRows((prev) => [
         ...prev,
@@ -77,7 +73,7 @@ function GridTreeDataGroupingCellIcon(props) {
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation(); // TODO remove event.stopPropagation
-  };
+  });
 
   const Icon = expanded
     ? rootProps.slots.treeDataCollapseIcon
@@ -103,9 +99,9 @@ function GridTreeDataGroupingCellIcon(props) {
       {...rootProps?.slotProps?.baseIconButton}
     >
       <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <Badge variant="dot" color="error" invisible={!error}>
+        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </Badge>
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseTooltip>
     </rootProps.slots.baseIconButton>
   ) : null;
@@ -125,14 +121,13 @@ export function NestedPaginationGroupingCell(props) {
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (state) => state.rows.dataRowIdToModelLookup[id];
-  const row = useGridSelector(apiRef, rowSelector);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;
   if (row) {
     descendantCount = Math.max(
-      rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0,
+      rootProps.dataSource?.getChildrenCount?.(row) ?? 0,
       0,
     );
   }

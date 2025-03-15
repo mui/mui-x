@@ -2,10 +2,11 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  GridInitialState,
-  GridToolbar,
-  GridDataSource,
-  GridValidRowModel,
+  type GridInitialState,
+  type GridDataSource,
+  type GridValidRowModel,
+  type GridRenderCellParams,
+  type GridDataSourceGroupNode,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
@@ -17,6 +18,7 @@ const dataSetOptions = {
   rowLength: 1000,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 20 },
 };
+const serverOptions = {};
 
 export default function ServerSideTreeDataNestedPagination() {
   const apiRef = useGridApiRef();
@@ -29,7 +31,7 @@ export default function ServerSideTreeDataNestedPagination() {
 
   const { fetchRows, columns, initialState } = useMockServer(
     dataSetOptions,
-    {},
+    serverOptions,
     false,
     true,
   );
@@ -38,6 +40,7 @@ export default function ServerSideTreeDataNestedPagination() {
     (params: GridRenderCellParams) => (
       <NestedPaginationGroupingCell
         {...params}
+        rowNode={params.rowNode as GridDataSourceGroupNode}
         nestedLevelRef={nestedLevelRef}
         setExpandedRows={setExpandedRows}
       />
@@ -85,20 +88,20 @@ export default function ServerSideTreeDataNestedPagination() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.unstable_dataSource.cache.clear()}>
+      <Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
         Reset cache
       </Button>
       <div style={{ height: 500 }}>
         <DataGridPro
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
+          dataSourceCache={null}
           treeData
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
+          showToolbar
           groupingColDef={{
             renderCell: renderGroupingCell,
           }}
