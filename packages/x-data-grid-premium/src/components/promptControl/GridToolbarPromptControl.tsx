@@ -83,8 +83,8 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   const classes = useUtilityClasses(ownerState);
 
   const context = React.useMemo(() => {
-    const examples = allowDataSampling ? apiRef.current.collectSampleData() : undefined;
-    return apiRef.current.getPromptContext(examples);
+    const examples = allowDataSampling ? apiRef.current.unstable_collectSampleData() : undefined;
+    return apiRef.current.unstable_getPromptContext(examples);
   }, [apiRef, allowDataSampling]);
 
   const processPrompt = React.useCallback(() => {
@@ -93,7 +93,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
     apiRef.current.setLoading(true);
 
     onPrompt(context, query)
-      .then(apiRef.current.applyPromptResult)
+      .then(apiRef.current.unstable_applyPromptResult)
       .catch((promptError) => {
         setError(apiRef.current.getLocaleText('toolbarPromptControlErrorMessage'));
         onError?.(promptError);
