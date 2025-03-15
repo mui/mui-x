@@ -26,6 +26,7 @@ const COMPONENT_API_PAGES = [
   'src/components/quickFilter/QuickFilterClear.tsx',
   'src/components/filterPanel/FilterPanelTrigger.tsx',
   'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
+  'src/components/pivotPanel/PivotPanelTrigger.tsx',
 ];
 
 export const projectGridSettings: ProjectSettings = {

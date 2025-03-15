@@ -15,6 +15,7 @@ export function useMaterialCSSVariables() {
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
+  const mutedBorderColor = getMutedBorderColor(t, borderColor);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
   const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
@@ -34,6 +35,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.spacingUnit]: t.spacing(1),
 
     [k.colors.border.base]: borderColor,
+    [k.colors.border.muted]: mutedBorderColor,
     [k.colors.background.base]: backgroundBase,
     [k.colors.background.overlay]:
       t.palette.mode === 'dark'
@@ -44,12 +46,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.muted]: t.palette.text.secondary,
     [k.colors.foreground.accent]: t.palette.primary.dark,
     [k.colors.foreground.disabled]: t.palette.text.disabled,
-
-    [k.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
+    [k.colors.interactive.hover]: t.palette.action.hover,
     [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: removeOpacity(t.palette.primary.main),
+    [k.colors.interactive.focus]: t.palette.primary.main,
     [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [k.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
+    [k.colors.interactive.disabled]: t.palette.action.disabled,
     [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
     [k.colors.interactive.selected]: selectedColor,
     [k.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
@@ -75,6 +76,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.small.fontWeight]: t.typography.caption.fontWeight as string,
     [k.typography.small.letterSpacing]: t.typography.caption.letterSpacing as string,
     [k.typography.small.lineHeight]: t.typography.caption.lineHeight as string,
+    [k.typography.large.fontFamily]: t.typography.body1.fontFamily as string,
+    [k.typography.large.fontSize]: t.typography.body1.fontSize as string,
+    [k.typography.large.fontWeight]: t.typography.body1.fontWeight as string,
+    [k.typography.large.letterSpacing]: t.typography.body1.letterSpacing as string,
+    [k.typography.large.lineHeight]: t.typography.body1.lineHeight as string,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
@@ -101,10 +107,9 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-function setOpacity(color: string, opacity: number) {
-  return `rgba(from ${color} r g b / ${opacity})`;
-}
-
-function removeOpacity(color: string) {
-  return setOpacity(color, 1);
+function getMutedBorderColor(theme: Theme, borderColor: string) {
+  if (theme.vars) {
+    return `color-mix(in srgb, ${borderColor} 60%, #fff)`;
+  }
+  return alpha(borderColor, 0.6);
 }

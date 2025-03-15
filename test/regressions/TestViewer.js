@@ -41,6 +41,7 @@ function MockTime(props) {
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
       // We need to let time advance to use `useDemoData`, but on the pickers test it makes the tests flaky
       shouldAdvanceTime: props.isDataGridTest,
+      shouldClearNativeTimers: true,
     });
     setReady(true);
 

@@ -24,7 +24,7 @@ const rows = [
   },
   {
     id: 2,
-    name: 'DataGrid',
+    name: 'MuiDataGrid',
     stars: 15000,
   },
 ];

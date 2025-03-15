@@ -291,6 +291,15 @@ export const GridRootStyles = styled('div', {
         width: 'unset',
       },
     },
+    [`&.${c.withSidePanel}`]: {
+      flexDirection: 'row',
+    },
+    [`& .${c.mainContent}`]: {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      flex: 1,
+    },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       padding: '0 10px',
@@ -358,12 +367,14 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
-    [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+    [`& .${c['pivotPanelField--sorted']} .${c.iconButtonContainer},
+      & .${c['columnHeader--sorted']} .${c.iconButtonContainer},
+      & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]: {
+      visibility: 'visible',
+      width: 'auto',
+    },
+    [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton},
+      & .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
       opacity: 0,
       transition: vars.transition(['opacity'], {
         duration: vars.transitions.duration.short,
@@ -433,9 +444,12 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
-        opacity: 0.5,
-      },
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
+        {
+          opacity: 0.5,
+        },
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader}`]: columnHeaderStyles,
@@ -444,6 +458,9 @@ export const GridRootStyles = styled('div', {
         [`.${c['columnSeparator--resizable']}`]: {
           color: vars.colors.foreground.accent,
         },
+      },
+      [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
+        opacity: 0.5,
       },
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
