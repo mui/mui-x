@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { CSSInterpolation } from '@mui/system';
+import { CSSInterpolation, keyframes } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
@@ -11,14 +11,16 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
+const fadeInAnimation = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
+
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
-    width: 'auto',
+    display: 'flex',
+    animation: `${fadeInAnimation} 150ms ease-in-out`,
   },
   [`& .${c.menuIcon}`]: {
-    width: 'auto',
-    visibility: 'visible',
+    display: 'flex',
+    animation: `${fadeInAnimation} 150ms ease-in-out`,
   },
 };
 
@@ -274,8 +276,7 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {
-          width: '0 !important',
-          visibility: 'hidden !important',
+          display: 'none',
         },
       },
       [`& .${c.cell}`]: {
@@ -360,15 +361,12 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
-        visibility: 'visible',
-        width: 'auto',
+        display: 'flex',
       },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
-      opacity: 0,
-      transition: vars.transition(['opacity'], {
-        duration: vars.transitions.duration.short,
-      }),
-    },
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.iconButtonContainer}:has(.${c.sortIcon})`]:
+      {
+        display: 'none',
+      },
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -485,16 +483,13 @@ export const GridRootStyles = styled('div', {
       }),
     },
     [`& .${c.menuIcon}`]: {
-      width: 0,
-      visibility: 'hidden',
+      display: 'none',
       fontSize: 20,
       marginRight: -5,
-      display: 'flex',
       alignItems: 'center',
     },
     [`.${c.menuOpen}`]: {
-      visibility: 'visible',
-      width: 'auto',
+      display: 'flex',
     },
 
     [`& .${c.headerFilterRow}`]: {
