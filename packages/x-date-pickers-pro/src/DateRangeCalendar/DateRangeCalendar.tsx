@@ -22,7 +22,7 @@ import {
   useUtils,
   PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useViews,
   PickerRangeValue,
   usePickerPrivateContext,
@@ -219,7 +219,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const rangePositionContext = useNullablePickerRangePositionContext();
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+  const { value, handleValueChange, timezone } = useControlledValue<
     PickerRangeValue,
     NonNullable<typeof onChange>
   >({

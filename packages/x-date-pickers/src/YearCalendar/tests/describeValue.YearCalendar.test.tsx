@@ -16,13 +16,13 @@ describe('<YearCalendar /> - Describe Value', () => {
     assertRenderedValue: (expectedValue: any) => {
       const activeYear = screen
         .queryAllByRole('radio')
-        .find((cell) => cell.getAttribute('tabindex') === '0');
-      expect(activeYear).not.to.equal(null);
+        .find((cell) => cell.getAttribute('aria-checked') === 'true');
+
       if (expectedValue == null) {
-        expect(activeYear).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
+        expect(activeYear).to.equal(undefined);
       } else {
+        expect(activeYear).not.to.equal(undefined);
         expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
-        expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
     setNewValue: (value) => {

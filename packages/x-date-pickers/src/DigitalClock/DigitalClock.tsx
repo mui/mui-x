@@ -18,7 +18,7 @@ import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types'
 import { useViews } from '../internals/hooks/useViews';
 import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
@@ -160,7 +160,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'DigitalClock',
     timezone: timezoneProp,
     value: valueProp,
