@@ -33,6 +33,14 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      */
     slots?: BarLabelSlots;
     /**
+     * The x position of the bar.
+     */
+    x: number;
+    /**
+     * The y position of the bar.
+     */
+    y: number;
+    /**
      * The height of the bar.
      */
     height: number;
@@ -40,6 +48,10 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * The width of the bar.
      */
     width: number;
+    /**
+     * The orientation of the bar.
+     */
+    layout: 'vertical' | 'horizontal';
     /**
      * The value of the data point.
      */
@@ -67,9 +79,12 @@ function BarLabelItem(props: BarLabelItemProps) {
     barLabel,
     slots,
     slotProps,
+    x,
+    y,
     height,
     width,
     value,
+    skipAnimation,
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -84,6 +99,7 @@ function BarLabelItem(props: BarLabelItemProps) {
     isFaded,
     isHighlighted,
     dataIndex,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -94,6 +110,10 @@ function BarLabelItem(props: BarLabelItemProps) {
     externalSlotProps: slotProps?.barLabel,
     additionalProps: {
       ...other,
+      x,
+      y,
+      width,
+      height,
       style,
       className: classes.root,
     },

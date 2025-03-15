@@ -1,53 +1,42 @@
 import * as React from 'react';
-import { SpringValue, animated } from '@react-spring/web';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { getRadius } from './getRadius';
 
-const buildInset = (corners: {
-  topLeft: number;
-  topRight: number;
-  bottomRight: number;
-  bottomLeft: number;
-}) =>
-  `inset(0px round ${corners.topLeft}px ${corners.topRight}px ${corners.bottomRight}px ${corners.bottomLeft}px)`;
-
-function BarClipRect(props: Record<string, any>) {
-  const radiusData = props.ownerState;
-
-  return (
-    <animated.rect
-      style={{
-        ...props.style,
-        clipPath: (
-          (props.ownerState.layout === 'vertical'
-            ? props.style?.height
-            : props.style?.width) as SpringValue<number>
-        ).to((value) =>
-          buildInset({
-            topLeft: Math.min(value, getRadius('top-left', radiusData)),
-            topRight: Math.min(value, getRadius('top-right', radiusData)),
-            bottomRight: Math.min(value, getRadius('bottom-right', radiusData)),
-            bottomLeft: Math.min(value, getRadius('bottom-left', radiusData)),
-          }),
-        ),
-      }}
-    />
-  );
-}
-
 export interface BarClipPathProps {
+  className?: string;
   maskId: string;
   borderRadius?: number;
   hasNegative: boolean;
   hasPositive: boolean;
   layout?: 'vertical' | 'horizontal';
-  style: {};
+  style?: React.CSSProperties;
+
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
+
+export interface BarClipPathClasses {
+  /** Styles applied to the root element. */
+  root: string;
+  /** Styles applied to the root element if it is horizontal. */
+  horizontal: string;
+  /** Styles applied to the root element if it is vertical. */
+  vertical: string;
+}
+
+export const barClipPathClasses: BarClipPathClasses = generateUtilityClasses('MuiBarClipPath', [
+  'root',
+  'horizontal',
+  'vertical',
+]);
 
 /**
  * @ignore - internal component.
  */
 function BarClipPath(props: BarClipPathProps) {
-  const { style, maskId, ...rest } = props;
+  const { className, maskId, x, y, width, height, style, ...radiusData } = props;
 
   if (!props.borderRadius || props.borderRadius <= 0) {
     return null;
@@ -55,7 +44,17 @@ function BarClipPath(props: BarClipPathProps) {
 
   return (
     <clipPath id={maskId}>
-      <BarClipRect ownerState={rest} style={style} />
+      <rect
+        className={className}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        style={{
+          ...style,
+          clipPath: `inset(0px round ${getRadius('top-left', radiusData)}px ${getRadius('top-right', radiusData)}px ${getRadius('bottom-right', radiusData)}px ${getRadius('bottom-left', radiusData)}px)`,
+        }}
+      />
     </clipPath>
   );
 }
