@@ -1,4 +1,4 @@
-import { GestureKey, Handler } from '@use-gesture/react';
+import { EventTypes, FullGestureState, GestureKey } from '@use-gesture/react';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
@@ -16,26 +16,40 @@ export type ChartInteraction =
   | 'moveEnd'
   | 'hover';
 
+export type ChartInteractionHandler<
+  Memo extends any,
+  Key extends GestureKey,
+  EventType = EventTypes[Key],
+> = (
+  state: Omit<FullGestureState<Key>, 'event' | 'memo'> & {
+    event: EventType;
+    memo: Memo;
+  },
+) => any | void;
+
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
-  (
+  <Memo extends any>(
     interaction: 'drag' | 'dragStart' | 'dragEnd',
-    callback: Handler<'drag', PointerEvent>,
+    callback: ChartInteractionHandler<Memo, 'drag', PointerEvent>,
   ): InteractionListenerResult;
-  (
+  <Memo extends any>(
     interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
-    callback: Handler<'pinch', PointerEvent>,
+    callback: ChartInteractionHandler<Memo, 'pinch', PointerEvent>,
   ): InteractionListenerResult;
-  (
+  <Memo extends any>(
     interaction: 'wheel' | 'wheelStart' | 'wheelEnd',
-    callback: Handler<'wheel', WheelEvent>,
+    callback: ChartInteractionHandler<Memo, 'wheel', WheelEvent>,
   ): InteractionListenerResult;
-  (
+  <Memo extends any>(
     interaction: 'move' | 'moveStart' | 'moveEnd',
-    callback: Handler<'move', PointerEvent>,
+    callback: ChartInteractionHandler<Memo, 'move', PointerEvent>,
   ): InteractionListenerResult;
-  (interaction: 'hover', callback: Handler<'hover', PointerEvent>): InteractionListenerResult;
+  <Memo extends any>(
+    interaction: 'hover',
+    callback: ChartInteractionHandler<Memo, 'hover', PointerEvent>,
+  ): InteractionListenerResult;
 };
 
 type InteractionMap<T extends ChartInteraction> = T extends 'wheel' | 'wheelStart' | 'wheelEnd'
@@ -44,14 +58,15 @@ type InteractionMap<T extends ChartInteraction> = T extends 'wheel' | 'wheelStar
 
 export type AddMultipleInteractionListeners = {
   <
-    T extends ChartInteraction[],
+    Memo extends any = {},
+    T extends ChartInteraction[] = any,
     K = T,
     I extends ChartInteraction[] = T,
     D extends GestureKey = K extends (infer J)[] ? (J extends GestureKey ? J : never) : never,
     E extends ChartInteraction = I extends (infer J)[] ? J : never,
   >(
     interactions: T,
-    callback: Handler<D, InteractionMap<E>>,
+    callback: ChartInteractionHandler<Memo, D, InteractionMap<E>>,
   ): InteractionListenerResult;
 };
 

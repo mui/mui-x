@@ -29,31 +29,33 @@ export const usePanOnDrag = (
     [optionsLookup],
   );
 
-  const touchStartRef = React.useRef<{
-    x: number;
-    y: number;
-    zoomData: readonly ZoomData[];
-  } | null>(null);
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isPanEnabled) {
       return () => {};
     }
 
-    const panHandler = instance.addInteractionListener('drag', (state) => {
+    const panHandler = instance.addInteractionListener<readonly ZoomData[]>('drag', (state) => {
       if (state.pinching) {
-        return state.cancel();
-      }
-
-      if (element === null || touchStartRef.current === null) {
+        state.cancel();
         return undefined;
       }
 
-      const point = getSVGPoint(element, state.event);
-      const movementX = point.x - touchStartRef.current.x;
-      const movementY = (point.y - touchStartRef.current.y) * -1;
-      const newZoomData = touchStartRef.current.zoomData.map((zoom) => {
+      if (!state.memo) {
+        state.memo = store.getSnapshot().zoom.zoomData;
+      }
+
+      const point = getSVGPoint(element, {
+        clientX: state.xy[0],
+        clientY: state.xy[1],
+      });
+      const originalPoint = getSVGPoint(element, {
+        clientX: state.initial[0],
+        clientY: state.initial[1],
+      });
+      const movementX = point.x - originalPoint.x;
+      const movementY = (point.y - originalPoint.y) * -1;
+      const newZoomData = state.memo.map((zoom) => {
         const options = optionsLookup[zoom.axisId];
         if (!options || !options.panning) {
           return zoom;
@@ -91,27 +93,20 @@ export const usePanOnDrag = (
       });
       // TODO: fix max update issue
       setZoomDataCallback(newZoomData);
-      return undefined;
+      return state.memo;
     });
 
     const panStartHandler = instance.addInteractionListener('dragStart', (state) => {
-      const point = getSVGPoint(element, state.event);
-
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
       setIsInteracting(true);
-      touchStartRef.current = {
-        x: point.x,
-        y: point.y,
-        zoomData: store.getSnapshot().zoom.zoomData,
-      };
-
-      return undefined;
+      return state.memo;
     });
 
-    const panEndHandler = instance.addInteractionListener('dragEnd', () => {
+    const panEndHandler = instance.addInteractionListener('dragEnd', (state) => {
       setIsInteracting(false);
+      return state.memo;
     });
 
     return () => {

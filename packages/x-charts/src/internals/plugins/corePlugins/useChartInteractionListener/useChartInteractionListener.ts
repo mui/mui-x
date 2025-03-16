@@ -7,7 +7,6 @@ import {
   wheelAction,
   moveAction,
   hoverAction,
-  Handler,
 } from '@use-gesture/react';
 import { ChartPlugin } from '../../models';
 import {
@@ -15,9 +14,10 @@ import {
   AddInteractionListener,
   AddMultipleInteractionListeners,
   ChartInteraction,
+  ChartInteractionHandler,
 } from './useChartInteractionListener.types';
 
-type ListenerRef = Map<ChartInteraction, Set<Handler<any>>>;
+type ListenerRef = Map<ChartInteraction, Set<ChartInteractionHandler<any, any>>>;
 
 const preventDefault = (event: Event) => event.preventDefault();
 
@@ -38,9 +38,18 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
   const retriggerEvent = React.useCallback((interaction: ChartInteraction, state: any) => {
     const listeners = listenersRef.current.get(interaction);
+    const memo = !state.memo ? new Map<Function, any>() : state.memo;
+
     if (listeners) {
-      listeners.forEach((callback) => callback(state));
+      listeners.forEach((callback) => {
+        const result = callback({ ...state, memo: memo.get(callback) });
+        if (result) {
+          memo.set(callback, result);
+        }
+      });
     }
+
+    return memo;
   }, []);
 
   useGesture(
@@ -86,7 +95,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       let listeners = listenersRef.current.get(interaction);
 
       if (!listeners) {
-        listeners = new Set<Handler<any>>();
+        listeners = new Set<ChartInteractionHandler<any, any>>();
         listeners.add(callback);
         listenersRef.current.set(interaction, listeners);
       } else {
