@@ -246,7 +246,7 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@8.57.1)(typescript@5.8.2))(eslint-import-resolver-webpack@0.13.10)(eslint@8.57.1)
       eslint-plugin-jsdoc:
-        specifier: ^50.6.3
+        specifier: ^50.6.6
         version: 50.6.6(eslint@8.57.1)
       eslint-plugin-jsx-a11y:
         specifier: ^6.10.2
