@@ -39,10 +39,6 @@ export const useZoomOnWheel = (
     }
 
     const zoomOnWheelHandler = instance.addInteractionListener('wheel', (state) => {
-      if (element === null) {
-        return;
-      }
-
       const point = getSVGPoint(element, state.event);
 
       if (!instance.isPointInside(point)) {

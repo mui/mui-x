@@ -45,10 +45,6 @@ export const useZoomOnPinch = (
     });
 
     const zoomHandler = instance.addInteractionListener('pinch', (state) => {
-      if (element === null) {
-        return;
-      }
-
       setZoomDataCallback((prevZoomData) => {
         const newZoomData = prevZoomData.map((zoom) => {
           const option = optionsLookup[zoom.axisId];

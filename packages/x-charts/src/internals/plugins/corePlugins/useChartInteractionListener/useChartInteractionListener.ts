@@ -68,6 +68,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         pointer: {
           // We can allow customizing the number of pointers
           buttons: 1,
+          keys: false,
         },
         // filterTaps: true,
       },
@@ -76,7 +77,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           min: 0.1,
           max: 2,
         },
-        rubberband: true,
       },
     },
   );
