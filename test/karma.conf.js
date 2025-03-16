@@ -28,12 +28,6 @@ module.exports = function setKarmaConfig(config) {
         served: true,
         included: true,
       },
-      {
-        pattern: 'test/karma.datagrid.tests.js',
-        watched: true,
-        served: true,
-        included: true,
-      },
     ],
     plugins: (process.env.PARALLEL === 'true' ? ['karma-parallel'] : []).concat([
       'karma-mocha',

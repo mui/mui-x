@@ -1,6 +1,14 @@
 'use client';
 import * as React from 'react';
-import { Handler, useGesture } from '@use-gesture/react';
+import {
+  createUseGesture,
+  dragAction,
+  pinchAction,
+  wheelAction,
+  moveAction,
+  hoverAction,
+  Handler,
+} from '@use-gesture/react';
 import { ChartPlugin } from '../../models';
 import {
   UseChartInteractionListenerSignature,
@@ -13,7 +21,16 @@ type ListenerRef = Map<ChartInteraction, Set<Handler<any>>>;
 
 const preventDefault = (event: Event) => event.preventDefault();
 
-// TODO: use import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react'
+// Create our own useGesture hook with the actions we need
+// Better for tree shaking
+const useGesture = createUseGesture([
+  dragAction,
+  pinchAction,
+  wheelAction,
+  moveAction,
+  hoverAction,
+]);
+
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   svgRef,
 }) => {
