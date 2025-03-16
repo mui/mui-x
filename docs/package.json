@@ -47,7 +47,7 @@
     "@mui/x-tree-view": "workspace:*",
     "@react-spring/web": "^9.7.5",
     "@tanstack/query-core": "^5.67.2",
-    "@tanstack/react-query": "^5.67.2",
+    "@tanstack/react-query": "^5.68.0",
     "ast-types": "^0.14.2",
     "autoprefixer": "^10.4.20",
     "babel-plugin-module-resolver": "^5.0.2",
