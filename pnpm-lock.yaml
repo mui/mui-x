@@ -429,8 +429,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/docs':
-        specifier: 7.0.0-beta.3
-        version: 7.0.0-beta.3(fcef6fae97ee2133493a528aa03e8f71)
+        specifier: 7.0.0-beta.4
+        version: 7.0.0-beta.4(fcef6fae97ee2133493a528aa03e8f71)
       '@mui/icons-material':
         specifier: ^5.16.14
         version: 5.16.14(@mui/material@5.16.14(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
@@ -652,8 +652,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@mui/internal-scripts':
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: ^2.0.4
+        version: 2.0.4
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
@@ -3079,8 +3079,8 @@ packages:
   '@mui/core-downloads-tracker@5.16.14':
     resolution: {integrity: sha512-sbjXW+BBSvmzn61XyTMun899E7nGPTXwqD9drm1jBUAvWEhJpPFIRxwQQiATWZnd9rvdxtnhhdsDxEGWI0jxqA==}
 
-  '@mui/docs@7.0.0-beta.3':
-    resolution: {integrity: sha512-SfZXoJzFUGVc89PnNwsKh94qbHZWN1NyjEr6kAPWTTb2HM0IRhM8t+BYzr+gznYD9Nk6YXjPZvKYgOnbSw9tWA==}
+  '@mui/docs@7.0.0-beta.4':
+    resolution: {integrity: sha512-wAlYRhGpPNQ/SddJh9v+t5XHEwsTcfi9uYIqmbvD/l6q6XOnnT/AdXjwROfDlqBwHrNrLGm78tBF16DkK8jarQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -3118,8 +3118,8 @@ packages:
   '@mui/internal-markdown@2.0.1':
     resolution: {integrity: sha512-Ru2clxTJVVBpQrxXudsxUp8d2lAZ5In5N+4Up2TrYEs+nwlTyueC9oe43cB7R2aSGeAKDI7VPA2teUdjvplgzQ==}
 
-  '@mui/internal-scripts@2.0.3':
-    resolution: {integrity: sha512-cvku8uvlzcKr4weLXql4EPVL9HpR+VnyiCFJL3Hmz/VZmZP1NtufRRRsDfcXvEuSN4lcqzCgmTbEzshdlfkQfg==}
+  '@mui/internal-scripts@2.0.4':
+    resolution: {integrity: sha512-k2oQOfw4dsfOfqOLlUaNe5B0eydnIDxvhv4A+R6Qz4gyChE7Hmo+sPBspRsMWiPH1Jlap5aExNNhaX/Xpev6oQ==}
 
   '@mui/internal-test-utils@2.0.3':
     resolution: {integrity: sha512-2vjvcZPhNjWNMFZi2SC3wSZn0cSkvdvkSAhEsPEbjVZlSd7DA+IH3CvudcOwCOFivxo0+GTiBhLRLCrVX1fKjA==}
@@ -12050,7 +12050,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.14': {}
 
-  '@mui/docs@7.0.0-beta.3(fcef6fae97ee2133493a528aa03e8f71)':
+  '@mui/docs@7.0.0-beta.4(fcef6fae97ee2133493a528aa03e8f71)':
     dependencies:
       '@babel/runtime': 7.26.10
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -12094,7 +12094,7 @@ snapshots:
       marked: 15.0.7
       prismjs: 1.30.0
 
-  '@mui/internal-scripts@2.0.3':
+  '@mui/internal-scripts@2.0.4':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.26.10)
