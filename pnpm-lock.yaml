@@ -165,7 +165,7 @@ importers:
         specifier: ^8.26.1
         version: 8.26.1(eslint@8.57.1)(typescript@5.8.2)
       autoprefixer:
-        specifier: ^10.4.20
+        specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
       axe-core:
         specifier: 4.10.3
@@ -495,7 +495,7 @@ importers:
         specifier: ^0.14.2
         version: 0.14.2
       autoprefixer:
-        specifier: ^10.4.20
+        specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
       babel-plugin-module-resolver:
         specifier: ^5.0.2
