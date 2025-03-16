@@ -91,7 +91,6 @@ export const usePanOnDrag = (
           end: newMaxPercent,
         };
       });
-      // TODO: fix max update issue
       setZoomDataCallback(newZoomData);
       return state.memo;
     });
