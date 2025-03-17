@@ -4,7 +4,6 @@ import {
   GridAddIcon,
   GridCheckIcon,
   GridExpandMoreIcon,
-  GridExpandLessIcon,
   GridDeleteIcon,
   GridCloseIcon,
 } from '@mui/x-data-grid';
@@ -17,6 +16,8 @@ import {
   GridRecordPromptIcon,
   GridMoveToTopIcon,
   GridMoveToBottomIcon,
+  GridExpandLessIcon,
+  GridPivotIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -26,6 +27,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   columnMenuAggregationIcon: GridFunctionsIcon,
   toolbarPromptSendIcon: GridSendPromptIcon,
   toolbarPromptRecordIcon: GridRecordPromptIcon,
+  pivotIcon: GridPivotIcon,
   pivotSearchIcon: GridSearchIcon,
   pivotSearchClearIcon: GridClearIcon,
   pivotMenuAddIcon: GridAddIcon,

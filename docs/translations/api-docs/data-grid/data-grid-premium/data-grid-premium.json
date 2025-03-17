@@ -1489,7 +1489,7 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
-    "pivotIcon": "Icon displayed in the pivot menu.",
+    "pivotIcon": "Icon used for the pivot icon",
     "pivotMenuAddIcon": "Icon displayed in the pivot menu for adding a field to a pivot section.",
     "pivotMenuCheckIcon": "Icon displayed in the pivot menu to signify a pivot section is selected.",
     "pivotMenuMoveDownIcon": "Icon displayed in the pivot menu for moving a field down.",

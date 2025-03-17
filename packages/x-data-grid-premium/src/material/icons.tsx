@@ -37,3 +37,13 @@ export const GridMoveToBottomIcon = createSvgIcon(
   <path d="M16.59 5.795 12 10.385l-4.59-4.59L6 7.205l6 6 6-6-1.41-1.41ZM18 16.205v2H6v-2h12Z" />,
   'MoveToBottom',
 );
+
+export const GridExpandLessIcon = createSvgIcon(
+  <path d="m12 8.295-6 6 1.41 1.41 4.59-4.58 4.59 4.58 1.41-1.41-6-6Z" />,
+  'ExpandLess',
+);
+
+export const GridPivotIcon = createSvgIcon(
+  <path d="M10 8h11V5c0-1.1-.9-2-2-2h-9zM3 8h5V3H5c-1.1 0-2 .9-2 2zm2 13h3V10H3v9c0 1.1.9 2 2 2m8 1-4-4 4-4zm1-9 4-4 4 4zm.58 6H13v-2h1.58c1.33 0 2.42-1.08 2.42-2.42V13h2v1.58c0 2.44-1.98 4.42-4.42 4.42" />,
+  'Pivot',
+);

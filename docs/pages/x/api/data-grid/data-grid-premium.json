@@ -1184,12 +1184,6 @@
       "class": null
     },
     {
-      "name": "pivotIcon",
-      "description": "Icon displayed in the pivot menu.",
-      "default": "GridPivotIcon",
-      "class": null
-    },
-    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
@@ -1229,6 +1223,12 @@
       "name": "toolbarPromptRecordIcon",
       "description": "Icon used for the button that starts/stops recording the prompt",
       "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "pivotIcon",
+      "description": "Icon used for the pivot icon",
+      "default": "GridPivotIcon",
       "class": null
     },
     {

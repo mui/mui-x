@@ -27,6 +27,11 @@ export interface GridPremiumIconSlotsComponent {
    */
   toolbarPromptRecordIcon: React.JSXElementConstructor<any>;
   /**
+   * Icon used for the pivot icon
+   * @default GridPivotIcon
+   */
+  pivotIcon: React.JSXElementConstructor<any>;
+  /**
    * Icon used for the search icon in the sidebar search field
    * @default GridSearchIcon
    */

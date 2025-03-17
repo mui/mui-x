@@ -967,12 +967,6 @@
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
       "class": null
-    },
-    {
-      "name": "pivotIcon",
-      "description": "Icon displayed in the pivot menu.",
-      "default": "GridPivotIcon",
-      "class": null
     }
   ],
   "classes": [

@@ -1092,12 +1092,6 @@
       "class": null
     },
     {
-      "name": "pivotIcon",
-      "description": "Icon displayed in the pivot menu.",
-      "default": "GridPivotIcon",
-      "class": null
-    },
-    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
