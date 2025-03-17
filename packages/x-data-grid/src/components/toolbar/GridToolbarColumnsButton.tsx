@@ -4,11 +4,13 @@ import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 interface GridToolbarColumnsButtonProps {
   /**
@@ -28,7 +30,9 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 
     const showColumns = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (
@@ -78,7 +82,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
             buttonProps.onPointerUp?.(event);
           }}
           onClick={showColumns}
-          ref={ref}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>

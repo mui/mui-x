@@ -105,8 +105,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.10)(react@19.0.0)
       '@next/eslint-plugin-next':
-        specifier: 15.2.1
-        version: 15.2.1
+        specifier: 15.2.2
+        version: 15.2.2
       '@octokit/plugin-retry':
         specifier: ^7.1.4
         version: 7.1.4(@octokit/core@5.2.0)
@@ -165,7 +165,7 @@ importers:
         specifier: ^8.26.1
         version: 8.26.1(eslint@8.57.1)(typescript@5.8.2)
       autoprefixer:
-        specifier: ^10.4.20
+        specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
       axe-core:
         specifier: 4.10.3
@@ -246,7 +246,7 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@8.57.1)(typescript@5.8.2))(eslint-import-resolver-webpack@0.13.10)(eslint@8.57.1)
       eslint-plugin-jsdoc:
-        specifier: ^50.6.3
+        specifier: ^50.6.6
         version: 50.6.6(eslint@8.57.1)
       eslint-plugin-jsx-a11y:
         specifier: ^6.10.2
@@ -429,8 +429,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
       '@mui/docs':
-        specifier: 7.0.0-beta.3
-        version: 7.0.0-beta.3(fcef6fae97ee2133493a528aa03e8f71)
+        specifier: 7.0.0-beta.4
+        version: 7.0.0-beta.4(fcef6fae97ee2133493a528aa03e8f71)
       '@mui/icons-material':
         specifier: ^5.16.14
         version: 5.16.14(@mui/material@5.16.14(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
@@ -495,7 +495,7 @@ importers:
         specifier: ^0.14.2
         version: 0.14.2
       autoprefixer:
-        specifier: ^10.4.20
+        specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
       babel-plugin-module-resolver:
         specifier: ^5.0.2
@@ -579,7 +579,7 @@ importers:
         specifier: ^0.5.47
         version: 0.5.47
       next:
-        specifier: ^15.2.1
+        specifier: ^15.2.2
         version: 15.2.2(@babel/core@7.26.10)(@playwright/test@1.51.0)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       nprogress:
         specifier: ^0.2.0
@@ -588,7 +588,7 @@ importers:
         specifier: ^8.5.3
         version: 8.5.3
       prismjs:
-        specifier: ^1.29.0
+        specifier: ^1.30.0
         version: 1.30.0
       prop-types:
         specifier: ^15.8.1
@@ -652,8 +652,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@mui/internal-scripts':
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: ^2.0.4
+        version: 2.0.4
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
@@ -3079,8 +3079,8 @@ packages:
   '@mui/core-downloads-tracker@5.16.14':
     resolution: {integrity: sha512-sbjXW+BBSvmzn61XyTMun899E7nGPTXwqD9drm1jBUAvWEhJpPFIRxwQQiATWZnd9rvdxtnhhdsDxEGWI0jxqA==}
 
-  '@mui/docs@7.0.0-beta.3':
-    resolution: {integrity: sha512-SfZXoJzFUGVc89PnNwsKh94qbHZWN1NyjEr6kAPWTTb2HM0IRhM8t+BYzr+gznYD9Nk6YXjPZvKYgOnbSw9tWA==}
+  '@mui/docs@7.0.0-beta.4':
+    resolution: {integrity: sha512-wAlYRhGpPNQ/SddJh9v+t5XHEwsTcfi9uYIqmbvD/l6q6XOnnT/AdXjwROfDlqBwHrNrLGm78tBF16DkK8jarQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -3118,8 +3118,8 @@ packages:
   '@mui/internal-markdown@2.0.1':
     resolution: {integrity: sha512-Ru2clxTJVVBpQrxXudsxUp8d2lAZ5In5N+4Up2TrYEs+nwlTyueC9oe43cB7R2aSGeAKDI7VPA2teUdjvplgzQ==}
 
-  '@mui/internal-scripts@2.0.3':
-    resolution: {integrity: sha512-cvku8uvlzcKr4weLXql4EPVL9HpR+VnyiCFJL3Hmz/VZmZP1NtufRRRsDfcXvEuSN4lcqzCgmTbEzshdlfkQfg==}
+  '@mui/internal-scripts@2.0.4':
+    resolution: {integrity: sha512-k2oQOfw4dsfOfqOLlUaNe5B0eydnIDxvhv4A+R6Qz4gyChE7Hmo+sPBspRsMWiPH1Jlap5aExNNhaX/Xpev6oQ==}
 
   '@mui/internal-test-utils@2.0.3':
     resolution: {integrity: sha512-2vjvcZPhNjWNMFZi2SC3wSZn0cSkvdvkSAhEsPEbjVZlSd7DA+IH3CvudcOwCOFivxo0+GTiBhLRLCrVX1fKjA==}
@@ -3301,8 +3301,8 @@ packages:
   '@next/env@15.2.2':
     resolution: {integrity: sha512-yWgopCfA9XDR8ZH3taB5nRKtKJ1Q5fYsTOuYkzIIoS8TJ0UAUKAGF73JnGszbjk2ufAQDj6mDdgsJAFx5CLtYQ==}
 
-  '@next/eslint-plugin-next@15.2.1':
-    resolution: {integrity: sha512-6ppeToFd02z38SllzWxayLxjjNfzvc7Wm07gQOKSLjyASvKcXjNStZrLXMHuaWkhjqxe+cnhb2uzfWXm1VEj/Q==}
+  '@next/eslint-plugin-next@15.2.2':
+    resolution: {integrity: sha512-1+BzokFuFQIfLaRxUKf2u5In4xhPV7tUgKcK53ywvFl6+LXHWHpFkcV7VNeKlyQKUotwiq4fy/aDNF9EiUp4RQ==}
 
   '@next/swc-darwin-arm64@15.2.2':
     resolution: {integrity: sha512-HNBRnz+bkZ+KfyOExpUxTMR0Ow8nkkcE6IlsdEa9W/rI7gefud19+Sn1xYKwB9pdCdxIP1lPru/ZfjfA+iT8pw==}
@@ -12050,7 +12050,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.14': {}
 
-  '@mui/docs@7.0.0-beta.3(fcef6fae97ee2133493a528aa03e8f71)':
+  '@mui/docs@7.0.0-beta.4(fcef6fae97ee2133493a528aa03e8f71)':
     dependencies:
       '@babel/runtime': 7.26.10
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -12094,7 +12094,7 @@ snapshots:
       marked: 15.0.7
       prismjs: 1.30.0
 
-  '@mui/internal-scripts@2.0.3':
+  '@mui/internal-scripts@2.0.4':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.26.10)
@@ -12330,7 +12330,7 @@ snapshots:
 
   '@next/env@15.2.2': {}
 
-  '@next/eslint-plugin-next@15.2.1':
+  '@next/eslint-plugin-next@15.2.2':
     dependencies:
       fast-glob: 3.3.1
 

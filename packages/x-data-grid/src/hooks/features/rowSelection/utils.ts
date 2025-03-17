@@ -13,6 +13,7 @@ import type {
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
 import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -155,9 +156,9 @@ export const findRowsToSelect = (
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
   addRow: (rowId: GridRowId) => void,
+  rowSelectionManager: RowSelectionManager = gridRowSelectionManagerSelector(apiRef),
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
-  const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
   if (!autoSelectDescendants && !autoSelectParents) {
@@ -182,7 +183,10 @@ export const findRowsToSelect = (
         return false;
       }
       const node = tree[rowId];
-      if (node?.type !== 'group') {
+      if (!node) {
+        return false;
+      }
+      if (node.type !== 'group') {
         return true;
       }
       return node.children.every(checkAllDescendantsSelected);
@@ -192,7 +196,7 @@ export const findRowsToSelect = (
       const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
       if (siblings.length === 0 || siblings.every(checkAllDescendantsSelected)) {
         const rowNode = tree[rowId] as GridGroupNode;
-        const parent = rowNode.parent;
+        const parent = rowNode?.parent;
         if (
           parent != null &&
           parent !== GRID_ROOT_GROUP_ID &&
