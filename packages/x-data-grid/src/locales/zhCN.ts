@@ -188,18 +188,13 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: '每页行数:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} 共 ${count !== -1 ? count : `超过 ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `约 ${estimated}` : `超过 ${to}`;
+    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return '第一页';

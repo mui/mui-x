@@ -187,18 +187,13 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: '每頁數量:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
+    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return '第一頁';
