@@ -16,7 +16,9 @@ import {
   ValidateDateTimeProps,
   ValidateDateTimePropsToDefault,
 } from '../validation/validateDateTime';
-import { PickerValue } from '../internals/models';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -35,12 +37,22 @@ export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends bo
         ...internalProps,
         ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
       }),
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
-        return localeText.openDatePickerDialogue(formattedValue);
-      },
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure],
+  );
+}
+
+function useOpenPickerButtonAriaLabel() {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
+
+  return React.useCallback(
+    (value: PickerValue) => {
+      const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+      return translations.openDatePickerDialogue(formattedValue);
+    },
+    [translations, utils],
   );
 }
 
@@ -88,8 +100,8 @@ export type UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure ext
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeValidationError,
-    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeProps,
+    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeManagerFieldInternalProps<
@@ -104,15 +116,6 @@ export interface DateTimeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeProps,
     AmPmProps {}
-
-interface DateTimeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeValidationError
-    >,
-    ValidateDateTimeProps {}
 
 type DateTimeManagerFieldPropsToDefault =
   | 'format'
@@ -131,6 +134,6 @@ interface GetDateTimeFieldInternalPropsDefaultsParameters
 
 interface GetDateTimeFieldInternalPropsDefaultsReturnValue
   extends Pick<
-    DateTimeManagerFieldInternalPropsWithDefaults<true>,
+    PickerManagerFieldInternalPropsWithDefaults<UseDateTimeManagerReturnValue<true>>,
     DateTimeManagerFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
   > {}

@@ -619,6 +619,38 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
       expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
+
+    it('should not auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should not auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
   });
 
   describe('prop: rowSelectionPropagation = { descendants: true, parents: false }', () => {
@@ -685,6 +717,41 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current?.getSelectedRows().size).to.equal(15);
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
       expect(apiRef.current?.getSelectedRows().size).to.equal(0);
+    });
+
+    it('should not auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
+      );
     });
 
     describe('prop: isRowSelectable', () => {
@@ -789,6 +856,41 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current?.getSelectedRows()).to.have.keys([3, 4, 5, 6, 7]);
     });
 
+    it('should auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
+      );
+    });
+
+    it('should not auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
     describe('prop: isRowSelectable', () => {
       it('should not auto select a parent if not allowed', async () => {
         const { user } = render(
@@ -869,6 +971,44 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
       await user.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
+      );
+    });
+
+    it('should auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
+      );
     });
 
     describe('prop: keepNonExistentRowsSelected = true', () => {

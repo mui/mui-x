@@ -18,8 +18,11 @@ const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
   'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {

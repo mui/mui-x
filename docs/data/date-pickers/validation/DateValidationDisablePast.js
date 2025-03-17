@@ -4,9 +4,10 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const today = dayjs();
@@ -19,9 +20,10 @@ export default function DateValidationDisablePast() {
       <DemoContainer
         components={[
           'DatePicker',
-          'DateTimePicker',
           'TimePicker',
+          'DateTimePicker',
           'DateRangePicker',
+          'TimeRangePicker',
           'DateTimeRangePicker',
         ]}
       >
@@ -44,6 +46,9 @@ export default function DateValidationDisablePast() {
         </DemoItem>
         <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[yesterday, today]} disablePast />
+        </DemoItem>
+        <DemoItem label="TimeRangePicker" component="TimeRangePicker">
+          <TimeRangePicker defaultValue={[yesterday, today]} disablePast />
         </DemoItem>
         <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker defaultValue={[yesterday, today]} disablePast />

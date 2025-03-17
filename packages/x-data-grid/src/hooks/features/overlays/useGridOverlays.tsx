@@ -8,7 +8,7 @@ import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
 import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
 import type { GridOverlayType } from '../../../components/base/GridOverlays';
-import { gridVisibleColumnDefinitionsSelector } from '..';
+import { gridVisibleColumnDefinitionsSelector } from '../columns';
 
 /**
  * Uses the grid state to determine which overlay to display.

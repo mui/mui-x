@@ -13,6 +13,7 @@ import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -58,7 +59,8 @@ export interface MarkPlotProps
  */
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();

@@ -4,13 +4,10 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
-  AreaPlotProps,
   LineChartProps,
   LineHighlightPlot,
   LinePlot,
-  LinePlotProps,
   MarkPlot,
-  MarkPlotProps,
 } from '@mui/x-charts/LineChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -22,113 +19,16 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartContainerProProps } from '../ChartContainerPro';
-import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
-function AreaPlotZoom(props: AreaPlotProps) {
-  const isInteracting = useIsZoomInteracting();
-  return <AreaPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
-}
-
-AreaPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when a line area item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
-function LinePlotZoom(props: LinePlotProps) {
-  const isInteracting = useIsZoomInteracting();
-  return <LinePlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
-}
-
-LinePlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
-function MarkPlotZoom(props: MarkPlotProps) {
-  const isInteracting = useIsZoomInteracting();
-  return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
-}
-
-MarkPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
 export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'line', LineChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig'
+    > {}
 
 /**
  * Demos:
@@ -186,15 +86,15 @@ const LineChartPro = React.forwardRef(function LineChartPro(
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
-            <AreaPlotZoom {...areaPlotProps} />
-            <LinePlotZoom {...linePlotProps} />
+            <AreaPlot {...areaPlotProps} />
+            <LinePlot {...linePlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-            <MarkPlotZoom {...markPlotProps} />
+            <MarkPlot {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
           {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
