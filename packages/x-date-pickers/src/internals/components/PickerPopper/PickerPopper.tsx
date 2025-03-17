@@ -331,8 +331,9 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerPopper' });
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
-  const { open, triggerRef, popupRef, reduceAnimations } = usePickerContext();
-  const { dismissViews, doesTheCurrentViewHasAnUI, viewContainerRole } = usePickerPrivateContext();
+  const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { dismissViews, getCurrentViewMode, triggerElement, viewContainerRole } =
+    usePickerPrivateContext();
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
@@ -350,7 +351,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
-    if (viewContainerRole === 'tooltip' || !doesTheCurrentViewHasAnUI()) {
+    if (viewContainerRole === 'tooltip' || getCurrentViewMode() === 'field') {
       return;
     }
 
@@ -368,7 +369,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, viewContainerRole, doesTheCurrentViewHasAnUI]);
+  }, [open, viewContainerRole, getCurrentViewMode]);
 
   const classes = useUtilityClasses(classesProp);
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
@@ -423,7 +424,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
       role: viewContainerRole == null ? undefined : viewContainerRole,
       open,
       placement,
-      anchorEl: triggerRef.current,
+      anchorEl: triggerElement,
       onKeyDown: handleKeyDown,
     },
     className: classes.root,

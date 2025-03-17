@@ -68,4 +68,4 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color'> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {}

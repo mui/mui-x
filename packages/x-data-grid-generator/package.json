@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.0.0-alpha.13",
+  "version": "8.0.0-alpha.14",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -33,7 +33,7 @@
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@mui/x-data-grid-premium": "workspace:*",
     "chance": "^1.1.12",
     "clsx": "^2.1.1",

@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { OnErrorProps, PickersTimezone } from '../models';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
+import type { PickerValueManager } from '../internals/models';
 import { PickerValidValue } from '../internals/models';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {

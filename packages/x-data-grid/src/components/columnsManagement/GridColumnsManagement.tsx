@@ -374,6 +374,7 @@ GridColumnsManagement.propTypes = {
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
     placeholder: PropTypes.string,
+    role: PropTypes.string,
     size: PropTypes.oneOf(['medium', 'small']),
     slotProps: PropTypes.object,
     style: PropTypes.object,
@@ -471,7 +472,7 @@ const GridColumnsManagementEmptyText = styled('div', {
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(1, 0),
   alignSelf: 'center',
-  fontSize: vars.typography.body.fontSize,
+  font: vars.typography.font.body,
 });
 
 export { GridColumnsManagement };

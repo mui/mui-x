@@ -2,7 +2,6 @@ import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
-import * as packageJson from '../../package.json';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Priority to the config (e.g. in code, env)
@@ -57,7 +56,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Telemetry-Client-Version': packageJson.version,
+          'X-Telemetry-Client-Version': process.env.MUI_VERSION ?? '<dev>',
           'X-Telemetry-Node-Env': (process.env.NODE_ENV as any) ?? '<unknown>',
         },
         body: JSON.stringify([eventPayload]),
