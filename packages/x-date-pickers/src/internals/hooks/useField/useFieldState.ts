@@ -32,12 +32,8 @@ import {
   InferFieldSection,
   PickerManager,
 } from '../../../models';
-<<<<<<< HEAD
 import { useValidation } from '../../../validation';
-import { useControlledValueWithTimezone } from '../useValueWithTimezone';
-=======
 import { useControlledValue } from '../useControlledValue';
->>>>>>> master
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
