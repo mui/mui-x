@@ -352,7 +352,7 @@ There are a few limitations to the row selection propagation:
 
 - Row selection propagation is a client-side feature and is not supported with the [server-side data source](/x/react-data-grid/server-side-data/).
 
-- If you are using the state setter method `apiRef.current.setRowSelectionModel` you need to explicitly compute the selection model with the rows with propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel` and pass it.
+- If you are using the state setter method `apiRef.current.setRowSelectionModel()` you need to explicitly compute the selection model with the rows with propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel()` and pass it.
 
   ```ts
   const selectionModelWithPropagation =
