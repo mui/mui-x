@@ -168,28 +168,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '显示',
   collapseDetailPanel: '折叠',
 
-  // Pagination
-  paginationRowsPerPage: '每页行数:',
-  paginationDisplayedRows: ({ from, to, count, estimated }) => {
-    if (!estimated) {
-      return `${from}–${to} 共 ${count !== -1 ? count : `超过 ${to}`}`;
-    }
-    const estimatedLabel = estimated && estimated > to ? `约 ${estimated}` : `超过 ${to}`;
-    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
-  },
-  paginationItemAriaLabel: (type) => {
-    if (type === 'first') {
-      return '第一页';
-    }
-    if (type === 'last') {
-      return '最后一页';
-    }
-    if (type === 'next') {
-      return '下一页';
-    }
-    return '上一页';
-  },
-
   // Row reordering text
   rowReorderingHeaderName: '重新排列行',
 

@@ -167,28 +167,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '展開',
   collapseDetailPanel: '摺疊',
 
-  // Pagination
-  paginationRowsPerPage: '每頁數量:',
-  paginationDisplayedRows: ({ from, to, count, estimated }) => {
-    if (!estimated) {
-      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
-    }
-    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
-    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
-  },
-  paginationItemAriaLabel: (type) => {
-    if (type === 'first') {
-      return '第一頁';
-    }
-    if (type === 'last') {
-      return '最後一頁';
-    }
-    if (type === 'next') {
-      return '下一頁';
-    }
-    return '上一頁';
-  },
-
   // Row reordering text
   rowReorderingHeaderName: '排序',
 
