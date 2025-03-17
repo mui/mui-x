@@ -34,12 +34,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const radius = getRadius(t);
 
-  const fontBody = t.vars
-    ? ((t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2))
-    : formatFont(t.typography.body2);
-  const fontSmall = t.vars
-    ? ((t.vars as any)?.font?.caption ?? formatFont(t.typography.caption))
-    : formatFont(t.typography.caption);
+  const fontBody = (t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2));
+  const fontSmall = (t.vars as any)?.font?.caption ?? formatFont(t.typography.caption);
 
   const k = vars.keys;
 
