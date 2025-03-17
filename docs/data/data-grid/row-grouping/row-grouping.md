@@ -346,12 +346,30 @@ The selected rows that do not pass the filtering criteria are automatically dese
 :::
 
 :::warning
-If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation doesn't apply.
-:::
+There are a few limitations to the row selection propagation:
 
-:::warning
-Row selection propagation is a client-side feature and is not supported with the [server-side data source](/x/react-data-grid/server-side-data/).
-:::
+- If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation doesn't apply.
+
+- Row selection propagation is a client-side feature and is not supported with the [server-side data source](/x/react-data-grid/server-side-data/).
+
+- If you are using the state setter method `apiRef.current.setRowSelectionModel` you need to explicitly compute the selection model with the rows with propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel` and pass it.
+
+  ```ts
+  const selectionModelWithPropagation =
+    apiRef.current.getPropagatedRowSelectionModel({
+      type: 'include',
+      ids: new Set([1, 2, 3]),
+    });
+  apiRef.current.setRowSelectionModel(selectionModelWithPropagation);
+  ```
+
+  Checkout the [API section](/x/react-data-grid/row-selection/#apiref) for signatures of these methods.
+
+- If you are using the `keepNonExistentRowsSelected` prop, the row selection propagation will not apply automatically to the rows being added that were part of the selection model, but didn't exist in the previous rows.
+
+  Consider opening a [GitHub issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml) if you need this behavior.
+
+  :::
 
 ## Get the rows in a group
 
