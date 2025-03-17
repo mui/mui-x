@@ -165,9 +165,9 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       {...other}
       {...slotProps?.root}
       slotProps={{
-        input: {
+        htmlInput: {
           max: isDateTime ? '9999-12-31T23:59' : '9999-12-31',
-          ...slotProps?.root?.slotProps?.input,
+          ...slotProps?.root?.slotProps?.htmlInput,
         },
       }}
     />

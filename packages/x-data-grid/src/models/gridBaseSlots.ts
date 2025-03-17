@@ -236,7 +236,7 @@ export type InputProps = {
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
   slotProps?: {
-    input?: React.InputHTMLAttributes<HTMLInputElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
 };
 
@@ -303,7 +303,7 @@ export type TextFieldProps = {
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
-    input?: Partial<InputProps>;
+    input?: Omit<Partial<InputProps>, 'slotProps'>;
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
