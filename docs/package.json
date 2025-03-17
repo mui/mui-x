@@ -80,7 +80,7 @@
     "next": "^15.2.2",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.3",
-    "prismjs": "^1.29.0",
+    "prismjs": "^1.30.0",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-docgen": "^5.4.3",
