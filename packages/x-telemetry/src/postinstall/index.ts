@@ -17,12 +17,12 @@ import { TelemetryStorage } from './storage';
     return;
   }
 
-  const storage = new TelemetryStorage({
-    distDir: path.join(process.cwd()),
+  const storage = TelemetryStorage.init({
+    distDir: process.cwd(),
   });
 
-  const [environmentInfo, projectId, machineId] = await Promise.all([
-    getEnvironmentInfo(),
+  const environmentInfo = getEnvironmentInfo();
+  const [projectId, machineId] = await Promise.all([
     getAnonymousProjectId(),
     getAnonymousMachineId(),
   ]);
