@@ -95,17 +95,15 @@ export const usePanOnDrag = (
       return state.memo;
     });
 
-    const panStartHandler = instance.addInteractionListener('dragStart', (state) => {
+    const panStartHandler = instance.addInteractionListener('dragStart', () => {
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
       setIsInteracting(true);
-      return state.memo;
     });
 
-    const panEndHandler = instance.addInteractionListener('dragEnd', (state) => {
+    const panEndHandler = instance.addInteractionListener('dragEnd', () => {
       setIsInteracting(false);
-      return state.memo;
     });
 
     return () => {
