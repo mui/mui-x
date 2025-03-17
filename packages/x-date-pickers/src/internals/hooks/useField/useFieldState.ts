@@ -32,8 +32,12 @@ import {
   InferFieldSection,
   PickerManager,
 } from '../../../models';
+<<<<<<< HEAD
 import { useValidation } from '../../../validation';
 import { useControlledValueWithTimezone } from '../useValueWithTimezone';
+=======
+import { useControlledValue } from '../useControlledValue';
+>>>>>>> master
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
@@ -86,7 +90,7 @@ export const useFieldState = <
     forwardedProps: { error: errorProp },
   } = parameters;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'a field component',
     timezone: timezoneProp,
     value: valueProp,
@@ -159,7 +163,7 @@ export const useFieldState = <
 
     const stateWithoutReferenceDate: Omit<UseFieldState<TValue>, 'referenceValue'> = {
       sections,
-      lastValue: value,
+      lastExternalValue: value,
       lastSectionsDependencies: { format, isRtl, locale: utils.locale },
       tempValueStrAndroid: null,
       characterQuery: null,
@@ -409,7 +413,7 @@ export const useFieldState = <
   });
 
   // If `prop.value` changes, we update the state to reflect the new value
-  if (value !== state.lastValue) {
+  if (value !== state.lastExternalValue) {
     let sections: InferFieldSection<TValue>[];
     if (
       sectionToUpdateOnNextInvalidDateRef.current != null &&
@@ -430,7 +434,7 @@ export const useFieldState = <
 
     setState((prevState) => ({
       ...prevState,
-      lastValue: value,
+      lastExternalValue: value,
       sections,
       sectionsDependencies: { format, isRtl, locale: utils.locale },
       referenceValue: fieldValueManager.updateReferenceValue(

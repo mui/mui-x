@@ -27,7 +27,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
@@ -151,7 +151,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'DateCalendar',
     timezone: timezoneProp,
     value: valueProp,

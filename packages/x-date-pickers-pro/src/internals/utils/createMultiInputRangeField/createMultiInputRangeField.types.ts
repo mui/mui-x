@@ -92,6 +92,7 @@ export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAny
       enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
     },
   ) => TManager;
+  allowTriggerShifting?: boolean;
 }
 
 export type CreateMultiInputRangeFieldReturnValue<TManager extends PickerAnyRangeManager> = ((

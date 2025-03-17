@@ -2,7 +2,7 @@
 import {
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useFieldInternalPropsWithDefaults,
   UseFieldReturnValue,
 } from '@mui/x-date-pickers/internals';
@@ -85,7 +85,7 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   } = internalPropsWithDefaults;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'useMultiInputRangeField',
     timezone: timezoneProp,
     value: valueProp,

@@ -68,7 +68,7 @@ export {
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from './constants/dimensions';
 
-export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
+export { useControlledValue } from './hooks/useControlledValue';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
