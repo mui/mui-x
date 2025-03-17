@@ -3,10 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { select } from '@mui/x-charts-vendor/d3-selection';
-import { easeCubicInOut } from '@mui/x-charts-vendor/d3-ease';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import useForkRef from '@mui/utils/useForkRef';
-import { ANIMATION_DURATION_MS } from '../constants';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
 
@@ -63,7 +62,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
       transitionRef.current = select(element)
         .transition(TRANSITION_NAME)
         .duration(skip ? 0 : ANIMATION_DURATION_MS)
-        .ease(easeCubicInOut)
+        .ease(ANIMATION_TIMING_FUNCTION_JS)
         .attrTween('d', () => (t) => {
           const interpolatedD = stringInterpolator(t);
 
