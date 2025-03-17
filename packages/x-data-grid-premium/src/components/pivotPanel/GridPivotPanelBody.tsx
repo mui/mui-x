@@ -109,7 +109,7 @@ const GridPivotPanelSectionTitle = styled('div', {
   justifyContent: 'space-between',
   alignItems: 'center',
   gap: vars.spacing(1),
-  ...vars.typography.body,
+  font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
 });
 
@@ -137,7 +137,7 @@ const GridPivotPanelPlaceholder = styled('div', {
   height: '100%',
   padding: vars.spacing(0, 1),
   color: vars.colors.foreground.muted,
-  ...vars.typography.body,
+  font: vars.typography.font.body,
 });
 
 export interface FieldTransferObject {
