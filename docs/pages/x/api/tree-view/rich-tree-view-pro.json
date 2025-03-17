@@ -183,10 +183,59 @@
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
-      "class": null
+      "class": "MuiRichTreeViewPro-item"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeViewPro-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiRichTreeViewPro-itemContent",
+      "description": "Styles applied to the item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemDragAndDropOverlay",
+      "className": "MuiRichTreeViewPro-itemDragAndDropOverlay",
+      "description": "Styles applied to the item's drag and drop overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemErrorIcon",
+      "className": "MuiRichTreeViewPro-itemErrorIcon",
+      "description": "Styles applied to the item's error icon element",
+      "isGlobal": false
+    },
+    {
+      "key": "itemGroupTransition",
+      "className": "MuiRichTreeViewPro-itemGroupTransition",
+      "description": "Styles applied to the item's transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemIconContainer",
+      "className": "MuiRichTreeViewPro-itemIconContainer",
+      "description": "Styles applied to the item's icon container element icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabel",
+      "className": "MuiRichTreeViewPro-itemLabel",
+      "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabelInput",
+      "className": "MuiRichTreeViewPro-itemLabelInput",
+      "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeViewPro",

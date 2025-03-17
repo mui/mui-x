@@ -75,7 +75,7 @@
       "name": "errorIcon",
       "description": "The component that is rendered when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
       "default": "TreeItemErrorContainer",
-      "class": null
+      "class": "MuiTreeItem-errorIcon"
     },
     {
       "name": "loadingIcon",

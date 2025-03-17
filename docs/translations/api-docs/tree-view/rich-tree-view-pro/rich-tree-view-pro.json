@@ -144,7 +144,38 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "itemCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s checkbox element"
+    },
+    "itemContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s content element"
+    },
+    "itemDragAndDropOverlay": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s drag and drop overlay element"
+    },
+    "itemErrorIcon": { "description": "Styles applied to the item&#39;s error icon element" },
+    "itemGroupTransition": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s transition element"
+    },
+    "itemIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s icon container element icon"
+    },
+    "itemLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s label element"
+    },
+    "itemLabelInput": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the item&#39;s label input element (visible only",
+      "conditions": "editing is enabled)"
+    }
+  },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
