@@ -2,7 +2,7 @@
   { "name": "AllSeriesType", "kind": "TypeAlias" },
   { "name": "AnimatedArea", "kind": "Function" },
   { "name": "AnimatedAreaProps", "kind": "Interface" },
-  { "name": "AnimatedLine", "kind": "Function" },
+  { "name": "AnimatedLine", "kind": "Variable" },
   { "name": "AnimatedLineProps", "kind": "Interface" },
   { "name": "AreaElement", "kind": "Function" },
   { "name": "areaElementClasses", "kind": "Variable" },
