@@ -54,7 +54,6 @@ export default function QuickFilteringDiacritics() {
           disableDensitySelector
           hideFooter
           showToolbar
-          slotProps={{ toolbar: { showQuickFilter: true } }}
           ignoreDiacritics={ignoreDiacritics}
         />
       </div>

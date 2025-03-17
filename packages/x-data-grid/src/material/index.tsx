@@ -600,7 +600,7 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIFocusTrap open disableEnforceFocus>
+    <MUIFocusTrap open disableEnforceFocus disableAutoFocus>
       <div tabIndex={-1}>{content}</div>
     </MUIFocusTrap>
   );

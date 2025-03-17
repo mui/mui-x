@@ -71,7 +71,6 @@ export default function ServerSideTreeData() {
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
           showToolbar
-          slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>
     </div>
