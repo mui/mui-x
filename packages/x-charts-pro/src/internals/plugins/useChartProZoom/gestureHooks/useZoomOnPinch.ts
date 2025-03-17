@@ -56,8 +56,8 @@ export const useZoomOnPinch = (
           const isZoomIn = state.direction[0] > 0;
           const scaleRatio = 1 + (isZoomIn ? scaledStep : -scaledStep);
 
-          // If the scale ratio is 0, it means the pinch gesture is not valid.
-          if (scaleRatio === 0) {
+          // If the delta is 0, it means the pinch gesture is not valid.
+          if (state.delta[0] === 0) {
             return zoom;
           }
 

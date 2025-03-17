@@ -81,12 +81,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         },
         // filterTaps: true,
       },
-      pinch: {
-        scaleBounds: {
-          min: 0.1,
-          max: 2,
-        },
-      },
+      pinch: {},
     },
   );
 
