@@ -1,7 +1,9 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { NestedClasses } from '../internals/models';
+import { TreeItemNonStateClasses } from '../TreeItem/treeItemClasses';
 
-export interface RichTreeViewClasses {
+export interface RichTreeViewClasses extends NestedClasses<'item', keyof TreeItemNonStateClasses> {
   /** Styles applied to the root element. */
   root: string;
 }
@@ -14,4 +16,12 @@ export function getRichTreeViewUtilityClass(slot: string): string {
 
 export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('MuiRichTreeView', [
   'root',
+  'item',
+  'itemContent',
+  'itemGroupTransition',
+  'itemIconContainer',
+  'itemLabel',
+  'itemCheckbox',
+  'itemLabelInput',
+  'itemDragAndDropOverlay',
 ]);
