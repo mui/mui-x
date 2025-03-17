@@ -11,5 +11,6 @@
     pageSizeOptions={pageSizeOptions}
     initialState={initialStateWithPagination}
     showToolbar
+    defaultGroupingExpansionDepth={-1}
   />
 </div>
