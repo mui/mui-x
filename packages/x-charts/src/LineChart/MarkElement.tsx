@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import { ANIMATION_DURATION_MS } from '../constants';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
@@ -26,7 +26,7 @@ const MarkElementPath = styled('path', {
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'transform, transform-origin',
-    transitionTimingFunction: 'ease-in',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
 
