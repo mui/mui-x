@@ -313,11 +313,11 @@ You can force the filtering to be applied to other grouping criteria using the `
 
 When using `rowGroupingColumnMode = "multiple"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the grouping criteria of each grouping column.
 
-If you're rendering leaves on one of those columns with the `leafField` property of `groupingColDef`, sorting and filtering will be applied on the leaves for this grouping column based on the `sortComparator` and `filterOperators` of the leave's original column.
+If you're rendering leaves in one of those columns with the `leafField` property of `groupingColDef`, then sorting and filtering will be applied on the leaves for this grouping column based on the `sortComparator` and `filterOperators` of their original column.
 
 If you want to render leaves but apply the sorting and filtering on the grouping criteria of the column, you can force it by setting the `mainGroupingCriteria` property `groupingColDef` to be equal to the grouping criteria.
 
-In the example below, sorting and filtering from the `company` grouping column are applied to the `company` field, while sorting and filtering from the `director` grouping column are applied to the `director` field even though it has leaves.
+In the example below, sorting and filtering from the **Company** grouping column are applied to the `company` field, while sorting and filtering from the **Director** grouping column are applied to the `director` field even though it has leaves.
 
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -327,9 +327,8 @@ If you're dynamically switching the `leafField` or `mainGroupingCriteria`, sorti
 
 ## Automatic parent and children selection
 
-By default, selecting a parent row selects all of its descendants automatically.
-You can customize this behavior by using the `rowSelectionPropagation` prop.
-
+By default, selecting a parent row also selects all of its descendants.
+You can customize this behavior using the `rowSelectionPropagation` prop.
 Here's how it's structured:
 
 ```ts
@@ -341,37 +340,32 @@ type GridRowSelectionPropagation = {
 
 ### Row selection propagation
 
-:::warning
-Row selection propagation is only supported on the client side.
-:::
-
 When `rowSelectionPropagation.descendants` is set to `true`:
 
-- Selecting a parent selects all its filtered descendants automatically
-- Deselecting a parent row deselects all its filtered descendants automatically
+- Selecting a parent selects all of its filtered descendants automatically
+- Deselecting a parent row deselects of all its filtered descendants automatically
 
 When `rowSelectionPropagation.parents` is set to `true`:
 
-- Selecting all the filtered descendants of a parent selects the parent automatically
-- Deselecting a descendant of a selected parent deselects the parent automatically
+- Selecting all the filtered descendants of a parent also selects the parent automatically
+- Deselecting a descendant of a selected parent also deselects the parent automatically
 
-The example below demonstrates the usage of the `rowSelectionPropagation` prop.
+The example below demonstrates the usage of the `rowSelectionPropagation` prop—use the checkboxes at the top to see how the selection behavior changes between parents and children.
 
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The row selection propagation also affects the **Select all** checkbox like any other checkbox group.
-
-The selected rows that do not pass the filtering criteria are automatically deselected when the filter is applied.
+Row selection propagation also affects the **Select all** checkbox like any other checkbox group.
+Selected rows that do not pass the filtering criteria are automatically deselected when the filter is applied.
 Row selection propagation is not applied to the unfiltered rows.
 
 :::warning
-There are a few limitations to the row selection propagation:
+Row selection propagation has some limitations:
 
-- If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation doesn't apply.
+- If `props.disableMultipleRowSelection` is set to `true`, then row selection propagation won't apply.
 
-- Row selection propagation is a client-side feature and is not supported with the [server-side data source](/x/react-data-grid/server-side-data/).
+- Row selection propagation is a client-side feature and does not support [server-side data sources](/x/react-data-grid/server-side-data/).
 
-- If you are using the state setter method `apiRef.current.setRowSelectionModel()` you need to explicitly compute the selection model with the rows with propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel()` and pass it.
+- If you're using the state setter method `apiRef.current.setRowSelectionModel()`, you must explicitly compute the selection model with the rows that have propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel()` and pass it as shown below:
 
   ```ts
   const selectionModelWithPropagation =
@@ -382,17 +376,16 @@ There are a few limitations to the row selection propagation:
   apiRef.current.setRowSelectionModel(selectionModelWithPropagation);
   ```
 
-  Checkout the [API section](/x/react-data-grid/row-selection/#apiref) for signatures of these methods.
+  See [the `apiRef` section below](/x/react-data-grid/row-selection/#apiref) for the signatures of these methods.
 
-- If you are using the `keepNonExistentRowsSelected` prop, the row selection propagation will not apply automatically to the rows being added that were part of the selection model, but didn't exist in the previous rows.
-
+- If you're using the `keepNonExistentRowsSelected` prop, then row selection propagation will not automatically apply to the rows being added that were part of the selection model but didn't exist in the previous rows.
   Consider opening a [GitHub issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml) if you need this behavior.
 
-  :::
+:::
 
 ## Get all rows in a group
 
-Use the `apiRef.current.getRowGroupChildren` method to get the IDs of all rows in a group.
+Use the `apiRef.current.getRowGroupChildren()` method to get the IDs of all rows in a group.
 The results will not contain autogenerated rows such as subgroup rows or aggregation footers.
 
 ```ts
@@ -407,7 +400,7 @@ const rows: GridRowId[] = apiRef.current.getRowGroupChildren({
 });
 ```
 
-Use `getGroupRowIdFromPath` to get row IDs from within all groups that match a given grouping criterion:
+Use `getGroupRowIdFromPath()` to get row IDs from within all groups that match a given grouping criterion:
 
 ```ts
 const rows = apiRef.current.getRowGroupChildren({
@@ -430,13 +423,13 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With the row group panel, users would be able to control which columns are used for grouping by dragging them inside the panel.
 
-## Full example
-
-{{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Advanced use cases
 
+The demo below provides an example of row grouping that's closer to a real-world use case for this feature, grouping a large dataset of contacts based on the types of goods they provide (via the hidden **Commodity** column).
+
 See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
+
+{{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef
 
