@@ -24,6 +24,7 @@ const TRANSITION_NAME = 'MuiAnimatedLine-transition';
 function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
   const lastInterpolatedDRef = React.useRef(props.d);
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
+  const recentDRef = React.useRef(props.d);
 
   /*
    * We need to interrupt the animation when:
@@ -49,6 +50,10 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
     };
   }, []);
 
+  React.useLayoutEffect(() => {
+    recentDRef.current = props.d;
+  }, [props.d]);
+
   /* Handles `skip` changing.
    * If it happens while the element is transitioning, it should jump to the finished state of the transition
    * immediately. */
@@ -59,6 +64,8 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
     if (element && transition) {
       if (skip) {
         interrupt(element, TRANSITION_NAME);
+        element.setAttribute('d', recentDRef.current);
+        lastInterpolatedDRef.current = recentDRef.current;
       } else {
         // TODO: start animation
       }
