@@ -44,7 +44,7 @@ function ToolbarWithPromptInput() {
       setPrompt(selectedPrompt);
       if (selectedPrompt) {
         apiRef.current.setLoading(true);
-        const result = await mockPromptResolver(context, selectedPrompt);
+        const result = await mockPromptResolver(selectedPrompt, context);
         apiRef.current.unstable_applyPromptResult(result);
         apiRef.current.setLoading(false);
       }

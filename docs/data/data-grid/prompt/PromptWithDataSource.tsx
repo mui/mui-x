@@ -46,10 +46,7 @@ function ToolbarWithPromptInput() {
   const [prompt, setPrompt] = React.useState('');
 
   const context = React.useMemo(
-    () =>
-      apiRef.current.unstable_getPromptContext(
-        apiRef.current.unstable_collectSampleData(),
-      ),
+    () => apiRef.current.unstable_getPromptContext(true),
     [apiRef],
   );
 
@@ -59,7 +56,7 @@ function ToolbarWithPromptInput() {
       setPrompt(selectedPrompt);
       if (selectedPrompt) {
         apiRef.current.setLoading(true);
-        const result = await mockPromptResolver(context, selectedPrompt);
+        const result = await mockPromptResolver(selectedPrompt, context);
         apiRef.current.unstable_applyPromptResult(result);
       }
     },
