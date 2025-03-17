@@ -70,7 +70,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
   const store = useStore();
-  const isOpen = useSelector(
+  const hasData = useSelector(
     store,
     // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
@@ -80,7 +80,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
+  const popperOpen = pointerType !== null && hasData; // tooltipHasData;
 
   React.useEffect(() => {
     const positionHandler = instance.addMultipleInteractionListeners(['move', 'drag'], (state) => {

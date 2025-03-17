@@ -79,7 +79,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           buttons: 1,
           keys: false,
         },
-        preventScroll: true,
       },
       pinch: {},
     },

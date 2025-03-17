@@ -60,20 +60,27 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const removePointerHandler = instance.addInteractionListener('dragEnd', () => {
+    const removePointerHandler = instance.addInteractionListener('dragEnd', (state) => {
       // TODO: We can check and only close when it is not a tap with `!state.tap`
       // This would allow users to click/tap on the chart to display the tooltip.
-      setPointerType(null);
+
+      // Only close the tooltip on mobile, which doesn't trigger a hover event.
+      if (!state.hovering) {
+        setPointerType(null);
+      }
     });
 
     // Move is mouse, Drag is both mouse and touch.
     const setPointerHandler = instance.addMultipleInteractionListeners(
-      ['moveStart', 'dragStart'],
+      ['move', 'drag'],
       (state) => {
-        setPointerType({
-          height: state.event.height,
-          pointerType: state.event.pointerType as PointerType['pointerType'],
-        });
+        // @ts-expect-error tap doesn't exist on move.
+        if (!state.first && !state.tap) {
+          setPointerType({
+            height: state.event.height,
+            pointerType: state.event.pointerType as PointerType['pointerType'],
+          });
+        }
       },
     );
 
