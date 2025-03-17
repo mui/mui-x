@@ -50,7 +50,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žádné sloupce',
   columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
   columnsManagementReset: 'Resetovat',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Vyčistit',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
@@ -66,9 +66,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'neobsahuje',
   filterOperatorEquals: 'rovná se',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nerovná se',
   filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -89,9 +89,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Neobsahuje',
   headerFilterOperatorEquals: 'Rovná se',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nerovná se',
   headerFilterOperatorStartsWith: 'Začíná na',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',
@@ -117,7 +117,7 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Možnosti sloupce ${columnName}`,
   columnMenuShowColumns: 'Zobrazit sloupce',
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',

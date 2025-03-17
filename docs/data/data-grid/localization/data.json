@@ -67,7 +67,7 @@
     "languageTag": "cs-CZ",
     "importName": "csCZ",
     "localeName": "Czech",
-    "missingKeysCount": 6,
+    "missingKeysCount": 0,
     "totalKeysCount": 124,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/csCZ.ts"
   },
@@ -235,7 +235,7 @@
     "languageTag": "sk-SK",
     "importName": "skSK",
     "localeName": "Slovak",
-    "missingKeysCount": 7,
+    "missingKeysCount": 0,
     "totalKeysCount": 124,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/skSK.ts"
   },
