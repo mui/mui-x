@@ -38,7 +38,8 @@ const zhTWPickers: Partial<PickersLocaleText<any>> = {
   datePickerToolbarTitle: '選擇日期',
   dateTimePickerToolbarTitle: '選擇日期和時間',
   timePickerToolbarTitle: '選擇時間',
-  dateRangePickerToolbarTitle: '選擇時間範圍',
+  dateRangePickerToolbarTitle: '選擇日期範圍',
+  timeRangePickerToolbarTitle: '選擇時間範圍',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
@@ -56,15 +57,13 @@ const zhTWPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}週`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `選擇日期，已選擇${formattedDate ?? utils.format(value, 'fullDate')}`
-      : '選擇日期',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `選擇時間，已選擇${formattedTime ?? utils.format(value, 'fullTime')}`
-      : '選擇時間',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `選擇範圍，已選擇的範圍是 ${formattedRange}` : '選擇範圍',
   fieldClearLabel: '清除',
 
   // Table labels

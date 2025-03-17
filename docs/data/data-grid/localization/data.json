@@ -36,24 +36,24 @@
     "importName": "zhHK",
     "localeName": "Chinese (Hong Kong)",
     "missingKeysCount": 0,
-    "totalKeysCount": 124,
-    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/zhHK.ts"
+    "totalKeysCount": 139,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhHK.ts"
   },
   {
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
     "missingKeysCount": 0,
-    "totalKeysCount": 124,
-    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/zhCN.ts"
+    "totalKeysCount": 139,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhCN.ts"
   },
   {
     "languageTag": "zh-TW",
     "importName": "zhTW",
     "localeName": "Chinese (Taiwan)",
     "missingKeysCount": 0,
-    "totalKeysCount": 124,
-    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/zhTW.ts"
+    "totalKeysCount": 139,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhTW.ts"
   },
   {
     "languageTag": "hr-HR",
