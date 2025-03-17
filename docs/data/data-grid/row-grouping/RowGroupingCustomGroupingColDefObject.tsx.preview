@@ -4,6 +4,6 @@
   disableRowSelectionOnClick
   initialState={initialState}
   groupingColDef={{
-    headerName: 'Group',
+    headerName: 'Director (by Company)',
   }}
 />
