@@ -495,13 +495,8 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "unstable_collectSampleData": {
-      "type": { "description": "(sampleCount?: number) =&gt; Record&lt;string, any[]&gt;" },
-      "required": true,
-      "isPremiumPlan": true
-    },
     "unstable_getPromptContext": {
-      "type": { "description": "(examples?: Record&lt;string, any[]&gt;) =&gt; string" },
+      "type": { "description": "(allowDataSampling?: boolean) =&gt; string" },
       "required": true,
       "isPremiumPlan": true
     },

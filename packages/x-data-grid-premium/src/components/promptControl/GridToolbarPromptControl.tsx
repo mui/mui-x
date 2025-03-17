@@ -42,7 +42,7 @@ const GridToolbarPromptControlRoot = styled('div', {
   flexDirection: 'row',
 });
 
-type GridToolbarPromptControlProps = {
+export type GridToolbarPromptControlProps = {
   /**
    * Allow taking couple of random cell values from each column to improve the prompt context.
    * If allowed, samples are taken from different rows.
@@ -58,11 +58,11 @@ type GridToolbarPromptControlProps = {
   /**
    * Called when the new prompt is ready to be processed.
    * Provides the prompt and the data context and expects the grid state updates to be returned.
-   * @param {string} context The context of the prompt
    * @param {string} query The query to process
+   * @param {string} context The context of the prompt
    * @returns {Promise<PromptResponse>} The grid state updates
    */
-  onPrompt: (context: string, query: string) => Promise<PromptResponse>;
+  onPrompt: (query: string, context: string) => Promise<PromptResponse>;
   /**
    * Called when an error occurs.
    * @param {string} error The error message
@@ -82,17 +82,17 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   const ownerState = { classes: rootProps.classes, recording: isRecording };
   const classes = useUtilityClasses(ownerState);
 
-  const context = React.useMemo(() => {
-    const examples = allowDataSampling ? apiRef.current.unstable_collectSampleData() : undefined;
-    return apiRef.current.unstable_getPromptContext(examples);
-  }, [apiRef, allowDataSampling]);
+  const context = React.useMemo(
+    () => apiRef.current.unstable_getPromptContext(allowDataSampling),
+    [apiRef, allowDataSampling],
+  );
 
   const processPrompt = React.useCallback(() => {
     setLoading(true);
     setError(null);
     apiRef.current.setLoading(true);
 
-    onPrompt(context, query)
+    onPrompt(query, context)
       .then(apiRef.current.unstable_applyPromptResult)
       .catch((promptError) => {
         setError(apiRef.current.getLocaleText('toolbarPromptControlErrorMessage'));

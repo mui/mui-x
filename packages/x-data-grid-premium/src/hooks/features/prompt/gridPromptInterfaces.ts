@@ -33,20 +33,14 @@ export type PromptResponse = {
  */
 export interface GridPromptApi {
   /**
-   * Collects sample data from the grid that can be used to improve the prompt context.
-   * It takes random values for all columns but from different rows to make the samples more random.
-   * @param {number} sampleCount The number of samples (randomized rows) to collect.
-   * Default is 5. Maximum is 20.
-   * If the number of rows in the grid is less than the sample count, all rows are used.
-   * @returns {Record<string, any[]>} The sample data.
-   */
-  unstable_collectSampleData: (sampleCount?: number) => Record<string, any[]>;
-  /**
    * Get the context for the prompt.
-   * @param {Record<string, any[]>} examples Column examples to be used to make the context more detailed and the response more accurate.
+   * @param {boolean} allowDataSampling Whether to use grid data as examples in the context.
+   * If true, random cell values from each column are used to make the context more detailed and the response more accurate.
+   * If false, the samples are only generated from the unstable_examples property of the column(s).
+   * Default is false.
    * @returns {string} The context for the prompt.
    */
-  unstable_getPromptContext: (examples?: Record<string, any[]>) => string;
+  unstable_getPromptContext: (allowDataSampling?: boolean) => string;
   /**
    * Use the prompt processing result to update all relevant parts of the grid state.
    * @param {PromptResponse} result The result of the prompt.

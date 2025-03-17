@@ -13,47 +13,46 @@ import { getValueOptions, getVisibleRows } from '@mui/x-data-grid-pro/internals'
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { PromptResponse } from './gridPromptInterfaces';
 
-const MAX_SAMPLE_COUNT = 20;
+const DEFAULT_SAMPLE_COUNT = 5;
 
 export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
 
-  const collectSampleData = React.useCallback(
-    (sampleCount = 5) => {
-      const columnExamples: Record<string, any[]> = {};
+  const collectSampleData = React.useCallback(() => {
+    const columnExamples: Record<string, any[]> = {};
 
-      columns.forEach((column) => {
-        columnExamples[column.field] = Array.from({
-          length: Math.min(sampleCount, rows.length, MAX_SAMPLE_COUNT),
-        }).map(() => {
-          const row = rows[Math.floor(Math.random() * rows.length)];
-          if (column.valueGetter) {
-            return column.valueGetter(row[column.field] as never, row, column, apiRef);
-          }
-          return row[column.field];
-        });
+    columns.forEach((column) => {
+      columnExamples[column.field] = Array.from({
+        length: Math.min(DEFAULT_SAMPLE_COUNT, rows.length),
+      }).map(() => {
+        const row = rows[Math.floor(Math.random() * rows.length)];
+        if (column.valueGetter) {
+          return column.valueGetter(row[column.field] as never, row, column, apiRef);
+        }
+        return row[column.field];
       });
+    });
 
-      return columnExamples;
-    },
-    [apiRef, columns, rows],
-  );
+    return columnExamples;
+  }, [apiRef, columns, rows]);
 
   const getPromptContext = React.useCallback(
-    (examples?: Record<string, any[]>) => {
+    (allowDataSampling = false) => {
+      const examples = allowDataSampling ? collectSampleData() : {};
+
       const columnsContext = columns.map((column) => ({
         field: column.field,
         description: column.description ?? null,
-        examples: examples?.[column.field] ?? column.unstable_examples ?? [],
+        examples: examples[column.field] ?? column.unstable_examples ?? [],
         type: column.type ?? 'string',
         allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
       }));
 
-      return `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`;
+      return JSON.stringify(columnsContext);
     },
-    [columns],
+    [columns, collectSampleData],
   );
 
   const applyPromptResult = React.useCallback(
@@ -119,7 +118,6 @@ export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
   useGridApiMethod(
     apiRef,
     {
-      unstable_collectSampleData: collectSampleData,
       unstable_getPromptContext: getPromptContext,
       unstable_applyPromptResult: applyPromptResult,
     },

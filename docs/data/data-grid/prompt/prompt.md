@@ -86,13 +86,14 @@ const PROMPT_RESOLVER_PROXY_BASE_URL =
     ? 'http://localhost:3000'
     : 'https://api.my-proxy.com';
 
-function processPrompt(context: string, query: string) {
-  const extendedContext = `The rows represent: List of employees with their company, position and start date\n\n${context}`;
+function processPrompt(query: string, context: string) {
+  const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
   return unstable_gridDefaultPromptResolver(
     `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/datagrid/prompt`,
-    extendedContext,
     query,
+    context,
+    additionalContext,
   );
 }
 ```
