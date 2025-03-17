@@ -6,6 +6,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
+  noColumnsOverlayLabel: 'Žiadne stĺpce',
+  noColumnsOverlayManageColumns: 'Spravovať stĺpce',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -38,6 +40,18 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Zadajte požiadavku…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Zadajte alebo nahrajte požiadavku…',
+  toolbarPromptControlRecordingPlaceholder: 'Počúvam požiadavku…',
+  toolbarPromptControlLabel: 'Vstup požiadavky',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrávať',
+  toolbarPromptControlRecordButtonActiveLabel: 'Zastaviť nahrávanie',
+  toolbarPromptControlSendActionLabel: 'Odoslať',
+  toolbarPromptControlSendActionAriaLabel: 'Odoslať požiadavku',
+  toolbarPromptControlErrorMessage:
+    'Pri spracovaní požiadavky došlo k chybe. Skúste to znova s inou požiadavkou.',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -49,8 +63,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Vyhľadať',
   columnsManagementNoColumns: 'Žiadne stĺpce',
   columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementReset: 'Resetovať',
+  columnsManagementDeleteIconLabel: 'Vymazať',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
@@ -66,9 +80,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'neobsahuje',
   filterOperatorEquals: 'rovná sa',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nerovná sa',
   filterOperatorStartsWith: 'začína s',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -89,9 +103,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Neobsahuje',
   headerFilterOperatorEquals: 'Rovná sa',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nerovná sa',
   headerFilterOperatorStartsWith: 'Začína s',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',
@@ -109,6 +123,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Väčší ako alebo rovný',
   'headerFilterOperator<': 'Menší ako',
   'headerFilterOperator<=': 'Menší ako alebo rovný',
+  headerFilterClear: 'Zrušiť filter',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -117,7 +132,7 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Ponuka stĺpca ${columnName}`,
   columnMenuShowColumns: 'Zobraziť stĺpce',
   columnMenuManageColumns: 'Spravovať stĺpce',
   columnMenuFilter: 'Filter',
@@ -197,6 +212,30 @@ const skSKGrid: Partial<GridLocaleText> = {
   detailPanelToggle: 'Prepnúť detail panelu',
   expandDetailPanel: 'Rozbaliť',
   collapseDetailPanel: 'Zbaliť',
+
+  // Pagination
+  paginationRowsPerPage: 'Riadkov na stránke:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} z ${count !== -1 ? count : `viac ako ${to}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to ? `približne ${estimated}` : `viac ako ${to}`;
+    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ísť na prvú stránku';
+    }
+    if (type === 'last') {
+      return 'Ísť na poslednú stránku';
+    }
+    if (type === 'next') {
+      return 'Ísť na ďaľšiu stránku';
+    }
+    // if (type === 'previous') {
+    return 'Ísť na predchádzajúcu stránku';
+  },
 
   // Row reordering text
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
