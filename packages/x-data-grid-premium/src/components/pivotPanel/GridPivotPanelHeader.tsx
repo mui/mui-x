@@ -58,7 +58,7 @@ const GridPivotPanelSwitchLabel = styled('span', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSwitchLabel',
 })<{ ownerState: OwnerState }>({
-  ...vars.typography.large,
+  font: vars.typography.font.large,
   fontWeight: vars.typography.fontWeight.medium,
 });
 

@@ -480,7 +480,7 @@ const GridColumnsManagementEmptyText = styled('div', {
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(1, 0),
   alignSelf: 'center',
-  fontSize: vars.typography.body.fontSize,
+  font: vars.typography.font.body,
 });
 
 export { GridColumnsManagement };
