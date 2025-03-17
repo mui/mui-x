@@ -441,6 +441,9 @@ const columns = [
   },
 ];
 
+const mainDataGridCellClassName = 'main-data-grid-cell';
+const getCellClassName = () => mainDataGridCellClassName;
+
 export default function PopularFeaturesDemo() {
   const apiRef = useGridApiRef();
 
@@ -503,10 +506,11 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',
           // Do not target cells in nested grids
-          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
+          [`.${gridClasses.cell}.${mainDataGridCellClassName}`]: {
             py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
