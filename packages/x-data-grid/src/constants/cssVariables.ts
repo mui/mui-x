@@ -61,6 +61,10 @@ const keys = {
     base: '--DataGrid-t-radius-base',
   },
   typography: {
+    font: {
+      body: '--DataGrid-t-typography-font-body',
+      small: '--DataGrid-t-typography-font-small',
+    },
     fontFamily: {
       base: '--DataGrid-t-typography-font-family-base',
     },
@@ -69,20 +73,6 @@ const keys = {
       regular: '--DataGrid-t-typography-font-weight-regular',
       medium: '--DataGrid-t-typography-font-weight-medium',
       bold: '--DataGrid-t-typography-font-weight-bold',
-    },
-    body: {
-      fontFamily: '--DataGrid-t-typography-body-font-family',
-      fontSize: '--DataGrid-t-typography-body-font-size',
-      fontWeight: '--DataGrid-t-typography-body-font-weight',
-      letterSpacing: '--DataGrid-t-typography-body-letter-spacing',
-      lineHeight: '--DataGrid-t-typography-body-line-height',
-    },
-    small: {
-      fontFamily: '--DataGrid-t-typography-small-font-family',
-      fontSize: '--DataGrid-t-typography-small-font-size',
-      fontWeight: '--DataGrid-t-typography-small-font-weight',
-      letterSpacing: '--DataGrid-t-typography-small-letter-spacing',
-      lineHeight: '--DataGrid-t-typography-small-line-height',
     },
   },
   transitions: {
