@@ -138,7 +138,7 @@ This automatically hides grouped columns when added to the model, and displays t
 This hook is not compatible with the deprecated column property `hide`.
 
 You can manage column visibility with `columnVisibilityModel`, `initialState`, or both together.
-To do so, pass them to the hook parameters.
+To do so, pass them to the hook parameters as shown below.
 :::
 
 The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden` hook.
@@ -202,8 +202,9 @@ This disables all features related to row grouping, even if a model is provided.
 ### For specific columns
 
 To disable grouping for a specific column, set the `groupable` property on its `GridColDef` to `false`.
-In the example below, the `director` column cannot be grouped.
-In all examples, the `title` and `gross` columns cannot be grouped.
+
+In the example below, the **Director** column cannot be grouped, even though there are repeating values.
+(The **Title** and **Gross** columns cannot be grouped in any examples in this doc because there are no repeating values.)
 
 {{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -215,7 +216,7 @@ To apply row grouping programmatically on non-groupable columns (columns with `g
 2. Provide the `rowGroupingModel` prop. This [controls grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
 3. Call the API method `setRowGroupingModel`. This sets the aggregation with the provided model.
 
-In the following example, the `company` column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
+In the following example, the **Company** column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
 
 {{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -242,8 +243,9 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ### Rows with missing groups
 
-If a grouping criterion's key is `null` or `undefined` for a given row, the Data Grid will treat that row as if it doesn't have a value for this group, and will inline it for those groups.
-The demo below illustrates this behavior:
+If a grouping criterion's key is `null` or `undefined` for a given row, the Data Grid will treat that row as if it doesn't have a value and exclude it from grouping.
+
+The demo below illustrates this behavior—movies are grouped by **Cinematic Universe**, and rows with no value for this column are displayed individually before those with values are displayed in groups:
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -264,9 +266,14 @@ isGroupExpandedByDefault={
 }
 ```
 
+The example below uses this pattern to only expand the **20th Century Fox** group on first load:
+
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `setRowChildrenExpansion()` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event that you can listen for to react to the expansion change.
+Use the `setRowChildrenExpansion()` method on [the `apiRef` object](#apiref) to programmatically set the expansion of a row.
+Changing the expansion of a row emits a `rowExpansionChange` event that you can listen for to react to the expansion change.
+
+The demo below uses this pattern to implement the expansion toggle button:
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
