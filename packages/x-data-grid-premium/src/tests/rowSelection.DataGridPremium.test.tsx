@@ -115,9 +115,9 @@ describe('<DataGridPremium /> - Row selection', () => {
       });
       expect(onRowSelectionModelChange.callCount).to.equal(1);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([
+        'auto-generated-row-category1/Cat B',
         3,
         4,
-        'auto-generated-row-category1/Cat B',
       ]);
     });
 

@@ -3,7 +3,10 @@ import { GridSignature } from '../../utils/useGridApiEventHandler';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
-import { selectedIdsLookupSelector } from './gridRowSelectionSelector';
+import {
+  gridRowSelectionStateSelector,
+  selectedIdsLookupSelector,
+} from './gridRowSelectionSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
@@ -155,9 +158,9 @@ export const findRowsToSelect = (
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
   addRow: (rowId: GridRowId) => void,
+  selectedIds: Set<GridRowId> = new Set(gridRowSelectionStateSelector(apiRef.current.state)),
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
-  const selectedIdsLookup = selectedIdsLookupSelector(apiRef);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
   if (!autoSelectDescendants && !autoSelectParents) {
@@ -178,7 +181,7 @@ export const findRowsToSelect = (
 
   if (autoSelectParents) {
     const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (selectedIdsLookup[rowId] !== rowId && !selectedDescendants.has(rowId)) {
+      if (!selectedIds.has(rowId) && !selectedDescendants.has(rowId)) {
         return false;
       }
       const node = tree[rowId];

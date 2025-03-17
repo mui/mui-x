@@ -420,6 +420,7 @@ export const useGridRowSelection = (
           props.rowSelectionPropagation?.descendants ?? false,
           props.rowSelectionPropagation?.parents ?? false,
           addRow,
+          propagatedSelectionModel,
         );
       }
 
