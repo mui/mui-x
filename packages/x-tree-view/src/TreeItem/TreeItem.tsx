@@ -23,6 +23,7 @@ import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
+import { useTreeViewClassesContext } from '../internals/TreeViewProvider/TreeViewClassesContext';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -199,24 +200,25 @@ export const TreeItemCheckbox = styled(
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
+  const classesFromTreeView = useTreeViewClassesContext();
 
   const slots = {
-    root: ['root'],
-    content: ['content'],
+    root: ['root', classesFromTreeView.item],
+    content: ['content', classesFromTreeView.itemContent],
+    iconContainer: ['iconContainer', classesFromTreeView.itemIconContainer],
+    checkbox: ['checkbox', classesFromTreeView.itemCheckbox],
+    label: ['label', classesFromTreeView.itemLabel],
+    groupTransition: ['groupTransition', classesFromTreeView.itemGroupTransition],
+    labelInput: ['labelInput', classesFromTreeView.itemLabelInput],
+    dragAndDropOverlay: ['dragAndDropOverlay', classesFromTreeView.itemDragAndDropOverlay],
+    errorIcon: ['errorIcon', classesFromTreeView.itemErrorIcon],
+    loadingIcon: ['loadingIcon'],
     expanded: ['expanded'],
     editing: ['editing'],
     editable: ['editable'],
     selected: ['selected'],
     focused: ['focused'],
     disabled: ['disabled'],
-    iconContainer: ['iconContainer'],
-    checkbox: ['checkbox'],
-    label: ['label'],
-    groupTransition: ['groupTransition'],
-    labelInput: ['labelInput'],
-    dragAndDropOverlay: ['dragAndDropOverlay'],
-    errorIcon: ['errorIcon'],
-    loadingIcon: ['loadingIcon'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);

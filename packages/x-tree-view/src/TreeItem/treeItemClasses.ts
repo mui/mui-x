@@ -1,26 +1,46 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
-export interface TreeItemNonStateClasses {
+export interface TreeItemForwardedClasses {
+  /** Styles applied to the item's root element. */
+  item: string;
+  /** Styles applied to the item's content element. */
+  itemContent: string;
+  /** Styles applied to the item's transition element. */
+  itemGroupTransition: string;
+  /** Styles applied to the item's icon container element icon. */
+  itemIconContainer: string;
+  /** Styles applied to the item's label element. */
+  itemLabel: string;
+  /** Styles applied to the item's label input element (visible only when editing is enabled). */
+  itemLabelInput: string;
+  /** Styles applied to the item's checkbox element. */
+  itemCheckbox: string;
+  /** Styles applied to the item's drag and drop overlay element. */
+  itemDragAndDropOverlay: string;
+  /** Styles applied to the item's error icon element */
+  itemErrorIcon: string;
+}
+
+export interface TreeItemClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the content element. */
   content: string;
-  /** Styles applied to the transition component. */
+  /** Styles applied to the transition element. */
   groupTransition: string;
-  /** Styles applied to the Tree Item icon. */
+  /** Styles applied to the icon container element. */
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
+  /** Styles applied to the label input element (visible only when editing is enabled). */
+  labelInput: string;
   /** Styles applied to the checkbox element. */
   checkbox: string;
-  /** Styles applied to the input element that is visible when editing is enabled. */
-  labelInput: string;
-  /** Styles applied to the drag and drop overlay. */
+  /** Styles applied to the drag and drop overlay element. */
   dragAndDropOverlay: string;
-}
-
-export interface TreeItemClasses extends TreeItemNonStateClasses {
+  /** Styles applied to the error icon element */
+  errorIcon: string;
   /** State class applied to the content element when expanded. */
   expanded: string;
   /** State class applied to the content element when selected. */
@@ -50,6 +70,7 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'checkbox',
   'labelInput',
   'dragAndDropOverlay',
+  'errorIcon',
   // State classes, will be replaced by data-attrs in the next major
   'expanded',
   'selected',

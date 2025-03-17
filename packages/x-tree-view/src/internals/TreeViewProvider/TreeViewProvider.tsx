@@ -2,6 +2,9 @@ import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewAnyPluginSignature } from '../models';
+import { TreeViewClassesContext } from './TreeViewClassesContext';
+
+const EMPTY_OBJECT = {};
 
 /**
  * Sets up the contexts for the underlying TreeItem components.
@@ -11,11 +14,13 @@ import { TreeViewAnyPluginSignature } from '../models';
 export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
   props: TreeViewProviderProps<TSignatures>,
 ) {
-  const { value, children } = props;
+  const { value, classes = EMPTY_OBJECT, children } = props;
 
   return (
     <TreeViewContext.Provider value={value}>
-      {value.wrapRoot({ children })}
+      <TreeViewClassesContext.Provider value={classes}>
+        {value.wrapRoot({ children })}
+      </TreeViewClassesContext.Provider>
     </TreeViewContext.Provider>
   );
 }

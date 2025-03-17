@@ -1,12 +1,9 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { NestedClasses } from '../internals/models';
-import { TreeItemNonStateClasses } from '../TreeItem/treeItemClasses';
+import { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewClassesContext';
 
-export interface RichTreeViewClasses extends NestedClasses<'item', keyof TreeItemNonStateClasses> {
-  /** Styles applied to the root element. */
-  root: string;
-}
+export interface RichTreeViewClasses
+  extends Omit<TreeViewClasses, 'itemDragAndDropOverlay' | 'itemErrorIcon'> {}
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
 
@@ -23,5 +20,4 @@ export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('
   'itemLabel',
   'itemCheckbox',
   'itemLabelInput',
-  'itemDragAndDropOverlay',
 ]);

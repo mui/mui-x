@@ -36,11 +36,3 @@ export type ConvertSignaturesIntoPlugins<
       : never
     : never
   : [];
-
-/**
- * Generate the classes for a given component when exposed from its parent.
- * For example, when the Tree View exposes the Tree Item classes, the classes should be prefixed with `item` except for the root.
- */
-export type NestedClasses<TPrefix extends string, TClassKeys extends string> = {
-  [K in TClassKeys as K extends 'root' ? TPrefix : `${TPrefix}${Capitalize<K>}`]: string;
-};

@@ -91,3 +91,5 @@ export type {
 export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
 export { TreeViewStore } from './utils/TreeViewStore';
+
+export { TreeViewClasses } from './TreeViewProvider/TreeViewClassesContext';
