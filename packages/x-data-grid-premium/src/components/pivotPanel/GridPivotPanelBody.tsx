@@ -222,6 +222,11 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
         const newModel = { ...prev };
         const isSameSection = targetSection === originSection;
 
+        const hidden =
+          originSection === null
+            ? false
+            : (prev[originSection].find((item) => item.field === field)?.hidden ?? false);
+
         if (targetSection) {
           const newSectionArray = [...prev[targetSection]];
           let toIndex = newSectionArray.length;
@@ -247,16 +252,17 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             newSectionArray.splice(toIndex, 0, {
               field,
               aggFunc,
+              hidden,
             });
             newModel.values = newSectionArray as GridPivotModel['values'];
           } else if (targetSection === 'columns') {
             const sort = isSameSection
               ? prev.columns.find((item) => item.field === field)?.sort
               : undefined;
-            newSectionArray.splice(toIndex, 0, { field, sort });
+            newSectionArray.splice(toIndex, 0, { field, sort, hidden });
             newModel.columns = newSectionArray as GridPivotModel['columns'];
           } else if (targetSection === 'rows') {
-            newSectionArray.splice(toIndex, 0, { field });
+            newSectionArray.splice(toIndex, 0, { field, hidden });
             newModel.rows = newSectionArray as GridPivotModel['rows'];
           }
         }
