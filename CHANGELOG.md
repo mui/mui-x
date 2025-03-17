@@ -30,7 +30,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix bug with adding and removing columns in active edit state (#16916) @Blake-McCullough
 - [DataGrid] Fix visual issue with pinned columns and row spanning (#16942) @MBilalShafi
 - [DataGrid] Make column header menu button aria-labels unique (#16925) @owais635
-- [DataGrid] `printOptions` should respect `hideFooter` root prop (#16915) @k-rajat19
+- [DataGrid] Fix `printOptions` not respecting `hideFooter` root prop (#16915) @k-rajat19
 - [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#16917 and #16887) @nusr
 - [l10n] Improve Czech (cs-CZ) and Slovak (sk-Sk) locales (#16996) @hlavacz
 - [l10n] Improve Korean (ko-KR) locale (#16998) @yelahj
