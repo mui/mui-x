@@ -1,4 +1,5 @@
 import { GridRowId, GridRowModel } from '../gridRows';
+import { GridRowSelectionModel } from '../gridRowSelectionModel';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
