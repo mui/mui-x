@@ -133,6 +133,13 @@
       "required": true,
       "isProPlan": true
     },
+    "getPropagatedRowSelectionModel": {
+      "type": {
+        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+      },
+      "required": true,
+      "isProPlan": true
+    },
     "getRootDimensions": { "type": { "description": "() =&gt; GridDimensions" }, "required": true },
     "getRow": {
       "type": {
@@ -395,7 +402,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowSelectionModel: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {
