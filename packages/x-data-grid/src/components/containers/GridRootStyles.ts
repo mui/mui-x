@@ -177,7 +177,7 @@ export const GridRootStyles = styled('div', {
   const headerBackground = vars.header.background.base;
   const pinnedBackground = vars.cell.background.pinned;
 
-  const hoverColor = vars.colors.interactive.hover;
+  const hoverColor = removeOpacity(vars.colors.interactive.hover);
   const hoverOpacity = vars.colors.interactive.hoverOpacity;
   const selectedColor = vars.colors.interactive.selected;
   const selectedOpacity = vars.colors.interactive.selectedOpacity;
@@ -805,6 +805,10 @@ export const GridRootStyles = styled('div', {
 
 function setOpacity(color: string, opacity: number) {
   return `rgba(from ${color} r g b / ${opacity})`;
+}
+
+function removeOpacity(color: string) {
+  return setOpacity(color, 1);
 }
 
 function mix(background: string, overlay: string, opacity: number | string) {
