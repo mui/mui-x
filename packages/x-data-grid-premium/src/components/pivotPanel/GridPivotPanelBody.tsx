@@ -267,13 +267,9 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
           }
         }
         if (!isSameSection && originSection) {
-          // @ts-ignore FIXME
-          newModel[originSection] = prev[originSection].filter((f) => {
-            if (typeof f === 'string') {
-              return f !== field;
-            }
-            return f.field !== field;
-          });
+          (newModel[originSection] as (typeof prev)[typeof originSection]) = prev[
+            originSection
+          ].filter((f) => f.field !== field);
         }
         return newModel;
       });
