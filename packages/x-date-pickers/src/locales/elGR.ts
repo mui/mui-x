@@ -41,6 +41,7 @@ const elGRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Επιλέξτε ημερομηνία και ώρα',
   timePickerToolbarTitle: 'Επιλέξτε ώρα',
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,13 +59,14 @@ const elGRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Εβδομάδα ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate}`
       : 'Επιλέξτε ημερομηνία',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime}` : 'Επιλέξτε ώρα',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

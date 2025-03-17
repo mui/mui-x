@@ -1,4 +1,3 @@
-import { urPKCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -124,6 +123,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'مینیو',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'کالم دکھائیں',
   columnMenuManageColumns: 'کالم مینج کریں',
   columnMenuFilter: 'فلٹر',
@@ -183,8 +183,36 @@ const urPKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'پھیلائیں',
   collapseDetailPanel: 'تنگ کریں',
 
+  // Pagination
+  paginationRowsPerPage: 'ایک صفحے پر قطاریں:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'پہلے صفحے پر جائیں';
+    }
+    if (type === 'last') {
+      return 'آخری صفحے پر جائیں';
+    }
+    if (type === 'next') {
+      return 'اگلے صفحے پر جائیں';
+    }
+    // if (type === 'previous') {
+    return 'پچھلے صفحے پر جائیں';
+  },
+
   // Row reordering text
-  rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
+  // rowReorderingHeaderName: 'Row reordering',
 
   // Aggregation
   aggregationMenuItemHeader: 'ایگریگیشن',
@@ -195,4 +223,4 @@ const urPKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'سائز',
 };
 
-export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
+export const urPK: Localization = getGridLocalization(urPKGrid);

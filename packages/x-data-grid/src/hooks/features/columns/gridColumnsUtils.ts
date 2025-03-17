@@ -386,7 +386,11 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
+    columnsState.lookup[field] = resolveProps(existingState, {
+      ...getDefaultColTypeDef(newColumn.type),
+      ...newColumn,
+      hasBeenResized,
+    });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {

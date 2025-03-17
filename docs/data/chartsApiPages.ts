@@ -211,6 +211,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
+    pathname: '/x/api/charts/radar-axis-highlight',
+    title: 'RadarAxisHighlight',
+  },
+  {
     pathname: '/x/api/charts/radar-chart',
     title: 'RadarChart',
   },
@@ -221,6 +225,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-grid',
     title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
   },
   {
     pathname: '/x/api/charts/radar-series-area',

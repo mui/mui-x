@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
@@ -24,6 +25,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
+import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -46,7 +48,6 @@ import {
   GridKeyboardArrowRight,
   GridMoreVertIcon,
   GridRemoveIcon,
-  GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -58,11 +59,13 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export { useMaterialCSSVariables } from './variables';
@@ -153,6 +156,62 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   );
 });
 
+const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+  [`& .${tablePaginationClasses.selectLabel}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  [`& .${tablePaginationClasses.input}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
+    },
+  },
+})) as typeof MUIPagination;
+
+const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
+  function BasePagination(props, ref) {
+    const { onRowsPerPageChange, disabled, ...rest } = props;
+    const computedProps = React.useMemo(() => {
+      if (!disabled) {
+        return undefined;
+      }
+      return {
+        backIconButtonProps: { disabled: true },
+        nextIconButtonProps: { disabled: true },
+      };
+    }, [disabled]);
+
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const { estimatedRowCount } = rootProps;
+
+    return (
+      <StyledPagination
+        component="div"
+        onRowsPerPageChange={useEventCallback(
+          (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+            onRowsPerPageChange?.(Number(event.target.value));
+          },
+        )}
+        labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
+        labelDisplayedRows={(params) =>
+          apiRef.current.getLocaleText('paginationDisplayedRows')({
+            ...params,
+            estimated: estimatedRowCount,
+          })
+        }
+        getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+        {...computedProps}
+        {...rest}
+        ref={ref}
+      />
+    );
+  },
+);
+
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
@@ -170,7 +229,7 @@ const iconSlots: GridIconSlotsComponent = {
   densityCompactIcon: GridViewHeadlineIcon,
   densityStandardIcon: GridTableRowsIcon,
   densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridSaveAltIcon,
+  exportIcon: GridDownloadIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
   treeDataExpandIcon: GridKeyboardArrowRight,
@@ -180,10 +239,11 @@ const iconSlots: GridIconSlotsComponent = {
   detailPanelCollapseIcon: GridRemoveIcon,
   rowReorderIcon: GridDragIcon,
   quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridCloseIcon,
+  quickFilterClearIcon: GridClearIcon,
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  columnMenuUnsortIcon: null,
   columnMenuFilterIcon: GridFilterAltIcon,
   columnMenuManageColumnsIcon: GridViewColumnIcon,
   columnMenuClearIcon: GridClearIcon,
@@ -208,6 +268,7 @@ const baseSlots: GridBaseSlots = {
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseTooltip: MUITooltip,
+  basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,

@@ -41,6 +41,7 @@ const nnNOPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vel dato & klokkeslett',
   timePickerToolbarTitle: 'Vel klokkeslett',
   dateRangePickerToolbarTitle: 'Vel datoperiode',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +59,12 @@ const nnNOPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Veke ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vel dato, vald dato er ${formattedDate}` : 'Vel dato',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vel tid, vald tid er ${formattedTime}` : 'Vel tid',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Fjern verdi',
 
   // Table labels
