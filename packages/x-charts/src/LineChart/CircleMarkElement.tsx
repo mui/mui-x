@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
+import { ANIMATION_DURATION_MS } from '@mui/x-charts';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
@@ -27,7 +28,9 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
 
 const Circle = styled('circle')({
   [`&.${markElementClasses.animate}`]: {
-    transition: 'cx 0.2s ease-in, cy 0.2s ease-in',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'cx, cy',
+    transitionTimingFunction: 'ease-in',
   },
 });
 

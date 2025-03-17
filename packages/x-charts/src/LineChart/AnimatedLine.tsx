@@ -6,6 +6,7 @@ import { select } from '@mui/x-charts-vendor/d3-selection';
 import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import useForkRef from '@mui/utils/useForkRef';
+import { ANIMATION_DURATION_MS } from '../constants';
 import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
 
@@ -20,7 +21,6 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 }
 
 const TRANSITION_NAME = 'MuiAnimatedLine-transition';
-const DURATION = 200;
 function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
   const lastInterpolatedDRef = React.useRef(props.d);
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
@@ -87,7 +87,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
 
       transitionRef.current = select(element)
         .transition(TRANSITION_NAME)
-        .duration(DURATION)
+        .duration(ANIMATION_DURATION_MS)
         .ease(easeLinear)
         .attrTween('d', () => (t) => {
           const interpolatedD = stringInterpolator(t);
