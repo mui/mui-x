@@ -46,21 +46,13 @@ const HighlightPathElement = styled('path', {
   name: 'MuiHighlightElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>(({ ownerState }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
-  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
-  fill: ownerState.color,
-}));
+})<{ ownerState: LineHighlightElementOwnerState }>();
 
 const HighlightCircleElement = styled('circle', {
   name: 'MuiHighlightElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>(({ ownerState }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
-  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
-  fill: ownerState.color,
-}));
+})<{ ownerState: LineHighlightElementOwnerState }>();
 
 export type LineHighlightElementProps =
   | (LineHighlightElementOwnerState &
@@ -104,6 +96,9 @@ function LineHighlightElement(props: LineHighlightElementProps) {
       pointerEvents="none"
       ownerState={ownerState}
       className={classes.root}
+      transform={`translate(${x}, ${y})`}
+      transform-origin={`${x}px ${y}px`}
+      fill={color}
       {...additionalProps}
       {...other}
     />
