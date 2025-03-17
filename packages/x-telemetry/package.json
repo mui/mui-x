@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.9",
-    "@fingerprintjs/fingerprintjs": "3.4.2",
+    "@fingerprintjs/fingerprintjs": "^3.4.2",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "ci-info": "^4.0.0",
-    "conf": "^5.0.0",
-    "is-docker": "^2.2.1",
+    "conf": "^11.0.0",
+    "is-docker": "^3.0.0",
     "msgpack-lite": "^0.1.26",
     "node-machine-id": "^1.1.12"
   },

@@ -1,4 +1,3 @@
-import msgpack from 'msgpack-lite';
 import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
@@ -49,6 +48,8 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       console.log('[mui-x-telemetry] event', JSON.stringify(eventPayload, null, 2));
       return;
     }
+
+    const msgpack = await import('msgpack-lite');
 
     // TODO: batch events and send them in a single request when there will be more
     await fetchWithRetry(
