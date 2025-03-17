@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { select } from '@mui/x-charts-vendor/d3-selection';
-import { easeLinear } from '@mui/x-charts-vendor/d3-ease';
+import { easeCubicInOut } from '@mui/x-charts-vendor/d3-ease';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import useForkRef from '@mui/utils/useForkRef';
 import { ANIMATION_DURATION_MS } from '../constants';
@@ -88,7 +88,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
       transitionRef.current = select(element)
         .transition(TRANSITION_NAME)
         .duration(ANIMATION_DURATION_MS)
-        .ease(easeLinear)
+        .ease(easeCubicInOut)
         .attrTween('d', () => (t) => {
           const interpolatedD = stringInterpolator(t);
 

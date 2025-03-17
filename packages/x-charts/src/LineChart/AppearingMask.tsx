@@ -5,7 +5,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { cleanId } from '../internals/cleanId';
 import { useChartId, useDrawingArea } from '../hooks';
 import { SeriesId } from '../models/seriesType/common';
-import { ANIMATION_DURATION_MS } from '../constants';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
 
 interface AppearingMaskProps {
   id: SeriesId;
@@ -27,7 +27,7 @@ const AnimatedRect = styled('rect')({
   [`&.${appearingMaskClasses.animate}`]: {
     animationName: 'animate-width',
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
-    animationTimingFunction: 'ease-in',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 
   '@keyframes animate-width': {

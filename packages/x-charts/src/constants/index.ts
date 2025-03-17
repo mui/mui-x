@@ -15,3 +15,6 @@ export const DEFAULT_AXIS_SIZE_HEIGHT = 25;
 export const AXIS_LABEL_DEFAULT_HEIGHT = 20;
 
 export const ANIMATION_DURATION_MS = 300;
+// Similar to d3-ease's easeCubicInOut.
+// Comparison: https://codesandbox.io/p/sandbox/8732px
+export const ANIMATION_TIMING_FUNCTION = 'cubic-bezier(0.66, 0, 0.34, 1)';
