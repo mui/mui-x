@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.28.0
+
+_Mar 17, 2025_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for `@mui/material` version 7 in all X packages
+- 🐞 Bugfixes
+- 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
+- 🌍 Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales on the Pickers
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@Blake-McCullough, @hlavacz, @yelahj, @k-rajat19, @nusr.
+Following are all team members who have contributed to this release:
+@arminmeh, @flaviendelangle, @LukasTy, @michelengelen, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.28.0`
+
+- [DataGrid] Add click propagation and prevents default on `toggleMenu` click (#16909) @michelengelen
+- [DataGrid] Fix `processRowUpdate()` error if the row is removed before it is executed (#16904) @arminmeh
+- [DataGrid] Fix bug with adding and removing columns in active edit state (#16916) @Blake-McCullough
+- [DataGrid] Fix visual issue with pinned columns and row spanning (#16942) @MBilalShafi
+- [DataGrid] Make column header menu button aria-labels unique (#16925) @owais635
+- [DataGrid] Fix `printOptions` not respecting `hideFooter` root prop (#16915) @k-rajat19
+- [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#16917 and #16887) @nusr
+- [l10n] Improve Czech (cs-CZ) and Slovak (sk-Sk) locales (#16996) @hlavacz
+- [l10n] Improve Korean (ko-KR) locale (#16998) @yelahj
+
+#### `@mui/x-data-grid-pro@7.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.28.0`, plus:
+
+- [DataGridPro] Fix header filters not displaying restored values (#16976) @MBilalShafi
+- [DataGridPro] Fix infinite loading not reacting when scrolling to the end (#16939) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.28.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.28.0`, plus:
+
+- [DataGridPremium] Fix selection propagation issues with controlled state (#16995) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.28.0`
+
+- [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#16997) @nusr
+
+#### `@mui/x-date-pickers-pro@7.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.28.0`, plus:
+
+- [DateRangeCalendar] Do not update the previewed day when hovering a day and the value is empty (#16892) @flaviendelangle
+
+### Charts
+
+#### `@mui/x-charts@7.28.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.28.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.28.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.28.0`.
+
+### Docs
+
+- [docs] Fix link to the lazy loading demo for the DataGrid (#16912) @nusr
+
+### Core
+
+- [core] Allow `@mui/material` v7 in dependencies (#16951) @LukasTy
+- [infra] Make tests on React 18 part of pipeline (#16958) @LukasTy
+
 ## 7.27.3
 
 _Mar 7, 2025_
