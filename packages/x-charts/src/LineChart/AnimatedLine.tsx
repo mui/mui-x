@@ -20,7 +20,7 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
   skipAnimation?: boolean;
 }
 
-function useAnimate<Props extends {}, Elem extends Element>(
+function useAnimate<Props, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
