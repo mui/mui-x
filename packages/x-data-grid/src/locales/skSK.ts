@@ -6,8 +6,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
-  noColumnsOverlayLabel: 'Žiadne stĺpce',
-  noColumnsOverlayManageColumns: 'Spravovať stĺpce',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -39,18 +37,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterPlaceholder: 'Vyhľadať…',
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
-
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Zadajte požiadavku…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Zadajte alebo nahrajte požiadavku…',
-  toolbarPromptControlRecordingPlaceholder: 'Počúvam požiadavku…',
-  toolbarPromptControlLabel: 'Vstup požiadavky',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrávať',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zastaviť nahrávanie',
-  toolbarPromptControlSendActionLabel: 'Odoslať',
-  toolbarPromptControlSendActionAriaLabel: 'Odoslať požiadavku',
-  toolbarPromptControlErrorMessage:
-    'Pri spracovaní požiadavky došlo k chybe. Skúste to znova s inou požiadavkou.',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -123,7 +109,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Väčší ako alebo rovný',
   'headerFilterOperator<': 'Menší ako',
   'headerFilterOperator<=': 'Menší ako alebo rovný',
-  headerFilterClear: 'Zrušiť filter',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -212,30 +197,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   detailPanelToggle: 'Prepnúť detail panelu',
   expandDetailPanel: 'Rozbaliť',
   collapseDetailPanel: 'Zbaliť',
-
-  // Pagination
-  paginationRowsPerPage: 'Riadkov na stránke:',
-  paginationDisplayedRows: ({ from, to, count, estimated }) => {
-    if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `viac ako ${to}`}`;
-    }
-    const estimatedLabel =
-      estimated && estimated > to ? `približne ${estimated}` : `viac ako ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
-  },
-  paginationItemAriaLabel: (type) => {
-    if (type === 'first') {
-      return 'Ísť na prvú stránku';
-    }
-    if (type === 'last') {
-      return 'Ísť na poslednú stránku';
-    }
-    if (type === 'next') {
-      return 'Ísť na ďaľšiu stránku';
-    }
-    // if (type === 'previous') {
-    return 'Ísť na predchádzajúcu stránku';
-  },
 
   // Row reordering text
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
