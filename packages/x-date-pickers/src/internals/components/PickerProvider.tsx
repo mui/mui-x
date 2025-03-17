@@ -34,12 +34,13 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
   },
+  rootRefObject: { current: null },
+  labelId: undefined,
   dismissViews: () => {},
   hasUIView: true,
   getCurrentViewMode: () => 'UI',
-  rootRefObject: { current: null },
+  triggerElement: null,
   viewContainerRole: null,
-  labelId: undefined,
 });
 
 /**
@@ -167,7 +168,7 @@ export interface PickerContextValue<
    * The ref to attach to the element that triggers the Picker opening.
    * When using a built-in field component, this property is automatically attached to the right element.
    */
-  triggerRef: React.RefObject<any>;
+  triggerRef: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
   /**
    * The status of the element that triggers the Picker opening.
    * If it is "hidden", the field should not render the UI to open the Picker.
@@ -309,23 +310,14 @@ export interface SetValueActionOptions<TError = string | null> {
 }
 
 export interface PickerPrivateContextValue {
-  /**
-   * The ownerState of the Picker.
-   */
-  ownerState: PickerOwnerState;
-  /**
-   * The ref of the root element.
-   * This is the object counterpart of the `usePickerContext().rootRef` property which can be a function.
-   */
-  rootRefObject: React.RefObject<HTMLDivElement | null>;
-  /**
-   * The id of the label element.
-   */
-  labelId: string | undefined;
   /*
    * Close the Picker and accept the current value if it is not equal to the last accepted value.
    */
   dismissViews: () => void;
+  /**
+   * The ownerState of the picker.
+   */
+  ownerState: PickerOwnerState;
   /**
    * Whether at least one view has an UI (it has a view renderer associated).
    */
@@ -335,6 +327,19 @@ export interface PickerPrivateContextValue {
    * @returns {boolean} The mode of the current view.
    */
   getCurrentViewMode: () => 'UI' | 'field';
+  /**
+   * The ref of the root element.
+   * This is the object counterpart of the `usePickerContext().rootRef` property which can be a function.
+   */
+  rootRefObject: React.RefObject<HTMLDivElement | null>;
+  /**
+   * The id of the label element.
+   */
+  labelId: string | undefined;
+  /**
+   * The element used as the anchor for the Picker Popper.
+   */
+  triggerElement: HTMLElement | null;
   /**
    * The aria role associated with the view container.
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
