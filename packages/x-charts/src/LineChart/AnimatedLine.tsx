@@ -24,20 +24,6 @@ const TRANSITION_NAME = 'MuiAnimatedLine-transition';
 function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
   const lastInterpolatedDRef = React.useRef(props.d);
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
-  const recentDRef = React.useRef(props.d);
-
-  /*
-   * We need to interrupt the animation when:
-   * - the element is removed from the DOM
-   * - the `skipAnimation` prop becomes true
-   * - the `d` prop changes and `skipAnimation` is not true and there is an element
-   *
-   * We start a new animation when:
-   * - a new element is added to the DOM
-   * - the `skipAnimation` prop becomes false
-   * - the `d` prop changes and `skipAnimation` is not true and there is an element
-   *   */
-
   const elementRef = React.useRef<SVGPathElement>(null);
   const elementUnmounted = React.useRef(false);
 
@@ -46,31 +32,13 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
     return () => {
       const lastElement = elementRef.current;
 
-      interrupt(lastElement, TRANSITION_NAME);
+      // FIXME: There's a bug here because the ref is called with null after this cleanup runs, so the interrupt will
+      //        never be called
+      if (lastElement) {
+        interrupt(lastElement, TRANSITION_NAME);
+      }
     };
   }, []);
-
-  React.useLayoutEffect(() => {
-    recentDRef.current = props.d;
-  }, [props.d]);
-
-  /* Handles `skip` changing.
-   * If it happens while the element is transitioning, it should jump to the finished state of the transition
-   * immediately. */
-  React.useLayoutEffect(() => {
-    const transition = transitionRef.current;
-    const element = elementRef.current;
-
-    if (element && transition) {
-      if (skip) {
-        interrupt(element, TRANSITION_NAME);
-        element.setAttribute('d', recentDRef.current);
-        lastInterpolatedDRef.current = recentDRef.current;
-      } else {
-        // TODO: start animation
-      }
-    }
-  }, [skip]);
 
   /* `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
    * `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be called only
@@ -94,7 +62,7 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
 
       transitionRef.current = select(element)
         .transition(TRANSITION_NAME)
-        .duration(ANIMATION_DURATION_MS)
+        .duration(skip ? 0 : ANIMATION_DURATION_MS)
         .ease(easeCubicInOut)
         .attrTween('d', () => (t) => {
           const interpolatedD = stringInterpolator(t);
@@ -104,18 +72,16 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
           return interpolatedD;
         });
     },
-    [props.d],
+    [props.d, skip],
   );
 
   React.useLayoutEffect(() => {
     const element = elementRef.current;
 
-    if (element && !skip) {
-      interrupt(element, TRANSITION_NAME);
-      // Also, start the animation
+    if (element) {
       animate(element);
     }
-  }, [animate, skip]);
+  }, [animate]);
 
   const setRef = React.useCallback(
     (element: SVGPathElement | null) => {
@@ -125,23 +91,18 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
         return;
       }
 
+      const lastElement = elementRef.current;
+
       // If it's the same element, there's nothing to do.
-      if (elementRef.current === element) {
+      if (lastElement === element) {
         return;
       }
 
-      if (!skip) {
-        /* If we're not skipping animation, we need to set the attribute to override React's changes.
-         * Still need to figure out if this is better than asking the user not to pass the `d` prop to the component.
-         * The problem with that is that SSR might not look good. */
-        element.setAttribute('d', lastInterpolatedDRef.current);
-        // Also, start the animation
-        animate(element);
-      }
+      animate(element);
 
       elementRef.current = element;
     },
-    [animate, skip],
+    [animate],
   );
 
   return setRef;
