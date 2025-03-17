@@ -21,25 +21,29 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 
 const TRANSITION_NAME = 'MuiAnimatedLine-transition';
 function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
+  /* A transition is interrupted when:
+   * T1. The transitioned element changes;
+   * T2. The transitioned element is unmounted;
+   * T3. The component calling this hook is unmounted. */
   const lastInterpolatedDRef = React.useRef(props.d);
   const transitionRef = React.useRef<Transition<SVGPathElement, unknown, null, undefined>>(null);
   const elementRef = React.useRef<SVGPathElement>(null);
   const elementUnmounted = React.useRef(false);
 
-  /* Stop the transition if the component that calls this hook is unmounted. */
   React.useLayoutEffect(() => {
     return () => {
+      /* T3. Stop the transition if the component that calls this hook is unmounted. */
       const lastElement = elementRef.current;
 
-      // FIXME: There's a bug here because the ref is called with null after this cleanup runs, so the interrupt will
-      //        never be called
       if (lastElement) {
         interrupt(lastElement, TRANSITION_NAME);
       }
     };
   }, []);
 
-  /* `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
+  /* T2. Interrupt the transition if the element is unmounted.
+   *
+   * `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
    * `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be called only
    *  when the underlying element changes.
    *  When `elementUnmounted` is true, it means `setRef` wasn't called with an element, so we must interrupt the
@@ -95,6 +99,11 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
       // If it's the same element, there's nothing to do.
       if (lastElement === element) {
         return;
+      }
+
+      // T1. If it's a different element, interrupt the transition of the last element.
+      if (lastElement) {
+        interrupt(lastElement, TRANSITION_NAME);
       }
 
       animate(element);
