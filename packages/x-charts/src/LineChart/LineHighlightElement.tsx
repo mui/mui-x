@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
@@ -16,7 +15,7 @@ export interface LineHighlightElementClasses {
 
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
-interface LineHighlightElementOwnerState {
+interface LineHighlightElementCommonProps {
   id: SeriesId;
   color: string;
   x: number;
@@ -33,7 +32,7 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
   ['root'],
 );
 
-const useUtilityClasses = (ownerState: LineHighlightElementOwnerState) => {
+const useUtilityClasses = (ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'id'>) => {
   const { classes, id } = ownerState;
   const slots = {
     root: ['root', `series-${id}`],
@@ -42,22 +41,10 @@ const useUtilityClasses = (ownerState: LineHighlightElementOwnerState) => {
   return composeClasses(slots, getHighlightElementUtilityClass, classes);
 };
 
-const HighlightPathElement = styled('path', {
-  name: 'MuiHighlightElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>();
-
-const HighlightCircleElement = styled('circle', {
-  name: 'MuiHighlightElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>();
-
 export type LineHighlightElementProps =
-  | (LineHighlightElementOwnerState &
+  | (LineHighlightElementCommonProps &
       ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>))
-  | (LineHighlightElementOwnerState & {
+  | (LineHighlightElementCommonProps & {
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     } & Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'>);
 
@@ -74,16 +61,9 @@ export type LineHighlightElementProps =
 function LineHighlightElement(props: LineHighlightElementProps) {
   const { x, y, id, classes: innerClasses, color, shape, ...other } = props;
 
-  const ownerState = {
-    id,
-    classes: innerClasses,
-    color,
-    x,
-    y,
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
-  const Element = shape === 'circle' ? HighlightCircleElement : HighlightPathElement;
+  const Element = shape === 'circle' ? 'circle' : 'path';
 
   const additionalProps =
     shape === 'circle'
@@ -94,10 +74,10 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   return (
     <Element
       pointerEvents="none"
-      ownerState={ownerState}
       className={classes.root}
-      transform={`translate(${x}, ${y})`}
-      transform-origin={`${x}px ${y}px`}
+      transform={`translate(${x} ${y})`}
+      // @ts-expect-error transformOrigin exist but not in @types/react
+      transformOrigin={`${x} ${y}`}
       fill={color}
       {...additionalProps}
       {...other}
