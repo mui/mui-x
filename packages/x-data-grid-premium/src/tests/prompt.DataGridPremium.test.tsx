@@ -100,8 +100,8 @@ describe('<DataGridPremium /> - Prompt', () => {
       await user.click(sendButton);
 
       expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[0]).contains('Example1');
-      expect(promptSpy.firstCall.args[0]).not.contains('CatA');
+      expect(promptSpy.firstCall.args[1]).contains('Example1');
+      expect(promptSpy.firstCall.args[1]).not.contains('CatA');
     });
 
     it('should sample rows to generate the prompt context', async () => {
@@ -114,8 +114,8 @@ describe('<DataGridPremium /> - Prompt', () => {
       await user.click(sendButton);
 
       expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[0]).not.contains('Example1');
-      expect(promptSpy.firstCall.args[0]).contains('CatA');
+      expect(promptSpy.firstCall.args[1]).not.contains('Example1');
+      expect(promptSpy.firstCall.args[1]).contains('CatA');
     });
   });
 
