@@ -248,9 +248,6 @@
     "unstable_applyPromptResult": {
       "description": "Use the prompt processing result to update all relevant parts of the grid state."
     },
-    "unstable_collectSampleData": {
-      "description": "Collects sample data from the grid that can be used to improve the prompt context.<br />It takes random values for all columns but from different rows to make the samples more random."
-    },
     "unstable_getPromptContext": { "description": "Get the context for the prompt." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
