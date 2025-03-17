@@ -7,67 +7,11 @@ import { PickersTimezone, PickerValidDate } from '../../models';
 import { PickerValidValue } from '../models';
 
 /**
- * Hooks making sure that:
+ * Hooks controlling the value while making sure that:
  * - The value returned by `onChange` always have the timezone of `props.value` or `props.defaultValue` if defined
  * - The value rendered is always the one from `props.timezone` if defined
  */
-export const useValueWithTimezone = <
-  TValue extends PickerValidValue,
-  TChange extends (...params: any[]) => void,
->({
-  timezone: timezoneProp,
-  value: valueProp,
-  defaultValue,
-  referenceDate,
-  onChange,
-  valueManager,
-}: UseValueWithTimezoneParameters<TValue, TChange>) => {
-  const utils = useUtils();
-
-  const firstDefaultValue = React.useRef(defaultValue);
-  const inputValue = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
-
-  const inputTimezone = React.useMemo(
-    () => valueManager.getTimezone(utils, inputValue),
-    [utils, valueManager, inputValue],
-  );
-
-  const setInputTimezone = useEventCallback((newValue: TValue) => {
-    if (inputTimezone == null) {
-      return newValue;
-    }
-
-    return valueManager.setTimezone(utils, inputTimezone, newValue);
-  });
-
-  let timezoneToRender: PickersTimezone;
-  if (timezoneProp) {
-    timezoneToRender = timezoneProp;
-  } else if (inputTimezone) {
-    timezoneToRender = inputTimezone;
-  } else if (referenceDate) {
-    timezoneToRender = utils.getTimezone(referenceDate);
-  } else {
-    timezoneToRender = 'default';
-  }
-
-  const valueWithTimezoneToRender = React.useMemo(
-    () => valueManager.setTimezone(utils, timezoneToRender, inputValue),
-    [valueManager, utils, timezoneToRender, inputValue],
-  );
-
-  const handleValueChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
-    const newValueWithInputTimezone = setInputTimezone(newValue);
-    onChange?.(newValueWithInputTimezone, ...otherParams);
-  }) as TChange;
-
-  return { value: valueWithTimezoneToRender, handleValueChange, timezone: timezoneToRender };
-};
-
-/**
- * Wrapper around `useControlled` and `useValueWithTimezone`
- */
-export const useControlledValueWithTimezone = <
+export const useControlledValue = <
   TValue extends PickerValidValue,
   TChange extends (...params: any[]) => void,
 >({
@@ -79,6 +23,8 @@ export const useControlledValueWithTimezone = <
   onChange: onChangeProp,
   valueManager,
 }: UseControlledValueWithTimezoneParameters<TValue, TChange>) => {
+  const utils = useUtils();
+
   const [valueWithInputTimezone, setValue] = useControlled({
     name,
     state: 'value',
@@ -86,19 +32,48 @@ export const useControlledValueWithTimezone = <
     default: defaultValue ?? valueManager.emptyValue,
   });
 
-  const onChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
-    setValue(newValue);
-    onChangeProp?.(newValue, ...otherParams);
+  const inputTimezone = React.useMemo(
+    () => valueManager.getTimezone(utils, valueWithInputTimezone),
+    [utils, valueManager, valueWithInputTimezone],
+  );
+
+  const setInputTimezone = useEventCallback((newValue: TValue) => {
+    if (inputTimezone == null) {
+      return newValue;
+    }
+
+    return valueManager.setTimezone(utils, inputTimezone, newValue);
+  });
+
+  const timezoneToRender = React.useMemo(() => {
+    if (timezoneProp) {
+      return timezoneProp;
+    }
+    if (inputTimezone) {
+      return inputTimezone;
+    }
+    if (referenceDate) {
+      return utils.getTimezone(referenceDate);
+    }
+    return 'default';
+  }, [timezoneProp, inputTimezone, referenceDate, utils]);
+
+  const valueWithTimezoneToRender = React.useMemo(
+    () => valueManager.setTimezone(utils, timezoneToRender, valueWithInputTimezone),
+    [valueManager, utils, timezoneToRender, valueWithInputTimezone],
+  );
+
+  const handleValueChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
+    const newValueWithInputTimezone = setInputTimezone(newValue);
+    setValue(newValueWithInputTimezone);
+    onChangeProp?.(newValueWithInputTimezone, ...otherParams);
   }) as TChange;
 
-  return useValueWithTimezone({
-    timezone: timezoneProp,
-    value: valueWithInputTimezone,
-    defaultValue: undefined,
-    referenceDate,
-    onChange,
-    valueManager,
-  });
+  return {
+    value: valueWithTimezoneToRender,
+    handleValueChange,
+    timezone: timezoneToRender,
+  };
 };
 
 interface UseValueWithTimezoneParameters<
