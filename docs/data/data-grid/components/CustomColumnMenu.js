@@ -105,7 +105,7 @@ export default function CustomColumnMenu() {
             },
             {
               id: 2,
-              name: 'MuiDataGridPro',
+              name: 'DataGridPro',
               stars: 15000,
               default: 'Enterprise',
             },
