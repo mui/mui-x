@@ -41,13 +41,6 @@ function useAnimate<Props extends {}, Elem extends Element>(
   const transitionRef = React.useRef<Transition<Elem, unknown, null, undefined>>(null);
   const elementRef = React.useRef<Elem>(null);
   const elementUnmounted = React.useRef(false);
-  const createInterpolatorRef = React.useRef(createInterpolator);
-  const applyPropsRef = React.useRef(applyProps);
-
-  React.useLayoutEffect(() => {
-    createInterpolatorRef.current = createInterpolator;
-    applyPropsRef.current = applyProps;
-  });
 
   React.useLayoutEffect(() => {
     return () => {
@@ -85,18 +78,18 @@ function useAnimate<Props extends {}, Elem extends Element>(
         .ease(ANIMATION_TIMING_FUNCTION_JS)
         .tween('animate', () => {
           const lastProps = lastInterpolatedProps.current;
-          const interpolate = createInterpolatorRef.current(lastProps, props);
+          const interpolate = createInterpolator(lastProps, props);
 
           return function animateAt(t) {
             const interpolatedProps = interpolate(t);
 
             lastInterpolatedProps.current = interpolatedProps;
 
-            applyPropsRef.current(this, interpolatedProps);
+            applyProps(this, interpolatedProps);
           };
         });
     },
-    [props, skip, transitionName],
+    [applyProps, createInterpolator, props, skip, transitionName],
   );
 
   React.useLayoutEffect(() => {
