@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { clampAngle } from '../internals/clampAngle';
-import { useIsClient } from '../hooks/useIsClient';
+import { useIsHydrated } from '../hooks/useIsHydrated';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
@@ -238,7 +238,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
-  const isClient = useIsClient();
+  const isHydrated = useIsHydrated();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -333,7 +333,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
   );
 
-  const tickLabels = isClient
+  const tickLabels = isHydrated
     ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, axisTickLabelProps.style)
     : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 

@@ -16,6 +16,7 @@ import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 /**
  * Solution of the equations
@@ -256,7 +257,8 @@ const BarPlotRoot = styled('g', {
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 

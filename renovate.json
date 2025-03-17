@@ -122,6 +122,15 @@
       "groupName": "date-fns-v2",
       "matchPackageNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"
+    },
+    {
+      "groupName": "recast",
+      "matchPackageNames": ["recast"],
+      "allowedVersions": "< 0.23.10"
+    },
+    {
+      "groupName": "Tanstack query",
+      "matchPackageNames": ["@tanstack/*query*"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

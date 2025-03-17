@@ -23,7 +23,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CustomLayoutRangePicker from './CustomLayoutRangePicker';
 import { getMD3Theme } from './themes/md3';
 import { getCustomTheme } from './themes/customTheme';
-import ConfigToggleButtons from './ConfigToggleButtons';
+import ConfigToggleButtons from '../ConfigToggleButtons';
 import {
   Config,
   Themes,
