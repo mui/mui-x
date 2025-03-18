@@ -118,22 +118,17 @@ export default function transformCSS({ types: t }: BabelT) {
 
         const prefix = prefixNode.extra.rawValue;
 
-        /* eslint-disable no-underscore-dangle */
-        const context = {
-          __source: file.code.slice(classesNode.start, classesNode.end),
-          __result: null,
-        };
-        vm.createContext(context);
-        vm.runInContext(
+        const source = file.code.slice(classesNode.start, classesNode.end);
+        const result = vm.runInContext(
           `
           ${state.cssVariables};
-          __result = eval('(' + __source + ')')
+          const result = ${source};
+          result;
         `,
-          context,
+          vm.createContext({}),
         );
 
-        const classes = context.__result;
-        /* eslint-enable no-underscore-dangle */
+        const classes = result;
 
         path.replaceWith(buildClassesNode(file.opts.filename, prefix, classes));
       },
