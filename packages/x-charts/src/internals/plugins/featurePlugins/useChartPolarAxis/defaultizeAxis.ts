@@ -1,5 +1,5 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { DEFAULT_ROTATION_AXIS_KEY } from '../../../../constants';
+import { DEFAULT_RADIUS_AXIS_KEY, DEFAULT_ROTATION_AXIS_KEY } from '../../../../constants';
 import { ScaleName } from '../../../../models';
 import { AxisId, PolarAxisConfig } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
@@ -9,7 +9,8 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   dataset: Readonly<DatasetType> | undefined,
   axisName: 'rotation' | 'radius',
 ): PolarAxisConfig<TScale, any>[] {
-  const DEFAULT_AXIS_KEY: AxisId = axisName === 'rotation' ? DEFAULT_ROTATION_AXIS_KEY : 5;
+  const DEFAULT_AXIS_KEY: AxisId =
+    axisName === 'rotation' ? DEFAULT_ROTATION_AXIS_KEY : DEFAULT_RADIUS_AXIS_KEY;
 
   const inputAxes: MakeOptional<PolarAxisConfig<ScaleName, any>, 'id'>[] =
     inAxis && inAxis.length > 0 ? inAxis : [{ id: DEFAULT_AXIS_KEY }];

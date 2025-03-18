@@ -75,6 +75,19 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## `@mui/material` peer dependency change
+
+The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
+This change should resolve ESM and CJS interoperability issues in various environments.
+
+:::info
+The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
+
+- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
+- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
+
+:::
+
 ## ✅ Rename `date-fns` adapter imports
 
 :::warning
@@ -1271,6 +1284,36 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
    />
   ```
 
+### ⏩ `useClearableField`
+
+This hook has been removed. The custom field component now receives the `clearable` and `onClear` props.
+
+You can remove the `useClearableField` hook from your component and use the new props to conditionally render the clear button:
+
+```diff
+-import { useClearableField } from '@mui/x-date-pickers-pro/hooks';
+
+ function CustomField(props) {
+   const {
+     id,
+     label
+     value,
++    clearable,
++    onClear,
+   } = props;
+-  const processedFieldProps = useClearableField({
+-    ...fieldResponse,
+-    slots,
+-    slotProps,
+-  });
++  {clearable && value && (
++    <IconButton title="Clear" tabIndex={-1} onClick={onClear}>
++      <ClearIcon />
++    </IconButton>
++  )}
+ }
+```
+
 ## Typing breaking changes
 
 ### Do not pass the date object as a generic
@@ -1305,7 +1348,12 @@ The `TSection` generic of the `FieldRef` type has been replaced with the `TValue
 ### ⏩ Removed types
 
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
-If you were using them, you need to replace them with the following code:
+
+:::success
+If you were using them, you can replace them with the examples below.
+
+However, consider looking into your usage to see if you really need those types.
+:::
 
 - `NonEmptyDateRange`
 
@@ -1716,6 +1764,47 @@ If you were using them, you need to replace them with the following code:
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
+
+- `ExportedUseClearableFieldProps`
+
+  ```ts
+  interface ExportedUseClearableFieldProps {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler;
+  }
+  ```
+
+- `UseClearableFieldSlots`
+
+  ```ts
+  interface UseClearableFieldSlots {
+    clearIcon?: React.ElementType;
+    clearButton?: React.ElementType;
+  }
+  ```
+
+- `UseClearableFieldSlotProps`
+
+  ```ts
+  import { SlotComponentProps } from '@mui/utils';
+  import { FieldOwnerState } from '@mui/x-date-pickers/models';
+  import { ClearIcon } from '@mui/x-date-pickers/icons';
+  import IconButton from '@mui/material/IconButton';
+
+  interface UseClearableFieldSlotProps {
+    clearIcon?: SlotComponentProps<typeof ClearIcon, {}, FieldOwnerState>;
+    clearButton?: SlotComponentProps<typeof IconButton, {}, FieldOwnerState>;
+  }
+  ```
+
+- `UseClearableFieldResponse`
+
+  ```ts
+  type UseClearableFieldResponse<TFieldProps extends {}> = Omit<
+    TFieldProps,
+    'clearable' | 'onClear' | 'slots' | 'slotProps'
+  >;
+  ```
 
 ## Theme breaking change
 

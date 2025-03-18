@@ -899,6 +899,12 @@
       "class": null
     },
     {
+      "name": "basePagination",
+      "description": "The custom Pagination component used in the grid.",
+      "default": "Pagination",
+      "class": null
+    },
+    {
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
@@ -1100,6 +1106,12 @@
       "name": "columnMenuSortDescendingIcon",
       "description": "Icon displayed in column menu for descending sort",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
       "class": null
     },
     {

@@ -181,6 +181,17 @@ type ClickAwayMouseEventHandler =
   | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
+export type PaginationProps = {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  rowsPerPageOptions?: readonly (number | { value: number; label: string })[];
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => void;
+  onRowsPerPageChange?: (rowsPerPage: number) => void;
+
+  disabled?: boolean;
+};
+
 export type PopperProps = {
   open: boolean;
   children?: React.ReactNode;
@@ -292,7 +303,7 @@ export type TextFieldProps = {
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
-    input?: Partial<InputProps>;
+    input?: Omit<Partial<InputProps>, 'slotProps'>;
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };

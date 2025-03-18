@@ -2,7 +2,6 @@ import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale'
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsAxisProps,
-  ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
   ChartsRotationAxisProps,
@@ -18,20 +17,13 @@ import { getScale } from '../../../getScale';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { deg2rad } from '../../../angleConversion';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
 > = {
   [axisId: AxisId]: PolarAxisDefaultized<ScaleName, any, AxisProps>;
-};
-
-const degreeToRad = (value?: number, defaultRad?: number) => {
-  if (value === undefined) {
-    return defaultRad!;
-  }
-  return (Math.PI * value) / 180;
 };
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
@@ -44,8 +36,8 @@ function getRange(
   if (axisDirection === 'rotation') {
     if (axis.scaleType === 'point') {
       const angles = [
-        degreeToRad((axis as RotationConfig).startAngle, 0),
-        degreeToRad((axis as RotationConfig).endAngle, 2 * Math.PI),
+        deg2rad((axis as RotationConfig).startAngle, 0),
+        deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
       ];
       const diff = angles[1] - angles[0];
       if (diff > Math.PI * 2 - 0.1) {
@@ -55,8 +47,8 @@ function getRange(
       return angles;
     }
     return [
-      degreeToRad((axis as RotationConfig).startAngle, 0),
-      degreeToRad((axis as RotationConfig).endAngle, 2 * Math.PI),
+      deg2rad((axis as RotationConfig).startAngle, 0),
+      deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
     ];
   }
   return [0, Math.min(drawingArea.height, drawingArea.width) / 2];
@@ -93,13 +85,13 @@ export function computeAxisValue<T extends ChartSeriesType>(
     axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
-): ComputeResult<ChartsYAxisProps>;
+): ComputeResult<ChartsRadiusAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
     axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
-): ComputeResult<ChartsAxisProps>;
+): ComputeResult<ChartsRotationAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>({
   drawingArea,
   formattedSeries,

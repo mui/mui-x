@@ -38,7 +38,8 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   datePickerToolbarTitle: '選擇日期',
   dateTimePickerToolbarTitle: '選擇日期和時間',
   timePickerToolbarTitle: '選擇時間',
-  dateRangePickerToolbarTitle: '選擇時間範圍',
+  dateRangePickerToolbarTitle: '選擇日期範圍',
+  timeRangePickerToolbarTitle: '選擇時間範圍',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -56,11 +57,13 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}週`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `選擇範圍，已選擇嘅範圍係 ${formattedRange}` : '選擇範圍',
   fieldClearLabel: '清除',
 
   // Table labels
