@@ -21,7 +21,7 @@ const advancedFeatures = [
   },
   {
     title: 'Lazy loading children',
-    description: 'WImproves performance by loading children on demand, especially for large trees.',
+    description: 'Improves performance by loading children on demand, especially for large trees.',
     iconLink: '/static/x/pro.svg',
   },
 ];
