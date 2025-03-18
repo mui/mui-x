@@ -36,28 +36,29 @@ Following are all team members who have contributed to this release:
 
 Below are the highlights of the alpha releases leading up to this beta release:
 
-- 🚀📊 **New Pro Chart**: It is now possible to create Funnel charts—perfect for visualizing conversions, sales pipelines and more!
-- 🎁 **Radar Chart**: The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks.
-- 🛠️ **Toolbar Component**: New and improved [Toolbar component](https://next.mui.com/x/react-data-grid/components/toolbar/) for the data grid.
-- 📊 **Decouple `margin` and `axis-size`**: A new API to support multiple axes (#16418) @JCQuintas.
-- 📦 **Data Source**: Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
-- ⚡ **Excel Export Performance**: Improve Data Grid Excel export serialization performance.
-- 🚫 **No Columns Overlay**: Add ["No columns" overlay](https://next.mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
-- ⚡ **Performance Improvements**: Mount and resize performance improvements for the Data Grid.
-- 🎨 **Theming Improvements**: Data Grid theming improvements and default background color.
-- 🍬 **Header Filters Design**: Improved design for Data Grid [Header filters](https://next.mui.com/x/react-data-grid/filtering/header-filters/).
-- 🔄 **Scroll Restoration**: Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration).
-- 📊 **SSR for Charts**: Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering).
-- 📊 **HTML Legend for Charts**: Charts legend is now an HTML element which can be styled more easily.
-- 💫 **Aggregation Support**: Support [aggregation with server-side data](/x/react-data-grid/server-side-data/aggregation/).
-- 🏎️ **Data Grid Performance**: Improve Data Grid aggregation, resize and scrolling performance.
-- 💫 **Server-side Lazy Loading**: Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid. Use [data source](https://mui.com/x/react-data-grid/server-side-data/#data-source) to fetch a range of rows on demand and update the rows as described in [Infinite loading](https://mui.com/x/react-data-grid/row-updates/#infinite-loading) and [Lazy loading](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) without extra callbacks.
-- 🎯 **Data Caching**: Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching). Check out our [recommendations](https://mui.com/x/react-data-grid/server-side-data/#improving-the-cache-hit-rate) for improving the cache hit rate.
-- **Charts Composition**: `<ChartDataProvider />` and `<ChartsSurface />` components are now fully divided — [Learn more](https://next.mui.com/x/react-charts/composition/#overview).
-- **Custom HTML Components**: Users can create their own HTML components using chart data — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
-- 🔧 **Tooltip Customization**: Refactor Tooltip customization for charts — [Learn more](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
-- ⚛️ **React 19 Support**.
-- 🔁 **Automatic Selection**: Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- ⚛️ React 19 support.
+
+- 🛠️ New and improved Data Grid [Toolbar component](https://next.mui.com/x/react-data-grid/components/toolbar/).
+- 📦 Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
+- 🚫 Add ["No columns" overlay](https://next.mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
+- 🍬 Improved design for Data Grid [Header filters](https://next.mui.com/x/react-data-grid/filtering/header-filters/).
+- 🔄 Add Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration).
+- 💫 Support [aggregation with server-side data](https://next.mui.com/x/react-data-grid/server-side-data/aggregation/).
+- 🎁 Support [Server-side lazy loading](https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 🎯 Improved [data caching](https://next.mui.com/x/react-data-grid/server-side-data/#data-caching).
+- 🏎️ Improve Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
+- 🎨 Improve Data Grid theming and add default background color.
+
+- 📊 New Pro chart: [Funnel](https://next.mui.com/x/react-charts/funnel/).
+- 📊 New community chart: [Radar](https://next.mui.com/x/react-charts/radar/) is available in preview for testing.
+- 📊 Charts legend is now an HTML element which can be styled more easily.
+- 📊 Create [custom HTML components](https://next.mui.com/x/react-charts/components/#html-components) using chart data.
+- 📊 Refactor Charts [Tooltip customization](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
+- 📊 Improve Charts [composition](https://next.mui.com/x/react-charts/composition/#overview).
+- 📊 Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering).
+- 📊 Decouple `margin` and `axis-size`: A new API to support multiple axes.
+
+- 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
 ### Data Grid
 
@@ -276,7 +277,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.14`, plus:
 
   ```diff
    const { publicAPI } = useTreeItemUtils();
-  
+
    const handleSelectItem() {
   -  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
   +  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
@@ -287,7 +288,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.14`, plus:
 
   ```diff
    const { publicAPI } = useTreeItemUtils();
-  
+
    const handleExpandItem() {
   -  publicAPI.setItemExpansion(event, props.itemId, true)
   +  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
