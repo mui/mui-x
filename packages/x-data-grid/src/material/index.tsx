@@ -243,6 +243,7 @@ const iconSlots: GridIconSlotsComponent = {
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  columnMenuUnsortIcon: null,
   columnMenuFilterIcon: GridFilterAltIcon,
   columnMenuManageColumnsIcon: GridViewColumnIcon,
   columnMenuClearIcon: GridClearIcon,
@@ -559,7 +560,7 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIFocusTrap open disableEnforceFocus>
+    <MUIFocusTrap open disableEnforceFocus disableAutoFocus>
       <div tabIndex={-1}>{content}</div>
     </MUIFocusTrap>
   );
