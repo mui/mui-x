@@ -12,9 +12,7 @@ import {
   gridPivotInitialColumnsSelector,
   gridPivotModelSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
-import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotPanelField } from './GridPivotPanelField';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -145,16 +143,6 @@ export interface FieldTransferObject {
   modelKey: 'columns' | 'rows' | 'values' | null;
 }
 
-export type DropPosition = 'top' | 'bottom' | null;
-
-export type UpdatePivotModel = (params: {
-  field: string;
-  targetSection: FieldTransferObject['modelKey'];
-  originSection: FieldTransferObject['modelKey'];
-  targetField?: string;
-  targetFieldPosition?: DropPosition;
-}) => void;
-
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
@@ -212,71 +200,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     });
   }, [pivotModel.columns, pivotModel.rows, pivotModel.values, searchValue, fields, getColumnName]);
 
-  const updatePivotModel = React.useCallback<UpdatePivotModel>(
-    ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
-      if (field === targetField) {
-        return;
-      }
-
-      onPivotModelChange((prev) => {
-        const newModel = { ...prev };
-        const isSameSection = targetSection === originSection;
-
-        const hidden =
-          originSection === null
-            ? false
-            : (prev[originSection].find((item) => item.field === field)?.hidden ?? false);
-
-        if (targetSection) {
-          const newSectionArray = [...prev[targetSection]];
-          let toIndex = newSectionArray.length;
-          if (targetField) {
-            const fromIndex = newSectionArray.findIndex((item) => item.field === field);
-            if (fromIndex > -1) {
-              newSectionArray.splice(fromIndex, 1);
-            }
-            toIndex = newSectionArray.findIndex((item) => item.field === targetField);
-            if (targetFieldPosition === 'bottom') {
-              toIndex += 1;
-            }
-          }
-
-          if (targetSection === 'values') {
-            const aggFunc = isSameSection
-              ? prev.values.find((item) => item.field === field)?.aggFunc
-              : getAvailableAggregationFunctions({
-                  aggregationFunctions: rootProps.aggregationFunctions,
-                  colDef: initialColumnsLookup[field],
-                  isDataSource: false,
-                })[0];
-            newSectionArray.splice(toIndex, 0, {
-              field,
-              aggFunc,
-              hidden,
-            });
-            newModel.values = newSectionArray as GridPivotModel['values'];
-          } else if (targetSection === 'columns') {
-            const sort = isSameSection
-              ? prev.columns.find((item) => item.field === field)?.sort
-              : undefined;
-            newSectionArray.splice(toIndex, 0, { field, sort, hidden });
-            newModel.columns = newSectionArray as GridPivotModel['columns'];
-          } else if (targetSection === 'rows') {
-            newSectionArray.splice(toIndex, 0, { field, hidden });
-            newModel.rows = newSectionArray as GridPivotModel['rows'];
-          }
-        }
-        if (!isSameSection && originSection) {
-          (newModel[originSection] as (typeof prev)[typeof originSection]) = prev[
-            originSection
-          ].filter((f) => f.field !== field);
-        }
-        return newModel;
-      });
-    },
-    [initialColumnsLookup, onPivotModelChange, rootProps.aggregationFunctions],
-  );
-
   const handleDragStart = (modelKey: FieldTransferObject['modelKey']) => {
     setDrag({ active: true, initialModelKey: modelKey, dropZone: null });
   };
@@ -304,7 +227,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     if (originSection === targetSection) {
       return;
     }
-    updatePivotModel({ field, targetSection, originSection });
+    apiRef.current.updatePivotModel({ field, targetSection, originSection });
   };
 
   const handleDragOver = React.useCallback((event: React.DragEvent) => {
@@ -359,9 +282,9 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                 key={field}
                 field={field}
                 modelKey={null}
-                updatePivotModel={updatePivotModel}
+                updatePivotModel={apiRef.current.updatePivotModel}
                 pivotModel={pivotModel}
-                onPivotModelChange={onPivotModelChange}
+                onPivotModelChange={apiRef.current.setPivotModel}
                 slots={rootProps.slots}
                 slotProps={rootProps.slotProps}
                 onDragStart={handleDragStart}
@@ -416,7 +339,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       data-field={field}
                       hidden={hidden ?? false}
                       pivotModel={pivotModel}
-                      updatePivotModel={updatePivotModel}
+                      updatePivotModel={apiRef.current.updatePivotModel}
                       onPivotModelChange={onPivotModelChange}
                       slots={rootProps.slots}
                       slotProps={rootProps.slotProps}
@@ -463,7 +386,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       key={field}
                       field={field}
                       modelKey="columns"
-                      updatePivotModel={updatePivotModel}
+                      updatePivotModel={apiRef.current.updatePivotModel}
                       pivotModel={pivotModel}
                       onPivotModelChange={onPivotModelChange}
                       slots={rootProps.slots}
@@ -513,7 +436,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       key={field}
                       field={field}
                       modelKey="values"
-                      updatePivotModel={updatePivotModel}
+                      updatePivotModel={apiRef.current.updatePivotModel}
                       pivotModel={pivotModel}
                       onPivotModelChange={onPivotModelChange}
                       slots={rootProps.slots}

@@ -4,15 +4,19 @@ import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './GridPivotPanelBody';
+import type { FieldTransferObject } from './GridPivotPanelBody';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import type {
+  DropPosition,
+  GridPivotingApi,
+} from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 interface GridPivotPanelFieldMenuProps {
   field: string;
   modelKey: FieldTransferObject['modelKey'];
   pivotModel: GridPivotModel;
-  updatePivotModel: UpdatePivotModel;
+  updatePivotModel: GridPivotingApi['updatePivotModel'];
 }
 
 type MenuAction = {

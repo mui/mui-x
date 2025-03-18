@@ -37,12 +37,21 @@ export interface GridPivotModel {
   }[];
 }
 
+export type DropPosition = 'top' | 'bottom' | null;
+
 export interface GridPivotingApi {
   /**
    * Sets the pivot model to use in the pivot mode.
    * @param {GridPivotModel | ((prev: GridPivotModel) => GridPivotModel)} model - The pivot model to set.
    */
   setPivotModel: (model: GridPivotModel | ((prev: GridPivotModel) => GridPivotModel)) => void;
+  updatePivotModel: (params: {
+    field: string;
+    targetSection: 'columns' | 'rows' | 'values' | null;
+    originSection: 'columns' | 'rows' | 'values' | null;
+    targetField?: string;
+    targetFieldPosition?: DropPosition;
+  }) => void;
   /**
    * Sets whether the pivot mode is enabled.
    * @param {boolean | ((prev: boolean) => boolean)} mode - The new value of the pivot mode state.

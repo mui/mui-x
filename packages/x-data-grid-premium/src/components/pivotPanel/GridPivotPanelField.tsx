@@ -17,13 +17,17 @@ import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterf
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
-import type { DropPosition, FieldTransferObject, UpdatePivotModel } from './GridPivotPanelBody';
+import type { FieldTransferObject } from './GridPivotPanelBody';
+import type {
+  DropPosition,
+  GridPivotingApi,
+} from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 type GridPivotPanelFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   pivotModel: GridPivotModel;
-  updatePivotModel: UpdatePivotModel;
+  updatePivotModel: GridPivotingApi['updatePivotModel'];
   onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
   slots: DataGridPremiumProcessedProps['slots'];
   slotProps: DataGridPremiumProcessedProps['slotProps'];

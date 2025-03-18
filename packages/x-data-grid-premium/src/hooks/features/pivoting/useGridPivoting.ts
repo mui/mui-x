@@ -18,6 +18,7 @@ import {
   useGridRegisterPipeProcessor,
   useGridSelector,
   GridPipeProcessor,
+  gridPivotInitialColumnsSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -34,6 +35,7 @@ import {
   getPivotedData,
   isPivotingAvailable as isPivotingAvailableFn,
 } from './utils';
+import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
 
 const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 
@@ -90,6 +92,7 @@ export const useGridPivoting = (
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
     | 'pivotingColDef'
+    | 'aggregationFunctions'
   >,
 ) => {
   const isPivot = useGridSelector(apiRef, gridPivotEnabledSelector);
@@ -240,6 +243,72 @@ export const useGridPivoting = (
     [apiRef, computePivotingState, isPivotingAvailable],
   );
 
+  const updatePivotModel = React.useCallback<GridPivotingApi['updatePivotModel']>(
+    ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
+      if (field === targetField) {
+        return;
+      }
+
+      apiRef.current.setPivotModel((prev) => {
+        const newModel = { ...prev };
+        const isSameSection = targetSection === originSection;
+
+        const hidden =
+          originSection === null
+            ? false
+            : (prev[originSection].find((item) => item.field === field)?.hidden ?? false);
+
+        if (targetSection) {
+          const newSectionArray = [...prev[targetSection]];
+          let toIndex = newSectionArray.length;
+          if (targetField) {
+            const fromIndex = newSectionArray.findIndex((item) => item.field === field);
+            if (fromIndex > -1) {
+              newSectionArray.splice(fromIndex, 1);
+            }
+            toIndex = newSectionArray.findIndex((item) => item.field === targetField);
+            if (targetFieldPosition === 'bottom') {
+              toIndex += 1;
+            }
+          }
+
+          if (targetSection === 'values') {
+            const initialColumns = gridPivotInitialColumnsSelector(apiRef);
+            const aggFunc = isSameSection
+              ? prev.values.find((item) => item.field === field)?.aggFunc
+              : getAvailableAggregationFunctions({
+                  aggregationFunctions: props.aggregationFunctions,
+                  colDef: initialColumns.find((column) => column.field === field)!,
+                  isDataSource: false,
+                })[0];
+            newSectionArray.splice(toIndex, 0, {
+              field,
+              aggFunc,
+              hidden,
+            });
+            newModel.values = newSectionArray as GridPivotModel['values'];
+          } else if (targetSection === 'columns') {
+            const sort = isSameSection
+              ? prev.columns.find((item) => item.field === field)?.sort
+              : undefined;
+            newSectionArray.splice(toIndex, 0, { field, sort, hidden });
+            newModel.columns = newSectionArray as GridPivotModel['columns'];
+          } else if (targetSection === 'rows') {
+            newSectionArray.splice(toIndex, 0, { field, hidden });
+            newModel.rows = newSectionArray as GridPivotModel['rows'];
+          }
+        }
+        if (!isSameSection && originSection) {
+          (newModel[originSection] as (typeof prev)[typeof originSection]) = prev[
+            originSection
+          ].filter((f) => f.field !== field);
+        }
+        return newModel;
+      });
+    },
+    [apiRef, props.aggregationFunctions],
+  );
+
   const setPivotEnabled = React.useCallback<GridPivotingApi['setPivotEnabled']>(
     (callback) => {
       if (!isPivotingAvailable) {
@@ -307,7 +376,11 @@ export const useGridPivoting = (
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
 
-  useGridApiMethod(apiRef, { setPivotModel, setPivotEnabled, setPivotPanelOpen }, 'public');
+  useGridApiMethod(
+    apiRef,
+    { setPivotModel, updatePivotModel, setPivotEnabled, setPivotPanelOpen },
+    'public',
+  );
 
   useEnhancedEffect(() => {
     if (props.pivotModel !== undefined) {
