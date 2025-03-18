@@ -138,14 +138,13 @@ export default function MainDemo() {
         <Paper
           component="div"
           variant="outlined"
-          sx={(theme) => ({
+          sx={{
             mb: 8,
             height: 640,
             width: '100%',
             overflow: 'hidden',
             display: 'flex',
-            backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
-          })}
+          }}
         >
           <PlaygroundTreeView {...treeViewProps} />
 
