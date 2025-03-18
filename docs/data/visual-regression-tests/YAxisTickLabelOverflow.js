@@ -1,24 +1,21 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { BarChartProps } from '@mui/x-charts/BarChart';
 
 const defaultYAxis = {
   scaleType: 'band',
   dataKey: 'code',
   width: 100,
-  valueFormatter: (value: any) =>
-    usAirportPassengers.find((item) => item.code === value)!.fullName,
+  valueFormatter: (value) =>
+    usAirportPassengers.find((item) => item.code === value).fullName,
   label: '0deg Axis Title',
-} as const;
+};
 
 const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
-
-type AxisPosition = NonNullable<BarChartProps['yAxis']>[number]['position'];
 
 const yAxes = degrees
   .map((angle) => ({
     ...defaultYAxis,
-    position: 'left' as AxisPosition,
+    position: 'left',
     id: `angle${angle}`,
     label: `${angle}deg Axis Title`,
     tickLabelStyle: { angle },
@@ -31,7 +28,7 @@ const yAxes = degrees
       position: 'right',
       tickLabelStyle: { angle },
     })),
-  ) satisfies BarChartProps['yAxis'];
+  );
 
 export default function YAxisTickLabelOverflow() {
   return (
