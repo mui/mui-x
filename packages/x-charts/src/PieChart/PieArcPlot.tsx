@@ -102,6 +102,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           innerRadius={item.innerRadius}
           outerRadius={item.outerRadius}
           cornerRadius={item.cornerRadius}
+          skipAnimation={skipAnimation ?? false}
           id={id}
           color={item.color}
           dataIndex={index}
