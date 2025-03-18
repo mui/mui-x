@@ -12,12 +12,9 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
-  TreeItemContent,
   TreeItemIconContainer,
   TreeItemLabel,
-  TreeItemRoot,
   TreeItemGroupTransition,
-  treeItemClasses,
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
@@ -93,31 +90,39 @@ declare module 'react' {
   }
 }
 
-const StyledTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
+const TreeItemRoot = styled('li')(({ theme }) => ({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  outline: 0,
   color: theme.palette.grey[400],
-  position: 'relative',
-  [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: theme.spacing(3.5),
-  },
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],
   }),
-})) as unknown as typeof TreeItemRoot;
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
+}));
+
+const TreeItemContent = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0.5),
+  paddingRight: theme.spacing(1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
+  width: '100%',
+  boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  cursor: 'pointer',
+  WebkitTapHighlightColor: 'transparent',
   flexDirection: 'row-reverse',
   borderRadius: theme.spacing(0.7),
   marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(0.5),
-  paddingRight: theme.spacing(1),
   fontWeight: 500,
-  '&[data-expanded]': {
-    '&:not([data-focused], [data-selected], [data-selected][data-focused] .labelIcon':
-      {
-        color: theme.palette.primary.dark,
-        ...theme.applyStyles('light', {
-          color: theme.palette.primary.main,
-        }),
-      },
+  '&[data-expanded]:not([data-focused], [data-selected]) .labelIcon': {
+    color: theme.palette.primary.dark,
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
     '&::before': {
       content: '""',
       display: 'block',
@@ -132,27 +137,27 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
       }),
     },
   },
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    color: 'white',
-    ...theme.applyStyles('light', {
-      color: theme.palette.primary.main,
-    }),
-  },
-  [`&[data-focused], &[data-selected], &[data-focused][data-selected]`]: {
+  [`&[data-focused], &[data-selected]`]: {
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
     ...theme.applyStyles('light', {
       backgroundColor: theme.palette.primary.main,
     }),
   },
+  '&:not([data-focused], [data-selected]):hover': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    color: 'white',
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
+  },
 }));
 
-const StyledTreeItemLabelText = styled(Typography)({
+const TreeItemLabelText = styled(Typography)({
   color: 'inherit',
   fontFamily: 'General Sans',
   fontWeight: 500,
-}) as unknown as typeof Typography;
+});
 
 interface CustomLabelProps {
   children: React.ReactNode;
@@ -183,7 +188,7 @@ function CustomLabel({
         />
       )}
 
-      <StyledTreeItemLabelText variant="body2">{children}</StyledTreeItemLabelText>
+      <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
     </TreeItemLabel>
   );
@@ -241,8 +246,8 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
   return (
     <TreeItemProvider {...getContextProviderProps()}>
-      <StyledTreeItemRoot {...getRootProps(other)}>
-        <CustomTreeItemContent {...getContentProps()}>
+      <TreeItemRoot {...getRootProps(other)}>
+        <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemIconContainer>
@@ -254,9 +259,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             })}
           />
           <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
-        </CustomTreeItemContent>
+        </TreeItemContent>
         {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
-      </StyledTreeItemRoot>
+      </TreeItemRoot>
     </TreeItemProvider>
   );
 });
