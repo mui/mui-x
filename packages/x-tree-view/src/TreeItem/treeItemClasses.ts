@@ -41,17 +41,35 @@ export interface TreeItemClasses {
   dragAndDropOverlay: string;
   /** Styles applied to the error icon element */
   errorIcon: string;
-  /** State class applied to the content element when expanded. */
+  /**
+   * State class applied to the content element when the item is expanded.
+   * @deprecated Use the `data-expanded` attribute instead.
+   */
   expanded: string;
-  /** State class applied to the content element when selected. */
+  /**
+   * State class applied to the content element when the item is selected.
+   * @deprecated Use the `data-selected` attribute instead.
+   */
   selected: string;
-  /** State class applied to the content element when focused. */
+  /**
+   * State class applied to the content element when the item is focused.
+   * @deprecated Use the `data-focused` attribute instead.
+   */
   focused: string;
-  /** State class applied to the element when disabled. */
+  /**
+   * State class applied to the content element when the item is disabled.
+   * @deprecated Use the `data-disabled` attribute instead.
+   */
   disabled: string;
-  /** Styles applied to the content of the items that are editable. */
+  /**
+   * State class applied to the content element when the item is editable.
+   * @deprecated Use the `data-editable` attribute instead.
+   */
   editable: string;
-  /** Styles applied to the content element when editing is enabled. */
+  /**
+   * State class applied to the content element when the item is being edited.
+   * @deprecated Use the `data-editing` attribute instead.
+   */
   editing: string;
 }
 

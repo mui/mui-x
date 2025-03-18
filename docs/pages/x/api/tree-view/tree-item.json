@@ -96,38 +96,44 @@
     {
       "key": "disabled",
       "className": "Mui-disabled",
-      "description": "State class applied to the element when disabled.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is disabled.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "editable",
       "className": "MuiTreeItem-editable",
-      "description": "Styles applied to the content of the items that are editable.",
-      "isGlobal": false
+      "description": "State class applied to the content element when the item is editable.",
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "editing",
       "className": "MuiTreeItem-editing",
-      "description": "Styles applied to the content element when editing is enabled.",
-      "isGlobal": false
+      "description": "State class applied to the content element when the item is being edited.",
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "expanded",
       "className": "Mui-expanded",
-      "description": "State class applied to the content element when expanded.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is expanded.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "focused",
       "className": "Mui-focused",
-      "description": "State class applied to the content element when focused.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is focused.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "selected",
       "className": "Mui-selected",
-      "description": "State class applied to the content element when selected.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is selected.",
+      "isGlobal": true,
+      "isDeprecated": true
     }
   ],
   "spread": true,
