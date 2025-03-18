@@ -6,6 +6,11 @@ import { fetchWithRetry } from './fetcher';
 const sendMuiXTelemetryRetries = 3;
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
+  // Disable reporting in SSR / Node.js
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   // Priority to the config (e.g. in code, env)
   const envIsCollecting = getTelemetryEnvConfigValue('IS_COLLECTING');
   if (typeof envIsCollecting === 'boolean') {

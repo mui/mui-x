@@ -1,11 +1,22 @@
 import fs from 'fs';
 import path from 'path';
 import { randomBytes } from 'crypto';
+import { fileURLToPath } from 'url';
 import type { TelemetryContextType } from '../context';
 import getEnvironmentInfo from './get-environment-info';
 import getAnonymousProjectId from './get-project-id';
 import getAnonymousMachineId from './get-machine-id';
 import { TelemetryStorage } from './storage';
+
+const dirname =
+  typeof __dirname === 'string'
+    ? __dirname // cjs build in root dir
+    : (() => {
+        const filename = fileURLToPath(import.meta.url);
+
+        // esm build in `esm/`, so we need to go up two levels
+        return path.dirname(path.dirname(filename));
+      })();
 
 (async () => {
   // If Node.js support permissions, we need to check if the current user has
@@ -41,7 +52,7 @@ import { TelemetryStorage } from './storage';
   };
 
   const writeContextData = (filePath: string, format: (content: string) => string) => {
-    const targetPath = path.resolve(__dirname, '..', filePath, 'context.js');
+    const targetPath = path.resolve(dirname, '..', filePath, 'context.js');
     fs.writeFileSync(targetPath, format(JSON.stringify(contextData, null, 2)));
   };
 
