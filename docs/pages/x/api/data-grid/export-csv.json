@@ -25,18 +25,6 @@
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "href": { "type": { "name": "string" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
-    "loading": { "type": { "name": "bool" }, "default": "null" },
-    "loadingIndicator": {
-      "type": { "name": "node" },
-      "default": "<CircularProgress color=\"inherit\" size={16} />"
-    },
-    "loadingPosition": {
-      "type": {
-        "name": "enum",
-        "description": "'center'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'"
-      },
-      "default": "'center'"
-    },
     "onFocusVisible": { "type": { "name": "func" } },
     "options": {
       "type": {
@@ -251,48 +239,6 @@
       "description": "Styles applied to the icon element if supplied and `size=\"small\"`.",
       "isGlobal": false,
       "isDeprecated": true
-    },
-    {
-      "key": "loading",
-      "className": "MuiExportCsv-loading",
-      "description": "Styles applied to the root element if `loading={true}`.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingIconPlaceholder",
-      "className": "MuiExportCsv-loadingIconPlaceholder",
-      "description": "Styles applied to the loadingIconPlaceholder element.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingIndicator",
-      "className": "MuiExportCsv-loadingIndicator",
-      "description": "Styles applied to the loadingIndicator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingPositionCenter",
-      "className": "MuiExportCsv-loadingPositionCenter",
-      "description": "Styles applied to the root element if `loadingPosition=\"center\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingPositionEnd",
-      "className": "MuiExportCsv-loadingPositionEnd",
-      "description": "Styles applied to the root element if `loadingPosition=\"end\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingPositionStart",
-      "className": "MuiExportCsv-loadingPositionStart",
-      "description": "Styles applied to the root element if `loadingPosition=\"start\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "loadingWrapper",
-      "className": "MuiExportCsv-loadingWrapper",
-      "description": "Styles applied to the loadingWrapper element.",
-      "isGlobal": false
     },
     {
       "key": "outlined",
