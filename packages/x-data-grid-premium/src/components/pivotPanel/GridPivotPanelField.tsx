@@ -370,7 +370,6 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
           as={rootProps.slots.baseCheckbox}
           size="small"
           density="compact"
-          truncate
           {...rootProps.slotProps?.baseCheckbox}
           checked={!props.hidden}
           onChange={handleVisibilityChange}

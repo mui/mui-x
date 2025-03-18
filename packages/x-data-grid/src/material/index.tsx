@@ -78,37 +78,21 @@ const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   },
 }));
 
-const FormControlLabel = styled(MUIFormControlLabel, {
-  shouldForwardProp: (prop) => prop !== 'fullWidth' && prop !== 'truncate',
-})<{ fullWidth?: boolean; truncate?: boolean }>(({ theme }) => ({
+const FormControlLabel = styled(MUIFormControlLabel)<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   margin: 0,
+  overflow: 'hidden',
   [`& .${formControlLabelClasses.label}`]: {
     fontSize: theme.typography.pxToRem(14),
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   variants: [
     {
       props: { fullWidth: true },
       style: {
         width: '100%',
-      },
-    },
-    {
-      props: { labelPlacement: 'start', fullWidth: true },
-      style: {
-        justifyContent: 'space-between',
-        width: '100%',
-      },
-    },
-    {
-      props: { truncate: true },
-      style: {
-        overflow: 'hidden',
-        [`& .${formControlLabelClasses.label}`]: {
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        },
       },
     },
   ],
@@ -303,7 +287,7 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 export default materialSlots;
 
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, density, truncate, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -347,13 +331,12 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       }
       label={label}
       fullWidth={fullWidth}
-      truncate={truncate}
     />
   );
 }
 
 function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButtonElement>) {
-  const { label, labelPlacement, className, fullWidth, ...other } = props;
+  const { label, className, ...other } = props;
 
   if (!label) {
     return <MUISwitch {...other} className={className} ref={ref} />;
@@ -363,9 +346,7 @@ function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButto
     <FormControlLabel
       className={className}
       control={<MUISwitch {...other} ref={ref} />}
-      fullWidth={fullWidth}
       label={label}
-      labelPlacement={labelPlacement}
     />
   );
 }

@@ -118,7 +118,6 @@ export type CheckboxProps = {
   onKeyDown?: React.KeyboardEventHandler;
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
-  truncate?: boolean;
   slotProps?: {
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
@@ -286,9 +285,7 @@ export type SwitchProps = {
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
   label?: React.ReactNode;
-  labelPlacement?: 'start' | 'end';
   className?: string;
-  fullWidth?: boolean;
 };
 
 export type TextFieldProps = {
