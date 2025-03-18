@@ -154,7 +154,11 @@ const TreeItemContent = styled('div')(({ theme }) => ({
   },
 }));
 
-const AnimatedCollapse = animated(Collapse);
+const CustomCollapse = styled(Collapse)({
+  padding: 0,
+});
+
+const AnimatedCollapse = animated(CustomCollapse);
 
 function TransitionComponent(props: TransitionProps) {
   const style = useSpring({
@@ -171,7 +175,7 @@ const TreeItemLabelText = styled(Typography)({
   color: 'inherit',
   fontFamily: 'General Sans',
   fontWeight: 500,
-}) as unknown as typeof Typography;
+});
 
 interface CustomLabelProps {
   children: React.ReactNode;
@@ -290,6 +294,7 @@ export default function FileExplorer() {
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
+      itemChildrenIndentation={24}
     />
   );
 }

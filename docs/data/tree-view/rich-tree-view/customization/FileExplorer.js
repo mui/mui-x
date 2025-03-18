@@ -139,7 +139,11 @@ const TreeItemContent = styled('div')(({ theme }) => ({
   },
 }));
 
-const AnimatedCollapse = animated(Collapse);
+const CustomCollapse = styled(Collapse)({
+  padding: 0,
+});
+
+const AnimatedCollapse = animated(CustomCollapse);
 
 function TransitionComponent(props) {
   const style = useSpring({
@@ -257,6 +261,7 @@ export default function FileExplorer() {
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
+      itemChildrenIndentation={24}
     />
   );
 }

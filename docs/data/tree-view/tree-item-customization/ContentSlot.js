@@ -18,7 +18,7 @@ const CustomContent = styled('div')(({ theme }) => ({
     opacity: 0.5,
     backgroundColor: theme.palette.action.disabledBackground,
   },
-  '[data-selected]': {
+  '&[data-selected]': {
     backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
   },
 }));
