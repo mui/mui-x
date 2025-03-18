@@ -139,16 +139,91 @@ describe('useAnimate', () => {
 
     rerender(<TestComponent width={0} />);
 
-    await waitFor(() => {
-      expect(calls).to.be.greaterThan(0);
-    });
+    await waitFor(
+      () => {
+        expect(calls).to.equal(1);
+      },
+      {
+        /* Need to reduce interval to ensure we get the first call.
+         * The default of 50ms is too slow because a transition is happening every frame.  */
+        interval: 3,
+      },
+    );
 
-    // Should immediately start animating from the last value to 0
     expect(lastCall).to.be.lessThan(lastIncreasingCall);
 
     // Until the animation is complete
     await waitFor(() => {
       expect(lastCall).to.equal(0);
     });
+  });
+
+  it('jumps to end of animation if `skip` becomes true while animating', async () => {
+    let calls = 0;
+    let firstCall: number | null = null;
+    let lastCall: number | null = null;
+
+    function applyProps(element: SVGPathElement, props: { width: number }) {
+      calls += 1;
+
+      if (firstCall === null) {
+        firstCall = props.width;
+      }
+
+      lastCall = props.width;
+    }
+
+    function TestComponent({
+      width,
+      skipAnimation = false,
+    }: {
+      width: number;
+      skipAnimation?: boolean;
+    }) {
+      const ref = useAnimate(
+        { width },
+        {
+          createInterpolator: interpolateWidth,
+          applyProps,
+          initialProps: { width: 1000 },
+          skip: skipAnimation,
+        },
+      );
+
+      return (
+        <svg>
+          <path ref={ref} />
+        </svg>
+      );
+    }
+
+    const { rerender } = render(<TestComponent width={2000} />);
+
+    await waitFor(() => {
+      expect(calls).to.be.greaterThan(0);
+    });
+
+    // Should be animating from 1000 to 2000
+    expect(lastCall).to.be.greaterThan(1000);
+    expect(lastCall).to.be.lessThan(2000);
+
+    calls = 0;
+    lastCall = null;
+
+    rerender(<TestComponent width={0} skipAnimation />);
+
+    await waitFor(
+      () => {
+        expect(calls).to.equal(1);
+      },
+      {
+        /* Need to reduce interval to ensure we get the first call.
+         * The default of 50ms is too slow because a transition is happening every frame.  */
+        interval: 3,
+      },
+    );
+
+    // Should jump to 0 immediately after first call
+    expect(lastCall).to.equal(0);
   });
 });
