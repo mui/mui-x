@@ -5,16 +5,18 @@ import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 
-export function useAnimate<Props extends {}, Elem extends Element>(
+export function useAnimate<Props, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
     applyProps,
     skip,
+    initialProps,
   }: {
     createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
     applyProps: (element: Elem, props: Props) => void;
     skip?: boolean;
+    initialProps?: Props;
   },
 ) {
   const transitionName = `MuiUseAnimate-${useId()}`;
@@ -22,7 +24,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
    * T1. The transitioned element changes;
    * T2. The transitioned element is unmounted;
    * T3. The component calling this hook is unmounted. */
-  const lastInterpolatedProps = React.useRef(props);
+  const lastInterpolatedProps = React.useRef(initialProps ?? props);
   const transitionRef = React.useRef<Transition<Elem, unknown, null, undefined>>(null);
   const elementRef = React.useRef<Elem>(null);
   const elementUnmounted = React.useRef(false);
@@ -40,7 +42,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
   /* T2. Interrupt the transition if the element is unmounted.
    *
-   * `elementUnmounted` is set to true when a `setRef` is called with a non-null element. This is needed because
+   * `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
    * `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be called only
    *  when the underlying element changes.
    *  When `elementUnmounted` is true, it means `setRef` wasn't called with an element, so we must interrupt the
