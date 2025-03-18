@@ -7,6 +7,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
 import { useAnimate } from '../internals/useAnimate';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
@@ -58,8 +59,15 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 
 type PieArcAnimatedProps = Pick<
   PieArcProps,
-  'startAngle' | 'endAngle' | 'cornerRadius' | 'paddingAngle' | 'innerRadius' | 'outerRadius'
+  | 'startAngle'
+  | 'endAngle'
+  | 'cornerRadius'
+  | 'paddingAngle'
+  | 'innerRadius'
+  | 'outerRadius'
+  | 'skipAnimation'
 >;
+
 type PieArcInterpolatedProps = Pick<PieArcAnimatedProps, 'startAngle' | 'endAngle'>;
 function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
   const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
@@ -73,7 +81,7 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   };
 }
 
-function useAnimatePieArc(props: PieArcAnimatedProps) {
+export function useAnimatePieArc(props: PieArcAnimatedProps) {
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
     {
@@ -85,7 +93,7 @@ function useAnimatePieArc(props: PieArcAnimatedProps) {
             .cornerRadius(props.cornerRadius)({
               padAngle: props.paddingAngle,
               innerRadius: props.innerRadius,
-              outerRadius: props.cornerRadius,
+              outerRadius: props.outerRadius,
               startAngle: animatedProps.startAngle,
               endAngle: animatedProps.endAngle,
             })!
@@ -96,6 +104,7 @@ function useAnimatePieArc(props: PieArcAnimatedProps) {
         startAngle: (props.startAngle + props.endAngle) / 2,
         endAngle: (props.startAngle + props.endAngle) / 2,
       },
+      skip: props.skipAnimation,
     },
   );
 
@@ -104,7 +113,7 @@ function useAnimatePieArc(props: PieArcAnimatedProps) {
     d: d3Arc().cornerRadius(props.cornerRadius)({
       padAngle: props.paddingAngle,
       innerRadius: props.innerRadius,
-      outerRadius: props.cornerRadius,
+      outerRadius: props.outerRadius,
       startAngle: props.startAngle,
       endAngle: props.endAngle,
     })!,
@@ -118,7 +127,9 @@ const PieArcRoot = styled('path', {
 })<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
+  transitionProperty: 'opacity, fill, filter',
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
 }));
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
@@ -130,18 +141,26 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     outerRadius: number;
     paddingAngle: number;
     startAngle: number;
+    /** @default false */
+    skipAnimation: boolean;
   };
 
 function PieArc(props: PieArcProps) {
   const {
     classes: innerClasses,
     color,
-    cornerRadius,
     dataIndex,
     id,
     isFaded,
     isHighlighted,
     onClick,
+    cornerRadius,
+    startAngle,
+    endAngle,
+    innerRadius,
+    outerRadius,
+    paddingAngle,
+    skipAnimation,
     ...other
   } = props;
 
@@ -156,7 +175,15 @@ function PieArc(props: PieArcProps) {
   const classes = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
-  const animatedProps = useAnimatePieArc(props);
+  const animatedProps = useAnimatePieArc({
+    cornerRadius,
+    startAngle,
+    endAngle,
+    innerRadius,
+    outerRadius,
+    paddingAngle,
+    skipAnimation,
+  });
 
   return (
     <PieArcRoot
@@ -182,10 +209,20 @@ PieArc.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
+  endAngle: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
+  outerRadius: PropTypes.number.isRequired,
+  paddingAngle: PropTypes.number.isRequired,
+  /**
+   * @default false
+   */
+  skipAnimation: PropTypes.bool.isRequired,
+  startAngle: PropTypes.number.isRequired,
 } as any;
 
 export { PieArc };

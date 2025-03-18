@@ -359,6 +359,8 @@
   { "name": "Unstable_FunnelChart", "kind": "Variable" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Function" },
+  { "name": "useAnimateLine", "kind": "Function" },
+  { "name": "useAnimatePieArc", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
   { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },
   { "name": "useBarSeries", "kind": "Function" },
