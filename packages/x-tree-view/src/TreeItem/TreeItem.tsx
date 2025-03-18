@@ -12,12 +12,7 @@ import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
-import {
-  useTreeItem,
-  UseTreeItemContentSlotOwnProps,
-  UseTreeItemLabelSlotOwnProps,
-  UseTreeItemStatus,
-} from '../useTreeItem';
+import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
 import { getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
@@ -62,52 +57,40 @@ export const TreeItemContent = styled('div', {
       backgroundColor: 'transparent',
     },
   },
-  variants: [
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
-      style: {
-        opacity: (theme.vars || theme).palette.action.disabledOpacity,
-        backgroundColor: 'transparent',
-      },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.focused,
-      style: { backgroundColor: (theme.vars || theme).palette.action.focus },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
-      style: {
+  '&[data-disabled]': {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    backgroundColor: 'transparent',
+  },
+  '&[data-focused]': {
+    backgroundColor: (theme.vars || theme).palette.action.focus,
+  },
+  '&[data-selected]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
+        : alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+          ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover': {
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-            : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-          },
-        },
       },
     },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected && status.focused,
-      style: {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-          : alpha(
-              theme.palette.primary.main,
-              theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-            ),
-      },
-    },
-  ],
+  },
+  '&[data-selected][data-focused]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
+      : alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+        ),
+  },
 }));
 
 export const TreeItemLabel = styled('div', {

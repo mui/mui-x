@@ -262,6 +262,12 @@ export const useTreeItem = <
       status,
     };
 
+    ['expanded', 'selected', 'focused', 'disabled', 'editing', 'editable'].forEach((key) => {
+      if (status[key]) {
+        props[`data-${key}`] = '';
+      }
+    });
+
     const enhancedContentProps =
       propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
