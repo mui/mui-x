@@ -18,20 +18,22 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-    item: ['item'],
-    itemContent: ['itemContent'],
-    itemGroupTransition: ['itemGroupTransition'],
-    itemIconContainer: ['itemIconContainer'],
-    itemLabel: ['itemLabel'],
-    // itemLabelInput: ['itemLabelInput'], => feature not available on this component
-    itemCheckbox: ['itemCheckbox'],
-    // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
-    // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      // itemLabelInput: ['itemLabelInput'], => feature not available on this component
+      itemCheckbox: ['itemCheckbox'],
+      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+    };
 
-  return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+    return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+  }, [classes]);
 };
 
 export const SimpleTreeViewRoot = styled('ul', {

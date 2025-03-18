@@ -22,20 +22,22 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-    item: ['item'],
-    itemContent: ['itemContent'],
-    itemGroupTransition: ['itemGroupTransition'],
-    itemIconContainer: ['itemIconContainer'],
-    itemLabel: ['itemLabel'],
-    itemLabelInput: ['itemLabelInput'],
-    itemCheckbox: ['itemCheckbox'],
-    itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
-    itemErrorIcon: ['itemErrorIcon'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
+      itemErrorIcon: ['itemErrorIcon'],
+    };
 
-  return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewProRoot = styled('ul', {
