@@ -80,7 +80,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     }
   });
 
-  const [target, setTarget] = React.useState<Element | null>(null);
+  const [fallbackTarget, setFallbackTarget] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -88,11 +88,11 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     );
 
     if (panelAnchor) {
-      setTarget(panelAnchor);
+      setFallbackTarget(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!target) {
+  if (!fallbackTarget) {
     return null;
   }
 
@@ -102,7 +102,6 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       ownerState={rootProps}
       placement="bottom-start"
       className={clsx(classes.panel, className, variablesClass)}
-      target={target}
       flip
       onDidShow={onDidShow}
       onDidHide={onDidHide}
@@ -112,6 +111,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       focusTrap
       {...other}
       {...rootProps.slotProps?.basePopper}
+      target={props.target ?? fallbackTarget}
       ref={ref}
     >
       <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>
