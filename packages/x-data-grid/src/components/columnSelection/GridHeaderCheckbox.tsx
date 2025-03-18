@@ -77,7 +77,9 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
       const rowIds =
-        !rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly
+        !rootProps.pagination ||
+        !rootProps.checkboxSelectionVisibleOnly ||
+        rootProps.paginationMode === 'server'
           ? visibleRowIds
           : paginatedVisibleRowIds;
 
