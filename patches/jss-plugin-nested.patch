@@ -1,0 +1,21 @@
+diff --git a/dist/jss-plugin-nested.esm.js b/dist/jss-plugin-nested.esm.mjs
+similarity index 100%
+rename from dist/jss-plugin-nested.esm.js
+rename to dist/jss-plugin-nested.esm.mjs
+diff --git a/package.json b/package.json
+index e0d31091f806f716cdd99f9796946a3772d3478b..c119560e2811b16915c5913545c4b918eb00e125 100644
+--- a/package.json
++++ b/package.json
+@@ -23,6 +23,12 @@
+     "src",
+     "!*.test.*"
+   ],
++  "exports": {
++    ".": {
++      "import": "./dist/jss-plugin-nested.esm.mjs",
++      "require": "./dist/jss-plugin-nested.cjs.js"
++    }
++  },
+   "keywords": [
+     "cssinjs",
+     "css-in-js",
