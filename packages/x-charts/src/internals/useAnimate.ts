@@ -3,10 +3,12 @@ import useId from '@mui/utils/useId';
 import * as React from 'react';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
+// FIXME: Do not use @babel/types
+import { shallowEqual } from '@babel/types';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
-export function useAnimate<Props, Elem extends Element>(
+export function useAnimate<Props extends {}, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
@@ -29,6 +31,7 @@ export function useAnimate<Props, Elem extends Element>(
   const transitionRef = React.useRef<Transition<Elem, unknown, null, undefined>>(null);
   const elementRef = React.useRef<Elem>(null);
   const elementUnmounted = React.useRef(false);
+  const lastProps = React.useRef(props);
 
   useIsomorphicLayoutEffect(() => {
     return () => {
@@ -58,6 +61,10 @@ export function useAnimate<Props, Elem extends Element>(
     }
   });
 
+  useIsomorphicLayoutEffect(() => {
+    lastProps.current = props;
+  }, [props]);
+
   const animate = React.useCallback(
     (element: Elem) => {
       transitionRef.current = select(element)
@@ -80,14 +87,6 @@ export function useAnimate<Props, Elem extends Element>(
     [applyProps, createInterpolator, props, skip, transitionName],
   );
 
-  useIsomorphicLayoutEffect(() => {
-    const element = elementRef.current;
-
-    if (element) {
-      animate(element);
-    }
-  }, [animate]);
-
   const setRef = React.useCallback(
     (element: Elem | null) => {
       elementUnmounted.current = element === null;
@@ -98,9 +97,14 @@ export function useAnimate<Props, Elem extends Element>(
 
       const lastElement = elementRef.current;
 
-      // If it's the same element, there's nothing to do.
       if (lastElement === element) {
-        return;
+        // If it's the same element and same props, there's nothing to do.
+        if (shallowEqual(lastProps.current, props)) {
+          return;
+        }
+
+        // If props aren't the same, interrupt the transition and fall through to start a new animation.
+        interrupt(element, transitionName);
       }
 
       // T1. If it's a different element, interrupt the transition of the last element.
@@ -112,7 +116,7 @@ export function useAnimate<Props, Elem extends Element>(
 
       elementRef.current = element;
     },
-    [animate, transitionName],
+    [animate, props, transitionName],
   );
 
   return setRef;
