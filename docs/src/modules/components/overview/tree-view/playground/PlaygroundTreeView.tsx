@@ -42,7 +42,9 @@ import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
 import { Corner, Density } from './PlaygroundThemeConfig';
 import { ExtendedTreeItemProps, ITEMS } from './items';
 
-const CustomGroupTransition = styled(TreeItemGroupTransition)(
+const CustomGroupTransition = styled(TreeItemGroupTransition, {
+  shouldForwardProp: (prop) => prop !== 'showChildrenOutline',
+})(
   ({
     theme,
     showChildrenOutline,
@@ -432,6 +434,7 @@ export default function PlaygroundTreeView({
               'avatar',
               'actions',
             ]}
+            defaultSelectedItems={['avatar']}
             sx={{ flexGrow: 1, width: 300, height: '100%' }}
             slots={{ item: CustomTreeItem as any }}
             itemChildrenIndentation={12}

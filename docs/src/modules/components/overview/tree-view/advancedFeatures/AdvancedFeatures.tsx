@@ -41,7 +41,7 @@ export default function AdvancedFeatures() {
           }}
         >
           <SectionHeadline
-            overline="Internationalization"
+            overline="Advanced features"
             title={
               <Typography variant="h2" fontSize="1.625rem">
                 {advancedFeatures[activeItem].title}

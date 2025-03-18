@@ -1,5 +1,4 @@
 import * as React from 'react';
-import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -64,17 +63,26 @@ export default function TreeViewKeyboard() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Divider />
       <Stack spacing={6} py={8} sx={{ width: '100%' }}>
-        <Stack sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
-          <SectionHeadline
-            overline="Accessibility"
-            title={
-              // eslint-disable-next-line material-ui/no-hardcoded-labels
-              <Typography variant="h2" fontSize="1.625rem">
-                Inclusive by design
-              </Typography>
-            }
-            description="The MUI X Tree View feature advanced keyboard support that's compliant with WCAG and WAI-ARIA standards, so users who require assistive technology can navigate your interface with ease."
-          />
+        <Stack spacing={1} sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+          <Typography variant="body2" color="primary" fontWeight="semiBold">
+            Accessibility
+          </Typography>
+          <Typography
+            variant="h4"
+            component="h2"
+            fontWeight="semiBold"
+            color="text.primary"
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
+          >
+            Inclusive by design
+          </Typography>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+          <Typography variant="body1" color="text.secondary">
+            The MUI X Tree View feature advanced keyboard support that&apos;s compliant with WCAG
+            and WAI-ARIA standards, so users who require assistive technology can navigate your
+            interface with ease.
+          </Typography>
           <Button
             size="small"
             href="/x/react-tree-view/accessibility/"
@@ -90,45 +98,50 @@ export default function TreeViewKeyboard() {
           sx={(currentTheme) => ({
             height: '100%',
             width: '100%',
-            backgroundColor: currentTheme.palette.background.paper,
             backgroundImage: `linear-gradient(${currentTheme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${currentTheme.palette.divider} 1px, ${currentTheme.palette.background.paper} 1px)`,
             backgroundSize: '20px 20px',
-            display: 'flex',
-            flexDirection: { lg: 'row', md: 'column' },
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            flexGrow: 1,
-            gap: 2,
             p: 2,
           })}
         >
-          <ThemeProvider theme={theme}>
-            <Paper variant="outlined" sx={{ p: 2, minHeight: 100, minWidth: 290 }}>
-              <RichTreeView
-                multiSelect
-                checkboxSelection
-                items={MUI_X_PRODUCTS}
-                ref={ref}
-                onKeyDown={(event: React.KeyboardEvent) => {
-                  setSelectedKey({
-                    key: event.key,
-                    code: event.code,
-                    location: event.location,
-                  });
-                }}
-                onKeyUp={() => {
-                  setSelectedKey(null);
-                }}
+          <Stack
+            spacing={2}
+            sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}
+            direction={{ lg: 'row', xs: 'column' }}
+            justifyContent="space-evenly"
+            alignItems={{ xs: 'center', lg: 'flex-start' }}
+          >
+            <ThemeProvider theme={theme}>
+              <Paper
+                variant="outlined"
+                sx={{ p: 2, minHeight: 150, width: '100%', maxWidth: 350, minWidth: 300 }}
+              >
+                <RichTreeView
+                  multiSelect
+                  checkboxSelection
+                  items={MUI_X_PRODUCTS}
+                  defaultExpandedItems={['tree-view']}
+                  ref={ref}
+                  onKeyDown={(event: React.KeyboardEvent) => {
+                    setSelectedKey({
+                      key: event.key,
+                      code: event.code,
+                      location: event.location,
+                    });
+                  }}
+                  onKeyUp={() => {
+                    setSelectedKey(null);
+                  }}
+                />
+              </Paper>
+            </ThemeProvider>
+            <Box sx={{ height: 'fit-content', width: '100%', maxWidth: 350, minWidth: 300 }}>
+              <KeyboardSvg
+                handleKeySelection={handleKeySelection}
+                selectedKey={selectedKey}
+                additionalSelected={['space', 'a', 't', 'm', 'x']}
               />
-            </Paper>
-          </ThemeProvider>
-          <Box sx={{ width: '350px', height: 'fit-content' }}>
-            <KeyboardSvg
-              handleKeySelection={handleKeySelection}
-              selectedKey={selectedKey}
-              additionalSelected={['space', 'a', 't', 'm', 'x']}
-            />
-          </Box>
+            </Box>
+          </Stack>
         </Paper>
       </Stack>
     </LocalizationProvider>

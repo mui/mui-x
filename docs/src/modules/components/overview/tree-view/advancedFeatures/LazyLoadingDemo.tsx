@@ -14,6 +14,13 @@ type ItemType = TreeViewBaseItem<{
   childrenCount?: number;
 }>;
 
+export const initialItems: ItemType[] = [
+  { id: '1', label: 'Amy Harris', childrenCount: randomInt(1, 5) },
+  { id: '2', label: 'Sam Smith', childrenCount: randomInt(1, 5) },
+  { id: '3', label: 'Jordan Miles', childrenCount: randomInt(1, 5) },
+  { id: '4', label: 'Amalia Brown', childrenCount: randomInt(1, 5) },
+];
+
 export default function LazyLoadingDemo() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
@@ -52,7 +59,7 @@ export default function LazyLoadingDemo() {
         >
           <ThemeProvider theme={theme}>
             <RichTreeViewPro
-              items={[]}
+              items={initialItems}
               experimentalFeatures={{ lazyLoading: true }}
               dataSource={{
                 getChildrenCount: (item) => item?.childrenCount as number,
