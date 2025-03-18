@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
   ThemeOptions,
@@ -23,7 +22,6 @@ import {
   TreeItemIconContainer,
   TreeItemLabel,
   TreeItemRoot,
-  treeItemClasses,
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
@@ -64,57 +62,54 @@ function TransitionComponent(props: TransitionProps) {
   return <AnimatedCollapse style={style} {...props} />;
 }
 
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme, status }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   gap: theme.spacing(1.5),
   paddingLeft: `calc(${theme.spacing(0.2)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth)/2)`,
   marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(0.5),
   color: theme.palette.grey[500],
   borderLeft: `3px solid transparent`,
-  ...(status.selected && {
+  '&[data-selected]': {
     borderLeftColor: theme.palette.primary.main,
     color: theme.palette.grey[700],
     backgroundColor: alpha(theme.palette.grey[300], 0.2),
     '&:hover': {
       backgroundColor: alpha(theme.palette.grey[300], 0.3),
     },
-    ...(status.focused && {
+    '&[data-focused]': {
       backgroundColor: alpha(theme.palette.grey[300], 0.4),
       '&:hover': {
         backgroundColor: alpha(theme.palette.grey[300], 0.5),
       },
-    }),
-  }),
-  ...(status.focused &&
-    !status.selected && {
-      backgroundColor: alpha(theme.palette.grey[300], 0.1),
-      '&:hover': {
-        backgroundColor: alpha(theme.palette.grey[300], 0.2),
-      },
-    }),
-
+    },
+  },
+  '&[data-focused][data-selected]': {
+    backgroundColor: alpha(theme.palette.grey[300], 0.1),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.grey[300], 0.2),
+    },
+  },
   ...theme.applyStyles('dark', {
     color: theme.palette.grey[300],
-    ...(status.selected && {
+    '&[data-selected]': {
       color: theme.palette.grey[50],
       backgroundColor: alpha(theme.palette.grey[600], 0.6),
       '&:hover': {
         backgroundColor: alpha(theme.palette.grey[600], 0.7),
       },
-      ...(status.focused && {
+      '&[data-focused]': {
         backgroundColor: alpha(theme.palette.grey[600], 0.8),
         '&:hover': {
           backgroundColor: alpha(theme.palette.grey[600], 0.9),
         },
-      }),
-    }),
-    ...(status.focused &&
-      !status.selected && {
-        backgroundColor: alpha(theme.palette.grey[600], 0.3),
-        '&:hover': {
-          backgroundColor: alpha(theme.palette.grey[600], 0.4),
-        },
-      }),
+      },
+    },
+    '&[data-focused][data-selected]': {
+      backgroundColor: alpha(theme.palette.grey[600], 0.3),
+      '&:hover': {
+        backgroundColor: alpha(theme.palette.grey[600], 0.4),
+      },
+    },
   }),
 }));
 
@@ -141,15 +136,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
   return (
     <TreeItemProvider {...getContextProviderProps()}>
-      <TreeItemRoot
-        {...getRootProps({
-          ...other,
-          className: clsx(treeItemClasses.root, {
-            'Mui-selected': status.selected,
-            'Mui-disabled': status.disabled,
-          }),
-        })}
-      >
+      <TreeItemRoot {...getRootProps(other)}>
         <CustomTreeItemContent {...getContentProps()}>
           <Stack
             direction="row"
