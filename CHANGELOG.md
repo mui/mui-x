@@ -77,7 +77,7 @@ Below are the highlights of the alpha releases leading up to this beta release:
 - [DataGrid] Make column header menu button aria-labels unique (#16796) @owais635
 - [DataGrid] Refactor: create base Pagination (#16759) @romgrk
 - [DataGrid] Update CSS variable naming convention to singular (#16993) @KenanYusuf
-- [DataGrid] Use Material UI CSS vars (#16962) @KenanYusuf
+- [DataGrid] Use Material UI CSS vars (#16962) @KenanYusuf
 - [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#15230, #16898 and #16966) @nusr
 - [l10n] Improve Czech (cs-CZ) and Slovak (sk-Sk) locales (#16968) @hlavacz
 - [l10n] Improve Korean (ko-KR) locale (#16807) @yelahj
@@ -132,13 +132,14 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`, plus:
 
 - [charts] Add axis highlight to the radar (#16868) @alexfauquette
 - [charts] Add radar labels (#16839) @alexfauquette
+- [charts] Allow breaking line for radar labels (#16947) @alexfauquette
 - [charts] Allow circular grid on radar chart (#16870) @alexfauquette
 - [charts] Allow customizing shape in scatter charts (#16640) @bernardobelchior
 - [charts] Avoid spreading props in demos (#16857) @bernardobelchior
 - [charts] Fix React 18 tests failing due to missing `forwardRef` (#16894) @bernardobelchior
 - [charts] Fix interaction performance (#16897) @JCQuintas
 - [charts] Fix x-axis tick label overflow (#16709) @bernardobelchior
-- [charts] Grid support time step bellow 1s (#16957) @alexfauquette
+- [charts] Grid support time step below 1s (#16957) @alexfauquette
 - [charts] Improve radar slice (#16932) @alexfauquette
 - [charts] Radar add option to highlighting series (#16940) @alexfauquette
 - [charts] Refactor zoom `isInteracting` behavior directly to community code (#16999) @JCQuintas
@@ -175,7 +176,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
 
 - [core] Fix proptypes and API docs after merge (#16934) @LukasTy
 - [core] Update `@mui/utils` dependency to only v7 (#16928) @Janpot
-- [core] Use MUI Core v7 libraries in packages and docs (#16771) @DiegoAndai
+- [core] Use MUI Core v7 libraries in packages and docs (#16771) @DiegoAndai
 - [code-infra] Avoid loading package.json with relative path (#16931) @Janpot
 - [code-infra] Bump `cimg/node` image version (#16964) @LukasTy
 - [code-infra] Create `Tanstack query` renovate group (#16989) @LukasTy
