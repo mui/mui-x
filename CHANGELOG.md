@@ -137,6 +137,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`, plus:
 - [charts] Allow customizing shape in scatter charts (#16640) @bernardobelchior
 - [charts] Avoid spreading props in demos (#16857) @bernardobelchior
 - [charts] Fix React 18 tests failing due to missing `forwardRef` (#16894) @bernardobelchior
+- [charts] Fix line highlight position with RTL (#16994) @alexfauquette
 - [charts] Fix interaction performance (#16897) @JCQuintas
 - [charts] Fix x-axis tick label overflow (#16709) @bernardobelchior
 - [charts] Grid support time step below 1s (#16957) @alexfauquette
