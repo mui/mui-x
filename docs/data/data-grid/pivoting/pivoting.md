@@ -71,7 +71,9 @@ For example, if you pivot by `region` and `quarter` columns, each unique combina
 
 ### Pivoting in action
 
-In the demo below, we pivot a dataset of sales to have `product` and `size` fields as **rows**, `region` and `quarter` fields as **columns**, and `sales` and `profit` fields as aggregated **values**.
+In the demo below, we want to check our sales by region and quarter for each product and size available.
+To get that, we pivot a dataset of sales to have `product` and `size` fields as **rows**, `region` and `quarter` fields
+as **columns**, and `sales` and `profit` fields as aggregated **values**.
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
