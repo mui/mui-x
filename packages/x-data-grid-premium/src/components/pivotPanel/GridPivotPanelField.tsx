@@ -8,6 +8,7 @@ import {
   GridSlotProps,
   GridSortDirection,
   NotRendered,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridColumnSortButton, vars } from '@mui/x-data-grid-pro/internals';
@@ -20,6 +21,7 @@ import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
 import type { FieldTransferObject } from './GridPivotPanelBody';
 import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { gridPivotInitialColumnsSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
 type GridPivotPanelFieldProps = {
   children: React.ReactNode;
@@ -27,14 +29,9 @@ type GridPivotPanelFieldProps = {
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
 } & (
-  | { modelKey: 'columns'; sort: GridPivotModel['columns'][number]['sort']; hidden?: boolean }
-  | { modelKey: 'rows'; hidden?: boolean }
-  | {
-      modelKey: 'values';
-      aggFunc: GridPivotModel['values'][number]['aggFunc'];
-      colDef: GridColDef;
-      hidden?: boolean;
-    }
+  | { modelKey: 'columns'; modelValue: GridPivotModel['columns'][number] }
+  | { modelKey: 'rows'; modelValue: GridPivotModel['rows'][number] }
+  | { modelKey: 'values'; modelValue: GridPivotModel['values'][number] }
   | { modelKey: null }
 );
 
@@ -46,7 +43,7 @@ type OwnerState = GridPivotPanelFieldProps &
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, modelKey } = ownerState;
-  const sorted = modelKey === 'columns' && ownerState.sort;
+  const sorted = modelKey === 'columns' && ownerState.modelValue.sort;
   const slots = {
     root: ['pivotPanelField', sorted && 'pivotPanelField--sorted'],
     name: ['pivotPanelFieldName'],
@@ -143,19 +140,19 @@ const GridPivotPanelFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckb
 function AggregationSelect({
   aggFunc,
   field,
-  onPivotModelChange,
-  colDef,
 }: {
   aggFunc: GridPivotModel['values'][number]['aggFunc'];
   field: FieldTransferObject['field'];
-  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
-  colDef: GridColDef;
 }) {
   const rootProps = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
   const aggregationMenuTriggerId = useId();
   const aggregationMenuId = useId();
+
+  const apiRef = useGridApiContext();
+  const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+  const colDef = initialColumns.get(field) as GridColDef;
 
   const availableAggregationFunctions = React.useMemo(
     () =>
@@ -168,7 +165,7 @@ function AggregationSelect({
   );
 
   const handleClick = (func: string) => {
-    onPivotModelChange((prev) => {
+    apiRef.current.setPivotModel((prev) => {
       return {
         ...prev,
         values: prev.values.map((col) => {
@@ -292,7 +289,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   );
 
   const handleSort = () => {
-    const currentSort = section === 'columns' ? props.sort : null;
+    const currentSort = section === 'columns' ? props.modelValue.sort : null;
     let newValue: GridSortDirection;
 
     if (currentSort === 'asc') {
@@ -360,7 +357,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
           size="small"
           density="compact"
           {...rootProps.slotProps?.baseCheckbox}
-          checked={!props.hidden}
+          checked={!props.modelValue.hidden || false}
           onChange={handleVisibilityChange}
           label={children}
         />
@@ -377,18 +374,13 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
         {section === 'columns' && (
           <GridColumnSortButton
             field={field}
-            direction={props.sort}
+            direction={props.modelValue.sort}
             sortingOrder={rootProps.sortingOrder}
             onClick={handleSort}
           />
         )}
         {section === 'values' && (
-          <AggregationSelect
-            aggFunc={props.aggFunc}
-            field={field}
-            colDef={props.colDef}
-            onPivotModelChange={apiRef.current.setPivotModel}
-          />
+          <AggregationSelect aggFunc={props.modelValue.aggFunc} field={field} />
         )}
         <GridPivotPanelFieldMenu field={field} modelKey={section} />
       </GridPivotPanelFieldActionContainer>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import {
-  GridColDef,
   GridShadowScrollArea,
   getDataGridUtilityClass,
   useGridSelector,
@@ -311,17 +310,17 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
               )}
               {pivotModel.rows.length > 0 && (
                 <GridPivotPanelFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {pivotModel.rows.map(({ field, hidden }) => (
+                  {pivotModel.rows.map((modelValue) => (
                     <GridPivotPanelField
-                      key={field}
-                      field={field}
+                      key={modelValue.field}
+                      field={modelValue.field}
                       modelKey="rows"
-                      data-field={field}
-                      hidden={hidden ?? false}
+                      modelValue={modelValue}
+                      data-field={modelValue.field}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {getColumnName(field)}
+                      {getColumnName(modelValue.field)}
                     </GridPivotPanelField>
                   ))}
                 </GridPivotPanelFieldList>
@@ -356,17 +355,16 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
               )}
               {pivotModel.columns.length > 0 && (
                 <GridPivotPanelFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {pivotModel.columns.map(({ field, sort, hidden }) => (
+                  {pivotModel.columns.map((modelValue) => (
                     <GridPivotPanelField
-                      key={field}
-                      field={field}
+                      key={modelValue.field}
+                      field={modelValue.field}
                       modelKey="columns"
-                      sort={sort}
-                      hidden={hidden ?? false}
+                      modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {getColumnName(field)}
+                      {getColumnName(modelValue.field)}
                     </GridPivotPanelField>
                   ))}
                 </GridPivotPanelFieldList>
@@ -401,18 +399,16 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
               )}
               {pivotModel.values.length > 0 && (
                 <GridPivotPanelFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {pivotModel.values.map(({ field, aggFunc, hidden }) => (
+                  {pivotModel.values.map((modelValue) => (
                     <GridPivotPanelField
-                      key={field}
-                      field={field}
+                      key={modelValue.field}
+                      field={modelValue.field}
                       modelKey="values"
-                      aggFunc={aggFunc}
-                      colDef={initialColumns.get(field) as GridColDef}
-                      hidden={hidden ?? false}
+                      modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {getColumnName(field)}
+                      {getColumnName(modelValue.field)}
                     </GridPivotPanelField>
                   ))}
                 </GridPivotPanelFieldList>
