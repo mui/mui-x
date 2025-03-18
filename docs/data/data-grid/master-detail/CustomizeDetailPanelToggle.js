@@ -54,7 +54,7 @@ function CustomDetailPanelToggle(props) {
     gridDetailPanelExpandedRowIdsSelector,
   );
 
-  const isExpanded = expandedRowIds.has(id);
+  const isExpanded = expandedRowIds.includes(id);
 
   // If the value is not a valid React element, it means that the row has no detail panel.
   const hasDetail = React.isValidElement(contentCache[id]);
