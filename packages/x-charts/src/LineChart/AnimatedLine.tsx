@@ -18,11 +18,17 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
 }
 
 function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
-  return useAnimate(props.d, {
-    createInterpolator: (lastD, newD) => interpolateString(lastD, newD),
-    applyProps: (element: SVGPathElement, d) => element.setAttribute('d', d),
-    skip,
-  });
+  return useAnimate(
+    { d: props.d },
+    {
+      createInterpolator: (lastProps, newProps) => {
+        const interpolate = interpolateString(lastProps.d, newProps.d);
+        return (t) => ({ d: interpolate(t) });
+      },
+      applyProps: (element: SVGPathElement, { d }) => element.setAttribute('d', d),
+      skip,
+    },
+  );
 }
 
 /**

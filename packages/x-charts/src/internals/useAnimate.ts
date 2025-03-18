@@ -5,7 +5,7 @@ import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 
-export function useAnimate<Props, Elem extends Element>(
+export function useAnimate<Props extends {}, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
