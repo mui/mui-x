@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import reactMajor from '@mui/x-internals/reactMajor';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
@@ -71,14 +72,18 @@ function LineHighlightElement(props: LineHighlightElementProps) {
       : {
           d: d3Symbol(d3SymbolsFill[getSymbol(shape)])()!,
         };
+
+  // React 18 does not recognize `transformOrigin` and React 19 does not recognize `transform-origin`
+  const transformOrigin =
+    reactMajor > 18 ? { transformOrigin: `${x} ${y}` } : { 'transform-origin': `${x} ${y}` };
+
   return (
     <Element
       pointerEvents="none"
       className={classes.root}
       transform={`translate(${x} ${y})`}
-      // @ts-expect-error transformOrigin exist but not in @types/react
-      transformOrigin={`${x} ${y}`}
       fill={color}
+      {...transformOrigin}
       {...additionalProps}
       {...other}
     />
