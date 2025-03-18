@@ -16,6 +16,7 @@ export default function StackBars() {
         { dataKey: 'treas', stack: 'equity' },
       ])}
       xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
+      yAxis={[{ width: 80 }]}
       {...config}
     />
   );

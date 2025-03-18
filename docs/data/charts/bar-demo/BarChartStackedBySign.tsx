@@ -23,6 +23,7 @@ export default function BarChartStackedBySign() {
         { data: uData, label: 'uv', id: 'uvId', stack: 'stack1' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 60 }]}
     />
   );
 }
