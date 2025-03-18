@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.10",
+    "@base-ui-components/react": "1.0.0-alpha.4",
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-internals": "workspace:*",
