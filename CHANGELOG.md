@@ -7,6 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-beta.0
 
+<img width="100%" alt="MUI X v8 Beta is live" src="https://github.com/user-attachments/assets/61ec4dd8-c946-456b-8b45-d51de8772f5d">
+
+
 _Mar 18, 2025_
 
 We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
