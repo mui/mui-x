@@ -51,16 +51,16 @@ export const getInitialColumns = (
   lookup: GridColumnsState['lookup'],
   getPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'],
 ) => {
-  let initialColumns: GridColDef[] = [];
+  const initialColumns: Map<string, GridColDef> = new Map();
   for (let i = 0; i < orderedFields.length; i += 1) {
     const field = orderedFields[i];
     const column = lookup[field];
     if (!isGroupingColumn(field)) {
-      initialColumns.push(column);
+      initialColumns.set(field, column);
 
       const derivedColumns = getPivotDerivedColumns?.(column);
       if (derivedColumns) {
-        initialColumns = initialColumns.concat(derivedColumns);
+        derivedColumns.forEach((col) => initialColumns.set(col.field, col));
       }
     }
   }
@@ -105,7 +105,7 @@ export const getPivotedData = ({
   pivotingColDef,
 }: {
   rows: GridRowModel[];
-  columns: GridColDef[];
+  columns: Map<string, GridColDef>;
   pivotModel: GridPivotModel;
   apiRef: RefObject<GridApiPremium>;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
@@ -119,8 +119,7 @@ export const getPivotedData = ({
   const pivotColumnsIncludedInPivotValues: GridColDef[] = [];
 
   const initialColumns = new Map<string, GridColDef>();
-  for (let i = 0; i < columns.length; i += 1) {
-    const column = columns[i];
+  for (const column of columns.values()) {
     if (!isGroupingColumn(column.field)) {
       initialColumns.set(column.field, column);
 

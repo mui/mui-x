@@ -274,8 +274,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (pivotEnabled) {
         return {
           filteredColumns: filterableColumns.filter(
-            (column) =>
-              initialColumns?.find((col: GridColDef) => col.field === column.field) !== undefined,
+            (column) => initialColumns.get(column.field) !== undefined,
           ),
           selectedField: itemField,
         };

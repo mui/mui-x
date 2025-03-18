@@ -97,9 +97,9 @@ export const useGridPivoting = (
 ) => {
   const isPivot = useGridSelector(apiRef, gridPivotEnabledSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
-  const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
-    undefined,
-  );
+  const nonPivotDataRef = React.useRef<
+    { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
+  >(undefined);
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
 
@@ -148,7 +148,7 @@ export const useGridPivoting = (
   const computePivotingState = React.useCallback(
     ({ enabled, model: pivotModel }: Pick<GridPivotingState, 'enabled' | 'model'>) => {
       if (enabled && pivotModel) {
-        const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: [] };
+        const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: new Map() };
 
         return {
           initialColumns: columns,
@@ -278,7 +278,7 @@ export const useGridPivoting = (
               ? prev.values.find((item) => item.field === field)?.aggFunc
               : getAvailableAggregationFunctions({
                   aggregationFunctions: props.aggregationFunctions,
-                  colDef: initialColumns.find((column) => column.field === field)!,
+                  colDef: initialColumns.get(field)!,
                   isDataSource: false,
                 })[0];
             newSectionArray.splice(toIndex, 0, {

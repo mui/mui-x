@@ -147,8 +147,8 @@ const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: nul
 
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridApiContext();
-  const columns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
-  const fields = React.useMemo(() => columns.map((col) => col.field), [columns]);
+  const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+  const fields = React.useMemo(() => initialColumns.keys().toArray(), [initialColumns]);
   const rootProps = useGridRootProps();
   const [drag, setDrag] = React.useState<{
     active: boolean;
@@ -163,22 +163,12 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     apiRef.current.setPivotModel,
   ]);
 
-  const initialColumnsLookup = React.useMemo(() => {
-    return columns.reduce(
-      (acc, column) => {
-        acc[column.field] = column;
-        return acc;
-      },
-      {} as Record<string, GridColDef>,
-    );
-  }, [columns]);
-
   const getColumnName = React.useCallback(
     (field: string) => {
-      const column = initialColumnsLookup[field];
+      const column = initialColumns.get(field);
       return column?.headerName || field;
     },
-    [initialColumnsLookup],
+    [initialColumns],
   );
 
   const availableFields = React.useMemo(() => {
@@ -442,7 +432,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       slots={rootProps.slots}
                       slotProps={rootProps.slotProps}
                       aggFunc={aggFunc}
-                      colDef={initialColumnsLookup[field]}
+                      colDef={initialColumns.get(field) as GridColDef}
                       hidden={hidden ?? false}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}

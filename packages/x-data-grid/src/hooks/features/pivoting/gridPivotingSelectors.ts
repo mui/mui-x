@@ -13,7 +13,7 @@ export const gridPivotEnabledSelector = createSelector(
   (pivoting) => pivoting?.enabled,
 );
 
-const emptyColumns: GridColDef[] = [];
+const emptyColumns = new Map<string, GridColDef>();
 
 export const gridPivotInitialColumnsSelector = createSelector(
   gridPivotingStateSelector,
