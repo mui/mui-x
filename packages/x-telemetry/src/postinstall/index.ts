@@ -14,7 +14,7 @@ const dirname =
     : (() => {
         const filename = fileURLToPath(import.meta.url);
 
-        // esm build in `esm/`, so we need to go up two levels
+        // esm build in `esm` directory, so we need to go up two levels
         return path.dirname(path.dirname(filename));
       })();
 

@@ -58,7 +58,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
 
     // TODO: batch events and send them in a single request when there will be more
     await fetchWithRetry(
-      'https://x-telemetry.mui.com/v2/record',
+      'https://x-telemetry.mui.com/v2/telemetry/record',
       {
         method: 'POST',
         headers: {
