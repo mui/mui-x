@@ -234,8 +234,6 @@ To avoid this, you can use the `margin` property to increase the space between t
 
 {{"demo": "MarginAndLabelPosition.js"}}
 
-{{"demo": "XAxisTickLabelOverflow.js"}}
-
 ### Rendering
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
