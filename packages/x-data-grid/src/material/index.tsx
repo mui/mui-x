@@ -78,7 +78,9 @@ const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   },
 }));
 
-const FormControlLabel = styled(MUIFormControlLabel)<{ fullWidth?: boolean }>(({ theme }) => ({
+const FormControlLabel = styled(MUIFormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'fullWidth',
+})<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   margin: 0,
   overflow: 'hidden',
