@@ -1,65 +1,44 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartProps } from '@mui/x-charts/BarChart';
 
-const defaultXAxis = {
-  id: 'angle0',
+const defaultYAxis = {
   scaleType: 'band',
   dataKey: 'code',
-  position: 'bottom',
-  zoom: true,
-  height: 80,
-  valueFormatter: (value) =>
-    usAirportPassengers.find((item) => item.code === value).fullName,
+  width: 100,
+  valueFormatter: (value: any) =>
+    usAirportPassengers.find((item) => item.code === value)!.fullName,
   label: '0deg Axis Title',
-};
+} as const;
+
+const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+
+type AxisPosition = NonNullable<BarChartProps['yAxis']>[number]['position'];
+
+const yAxes = degrees
+  .map((angle) => ({
+    ...defaultYAxis,
+    position: 'left' as AxisPosition,
+    id: `angle${angle}`,
+    label: `${angle}deg Axis Title`,
+    tickLabelStyle: { angle },
+  }))
+  .concat(
+    degrees.map((angle) => ({
+      ...defaultYAxis,
+      id: `right-angle${angle}`,
+      label: `${angle}deg Axis Title`,
+      position: 'right',
+      tickLabelStyle: { angle },
+    })),
+  ) satisfies BarChartProps['yAxis'];
 
 export default function XAxisTickLabelOverflow() {
   return (
     <BarChartPro
-      xAxis={[
-        {
-          ...defaultXAxis,
-          id: 'angle-90',
-          label: '-90deg Axis Title',
-          tickLabelStyle: {
-            angle: -90,
-            textAnchor: 'end',
-            dominantBaseline: 'central',
-          },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle-45',
-          label: '-45deg Axis Title',
-          tickLabelStyle: {
-            angle: -45,
-            textAnchor: 'end',
-            dominantBaseline: 'central',
-          },
-        },
-        defaultXAxis,
-        {
-          ...defaultXAxis,
-          id: 'angle45',
-          label: '45deg Axis Title',
-          tickLabelStyle: {
-            angle: 45,
-            textAnchor: 'start',
-          },
-        },
-        {
-          ...defaultXAxis,
-          id: 'angle90',
-          label: '90deg Axis Title',
-          tickLabelStyle: {
-            angle: 90,
-            textAnchor: 'start',
-            dominantBaseline: 'central',
-          },
-        },
-      ]}
+      yAxis={yAxes}
       // Other props
-      height={600}
+      width={1600}
       dataset={usAirportPassengers}
       series={[
         { dataKey: '2018', label: '2018' },
@@ -69,10 +48,9 @@ export default function XAxisTickLabelOverflow() {
         { dataKey: '2022', label: '2022' },
       ]}
       hideLegend
-      yAxis={[
+      xAxis={[
         {
           valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          width: 40,
         },
       ]}
     />

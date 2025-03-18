@@ -5,9 +5,9 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { useIsHydrated } from '../hooks/useIsHydrated';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
-import { useIsClient } from '../hooks/useIsClient';
 import { getStringSize } from '../internals/domUtils';
 import { TickItemType, useTicks } from '../hooks/useTicks';
 import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
@@ -162,7 +162,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const theme = useTheme();
   const isRtl = useRtl();
-  const isClient = useIsClient();
+  const isHydrated = useIsHydrated();
 
   const classes = useUtilityClasses(defaultizedProps);
 
@@ -265,7 +265,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     axisWidth - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
   );
 
-  const tickLabels = isClient
+  const tickLabels = isHydrated
     ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, axisTickLabelProps.style)
     : new Map();
 
@@ -319,7 +319,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-      {label && isClient && (
+      {label && isHydrated && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
