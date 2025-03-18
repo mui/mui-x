@@ -6,10 +6,10 @@ import {
 } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
-  UseTreeViewItemCustomizationSignature,
+  UseTreeViewIconsSignature,
 } from '@mui/x-tree-view/internals';
 
-describeTreeView<[UseTreeViewItemCustomizationSignature, UseTreeViewExpansionSignature]>(
+describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
   'useTreeViewItemCustomization plugin',
   ({ render }) => {
     describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {
