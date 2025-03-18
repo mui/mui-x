@@ -2,21 +2,15 @@ import * as React from 'react';
 
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
-import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject } from './GridPivotPanelBody';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
-import type {
-  DropPosition,
-  GridPivotingApi,
-} from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 interface GridPivotPanelFieldMenuProps {
   field: string;
   modelKey: FieldTransferObject['modelKey'];
-  pivotModel: GridPivotModel;
-  updatePivotModel: GridPivotingApi['updatePivotModel'];
 }
 
 type MenuAction = {
@@ -31,7 +25,7 @@ type MenuDivider = {
 };
 
 function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
-  const { field, modelKey, updatePivotModel } = props;
+  const { field, modelKey } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridApiContext();
@@ -154,7 +148,7 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
         break;
     }
 
-    updatePivotModel({
+    apiRef.current.updatePivotModel({
       field,
       targetField,
       targetFieldPosition,

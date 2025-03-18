@@ -18,19 +18,12 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
 import type { FieldTransferObject } from './GridPivotPanelBody';
-import type {
-  DropPosition,
-  GridPivotingApi,
-} from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPivotPanelFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
-  pivotModel: GridPivotModel;
-  updatePivotModel: GridPivotingApi['updatePivotModel'];
-  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
-  slots: DataGridPremiumProcessedProps['slots'];
-  slotProps: DataGridPremiumProcessedProps['slotProps'];
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
 } & (
@@ -231,21 +224,13 @@ function AggregationSelect({
 }
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
-  const {
-    children,
-    field,
-    pivotModel,
-    slots,
-    updatePivotModel,
-    onPivotModelChange,
-    onDragStart,
-    onDragEnd,
-  } = props;
+  const { children, field, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
   const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
+  const apiRef = useGridApiContext();
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
@@ -294,7 +279,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
           event.dataTransfer.getData('text/plain'),
         ) as FieldTransferObject;
 
-        updatePivotModel({
+        apiRef.current.updatePivotModel({
           field: droppedField,
           targetField: field,
           targetFieldPosition: position,
@@ -303,7 +288,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
         });
       }
     },
-    [getDropPosition, updatePivotModel, field, section],
+    [getDropPosition, apiRef, field, section],
   );
 
   const handleSort = () => {
@@ -318,7 +303,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       newValue = 'asc';
     }
 
-    onPivotModelChange((prev) => {
+    apiRef.current.setPivotModel((prev) => {
       return {
         ...prev,
         columns: prev.columns.map((col) => {
@@ -336,7 +321,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
 
   const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (section) {
-      onPivotModelChange((prev) => {
+      apiRef.current.setPivotModel((prev) => {
         return {
           ...prev,
           [section]: prev[section].map((col) => {
@@ -364,7 +349,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       draggable="true"
     >
       <GridPivotPanelFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
-        <slots.columnReorderIcon fontSize="small" />
+        <rootProps.slots.columnReorderIcon fontSize="small" />
       </GridPivotPanelFieldDragIcon>
 
       {hideable ? (
@@ -402,15 +387,10 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
             aggFunc={props.aggFunc}
             field={field}
             colDef={props.colDef}
-            onPivotModelChange={onPivotModelChange}
+            onPivotModelChange={apiRef.current.setPivotModel}
           />
         )}
-        <GridPivotPanelFieldMenu
-          field={field}
-          modelKey={section}
-          pivotModel={pivotModel}
-          updatePivotModel={updatePivotModel}
-        />
+        <GridPivotPanelFieldMenu field={field} modelKey={section} />
       </GridPivotPanelFieldActionContainer>
     </GridPivotPanelFieldRoot>
   );

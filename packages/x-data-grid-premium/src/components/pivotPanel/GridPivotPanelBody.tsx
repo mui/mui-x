@@ -158,11 +158,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const classes = useUtilityClasses(rootProps);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onPivotModelChange = React.useCallback(apiRef.current.setPivotModel, [
-    apiRef.current.setPivotModel,
-  ]);
-
   const getColumnName = React.useCallback(
     (field: string) => {
       const column = initialColumns.get(field);
@@ -272,11 +267,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                 key={field}
                 field={field}
                 modelKey={null}
-                updatePivotModel={apiRef.current.updatePivotModel}
-                pivotModel={pivotModel}
-                onPivotModelChange={apiRef.current.setPivotModel}
-                slots={rootProps.slots}
-                slotProps={rootProps.slotProps}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
@@ -328,11 +318,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelKey="rows"
                       data-field={field}
                       hidden={hidden ?? false}
-                      pivotModel={pivotModel}
-                      updatePivotModel={apiRef.current.updatePivotModel}
-                      onPivotModelChange={onPivotModelChange}
-                      slots={rootProps.slots}
-                      slotProps={rootProps.slotProps}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
@@ -376,11 +361,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       key={field}
                       field={field}
                       modelKey="columns"
-                      updatePivotModel={apiRef.current.updatePivotModel}
-                      pivotModel={pivotModel}
-                      onPivotModelChange={onPivotModelChange}
-                      slots={rootProps.slots}
-                      slotProps={rootProps.slotProps}
                       sort={sort}
                       hidden={hidden ?? false}
                       onDragStart={handleDragStart}
@@ -426,11 +406,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       key={field}
                       field={field}
                       modelKey="values"
-                      updatePivotModel={apiRef.current.updatePivotModel}
-                      pivotModel={pivotModel}
-                      onPivotModelChange={onPivotModelChange}
-                      slots={rootProps.slots}
-                      slotProps={rootProps.slotProps}
                       aggFunc={aggFunc}
                       colDef={initialColumns.get(field) as GridColDef}
                       hidden={hidden ?? false}
