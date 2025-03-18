@@ -106,7 +106,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 #### `@mui/x-date-pickers@8.0.0-beta.0`
 
 - [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#16966) @nusr
-- [pickers] Add the Time Range Picker component (#9431) @LukasTy and @flaviendelangle 
+- [pickers] Add the Time Range Picker component (#9431) @LukasTy and @flaviendelangle
 - [pickers] Add valid aria labels to the range picker opening button (#16799) @flaviendelangle
 - [pickers] Always use `props.value` as the source of truth when defined (#16853) @flaviendelangle
 - [pickers] Avoid passing unexpected `focusedView` to time renderers (#16869) @LukasTy
