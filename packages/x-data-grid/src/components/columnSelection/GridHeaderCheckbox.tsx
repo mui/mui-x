@@ -95,6 +95,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     }, [
       apiRef,
       rootProps.pagination,
+      rootProps.paginationMode,
       rootProps.checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
       visibleRowIds,
