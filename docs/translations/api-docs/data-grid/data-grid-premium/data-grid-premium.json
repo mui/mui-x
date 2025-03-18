@@ -1323,6 +1323,7 @@
     "columnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
     "columnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
     "columnMenuUngroupIcon": "Icon displayed in column menu for ungrouping",
+    "columnMenuUnsortIcon": "Icon displayed in column menu for unsort",
     "columnReorderIcon": "Icon displayed on the column reorder button.",
     "columnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
     "columnSelectorIcon": "Icon displayed on the column menu selector tab.",

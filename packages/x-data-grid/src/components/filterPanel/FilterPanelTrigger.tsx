@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
   gridFilterActiveItemsSelector,
@@ -61,6 +63,8 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
     const filterCount = activeFilters.length;
     const state = { open, filterCount };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
@@ -91,7 +95,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
         onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
-        ref,
+        ref: handleRef,
       },
       state,
     );
@@ -203,6 +207,24 @@ FilterPanelTrigger.propTypes = {
    * @default 'a'
    */
   LinkComponent: PropTypes.elementType,
+  /**
+   * If `true`, the loading indicator is visible and the button is disabled.
+   * If `true | false`, the loading wrapper is always rendered before the children to prevent [Google Translation Crash](https://github.com/mui/material-ui/issues/27853).
+   * @default null
+   */
+  loading: PropTypes.bool,
+  /**
+   * Element placed before the children if the button is in loading state.
+   * The node should contain an element with `role="progressbar"` with an accessible name.
+   * By default, it renders a `CircularProgress` that is labeled by the button itself.
+   * @default <CircularProgress color="inherit" size={16} />
+   */
+  loadingIndicator: PropTypes.node,
+  /**
+   * The loading indicator can be positioned on the start, end, or the center of the button.
+   * @default 'center'
+   */
+  loadingPosition: PropTypes.oneOf(['center', 'end', 'start']),
   /**
    * Callback fired when the component is focused with a keyboard.
    * We trigger a `onFocus` callback too.
