@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -111,13 +110,14 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   marginTop: theme.spacing(0.5),
   paddingRight: theme.spacing(1),
   fontWeight: 500,
-  [`&.Mui-expanded `]: {
-    '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-      color: theme.palette.primary.dark,
-      ...theme.applyStyles('light', {
-        color: theme.palette.primary.main,
-      }),
-    },
+  '&[data-expanded]': {
+    '&:not([data-focused], [data-selected], [data-selected][data-focused] .labelIcon':
+      {
+        color: theme.palette.primary.dark,
+        ...theme.applyStyles('light', {
+          color: theme.palette.primary.main,
+        }),
+      },
     '&::before': {
       content: '""',
       display: 'block',
@@ -139,7 +139,7 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
       color: theme.palette.primary.main,
     }),
   },
-  [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
+  [`&[data-focused], &[data-selected], &[data-focused][data-selected]`]: {
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
     ...theme.applyStyles('light', {
@@ -242,16 +242,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   return (
     <TreeItemProvider {...getContextProviderProps()}>
       <StyledTreeItemRoot {...getRootProps(other)}>
-        <CustomTreeItemContent
-          {...getContentProps({
-            className: clsx('content', {
-              'Mui-expanded': status.expanded,
-              'Mui-selected': status.selected,
-              'Mui-focused': status.focused,
-              'Mui-disabled': status.disabled,
-            }),
-          })}
-        >
+        <CustomTreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemIconContainer>

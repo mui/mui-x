@@ -3,7 +3,6 @@ import { alpha, styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomContent = styled('div')(({ theme }) => ({
@@ -15,21 +14,13 @@ const CustomContent = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.2),
   },
-  variants: [
-    {
-      props: ({ status }) => status.disabled,
-      style: {
-        opacity: 0.5,
-        backgroundColor: theme.palette.action.disabledBackground,
-      },
-    },
-    {
-      props: ({ status }) => status.selected,
-      style: {
-        backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
-      },
-    },
-  ],
+  '&[data-disabled]': {
+    opacity: 0.5,
+    backgroundColor: theme.palette.action.disabledBackground,
+  },
+  '[data-selected]': {
+    backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
+  },
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
