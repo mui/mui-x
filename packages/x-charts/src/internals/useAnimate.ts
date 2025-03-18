@@ -40,7 +40,7 @@ export function useAnimate<Props, Elem extends Element>(
 
   /* T2. Interrupt the transition if the element is unmounted.
    *
-   * `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
+   * `elementUnmounted` is set to true when a `setRef` is called with a non-null element. This is needed because
    * `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be called only
    *  when the underlying element changes.
    *  When `elementUnmounted` is true, it means `setRef` wasn't called with an element, so we must interrupt the
