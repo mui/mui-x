@@ -143,7 +143,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @returns {GridColDef[] | undefined} The derived columns.
    * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
    */
-  getPivotDerivedColumns: (column: GridColDef) => GridColDef[] | undefined;
+  getPivotDerivedColumns: ((column: GridColDef) => GridColDef[] | undefined) | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

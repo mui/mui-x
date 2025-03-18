@@ -58,7 +58,7 @@ export const getInitialColumns = (
     if (!isGroupingColumn(field)) {
       initialColumns.push(column);
 
-      const derivedColumns = getPivotDerivedColumns(column);
+      const derivedColumns = getPivotDerivedColumns?.(column);
       if (derivedColumns) {
         initialColumns = initialColumns.concat(derivedColumns);
       }
