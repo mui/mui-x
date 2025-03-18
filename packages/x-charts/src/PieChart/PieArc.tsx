@@ -2,11 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { useAnimate } from '../internals/useAnimate';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
 
@@ -55,7 +56,62 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled(animated.path, {
+type PieArcAnimatedProps = Pick<
+  PieArcProps,
+  'startAngle' | 'endAngle' | 'cornerRadius' | 'paddingAngle' | 'innerRadius' | 'outerRadius'
+>;
+type PieArcInterpolatedProps = Pick<PieArcAnimatedProps, 'startAngle' | 'endAngle'>;
+function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
+  const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
+  const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
+
+  return (t: number) => {
+    return {
+      startAngle: interpolateStartAngle(t),
+      endAngle: interpolateEndAngle(t),
+    };
+  };
+}
+
+function useAnimatePieArc(props: PieArcAnimatedProps) {
+  const ref = useAnimate(
+    { startAngle: props.startAngle, endAngle: props.endAngle },
+    {
+      createInterpolator: pieArcPropsInterpolator,
+      applyProps(element, animatedProps) {
+        element.setAttribute(
+          'd',
+          d3Arc()
+            .cornerRadius(props.cornerRadius)({
+              padAngle: props.paddingAngle,
+              innerRadius: props.innerRadius,
+              outerRadius: props.cornerRadius,
+              startAngle: animatedProps.startAngle,
+              endAngle: animatedProps.endAngle,
+            })!
+            .toString(),
+        );
+      },
+      initialProps: {
+        startAngle: (props.startAngle + props.endAngle) / 2,
+        endAngle: (props.startAngle + props.endAngle) / 2,
+      },
+    },
+  );
+
+  return {
+    ref,
+    d: d3Arc().cornerRadius(props.cornerRadius)({
+      padAngle: props.paddingAngle,
+      innerRadius: props.innerRadius,
+      outerRadius: props.cornerRadius,
+      startAngle: props.startAngle,
+      endAngle: props.endAngle,
+    })!,
+  };
+}
+
+const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
@@ -67,13 +123,13 @@ const PieArcRoot = styled(animated.path, {
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
-    cornerRadius: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
+    cornerRadius: number;
+    endAngle: number;
+    innerRadius: number;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
-    outerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
-    startAngle: SpringValue<number>;
+    outerRadius: number;
+    paddingAngle: number;
+    startAngle: number;
   };
 
 function PieArc(props: PieArcProps) {
@@ -82,15 +138,10 @@ function PieArc(props: PieArcProps) {
     color,
     cornerRadius,
     dataIndex,
-    endAngle,
     id,
-    innerRadius,
     isFaded,
     isHighlighted,
     onClick,
-    outerRadius,
-    paddingAngle,
-    startAngle,
     ...other
   } = props;
 
@@ -105,22 +156,10 @@ function PieArc(props: PieArcProps) {
   const classes = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
+  const animatedProps = useAnimatePieArc(props);
 
   return (
     <PieArcRoot
-      d={to(
-        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
-        (sA, eA, pA, iR, oR, cR) =>
-          d3Arc().cornerRadius(cR)({
-            padAngle: pA,
-            startAngle: sA,
-            endAngle: eA,
-            innerRadius: iR,
-            outerRadius: oR,
-          })!,
-      )}
-      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
-      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
@@ -132,6 +171,7 @@ function PieArc(props: PieArcProps) {
       strokeLinejoin="round"
       {...other}
       {...interactionProps}
+      {...animatedProps}
     />
   );
 }
