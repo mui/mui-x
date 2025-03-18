@@ -4,6 +4,7 @@ import * as React from 'react';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 export function useAnimate<Props, Elem extends Element>(
   props: Props,
@@ -29,7 +30,7 @@ export function useAnimate<Props, Elem extends Element>(
   const elementRef = React.useRef<Elem>(null);
   const elementUnmounted = React.useRef(false);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     return () => {
       /* T3. Stop the transition if the component that calls this hook is unmounted. */
       const lastElement = elementRef.current;
@@ -49,7 +50,7 @@ export function useAnimate<Props, Elem extends Element>(
    *  transition.
    *
    * This runs on every render, so it must be light. */
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (elementUnmounted.current) {
       const lastElement = elementRef.current;
 
@@ -79,7 +80,7 @@ export function useAnimate<Props, Elem extends Element>(
     [applyProps, createInterpolator, props, skip, transitionName],
   );
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const element = elementRef.current;
 
     if (element) {
