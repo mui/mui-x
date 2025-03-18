@@ -44,7 +44,7 @@ try {
 export default withDocsInfra({
   typescript: {
     // The tsconfig also contains path aliases that are used by next.js.
-    tsconfigPath: IS_PRODUCTION ? '../tsconfig.build.json' : '../tsconfig.json',
+    tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
   },
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place

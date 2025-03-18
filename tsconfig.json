@@ -49,17 +49,7 @@
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
-    },
-    "skipLibCheck": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    }
   },
-  "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }
