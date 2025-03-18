@@ -9,7 +9,7 @@ import {
   ScatterValueType,
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { useInteractionAllItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
@@ -20,6 +20,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { useChartContext } from '../context/ChartProvider';
 import { ScatterMarker } from './ScatterMarker';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -62,7 +63,6 @@ function Scatter(props: ScatterProps) {
   const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
-  const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   const cleanData = React.useMemo(() => {
@@ -74,7 +74,9 @@ function Scatter(props: ScatterProps) {
       color: string;
       isHighlighted: boolean;
       isFaded: boolean;
-      interactionProps: ReturnType<typeof getInteractionItemProps>;
+      interactionProps?: ReturnType<typeof useInteractionAllItemProps>[0];
+      seriesId: SeriesId;
+      type: 'scatter';
     })[] = [];
 
     for (let i = 0; i < series.data.length; i += 1) {
@@ -98,8 +100,9 @@ function Scatter(props: ScatterProps) {
           y,
           isHighlighted: isItemHighlighted,
           isFaded: !isItemHighlighted && isFaded(currentItem),
-          interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
+          seriesId: series.id,
+          type: 'scatter',
           dataIndex: i,
           color: colorGetter ? colorGetter(i) : color,
         });
@@ -114,11 +117,12 @@ function Scatter(props: ScatterProps) {
     series.id,
     isHighlighted,
     isFaded,
-    getInteractionItemProps,
     colorGetter,
     color,
     instance,
   ]);
+
+  const interactionItemProps = useInteractionAllItemProps(cleanData, skipInteractionHandlers);
 
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
@@ -133,7 +137,7 @@ function Scatter(props: ScatterProps) {
 
   return (
     <g>
-      {cleanData.map((dataPoint) => (
+      {cleanData.map((dataPoint, i) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
           dataIndex={dataPoint.dataIndex}
@@ -151,7 +155,7 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          {...dataPoint.interactionProps}
+          {...interactionItemProps[i]}
           {...markerProps}
         />
       ))}

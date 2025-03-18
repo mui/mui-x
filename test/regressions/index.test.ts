@@ -12,6 +12,7 @@ function sleep(timeoutMS: number | undefined) {
 }
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
+const isMaterialUIv7 = materialPackageJson.version.startsWith('7.');
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -22,6 +23,7 @@ const timeSensitiveSuites = [
   'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
@@ -29,6 +31,12 @@ const isConsoleWarningIgnored = (msg?: string) => {
     isMaterialUIv6 &&
     msg?.startsWith(
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    );
+
+  const isMuiLoadingButtonWarning =
+    (isMaterialUIv6 || isMaterialUIv7) &&
+    msg?.includes(
+      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
     );
 
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
@@ -40,7 +48,13 @@ const isConsoleWarningIgnored = (msg?: string) => {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
     return true;
   }
   return false;

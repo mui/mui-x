@@ -107,10 +107,10 @@ export default function QuickFilterOutsideOfGrid() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item>
+      <Grid>
         <Box id="filter-panel" />
       </Grid>
-      <Grid item style={{ height: 400, width: '100%' }}>
+      <Grid style={{ height: 400, width: '100%' }}>
         <DataGrid
           {...data}
           loading={loading}

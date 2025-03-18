@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useSpringValue } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
@@ -49,7 +49,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -57,7 +57,14 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
+  const cx = useSpringValue(x, { immediate: skipAnimation });
+  const cy = useSpringValue(y, { immediate: skipAnimation });
+
+  React.useEffect(() => {
+    cy.start(y, { immediate: skipAnimation });
+    cx.start(x, { immediate: skipAnimation });
+  }, [cy, y, cx, x, skipAnimation]);
+
   const ownerState = {
     id,
     classes: innerClasses,
@@ -71,8 +78,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     <animated.circle
       {...other}
       // @ts-expect-error
-      cx={position.x}
-      cy={position.y}
+      cx={cx}
+      cy={cy}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
@@ -80,7 +87,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }
