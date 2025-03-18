@@ -17,8 +17,8 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
   skipAnimation?: boolean;
 }
 
-function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: boolean }) {
-  return useAnimate(
+export function useAnimateLine(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
+  const ref = useAnimate(
     { d: props.d },
     {
       createInterpolator: (lastProps, newProps) => {
@@ -26,9 +26,11 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
         return (t) => ({ d: interpolate(t) });
       },
       applyProps: (element: SVGPathElement, { d }) => element.setAttribute('d', d),
-      skip,
+      skip: props.skipAnimation,
     },
   );
+
+  return { ref, d: props.d };
 }
 
 /**
@@ -43,16 +45,15 @@ function useAnimatePath(props: Pick<AnimatedLineProps, 'd'>, { skip }: { skip?: 
  */
 const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
   function AnimatedLine(props, ref) {
-    const { d, skipAnimation, ownerState, ...other } = props;
+    const { skipAnimation, ownerState, ...other } = props;
 
-    const animateRef = useAnimatePath(props, { skip: props.skipAnimation });
+    const { ref: animateRef, ...otherProps } = useAnimateLine(props);
     const forkRef = useForkRef(ref, animateRef);
 
     return (
       <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
         <path
           ref={forkRef}
-          d={d}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
@@ -60,6 +61,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
           opacity={ownerState.isFaded ? 0.3 : 1}
           {...other}
+          {...otherProps}
         />
       </AppearingMask>
     );
