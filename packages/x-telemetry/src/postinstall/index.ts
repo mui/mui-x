@@ -32,8 +32,8 @@ const dirname =
     distDir: process.cwd(),
   });
 
-  const environmentInfo = getEnvironmentInfo();
-  const [projectId, machineId] = await Promise.all([
+  const [environmentInfo, projectId, machineId] = await Promise.all([
+    getEnvironmentInfo(),
     getAnonymousProjectId(),
     getAnonymousMachineId(),
   ]);
