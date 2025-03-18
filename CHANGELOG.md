@@ -11,9 +11,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 18, 2025_
 
-We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Add Time Range Picker component
+- 🚀 Add [Time Range Picker](https://next.mui.com/x/react-date-pickers/time-range-picker/) component
 - 🎁 Add support for `@mui/material` version 7 in all X packages
 - 🐞 Bugfixes
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
@@ -50,13 +50,13 @@ Below are the highlights of the alpha releases leading up to this beta release:
 - 🎨 Improve Data Grid theming and add default background color.
 
 - 📊 New Pro chart: [Funnel](https://next.mui.com/x/react-charts/funnel/).
-- 📊 New community chart: [Radar](https://next.mui.com/x/react-charts/radar/) is available in preview for testing.
+- 📊 New Community chart: [Radar](https://next.mui.com/x/react-charts/radar/) is available in preview for testing.
 - 📊 Charts legend is now an HTML element which can be styled more easily.
 - 📊 Create [custom HTML components](https://next.mui.com/x/react-charts/components/#html-components) using chart data.
 - 📊 Refactor Charts [Tooltip customization](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
 - 📊 Improve Charts [composition](https://next.mui.com/x/react-charts/composition/#overview).
 - 📊 Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering).
-- 📊 Decouple `margin` and `axis-size`: A new API to support multiple axes.
+- 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`)
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
@@ -67,7 +67,7 @@ Below are the highlights of the alpha releases leading up to this beta release:
 - [DataGrid] Add a slot for unsort icon in column menu (#16918) @layerok
 - [DataGrid] Add click propagation and prevents default on `toggleMenu` click (#16845) @michelengelen
 - [DataGrid] Anchor preference panel to columns/filter trigger (#16953) @KenanYusuf
-- [DataGrid] Fix QuickFilter debounce overriding input value (#16856) @KenanYusuf
+- [DataGrid] Fix `QuickFilter` debounce overriding input value (#16856) @KenanYusuf
 - [DataGrid] Fix `printOptions` not respecting `hideFooter` root prop (#14863) @k-rajat19
 - [DataGrid] Fix `processRowUpdate()` error if the row is removed before it is executed (#16741) @arminmeh
 - [DataGrid] Fix bug with adding and removing columns in active edit state (#16888) @Blake-McCullough
@@ -106,7 +106,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 #### `@mui/x-date-pickers@8.0.0-beta.0`
 
 - [l10n] Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales (#16966) @nusr
-- [pickers] Add `TimeRangePicker` component (#9431) @flaviendelangle
+- [pickers] Add the Time Range Picker component (#9431) @LukasTy and @flaviendelangle 
 - [pickers] Add valid aria labels to the range picker opening button (#16799) @flaviendelangle
 - [pickers] Always use `props.value` as the source of truth when defined (#16853) @flaviendelangle
 - [pickers] Avoid passing unexpected `focusedView` to time renderers (#16869) @LukasTy
@@ -165,7 +165,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
 
 ### Docs
 
-- [docs] Add `TimeRangePicker` to relevant validation demos (#16919) @LukasTy
+- [docs] Add the Time Range Picker to relevant validation demos (#16919) @LukasTy
 - [docs] Adjust Picker field lifecycle explanation (#16901) @LukasTy
 - [docs] Fix custom detail panel toggle state update (#16929) @nusr
 - [docs] Fix Pickers custom field with Autocomplete demo (#16863) @LukasTy
