@@ -229,12 +229,36 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
-
+  /**
+   * The pivot model of the grid.
+   * Will be used to generate the pivot data.
+   * In case of `pivotEnabled` being `false`, the pivot model is still used to populate the pivot panel.
+   */
   pivotModel?: GridPivotModel;
-  onPivotModelChange?: React.Dispatch<React.SetStateAction<GridPivotModel>>;
+  /**
+   * Callback fired when the pivot model changes.
+   * @param {GridPivotModel} pivotModel The new pivot model.
+   */
+  onPivotModelChange?: (pivotModel: GridPivotModel) => void;
+  /**
+   * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
+   * @default false
+   */
   pivotEnabled?: boolean;
+  /**
+   * Callback fired when the pivot enabled state changes.
+   * @param {boolean} isPivot Whether the data grid is in pivot mode.
+   */
   onPivotEnabledChange?: (isPivot: boolean) => void;
+  /**
+   * If `true`, the pivot side panel is visible.
+   * @default false
+   */
   pivotPanelOpen?: boolean;
+  /**
+   * Callback fired when the pivot side panel open state changes.
+   * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   */
   onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
 
   /**

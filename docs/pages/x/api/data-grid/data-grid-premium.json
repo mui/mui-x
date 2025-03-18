@@ -472,6 +472,24 @@
         "describedArgs": ["pinnedColumns", "details"]
       }
     },
+    "onPivotEnabledChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(isPivot: boolean) => void", "describedArgs": ["isPivot"] }
+    },
+    "onPivotModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(pivotModel: GridPivotModel) => void",
+        "describedArgs": ["pivotModel"]
+      }
+    },
+    "onPivotPanelOpenChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(pivotPanelOpen: boolean) => void",
+        "describedArgs": ["pivotPanelOpen"]
+      }
+    },
     "onPreferencePanelClose": {
       "type": { "name": "func" },
       "signature": {
@@ -596,6 +614,7 @@
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
     },
+    "pivotEnabled": { "type": { "name": "bool" }, "default": "false" },
     "pivotingColDef": {
       "type": { "name": "func" },
       "signature": {
@@ -604,6 +623,13 @@
         "returned": "Partial<GridPivotingColDefOverrides> | undefined | void"
       }
     },
+    "pivotModel": {
+      "type": {
+        "name": "shape",
+        "description": "{ columns: Array&lt;object&gt;, rows: Array&lt;{ field: string, hidden?: bool }&gt;, values: Array&lt;{ aggFunc: string, field: string, hidden?: bool }&gt; }"
+      }
+    },
+    "pivotPanelOpen": { "type": { "name": "bool" }, "default": "false" },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
