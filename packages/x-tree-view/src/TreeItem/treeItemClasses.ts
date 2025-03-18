@@ -1,27 +1,6 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
-export interface TreeItemForwardedClasses {
-  /** Styles applied to the item's root element. */
-  item: string;
-  /** Styles applied to the item's content element. */
-  itemContent: string;
-  /** Styles applied to the item's transition element. */
-  itemGroupTransition: string;
-  /** Styles applied to the item's icon container element icon. */
-  itemIconContainer: string;
-  /** Styles applied to the item's label element. */
-  itemLabel: string;
-  /** Styles applied to the item's label input element (visible only when editing is enabled). */
-  itemLabelInput: string;
-  /** Styles applied to the item's checkbox element. */
-  itemCheckbox: string;
-  /** Styles applied to the item's drag and drop overlay element. */
-  itemDragAndDropOverlay: string;
-  /** Styles applied to the item's error icon element */
-  itemErrorIcon: string;
-}
-
 export interface TreeItemClasses {
   /** Styles applied to the root element. */
   root: string;
