@@ -56,6 +56,7 @@
     "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
     "use-react-version": "node scripts/useReactVersion.mjs",
     "use-material-ui-v6": "node scripts/useMaterialUIv6.mjs",
+    "use-material-ui-next": "node scripts/useMaterialUINext.mjs",
     "build:codesandbox": "lerna run --concurrency 3 --no-private --scope \"@mui/*\" build",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
     "release:changelog": "node scripts/releaseChangelog.mjs",
@@ -90,13 +91,13 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^5.16.14",
+    "@mui/icons-material": "^7.0.0-beta.4",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.20",
     "@mui/internal-markdown": "^2.0.1",
     "@mui/internal-test-utils": "^2.0.3",
-    "@mui/material": "^5.16.14",
-    "@mui/monorepo": "github:mui/material-ui#87194996f65fdce52dea3466aeb04a2195457521",
-    "@mui/utils": "^5.16.14",
+    "@mui/material": "^7.0.0-beta.4",
+    "@mui/monorepo": "github:mui/material-ui#260ed53760f179e3bb4f1f43e2f2712ecbf9fdd7",
+    "@mui/utils": "^7.0.0-beta.4",
     "@next/eslint-plugin-next": "15.2.2",
     "@octokit/plugin-retry": "^7.1.4",
     "@octokit/rest": "^21.1.1",
@@ -208,7 +209,14 @@
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
+      "jss-plugin-rule-value-function": "patches/jss-plugin-rule-value-function.patch",
+      "jss-plugin-global": "patches/jss-plugin-global.patch",
+      "jss-plugin-nested": "patches/jss-plugin-nested.patch",
+      "jss-plugin-camel-case": "patches/jss-plugin-camel-case.patch",
+      "jss-plugin-default-unit": "patches/jss-plugin-default-unit.patch",
+      "jss-plugin-vendor-prefixer": "patches/jss-plugin-vendor-prefixer.patch",
+      "jss-plugin-props-sort": "patches/jss-plugin-props-sort.patch"
     }
   }
 }

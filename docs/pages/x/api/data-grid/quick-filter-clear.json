@@ -24,6 +24,11 @@
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
+    "loading": { "type": { "name": "bool" }, "default": "null" },
+    "loadingIndicator": {
+      "type": { "name": "node" },
+      "default": "<CircularProgress color=\"inherit\" size={16} />"
+    },
     "onFocusVisible": { "type": { "name": "func" } },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "size": {
@@ -108,6 +113,24 @@
       "key": "edgeStart",
       "className": "MuiQuickFilterClear-edgeStart",
       "description": "Styles applied to the root element if `edge=\"start\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "loading",
+      "className": "MuiQuickFilterClear-loading",
+      "description": "Styles applied to the root element if `loading={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "loadingIndicator",
+      "className": "MuiQuickFilterClear-loadingIndicator",
+      "description": "Styles applied to the loadingIndicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "loadingWrapper",
+      "className": "MuiQuickFilterClear-loadingWrapper",
+      "description": "Styles applied to the loadingWrapper element.",
       "isGlobal": false
     },
     {
