@@ -4,7 +4,7 @@ import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject } from './GridPivotPanelBody';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
@@ -28,7 +28,7 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
   const { field, modelKey } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const isAvailableField = modelKey === null;
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const fieldIndexInModel = !isAvailableField

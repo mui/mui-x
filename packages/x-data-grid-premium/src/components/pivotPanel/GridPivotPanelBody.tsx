@@ -14,7 +14,7 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridPivotPanelField } from './GridPivotPanelField';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
@@ -145,7 +145,7 @@ export interface FieldTransferObject {
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const fields = React.useMemo(() => initialColumns.keys().toArray(), [initialColumns]);
   const rootProps = useGridRootProps();

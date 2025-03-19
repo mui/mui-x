@@ -22,6 +22,7 @@ import type { FieldTransferObject } from './GridPivotPanelBody';
 import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotInitialColumnsSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 
 type GridPivotPanelFieldProps = {
   children: React.ReactNode;
@@ -227,7 +228,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const section = props.modelKey;
   const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {

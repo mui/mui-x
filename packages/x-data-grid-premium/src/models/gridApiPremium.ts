@@ -18,7 +18,10 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
-import type { GridPivotingApi } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotingApi,
+  GridPivotingPrivateApi,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -45,4 +48,5 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
-    GridDetailPanelPrivateApi {}
+    GridDetailPanelPrivateApi,
+    GridPivotingPrivateApi {}

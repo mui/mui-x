@@ -24,7 +24,12 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type { GridPivotingApi, GridPivotingState, GridPivotModel } from './gridPivotingInterfaces';
+import type {
+  GridPivotingApi,
+  GridPivotingPrivateApi,
+  GridPivotingState,
+  GridPivotModel,
+} from './gridPivotingInterfaces';
 import {
   gridPivotModelSelector,
   gridPivotEnabledSelector,
@@ -243,7 +248,7 @@ export const useGridPivoting = (
     [apiRef, computePivotingState, isPivotingAvailable],
   );
 
-  const updatePivotModel = React.useCallback<GridPivotingApi['updatePivotModel']>(
+  const updatePivotModel = React.useCallback<GridPivotingPrivateApi['updatePivotModel']>(
     ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
       if (field === targetField) {
         return;
@@ -376,11 +381,8 @@ export const useGridPivoting = (
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
 
-  useGridApiMethod(
-    apiRef,
-    { setPivotModel, updatePivotModel, setPivotEnabled, setPivotPanelOpen },
-    'public',
-  );
+  useGridApiMethod(apiRef, { setPivotModel, setPivotEnabled, setPivotPanelOpen }, 'public');
+  useGridApiMethod(apiRef, { updatePivotModel }, 'private');
 
   useEnhancedEffect(() => {
     if (props.pivotModel !== undefined) {
