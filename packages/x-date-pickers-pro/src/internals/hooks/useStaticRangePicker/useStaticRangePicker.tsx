@@ -45,7 +45,23 @@ export const useStaticRangePicker = <
     autoFocusView: autoFocus ?? false,
     viewContainerRole: null,
     localeText,
+    goToNextStep,
+    goToPreviousStep,
   });
+
+  function goToNextStep() {
+    if (rangePositionResponse.rangePosition === 'start') {
+      rangePositionResponse.setRangePosition('end');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
+
+  function goToPreviousStep() {
+    if (rangePositionResponse.rangePosition === 'end') {
+      rangePositionResponse.setRangePosition('start');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
 
   const Layout = slots?.layout ?? PickerStaticLayout;
 

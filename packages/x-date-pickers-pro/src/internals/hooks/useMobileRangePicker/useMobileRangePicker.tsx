@@ -57,7 +57,23 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     viewContainerRole: 'dialog',
     localeText,
+    goToNextStep,
+    goToPreviousStep,
   });
+
+  function goToNextStep() {
+    if (rangePositionResponse.rangePosition === 'start') {
+      rangePositionResponse.setRangePosition('end');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
+
+  function goToPreviousStep() {
+    if (rangePositionResponse.rangePosition === 'end') {
+      rangePositionResponse.setRangePosition('start');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
 
   const labelId = providerProps.privateContextValue.labelId;
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
