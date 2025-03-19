@@ -13,13 +13,14 @@ import { TickItemType, useTicks } from '../hooks/useTicks';
 import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider';
 import { useYAxes } from '../hooks';
 import { clampAngle } from '../internals/clampAngle';
+import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position } = ownerState;
@@ -49,35 +50,35 @@ function shortenLabels(
   const shortenedLabels = new Map<TickItemType, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
-  let topBoundModifier = 1;
-  let bottomBoundModifier = 1;
+  let topBoundFactor = 1;
+  let bottomBoundFactor = 1;
 
   if (tickLabelStyle?.textAnchor === 'start') {
-    topBoundModifier = Infinity;
-    bottomBoundModifier = 1;
+    topBoundFactor = Infinity;
+    bottomBoundFactor = 1;
   } else if (tickLabelStyle?.textAnchor === 'end') {
-    topBoundModifier = 1;
-    bottomBoundModifier = Infinity;
+    topBoundFactor = 1;
+    bottomBoundFactor = Infinity;
   } else {
-    topBoundModifier = 2;
-    bottomBoundModifier = 2;
+    topBoundFactor = 2;
+    bottomBoundFactor = 2;
   }
 
   if (angle > 90 && angle < 270) {
-    [topBoundModifier, bottomBoundModifier] = [bottomBoundModifier, topBoundModifier];
+    [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
   }
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
-      // That maximum width of the tick depends on its proximity to the axis bounds.
+      // That maximum height of the tick depends on its proximity to the axis bounds.
       const height = Math.min(
-        (item.offset + item.labelOffset) * topBoundModifier,
+        (item.offset + item.labelOffset) * topBoundFactor,
         (drawingArea.top +
           drawingArea.height +
           drawingArea.bottom -
           item.offset -
           item.labelOffset) *
-          bottomBoundModifier,
+          bottomBoundFactor,
       );
 
       const doesTextFit = (text: string) =>
@@ -93,19 +94,6 @@ function shortenLabels(
   }
 
   return shortenedLabels;
-}
-
-function invertTextAnchor(
-  textAnchor: ChartsTextStyle['textAnchor'],
-): ChartsTextStyle['textAnchor'] {
-  switch (textAnchor) {
-    case 'start':
-      return 'end';
-    case 'end':
-      return 'start';
-    default:
-      return textAnchor;
-  }
 }
 
 const YAxisRoot = styled(AxisRoot, {
@@ -262,12 +250,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxWidth = Math.max(
     0,
-    axisWidth - labelHeight - tickSize - TICK_LABEL_GAP - AXIS_LABEL_TICK_LABEL_GAP,
+    axisWidth - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
   );
 
   const tickLabels = isHydrated
     ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, axisTickLabelProps.style)
-    : new Map();
+    : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
 
   return (
     <YAxisRoot
