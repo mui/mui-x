@@ -493,7 +493,7 @@
     },
     "onPivotActiveChange": {
       "description": "Callback fired when the pivot active state changes.",
-      "typeDescriptions": { "isPivot": "Whether the data grid is in pivot mode." }
+      "typeDescriptions": { "isPivotActive": "Whether the data grid is in pivot mode." }
     },
     "onPivotModelChange": {
       "description": "Callback fired when the pivot model changes.",

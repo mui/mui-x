@@ -823,7 +823,7 @@ DataGridPremiumRaw.propTypes = {
   onPinnedColumnsChange: PropTypes.func,
   /**
    * Callback fired when the pivot active state changes.
-   * @param {boolean} isPivot Whether the data grid is in pivot mode.
+   * @param {boolean} isPivotActive Whether the data grid is in pivot mode.
    */
   onPivotActiveChange: PropTypes.func,
   /**

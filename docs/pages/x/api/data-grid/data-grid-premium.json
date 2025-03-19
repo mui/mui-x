@@ -474,7 +474,10 @@
     },
     "onPivotActiveChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(isPivot: boolean) => void", "describedArgs": ["isPivot"] }
+      "signature": {
+        "type": "function(isPivotActive: boolean) => void",
+        "describedArgs": ["isPivotActive"]
+      }
     },
     "onPivotModelChange": {
       "type": { "name": "func" },

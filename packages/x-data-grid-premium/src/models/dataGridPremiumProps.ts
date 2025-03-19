@@ -247,9 +247,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   pivotActive?: boolean;
   /**
    * Callback fired when the pivot active state changes.
-   * @param {boolean} isPivot Whether the data grid is in pivot mode.
+   * @param {boolean} isPivotActive Whether the data grid is in pivot mode.
    */
-  onPivotActiveChange?: (isPivot: boolean) => void;
+  onPivotActiveChange?: (isPivotActive: boolean) => void;
   /**
    * If `true`, the pivot side panel is visible.
    * @default false
