@@ -100,7 +100,7 @@ export const useGridPivoting = (
     | 'aggregationFunctions'
   >,
 ) => {
-  const isPivot = useGridSelector(apiRef, gridPivotActiveSelector);
+  const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<
     { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
@@ -174,7 +174,7 @@ export const useGridPivoting = (
   );
 
   useOnMount(() => {
-    if (!isPivotingAvailable || !isPivot) {
+    if (!isPivotingAvailable || !isPivotActive) {
       return undefined;
     }
 
@@ -214,11 +214,11 @@ export const useGridPivoting = (
     if (!isPivotingAvailable) {
       return;
     }
-    if (!isPivot && exportedStateRef.current) {
+    if (!isPivotActive && exportedStateRef.current) {
       apiRef.current.restoreState(exportedStateRef.current);
       exportedStateRef.current = null;
     }
-  }, [isPivot, apiRef, isPivotingAvailable]);
+  }, [isPivotActive, apiRef, isPivotingAvailable]);
 
   const setPivotModel = React.useCallback<GridPivotingApi['setPivotModel']>(
     (callback) => {
