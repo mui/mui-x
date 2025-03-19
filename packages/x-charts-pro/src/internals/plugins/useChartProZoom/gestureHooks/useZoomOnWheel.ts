@@ -23,7 +23,6 @@ export const useZoomOnWheel = (
     instance,
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
-  interactionTimeoutRef: React.RefObject<number | undefined>,
   setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
@@ -45,26 +44,15 @@ export const useZoomOnWheel = (
         return;
       }
 
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      // Debounce transition to `isInteractive=false`.
       if (!state.dragging) {
         setIsInteracting(true);
-
-        // Ref is passed in.
-        // eslint-disable-next-line react-compiler/react-compiler
-        interactionTimeoutRef.current = window.setTimeout(() => {
-          setIsInteracting(false);
-        }, 166);
       }
     });
 
-    const wheelEndHandler = instance.addInteractionListener('wheelEnd', () => {
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
+    const wheelEndHandler = instance.addInteractionListener('wheelEnd', (state) => {
+      if (!state.dragging && !state.pinching) {
+        setIsInteracting(false);
       }
-      setIsInteracting(false);
     });
 
     const zoomOnWheelHandler = instance.addInteractionListener('wheel', (state) => {
@@ -105,9 +93,6 @@ export const useZoomOnWheel = (
       zoomOnWheelHandler.cleanup();
       wheelStartHandler.cleanup();
       wheelEndHandler.cleanup();
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
     };
   }, [
     svgRef,
@@ -117,6 +102,5 @@ export const useZoomOnWheel = (
     setIsInteracting,
     instance,
     setZoomDataCallback,
-    interactionTimeoutRef,
   ]);
 };

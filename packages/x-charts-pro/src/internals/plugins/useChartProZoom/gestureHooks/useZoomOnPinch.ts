@@ -22,7 +22,6 @@ export const useZoomOnPinch = (
     instance,
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
-  interactionTimeoutRef: React.RefObject<number | undefined>,
   setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
@@ -38,9 +37,6 @@ export const useZoomOnPinch = (
     }
 
     const zoomStartHandler = instance.addInteractionListener('pinchStart', () => {
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
       setIsInteracting(true);
     });
 
@@ -99,6 +95,5 @@ export const useZoomOnPinch = (
     setIsInteracting,
     instance,
     setZoomDataCallback,
-    interactionTimeoutRef,
   ]);
 };

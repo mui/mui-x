@@ -16,7 +16,6 @@ export const usePanOnDrag = (
     instance,
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
-  interactionTimeoutRef: React.RefObject<number | undefined>,
   setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
@@ -96,9 +95,6 @@ export const usePanOnDrag = (
     });
 
     const panStartHandler = instance.addInteractionListener('dragStart', () => {
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
       setIsInteracting(true);
     });
 
@@ -121,6 +117,5 @@ export const usePanOnDrag = (
     drawingArea.height,
     setZoomDataCallback,
     store,
-    interactionTimeoutRef,
   ]);
 };

@@ -108,14 +108,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   );
 
   // Add events
-  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
   const pluginData = { store, instance, svgRef };
 
-  usePanOnDrag(pluginData, interactionTimeoutRef, setIsInteracting, setZoomDataCallback);
+  usePanOnDrag(pluginData, setIsInteracting, setZoomDataCallback);
 
-  useZoomOnWheel(pluginData, interactionTimeoutRef, setIsInteracting, setZoomDataCallback);
+  useZoomOnWheel(pluginData, setIsInteracting, setZoomDataCallback);
 
-  useZoomOnPinch(pluginData, interactionTimeoutRef, setIsInteracting, setZoomDataCallback);
+  useZoomOnPinch(pluginData, setIsInteracting, setZoomDataCallback);
 
   return {
     publicAPI: {
