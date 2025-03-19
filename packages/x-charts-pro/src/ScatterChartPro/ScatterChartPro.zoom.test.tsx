@@ -122,7 +122,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
-    it.only(`should pan on ${pointerName} drag`, async () => {
+    it(`should pan on ${pointerName} drag`, async () => {
       const { user } = render(
         <ScatterChartPro
           {...scatterChartProps}
