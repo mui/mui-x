@@ -9,14 +9,14 @@ function getAsANumber(value: number | Date) {
  * For a pointer coordinate, this function returns the value and dataIndex associated.
  * Returns `null` if the coordinate is outside of values.
  */
-export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) {
+export function getAxisIndex(axisConfig: AxisDefaultized, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isBandScale(scale)) {
     const value = scale.invert(pointerValue);
 
     if (axisData === undefined) {
-      return { value, index: -1 };
+      return -1;
     }
 
     const valueAsNumber = getAsANumber(value);
@@ -42,10 +42,7 @@ export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) 
       return false;
     });
 
-    return {
-      value: closestIndex !== undefined && closestIndex >= 0 ? axisData![closestIndex] : value,
-      index: closestIndex,
-    };
+    return closestIndex;
   }
 
   const dataIndex =
@@ -54,17 +51,34 @@ export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) 
       : Math.floor((pointerValue - Math.min(...scale.range())) / scale.step());
 
   if (dataIndex < 0 || dataIndex >= axisData!.length) {
+    return -1;
+  }
+  return reverse ? axisData!.length - 1 - dataIndex : dataIndex;
+}
+
+/**
+ * For a pointer coordinate, this function returns the value and dataIndex associated.
+ * Returns `null` if the coordinate is outside of values.
+ */
+export function getAxisValue(
+  axisConfig: AxisDefaultized,
+  pointerValue: number,
+  dataIndex: number,
+): number | Date | null {
+  const { scale, data: axisData } = axisConfig;
+
+  if (!isBandScale(scale)) {
+    const value = scale.invert(pointerValue);
+
+    if (dataIndex < 0) {
+      return value;
+    }
+    return axisData![dataIndex];
+  }
+
+  if (dataIndex < 0 || dataIndex >= axisData!.length) {
     return null;
   }
-  if (reverse) {
-    const reverseIndex = axisData!.length - 1 - dataIndex;
-    return {
-      index: reverseIndex,
-      value: axisData![reverseIndex],
-    };
-  }
-  return {
-    index: dataIndex,
-    value: axisData![dataIndex],
-  };
+
+  return axisData![dataIndex];
 }

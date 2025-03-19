@@ -9,12 +9,9 @@ import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/u
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
-import { getAxisValue } from './getAxisValue';
+import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
-import {
-  selectorChartsInteractionAxis,
-  selectorChartsInteractionIsInitialized,
-} from '../useChartInteraction';
+import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -44,7 +41,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const processedSeries = useSelector(store, selectorChartSeriesProcessed);
 
-  const interactionAxis = useSelector(store, selectorChartsInteractionAxis);
   const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
   const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
@@ -86,17 +82,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const svgPoint = getSVGPoint(element, target);
 
       if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
-        store.update((prev) => ({
-          ...prev,
-          interaction: { item: null, axis: { x: null, y: null } },
-        }));
+        instance.cleanInteraction?.();
         return;
       }
 
-      instance.setAxisInteraction?.({
-        x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
-        y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
-      });
+      instance.setPointerCoordinate?.(svgPoint);
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -134,20 +124,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     isInteractionEnabled,
   ]);
 
-  const axisInteractionRef = React.useRef<
-    Record<'x' | 'y', null | { value: number | Date | string; index: number }>
-  >({
-    x: null,
-    y: null,
-  });
-
-  // This avoids re-attaching the event listener on mouse move.
-  React.useEffect(() => {
-    const { x, y } = interactionAxis;
-    axisInteractionRef.current.x = x;
-    axisInteractionRef.current.y = y;
-  }, [interactionAxis]);
-
   React.useEffect(() => {
     const element = svgRef.current;
     const onAxisClick = params.onAxisClick;
@@ -160,22 +136,13 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
-      if (axisInteractionRef.current.x === null && axisInteractionRef.current.y === null) {
-        const svgPoint = getSVGPoint(element, event);
 
-        const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
-        isXAxis = xIndex !== null && xIndex !== -1;
+      const svgPoint = getSVGPoint(element, event);
 
-        dataIndex = isXAxis
-          ? xIndex
-          : (getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y)?.index ?? null);
-      } else {
-        isXAxis =
-          axisInteractionRef.current.x !== null && axisInteractionRef.current.x.index !== -1;
-        dataIndex = isXAxis
-          ? axisInteractionRef.current.x && axisInteractionRef.current.x.index
-          : axisInteractionRef.current.y && axisInteractionRef.current.y.index;
-      }
+      const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x) ?? null;
+      isXAxis = xIndex !== null && xIndex !== -1;
+
+      dataIndex = isXAxis ? xIndex : (getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y) ?? null);
 
       const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
       if (dataIndex == null || dataIndex === -1) {
@@ -218,7 +185,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     xAxisIds,
     yAxisWithScale,
     yAxisIds,
-    axisInteractionRef,
     usedXAxis,
     usedYAxis,
   ]);

@@ -1,7 +1,5 @@
 import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
-import { AxisInteractionData, UseChartInteractionSignature } from './useChartInteraction.types';
-
-const EMPTY_AXIS_INTERACTION: AxisInteractionData = { x: null, y: null };
+import { UseChartInteractionSignature } from './useChartInteraction.types';
 
 const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature> = (state) =>
   state.interaction;
@@ -16,19 +14,19 @@ export const selectorChartsInteractionItem = createSelector(
   (interaction) => interaction?.item ?? null,
 );
 
-export const selectorChartsInteractionAxis = createSelector(
+export const selectorChartsInteractionPointer = createSelector(
   selectInteraction,
-  (interaction) => interaction?.axis ?? EMPTY_AXIS_INTERACTION,
+  (interaction) => interaction?.pointer ?? null,
 );
 
-export const selectorChartsInteractionXAxis = createSelector(
-  selectorChartsInteractionAxis,
-  (axis) => axis.x,
+export const selectorChartsInteractionPointerX = createSelector(
+  selectorChartsInteractionPointer,
+  (pointer) => pointer && pointer.x,
 );
 
-export const selectorChartsInteractionYAxis = createSelector(
-  selectorChartsInteractionAxis,
-  (axis) => axis.y,
+export const selectorChartsInteractionPointerY = createSelector(
+  selectorChartsInteractionPointer,
+  (pointer) => pointer && pointer.y,
 );
 
 export const selectorChartsInteractionItemIsDefined = createSelector(
@@ -36,12 +34,12 @@ export const selectorChartsInteractionItemIsDefined = createSelector(
   (item) => item !== null,
 );
 
-export const selectorChartsInteractionXAxisIsDefined = createSelector(
-  selectorChartsInteractionXAxis,
-  (x) => x !== null,
-);
+// export const selectorChartsInteractionXAxisIsDefined = createSelector(
+//   selectorChartsInteractionXAxis,
+//   (x) => x !== null,
+// );
 
-export const selectorChartsInteractionYAxisIsDefined = createSelector(
-  selectorChartsInteractionYAxis,
-  (y) => y !== null,
-);
+// export const selectorChartsInteractionYAxisIsDefined = createSelector(
+//   selectorChartsInteractionYAxis,
+//   (y) => y !== null,
+// );
