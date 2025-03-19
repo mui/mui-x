@@ -35,7 +35,7 @@ export type QuickFilterProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'class
    * The initial expanded state of the quick filter control.
    * @default false
    */
-  initialExpanded?: boolean;
+  defaultExpanded?: boolean;
   /**
    * The expanded state of the quick filter control.
    */
@@ -79,7 +79,7 @@ function QuickFilter(props: QuickFilterProps) {
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
     debounceMs = rootProps.filterDebounceMs,
-    initialExpanded = false,
+    defaultExpanded = false,
     expanded,
     onExpandedChange,
     ...other
@@ -90,7 +90,7 @@ function QuickFilter(props: QuickFilterProps) {
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
-  const [internalExpanded, setInternalExpanded] = React.useState(initialExpanded);
+  const [internalExpanded, setInternalExpanded] = React.useState(defaultExpanded);
   // Use the controlled value if provided, otherwise use the internal state
   const expandedValue = expanded ?? internalExpanded;
   const state = React.useMemo(
@@ -111,12 +111,6 @@ function QuickFilter(props: QuickFilterProps) {
       if (expanded === undefined) {
         setInternalExpanded(newExpanded);
       }
-
-      if (newExpanded) {
-        controlRef.current?.focus();
-      } else {
-        triggerRef.current?.focus();
-      }
     },
     [onExpandedChange, expanded],
   );
@@ -136,6 +130,25 @@ function QuickFilter(props: QuickFilterProps) {
       );
     }
   }, [quickFilterValues, formatter, parser]);
+
+  const isFirstRender = React.useRef(true);
+  const previousExpandedValue = React.useRef(expandedValue);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    // Ensure the expanded state has actually changed before focusing
+    if (previousExpandedValue.current !== expandedValue) {
+      if (expandedValue) {
+        controlRef.current?.focus();
+      } else {
+        triggerRef.current?.focus();
+      }
+      previousExpandedValue.current = expandedValue;
+    }
+  }, [expandedValue]);
 
   const setQuickFilterValueDebounced = React.useMemo(
     () =>
@@ -202,12 +215,20 @@ QuickFilter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The debounce time in milliseconds.
    * @default 150
    */
   debounceMs: PropTypes.number,
+  /**
+   * The initial expanded state of the quick filter control.
+   * @default false
+   */
+  defaultExpanded: PropTypes.bool,
   /**
    * The expanded state of the quick filter control.
    */
@@ -220,11 +241,6 @@ QuickFilter.propTypes = {
    */
   formatter: PropTypes.func,
   /**
-   * The initial expanded state of the quick filter control.
-   * @default false
-   */
-  initialExpanded: PropTypes.bool,
-  /**
    * Callback function that is called when the quick filter input is expanded or collapsed.
    * @param {boolean} expanded The new expanded state of the quick filter control
    */
@@ -236,6 +252,10 @@ QuickFilter.propTypes = {
    * @default (searchText: string) => searchText.split(' ').filter((word) => word !== '')
    */
   parser: PropTypes.func,
+  /**
+   * A function to customize rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
 export { QuickFilter };

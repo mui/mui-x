@@ -131,7 +131,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
               render={(triggerProps) => (
                 <rootProps.slots.baseTooltip
                   title={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
-                  disableFocusListener={state.expanded}
                 >
                   <GridQuickFilterTrigger
                     className={classes.trigger}

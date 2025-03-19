@@ -41,15 +41,28 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 }));
 
 function CustomToolbar() {
+  const [expanded, setExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'f') {
+        setExpanded(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <Toolbar>
-      <StyledQuickFilter>
+      <StyledQuickFilter expanded={expanded} onExpandedChange={setExpanded}>
         <QuickFilterTrigger
-          render={(triggerProps, state) => (
+          render={(triggerProps) => (
             <Tooltip title="Search">
               <StyledToolbarButton
                 {...triggerProps}
-                ownerState={{ expanded: state.expanded }}
+                ownerState={{ expanded }}
                 color="default"
               >
                 <SearchIcon fontSize="small" />
@@ -61,7 +74,7 @@ function CustomToolbar() {
           render={({ ref, ...controlProps }, state) => (
             <StyledTextField
               {...controlProps}
-              ownerState={{ expanded: state.expanded }}
+              ownerState={{ expanded }}
               inputRef={ref}
               aria-label="Search"
               placeholder="Search..."
@@ -97,7 +110,7 @@ function CustomToolbar() {
   );
 }
 
-export default function GridQuickFilter() {
+export default function GridControlledQuickFilter() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,

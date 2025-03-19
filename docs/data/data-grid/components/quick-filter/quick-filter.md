@@ -8,7 +8,7 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Quick Filter
 
-<p class="description">Provide users with a search field to filter data in the Data Grid.</p>
+<p class="description">Provide users with an expandable search field to filter data in the Data Grid.</p>
 
 ## Basic usage
 
@@ -27,9 +27,9 @@ import {
 } from '@mui/x-data-grid';
 
 <QuickFilter>
+  <QuickFilterTrigger />
   <QuickFilterControl />
   <QuickFilterClear />
-  <QuickFilterTrigger />
 </QuickFilter>;
 ```
 
@@ -62,6 +62,18 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 Below are some ways the Quick Filter component can be used.
 
+### Default expanded state
+
+The quick filter is uncontrolled by default and can be toggled via the trigger. The `defaultExpanded` prop can be used to set the initial expanded state.
+
+{{"demo": "GridUncontrolledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Expand quick filter via keyboard
+
+The demo below shows how to control the quick filter state using the `expanded` and `onExpandedChange` props to support expanding the quick filter via keyboard. Try pressing <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows)+<kbd class="key">Shift</kbd>+<kbd class="key">F</kbd>.
+
+{{"demo": "GridControlledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Persistent quick filter
 
 The demo below shows how to display a persistent quick filter by passing the `expanded` prop to the `<QuickFilter />` component.
@@ -73,7 +85,7 @@ The demo below shows how to display a persistent quick filter by passing the `ex
 ### ARIA
 
 - You must render a `<label />` with a `for` attribute set to the `id` of `<QuickFilterControl />`, or apply an `aria-label` attribute to the `<QuickFilterControl />`.
-- You must apply a text label or an `aria-label` attribute to the `<QuickFilterClear />`.
+- You must apply a text label or an `aria-label` attribute to the `<QuickFilterClear />` and `<QuickFilterTrigger />`.
 
 ### Keyboard
 

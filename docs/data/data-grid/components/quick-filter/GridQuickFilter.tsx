@@ -54,7 +54,7 @@ function CustomToolbar() {
       <StyledQuickFilter>
         <QuickFilterTrigger
           render={(triggerProps, state) => (
-            <Tooltip title="Search" disableFocusListener={state.expanded}>
+            <Tooltip title="Search">
               <StyledToolbarButton
                 {...triggerProps}
                 ownerState={{ expanded: state.expanded }}

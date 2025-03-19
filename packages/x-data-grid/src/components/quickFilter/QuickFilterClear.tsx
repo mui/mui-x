@@ -43,6 +43,7 @@ const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
         ...rootProps.slotProps?.baseIconButton,
         onClick: clearValue,
         className: resolvedClassName,
+        tabIndex: -1,
         ...other,
         ref,
       },

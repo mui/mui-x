@@ -1,6 +1,8 @@
 {
   "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "defaultExpanded": { "type": { "name": "bool" }, "default": "false" },
     "expanded": { "type": { "name": "bool" } },
     "formatter": {
       "type": { "name": "func" },
@@ -11,7 +13,6 @@
         "returned": "string"
       }
     },
-    "initialExpanded": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedChange": {
       "type": { "name": "func" },
       "signature": { "type": "function(expanded: boolean) => void", "describedArgs": ["expanded"] }
@@ -24,7 +25,8 @@
         "describedArgs": ["input"],
         "returned": "Array<any>"
       }
-    }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "QuickFilter",
   "imports": [
