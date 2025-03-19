@@ -44,13 +44,15 @@ export default function GridPivotingCommodities() {
     return undefined;
   }, [pivotEnabled]);
 
-  const pivotingColDef = React.useCallback<
-    NonNullable<DataGridPremiumProps['pivotingColDef']>
-  >((originalColumnField) => {
-    if (originalColumnField === 'quantity') {
-      return { width: 80 };
-    }
-    return undefined;
+  const pivotingColDef = React.useMemo<
+    DataGridPremiumProps['pivotingColDef']
+  >(() => {
+    return (originalColumnField) => {
+      if (originalColumnField === 'quantity') {
+        return { width: 80 };
+      }
+      return undefined;
+    };
   }, []);
 
   return (

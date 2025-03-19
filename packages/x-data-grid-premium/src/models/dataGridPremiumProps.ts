@@ -266,9 +266,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {string} originalColumnField The field of the original column.
    * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
    * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * @default undefined
    */
-  pivotingColDef?: (
-    originalColumnField: GridColDef['field'],
-    columnGroupPath: string[],
-  ) => Partial<GridPivotingColDefOverrides> | undefined;
+  pivotingColDef?:
+    | Partial<GridPivotingColDefOverrides>
+    | ((
+        originalColumnField: GridColDef['field'],
+        columnGroupPath: string[],
+      ) => Partial<GridPivotingColDefOverrides> | undefined);
 }

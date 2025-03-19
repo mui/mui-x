@@ -274,7 +274,7 @@ export const getPivotedData = ({
             const overrides =
               typeof pivotingColDef === 'function'
                 ? pivotingColDef(valueField, columnGroup.groupId.split(columnGroupIdSeparator))
-                : undefined;
+                : pivotingColDef;
             const column: GridColDef = {
               headerName: String(valueField),
               ...getAttributesFromInitialColumn(pivotValue.field),

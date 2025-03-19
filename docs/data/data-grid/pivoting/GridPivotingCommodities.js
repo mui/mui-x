@@ -40,11 +40,13 @@ export default function GridPivotingCommodities() {
     return undefined;
   }, [pivotEnabled]);
 
-  const pivotingColDef = React.useCallback((originalColumnField) => {
-    if (originalColumnField === 'quantity') {
-      return { width: 80 };
-    }
-    return undefined;
+  const pivotingColDef = React.useMemo(() => {
+    return (originalColumnField) => {
+      if (originalColumnField === 'quantity') {
+        return { width: 80 };
+      }
+      return undefined;
+    };
   }, []);
 
   return (

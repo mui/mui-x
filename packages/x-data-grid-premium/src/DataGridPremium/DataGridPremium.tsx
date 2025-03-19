@@ -1001,8 +1001,26 @@ DataGridPremiumRaw.propTypes = {
    * @param {string} originalColumnField The field of the original column.
    * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
    * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * @default undefined
    */
-  pivotingColDef: PropTypes.func,
+  pivotingColDef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      align: PropTypes.oneOf(['center', 'left', 'right']),
+      cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      description: PropTypes.string,
+      display: PropTypes.oneOf(['flex', 'text']),
+      flex: PropTypes.number,
+      headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+      headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      headerName: PropTypes.string,
+      maxWidth: PropTypes.number,
+      minWidth: PropTypes.number,
+      resizable: PropTypes.bool,
+      sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+      width: PropTypes.number,
+    }),
+  ]),
   /**
    * The pivot model of the grid.
    * Will be used to generate the pivot data.
