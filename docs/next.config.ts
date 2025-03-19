@@ -46,6 +46,9 @@ export default withDocsInfra({
     // The tsconfig also contains path aliases that are used by next.js.
     tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
   },
+  experimental: {
+    esmExternals: undefined,
+  },
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete

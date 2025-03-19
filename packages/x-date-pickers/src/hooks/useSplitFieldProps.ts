@@ -30,7 +30,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'focused',
 ] as const;
 
-type InternalPropNames<TValueType extends PickerValueType> =
+export type InternalPropNames<TValueType extends PickerValueType> =
   | (typeof SHARED_FIELD_INTERNAL_PROP_NAMES)[number]
   | (TValueType extends 'date' | 'date-time' ? (typeof DATE_VALIDATION_PROP_NAMES)[number] : never)
   | (TValueType extends 'time' | 'date-time' ? (typeof TIME_VALIDATION_PROP_NAMES)[number] : never)

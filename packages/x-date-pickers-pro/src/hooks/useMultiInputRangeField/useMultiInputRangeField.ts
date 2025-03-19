@@ -4,7 +4,7 @@ import {
   PickerManagerFieldInternalProps,
   useControlledValue,
   useFieldInternalPropsWithDefaults,
-  UseFieldResponse,
+  UseFieldReturnValue,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { UseTextFieldBaseForwardedProps, useTextFieldProps } from './useTextFieldProps';
@@ -187,7 +187,7 @@ export type UseMultiInputRangeFieldTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseTextFieldBaseForwardedProps,
 > = Omit<
-  UseFieldResponse<
+  UseFieldReturnValue<
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps & {
       onKeyDown: React.KeyboardEventHandler;
