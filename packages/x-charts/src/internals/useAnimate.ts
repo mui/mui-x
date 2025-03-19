@@ -3,8 +3,7 @@ import useId from '@mui/utils/useId';
 import * as React from 'react';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
-// FIXME: Do not use @babel/types
-import { shallowEqual } from '@babel/types';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
@@ -27,11 +26,11 @@ export function useAnimate<Props extends {}, Elem extends Element>(
    * T1. The transitioned element changes;
    * T2. The transitioned element is unmounted;
    * T3. The component calling this hook is unmounted. */
-  const lastInterpolatedProps = React.useRef(initialProps ?? props);
+  const lastInterpolatedPropsRef = React.useRef(initialProps ?? props);
   const transitionRef = React.useRef<Transition<Elem, unknown, null, undefined>>(null);
   const elementRef = React.useRef<Elem>(null);
-  const elementUnmounted = React.useRef(false);
-  const lastProps = React.useRef(props);
+  const elementUnmountedRef = React.useRef(false);
+  const lastPropsRef = React.useRef(props);
 
   useIsomorphicLayoutEffect(() => {
     return () => {
@@ -46,15 +45,15 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
   /* T2. Interrupt the transition if the element is unmounted.
    *
-   * `elementUnmounted` is when to true when a `setRef` is called with a non-null element. This is needed because
-   * `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be called only
-   *  when the underlying element changes.
+   * `elementUnmountedRef.current` is when to true when a `setRef` is called with a non-null element. This is needed
+   *  because `setRef` can be called because the component using this hook re-renders, i.e., it isn't guaranteed to be
+   *  called only when the underlying element changes.
    *  When `elementUnmounted` is true, it means `setRef` wasn't called with an element, so we must interrupt the
    *  transition.
    *
    * This runs on every render, so it must be light. */
   useIsomorphicLayoutEffect(() => {
-    if (elementUnmounted.current) {
+    if (elementUnmountedRef.current) {
       const lastElement = elementRef.current;
 
       interrupt(lastElement, transitionName);
@@ -62,7 +61,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
   });
 
   useIsomorphicLayoutEffect(() => {
-    lastProps.current = props;
+    lastPropsRef.current = props;
   }, [props]);
 
   const animate = React.useCallback(
@@ -72,13 +71,13 @@ export function useAnimate<Props extends {}, Elem extends Element>(
         .duration(skip ? 0 : ANIMATION_DURATION_MS)
         .ease(ANIMATION_TIMING_FUNCTION_JS)
         .tween('animate', () => {
-          const lastProps = lastInterpolatedProps.current;
-          const interpolate = createInterpolator(lastProps, props);
+          const lastInterpolatedProps = lastInterpolatedPropsRef.current;
+          const interpolate = createInterpolator(lastInterpolatedProps, props);
 
           return function animateAt(t) {
             const interpolatedProps = interpolate(t);
 
-            lastInterpolatedProps.current = interpolatedProps;
+            lastInterpolatedPropsRef.current = interpolatedProps;
 
             applyProps(this, interpolatedProps);
           };
@@ -89,7 +88,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
   const setRef = React.useCallback(
     (element: Elem | null) => {
-      elementUnmounted.current = element === null;
+      elementUnmountedRef.current = element === null;
 
       if (element === null) {
         return;
@@ -99,7 +98,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
       if (lastElement === element) {
         // If it's the same element and same props, there's nothing to do.
-        if (shallowEqual(lastProps.current, props)) {
+        if (fastObjectShallowCompare(lastPropsRef.current, props)) {
           return;
         }
 
