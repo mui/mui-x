@@ -18,4 +18,5 @@ export default function BasicLabel() {
 const props = {
   height: 300,
   xAxis: [{ data: ['A', 'B', 'C'], scaleType: 'band' as const }],
+  yAxis: [{ width: 50 }],
 };

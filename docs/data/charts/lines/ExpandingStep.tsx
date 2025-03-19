@@ -87,7 +87,7 @@ export default function ExpandingStep() {
           },
         ]}
         height={200}
-        margin={{ top: 10, bottom: 10 }}
+        margin={{ bottom: 10 }}
         skipAnimation
       >
         <ChartsAxisHighlight x="band" />
