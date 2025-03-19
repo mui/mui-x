@@ -22,7 +22,7 @@ export function shallowEqual(objA: unknown, objB: unknown): boolean {
   }
 
   // Test for A's keys different from B.
-  for (let i = 0; i < keysA.length; i++) {
+  for (let i = 0; i < keysA.length; i += 1) {
     const currentKey = keysA[i];
 
     if (
