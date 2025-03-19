@@ -34,26 +34,30 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
   function QuickFilterControl(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, controlRef, onValueChange, clearValue } = useQuickFilterContext();
+    const { state, controlRef, onValueChange, onExpandedChange, clearValue } =
+      useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(controlRef, ref);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Escape') {
-        clearValue();
+        if (state.value === '') {
+          onExpandedChange(false);
+        } else {
+          clearValue();
+        }
       }
 
       props.onKeyDown?.(event);
     };
 
-    const isFirstRender = React.useRef(true);
-    React.useEffect(() => {
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      } else if (state.expanded) {
-        controlRef.current?.focus();
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      if (state.value === '') {
+        onExpandedChange(false);
       }
-    }, [state.expanded, controlRef]);
+
+      props.slotProps?.htmlInput?.onBlur?.(event);
+    };
 
     const element = useGridComponentRenderer(
       rootProps.slots.baseTextField,
@@ -63,7 +67,10 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
         slotProps: {
           htmlInput: {
             role: 'searchbox',
+            'aria-hidden': !state.expanded ? 'true' : undefined,
+            tabIndex: state.expanded ? undefined : -1,
             ...props.slotProps?.htmlInput,
+            onBlur: handleBlur,
           },
           ...props.slotProps,
         },
@@ -76,10 +83,6 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
       },
       state,
     );
-
-    if (!state.expanded) {
-      return null;
-    }
 
     return <React.Fragment>{element}</React.Fragment>;
   },

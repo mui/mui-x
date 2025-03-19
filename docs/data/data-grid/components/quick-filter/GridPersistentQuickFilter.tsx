@@ -11,11 +11,16 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
+import { styled } from '@mui/material/styles';
+
+const StyledQuickFilter = styled(QuickFilter)({
+  marginLeft: 'auto',
+});
 
 function CustomToolbar() {
   return (
     <Toolbar>
-      <QuickFilter expanded>
+      <StyledQuickFilter expanded>
         <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
@@ -25,29 +30,33 @@ function CustomToolbar() {
               aria-label="Search"
               placeholder="Search..."
               size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-                endAdornment: other.value ? (
-                  <InputAdornment position="end">
-                    <QuickFilterClear
-                      edge="end"
-                      size="small"
-                      aria-label="Clear search"
-                      sx={{ marginRight: -0.75 }}
-                    >
-                      <CancelIcon fontSize="small" />
-                    </QuickFilterClear>
-                  </InputAdornment>
-                ) : null,
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: other.value ? (
+                    <InputAdornment position="end">
+                      <QuickFilterClear
+                        edge="end"
+                        size="small"
+                        aria-label="Clear search"
+                        sx={{ marginRight: -0.75 }}
+                      >
+                        <CancelIcon fontSize="small" />
+                      </QuickFilterClear>
+                    </InputAdornment>
+                  ) : null,
+                  ...other.slotProps?.input,
+                },
+                ...other.slotProps,
               }}
             />
           )}
         />
-      </QuickFilter>
+      </StyledQuickFilter>
     </Toolbar>
   );
 }

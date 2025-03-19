@@ -38,15 +38,6 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(triggerRef, ref);
 
-    const isFirstRender = React.useRef(true);
-    React.useEffect(() => {
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      } else if (!state.expanded) {
-        triggerRef.current?.focus();
-      }
-    }, [state.expanded, triggerRef]);
-
     const element = useGridComponentRenderer(
       rootProps.slots.baseButton,
       render,
@@ -54,15 +45,12 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
         ...rootProps.slotProps?.baseButton,
         onClick: () => onExpandedChange(!state.expanded),
         className: resolvedClassName,
+        'aria-hidden': state.expanded ? 'true' : undefined,
         ...other,
         ref: handleRef,
       },
       state,
     );
-
-    if (state.expanded) {
-      return null;
-    }
 
     return <React.Fragment>{element}</React.Fragment>;
   },

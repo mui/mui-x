@@ -49,10 +49,6 @@ const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
       state,
     );
 
-    if (!state.expanded) {
-      return null;
-    }
-
     return <React.Fragment>{element}</React.Fragment>;
   },
 );

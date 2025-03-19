@@ -1,7 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_debounce as debounce } from '@mui/utils';
-import { QuickFilterContext } from './QuickFilterContext';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { QuickFilterContext, QuickFilterState } from './QuickFilterContext';
+import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
@@ -9,8 +11,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridFilterModel } from '../../models';
 import { isDeepEqual } from '../../utils/utils';
 
-export type QuickFilterProps = {
-  children: React.ReactNode;
+export type QuickFilterProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> & {
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
@@ -40,6 +41,14 @@ export type QuickFilterProps = {
    */
   expanded?: boolean;
   /**
+   * A function to customize rendering of the component.
+   */
+  render?: RenderProp<React.ComponentProps<'div'>, QuickFilterState>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className?: string | ((state: QuickFilterState) => string);
+  /**
    * Callback function that is called when the quick filter input is expanded or collapsed.
    * @param {boolean} expanded The new expanded state of the quick filter control
    */
@@ -52,7 +61,7 @@ const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
 
 /**
  * The top level Quick Filter component that provides context to child components.
- * It does not render any DOM elements.
+ * It renders a `<div />` element.
  *
  * Demos:
  *
@@ -65,13 +74,15 @@ const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
 function QuickFilter(props: QuickFilterProps) {
   const rootProps = useGridRootProps();
   const {
+    render,
+    className,
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
     debounceMs = rootProps.filterDebounceMs,
     initialExpanded = false,
     expanded,
     onExpandedChange,
-    children,
+    ...other
   } = props;
 
   const apiRef = useGridApiContext();
@@ -80,9 +91,17 @@ function QuickFilter(props: QuickFilterProps) {
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
   const [internalExpanded, setInternalExpanded] = React.useState(initialExpanded);
-
   // Use the controlled value if provided, otherwise use the internal state
   const expandedValue = expanded ?? internalExpanded;
+  const state = React.useMemo(
+    () => ({
+      value,
+      expanded: expandedValue,
+    }),
+    [value, expandedValue],
+  );
+  const resolvedClassName = typeof className === 'function' ? className(state) : className;
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const handleExpandedChange = React.useCallback(
     (newExpanded: boolean) => {
@@ -91,6 +110,12 @@ function QuickFilter(props: QuickFilterProps) {
       }
       if (expanded === undefined) {
         setInternalExpanded(newExpanded);
+      }
+
+      if (newExpanded) {
+        controlRef.current?.focus();
+      } else {
+        triggerRef.current?.focus();
       }
     },
     [onExpandedChange, expanded],
@@ -136,25 +161,40 @@ function QuickFilter(props: QuickFilterProps) {
     setValue('');
     apiRef.current.setQuickFilterValues([]);
     controlRef.current?.focus();
-    handleExpandedChange(false);
-  }, [apiRef, controlRef, handleExpandedChange]);
+  }, [apiRef, controlRef]);
 
   const contextValue = React.useMemo(
     () => ({
       controlRef,
       triggerRef,
-      state: {
-        value,
-        expanded: expandedValue,
-      },
+      state,
       clearValue: handleClear,
       onValueChange: handleValueChange,
       onExpandedChange: handleExpandedChange,
     }),
-    [value, expandedValue, handleValueChange, handleClear, handleExpandedChange],
+    [state, handleValueChange, handleClear, handleExpandedChange],
   );
 
-  return <QuickFilterContext.Provider value={contextValue}>{children}</QuickFilterContext.Provider>;
+  useEnhancedEffect(() => {
+    if (ref.current && triggerRef.current) {
+      ref.current.style.setProperty('--trigger-width', `${triggerRef.current?.offsetWidth}px`);
+    }
+  }, []);
+
+  const element = useGridComponentRenderer(
+    'div',
+    render,
+    {
+      role: 'toolbar',
+      'aria-orientation': 'horizontal',
+      className: resolvedClassName,
+      ...other,
+      ref,
+    },
+    state,
+  );
+
+  return <QuickFilterContext.Provider value={contextValue}>{element}</QuickFilterContext.Provider>;
 }
 
 QuickFilter.propTypes = {

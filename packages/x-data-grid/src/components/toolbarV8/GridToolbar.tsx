@@ -129,11 +129,7 @@ function GridToolbar(props: GridToolbarProps) {
         </React.Fragment>
       )}
 
-      {showQuickFilter && (
-        <div style={{ marginLeft: 'auto' }}>
-          <GridToolbarQuickFilter {...quickFilterProps} />
-        </div>
-      )}
+      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
     </Toolbar>
   );
 }
