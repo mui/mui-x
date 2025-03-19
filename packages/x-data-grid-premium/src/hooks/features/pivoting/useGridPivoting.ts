@@ -211,10 +211,7 @@ export const useGridPivoting = (
   });
 
   useEnhancedEffect(() => {
-    if (!isPivotingAvailable) {
-      return;
-    }
-    if (!isPivotActive && exportedStateRef.current) {
+    if ((!isPivotingAvailable || !isPivotActive) && exportedStateRef.current) {
       apiRef.current.restoreState(exportedStateRef.current);
       exportedStateRef.current = null;
     }
