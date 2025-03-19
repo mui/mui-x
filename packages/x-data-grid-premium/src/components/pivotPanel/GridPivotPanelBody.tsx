@@ -91,8 +91,7 @@ const GridPivotPanelSection = styled(Collapsible, {
   }),
   '&[data-drag-over="true"]': {
     backgroundColor: vars.colors.interactive.hover,
-    borderColor: vars.colors.interactive.selected,
-    borderStyle: 'dashed',
+    outline: `2px solid ${vars.colors.interactive.selected}`,
   },
 });
 
@@ -292,9 +291,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-section="rows"
             data-drag-over={drag.dropZone === 'rows'}
           >
-            <CollapsibleTrigger
-              aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(rowsLabel)}
-            >
+            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotRows')}>
               <GridPivotPanelSectionTitle ownerState={rootProps} className={classes.sectionTitle}>
                 {rowsLabel}
                 {pivotModel.rows.length > 0 && (
@@ -337,9 +334,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-section="columns"
             data-drag-over={drag.dropZone === 'columns'}
           >
-            <CollapsibleTrigger
-              aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(columnsLabel)}
-            >
+            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotColumns')}>
               <GridPivotPanelSectionTitle ownerState={rootProps} className={classes.sectionTitle}>
                 {columnsLabel}
                 {pivotModel.columns.length > 0 && (
@@ -381,9 +376,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-section="values"
             data-drag-over={drag.dropZone === 'values'}
           >
-            <CollapsibleTrigger
-              aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(valuesLabel)}
-            >
+            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotValues')}>
               <GridPivotPanelSectionTitle ownerState={rootProps} className={classes.sectionTitle}>
                 {valuesLabel}
                 {pivotModel.values.length > 0 && (

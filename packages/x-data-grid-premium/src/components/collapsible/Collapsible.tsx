@@ -29,10 +29,8 @@ const CollapsibleRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden',
-  borderRadius: vars.radius.base,
-  border: `1px solid ${vars.colors.border.base}`,
   flex: ownerState.open ? '1 0 auto' : '0 0 auto',
+  borderRadius: vars.radius.base,
 }));
 
 function Collapsible(props: CollapsibleProps) {

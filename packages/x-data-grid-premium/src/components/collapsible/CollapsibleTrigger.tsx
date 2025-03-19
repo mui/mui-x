@@ -8,7 +8,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useCollapsibleContext } from './CollapsibleContext';
 
-export type CollapsibleTriggerProps = React.HTMLAttributes<HTMLDivElement>;
+export type CollapsibleTriggerProps = React.HTMLAttributes<HTMLButtonElement>;
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { open: boolean };
 
@@ -23,20 +23,32 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const CollapsibleTriggerRoot = styled('div', {
+const CollapsibleTriggerRoot = styled('button', {
   name: 'MuiDataGrid',
   slot: 'CollapsibleTrigger',
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ ownerState }) => ({
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   height: 40,
   padding: vars.spacing(0, 1.5),
+  border: `1px solid ${vars.colors.border.base}`,
+  background: 'none',
+  outline: 'none',
+  borderTopLeftRadius: vars.radius.base,
+  borderTopRightRadius: vars.radius.base,
+  borderBottomLeftRadius: ownerState.open ? 0 : vars.radius.base,
+  borderBottomRightRadius: ownerState.open ? 0 : vars.radius.base,
   '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
     cursor: 'pointer',
   },
-});
+  '&:focus-visible': {
+    outline: `2px solid ${vars.colors.interactive.selected}`,
+    outlineOffset: -2,
+  },
+}));
 
 const CollapsibleIcon = styled('div', {
   name: 'MuiDataGrid',
@@ -64,7 +76,6 @@ function CollapsibleTrigger(props: CollapsibleTriggerProps) {
     <CollapsibleTriggerRoot
       ownerState={ownerState}
       className={clsx(classes.root, className)}
-      role="button"
       tabIndex={0}
       aria-controls={open ? panelId : undefined}
       aria-expanded={!open}

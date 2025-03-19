@@ -27,7 +27,10 @@ const CollapsiblePanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'CollapsiblePanel',
 })<{ ownerState: OwnerState }>({
-  borderTop: `1px solid ${vars.colors.border.base}`,
+  border: `1px solid ${vars.colors.border.base}`,
+  borderTop: 'none',
+  borderBottomLeftRadius: vars.radius.base,
+  borderBottomRightRadius: vars.radius.base,
   flex: 1,
   overflow: 'hidden',
 });

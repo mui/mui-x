@@ -234,10 +234,6 @@ export interface GridLocaleText {
   pivotDragToRows: string;
   pivotDragToColumns: string;
   pivotDragToValues: string;
-
-  // Sidebar
-  sidebarCollapseSection: (name: string) => string;
-  sidebarExpandSection: (name: string) => string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;
