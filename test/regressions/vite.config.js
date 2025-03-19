@@ -1,4 +1,3 @@
-import fs from 'fs';
 import url from 'url';
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';

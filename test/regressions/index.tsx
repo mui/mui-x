@@ -86,7 +86,7 @@ const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true })
 console.log(requireDocs)
 
 Object.keys(requireDocs).forEach((path: string) => {
-  const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
+  const [name, ...suiteArray] = path.replace('../../docs/data/', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
@@ -109,11 +109,7 @@ Object.keys(requireDocs).forEach((path: string) => {
 const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
 console.log(requireRegressions)
 Object.keys(requireRegressions).forEach((path: string) => {
-  if (!path.startsWith('./')) {
-    return;
-  }
-
-  const name = path.replace('./', '').replace('.js', '');
+  const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
 
   tests.push({

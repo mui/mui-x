@@ -5,7 +5,6 @@ import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
 import { version } from '@mui/material'
-import * as mocha from 'mocha';
 
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
@@ -13,7 +12,6 @@ function sleep(timeoutMS: number | undefined) {
   });
 }
 
-console.log({ version })
 const isMaterialUIv6 = String(version).startsWith('6.');
 
 // Tests that need a longer timeout.
