@@ -24,14 +24,14 @@ describe('<DesktopTimePicker />', () => {
       expect(screen.getByRole('option', { name: 'AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
+    it('should render single column Picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
       render(<DesktopTimePicker open thresholdToRenderTimeInASingleColumn={1000} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '09:35 AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "timeSteps.minutes" number', () => {
+    it('should render single column Picker given big enough "timeSteps.minutes" number', () => {
       render(<DesktopTimePicker open timeSteps={{ minutes: 60 }} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);

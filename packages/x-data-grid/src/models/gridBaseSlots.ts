@@ -132,7 +132,9 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type DividerProps = {};
+export type DividerProps = {
+  orientation?: 'horizontal' | 'vertical';
+};
 
 export type MenuListProps = {
   ref?: Ref<HTMLUListElement>;
@@ -178,6 +180,17 @@ type ClickAwayMouseEventHandler =
   | 'onPointerDown'
   | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
+
+export type PaginationProps = {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  rowsPerPageOptions?: readonly (number | { value: number; label: string })[];
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => void;
+  onRowsPerPageChange?: (rowsPerPage: number) => void;
+
+  disabled?: boolean;
+};
 
 export type PopperProps = {
   open: boolean;
@@ -274,6 +287,7 @@ export type SwitchProps = {
 };
 
 export type TextFieldProps = {
+  role?: string;
   autoComplete?: string;
   className?: string;
   color?: 'primary' | 'error';
@@ -289,7 +303,7 @@ export type TextFieldProps = {
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
-    input?: Partial<InputProps>;
+    input?: Omit<Partial<InputProps>, 'slotProps'>;
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
@@ -297,6 +311,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
+  ref?: Ref<HTMLInputElement>;
 };
 
 export type TooltipProps = {

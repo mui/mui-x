@@ -23,28 +23,28 @@ const keys = {
   /* Variables */
   colors: {
     border: {
-      base: '--DataGrid-t-colors-border-base',
+      base: '--DataGrid-t-color-border-base',
     },
     foreground: {
-      base: '--DataGrid-t-colors-foreground-base',
-      muted: '--DataGrid-t-colors-foreground-muted',
-      accent: '--DataGrid-t-colors-foreground-accent',
-      disabled: '--DataGrid-t-colors-foreground-disabled',
+      base: '--DataGrid-t-color-foreground-base',
+      muted: '--DataGrid-t-color-foreground-muted',
+      accent: '--DataGrid-t-color-foreground-accent',
+      disabled: '--DataGrid-t-color-foreground-disabled',
     },
     background: {
-      base: '--DataGrid-t-colors-background-base',
-      overlay: '--DataGrid-t-colors-background-overlay',
-      backdrop: '--DataGrid-t-colors-background-backdrop',
+      base: '--DataGrid-t-color-background-base',
+      overlay: '--DataGrid-t-color-background-overlay',
+      backdrop: '--DataGrid-t-color-background-backdrop',
     },
     interactive: {
-      hover: '--DataGrid-t-colors-interactive-hover',
-      hoverOpacity: '--DataGrid-t-colors-interactive-hover-opacity',
-      focus: '--DataGrid-t-colors-interactive-focus',
-      focusOpacity: '--DataGrid-t-colors-interactive-focus-opacity',
-      disabled: '--DataGrid-t-colors-interactive-disabled',
-      disabledOpacity: '--DataGrid-t-colors-interactive-disabled-opacity',
-      selected: '--DataGrid-t-colors-interactive-selected',
-      selectedOpacity: '--DataGrid-t-colors-interactive-selected-opacity',
+      hover: '--DataGrid-t-color-interactive-hover',
+      hoverOpacity: '--DataGrid-t-color-interactive-hover-opacity',
+      focus: '--DataGrid-t-color-interactive-focus',
+      focusOpacity: '--DataGrid-t-color-interactive-focus-opacity',
+      disabled: '--DataGrid-t-color-interactive-disabled',
+      disabledOpacity: '--DataGrid-t-color-interactive-disabled-opacity',
+      selected: '--DataGrid-t-color-interactive-selected',
+      selectedOpacity: '--DataGrid-t-color-interactive-selected-opacity',
     },
   },
   header: {
@@ -61,6 +61,10 @@ const keys = {
     base: '--DataGrid-t-radius-base',
   },
   typography: {
+    font: {
+      body: '--DataGrid-t-typography-font-body',
+      small: '--DataGrid-t-typography-font-small',
+    },
     fontFamily: {
       base: '--DataGrid-t-typography-font-family-base',
     },
@@ -70,36 +74,22 @@ const keys = {
       medium: '--DataGrid-t-typography-font-weight-medium',
       bold: '--DataGrid-t-typography-font-weight-bold',
     },
-    body: {
-      fontFamily: '--DataGrid-t-typography-body-font-family',
-      fontSize: '--DataGrid-t-typography-body-font-size',
-      fontWeight: '--DataGrid-t-typography-body-font-weight',
-      letterSpacing: '--DataGrid-t-typography-body-letter-spacing',
-      lineHeight: '--DataGrid-t-typography-body-line-height',
-    },
-    small: {
-      fontFamily: '--DataGrid-t-typography-small-font-family',
-      fontSize: '--DataGrid-t-typography-small-font-size',
-      fontWeight: '--DataGrid-t-typography-small-font-weight',
-      letterSpacing: '--DataGrid-t-typography-small-letter-spacing',
-      lineHeight: '--DataGrid-t-typography-small-line-height',
-    },
   },
   transitions: {
     easing: {
-      easeIn: '--DataGrid-t-transitions-easing-ease-in',
-      easeOut: '--DataGrid-t-transitions-easing-ease-out',
-      easeInOut: '--DataGrid-t-transitions-easing-ease-in-out',
+      easeIn: '--DataGrid-t-transition-easing-ease-in',
+      easeOut: '--DataGrid-t-transition-easing-ease-out',
+      easeInOut: '--DataGrid-t-transition-easing-ease-in-out',
     },
     duration: {
-      short: '--DataGrid-t-transitions-duration-short',
-      base: '--DataGrid-t-transitions-duration-base',
-      long: '--DataGrid-t-transitions-duration-long',
+      short: '--DataGrid-t-transition-duration-short',
+      base: '--DataGrid-t-transition-duration-base',
+      long: '--DataGrid-t-transition-duration-long',
     },
   },
   shadows: {
-    base: '--DataGrid-t-shadows-base',
-    overlay: '--DataGrid-t-shadows-overlay',
+    base: '--DataGrid-t-shadow-base',
+    overlay: '--DataGrid-t-shadow-overlay',
   },
   zIndex: {
     panel: '--DataGrid-t-z-index-panel',

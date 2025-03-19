@@ -85,7 +85,7 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change the label of an item
 
-Use the `setItemExpansion` API method to change the expansion of an item.
+Use the `updateItemLabel()` API method to imperatively update the label of an item.
 
 ```ts
 apiRef.current.updateItemLabel(
@@ -97,3 +97,28 @@ apiRef.current.updateItemLabel(
 ```
 
 {{"demo": "ApiMethodUpdateItemLabel.js"}}
+
+## Editing lazy loaded children
+
+To store the updated item labels on your server use the `onItemLabelChange` callback function.
+
+Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually.
+
+```tsx
+const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {
+  // update your cache here
+};
+
+<RichTreeViewPro
+  items={[]}
+  onItemLabelChange={handleItemLabelChange}
+  isItemEditable
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+  {...otherProps}
+/>;
+```
+
+Visit the dedicated page for [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-label-editing) to read more.

@@ -13,10 +13,7 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import {
-  resolveDateTimeFormat,
-  resolveTimeViewsResponse,
-} from '../internals/utils/date-time-utils';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 import { PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
@@ -33,7 +30,7 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
-} from '../internals/hooks/usePicker/usePickerViews';
+} from '../internals/hooks/usePicker';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 
@@ -113,18 +110,10 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
-    DateOrTimeViewWithMeridiem,
     DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimePicker');
 
-  const {
-    shouldRenderTimeInASingleColumn,
-    thresholdToRenderTimeInASingleColumn,
-    views: resolvedViews,
-    timeSteps,
-  } = resolveTimeViewsResponse(defaultizedProps);
-
-  const renderTimeView = shouldRenderTimeInASingleColumn
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
@@ -143,8 +132,8 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
   const views = !shouldHoursRendererContainMeridiemView
-    ? resolvedViews.filter((view) => view !== 'meridiem')
-    : resolvedViews;
+    ? defaultizedProps.views.filter((view) => view !== 'meridiem')
+    : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -154,9 +143,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     views,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
-    timeSteps,
-    thresholdToRenderTimeInASingleColumn,
-    shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
       layout: DesktopDateTimePickerLayout,
@@ -258,7 +244,7 @@ DesktopDateTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

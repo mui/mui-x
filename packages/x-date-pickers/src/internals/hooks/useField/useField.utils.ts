@@ -1,5 +1,4 @@
 import {
-  AvailableAdjustKeyCode,
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
@@ -48,21 +47,6 @@ export const getDateSectionConfigFromFormatToken = (
     contentType: config.contentType,
     maxLength: config.maxLength,
   };
-};
-
-const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) => {
-  switch (keyCode) {
-    case 'ArrowUp':
-      return 1;
-    case 'ArrowDown':
-      return -1;
-    case 'PageUp':
-      return 5;
-    case 'PageDown':
-      return -5;
-    default:
-      return 0;
-  }
 };
 
 export const getDaysInWeekStr = (utils: MuiPickersAdapter, format: string) => {
@@ -230,106 +214,6 @@ export const cleanDigitSectionValue = (
   }
 
   return applyLocalizedDigits(valueStr, localizedDigits);
-};
-
-export const adjustSectionValue = <TValue extends PickerValidValue>(
-  utils: MuiPickersAdapter,
-  timezone: PickersTimezone,
-  section: InferFieldSection<TValue>,
-  keyCode: AvailableAdjustKeyCode,
-  sectionsValueBoundaries: FieldSectionsValueBoundaries,
-  localizedDigits: string[],
-  activeDate: PickerValidDate | null,
-  stepsAttributes?: { minutesStep?: number },
-): string => {
-  const delta = getDeltaFromKeyCode(keyCode);
-  const isStart = keyCode === 'Home';
-  const isEnd = keyCode === 'End';
-
-  const shouldSetAbsolute = section.value === '' || isStart || isEnd;
-
-  const adjustDigitSection = () => {
-    const sectionBoundaries = sectionsValueBoundaries[section.type]({
-      currentDate: activeDate,
-      format: section.format,
-      contentType: section.contentType,
-    });
-
-    const getCleanValue = (value: number) =>
-      cleanDigitSectionValue(utils, value, sectionBoundaries, localizedDigits, section);
-
-    const step =
-      section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
-
-    const currentSectionValue = parseInt(removeLocalizedDigits(section.value, localizedDigits), 10);
-    let newSectionValueNumber = currentSectionValue + delta * step;
-
-    if (shouldSetAbsolute) {
-      if (section.type === 'year' && !isEnd && !isStart) {
-        return utils.formatByString(utils.date(undefined, timezone), section.format);
-      }
-
-      if (delta > 0 || isStart) {
-        newSectionValueNumber = sectionBoundaries.minimum;
-      } else {
-        newSectionValueNumber = sectionBoundaries.maximum;
-      }
-    }
-
-    if (newSectionValueNumber % step !== 0) {
-      if (delta < 0 || isStart) {
-        newSectionValueNumber += step - ((step + newSectionValueNumber) % step); // for JS -3 % 5 = -3 (should be 2)
-      }
-      if (delta > 0 || isEnd) {
-        newSectionValueNumber -= newSectionValueNumber % step;
-      }
-    }
-
-    if (newSectionValueNumber > sectionBoundaries.maximum) {
-      return getCleanValue(
-        sectionBoundaries.minimum +
-          ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
-      );
-    }
-
-    if (newSectionValueNumber < sectionBoundaries.minimum) {
-      return getCleanValue(
-        sectionBoundaries.maximum -
-          ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
-      );
-    }
-
-    return getCleanValue(newSectionValueNumber);
-  };
-
-  const adjustLetterSection = () => {
-    const options = getLetterEditingOptions(utils, timezone, section.type, section.format);
-    if (options.length === 0) {
-      return section.value;
-    }
-
-    if (shouldSetAbsolute) {
-      if (delta > 0 || isStart) {
-        return options[0];
-      }
-
-      return options[options.length - 1];
-    }
-
-    const currentOptionIndex = options.indexOf(section.value);
-    const newOptionIndex = (currentOptionIndex + delta) % options.length;
-    const clampedIndex = (newOptionIndex + options.length) % options.length;
-
-    return options[clampedIndex];
-  };
-
-  if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
-    return adjustDigitSection();
-  }
-
-  return adjustLetterSection();
 };
 
 export const getSectionVisibleValue = (
@@ -656,12 +540,15 @@ const transferDateSectionValue = (
     }
 
     case 'weekDay': {
+      let dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
+      if (section.hasLeadingZerosInInput) {
+        dayInWeekStrOfActiveDate = cleanLeadingZeros(dayInWeekStrOfActiveDate, section.maxLength!);
+      }
+
       const formattedDaysInWeek = getDaysInWeekStr(utils, section.format);
-      const dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
       const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-
       return utils.addDays(dateToTransferFrom, diff);
     }
 

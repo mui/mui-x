@@ -83,7 +83,7 @@ describe('<DesktopDateTimePicker />', () => {
 
     openPicker({ type: 'date-time' });
 
-    // Change the date multiple times to check that picker doesn't close after cycling through all views internally
+    // Change the date multiple times to check that Picker doesn't close after cycling through all views internally
     fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
     fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
     fireEvent.click(screen.getByRole('gridcell', { name: '4' }));
@@ -142,7 +142,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should accept value and close picker when selecting time on "DigitalClock" view renderer', () => {
+    it('should accept value and close Picker when selecting time on "DigitalClock" view renderer', () => {
       const onChange = spy();
       const onAccept = spy();
       render(

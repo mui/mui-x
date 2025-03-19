@@ -1,12 +1,14 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { DataGrid, GridCellModes } from '@mui/x-data-grid';
+import Tooltip from '@mui/material/Tooltip';
+import { DataGrid, GridCellModes, Toolbar, ToolbarButton } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function EditToolbar(props) {
   const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
@@ -49,31 +51,24 @@ function EditToolbar(props) {
   };
 
   return (
-    <Box
-      sx={{
-        borderBottom: 1,
-        borderColor: 'divider',
-        p: 1,
-      }}
-    >
-      <Button
-        onClick={handleSaveOrEdit}
-        onMouseDown={handleMouseDown}
-        disabled={!selectedCellParams}
-        variant="outlined"
-      >
-        {cellMode === 'edit' ? 'Save' : 'Edit'}
-      </Button>
-      <Button
-        onClick={handleCancel}
-        onMouseDown={handleMouseDown}
-        disabled={cellMode === 'view'}
-        variant="outlined"
-        sx={{ ml: 1 }}
-      >
-        Cancel
-      </Button>
-    </Box>
+    <Toolbar>
+      <Tooltip title={cellMode === 'edit' ? 'Save' : 'Edit'}>
+        <ToolbarButton onClick={handleSaveOrEdit}>
+          {cellMode === 'edit' ? (
+            <SaveIcon fontSize="small" />
+          ) : (
+            <EditIcon fontSize="small" />
+          )}
+        </ToolbarButton>
+      </Tooltip>
+      {cellMode === 'edit' && (
+        <Tooltip title="Cancel">
+          <ToolbarButton onClick={handleCancel} onMouseDown={handleMouseDown}>
+            <CancelIcon fontSize="small" />
+          </ToolbarButton>
+        </Tooltip>
+      )}
+    </Toolbar>
   );
 }
 

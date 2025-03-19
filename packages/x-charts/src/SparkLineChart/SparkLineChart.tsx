@@ -37,7 +37,15 @@ export interface SparkLineChartSlotProps
 export interface SparkLineChartProps
   extends Omit<
     ChartContainerProps,
-    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins' | 'colors'
+    | 'series'
+    | 'xAxis'
+    | 'yAxis'
+    | 'zAxis'
+    | 'radiusAxis'
+    | 'rotationAxis'
+    | 'margin'
+    | 'plugins'
+    | 'colors'
   > {
   /**
    * The xAxis configuration.

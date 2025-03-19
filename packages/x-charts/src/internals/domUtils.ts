@@ -6,7 +6,7 @@ function isSsr(): boolean {
 }
 
 interface StringCache {
-  widthCache: Record<string, any>;
+  widthCache: Record<string, { width: number; height: number }>;
   cacheCount: number;
 }
 

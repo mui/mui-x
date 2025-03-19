@@ -563,7 +563,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current?.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([155, 177]);
+      expect(getWidths()).to.deep.equal([152, 174]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -573,14 +573,14 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 177]);
+      expect(getWidths()).to.deep.equal([100, 174]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([155, 177]);
+      expect(getWidths()).to.deep.equal([152, 174]);
     });
 
     it('should work with flex columns', async () => {
@@ -600,7 +600,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       fireEvent.doubleClick(separators[1]);
       await microtasks();
-      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 64]);
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 63]);
     });
 
     describe('options', () => {
@@ -616,19 +616,19 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [155, 177]);
+        await autosize({ includeHeaders: true }, [152, 174]);
       });
 
       it('.includeOutliers works', async () => {
-        await autosize({ includeOutliers: true }, [50, 144]);
+        await autosize({ includeOutliers: true }, [50, 141]);
       });
 
       it('.outliersFactor works', async () => {
-        await autosize({ outliersFactor: 40 }, [50, 144]);
+        await autosize({ outliersFactor: 40 }, [50, 141]);
       });
 
       it('.expand works', async () => {
-        await autosize({ expand: true }, [134, 148]);
+        await autosize({ expand: true }, [135, 147]);
       });
     });
   });

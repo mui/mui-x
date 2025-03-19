@@ -228,6 +228,7 @@ async function main(argv) {
         break;
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts-pro':

@@ -22,7 +22,7 @@ import {
 } from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
-
+import { gridFocusedVirtualCellSelector } from '../virtualization/gridFocusedVirtualCellSelector';
 /* eslint-disable no-underscore-dangle */
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
@@ -261,6 +261,13 @@ export const useGridRowsMeta = (
               ? entry.borderBoxSize[0].blockSize
               : entry.contentRect.height;
           const rowId = (entry.target as any).__mui_id;
+          const focusedVirtualRowId = gridFocusedVirtualCellSelector(apiRef)?.id;
+          if (focusedVirtualRowId === rowId && height === 0) {
+            // Focused virtual row has 0 height.
+            // We don't want to store it to avoid scroll jumping.
+            // https://github.com/mui/mui-x/issues/14726
+            return;
+          }
           apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
         }
         if (!isHeightMetaValid.current) {

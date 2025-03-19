@@ -76,11 +76,6 @@ export default function QuickFilteringExcludeHiddenColumns() {
           disableColumnSelector
           disableDensitySelector
           showToolbar
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
           filterModel={filterModel}
           onFilterModelChange={handleFilterModelChange}
           columnVisibilityModel={columnVisibilityModel}

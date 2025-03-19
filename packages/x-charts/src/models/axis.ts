@@ -198,6 +198,10 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The end angle (in deg).
    */
   endAngle?: number;
+  /**
+   * The gap between the axis and the label.
+   */
+  labelGap?: number;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
@@ -336,11 +340,10 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       scale: AxisScaleConfig[S]['scale'];
     };
 
-export type AxisConfig<
-  S extends ScaleName = ScaleName,
-  V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = {
+/**
+ * Config that is shared between cartesian and polar axes.
+ */
+type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
    * Id used to identify the axis.
    */
@@ -382,26 +385,59 @@ export type AxisConfig<
    */
   reverse?: boolean;
   /**
+   * Defines the axis scale domain based on the min/max values of series linked to it.
+   * - 'nice': Rounds the domain at human friendly values.
+   * - 'strict': Set the domain to the min/max value provided. No extra space is added.
+   * - function: Receives the calculated extremums as parameters, and should return the axis domain.
+   */
+  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+};
+
+export type PolarAxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+> = {
+  /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
    * X-axis: A top axis will move up, and a bottom axis will move down.
    * Y-axis: A left axis will move left, and a right axis will move right.
    * @default 0
    */
   offset?: number;
+} & CommonAxisConfig<S, V> &
+  Omit<Partial<AxisProps>, 'axisId'> &
+  Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisConfigExtension;
+
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
   /**
-   * Defines the axis scale domain based on the min/max values of series linked to it.
-   * - 'nice': Rounds the domain at human friendly values.
-   * - 'strict': Set the domain to the min/max value provided. No extras space is added.
-   * - function: Receives the calculated extremums as parameters, and should return the axis domain.
+   * The offset of the axis in pixels. It can be used to move the axis from its default position.
+   * X-axis: A top axis will move up, and a bottom axis will move down.
+   * Y-axis: A left axis will move left, and a right axis will move right.
+   * @default 0
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
-} & Omit<Partial<AxisProps>, 'axisId'> &
+  offset?: number;
+} & CommonAxisConfig<S, V> &
+  Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisSideConfig<AxisProps> &
   TickParams &
   AxisConfigExtension;
 
 export interface AxisConfigExtension {}
+
+export type PolarAxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+> = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
+  AxisScaleConfig[S] &
+  AxisScaleComputedConfig[S];
 
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,
@@ -419,6 +455,7 @@ export type AxisDefaultized<
     : AxisProps extends ChartsYAxisProps
       ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
       : AxisSideConfig<AxisProps>);
+
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {

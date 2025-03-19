@@ -25,7 +25,7 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
     <React.Fragment>
       {xTicks.map(({ value, offset }) => (
         <GridLine
-          key={`vertical-${value}`}
+          key={`vertical-${value.getTime?.() ?? value}`}
           y1={start}
           y2={end}
           x1={offset}

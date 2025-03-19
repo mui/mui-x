@@ -66,7 +66,7 @@ const COMPONENTS = {
   timeRange: {
     field: ['SingleInputTimeRangeField', 'MultiInputTimeRangeField'],
     view: [],
-    picker: [],
+    picker: ['TimeRangePicker', 'DesktopTimeRangePicker', 'MobileTimeRangePicker'],
   },
   dateTimeRange: {
     field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],

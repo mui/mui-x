@@ -1,4 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
+import { deg2rad } from './angleConversion';
 
 const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle as perfectly horizontal/vertical
 
@@ -34,7 +35,7 @@ export function getMinXTranslation(width: number, height: number, angle: number 
     return height;
   }
 
-  const radAngle = (standardAngle * Math.PI) / 180;
+  const radAngle = deg2rad(standardAngle);
   const angleSwich = Math.atan2(height, width);
 
   if (radAngle < angleSwich) {

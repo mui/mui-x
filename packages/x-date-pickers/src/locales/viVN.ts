@@ -41,6 +41,7 @@ const viVNPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Chọn ngày và giờ',
   timePickerToolbarTitle: 'Chọn giờ',
   dateRangePickerToolbarTitle: 'Chọn khoảng ngày',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +59,12 @@ const viVNPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tuần ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Chọn ngày, ngày đã chọn là ${formattedDate}` : 'Chọn ngày',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Chọn giờ, giờ đã chọn là ${formattedTime}` : 'Chọn giờ',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Xóa giá trị',
 
   // Table labels

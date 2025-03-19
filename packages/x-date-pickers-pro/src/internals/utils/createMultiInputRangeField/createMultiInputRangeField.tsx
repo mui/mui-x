@@ -29,6 +29,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
   useManager,
   name,
   getUtilityClass,
+  allowTriggerShifting,
 }: CreateMultiInputRangeFieldParameters<TManager>): CreateMultiInputRangeFieldReturnValue<TManager> {
   const useUtilityClasses = (classes: MultiInputRangeFieldProps<TManager>['classes']) => {
     const slots = {
@@ -106,8 +107,18 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       className: clsx(className, classes.root),
     });
 
-    const startTextFieldProps = useTextFieldProps({ slotProps, ownerState, position: 'start' });
-    const endTextFieldProps = useTextFieldProps({ slotProps, ownerState, position: 'end' });
+    const startTextFieldProps = useTextFieldProps({
+      slotProps,
+      ownerState,
+      position: 'start',
+      allowTriggerShifting,
+    });
+    const endTextFieldProps = useTextFieldProps({
+      slotProps,
+      ownerState,
+      position: 'end',
+      allowTriggerShifting,
+    });
 
     const fieldResponse = useMultiInputRangeField({
       manager,

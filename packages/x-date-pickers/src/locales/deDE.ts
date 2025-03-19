@@ -42,6 +42,7 @@ const deDEPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
   timePickerToolbarTitle: 'Uhrzeit auswählen',
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,13 +60,14 @@ const deDEPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Woche ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Datum auswählen, gewähltes Datum ist ${formattedDate}` : 'Datum auswählen',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime}`
       : 'Uhrzeit auswählen',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wert leeren',
 
   // Table labels

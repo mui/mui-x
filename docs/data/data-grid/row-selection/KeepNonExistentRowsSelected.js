@@ -17,11 +17,6 @@ export default function KeepNonExistentRowsSelected() {
         disableRowSelectionOnClick
         keepNonExistentRowsSelected
         showToolbar
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
       />
     </div>
   );

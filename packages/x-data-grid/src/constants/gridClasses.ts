@@ -600,6 +600,10 @@ export interface GridClasses {
    */
   sortIcon: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
    * Styles applied to the shadow scroll area element.
    * @ignore - do not document.
    */

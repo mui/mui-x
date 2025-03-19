@@ -7,7 +7,7 @@ import {
 import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../internals/models';
 
 /**
- * Returns a subset of the context passed by the picker wrapping the current component.
+ * Returns a subset of the context passed by the Picker wrapping the current component.
  * It only contains the actions and never causes a re-render of the component using it.
  */
 export const usePickerActionsContext = <
@@ -23,7 +23,7 @@ export const usePickerActionsContext = <
   if (value == null) {
     throw new Error(
       [
-        'MUI X: The `usePickerActionsContext` can only be called in fields that are used as a slot of a picker component',
+        'MUI X: The `usePickerActionsContext` can only be called in fields that are used as a slot of a Picker component',
       ].join('\n'),
     );
   }

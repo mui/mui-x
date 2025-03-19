@@ -1,0 +1,10 @@
+<FunnelChart
+  series={[populationByEducationLevelPercentageSeriesLabeled]}
+  categoryAxis={{
+    categories: ['First', 'Second', 'Third', 'Fourth', 'Fifth'],
+    position: 'left',
+    disableLine: true,
+    disableTicks: true,
+  }}
+  {...funnelProps}
+/>

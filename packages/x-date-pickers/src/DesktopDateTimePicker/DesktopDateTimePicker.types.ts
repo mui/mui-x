@@ -10,32 +10,22 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { DateOrTimeView } from '../models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import {
-  MultiSectionDigitalClockSlots,
-  MultiSectionDigitalClockSlotProps,
-} from '../MultiSectionDigitalClock';
-import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
+import { DigitalTimePickerProps } from '../internals/models/props/time';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
   extends BaseDateTimePickerSlots,
-    MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'>,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {}
+    MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {}
+    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DesktopDateTimePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps<DateOrTimeViewWithMeridiem>,
+> extends BaseDateTimePickerProps,
     DesktopOnlyPickerProps,
-    DesktopOnlyTimePickerProps,
+    DigitalTimePickerProps,
     ExportedYearCalendarProps {
   /**
    * Overridable component slots.

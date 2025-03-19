@@ -1,0 +1,9 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  filterModel={filterModel}
+  onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
+  slots={{ toolbar: CustomToolbar }}
+  slotProps={{ toolbar: { onRemoveFilter } }}
+  showToolbar
+/>

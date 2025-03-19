@@ -11,7 +11,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {

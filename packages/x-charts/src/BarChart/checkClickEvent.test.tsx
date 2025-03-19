@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
   dataset: [
@@ -44,9 +43,9 @@ describe('BarChart - click event', () => {
 
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
+    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 400,
@@ -66,11 +65,13 @@ describe('BarChart - click event', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 198,
-        clientY: 60,
-      });
-      fireEvent.click(svg);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 198, clientY: 60 },
+        },
+      ]);
 
       expect(onAxisClick.lastCall.args[1]).to.deep.equal({
         dataIndex: 0,
@@ -78,11 +79,13 @@ describe('BarChart - click event', () => {
         seriesValues: { s1: 4, s2: 2 },
       });
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 201,
-        clientY: 60,
-      });
-      fireEvent.click(svg);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 201, clientY: 60 },
+        },
+      ]);
 
       expect(onAxisClick.lastCall.args[1]).to.deep.equal({
         dataIndex: 1,
@@ -94,9 +97,9 @@ describe('BarChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     testSkipIf(isJSDOM)(
       'should provide the right context as second argument with layout="horizontal"',
-      () => {
+      async () => {
         const onAxisClick = spy();
-        render(
+        const { user } = render(
           <div
             style={{
               width: 400,
@@ -117,11 +120,13 @@ describe('BarChart - click event', () => {
         );
         const svg = document.querySelector<HTMLElement>('svg')!;
 
-        firePointerEvent(svg, 'pointermove', {
-          clientX: 60,
-          clientY: 198,
-        });
-        fireEvent.click(svg);
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: svg,
+            coords: { clientX: 60, clientY: 198 },
+          },
+        ]);
 
         expect(onAxisClick.lastCall.args[1]).to.deep.equal({
           dataIndex: 0,
@@ -129,11 +134,13 @@ describe('BarChart - click event', () => {
           seriesValues: { s1: 4, s2: 2 },
         });
 
-        firePointerEvent(svg, 'pointermove', {
-          clientX: 60,
-          clientY: 201,
-        });
-        fireEvent.click(svg);
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: svg,
+            coords: { clientX: 60, clientY: 201 },
+          },
+        ]);
 
         expect(onAxisClick.lastCall.args[1]).to.deep.equal({
           dataIndex: 1,
@@ -165,9 +172,9 @@ describe('BarChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
+    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 400,
@@ -188,21 +195,21 @@ describe('BarChart - click event', () => {
 
       const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
 
-      fireEvent.click(rectangles[0]);
+      await user.click(rectangles[0]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      fireEvent.click(rectangles[1]);
+      await user.click(rectangles[1]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
-      fireEvent.click(rectangles[2]);
+      await user.click(rectangles[2]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',

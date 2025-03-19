@@ -345,9 +345,6 @@ export default function FullFeaturedDemo() {
       <DataGridComponent
         {...data}
         showToolbar
-        slotProps={{
-          toolbar: { showQuickFilter: true },
-        }}
         loading={loading}
         checkboxSelection
         disableRowSelectionOnClick

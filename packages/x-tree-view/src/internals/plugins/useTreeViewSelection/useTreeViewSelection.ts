@@ -42,7 +42,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   }, [store, models.selectedItems.value]);
 
   const setSelectedItems = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     newModel: typeof params.defaultSelectedItems,
     additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
@@ -97,9 +97,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     models.selectedItems.setControlledValue(cleanModel);
   };
 
-  const selectItem: UseTreeViewSelectionInstance['selectItem'] = ({
-    event,
+  const setItemSelection: UseTreeViewSelectionInstance['setItemSelection'] = ({
     itemId,
+    event = null,
     keepExistingSelection = false,
     shouldBeSelected,
   }) => {
@@ -247,10 +247,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       'aria-multiselectable': params.multiSelect,
     }),
     publicAPI: {
-      selectItem,
+      setItemSelection,
     },
     instance: {
-      selectItem,
+      setItemSelection,
       selectAllNavigableItems,
       expandSelectionRange,
       selectRangeFromStartToItem,

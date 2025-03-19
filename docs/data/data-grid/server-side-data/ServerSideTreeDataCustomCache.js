@@ -97,7 +97,6 @@ export default function ServerSideTreeDataCustomCache() {
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
           showToolbar
-          slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>
     </div>

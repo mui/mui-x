@@ -1,0 +1,16 @@
+<FunnelChart
+  sx={{ '.MuiFunnelSection-series-big': { filter: 'brightness(0.7)' } }}
+  series={[
+    {
+      id: 'big',
+      data: dataBig,
+      sectionLabel: {
+        position: { horizontal: 'end' },
+        textAnchor: 'start',
+        offset: { x: 10 },
+      },
+    },
+    { data: dataSmall },
+  ]}
+  height={300}
+/>
