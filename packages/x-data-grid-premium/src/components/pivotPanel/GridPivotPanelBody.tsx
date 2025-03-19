@@ -164,15 +164,14 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     [initialColumns],
   );
 
+  const pivotModelFields = React.useMemo(() => {
+    const pivotModelArray = pivotModel.rows.concat(pivotModel.columns, pivotModel.values);
+    return new Set(pivotModelArray.map((item) => item.field));
+  }, [pivotModel]);
+
   const availableFields = React.useMemo(() => {
     return fields.filter((field) => {
-      if (pivotModel.rows.find((item) => item.field === field)) {
-        return false;
-      }
-      if (pivotModel.columns.find((item) => item.field === field)) {
-        return false;
-      }
-      if (pivotModel.values.find((item) => item.field === field)) {
+      if (pivotModelFields.has(field)) {
         return false;
       }
       if (searchValue) {
@@ -181,7 +180,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
       }
       return true;
     });
-  }, [pivotModel.columns, pivotModel.rows, pivotModel.values, searchValue, fields, getColumnName]);
+  }, [searchValue, fields, getColumnName, pivotModelFields]);
 
   const handleDragStart = (modelKey: FieldTransferObject['modelKey']) => {
     setDrag({ active: true, initialModelKey: modelKey, dropZone: null });
