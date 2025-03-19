@@ -39,6 +39,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
       if (lastElement) {
         interrupt(lastElement, transitionName);
+        elementRef.current = null;
       }
     };
   }, [transitionName]);
