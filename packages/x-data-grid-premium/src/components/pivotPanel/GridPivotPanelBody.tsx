@@ -147,7 +147,7 @@ const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: nul
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridPrivateApiContext();
   const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
-  const fields = React.useMemo(() => initialColumns.keys().toArray(), [initialColumns]);
+  const fields = React.useMemo(() => Array.from(initialColumns.keys()), [initialColumns]);
   const rootProps = useGridRootProps();
   const [drag, setDrag] = React.useState<{
     active: boolean;

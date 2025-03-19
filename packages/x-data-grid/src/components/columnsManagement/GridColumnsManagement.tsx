@@ -101,7 +101,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
   const pivotInitialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const columns = React.useMemo(
-    () => (pivotEnabled ? pivotInitialColumns.values().toArray() : columnDefinitions),
+    () => (pivotEnabled ? Array.from(pivotInitialColumns.values()) : columnDefinitions),
     [pivotEnabled, pivotInitialColumns, columnDefinitions],
   );
 
