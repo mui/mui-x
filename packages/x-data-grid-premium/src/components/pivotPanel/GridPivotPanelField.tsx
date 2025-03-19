@@ -185,7 +185,6 @@ function AggregationSelect({
       <rootProps.slots.baseChip
         label={aggFunc}
         size="small"
-        variant="outlined"
         ref={aggregationMenuTriggerRef}
         id={aggregationMenuTriggerId}
         aria-haspopup="true"

@@ -261,8 +261,8 @@ const iconSlots: GridIconSlotsComponent = {
 const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
   baseBadge: MUIBadge,
-  baseCheckbox: React.forwardRef(BaseCheckbox),
-  baseChip: MUIChip,
+  baseCheckbox: forwardRef(BaseCheckbox),
+  baseChip: BaseChip,
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseInput: BaseInput,
@@ -335,6 +335,10 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       fullWidth={fullWidth}
     />
   );
+}
+
+function BaseChip(props: GridSlotProps['baseChip']) {
+  return <MUIChip variant="outlined" {...props} />;
 }
 
 function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButtonElement>) {

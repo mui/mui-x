@@ -326,5 +326,4 @@ export type TooltipProps = {
 export type ChipProps = {
   label: string;
   size?: 'small' | 'medium';
-  variant?: 'outlined' | 'filled';
 };
