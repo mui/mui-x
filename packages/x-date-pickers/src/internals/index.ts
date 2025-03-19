@@ -189,6 +189,8 @@ export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 
+export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+
 export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
 export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
 export { getDateTimeFieldInternalPropsDefaults } from '../managers/useDateTimeManager';
