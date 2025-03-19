@@ -81,9 +81,10 @@ export interface PickerManager<
   ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
    * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
-   * @returns {(value: TValue) => string} The method to create the aria-label to apply on the button that opens the Picker.
+   * @param {TValue} value The value of the Picker.
+   * @returns {string} The aria-label to apply on the button that opens the Picker.
    */
-  internal_useOpenPickerButtonAriaLabel: () => (value: TValue) => string;
+  internal_useOpenPickerButtonAriaLabel: (value: TValue) => string;
 }
 
 interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
