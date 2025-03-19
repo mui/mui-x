@@ -6,8 +6,8 @@ function getAsANumber(value: number | Date) {
 }
 
 /**
- * For a pointer coordinate, this function returns the value and dataIndex associated.
- * Returns `null` if the coordinate is outside of values.
+ * For a pointer coordinate, this function returns the dataIndex associated.
+ * Returns `-1` if no dataIndex matches.
  */
 export function getAxisIndex(axisConfig: AxisDefaultized, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
@@ -57,8 +57,8 @@ export function getAxisIndex(axisConfig: AxisDefaultized, pointerValue: number):
 }
 
 /**
- * For a pointer coordinate, this function returns the value and dataIndex associated.
- * Returns `null` if the coordinate is outside of values.
+ * For a pointer coordinate, this function returns the value associated.
+ * Returns `null` if the coordinate has no value associated.
  */
 export function getAxisValue(
   axisConfig: AxisDefaultized,
