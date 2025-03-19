@@ -25,6 +25,14 @@ export interface PickerDayOwnerState extends PickerOwnerState {
    */
   isDayOutsideMonth: boolean;
   /**
+   * Whether the day is the first day of the week.
+   */
+  isDayStartOfWeek: boolean;
+  /**
+   * Whether the day is the last day of the week.
+   */
+  isDayEndOfWeek: boolean;
+  /**
    * Whether the margin around the day should be removed.
    */
   disableMargin: boolean;
