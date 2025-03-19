@@ -15,7 +15,6 @@ export function useMaterialCSSVariables() {
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
-  const mutedBorderColor = getMutedBorderColor(t, borderColor);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
   const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
@@ -45,21 +44,20 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.spacingUnit]: t.vars ? ((t.vars as any).spacing ?? t.spacing(1)) : t.spacing(1),
 
     [k.colors.border.base]: borderColor,
-    [k.colors.border.muted]: mutedBorderColor,
     [k.colors.background.base]: backgroundBase,
     [k.colors.background.overlay]: backgroundOverlay,
     [k.colors.background.backdrop]: backgroundBackdrop,
-    [k.colors.foreground.base]: t.palette.text.primary,
-    [k.colors.foreground.muted]: t.palette.text.secondary,
-    [k.colors.foreground.accent]: t.palette.primary.dark,
-    [k.colors.foreground.disabled]: t.palette.text.disabled,
+    [k.colors.foreground.base]: (t.vars || t).palette.text.primary,
+    [k.colors.foreground.muted]: (t.vars || t).palette.text.secondary,
+    [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
+    [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
 
-    [k.colors.interactive.hover]: t.palette.action.hover,
-    [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: t.palette.primary.main,
-    [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [k.colors.interactive.disabled]: t.palette.action.disabled,
-    [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
+    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
+    [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
+    [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
+    [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
+    [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
+    [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
     [k.colors.interactive.selected]: selectedColor,
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
@@ -111,11 +109,12 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-function getMutedBorderColor(theme: Theme, borderColor: string) {
-  if (theme.vars) {
-    return `color-mix(in srgb, ${borderColor} 60%, #fff)`;
-  }
-  return alpha(borderColor, 0.6);
+function setOpacity(color: string, opacity: number) {
+  return `rgba(from ${color} r g b / ${opacity})`;
+}
+
+function removeOpacity(color: string) {
+  return setOpacity(color, 1);
 }
 
 function formatFont(font: React.CSSProperties) {

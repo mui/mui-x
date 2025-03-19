@@ -24,7 +24,6 @@ const keys = {
   colors: {
     border: {
       base: '--DataGrid-t-color-border-base',
-      muted: '--DataGrid-t-color-border-muted',
     },
     foreground: {
       base: '--DataGrid-t-color-foreground-base',
