@@ -19,7 +19,7 @@ export type QuickFilterTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 };
 
 /**
- * A button that expands the quick filter.
+ * A button that expands/collapses the quick filter.
  * It renders the `baseButton` slot.
  *
  * Demos:

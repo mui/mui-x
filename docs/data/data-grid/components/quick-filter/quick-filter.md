@@ -36,7 +36,7 @@ import {
 ### Quick Filter
 
 `<QuickFilter />` is the top level component that provides context to child components.
-It does not render any DOM elements.
+It renders a `<div />` element.
 
 ### Quick Filter Control
 
@@ -50,7 +50,7 @@ It renders the `baseIconButton` slot.
 
 ### Quick Filter Trigger
 
-`<QuickFilterTrigger />` is a button that expands the quick filter control.
+`<QuickFilterTrigger />` is a button that expands/collapses the quick filter.
 It renders the `baseIconButton` slot.
 
 ## Custom elements
@@ -89,6 +89,6 @@ The demo below shows how to display a persistent quick filter by passing the `ex
 
 ### Keyboard
 
-|                          Keys | Description                                            |
-| ----------------------------: | :----------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Resets the filter value whilst focused on the control. |
+|                          Keys | Description                                                        |
+| ----------------------------: | :----------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Clears quick filter value. If already empty, collapses the filter. |
