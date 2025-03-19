@@ -1,7 +1,7 @@
 import type { GridColDef } from '../../../models/colDef';
 
 export interface GridPivotingStatePartial {
-  enabled: boolean;
+  active: boolean;
   panelOpen: boolean;
   initialColumns: Map<string, GridColDef> | undefined;
 }

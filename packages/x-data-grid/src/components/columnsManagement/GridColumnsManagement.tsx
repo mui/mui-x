@@ -22,7 +22,7 @@ import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils
 import { NotRendered } from '../../utils/assert';
 import { GridShadowScrollArea } from '../GridShadowScrollArea';
 import {
-  gridPivotEnabledSelector,
+  gridPivotActiveSelector,
   gridPivotInitialColumnsSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
@@ -98,11 +98,11 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   const [searchValue, setSearchValue] = React.useState('');
   const classes = useUtilityClasses(rootProps);
   const columnDefinitions = useGridSelector(apiRef, gridColumnDefinitionsSelector);
-  const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const pivotInitialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const columns = React.useMemo(
-    () => (pivotEnabled ? Array.from(pivotInitialColumns.values()) : columnDefinitions),
-    [pivotEnabled, pivotInitialColumns, columnDefinitions],
+    () => (pivotActive ? Array.from(pivotInitialColumns.values()) : columnDefinitions),
+    [pivotActive, pivotInitialColumns, columnDefinitions],
   );
 
   const {
@@ -285,7 +285,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             <rootProps.slots.baseCheckbox
               key={column.field}
               className={classes.row}
-              disabled={column.hideable === false || pivotEnabled}
+              disabled={column.hideable === false || pivotActive}
               checked={columnVisibilityModel[column.field] !== false}
               onClick={toggleColumn}
               name={column.field}
@@ -307,7 +307,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
             <rootProps.slots.baseCheckbox
-              disabled={hideableColumns.length === 0 || pivotEnabled}
+              disabled={hideableColumns.length === 0 || pivotActive}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
               onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
@@ -323,7 +323,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           {!disableResetButton ? (
             <rootProps.slots.baseButton
               onClick={() => apiRef.current.setColumnVisibilityModel(initialColumnVisibilityModel)}
-              disabled={isResetDisabled || pivotEnabled}
+              disabled={isResetDisabled || pivotActive}
               {...rootProps.slotProps?.baseButton}
             >
               {apiRef.current.getLocaleText('columnsManagementReset')}

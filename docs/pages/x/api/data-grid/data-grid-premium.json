@@ -472,7 +472,7 @@
         "describedArgs": ["pinnedColumns", "details"]
       }
     },
-    "onPivotEnabledChange": {
+    "onPivotActiveChange": {
       "type": { "name": "func" },
       "signature": { "type": "function(isPivot: boolean) => void", "describedArgs": ["isPivot"] }
     },
@@ -614,7 +614,7 @@
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
     },
-    "pivotEnabled": { "type": { "name": "bool" }, "default": "false" },
+    "pivotActive": { "type": { "name": "bool" }, "default": "false" },
     "pivotingColDef": {
       "type": {
         "name": "union",

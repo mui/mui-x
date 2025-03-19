@@ -29,16 +29,16 @@ export default function GridPivotingCommodities() {
     editable: true,
   });
 
-  const [pivotEnabled, setPivotEnabled] = React.useState(false);
+  const [pivotActive, setPivotActive] = React.useState(false);
 
   const pinnedColumns = React.useMemo(() => {
-    if (pivotEnabled) {
+    if (pivotActive) {
       return {
         left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
       };
     }
     return undefined;
-  }, [pivotEnabled]);
+  }, [pivotActive]);
 
   const pivotingColDef = React.useMemo(() => {
     return (originalColumnField) => {
@@ -56,8 +56,8 @@ export default function GridPivotingCommodities() {
           rows={data.rows}
           columns={data.columns}
           showToolbar
-          pivotEnabled={pivotEnabled}
-          onPivotEnabledChange={setPivotEnabled}
+          pivotActive={pivotActive}
+          onPivotActiveChange={setPivotActive}
           initialState={initialState}
           loading={loading}
           columnGroupHeaderHeight={36}

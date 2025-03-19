@@ -232,7 +232,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * The pivot model of the grid.
    * Will be used to generate the pivot data.
-   * In case of `pivotEnabled` being `false`, the pivot model is still used to populate the pivot panel.
+   * In case of `pivotActive` being `false`, the pivot model is still used to populate the pivot panel.
    */
   pivotModel?: GridPivotModel;
   /**
@@ -244,12 +244,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
    * @default false
    */
-  pivotEnabled?: boolean;
+  pivotActive?: boolean;
   /**
-   * Callback fired when the pivot enabled state changes.
+   * Callback fired when the pivot active state changes.
    * @param {boolean} isPivot Whether the data grid is in pivot mode.
    */
-  onPivotEnabledChange?: (isPivot: boolean) => void;
+  onPivotActiveChange?: (isPivot: boolean) => void;
   /**
    * If `true`, the pivot side panel is visible.
    * @default false

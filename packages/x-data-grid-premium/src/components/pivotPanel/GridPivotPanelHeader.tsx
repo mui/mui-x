@@ -12,7 +12,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridPivotEnabledSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { gridPivotActiveSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotPanelSearch } from './GridPivotPanelSearch';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
@@ -66,10 +66,10 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const { searchValue, onSearchValueChange } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const classes = useUtilityClasses(rootProps);
   const rows = useGridSelector(apiRef, gridRowCountSelector);
-  const isEmptyPivot = pivotEnabled && rows === 0;
+  const isEmptyPivot = pivotActive && rows === 0;
 
   return (
     <SidebarHeader>
@@ -78,9 +78,9 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           as={rootProps.slots.baseSwitch}
           ownerState={rootProps}
           className={classes.switch}
-          checked={pivotEnabled}
+          checked={pivotActive}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            apiRef.current.setPivotEnabled(event.target.checked)
+            apiRef.current.setPivotActive(event.target.checked)
           }
           size="small"
           label={
@@ -94,7 +94,7 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           onClick={() => {
             apiRef.current.setPivotPanelOpen(false);
             if (isEmptyPivot) {
-              apiRef.current.setPivotEnabled(false);
+              apiRef.current.setPivotActive(false);
             }
           }}
           aria-label={apiRef.current.getLocaleText('pivotCloseButton')}

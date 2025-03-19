@@ -8,7 +8,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridPivotPanelOpenSelector,
-  gridPivotEnabledSelector,
+  gridPivotActiveSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
 
 export interface PivotPanelState {
@@ -53,7 +53,7 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
     const panelId = useId();
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridPivotPanelOpenSelector);
-    const enabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+    const enabled = useGridSelector(apiRef, gridPivotActiveSelector);
     const state = { open, enabled };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 

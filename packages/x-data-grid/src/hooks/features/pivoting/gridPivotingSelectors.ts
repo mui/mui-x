@@ -8,9 +8,9 @@ const gridPivotingStateSelector = createRootSelector(
   (state: GridStateCommunity) => state.pivoting as GridPivotingStatePartial,
 );
 
-export const gridPivotEnabledSelector = createSelector(
+export const gridPivotActiveSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => pivoting?.enabled,
+  (pivoting) => pivoting?.active,
 );
 
 const emptyColumns = new Map<string, GridColDef>();

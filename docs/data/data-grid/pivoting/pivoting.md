@@ -123,8 +123,8 @@ For fully controlled pivoting state, there are the following controlled props:
   - `pivotModel`: Controls the current pivot configuration.
   - `onPivotModelChange`: Callback fired when the pivot model changes.
 - Pivot mode toggle:
-  - `pivotEnabled`: Controls whether pivoting is enabled.
-  - `onPivotEnabledChange`: Callback fired when pivoting is enabled/disabled.
+  - `pivotActive`: Controls whether pivot mode is active.
+  - `onPivotActiveChange`: Callback fired when pivot mode is active/inactive.
 - Pivot panel:
   - `pivotPanelOpen`: Controls whether the pivot panel is open.
   - `onPivotPanelOpenChange`: Callback fired when the pivot panel is opened/closed.

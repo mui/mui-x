@@ -62,8 +62,8 @@ export default function GridPivotingControlled() {
         columns={columns}
         pivotModel={pivotModel}
         onPivotModelChange={setPivotModel}
-        pivotEnabled={pivotModeEnabled}
-        onPivotEnabledChange={setPivotModeEnabled}
+        pivotActive={pivotModeEnabled}
+        onPivotActiveChange={setPivotModeEnabled}
         pivotPanelOpen={pivotPanelOpen}
         onPivotPanelOpenChange={setPivotPanelOpen}
         columnGroupHeaderHeight={36}

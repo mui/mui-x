@@ -46,10 +46,10 @@ export interface GridPivotingApi {
    */
   setPivotModel: (model: GridPivotModel | ((prev: GridPivotModel) => GridPivotModel)) => void;
   /**
-   * Sets whether the pivot mode is enabled.
-   * @param {boolean | ((prev: boolean) => boolean)} mode - The new value of the pivot mode state.
+   * Sets whether the pivot mode is active.
+   * @param {boolean | ((prev: boolean) => boolean)} active - The new value of the pivot mode state.
    */
-  setPivotEnabled: (mode: boolean | ((prev: boolean) => boolean)) => void;
+  setPivotActive: (active: boolean | ((prev: boolean) => boolean)) => void;
   /**
    * Sets whether the pivot panel is open.
    * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the pivot panel open state.

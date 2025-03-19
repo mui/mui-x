@@ -191,7 +191,7 @@
       "description": "Sets the <code>paginationModel</code> to a new value."
     },
     "setPinnedColumns": { "description": "Changes the pinned columns." },
-    "setPivotEnabled": { "description": "Sets whether the pivot mode is enabled." },
+    "setPivotActive": { "description": "Sets whether the pivot mode is active." },
     "setPivotModel": { "description": "Sets the pivot model to use in the pivot mode." },
     "setPivotPanelOpen": { "description": "Sets whether the pivot panel is open." },
     "setQuickFilterValues": {

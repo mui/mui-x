@@ -10,11 +10,11 @@ export const gridPivotModelSelector = createSelector(
 
 export const gridPivotPropsOverridesSelector = createSelector(
   gridPivotingStateSelector,
-  (pivoting) => (pivoting?.enabled ? pivoting.propsOverrides : undefined),
+  (pivoting) => (pivoting?.active ? pivoting.propsOverrides : undefined),
 );
 
 export {
-  gridPivotEnabledSelector,
+  gridPivotActiveSelector,
   gridPivotInitialColumnsSelector,
   gridPivotPanelOpenSelector,
 } from '@mui/x-data-grid/internals';

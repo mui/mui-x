@@ -12,7 +12,7 @@ import {
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-import { gridPivotEnabledSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
+import { gridPivotActiveSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 
@@ -43,10 +43,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     gridFilteredDescendantCountLookupSelector,
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
-  const pivotEnabled = useGridSelector(apiRef, gridPivotEnabledSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const maxTreeDepth = gridRowMaximumTreeDepthSelector(apiRef);
-  const shouldShowToggleContainer = !pivotEnabled || maxTreeDepth > 2;
-  const shouldShowToggleButton = !pivotEnabled || rowNode.depth < maxTreeDepth - 2;
+  const shouldShowToggleContainer = !pivotActive || maxTreeDepth > 2;
+  const shouldShowToggleButton = !pivotActive || rowNode.depth < maxTreeDepth - 2;
 
   const Icon = rowNode.childrenExpanded
     ? rootProps.slots.groupingCriteriaCollapseIcon
