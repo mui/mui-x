@@ -78,6 +78,8 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           // We can allow customizing the number of pointers
           buttons: 1,
           keys: false,
+          // Disable using `setPointerCapture` when testing, as it doesn't work properly.
+          capture: process.env.NODE_ENV !== 'test',
         },
       },
       pinch: {},
