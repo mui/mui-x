@@ -38,6 +38,35 @@ export const useZoomOnWheel = (
       return () => {};
     }
 
+    const wheelStartHandler = instance.addInteractionListener('wheel', (state) => {
+      const point = getSVGPoint(element, state.event);
+
+      if (!instance.isPointInside(point)) {
+        return;
+      }
+
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
+      // Debounce transition to `isInteractive=false`.
+      if (!state.dragging) {
+        setIsInteracting(true);
+
+        // Ref is passed in.
+        // eslint-disable-next-line react-compiler/react-compiler
+        interactionTimeoutRef.current = window.setTimeout(() => {
+          setIsInteracting(false);
+        }, 166);
+      }
+    });
+
+    const wheelEndHandler = instance.addInteractionListener('wheelEnd', () => {
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
+      setIsInteracting(false);
+    });
+
     const zoomOnWheelHandler = instance.addInteractionListener('wheel', (state) => {
       const point = getSVGPoint(element, state.event);
 
@@ -47,21 +76,6 @@ export const useZoomOnWheel = (
 
       if (!state.last) {
         state.event.preventDefault();
-      }
-
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      // Debounce transition to `isInteractive=false`.
-      // Useful because wheel events don't have an "end" event.
-      if (!state.dragging) {
-        setIsInteracting(true);
-
-        // Ref is passed in.
-        // eslint-disable-next-line react-compiler/react-compiler
-        interactionTimeoutRef.current = window.setTimeout(() => {
-          setIsInteracting(false);
-        }, 166);
       }
 
       setZoomDataCallback((prevZoomData) => {
@@ -89,6 +103,8 @@ export const useZoomOnWheel = (
 
     return () => {
       zoomOnWheelHandler.cleanup();
+      wheelStartHandler.cleanup();
+      wheelEndHandler.cleanup();
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }

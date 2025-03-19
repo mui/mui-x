@@ -21,30 +21,20 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    // Hover event is triggered when the mouse is moved over/out the chart.
-    const positionOnHoverHandler = instance.addInteractionListener('hover', (state) => {
-      if (state.hovering) {
+    // Drag event is triggered by mobile touch or mouse drag.
+    const positionOnDragHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
         setMousePosition({
           x: state.event.clientX,
           y: state.event.clientY,
           height: state.event.height,
           pointerType: state.event.pointerType as MousePosition['pointerType'],
         });
-      }
-    });
-
-    // Drag event is triggered by mobile touch or mouse drag.
-    const positionOnDragHandler = instance.addInteractionListener('drag', (state) => {
-      setMousePosition({
-        x: state.event.clientX,
-        y: state.event.clientY,
-        height: state.event.height,
-        pointerType: state.event.pointerType as MousePosition['pointerType'],
-      });
-    });
+      },
+    );
 
     return () => {
-      positionOnHoverHandler.cleanup();
       positionOnDragHandler.cleanup();
     };
   }, [instance]);
