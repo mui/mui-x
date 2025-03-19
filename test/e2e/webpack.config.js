@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const webpackBaseConfig = require('../../webpackBaseConfig');
+const webpackBaseConfig = require('../webpackBaseConfig');
 
 module.exports = {
   ...webpackBaseConfig,

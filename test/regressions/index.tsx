@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
 import { setupTestLicenseKey } from '../utils/testLicense';
+import TestViewer from './TestViewer';
 
 setupTestLicenseKey();
 
@@ -15,12 +15,14 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
+      isReady: () => boolean;
       navigate: ReturnType<typeof useNavigate>;
     };
   }
 }
 
 window.muiFixture = {
+  isReady: () => false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
@@ -80,8 +82,10 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs = require.context('docsx/data', true, /\.js$/);
-requireDocs.keys().forEach((path: string) => {
+const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true });
+console.log(requireDocs)
+
+Object.keys(requireDocs).forEach((path: string) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
@@ -89,13 +93,7 @@ requireDocs.keys().forEach((path: string) => {
     return;
   }
 
-  // TODO: Why does webpack include a key for the absolute and relative path?
-  // We just want the relative path
-  if (!path.startsWith('./')) {
-    return;
-  }
-
-  if (requireDocs(path).default === undefined) {
+  if (requireDocs[path].default === undefined) {
     return;
   }
 
@@ -103,15 +101,14 @@ requireDocs.keys().forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireDocs(path).default,
+    case: requireDocs[path].default,
   });
 });
 
 // @ts-ignore
-const requireRegressions = require.context('./data-grid', true, /\.js$/);
-requireRegressions.keys().forEach((path: string) => {
-  // "./DataGridRTLVirtualization.js"
-  // "test/regressions/data-grid/DataGridRTLVirtualization.js"
+const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
+console.log(requireRegressions)
+Object.keys(requireRegressions).forEach((path: string) => {
   if (!path.startsWith('./')) {
     return;
   }
@@ -123,7 +120,7 @@ requireRegressions.keys().forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireRegressions(path).default,
+    case: requireRegressions[path].default,
   });
 });
 
@@ -182,6 +179,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
+    window.muiFixture.isReady = () => true;
   }, [navigate]);
 
   return (
