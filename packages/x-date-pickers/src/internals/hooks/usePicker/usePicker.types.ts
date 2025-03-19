@@ -170,6 +170,8 @@ export interface UsePickerParameters<
     PickerRendererInterceptorProps<TValue, TView, TExternalProps>
   >;
   props: TExternalProps;
+  goToNextStep?: () => void;
+  goToPreviousStep?: () => void;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {

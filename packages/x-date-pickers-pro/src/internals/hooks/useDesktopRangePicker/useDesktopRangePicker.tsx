@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -53,7 +54,23 @@ export const useDesktopRangePicker = <
     autoFocusView: viewContainerRole === 'dialog',
     viewContainerRole,
     localeText,
+    goToNextStep,
+    goToPreviousStep,
   });
+
+  function goToNextStep() {
+    if (rangePositionResponse.rangePosition === 'start') {
+      rangePositionResponse.setRangePosition('end');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
+
+  function goToPreviousStep() {
+    if (rangePositionResponse.rangePosition === 'end') {
+      rangePositionResponse.setRangePosition('start');
+      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
+    }
+  }
 
   const Field = slots.field;
 

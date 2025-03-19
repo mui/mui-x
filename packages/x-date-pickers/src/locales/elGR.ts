@@ -35,6 +35,8 @@ const elGRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Καθαρισμός',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Σήμερα',
+  // nextStepButtonLabel: 'Next',
+  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Επιλέξτε ημερομηνία',

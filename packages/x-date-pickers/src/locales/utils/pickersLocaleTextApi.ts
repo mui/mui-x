@@ -58,6 +58,8 @@ export interface PickersComponentAgnosticLocaleText {
   clearButtonLabel: string;
   okButtonLabel: string;
   todayButtonLabel: string;
+  nextStepButtonLabel: string;
+  previousStepButtonLabel: string;
 
   // Clock labels
   clockLabelText: (view: TimeView, formattedTime: string | null) => string;

@@ -29,6 +29,8 @@ import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContex
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
 
+const noop = () => {};
+
 export const usePicker = <
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
@@ -44,6 +46,8 @@ export const usePicker = <
   rendererInterceptor: RendererInterceptor,
   localeText,
   viewContainerRole,
+  goToNextStep = noop,
+  goToPreviousStep = noop,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
 
@@ -222,6 +226,9 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
+  const wrappedGoToNextStep = useEventCallback(goToNextStep);
+  const wrappedGoToPreviousStep = useEventCallback(goToPreviousStep);
+
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
       setValue,
@@ -231,6 +238,8 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      goToNextStep: wrappedGoToNextStep,
+      goToPreviousStep: wrappedGoToPreviousStep,
     }),
     [
       setValue,
@@ -240,6 +249,8 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      wrappedGoToNextStep,
+      wrappedGoToPreviousStep,
     ],
   );
 

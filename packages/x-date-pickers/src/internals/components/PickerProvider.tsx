@@ -275,6 +275,18 @@ export interface PickerActionsContextValue<
    * The value will be reset to the last accepted value.
    */
   cancelValueChanges: () => void;
+  /**
+   * Go to the next step in the value picking process.
+   * On range pickers, if the user is currently picking the start date, it will move to the end date. Otherwise it will do nothing.
+   * On non-range pickers, it will do nothing.
+   */
+  goToNextStep: () => void;
+  /**
+   * Go to the previous step in the value picking process.
+   * On range pickers, if the user is currently picking the end date, it will move to the start date. Otherwise it will do nothing.
+   * On non-range pickers, it will do nothing.
+   */
+  goToPreviousStep: () => void;
 }
 
 export interface SetValueActionOptions<TError = string | null> {

@@ -35,6 +35,8 @@ const faIRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'پاک کردن',
   okButtonLabel: 'اوکی',
   todayButtonLabel: 'امروز',
+  // nextStepButtonLabel: 'Next',
+  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'تاریخ را انتخاب کنید',

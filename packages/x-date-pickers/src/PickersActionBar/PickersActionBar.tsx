@@ -7,7 +7,7 @@ import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerActionsContext } from '../hooks';
 
-export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
+export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'previous';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**
@@ -40,8 +40,14 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
-  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
-    usePickerActionsContext();
+  const {
+    clearValue,
+    setValueToToday,
+    acceptValueChanges,
+    cancelValueChanges,
+    goToNextStep,
+    goToPreviousStep,
+  } = usePickerActionsContext();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -77,6 +83,20 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
           </Button>
         );
 
+      case 'next':
+        return (
+          <Button onClick={goToNextStep} key={actionType}>
+            {translations.nextStepButtonLabel}
+          </Button>
+        );
+
+      case 'previous':
+        return (
+          <Button onClick={goToPreviousStep} key={actionType}>
+            {translations.previousStepButtonLabel}
+          </Button>
+        );
+
       default:
         return null;
     }
@@ -97,7 +117,9 @@ PickersActionBarComponent.propTypes = {
    * - `[]` for Desktop Date Picker and Desktop Date Range Picker
    * - `['cancel', 'accept']` for all other Pickers
    */
-  actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
+  actions: PropTypes.arrayOf(
+    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'previous', 'today']).isRequired,
+  ),
   /**
    * If `true`, the actions do not have additional margin.
    * @default false
