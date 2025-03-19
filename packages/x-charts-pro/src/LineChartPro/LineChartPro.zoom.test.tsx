@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM, testSkipIf } from 'test/utils/skipIf';
-import { BarChartPro } from './BarChartPro';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { LineChartPro } from './LineChartPro';
 
-describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
+describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
-  const barChartProps = {
+  const lineChartProps = {
     series: [
       {
         data: [10, 20, 30, 40],
@@ -15,7 +15,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ],
     xAxis: [
       {
-        scaleType: 'band',
+        scaleType: 'point',
         data: ['A', 'B', 'C', 'D'],
         zoom: true,
         height: 30,
@@ -25,7 +25,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     yAxis: [{ position: 'none' }],
     width: 100,
     height: 130,
-    margin: 0,
+    margin: 5,
     slotProps: { tooltip: { trigger: 'none' } },
   } as const;
 
@@ -51,7 +51,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   });
 
   it('should zoom on wheel', async () => {
-    const { user } = render(<BarChartPro {...barChartProps} />, options);
+    const { user } = render(<LineChartPro {...lineChartProps} />, options);
 
     expect(screen.queryByText('A')).not.to.equal(null);
     expect(screen.queryByText('B')).not.to.equal(null);
@@ -92,7 +92,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
       const { user } = render(
-        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
+        <LineChartPro {...lineChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
         options,
       );
 
@@ -151,62 +151,5 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       expect(screen.queryByText('C')).to.equal(null);
       expect(screen.queryByText('D')).to.equal(null);
     });
-  });
-
-  // Technically it should work, but it's not working in the test environment
-  // https://github.com/pmndrs/use-gesture/discussions/430
-  testSkipIf(true)('should zoom on pinch', async () => {
-    const { user } = render(<BarChartPro {...barChartProps} />, options);
-
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
-
-    const svg = document.querySelector('svg')!;
-
-    await user.pointer({
-      keys: '[TouchA]',
-      target: svg,
-      coords: { x: 50, y: 50 },
-    });
-
-    await user.pointer([
-      {
-        keys: '[TouchA>]',
-        target: svg,
-        coords: { x: 55, y: 45 },
-      },
-      {
-        keys: '[TouchB>]',
-        target: svg,
-        coords: { x: 45, y: 55 },
-      },
-      {
-        pointerName: 'TouchA',
-        target: svg,
-        coords: { x: 75, y: 25 },
-      },
-      {
-        pointerName: 'TouchB',
-        target: svg,
-        coords: { x: 25, y: 75 },
-      },
-      {
-        keys: '[/TouchA]',
-        target: svg,
-        coords: { x: 75, y: 25 },
-      },
-      {
-        keys: '[/TouchB]',
-        target: svg,
-        coords: { x: 25, y: 75 },
-      },
-    ]);
-
-    expect(screen.queryByText('A')?.textContent).to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).to.equal(null);
   });
 });
