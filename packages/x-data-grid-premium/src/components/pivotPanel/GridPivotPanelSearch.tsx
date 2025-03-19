@@ -7,7 +7,10 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
-export type GridPivotPanelSearchProps = GridSlotProps['baseTextField'] & {
+export type GridPivotPanelSearchProps = Pick<
+  GridSlotProps['baseTextField'],
+  'value' | 'onChange'
+> & {
   onClear: () => void;
 };
 
@@ -31,7 +34,7 @@ const GridPivotPanelSearchContainer = styled('div', {
 });
 
 function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
-  const { onClear, ...other } = props;
+  const { onClear, value, onChange } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -40,8 +43,6 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
     if (event.key === 'Escape') {
       onClear();
     }
-
-    props.onKeyDown?.(event);
   };
 
   return (
@@ -55,11 +56,11 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
         slotProps={{
           input: {
             startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
-            endAdornment: props.value ? (
+            endAdornment: value ? (
               <rootProps.slots.baseIconButton
                 edge="end"
                 size="small"
-                onClick={props.onClear}
+                onClick={onClear}
                 aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
               >
                 <rootProps.slots.pivotSearchClearIcon fontSize="small" />
@@ -68,7 +69,8 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
           },
         }}
         {...rootProps.slotProps?.baseTextField}
-        {...other}
+        value={value}
+        onChange={onChange}
       />
     </GridPivotPanelSearchContainer>
   );
