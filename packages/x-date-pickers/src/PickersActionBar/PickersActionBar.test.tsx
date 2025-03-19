@@ -18,6 +18,8 @@ describe('<PickersActionBar />', () => {
       setValueToToday: spy(),
       acceptValueChanges: spy(),
       cancelValueChanges: spy(),
+      goToNextStep: spy(),
+      goToPreviousStep: spy(),
     };
 
     render(<PickerActionsContext.Provider value={spys}>{element}</PickerActionsContext.Provider>);
