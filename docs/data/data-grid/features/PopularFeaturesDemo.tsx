@@ -513,9 +513,6 @@ export default function PopularFeaturesDemo() {
           detailPanelCollapseIcon: ArrowUp,
         }}
         showToolbar
-        slotProps={{
-          toolbar: { showQuickFilter: true },
-        }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
         getRowHeight={getRowHeight}
