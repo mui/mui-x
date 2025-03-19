@@ -102,13 +102,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     element.addEventListener('pointerdown', handleDown);
     element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerout', handleOut);
     element.addEventListener('pointercancel', handleOut);
     element.addEventListener('pointerleave', handleOut);
     return () => {
       element.removeEventListener('pointerdown', handleDown);
       element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerout', handleOut);
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
