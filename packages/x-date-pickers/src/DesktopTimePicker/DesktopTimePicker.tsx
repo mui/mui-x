@@ -168,6 +168,7 @@ DesktopTimePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the field components instead (for example, <DateField /> instead of <DatePicker disableOpenPicker />).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
