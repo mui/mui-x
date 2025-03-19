@@ -2,6 +2,7 @@
   "name": "@mui-x-internal/test-regressions",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
     "build": "cross-env E2E_BUILD=true vite build",
@@ -39,6 +40,7 @@
     "react-dom": "^19.0.0",
     "react-router": "^7.3.0",
     "react-transition-group": "^4.4.5",
+    "tsx": "^4.19.3",
     "vite": "^6.2.2",
     "vite-plugin-replace": "^0.1.1"
   }
