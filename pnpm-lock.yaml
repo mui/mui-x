@@ -687,6 +687,9 @@ importers:
       '@types/doctrine':
         specifier: ^0.0.9
         version: 0.0.9
+      '@types/fg-loadcss':
+        specifier: ^3.1.0
+        version: 3.1.3
       '@types/gtag.js':
         specifier: ^0.0.20
         version: 0.0.20
@@ -4186,6 +4189,9 @@ packages:
 
   '@types/express@5.0.0':
     resolution: {integrity: sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==}
+
+  '@types/fg-loadcss@3.1.3':
+    resolution: {integrity: sha512-l9Cf3szP7MbYXRuWnnctz6BRRADeGIakbY7+FtZSvvV+Rg+Ytv961FcXBtwpQrdjCbd4lIyawBADayxKA2GiaA==}
 
   '@types/format-util@1.0.4':
     resolution: {integrity: sha512-xrCYOdHh5zA3LUrn6CvspYwlzSWxPso11Lx32WnAG6KvLCRecKZ/Rh21PLXUkzUFsQmrGcx/traJAFjR6dVS5Q==}
@@ -13352,6 +13358,8 @@ snapshots:
       '@types/express-serve-static-core': 5.0.6
       '@types/qs': 6.9.18
       '@types/serve-static': 1.15.7
+
+  '@types/fg-loadcss@3.1.3': {}
 
   '@types/format-util@1.0.4': {}
 
