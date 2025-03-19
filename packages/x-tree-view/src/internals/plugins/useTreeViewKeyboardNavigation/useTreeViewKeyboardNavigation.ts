@@ -133,7 +133,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event,
             itemId,
             keepExistingSelection: params.multiSelect,
-            shouldBeSelected: params.multiSelect ? undefined : true,
+            shouldBeSelected: undefined,
           });
         }
         break;

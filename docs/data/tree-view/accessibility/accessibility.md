@@ -67,7 +67,7 @@ When a single-select tree receives focus:
 
 |                         Keys | Description                                                  |
 | ---------------------------: | :----------------------------------------------------------- |
-| <kbd class="key">Space</kbd> | Selects the focused item.                                    |
+| <kbd class="key">Space</kbd> | Toggles the selection state of the focused item.             |
 | <kbd class="key">Enter</kbd> | Selects the focused item if the item does not have children. |
 
 ### On multi-select trees
