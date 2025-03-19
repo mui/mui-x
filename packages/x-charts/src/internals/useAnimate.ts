@@ -3,7 +3,7 @@ import useId from '@mui/utils/useId';
 import * as React from 'react';
 import { interrupt, Transition } from '@mui/x-charts-vendor/d3-transition';
 import { select } from '@mui/x-charts-vendor/d3-selection';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { shallowEqual } from './shallowEqual';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
@@ -98,7 +98,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
       if (lastElement === element) {
         // If it's the same element and same props, there's nothing to do.
-        if (fastObjectShallowCompare(lastPropsRef.current, props)) {
+        if (shallowEqual(lastPropsRef.current, props)) {
           return;
         }
 
