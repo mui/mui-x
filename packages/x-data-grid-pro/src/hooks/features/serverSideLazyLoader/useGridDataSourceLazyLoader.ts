@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import { unstable_debounce as debounce } from '@mui/utils';
+import useLazyRef from '@mui/utils/useLazyRef';
 import {
   useGridApiEventHandler,
   gridSortModelSelector,
@@ -30,7 +31,6 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import useLazyRef from '@mui/utils/useLazyRef';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -102,19 +102,19 @@ export const useGridDataSourceLazyLoader = (
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
 
-      // Calculate the standard page-aligned range
-      let start = params.start - (params.start % paginationModel.pageSize);
-      let end = Math.min(
+      const start = params.start - (params.start % paginationModel.pageSize);
+      const end = Math.min(
         params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
         paginationRowCountRef.current - 1,
       );
 
       return {
         ...params,
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         ...adjustStartEnd({ start, end }, lastReplacedIndexes.current),
       };
     },
-    [privateApiRef, lastReplacedIndexes],
+    [privateApiRef, paginationRowCountRef],
   );
 
   const resetGrid = React.useCallback(() => {
@@ -263,10 +263,7 @@ export const useGridDataSourceLazyLoader = (
         start: fetchParams.start as number,
         end: fetchParams.end,
       };
-      console.log('handleDataUpdate', {
-        start: fetchParams.start,
-        end: fetchParams.end,
-      });
+
       rowsStale.current = false;
 
       if (loadingTrigger.current === null) {
@@ -296,7 +293,7 @@ export const useGridDataSourceLazyLoader = (
       addSkeletonRows();
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [privateApiRef, updateLoadingTrigger, addSkeletonRows],
+    [paginationRowCountRef, updateLoadingTrigger, addSkeletonRows, privateApiRef],
   );
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
@@ -399,7 +396,6 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      // Replace the rows with skeleton rows and refetch
       const adjustedGetRowsParams = adjustRowParams(getRowsParams);
       const startIndex =
         typeof adjustedGetRowsParams.start === 'string'
@@ -419,8 +415,8 @@ export const useGridDataSourceLazyLoader = (
 
       if (
         lastReplacedIndexes.current &&
-        lastReplacedIndexes.current.start === startIndex &&
-        lastReplacedIndexes.current.end === adjustedGetRowsParams.end
+        startIndex >= lastReplacedIndexes.current.start &&
+        adjustedGetRowsParams.end <= lastReplacedIndexes.current.end
       ) {
         return;
       }
@@ -430,7 +426,7 @@ export const useGridDataSourceLazyLoader = (
         end: adjustedGetRowsParams.end,
       };
 
-      // TODO: Change the rows being loaded to skeleton rows
+      // TODO: Update the rows being refetched to skeleton rows
       // Challenge: Pending pages get cancelled when other requests follow them
       // due to which the some stale skeleton rows might be there in the Data Grid
       fetchRows(adjustedGetRowsParams);
@@ -552,8 +548,8 @@ const adjustStartEnd = (
 
   if (start === lastStart) {
     if (lastEnd === 0 || end === lastEnd) {
-      // 1: (start = 0, end = 99), lastReplacedIndexes = (start = 0, end = 0) => fetch (0, 99)
-      // 2: (start = 0, end = 99), lastReplacedIndexes = (start = 0, end = 99) => fetch nothing
+      // 1: (start = 0, end = 99), (lastStart = 0, lastEnd = 0) => fetch (0, 99)
+      // 2: (start = 0, end = 99), (lastStart = 0, lastEnd = 99) => fetch nothing
       return {
         start, // 0
         end, // 99
@@ -561,7 +557,7 @@ const adjustStartEnd = (
     }
 
     if (end > lastEnd + 1) {
-      // (start = 0, end = 199), lastReplacedIndexes = (start = 0, end = 99) => fetch (100, 199)
+      // (start = 0, end = 199), (lastStart = 0, lastEnd = 99) => fetch (100, 199)
       return {
         start: lastEnd + 1, // 100
         end, // 199
@@ -569,7 +565,7 @@ const adjustStartEnd = (
     }
 
     if (end < lastEnd) {
-      // (start = 100, end = 199), lastReplacedIndexes = (start = 100, end = 299) => skip fetching
+      // (start = 100, end = 199), (lastStart = 100, lastEnd = 299) => skip fetching
       return {
         start: lastStart, // 100
         end: lastEnd, // 99
@@ -579,7 +575,7 @@ const adjustStartEnd = (
 
   if (start < lastStart) {
     if (end < start) {
-      // (start = 0, end = 99), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 99)
+      // (start = 0, end = 99), (lastStart = 100, lastEnd = 199) => fetch (0, 99)
       return {
         start, // 0
         end, // 99
@@ -587,7 +583,7 @@ const adjustStartEnd = (
     }
 
     if (end === lastEnd) {
-      // 4: (start = 0, end = 199), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 99)
+      // (start = 0, end = 199), (lastStart = 100, lastEnd = 199) => fetch (0, 99)
       return {
         start, // 0
         end: lastStart - 1, // 99
@@ -595,7 +591,7 @@ const adjustStartEnd = (
     }
 
     if (end > lastEnd) {
-      // (start = 0, end = 299), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 299)
+      // (start = 0, end = 299), (lastStart = 100, lastEnd = 199) => fetch (0, 299)
       // TODO: Should skip fetching already fetched range, see how to handle it
       // Range 1: (start = 0, end = 99)
       // Range 2: (start = 200, end = 299)
@@ -606,7 +602,7 @@ const adjustStartEnd = (
     }
 
     if (end < lastEnd) {
-      // 10: (start = 0, end = 199), lastReplacedIndexes = (start = 100, end = 299) => fetch (0, 99)
+      // (start = 0, end = 199), (lastStart = 100, lastEnd = 299) => fetch (0, 99)
       return {
         start, // 0
         end, // 99
@@ -616,8 +612,8 @@ const adjustStartEnd = (
 
   if (start > lastStart) {
     if (end <= lastEnd) {
-      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 199) => fetch nothing
-      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 299) => fetch nothing
+      // (start = 100, end = 199), (lastStart = 0, lastEnd = 199) => fetch nothing
+      // (start = 100, end = 199), (lastStart = 0, lastEnd = 299) => fetch nothing
       return {
         start: lastStart,
         end: lastEnd,
@@ -625,15 +621,13 @@ const adjustStartEnd = (
     }
 
     if (end > lastEnd) {
-      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 99) => fetch (100, 199)
+      // (start = 100, end = 199), (lastStart = 0, lastEnd = 99) => fetch (100, 199)
       return {
         start: Math.max(lastEnd + 1, start),
         end,
       };
     }
   }
-
-  console.log({ start, end }, { lastStart, lastEnd });
 
   throw new Error('Invalid fetch params');
 };
