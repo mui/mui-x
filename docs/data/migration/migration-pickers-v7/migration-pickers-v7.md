@@ -487,7 +487,7 @@ If you only want to allow editing through the field, you can use the [field comp
 ```
 
 :::success
-Using the field instead of the picker will decrease significantly your bundle size since all the view component won't be bundled anymore.
+Using the field instead of the picker significantly decreases your bundle size since all the view components won't be bundled anymore.
 :::
 
 ### ⏩ Update default `closeOnSelect` and Action Bar `actions` values
