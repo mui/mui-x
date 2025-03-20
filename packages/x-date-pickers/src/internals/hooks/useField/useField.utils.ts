@@ -290,12 +290,10 @@ export const doesSectionFormatHaveLeadingZeros = (
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
       if (isFourDigitYearFormat(utils, format)) {
-        const formatted0001 = utils.formatByString(utils.setYear(now, 1), format);
-        return formatted0001 === '0001';
+        return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
       }
 
-      const formatted2001 = utils.formatByString(utils.setYear(now, 2001), format);
-      return formatted2001 === '01';
+      return utils.formatByString(utils.setYear(now, 2001), format).startsWith('0');
     }
 
     case 'month': {
