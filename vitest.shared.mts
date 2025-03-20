@@ -65,7 +65,7 @@ export default defineConfig({
     isolate: false,
     ...(process.env.CI && {
       maxWorkers: 3,
-      minWorkers: 1,
+      minWorkers: 2,
       // Important to avoid timeouts on CI.
       // fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
@@ -73,14 +73,14 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      poolOptions: {
-        forks: {
-          singleFork: true,
-        },
-        threads: {
-          singleThread: true,
-        },
-      },
+      // poolOptions: {
+      //   forks: {
+      //     singleFork: true,
+      //   },
+      //   threads: {
+      //     singleThread: true,
+      //   },
+      // },
     }),
     exclude: [
       '**/*.spec.{js,ts,tsx}',
