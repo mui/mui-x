@@ -7,6 +7,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import useForkRef from '@mui/utils/useForkRef';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
 import { useAnimate } from '../internals/useAnimate';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
@@ -81,7 +82,12 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   };
 }
 
-export function useAnimatePieArc(props: PieArcAnimatedProps) {
+/** Animates the pie arc using a `path` element.
+ * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
+ * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
+export function useAnimatePieArc(
+  props: PieArcAnimatedProps & { ref?: React.RefObject<SVGPathElement> },
+) {
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
     {
@@ -109,7 +115,7 @@ export function useAnimatePieArc(props: PieArcAnimatedProps) {
   );
 
   return {
-    ref,
+    ref: useForkRef(ref, props.ref),
     d: d3Arc().cornerRadius(props.cornerRadius)({
       padAngle: props.paddingAngle,
       innerRadius: props.innerRadius,
