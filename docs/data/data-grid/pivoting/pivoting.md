@@ -6,8 +6,8 @@ title: Data Grid - Pivoting
 
 <p class="description">Rearrange rows and columns to view data from multiple perspectives.</p>
 
-Pivoting allows you to transform your data grid by reorganizing rows and columns, creating dynamic cross-tabulations of your data.
-This feature enables users to analyze data from different angles and gain insights that would be difficult to see in a normal data grid view.
+The Data Grid Premium's pivoting feature lets users transform the data in their grid by reorganizing rows and columns, creating dynamic cross-tabulations of data.
+This makes it possible to analyze data from different angles and gain insights that would be difficult to see in the default grid view.
 
 :::warning
 The pivoting feature is currently in preview and the API is subject to change.
@@ -21,13 +21,16 @@ You can enable it using the `experimentalFeatures` prop:
 
 ## Quick start
 
-The pivoting feature is enabled by default and can be accessed from the toolbar.
+Pivoting is enabled by default and can be accessed through the icon in the toolbar.
+In the demo below, the pivot panel is already open and some pivoting parameters have been set. 
+Use the **Pivot** switch at the top of the panel to toggle pivoting off and on.
+You can drag and drop existing columns in the **Rows**, **Columns**, and **Values** dropdown menus to change how the data is pivoted.
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Understanding the pivoting concepts
+## Understanding pivoting
 
-Pivoting transforms your data by reorganizing it along three key dimensions: **rows**, **columns**, and **values**.
+Pivoting transforms your data by reorganizing it along three key dimensions: rows, columns, and values.
 
 ### Non-pivoted data
 
@@ -38,8 +41,8 @@ It is the data that you see in the Data Grid before you pivot it.
 
 ### Rows
 
-**Rows** define how your data will be grouped vertically.
-Each unique value in the fields you select for rows will create a separate row in the pivot data grid.
+The **Rows** menu defines how the data will be grouped vertically after pivoting.
+Each unique value in the fields selected for rows will become a new row in the pivot Data Grid.
 For example, if you pivot by `product`, each unique product name will become a row in your pivot data grid.
 
 {{"demo": "GridPivotingRows.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -49,19 +52,20 @@ For example, if you pivot by `product` and `size` rows, each unique combination 
 
 ### Values
 
-**Values** define what data will be displayed in the cells of your pivot data grid.
-These are typically numeric fields that can be aggregated (summed, averaged, counted, etc.).
-For example, you might want to see the sum of `sales` for each combination of row and column.
+The **Values** menu defines what data will be displayed in the cells of the pivot Data Grid.
+These are typically numeric fields that can be aggregated (often into a sum, an average, or a total count).
+For example, the demo below contains multiple rows for just two kinds of products: apples and oranges.
+By selecting **Product** for the pivot rows and **Sales** for the pivot values, you can see the sum total of sales for each of the two products.
 
 {{"demo": "GridPivotingValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If multiple fields are selected for values, the each field will add a new aggregated column to the pivot data grid.
+If multiple fields are selected for values, each field will add a new aggregated column to the pivot Data Grid.
 For example, if you pivot by `sales` and `profit` values, the pivot data grid will have two aggregated columns: `sales` and `profit`.
 
 ### Columns
 
-**Columns** define how your data will be grouped horizontally.
-Each unique value in the fields you select for columns will create a new column group in the pivot data grid.
+The **Columns** menu defines how the data will be grouped horizontally after pivoting.
+Each unique value in the fields you select for columns will create a new column group in the pivot Data Grid.
 For example, if you pivot by `region`, each unique region will become a column group in your pivot data grid.
 
 {{"demo": "GridPivotingColumns.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -71,17 +75,17 @@ For example, if you pivot by `region` and `quarter` columns, each unique combina
 
 ### Pivoting in action
 
-In the demo below, we want to check our sales by region and quarter for each product and size available.
+In the demo below, the goal is to evaluate sales by region and quarter for each product and size available.
 To get that, we pivot a dataset of sales to have `product` and `size` fields as **rows**, `region` and `quarter` fields
 as **columns**, and `sales` and `profit` fields as aggregated **values**.
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Getting started with pivoting
+## Implementing pivoting
 
 ### Pivot model
 
-The pivot model is a configuration object that defines rows, columns, and values of the pivot data grid:
+The pivot model is a configuration object that defines rows, columns, and values of the pivot Grid:
 
 ```tsx
 interface GridPivotModel {
@@ -104,8 +108,9 @@ interface GridPivotModel {
 
 ### Initialize pivoting
 
-The easiest way to initialize pivoting is with an uncontrolled mode using the `initialState` prop.
-You can initialize the pivot model, pivot panel visibility, and enable the pivot mode:
+Use the `initialState` prop to initialize uncontrolled pivoting.
+This is the recommended method unless you specifically need to control the state.
+You can initialize the pivot model, toggle pivot panel visibility, and enable the pivot mode as shown below:
 
 ```tsx
 <DataGridPremium
@@ -117,17 +122,17 @@ You can initialize the pivot model, pivot panel visibility, and enable the pivot
 
 ### Controlled pivoting
 
-For fully controlled pivoting state, there are the following controlled props:
+For fully controlled pivoting state, you can use the following props:
 
 - Pivot model:
   - `pivotModel`: Controls the current pivot configuration.
   - `onPivotModelChange`: Callback fired when the pivot model changes.
 - Pivot mode toggle:
   - `pivotActive`: Controls whether pivot mode is active.
-  - `onPivotActiveChange`: Callback fired when pivot mode is active/inactive.
+  - `onPivotActiveChange`: Callback fired when the pivot mode changes between active and inactive.
 - Pivot panel:
   - `pivotPanelOpen`: Controls whether the pivot panel is open.
-  - `onPivotPanelOpenChange`: Callback fired when the pivot panel is opened/closed.
+  - `onPivotPanelOpenChange`: Callback fired when the pivot panel is opened or closed.
 
 {{"demo": "GridPivotingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -137,7 +142,7 @@ While this is not supported yet, we are working to bring this feature to the Dat
 
 ## Disable pivoting
 
-To disable the pivoting feature, set the `disablePivoting` prop to `true`:
+To disable pivoting, set the `disablePivoting` prop to `true`:
 
 ```tsx
 <DataGridPremium disablePivoting />
@@ -146,7 +151,7 @@ To disable the pivoting feature, set the `disablePivoting` prop to `true`:
 ## Derived columns in pivot mode
 
 In pivot mode, it's often useful to group data by a year or quarter.
-Data Grid automatically generates year and quarter columns for each `date` column.
+The Data Grid automatically generates year and quarter columns for each **Date** column for this purpose.
 
 In the demo below, the `transactionDate` column is represented by additional columns in the pivot mode: `transactionDate-year` and `transactionDate-quarter`:
 
@@ -155,16 +160,16 @@ In the demo below, the `transactionDate` column is represented by additional col
 ### Custom derived columns
 
 To customize the derived columns, use the `getPivotDerivedColumns` prop.
-It is called for each original column and should return an array of derived columns, or `undefined` if no derived columns are needed.
+This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
 {{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
 
 ## Sticky column groups
 
 Depending on the pivot mode, some column groups might exceed the width of the Data Grid viewport.
-To improve the user experience, you can make these column groups "sticky" so that the column group labels are visible while scrolling horizontally.
+To improve the user experience, you can make these column groups "sticky" so that the column group labels remain visible while scrolling horizontally.
 
-In the demo below, the `sx` prop is used to make the column groups sticky:
+The demo below illustrates how to do this using the `sx` prop to apply the necessary styles:
 
 {{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
