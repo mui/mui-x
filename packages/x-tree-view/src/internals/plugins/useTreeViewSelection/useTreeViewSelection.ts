@@ -225,15 +225,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     store.update((prevState) => ({
       ...prevState,
       selection: {
-        ...prevState.selection,
-      },
-    }));
-  }, [store, models.selectedItems.value]);
-
-  React.useEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      selection: {
         rawSelectedItems: models.selectedItems.value,
         // Only re-compute the map when the model changes.
         selectedItemsMap:

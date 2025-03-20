@@ -46,12 +46,9 @@ export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedPro
 
 export interface UseTreeViewLabelState {
   label: {
+    isItemEditable: (item: any) => boolean;
     editedItemId: string | null;
   };
-}
-
-export interface UseTreeViewLabelContextValue {
-  label: Pick<UseTreeViewLabelDefaultizedParameters<any>, 'isItemEditable'>;
 }
 
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
@@ -60,7 +57,6 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
-  contextValue: UseTreeViewLabelContextValue;
   dependencies: [UseTreeViewItemsSignature];
 }>;
 

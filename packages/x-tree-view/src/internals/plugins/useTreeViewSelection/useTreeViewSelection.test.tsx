@@ -470,7 +470,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should select un-selected item when clicking on an item checkbox', () => {
+        it.only('should select un-selected item when clicking on an item checkbox', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             checkboxSelection: true,

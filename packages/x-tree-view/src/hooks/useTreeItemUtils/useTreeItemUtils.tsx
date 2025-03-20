@@ -92,10 +92,7 @@ export const useTreeItemUtils = <
   itemId: string;
   children?: React.ReactNode;
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
-  const { instance, label, store, publicAPI } = useTreeViewContext<
-    TSignatures,
-    TOptionalSignatures
-  >();
+  const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
   const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
@@ -112,14 +109,8 @@ export const useTreeItemUtils = <
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);
   const isSelected = useSelector(store, selectorIsItemSelected, itemId);
   const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
-  const isEditing = useSelector(store, (state) =>
-    label == null ? false : selectorIsItemBeingEdited(state, itemId),
-  );
-  const isEditable = useSelector(store, (state) =>
-    label == null
-      ? false
-      : selectorIsItemEditable(state, { itemId, isItemEditable: label.isItemEditable }),
-  );
+  const isEditing = useSelector(store, selectorIsItemBeingEdited, itemId);
+  const isEditable = useSelector(store, selectorIsItemEditable, itemId);
 
   const status: UseTreeItemStatus = {
     expandable: isExpandable,

@@ -44,13 +44,10 @@ export const useTreeItem = <
 >(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
-  const {
-    runItemPlugins,
-    label: labelContext,
-    instance,
-    publicAPI,
-    store,
-  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
+  const { runItemPlugins, instance, publicAPI, store } = useTreeViewContext<
+    TSignatures,
+    TOptionalSignatures
+  >();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const depth = useSelector(
@@ -76,7 +73,7 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useSelector(store, selectorTreeViewId);
-  const isSelectionEnabledForItem = useSelector(store, selectorIsItemSelectionEnabled);
+  const isSelectionEnabledForItem = useSelector(store, selectorIsItemSelectionEnabled, itemId);
   const isCheckboxSelectionEnabled = useSelector(store, selectorIsCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useSelector(
@@ -312,8 +309,8 @@ export const useTreeItem = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (labelContext?.isItemEditable) {
-      props.editable = status.editable;
+    if (status.editable) {
+      props.editable = true;
     }
 
     return props;

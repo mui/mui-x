@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin, TreeViewState } from '../../models';
@@ -77,7 +78,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     store,
     selectorItemCheckboxStatus,
     itemId,
-    (a, b) => a.checked === b.checked && a.indeterminate === b.indeterminate,
+    fastObjectShallowCompare,
   );
 
   return {
@@ -94,7 +95,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
             return;
           }
 
-          if (selectorIsItemSelectionEnabled(store, itemId)) {
+          if (!selectorIsItemSelectionEnabled(store.value, itemId)) {
             return;
           }
 

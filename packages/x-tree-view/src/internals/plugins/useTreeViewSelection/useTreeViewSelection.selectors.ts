@@ -53,8 +53,8 @@ export const selectorIsCheckboxSelectionEnabled = createSelector(
  * @returns {boolean} `true` if selection is enabled for the item, `false` otherwise.
  */
 export const selectorIsItemSelectionEnabled = createSelector(
-  [selectorIsSelectionEnabled, selectorIsItemDisabled],
-  (isSelectionEnabled, isItemDisabled) => isSelectionEnabled && !isItemDisabled,
+  [selectorIsItemDisabled, selectorIsSelectionEnabled],
+  (isItemDisabled, isSelectionEnabled) => isSelectionEnabled && !isItemDisabled,
 );
 
 /**

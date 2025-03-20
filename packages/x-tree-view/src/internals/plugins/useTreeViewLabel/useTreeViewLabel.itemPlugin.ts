@@ -11,15 +11,12 @@ import { useSelector } from '../../hooks/useSelector';
 import { selectorIsItemBeingEdited, selectorIsItemEditable } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const {
-    store,
-    label: { isItemEditable },
-  } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
+  const { store } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
   const { label, itemId } = props;
 
   const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
-  const editable = useSelector(store, selectorIsItemEditable, { itemId, isItemEditable });
+  const editable = useSelector(store, selectorIsItemEditable, itemId);
   const editing = useSelector(store, selectorIsItemBeingEdited, itemId);
 
   React.useEffect(() => {
