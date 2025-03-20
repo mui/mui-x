@@ -262,9 +262,9 @@ describe('useAnimate', () => {
     await waitFor(() => {
       expect(lastCall).to.be.greaterThan(10);
     });
-    const lastCallBeforeUnmount = lastCall;
+
+    expect(lastCall).to.be.lessThan(1000);
     const numCallsBeforeUnmount = calls;
-    expect(lastCallBeforeUnmount).to.be.lessThan(1000);
 
     await user.click(screen.getByRole('button'));
 
@@ -274,8 +274,8 @@ describe('useAnimate', () => {
 
     await twoAnimationsFrames;
 
-    expect(lastCall).to.equal(lastCallBeforeUnmount);
-    expect(calls).to.equal(numCallsBeforeUnmount);
+    // Clicking the button is async, so at most one more call could have happened
+    expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + 1);
   });
 
   it('stops animation when the hook is unmounted', async () => {

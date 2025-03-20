@@ -1,4 +1,4 @@
-import { timer, Timer, now } from '@mui/x-charts-vendor/d3-timer';
+import { timer, Timer, now, timeout } from '@mui/x-charts-vendor/d3-timer';
 
 /**
  * A resumable transition class inspired by d3-transition.
@@ -38,32 +38,32 @@ export class Transition {
     return this.timer !== null;
   }
 
+  private timerCallback(elapsed: number) {
+    this.elapsed = Math.min(elapsed, this.duration);
+
+    const t = this.duration === 0 ? 1 : this.elapsed / this.duration;
+    const easedT = this.easingFn(t);
+
+    // Call the tick callback with the current value
+    this.onTickCallback(easedT);
+
+    if (this.elapsed >= this.duration) {
+      this.stop();
+    }
+  }
+
   /**
    * Resume the transition
    */
   resume(): this {
-    if (this.running) {
+    if (this.running || this.elapsed >= this.duration) {
       return this;
     }
 
-    this.timer = timer(
-      (elapsed) => {
-        this.elapsed = Math.min(elapsed, this.duration);
+    /* If we're resuming the transition, then subtract elapsed to continue the easing. */
+    const time = now() - this.elapsed;
 
-        const t = this.elapsed / this.duration;
-        const easedT = this.easingFn(t);
-
-        // Call the tick callback with the current value
-        this.onTickCallback(easedT);
-
-        if (this.elapsed >= this.duration) {
-          this.stop();
-        }
-      },
-      0,
-      /* If we're resuming the transition, then subtract elapsed to continue the easing. */
-      now() - this.elapsed,
-    );
+    this.timer = timer((elapsed) => this.timerCallback(elapsed), 0, time);
 
     return this;
   }
@@ -80,6 +80,17 @@ export class Transition {
       this.timer.stop();
       this.timer = null;
     }
+
+    return this;
+  }
+
+  /**
+   * Immediately finishes the transition and calls the tick callback with the final value.
+   */
+  finish(): this {
+    this.stop();
+
+    timeout(() => this.timerCallback(this.duration));
 
     return this;
   }
