@@ -17,7 +17,14 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
   skipAnimation?: boolean;
 }
 
-export function useAnimateLine(props: Pick<AnimatedLineProps, 'd' | 'skipAnimation'>) {
+type LineAnimatedProps = Pick<AnimatedLineProps, 'd' | 'skipAnimation'> & {
+  ref?: React.Ref<SVGPathElement>;
+};
+
+/** Animates a line of a line chart using a `path` element.
+ * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
+ * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
+export function useAnimateLine(props: LineAnimatedProps) {
   const ref = useAnimate(
     { d: props.d },
     {
@@ -30,7 +37,7 @@ export function useAnimateLine(props: Pick<AnimatedLineProps, 'd' | 'skipAnimati
     },
   );
 
-  return { ref, d: props.d };
+  return { ref: useForkRef(ref, props.ref), d: props.d };
 }
 
 /**
@@ -47,13 +54,11 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
   function AnimatedLine(props, ref) {
     const { skipAnimation, ownerState, ...other } = props;
 
-    const { ref: animateRef, ...otherProps } = useAnimateLine(props);
-    const forkRef = useForkRef(ref, animateRef);
+    const animateProps = useAnimateLine({ ...props, ref });
 
     return (
       <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
         <path
-          ref={forkRef}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
@@ -61,7 +66,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
           opacity={ownerState.isFaded ? 0.3 : 1}
           {...other}
-          {...otherProps}
+          {...animateProps}
         />
       </AppearingMask>
     );
