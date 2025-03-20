@@ -159,6 +159,126 @@ describe('<DataGrid /> - Quick filter', () => {
       });
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas, nike');
     });
+
+    it('should be collapsed by default if there is no value', () => {
+      render(<TestCase />);
+
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(-1);
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('false');
+    });
+
+    it('should be expanded by default if there is a value', () => {
+      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(0);
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
+    it('should expand when the trigger is clicked', () => {
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
+    it('should collapse when the input is blurred with no value', () => {
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('true');
+
+      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('false');
+    });
+
+    it('should collapse when the escape key is pressed with no value', () => {
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+
+      // Wait for the input to be focused
+      clock.runToLast();
+
+      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
+        key: 'Escape',
+      });
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('false');
+    });
+
+    it('should clear the input when the escape key is pressed with a value and not collapse the input', () => {
+      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+
+      screen.getByRole<HTMLInputElement>('searchbox').focus();
+      clock.runToLast();
+
+      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
+        key: 'Escape',
+      });
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
+    it('should clear the value when the clear button is clicked and focus the input', () => {
+      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear' }));
+      clock.runToLast();
+
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
+      expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+    });
+
+    it('should focus the input when the trigger is clicked and return focus to the trigger when collapsed', () => {
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+
+      // Wait for the input to be focused
+      clock.runToLast();
+
+      expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+
+      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+
+      // Wait for the trigger to be focused
+      clock.runToLast();
+
+      expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' })).toHaveFocus();
+    });
   });
 
   describe('quick filter logic', () => {
