@@ -108,7 +108,7 @@ The empty pivot overlay is displayed when pivot mode is enabled but fields have 
 
 ### Custom component
 
-If you want to customize the empty pivot overlay, a component can be passed to the `emptyPivotOverlay` slot and rendered in place.
+To customize the empty pivot overlay, pass a custom component to the `emptyPivotOverlay` slot.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)

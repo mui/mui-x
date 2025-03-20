@@ -159,7 +159,7 @@ In the demo below, the `transactionDate` column is represented by additional col
 
 ### Custom derived columns
 
-To customize the derived columns, use the `getPivotDerivedColumns` prop.
+Use the `getPivotDerivedColumns` prop to customize derived columns.
 This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
 {{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
