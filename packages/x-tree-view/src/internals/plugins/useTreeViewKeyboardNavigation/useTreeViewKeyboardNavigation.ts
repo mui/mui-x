@@ -149,7 +149,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          selectorIsItemEditable(store.value, { itemId, isItemEditable: params.isItemEditable! }) &&
+          selectorIsItemEditable(store.value, itemId) &&
           !selectorIsItemBeingEdited(store.value, itemId)
         ) {
           instance.setEditedItemId(itemId);

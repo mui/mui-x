@@ -16,22 +16,23 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
 
   const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
-  const editable = useSelector(store, selectorIsItemEditable, itemId);
-  const editing = useSelector(store, selectorIsItemBeingEdited, itemId);
+  const isItemEditable = useSelector(store, selectorIsItemEditable, itemId);
+  const isItemBeingEdited = useSelector(store, selectorIsItemBeingEdited, itemId);
 
   React.useEffect(() => {
-    if (!editing) {
+    if (!isItemBeingEdited) {
       setLabelInputValue(label as string);
     }
-  }, [editing, label]);
+  }, [isItemBeingEdited, label]);
 
   return {
     propsEnhancers: {
+      label: () => ({ editable: isItemEditable }),
       labelInput: ({
         externalEventHandlers,
         interactions,
       }): UseTreeItemLabelInputSlotPropsFromLabelEditing => {
-        if (!editable) {
+        if (!isItemEditable) {
           return {};
         }
 

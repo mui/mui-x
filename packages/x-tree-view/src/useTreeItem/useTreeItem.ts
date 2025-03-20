@@ -85,7 +85,7 @@ export const useTreeItem = <
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
-  > = { rootRefObject, contentRefObject, interactions, status };
+  > = { rootRefObject, contentRefObject, interactions };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -309,11 +309,16 @@ export const useTreeItem = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (status.editable) {
-      props.editable = true;
-    }
+    const enhancedLabelProps =
+      propsEnhancers.label?.({
+        ...sharedPropsEnhancerParams,
+        externalEventHandlers,
+      }) ?? {};
 
-    return props;
+    return {
+      ...enhancedLabelProps,
+      ...props,
+    };
   };
 
   const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
