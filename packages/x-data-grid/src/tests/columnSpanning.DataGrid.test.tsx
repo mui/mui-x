@@ -787,12 +787,16 @@ describe('<DataGrid /> - Column spanning', () => {
     );
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    // scroll to the very end
-    virtualScroller.scrollLeft = 1000;
-    // hide first row to trigger row virtualization
-    virtualScroller.scrollTop = rowHeight + 10;
 
-    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+    await act(async () =>
+      virtualScroller.scrollTo({
+        // hide first row to trigger row virtualization
+        top: rowHeight + 10,
+        // scroll to the very end
+        left: 1000,
+        behavior: 'instant',
+      }),
+    );
 
     await waitFor(() => {
       expect(getCell(2, 5).offsetLeft).to.equal(

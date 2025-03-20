@@ -163,8 +163,7 @@ describe('<DataGrid /> - Columns', () => {
       const { user } = render(<DynamicVirtualizationRange />);
 
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-      virtualScroller.scrollTop = 1_000;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => virtualScroller.scrollTo({ top: 1_000, behavior: 'instant' }));
 
       await user.click(screen.getByText('Update columns'));
     },
