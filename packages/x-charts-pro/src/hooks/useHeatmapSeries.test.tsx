@@ -1,9 +1,9 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useHeatmapSeries, useHeatmapSeriesContext } from './useHeatmapSeries';
 import { Heatmap } from '../Heatmap';
-import { HeatmapSeriesType } from '../models';
+import { DefaultizedHeatmapSeriesType, HeatmapSeriesType } from '../models';
 
 const mockSeries: HeatmapSeriesType[] = [
   {
@@ -71,9 +71,12 @@ describe('useHeatmapSeries', () => {
       `Make sure that they exist and their series are using the "heatmap" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useHeatmapSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedHeatmapSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useHeatmapSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useHeatmapSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });
