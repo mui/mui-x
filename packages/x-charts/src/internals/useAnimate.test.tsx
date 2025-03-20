@@ -1,4 +1,4 @@
-import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useAnimate } from '@mui/x-charts/internals/useAnimate';
@@ -225,5 +225,105 @@ describe('useAnimate', () => {
 
     // Should jump to 0 immediately after first call
     expect(lastCall).to.equal(0);
+  });
+
+  it('stops animation when its ref is removed from the DOM', async () => {
+    let calls = 0;
+    let firstCall: number | null = null;
+    let lastCall: number | null = null;
+
+    function applyProps(element: SVGPathElement, props: { width: number }) {
+      calls += 1;
+
+      if (firstCall === null) {
+        firstCall = props.width;
+      }
+
+      lastCall = props.width;
+    }
+
+    function TestComponent({ width }: { width: number }) {
+      const [mountPath, setMountPath] = React.useState(true);
+      const ref = useAnimate(
+        { width },
+        { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
+      );
+
+      return (
+        <React.Fragment>
+          <svg>{mountPath ? <path ref={ref} /> : null}</svg>
+          <button onClick={() => setMountPath(false)}>Unmount Path</button>
+        </React.Fragment>
+      );
+    }
+
+    const { user } = render(<TestComponent width={1000} />);
+
+    await waitFor(() => {
+      expect(lastCall).to.be.greaterThan(10);
+    });
+    const lastCallBeforeUnmount = lastCall;
+    const numCallsBeforeUnmount = calls;
+    expect(lastCallBeforeUnmount).to.be.lessThan(1000);
+
+    await user.click(screen.getByRole('button'));
+
+    const { promise: twoAnimationsFrames, resolve } = Promise.withResolvers<void>();
+    // Wait two frames to ensure the transition is stopped
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+
+    await twoAnimationsFrames;
+
+    expect(lastCall).to.equal(lastCallBeforeUnmount);
+    expect(calls).to.equal(numCallsBeforeUnmount);
+  });
+
+  it('stops animation when the hook is unmounted', async () => {
+    let calls = 0;
+    let firstCall: number | null = null;
+    let lastCall: number | null = null;
+
+    function applyProps(element: SVGPathElement, props: { width: number }) {
+      calls += 1;
+
+      if (firstCall === null) {
+        firstCall = props.width;
+      }
+
+      lastCall = props.width;
+    }
+
+    function TestComponent({ width }: { width: number }) {
+      const ref = useAnimate(
+        { width },
+        { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
+      );
+
+      return (
+        <svg>
+          <path ref={ref} />
+        </svg>
+      );
+    }
+
+    const { unmount } = render(<TestComponent width={1000} />);
+
+    await waitFor(() => {
+      expect(lastCall).to.be.greaterThan(10);
+    });
+    const lastCallBeforeUnmount = lastCall;
+    const numCallsBeforeUnmount = calls;
+    expect(lastCallBeforeUnmount).to.be.lessThan(1000);
+
+    unmount();
+
+    const { promise: twoAnimationFrames, resolve } = Promise.withResolvers<void>();
+    // Wait two frames to ensure the transition is stopped
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+
+    await twoAnimationFrames;
+
+    expect(lastCall).to.equal(lastCallBeforeUnmount);
+    expect(calls).to.equal(numCallsBeforeUnmount);
   });
 });
