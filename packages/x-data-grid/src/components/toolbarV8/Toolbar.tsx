@@ -193,20 +193,6 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     ref,
   });
 
-  // WE MIGHT NEED TO MAKE IT SO THAT THIS ONLY RUNS IF THE ACTIVE ELEMENT IS ACTUALLY A TOOLBAR BUTTON
-  // const isInitialFocus = React.useRef(true);
-  // React.useEffect(() => {
-  //   // Do not focus the item on initial render
-  //   if (focusableItemId && isInitialFocus.current) {
-  //     isInitialFocus.current = false;
-  //     return;
-  //   }
-
-  //   if (focusableItemId) {
-  //     items.find((item) => item.id === focusableItemId)?.ref.current?.focus();
-  //   }
-  // }, [focusableItemId, items]);
-
   React.useEffect(() => {
     if (items.length > 0) {
       setFocusableItemId(items[0].id);
