@@ -123,6 +123,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     const svg = svgRef.current;
 
     // Disable gesture on safari
+    // https://use-gesture.netlify.app/docs/gestures/#about-the-pinch-gesture
     svg?.addEventListener('gesturestart', preventDefault);
     svg?.addEventListener('gesturechange', preventDefault);
     svg?.addEventListener('gestureend', preventDefault);
