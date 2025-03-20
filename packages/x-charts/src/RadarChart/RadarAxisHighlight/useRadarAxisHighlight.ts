@@ -10,7 +10,8 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import {
   UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxis,
+  selectorChartsInteractionXAxisIndex,
+  selectorChartsInteractionXAxisValue,
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
@@ -86,12 +87,13 @@ export function useRadarAxisHighlight(
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
+  const xAxisInteractionValue = useSelector(store, selectorChartsInteractionXAxisValue);
   const center = useSelector(store, selectorChartPolarCenter);
 
-  const highlightedIndex = xAxisIdentifier?.index;
+  const highlightedIndex = xAxisInteractionIndex;
 
-  if (highlightedIndex === undefined) {
+  if (highlightedIndex === null || highlightedIndex < 0) {
     return null;
   }
 
@@ -101,7 +103,7 @@ export function useRadarAxisHighlight(
 
   const metric = radiusAxisIds[highlightedIndex];
   const radiusScale = radiusAxis[metric].scale;
-  const angle = rotationScale(xAxisIdentifier?.value as string)!;
+  const angle = rotationScale(xAxisInteractionValue as unknown as string)!;
   const radius = radiusScale.range()[1];
 
   return {

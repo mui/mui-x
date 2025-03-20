@@ -33,13 +33,3 @@ export const selectorChartsInteractionItemIsDefined = createSelector(
   selectorChartsInteractionItem,
   (item) => item !== null,
 );
-
-// export const selectorChartsInteractionXAxisIsDefined = createSelector(
-//   selectorChartsInteractionXAxis,
-//   (x) => x !== null,
-// );
-
-// export const selectorChartsInteractionYAxisIsDefined = createSelector(
-//   selectorChartsInteractionYAxis,
-//   (y) => y !== null,
-// );
