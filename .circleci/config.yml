@@ -150,20 +150,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm vitest --project "jsdom/*" --coverage
-      - run:
-          name: Check coverage generated
-          command: |
-            if ! [[ -s coverage/lcov.info ]]
-            then
-              exit 1
-            fi
-      - run:
-          name: Coverage
-          command: |
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+          command: pnpm vitest --project "jsdom/*"
 
   test_browser:
     <<: *default-job
@@ -175,9 +162,34 @@ jobs:
       - install_js:
           browsers: true
           react-version: << parameters.react-version >>
-      - run:
-          name: Test Browser
-          command: pnpm vitest --project "browser/*"
+      - when:
+          condition:
+            not:
+              equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser
+                command: pnpm vitest --project "browser/*"
+      - when:
+          condition:
+            equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser + Coverage
+                command: pnpm vitest --project "browser/*" --coverage
+            - run:
+                name: Check coverage generated
+                command: |
+                  if ! [[ -s coverage/lcov.info ]]
+                  then
+                    exit 1
+                  fi
+            - run:
+                name: Coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/linux/codecov
+                  chmod +x codecov
+                  ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
 
   test_lint:
     <<: *default-job
