@@ -15,7 +15,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the field components instead (for example, <DateField /> instead of <DatePicker disableOpenPicker />)."
+      "deprecationInfo": "Use the <a href=\"https://next.mui.com/x/react-date-pickers/fields/\">field component</a> instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "format": { "type": { "name": "string" } },
