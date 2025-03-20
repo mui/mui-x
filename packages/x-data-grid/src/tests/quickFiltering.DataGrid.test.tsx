@@ -236,14 +236,21 @@ describe('<DataGrid /> - Quick filter', () => {
     });
 
     it('should clear the input when the escape key is pressed with a value and not collapse the input', () => {
-      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+      render(<TestCase />);
 
-      screen.getByRole<HTMLInputElement>('searchbox').focus();
+      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      clock.runToLast();
+
+      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
+        target: { value: 'adidas' },
+      });
       clock.runToLast();
 
       fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
         key: 'Escape',
       });
+
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
 
       expect(
         screen
@@ -252,7 +259,7 @@ describe('<DataGrid /> - Quick filter', () => {
       ).to.equal('true');
     });
 
-    it('should clear the value when the clear button is clicked and focus the input', () => {
+    it('should clear the value when the clear button is clicked and focus to `the input', () => {
       render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
 
       fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear' }));
