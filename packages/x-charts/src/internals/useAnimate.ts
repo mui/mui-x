@@ -28,6 +28,14 @@ export function useAnimate<Props extends {}, Elem extends Element>(
     lastPropsRef.current = props;
   }, [props]);
 
+  useIsomorphicLayoutEffect(() => {
+    if (skip) {
+      transitionRef.current?.finish();
+    } else {
+      transitionRef.current?.resume();
+    }
+  }, [skip]);
+
   const animate = React.useCallback(
     (element: Elem) => {
       const lastInterpolatedProps = lastInterpolatedPropsRef.current;
@@ -63,18 +71,18 @@ export function useAnimate<Props extends {}, Elem extends Element>(
           return;
         }
 
-        // If props aren't the same, stop the transition and fall through to start a new animation.
+        // If props aren't the same, stop the transition and start a new animation.
         transitionRef.current?.stop();
       }
 
-      // If it's a different element, stop the transition of the last element.
+      // If it's a different element, stop the transition of the last element and start a new animation.
       if (lastElement) {
         transitionRef.current?.stop();
       }
 
-      animate(element);
-
       elementRef.current = element;
+
+      animate(element);
     },
     [animate, props],
   );
