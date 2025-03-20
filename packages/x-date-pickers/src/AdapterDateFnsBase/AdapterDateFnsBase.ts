@@ -20,7 +20,7 @@ type DateFnsLocaleBase = {
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yy: 'year',
+  yy: { sectionType: 'year', contentType: 'digit', maxLength: 2 },
   yyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yyyy: 'year',
 
