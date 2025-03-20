@@ -57,7 +57,6 @@ export default defineConfig({
     passWithNoTests: true,
     browser: {
       isolate: false,
-      fileParallelism: process.env.CI ? false : true,
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
@@ -81,13 +80,6 @@ export default defineConfig({
         },
       },
     }),
-    exclude: [
-      '**/*.spec.{js,ts,tsx}',
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/cypress/**',
-      '**/.{idea,git,cache,output,temp}/**',
-      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
-    ],
+    exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
 });

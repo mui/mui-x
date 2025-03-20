@@ -13,10 +13,10 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'lcov'],
+      reporter: process.env.CI ? ['lcovonly'] : ['text'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
-      include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
-      exclude: ['**/*.{test,spec}.{js,ts,tsx}', '**/*.test/*'],
+      include: ['packages/*/src/**/*.{ts,tsx}'],
+      exclude: ['**/*.{test,spec}.{js,ts,tsx}'],
     },
   },
 });
