@@ -142,7 +142,10 @@ function QuickFilter(props: QuickFilterProps) {
     // Ensure the expanded state has actually changed before focusing
     if (previousExpandedValue.current !== expandedValue) {
       if (expandedValue) {
-        controlRef.current?.focus();
+        // Ensures the focus does not interupt CSS transitions and animations on the control
+        requestAnimationFrame(() => {
+          controlRef.current?.focus();
+        });
       } else {
         triggerRef.current?.focus();
       }
