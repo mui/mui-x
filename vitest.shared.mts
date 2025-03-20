@@ -64,7 +64,7 @@ export default defineConfig({
     // Disable isolation to speed up the tests.
     isolate: false,
     ...(process.env.CI && {
-      maxWorkers: 3,
+      maxWorkers: 2,
       minWorkers: 1,
       // Important to avoid timeouts on CI.
       // fileParallelism: false,
