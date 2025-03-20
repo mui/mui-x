@@ -552,7 +552,6 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
 
-    // HTMLElement.focus() only scrolls to the element on a real browser
     testSkipIf(isJSDOM)(
       'should not jump during scroll while the focus is on the checkbox',
       async () => {
@@ -566,7 +565,7 @@ describe('<DataGrid /> - Row selection', () => {
 
         await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await act(() => virtualScroller.scrollTo({ top: 250 }));
+        await act(async () => virtualScroller.scrollTo({ top: 250, behavior: 'instant' }));
         expect(virtualScroller.scrollTop).to.equal(250);
       },
     );
