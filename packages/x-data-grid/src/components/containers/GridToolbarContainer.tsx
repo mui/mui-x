@@ -36,6 +36,7 @@ const GridToolbarContainerRoot = styled(Toolbar, {
   flexWrap: 'wrap',
   gap: vars.spacing(1),
   padding: vars.spacing(0.5),
+  minHeight: 'auto',
 });
 
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
