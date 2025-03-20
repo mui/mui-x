@@ -458,7 +458,7 @@ Here are two concrete examples:
 
 ### ⏩ Deprecate the `disableOpenPicker` prop
 
-The `disableOpenPicker` prop has been deprecated on all the picker components and will be removed in the next major release (v9.0.0).
+The `disableOpenPicker` prop has been deprecated on all Picker components and will be removed in the next major release (v9.0.0).
 If you only want to allow editing through the field, you can use the field component directly:
 
 ```diff
