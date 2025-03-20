@@ -388,23 +388,23 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Column menu', () => {
-    it('should render select on aggregable column', () => {
+    it('should render select on aggregable column', async () => {
       render(<Test />);
 
-      act(() => apiRef.current?.showColumnMenu('id'));
+      await act(async () => apiRef.current?.showColumnMenu('id'));
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
     });
 
-    it('should update the aggregation when changing "Aggregation" select value', () => {
-      render(<Test />);
+    it('should update the aggregation when changing "Aggregation" select value', async () => {
+      const { user } = render(<Test />);
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      act(() => apiRef.current?.showColumnMenu('id'));
+      await act(async () => apiRef.current?.showColumnMenu('id'));
 
-      fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
-      fireUserEvent.mousePress(
+      await user.click(screen.getByLabelText('Aggregation'));
+      await user.click(
         within(
           screen.getByRole('listbox', {
             name: 'Aggregation',
