@@ -80,7 +80,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            echo $0
+            source /root/.bashrc
             fnm install 23
             fnm use 23
       - when:
