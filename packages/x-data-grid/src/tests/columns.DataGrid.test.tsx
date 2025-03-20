@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColDef, gridClasses, gridColumnLookupSelector } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridRowsProp,
+  GridColDef,
+  gridClasses,
+  gridColumnLookupSelector,
+} from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';
@@ -162,7 +169,6 @@ describe('<DataGrid /> - Columns', () => {
       await user.click(screen.getByText('Update columns'));
     },
   );
-
 
   it('should revert to the default column properties if not specified otherwise', async () => {
     const columns1: GridColDef[] = [{ field: 'status', type: 'string' }];
