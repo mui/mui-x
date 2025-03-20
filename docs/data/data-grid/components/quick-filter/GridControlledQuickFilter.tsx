@@ -67,7 +67,7 @@ function CustomToolbar() {
       <StyledQuickFilter expanded={expanded} onExpandedChange={setExpanded}>
         <QuickFilterTrigger
           render={(triggerProps) => (
-            <Tooltip title="Search">
+            <Tooltip title="Search" enterDelay={0}>
               <StyledToolbarButton
                 {...triggerProps}
                 ownerState={{ expanded }}

@@ -131,6 +131,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
               render={(triggerProps) => (
                 <rootProps.slots.baseTooltip
                   title={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+                  enterDelay={0} // Prevents tooltip lagging behind transitioning trigger element
                 >
                   <GridQuickFilterTrigger
                     className={classes.trigger}
