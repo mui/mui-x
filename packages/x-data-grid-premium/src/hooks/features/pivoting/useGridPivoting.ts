@@ -199,8 +199,8 @@ export const useGridPivoting = (
       return undefined;
     }
 
-    const unsubscribe = apiRef.current?.store.subscribe((state) => {
-      const loading = gridRowsLoadingSelector({ current: state });
+    const unsubscribe = apiRef.current?.store.subscribe(() => {
+      const loading = gridRowsLoadingSelector(apiRef);
       if (loading === false) {
         unsubscribe();
         runPivoting();
