@@ -6,9 +6,9 @@ import {
   unstable_capitalize as capitalize,
   unstable_useId as useId,
 } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
-import useForkRef from '@mui/utils/useForkRef';
 import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
