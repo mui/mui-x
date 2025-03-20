@@ -768,14 +768,14 @@ describe('<DataGrid /> - Rows', () => {
         await waitFor(() => {
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
         });
-        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
-        await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+        // Scroll to measure the 2nd cell
+        await act(async () => virtualScroller.scrollTo({ top: 101, behavior: 'instant' }));
 
         await waitFor(() => {
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
         });
-        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-        await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+        // Scroll to measure all cells
+        await act(async () => virtualScroller.scrollTo({ top: 10e6, behavior: 'instant' }));
         await waitFor(() =>
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101),
         );

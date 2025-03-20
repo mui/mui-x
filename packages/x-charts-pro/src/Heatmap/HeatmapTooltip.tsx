@@ -19,7 +19,9 @@ import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 
 export interface HeatmapTooltipProps
-  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
+  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
+  trigger?: 'item' | 'none';
+}
 
 const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes'] }) => {
   const { classes } = ownerState;

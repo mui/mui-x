@@ -32,6 +32,7 @@ const defaultProps = {
   width: 400,
   xAxis: [{ data: [1, 2, 3, 4] }],
   yAxis: [{ data: ['A', 'B', 'C', 'D', 'E'] }],
+  slotProps: { tooltip: { trigger: 'none' as const } },
 };
 
 const options: any = {
