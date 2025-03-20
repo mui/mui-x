@@ -34,7 +34,7 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
   function QuickFilterTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, onExpandedChange, triggerRef } = useQuickFilterContext();
+    const { state, controlId, onExpandedChange, triggerRef } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(triggerRef, ref);
 
@@ -49,6 +49,8 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
       {
         ...rootProps.slotProps?.baseButton,
         className: resolvedClassName,
+        'aria-controls': controlId,
+        'aria-expanded': state.expanded,
         ...other,
         onClick: handleClick,
         ref: handleRef,

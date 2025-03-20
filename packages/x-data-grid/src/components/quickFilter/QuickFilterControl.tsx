@@ -34,7 +34,7 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
   function QuickFilterControl(props, ref) {
     const { render, className, slotProps, onKeyDown, onChange, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, controlRef, onValueChange, onExpandedChange, clearValue } =
+    const { state, controlId, controlRef, onValueChange, onExpandedChange, clearValue } =
       useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(controlRef, ref);
@@ -72,8 +72,8 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
         slotProps: {
           htmlInput: {
             role: 'searchbox',
-            'aria-hidden': !state.expanded ? 'true' : undefined,
-            disabled: !state.expanded,
+            id: controlId,
+            tabIndex: state.expanded ? undefined : -1,
             ...slotProps?.htmlInput,
             onBlur: handleBlur,
           },

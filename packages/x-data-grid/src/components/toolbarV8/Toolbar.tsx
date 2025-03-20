@@ -107,7 +107,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
         }
 
         // Return if we found an enabled item
-        if (!items[index].ref.current?.disabled) {
+        if (!items[index].ref.current?.disabled && !items[index].ref.current?.ariaDisabled) {
           return index;
         }
       }

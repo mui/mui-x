@@ -29,7 +29,7 @@ export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
  */
 const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { render, onKeyDown, onFocus, disabled, ...other } = props;
+    const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
     const id = useId();
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -67,11 +67,20 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       previousDisabled.current = disabled;
     }, [disabled, id, onItemDisabled]);
 
+    const previousAriaDisabled = React.useRef(ariaDisabled);
+    React.useEffect(() => {
+      if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
+        onItemDisabled(id!, true);
+      }
+      previousAriaDisabled.current = ariaDisabled;
+    }, [ariaDisabled, id, onItemDisabled]);
+
     const element = useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
       ...rootProps.slotProps?.baseIconButton,
       tabIndex: focusableItemId === id ? 0 : -1,
       ...other,
       disabled,
+      'aria-disabled': ariaDisabled,
       onKeyDown: handleKeyDown,
       onFocus: handleFocus,
       ref: handleRef,

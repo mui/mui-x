@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_debounce as debounce } from '@mui/utils';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { QuickFilterContext, QuickFilterState } from './QuickFilterContext';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -79,7 +80,7 @@ function QuickFilter(props: QuickFilterProps) {
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
     debounceMs = rootProps.filterDebounceMs,
-    defaultExpanded = false,
+    defaultExpanded,
     expanded,
     onExpandedChange,
     ...other
@@ -90,7 +91,9 @@ function QuickFilter(props: QuickFilterProps) {
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
-  const [internalExpanded, setInternalExpanded] = React.useState(defaultExpanded);
+  const [internalExpanded, setInternalExpanded] = React.useState(
+    defaultExpanded ?? value.length > 0,
+  );
   const expandedValue = expanded ?? internalExpanded;
   const state = React.useMemo(
     () => ({
@@ -101,6 +104,7 @@ function QuickFilter(props: QuickFilterProps) {
   );
   const resolvedClassName = typeof className === 'function' ? className(state) : className;
   const ref = React.useRef<HTMLDivElement>(null);
+  const controlId = useId();
 
   const handleExpandedChange = React.useCallback(
     (newExpanded: boolean) => {
@@ -183,11 +187,12 @@ function QuickFilter(props: QuickFilterProps) {
       controlRef,
       triggerRef,
       state,
+      controlId,
       clearValue: handleClearValue,
       onValueChange: handleValueChange,
       onExpandedChange: handleExpandedChange,
     }),
-    [state, handleValueChange, handleClearValue, handleExpandedChange],
+    [controlId, state, handleValueChange, handleClearValue, handleExpandedChange],
   );
 
   useEnhancedEffect(() => {
@@ -201,8 +206,9 @@ function QuickFilter(props: QuickFilterProps) {
     render,
     {
       role: 'toolbar',
-      'aria-orientation': 'horizontal',
       className: resolvedClassName,
+      'aria-orientation': 'horizontal',
+      'aria-controls': controlId,
       ...other,
       ref,
     },

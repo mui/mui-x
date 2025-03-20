@@ -7,6 +7,7 @@ export interface QuickFilterState {
 
 export interface QuickFilterContextValue {
   state: QuickFilterState;
+  controlId: string | undefined;
   controlRef: React.RefObject<HTMLInputElement | null>;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
   clearValue: () => void;

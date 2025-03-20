@@ -59,7 +59,7 @@ function CustomToolbar() {
                 {...triggerProps}
                 ownerState={{ expanded: state.expanded }}
                 color="default"
-                disabled={state.expanded}
+                aria-disabled={state.expanded}
               >
                 <SearchIcon fontSize="small" />
               </StyledToolbarButton>
