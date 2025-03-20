@@ -194,8 +194,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           dataIndex,
         });
 
-        // @ts-expect-error tap doesn't exist on move.
-        if (state.tap && onItemClick) {
+        if ('tap' in state && state.tap && onItemClick) {
           onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
         }
       },
