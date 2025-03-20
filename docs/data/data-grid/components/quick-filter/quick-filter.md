@@ -70,7 +70,7 @@ The quick filter is uncontrolled by default and can be toggled via the trigger. 
 
 ### Expand quick filter via keyboard
 
-The demo below shows how to control the quick filter state using the `expanded` and `onExpandedChange` props to support expanding the quick filter via keyboard. Try pressing <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows)+<kbd class="key">Shift</kbd>+<kbd class="key">F</kbd>.
+The demo below shows how to control the quick filter state using the `expanded` and `onExpandedChange` props to support expanding the quick filter via keyboard. Try pressing <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows)+<kbd class="key">Shift</kbd>+<kbd class="key">P</kbd>.
 
 {{"demo": "GridControlledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
 

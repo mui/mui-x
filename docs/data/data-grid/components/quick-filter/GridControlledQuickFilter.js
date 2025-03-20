@@ -45,7 +45,7 @@ function CustomToolbar() {
 
   React.useEffect(() => {
     const handleKeyDown = (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'f') {
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'p') {
         setExpanded(true);
       }
     };
