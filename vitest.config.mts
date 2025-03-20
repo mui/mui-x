@@ -12,7 +12,7 @@ export default defineConfig({
       'docs/vitest.config.{jsdom,browser}.mts',
     ],
     coverage: {
-      provider: 'istanbul',
+      provider: 'v8',
       reporter: ['text', 'lcov'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
