@@ -57,6 +57,7 @@ export default defineConfig({
     passWithNoTests: true,
     browser: {
       isolate: false,
+      fileParallelism: process.env.CI ? false : true,
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
@@ -64,23 +65,21 @@ export default defineConfig({
     // Disable isolation to speed up the tests.
     isolate: false,
     ...(process.env.CI && {
-      maxWorkers: 3,
-      minWorkers: 1,
       // Important to avoid timeouts on CI.
-      // fileParallelism: false,
+      fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
       testTimeout: 30000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      // poolOptions: {
-      //   forks: {
-      //     singleFork: true,
-      //   },
-      //   threads: {
-      //     singleThread: true,
-      //   },
-      // },
+      poolOptions: {
+        forks: {
+          singleFork: true,
+        },
+        threads: {
+          singleThread: true,
+        },
+      },
     }),
     exclude: [
       '**/*.spec.{js,ts,tsx}',
