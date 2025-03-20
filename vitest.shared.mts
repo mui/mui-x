@@ -64,6 +64,10 @@ export default defineConfig({
     // Disable isolation to speed up the tests.
     isolate: false,
     ...(process.env.CI && {
+      maxWorkers: 3,
+      minWorkers: 1,
+      // Important to avoid timeouts on CI.
+      // fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
       testTimeout: 30000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
