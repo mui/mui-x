@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
@@ -84,20 +84,18 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
-    it('should keep the focus on the switch after toggling a column', () => {
-      render(
+    it('should keep the focus on the switch after toggling a column', async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
       const button = screen.getByRole('button', { name: 'Columns' });
-      act(() => button.focus());
-      fireEvent.click(button);
+      await user.click(button);
 
       const column: HTMLElement = screen.getByRole('tooltip').querySelector('[name="id"]')!;
-      act(() => column.focus());
-      fireEvent.click(column);
+      await user.click(column);
 
       expect(column).toHaveFocus();
     });

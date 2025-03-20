@@ -596,7 +596,7 @@ describe('<DataGrid /> - Row selection', () => {
       const selectAllCell = document.querySelector<HTMLElement>(
         '[role="columnheader"][data-field="__check__"] input',
       )!;
-      await act(() => selectAllCell.focus());
+      await act(async () => selectAllCell.focus());
 
       await user.keyboard('[Space]');
 
