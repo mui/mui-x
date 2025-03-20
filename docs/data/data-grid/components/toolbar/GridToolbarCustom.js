@@ -71,8 +71,8 @@ function CustomToolbar() {
             />
             <div
               className={clsx(
-                'flex transition-all duration-300 ease-in-out',
-                state.expanded ? 'w-48' : 'w-0 overflow-clip',
+                'flex overflow-clip transition-all duration-300 ease-in-out',
+                state.expanded ? 'w-48' : 'w-0',
               )}
             >
               <QuickFilterControl

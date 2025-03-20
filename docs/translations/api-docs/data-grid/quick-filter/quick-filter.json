@@ -3,7 +3,7 @@
   "propDescriptions": {
     "className": { "description": "Override or extend the styles applied to the component." },
     "debounceMs": { "description": "The debounce time in milliseconds." },
-    "defaultExpanded": { "description": "The initial expanded state of the quick filter control." },
+    "defaultExpanded": { "description": "The default expanded state of the quick filter control." },
     "expanded": { "description": "The expanded state of the quick filter control." },
     "formatter": {
       "description": "Function responsible for formatting values of quick filter in a string when the model is modified",
