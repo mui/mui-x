@@ -138,7 +138,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const svgPoint = getSVGPoint(element, event);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
-      isXAxis = xIndex !== null && xIndex !== -1;
+      isXAxis = xIndex >= 0;
 
       dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
 

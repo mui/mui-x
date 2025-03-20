@@ -391,6 +391,11 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
   domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  /**
+   * If `true`, the tooltip with `trigger='axis'` will get values from this axis.
+   * The default behavior is deduced from the series using the axis.
+   */
+  triggerTooltip?: boolean;
 };
 
 export type PolarAxisConfig<

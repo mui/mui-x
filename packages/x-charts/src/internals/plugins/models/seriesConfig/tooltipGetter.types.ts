@@ -4,9 +4,18 @@ import type {
   ChartSeriesDefaultized,
   ChartSeriesType,
 } from '../../../../models/seriesType/config';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { AxisId } from '../../../../models/axis';
 
-export type TooltipGetter<T extends ChartSeriesType> = (params: {
-  series: ChartSeriesDefaultized<T>;
+export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
+  series: ChartSeriesDefaultized<TSeriesType>;
   getColor: (dataIndex: number) => string;
-  identifier: ChartItemIdentifier<T> | null;
-}) => ItemTooltip<T> | null;
+  identifier: ChartItemIdentifier<TSeriesType> | null;
+}) => ItemTooltip<TSeriesType> | null;
+
+export type AxisTriggeringTooltipGetter<
+  TSeriesType extends ChartSeriesType,
+  Directions extends 'x' | 'y' | 'rotation' | 'radius' = 'x' | 'y',
+> = (
+  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>,
+) => { direction: Directions; axisId: AxisId | undefined }[];

@@ -35,45 +35,59 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
     return null;
   }
 
-  const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tooltipData;
-
-  const axis = axisDirection === 'x' ? xAxis : yAxis;
-
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
-        {axisValue != null && !axis.hideTooltip && (
-          <thead>
-            <ChartsTooltipRow className={classes.row}>
-              <ChartsTooltipCell colSpan={3} className={clsx(classes.cell, classes.axisValueCell)}>
-                <Typography>{axisFormattedValue}</Typography>
-              </ChartsTooltipCell>
-            </ChartsTooltipRow>
-          </thead>
-        )}
-
-        <tbody>
-          {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
-            if (formattedValue == null) {
-              return null;
-            }
+        {tooltipData.map(
+          ({ axisId, axisDirection, axisValue, axisFormattedValue, seriesItems }) => {
+            const axis = axisDirection === 'x' ? xAxis : yAxis;
             return (
-              <ChartsTooltipRow key={seriesId} className={classes.row}>
-                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                  {color && (
-                    <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+              <React.Fragment key={axisId}>
+                {axisValue != null && !axis.hideTooltip && (
+                  <thead>
+                    <ChartsTooltipRow className={classes.row}>
+                      <ChartsTooltipCell
+                        colSpan={3}
+                        className={clsx(classes.cell, classes.axisValueCell)}
+                      >
+                        <Typography>{axisFormattedValue}</Typography>
+                      </ChartsTooltipCell>
+                    </ChartsTooltipRow>
+                  </thead>
+                )}
+
+                <tbody>
+                  {seriesItems.map(
+                    ({ seriesId, color, formattedValue, formattedLabel, markType }) => {
+                      if (formattedValue == null) {
+                        return null;
+                      }
+                      return (
+                        <ChartsTooltipRow key={seriesId} className={classes.row}>
+                          <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                            {color && (
+                              <ChartsLabelMark
+                                type={markType}
+                                color={color}
+                                className={classes.mark}
+                              />
+                            )}
+                          </ChartsTooltipCell>
+                          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                            {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
+                          </ChartsTooltipCell>
+                          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                            <Typography>{formattedValue}</Typography>
+                          </ChartsTooltipCell>
+                        </ChartsTooltipRow>
+                      );
+                    },
                   )}
-                </ChartsTooltipCell>
-                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                  {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
-                </ChartsTooltipCell>
-                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
-                  <Typography>{formattedValue}</Typography>
-                </ChartsTooltipCell>
-              </ChartsTooltipRow>
+                </tbody>
+              </React.Fragment>
             );
-          })}
-        </tbody>
+          },
+        )}
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
   );
