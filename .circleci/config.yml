@@ -46,7 +46,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.17
+    - image: cimg/node:20.19
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -73,10 +73,6 @@ commands:
         description: The version of React to use.
 
     steps:
-      - run:
-          name: Set npm registry public signing keys
-          command: |
-            echo "export COREPACK_INTEGRITY_KEYS='$(curl https://registry.npmjs.org/-/npm/v1/keys | jq -c '{npm: .keys}')'" >> $BASH_ENV
       - when:
           condition: << parameters.browsers >>
           steps:

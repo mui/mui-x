@@ -95,13 +95,13 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onAccept,
           onClose,
           open: true,
-          value: values[0],
+          defaultValue: values[0],
           slotProps: { actionBar: { actions: ['cancel'] } },
           closeOnSelect: false,
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        setNewValue(values[1], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));

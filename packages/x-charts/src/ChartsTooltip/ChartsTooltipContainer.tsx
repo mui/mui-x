@@ -195,6 +195,8 @@ ChartsTooltipContainer.propTypes = {
   /**
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -202,6 +204,8 @@ ChartsTooltipContainer.propTypes = {
   }),
   /**
    * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({

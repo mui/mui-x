@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
@@ -15,8 +14,7 @@ import {
   RangePosition,
   useField,
   UseFieldInternalProps,
-  useFieldInternalPropsWithDefaults,
-  UseFieldResponse,
+  UseFieldReturnValue,
   useNullableFieldPrivateContext,
   useNullablePickerContext,
   usePickerPrivateContext,
@@ -152,28 +150,11 @@ export function useTextFieldProps<
     onChange: handleChange,
   };
 
-  const splittedProps = useSplitFieldProps(allProps, valueType);
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+  const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField({
     manager,
-    internalProps: splittedProps.internalProps,
+    props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  });
-
-  const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    typeof splittedProps.forwardedProps,
-    typeof internalPropsWithDefaults
-  >({
-    forwardedProps: splittedProps.forwardedProps,
-    internalProps: internalPropsWithDefaults,
-    valueManager: manager.internal_valueManager,
-    fieldValueManager: manager.internal_fieldValueManager,
-    validator: manager.validator,
-    valueType: manager.valueType,
-    // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-    getOpenPickerButtonAriaLabel: () => '',
-  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+  }) as unknown as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {

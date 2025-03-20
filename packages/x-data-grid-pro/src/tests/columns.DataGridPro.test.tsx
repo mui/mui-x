@@ -575,7 +575,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should work through the API', async () => {
       render(<Test rows={rows} columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
-      expect(getWidths()).to.deep.equal([155, 177]);
+      expect(getWidths()).to.deep.equal([152, 174]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -585,14 +585,14 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       await user.dblClick(separator);
       await waitFor(() => {
-        expect(getWidths()).to.deep.equal([100, 177]);
+        expect(getWidths()).to.deep.equal([100, 174]);
       });
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await waitFor(() => {
-        expect(getWidths()).to.deep.equal([155, 177]);
+        expect(getWidths()).to.deep.equal([152, 174]);
       });
     });
 
@@ -615,7 +615,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       await user.dblClick(separators[1]);
       await waitFor(() => {
-        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 64]);
+        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 63]);
       });
     });
 
@@ -633,20 +633,20 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [155, 177]);
+        await autosize({ includeHeaders: true }, [152, 174]);
       });
 
       it('.includeOutliers works', async () => {
-        await autosize({ includeOutliers: true }, [50, 144]);
+        await autosize({ includeOutliers: true }, [50, 141]);
       });
 
       it('.outliersFactor works', async () => {
-        await autosize({ outliersFactor: 40 }, [50, 144]);
+        await autosize({ outliersFactor: 40 }, [50, 141]);
       });
 
       it('.expand works', async () => {
         // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
-        await autosize({ expand: true }, [134, 148]);
+        await autosize({ expand: true }, [135, 147]);
       });
     });
   });

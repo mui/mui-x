@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer } from 'test/utils/pickers';
-import { useValueWithTimezone } from './useValueWithTimezone';
+import { useControlledValue } from './useControlledValue';
 import { singleItemValueManager } from '../utils/valueManagers';
 
 describe('useValueWithTimezone', () => {
@@ -21,10 +21,11 @@ describe('useValueWithTimezone', () => {
     const { expectedTimezone, ...other } = params;
 
     function TestComponent(props: typeof other) {
-      const { timezone } = useValueWithTimezone({
+      const { timezone } = useControlledValue({
+        name: 'test',
         ...props,
         valueManager: singleItemValueManager,
-        onChange: () => {},
+        onChange: undefined,
       });
 
       return <div data-testid="result">{timezone}</div>;

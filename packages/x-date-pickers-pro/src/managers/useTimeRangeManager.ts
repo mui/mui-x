@@ -46,19 +46,16 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
 }
 
 function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
-  return function useOpenPickerButtonAriaLabel() {
+  return function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
     const utils = useUtils();
     const translations = usePickerTranslations();
 
-    return React.useCallback(
-      (value: PickerRangeValue) => {
-        const formatKey =
-          (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+    return React.useMemo(() => {
+      const formatKey =
+        (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
 
-        return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
-      },
-      [translations, utils],
-    );
+      return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
+    }, [value, translations, utils]);
   };
 }
 

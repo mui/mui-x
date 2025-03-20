@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -77,15 +77,17 @@ describe('ChartsTooltip', () => {
         },
       });
 
-      let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      let firstRow = ['', 'S1', '4'];
-      let secondRow = ['', 'S2', '2'];
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
-        // Header
-        'A',
-        ...firstRow,
-        ...secondRow,
-      ]);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        const firstRow = ['', 'S1', '4'];
+        const secondRow = ['', 'S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
 
       // Trigger the tooltip
       await user.pointer({
@@ -96,15 +98,17 @@ describe('ChartsTooltip', () => {
         },
       });
 
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      firstRow = ['', 'S1', '1'];
-      secondRow = ['', 'S2', '1'];
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
-        // Header
-        'B',
-        ...firstRow,
-        ...secondRow,
-      ]);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        const firstRow = ['', 'S1', '1'];
+        const secondRow = ['', 'S2', '1'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
     });
 
     it('should show right values with horizontal layout on axis', async () => {
@@ -132,15 +136,17 @@ describe('ChartsTooltip', () => {
         },
       });
 
-      let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      let firstRow = ['', 'S1', '4'];
-      let secondRow = ['', 'S2', '2'];
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
-        // Header
-        'A',
-        ...firstRow,
-        ...secondRow,
-      ]);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        const firstRow = ['', 'S1', '4'];
+        const secondRow = ['', 'S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
 
       // Trigger the tooltip
       await user.pointer({
@@ -151,15 +157,17 @@ describe('ChartsTooltip', () => {
         },
       });
 
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      firstRow = ['', 'S1', '1'];
-      secondRow = ['', 'S2', '1'];
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
-        // Header
-        'B',
-        ...firstRow,
-        ...secondRow,
-      ]);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        const firstRow = ['', 'S1', '1'];
+        const secondRow = ['', 'S2', '1'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
     });
   });
 
@@ -185,16 +193,20 @@ describe('ChartsTooltip', () => {
         target: rectangles[0],
       });
 
-      let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+      });
 
       // Trigger the tooltip
       await user.pointer({
         target: rectangles[3],
       });
 
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+      });
     });
 
     it('should show right values with horizontal layout on item', async () => {
@@ -217,14 +229,20 @@ describe('ChartsTooltip', () => {
       await user.pointer({
         target: rectangles[0],
       });
-      let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+      });
 
       await user.pointer({
         target: rectangles[3],
       });
-      cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-      expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+      });
     });
   });
 });
