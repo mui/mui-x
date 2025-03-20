@@ -28,7 +28,7 @@ type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
-  YY: 'year',
+  YY: { sectionType: 'year', contentType: 'digit', maxLength: 2 },
   YYYY: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
