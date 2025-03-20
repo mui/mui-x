@@ -64,7 +64,7 @@ Below are some ways the Quick Filter component can be used.
 
 ### Default expanded state
 
-The quick filter is uncontrolled by default and can be toggled via the trigger. The `defaultExpanded` prop can be used to set the initial expanded state.
+The quick filter is uncontrolled by default and can be toggled via the trigger. The `defaultExpanded` prop can be used to set the default expanded state.
 
 {{"demo": "GridUncontrolledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
 

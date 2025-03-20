@@ -32,21 +32,25 @@ export type QuickFilterTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
  */
 const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps>(
   function QuickFilterTrigger(props, ref) {
-    const { render, className, ...other } = props;
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const { state, onExpandedChange, triggerRef } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(triggerRef, ref);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onExpandedChange(!state.expanded);
+      onClick?.(event);
+    };
 
     const element = useGridComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {
         ...rootProps.slotProps?.baseButton,
-        onClick: () => onExpandedChange(!state.expanded),
         className: resolvedClassName,
-        'aria-hidden': state.expanded ? 'true' : undefined,
         ...other,
+        onClick: handleClick,
         ref: handleRef,
       },
       state,

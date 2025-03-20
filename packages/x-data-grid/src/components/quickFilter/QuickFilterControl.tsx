@@ -32,7 +32,7 @@ export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'clas
  */
 const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>(
   function QuickFilterControl(props, ref) {
-    const { render, className, ...other } = props;
+    const { render, className, slotProps, onKeyDown, onChange, ...other } = props;
     const rootProps = useGridRootProps();
     const { state, controlRef, onValueChange, onExpandedChange, clearValue } =
       useQuickFilterContext();
@@ -48,7 +48,7 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
         }
       }
 
-      props.onKeyDown?.(event);
+      onKeyDown?.(event);
     };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -56,7 +56,12 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
         onExpandedChange(false);
       }
 
-      props.slotProps?.htmlInput?.onBlur?.(event);
+      slotProps?.htmlInput?.onBlur?.(event);
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      onValueChange(event);
+      onChange?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -68,17 +73,17 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
           htmlInput: {
             role: 'searchbox',
             'aria-hidden': !state.expanded ? 'true' : undefined,
-            tabIndex: state.expanded ? undefined : -1,
-            ...props.slotProps?.htmlInput,
+            disabled: !state.expanded,
+            ...slotProps?.htmlInput,
             onBlur: handleBlur,
           },
-          ...props.slotProps,
+          ...slotProps,
         },
         value: state.value,
         className: resolvedClassName,
-        onChange: onValueChange,
-        onKeyDown: handleKeyDown,
         ...other,
+        onChange: handleChange,
+        onKeyDown: handleKeyDown,
         ref: handleRef,
       },
       state,

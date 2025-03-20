@@ -32,7 +32,7 @@ export type QuickFilterProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'class
    */
   debounceMs?: number;
   /**
-   * The initial expanded state of the quick filter control.
+   * The default expanded state of the quick filter control.
    * @default false
    */
   defaultExpanded?: boolean;
@@ -91,7 +91,6 @@ function QuickFilter(props: QuickFilterProps) {
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(quickFilterValues ?? []));
   const [internalExpanded, setInternalExpanded] = React.useState(defaultExpanded);
-  // Use the controlled value if provided, otherwise use the internal state
   const expandedValue = expanded ?? internalExpanded;
   const state = React.useMemo(
     () => ({
@@ -173,7 +172,7 @@ function QuickFilter(props: QuickFilterProps) {
     [setQuickFilterValueDebounced],
   );
 
-  const handleClear = React.useCallback(() => {
+  const handleClearValue = React.useCallback(() => {
     setValue('');
     apiRef.current.setQuickFilterValues([]);
     controlRef.current?.focus();
@@ -184,11 +183,11 @@ function QuickFilter(props: QuickFilterProps) {
       controlRef,
       triggerRef,
       state,
-      clearValue: handleClear,
+      clearValue: handleClearValue,
       onValueChange: handleValueChange,
       onExpandedChange: handleExpandedChange,
     }),
-    [state, handleValueChange, handleClear, handleExpandedChange],
+    [state, handleValueChange, handleClearValue, handleExpandedChange],
   );
 
   useEnhancedEffect(() => {
@@ -228,7 +227,7 @@ QuickFilter.propTypes = {
    */
   debounceMs: PropTypes.number,
   /**
-   * The initial expanded state of the quick filter control.
+   * The default expanded state of the quick filter control.
    * @default false
    */
   defaultExpanded: PropTypes.bool,
