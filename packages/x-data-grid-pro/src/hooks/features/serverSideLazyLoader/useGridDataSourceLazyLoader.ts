@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
@@ -103,15 +104,23 @@ export const useGridDataSourceLazyLoader = (
       const paginationModel = gridPaginationModelSelector(privateApiRef);
 
       const start = params.start - (params.start % paginationModel.pageSize);
-      const end = Math.min(
-        params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
-        paginationRowCountRef.current - 1,
-      );
+      const end =
+        params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1;
+
+      if (loadingTrigger.current === LoadingTrigger.SCROLL_END) {
+        return {
+          ...params,
+          start,
+          end,
+        };
+      }
 
       return {
         ...params,
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        ...adjustStartEnd({ start, end }, lastReplacedIndexes.current),
+        ...adjustStartEnd(
+          { start, end: Math.min(end, paginationRowCountRef.current - 1) },
+          lastReplacedIndexes.current,
+        ),
       };
     },
     [privateApiRef, paginationRowCountRef],
