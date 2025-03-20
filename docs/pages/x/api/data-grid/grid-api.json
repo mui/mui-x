@@ -470,10 +470,6 @@
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true
     },
-    "unstable_replaceRowsWithSkeleton": {
-      "type": { "description": "(firstRowToReplace: number, skeletonRows: number) =&gt; void" },
-      "required": true
-    },
     "unstable_setColumnVirtualization": {
       "type": { "description": "(enabled: boolean) =&gt; void" },
       "required": true

@@ -95,12 +95,6 @@ export interface GridRowApi {
    * @param {GridRowModel[]} newRows The new rows.
    */
   unstable_replaceRows: (firstRowToReplace: number, newRows: GridRowModel[]) => void;
-  /**
-   * Replace a set of rows with skeleton rows.
-   * @param {number} firstRowToReplace The index of the first row to be replaced.
-   * @param {number} skeletonRows The number of skeleton rows to be replaced.
-   */
-  unstable_replaceRowsWithSkeleton: (firstRowToReplace: number, skeletonRows: number) => void;
 }
 
 export interface GridRowProApi {

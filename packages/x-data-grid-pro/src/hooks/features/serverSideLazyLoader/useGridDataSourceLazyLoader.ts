@@ -13,6 +13,7 @@ import {
   gridPaginationModelSelector,
   gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
+  gridPaginationRowCountSelector,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -22,12 +23,14 @@ import {
   useGridRegisterStrategyProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
+  gridGetRowsParamsSelector,
 } from '@mui/x-data-grid/internals';
 import { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
+import useLazyRef from '@mui/utils/useLazyRef';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -73,6 +76,12 @@ export const useGridDataSourceLazyLoader = (
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
+  const paginationRowCountRef = useLazyRef(() => gridPaginationRowCountSelector(privateApiRef));
+
+  const lastReplacedIndexes = React.useRef({
+    start: 0,
+    end: 0,
+  });
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -93,13 +102,19 @@ export const useGridDataSourceLazyLoader = (
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
 
+      // Calculate the standard page-aligned range
+      let start = params.start - (params.start % paginationModel.pageSize);
+      let end = Math.min(
+        params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+        paginationRowCountRef.current - 1,
+      );
+
       return {
         ...params,
-        start: params.start - (params.start % paginationModel.pageSize),
-        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+        ...adjustStartEnd({ start, end }, lastReplacedIndexes.current),
       };
     },
-    [privateApiRef],
+    [privateApiRef, lastReplacedIndexes],
   );
 
   const resetGrid = React.useCallback(() => {
@@ -244,7 +259,14 @@ export const useGridDataSourceLazyLoader = (
 
         privateApiRef.current.unstable_replaceRows(startingIndex, response.rows);
       }
-
+      lastReplacedIndexes.current = {
+        start: fetchParams.start as number,
+        end: fetchParams.end,
+      };
+      console.log('handleDataUpdate', {
+        start: fetchParams.start,
+        end: fetchParams.end,
+      });
       rowsStale.current = false;
 
       if (loadingTrigger.current === null) {
@@ -263,15 +285,19 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, updateLoadingTrigger, addSkeletonRows],
   );
 
-  const handleRowCountChange = React.useCallback(() => {
-    if (rowsStale.current || loadingTrigger.current === null) {
-      return;
-    }
+  const handleRowCountChange: GridEventListener<'rowCountChange'> = React.useCallback(
+    (newCount) => {
+      paginationRowCountRef.current = newCount;
+      if (rowsStale.current || loadingTrigger.current === null) {
+        return;
+      }
 
-    updateLoadingTrigger(privateApiRef.current.state.pagination.rowCount);
-    addSkeletonRows();
-    privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
-  }, [privateApiRef, updateLoadingTrigger, addSkeletonRows]);
+      updateLoadingTrigger(newCount);
+      addSkeletonRows();
+      privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+    },
+    [privateApiRef, updateLoadingTrigger, addSkeletonRows],
+  );
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
     (newScrollPosition) => {
@@ -353,7 +379,23 @@ export const useGridDataSourceLazyLoader = (
       if (skeletonRowsSection) {
         getRowsParams.start = skeletonRowsSection.firstRowIndex;
         getRowsParams.end = skeletonRowsSection.lastRowIndex;
-        fetchRows(adjustRowParams(getRowsParams));
+        const adjustedGetRowsParams = adjustRowParams(getRowsParams);
+        const startIndex =
+          typeof adjustedGetRowsParams.start === 'string'
+            ? Math.max(filteredSortedRowIds.indexOf(adjustedGetRowsParams.start), 0)
+            : adjustedGetRowsParams.start;
+        if (
+          lastReplacedIndexes.current &&
+          lastReplacedIndexes.current.start === startIndex &&
+          lastReplacedIndexes.current.end === adjustedGetRowsParams.end
+        ) {
+          return;
+        }
+        lastReplacedIndexes.current = {
+          start: startIndex,
+          end: adjustedGetRowsParams.end,
+        };
+        fetchRows(adjustedGetRowsParams);
         return;
       }
 
@@ -363,9 +405,34 @@ export const useGridDataSourceLazyLoader = (
         typeof adjustedGetRowsParams.start === 'string'
           ? Math.max(filteredSortedRowIds.indexOf(adjustedGetRowsParams.start), 0)
           : adjustedGetRowsParams.start;
-      const skeletonRowsCount = adjustedGetRowsParams.end - startIndex + 1;
 
-      privateApiRef.current.unstable_replaceRowsWithSkeleton(startIndex, skeletonRowsCount);
+      const fetchParams = {
+        ...gridGetRowsParamsSelector(privateApiRef),
+        ...privateApiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
+        ...adjustedGetRowsParams,
+      };
+
+      if (privateApiRef.current.getCacheData(fetchParams)) {
+        // Early return if the data is cached
+        return;
+      }
+
+      if (
+        lastReplacedIndexes.current &&
+        lastReplacedIndexes.current.start === startIndex &&
+        lastReplacedIndexes.current.end === adjustedGetRowsParams.end
+      ) {
+        return;
+      }
+
+      lastReplacedIndexes.current = {
+        start: startIndex,
+        end: adjustedGetRowsParams.end,
+      };
+
+      // TODO: Change the rows being loaded to skeleton rows
+      // Challenge: Pending pages get cancelled when other requests follow them
+      // due to which the some stale skeleton rows might be there in the Data Grid
       fetchRows(adjustedGetRowsParams);
     },
     [privateApiRef, adjustRowParams, fetchRows],
@@ -470,4 +537,103 @@ export const useGridDataSourceLazyLoader = (
   React.useEffect(() => {
     setStrategyAvailability();
   }, [setStrategyAvailability]);
+};
+
+const adjustStartEnd = (
+  indexesToFetch: { start: number; end: number },
+  fetchedIndexes?: { start: number; end: number },
+) => {
+  if (!fetchedIndexes) {
+    return indexesToFetch;
+  }
+
+  const { start, end } = indexesToFetch;
+  const { start: lastStart, end: lastEnd } = fetchedIndexes;
+
+  if (start === lastStart) {
+    if (lastEnd === 0 || end === lastEnd) {
+      // 1: (start = 0, end = 99), lastReplacedIndexes = (start = 0, end = 0) => fetch (0, 99)
+      // 2: (start = 0, end = 99), lastReplacedIndexes = (start = 0, end = 99) => fetch nothing
+      return {
+        start, // 0
+        end, // 99
+      };
+    }
+
+    if (end > lastEnd + 1) {
+      // (start = 0, end = 199), lastReplacedIndexes = (start = 0, end = 99) => fetch (100, 199)
+      return {
+        start: lastEnd + 1, // 100
+        end, // 199
+      };
+    }
+
+    if (end < lastEnd) {
+      // (start = 100, end = 199), lastReplacedIndexes = (start = 100, end = 299) => skip fetching
+      return {
+        start: lastStart, // 100
+        end: lastEnd, // 99
+      };
+    }
+  }
+
+  if (start < lastStart) {
+    if (end < start) {
+      // (start = 0, end = 99), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 99)
+      return {
+        start, // 0
+        end, // 99
+      };
+    }
+
+    if (end === lastEnd) {
+      // 4: (start = 0, end = 199), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 99)
+      return {
+        start, // 0
+        end: lastStart - 1, // 99
+      };
+    }
+
+    if (end > lastEnd) {
+      // (start = 0, end = 299), lastReplacedIndexes = (start = 100, end = 199) => fetch (0, 299)
+      // TODO: Should skip fetching already fetched range, see how to handle it
+      // Range 1: (start = 0, end = 99)
+      // Range 2: (start = 200, end = 299)
+      return {
+        start, // 0
+        end, // 299
+      };
+    }
+
+    if (end < lastEnd) {
+      // 10: (start = 0, end = 199), lastReplacedIndexes = (start = 100, end = 299) => fetch (0, 99)
+      return {
+        start, // 0
+        end, // 99
+      };
+    }
+  }
+
+  if (start > lastStart) {
+    if (end <= lastEnd) {
+      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 199) => fetch nothing
+      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 299) => fetch nothing
+      return {
+        start: lastStart,
+        end: lastEnd,
+      };
+    }
+
+    if (end > lastEnd) {
+      // (start = 100, end = 199), lastReplacedIndexes = (start = 0, end = 99) => fetch (100, 199)
+      return {
+        start: Math.max(lastEnd + 1, start),
+        end,
+      };
+    }
+  }
+
+  console.log({ start, end }, { lastStart, lastEnd });
+
+  throw new Error('Invalid fetch params');
 };
