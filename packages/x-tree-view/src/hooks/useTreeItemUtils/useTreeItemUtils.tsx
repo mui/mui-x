@@ -21,7 +21,10 @@ import {
 } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { selectorIsItemDisabled } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemSelected,
+  selectorIsMultiSelectEnabled,
+} from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 import {
   selectorGetTreeItemError,
   selectorIsItemLoading,
@@ -89,16 +92,14 @@ export const useTreeItemUtils = <
   itemId: string;
   children?: React.ReactNode;
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
-  const {
-    instance,
-    label,
-    store,
-    selection: { multiSelect },
-    publicAPI,
-  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
+  const { instance, label, store, publicAPI } = useTreeViewContext<
+    TSignatures,
+    TOptionalSignatures
+  >();
 
   const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
   const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
+  const isMultiSelectEnabled = useSelector(store, selectorIsMultiSelectEnabled);
 
   const loading = useSelector(store, (state) =>
     isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
@@ -141,7 +142,7 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
@@ -159,7 +160,7 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     if (multiple) {
       if (event.shiftKey) {
@@ -174,13 +175,13 @@ export const useTreeItemUtils = <
 
   const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
-    if (multiSelect && hasShift) {
+    if (isMultiSelectEnabled && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
       instance.setItemSelection({
         event,
         itemId,
-        keepExistingSelection: multiSelect,
+        keepExistingSelection: isMultiSelectEnabled,
         shouldBeSelected: event.target.checked,
       });
     }

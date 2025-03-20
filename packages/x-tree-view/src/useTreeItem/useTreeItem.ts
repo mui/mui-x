@@ -33,6 +33,10 @@ import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeVie
 import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { selectorItemExpansionTrigger } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import {
+  selectorIsCheckboxSelectionEnabled,
+  selectorIsItemSelectionEnabled,
+} from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -42,8 +46,6 @@ export const useTreeItem = <
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
-    items: { onItemClick },
-    selection: { disableSelection, checkboxSelection },
     label: labelContext,
     instance,
     publicAPI,
@@ -74,6 +76,8 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useSelector(store, selectorTreeViewId);
+  const isSelectionEnabledForItem = useSelector(store, selectorIsItemSelectionEnabled);
+  const isCheckboxSelectionEnabled = useSelector(store, selectorIsCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useSelector(
     store,
@@ -159,7 +163,7 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      onItemClick(event, itemId);
+      instance.handleItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
@@ -168,7 +172,7 @@ export const useTreeItem = <
         interactions.handleExpansion(event);
       }
 
-      if (!checkboxSelection) {
+      if (!isCheckboxSelectionEnabled) {
         interactions.handleSelection(event);
       }
     };
@@ -212,7 +216,7 @@ export const useTreeItem = <
     if (status.selected) {
       // - each selected node has aria-selected set to true.
       ariaSelected = true;
-    } else if (disableSelection || status.disabled) {
+    } else if (!isSelectionEnabledForItem) {
       // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
       ariaSelected = undefined;
     } else {
