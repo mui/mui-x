@@ -73,12 +73,12 @@ commands:
       - run:
           name: Install fnm
           command: |
+            apt install curl
+            apt install unzip
             curl -fsSL https://fnm.vercel.app/install | bash
       - run:
           name: Install Node.js
           command: |
-            apt install curl
-            apt install unzip
             fnm install 23
             fnm use 23
       - when:
