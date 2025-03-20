@@ -67,9 +67,10 @@ type PieArcAnimatedProps = Pick<
   | 'innerRadius'
   | 'outerRadius'
   | 'skipAnimation'
->;
+> & { ref?: React.Ref<SVGPathElement> };
 
 type PieArcInterpolatedProps = Pick<PieArcAnimatedProps, 'startAngle' | 'endAngle'>;
+
 function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
   const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
   const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
@@ -82,12 +83,10 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   };
 }
 
-/** Animates the pie arc using a `path` element.
+/** Animates a pie slice using a `path` element.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
-export function useAnimatePieArc(
-  props: PieArcAnimatedProps & { ref?: React.RefObject<SVGPathElement> },
-) {
+export function useAnimatePieArc(props: PieArcAnimatedProps) {
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
     {
