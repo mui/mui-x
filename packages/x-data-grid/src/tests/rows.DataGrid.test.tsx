@@ -754,13 +754,14 @@ describe('<DataGrid /> - Rows', () => {
       it('should measure rows while scrolling', async () => {
         const columnHeaderHeight = 50;
         const border = 1;
+        const cellHeight = columnHeaderHeight + border * 2;
         render(
           <TestCase
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 52 + border * 2}
+            height={cellHeight * 2}
           />,
         );
         const virtualScroller = grid('virtualScroller')!;
@@ -768,14 +769,11 @@ describe('<DataGrid /> - Rows', () => {
         await waitFor(() => {
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
         });
-        // Scroll to measure the 2nd cell
-        await act(async () => virtualScroller.scrollTo({ top: 101, behavior: 'instant' }));
 
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
-        });
+        // It calculates the entire height of the scrollbar whenever the scroll event happens
+        // https://stackblitz.com/edit/react-kejzfzfx?file=Demo.tsx%3AL26
         // Scroll to measure all cells
-        await act(async () => virtualScroller.scrollTo({ top: 10e6, behavior: 'instant' }));
+        await act(async () => virtualScroller.scrollTo({ top: 1, behavior: 'instant' }));
         await waitFor(() =>
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101),
         );
