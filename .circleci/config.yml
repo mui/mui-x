@@ -82,6 +82,9 @@ commands:
           command: |
             cat /root/.bashrc
             source /root/.bashrc
+            echo $PATH
+            echo $FNM_PATH
+            ls /root/.local/share/fnm
             fnm install 23
             fnm use 23
       - when:
