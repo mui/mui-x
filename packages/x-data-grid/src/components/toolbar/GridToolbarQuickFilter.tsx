@@ -135,9 +135,9 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                   <GridQuickFilterTrigger
                     className={classes.trigger}
                     {...triggerProps}
-                    disabled={state.expanded}
                     ownerState={currentOwnerState}
                     color="default"
+                    disabled={state.expanded}
                   >
                     <rootProps.slots.quickFilterIcon fontSize="small" />
                   </GridQuickFilterTrigger>

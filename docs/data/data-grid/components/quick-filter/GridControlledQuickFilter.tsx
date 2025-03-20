@@ -72,6 +72,7 @@ function CustomToolbar() {
                 {...triggerProps}
                 ownerState={{ expanded }}
                 color="default"
+                disabled={expanded}
               >
                 <SearchIcon fontSize="small" />
               </StyledToolbarButton>
