@@ -3,7 +3,7 @@ import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/mode
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
-  UsePickerViewsProps,
+  UsePickerProps,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
   PickerFieldUISlotsFromContext,
@@ -54,7 +54,7 @@ export interface UseMobileRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
 > extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.

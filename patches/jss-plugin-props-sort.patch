@@ -1,0 +1,21 @@
+diff --git a/dist/jss-plugin-props-sort.esm.js b/dist/jss-plugin-props-sort.esm.mjs
+similarity index 100%
+rename from dist/jss-plugin-props-sort.esm.js
+rename to dist/jss-plugin-props-sort.esm.mjs
+diff --git a/package.json b/package.json
+index 2959dac001a1f5c8e2d1b8d676c824110d2d4714..de7f41db5e82d113a8d9f22981117150d480df4a 100644
+--- a/package.json
++++ b/package.json
+@@ -23,6 +23,12 @@
+     "src",
+     "!*.test.*"
+   ],
++  "exports": {
++    ".": {
++      "import": "./dist/jss-plugin-props-sort.esm.mjs",
++      "require": "./dist/jss-plugin-props-sort.cjs.js"
++    }
++  },
+   "keywords": [
+     "cssinjs",
+     "css-in-js",

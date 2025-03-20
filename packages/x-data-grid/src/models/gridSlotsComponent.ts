@@ -76,6 +76,11 @@ export interface GridBaseSlots {
    */
   baseTooltip: React.JSXElementConstructor<GridSlotProps['baseTooltip']>;
   /**
+   * The custom Pagination component used in the grid.
+   * @default Pagination
+   */
+  basePagination: React.JSXElementConstructor<GridSlotProps['basePagination']>;
+  /**
    * The custom Popper component used in the grid.
    * @default Popper
    */
@@ -154,8 +159,7 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   footerRowCount: React.JSXElementConstructor<GridSlotProps['footerRowCount']>;
   /**
-   * Toolbar component rendered inside the Header component.
-   * @default GridToolbar
+   * Toolbar component rendered in the grid header.
    */
   toolbar: React.JSXElementConstructor<GridSlotProps['toolbar']>;
   /**

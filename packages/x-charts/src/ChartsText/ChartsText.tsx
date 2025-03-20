@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
   extends Omit<
@@ -24,14 +25,17 @@ function ChartsText(props: ChartsTextProps) {
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
+  const isHydrated = useIsHydrated();
+
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
-    [style, text],
+    () => getWordsByLines({ style, needsComputation: isHydrated && text.includes('\n'), text }),
+    [style, text, isHydrated],
   );
 
   let startDy: number;
   switch (dominantBaseline) {
     case 'hanging':
+    case 'text-before-edge':
       startDy = 0;
       break;
     case 'central':
@@ -42,19 +46,10 @@ function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  const transforms: string[] = [];
-  // if (scaleToFit) {
-  //   const lineWidth = wordsByLines[0].width;
-  //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
-  // }
-  if (angle) {
-    transforms.push(`rotate(${angle}, ${x}, ${y})`);
-  }
-
   return (
     <text
       {...textProps}
-      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
+      transform={angle ? `rotate(${angle}, ${x}, ${y})` : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}

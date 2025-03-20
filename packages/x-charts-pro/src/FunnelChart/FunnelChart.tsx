@@ -24,7 +24,16 @@ import { CategoryAxis } from './categoryAxis.types';
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel'>,
-      'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset' | 'yAxis' | 'xAxis'
+      | 'series'
+      | 'plugins'
+      | 'zAxis'
+      | 'zoom'
+      | 'onZoomChange'
+      | 'dataset'
+      | 'yAxis'
+      | 'xAxis'
+      | 'rotationAxis'
+      | 'radiusAxis'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,

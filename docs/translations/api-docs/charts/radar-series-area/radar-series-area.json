@@ -1,0 +1,9 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "seriesId": {
+      "description": "The id of the series to display. If undefined all series are displayed."
+    }
+  },
+  "classDescriptions": {}
+}

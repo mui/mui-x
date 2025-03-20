@@ -45,7 +45,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
       fireEvent.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -76,7 +76,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
@@ -91,7 +91,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      const button = screen.getByRole('button', { name: 'Select columns' });
+      const button = screen.getByRole('button', { name: 'Columns' });
       act(() => button.focus());
       fireEvent.click(button);
 
@@ -138,7 +138,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByText('Columns'));
+      fireEvent.click(screen.getByLabelText('Columns'));
 
       const searchInput = document.querySelector('input[type="search"]')!;
       fireEvent.change(searchInput, { target: { value: 'test' } });

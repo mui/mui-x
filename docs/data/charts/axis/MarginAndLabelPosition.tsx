@@ -31,7 +31,7 @@ export default function MarginAndLabelPosition() {
                 ? value.split('').join('\n')
                 : usAirportPassengers.find((item) => item.code === value)!.fullName,
             label: 'airports',
-            height: fixMargin ? 85 : undefined,
+            height: fixMargin ? 75 : undefined,
           },
         ]}
         // Other props

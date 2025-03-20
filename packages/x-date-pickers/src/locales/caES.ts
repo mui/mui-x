@@ -41,6 +41,7 @@ const caESPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Seleccionar data i hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +59,12 @@ const caESPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Setmana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Tria la data, la data triada és ${formattedDate}` : 'Tria la data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Tria l'hora, l'hora triada és ${formattedTime}` : "Tria l'hora",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Netega el valor',
 
   // Table labels

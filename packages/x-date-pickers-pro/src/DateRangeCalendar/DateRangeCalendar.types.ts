@@ -9,7 +9,7 @@ import {
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/DateCalendar';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/PickersDay';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,

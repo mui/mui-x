@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { ALL_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartContainerProPropsReturnValue<
   TSeries extends ChartSeriesType,
@@ -30,7 +30,7 @@ export const useChartContainerProProps = <
   const { initialZoom, zoomData, onZoomChange, plugins, apiRef, ...baseProps } =
     props as ChartContainerProProps<TSeries, AllPluginSignatures>;
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps(
+  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
     ref,
   );
@@ -41,7 +41,7 @@ export const useChartContainerProProps = <
     zoomData,
     onZoomChange,
     apiRef,
-    plugins: plugins ?? ALL_PLUGINS,
+    plugins: plugins ?? DEFAULT_PLUGINS,
   } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
 
   return {

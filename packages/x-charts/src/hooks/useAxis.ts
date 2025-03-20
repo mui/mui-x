@@ -4,6 +4,11 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import {
+  selectorChartRadiusAxis,
+  selectorChartRotationAxis,
+  UseChartPolarAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { AxisId } from '../models/axis';
@@ -68,4 +73,42 @@ export function useYAxis(axisId?: AxisId) {
   const id = axisId ?? yAxisIds[0];
 
   return yAxis[id];
+}
+
+export function useRotationAxes() {
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
+    store,
+    selectorChartRotationAxis,
+  );
+
+  return { rotationAxis, rotationAxisIds };
+}
+
+export function useRadiusAxes() {
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+
+  return { radiusAxis, radiusAxisIds };
+}
+
+export function useRotationAxis(identifier?: number | string) {
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
+    store,
+    selectorChartRotationAxis,
+  );
+
+  const id = typeof identifier === 'string' ? identifier : rotationAxisIds[identifier ?? 0];
+
+  return rotationAxis[id];
+}
+
+export function useRadiusAxis(identifier?: number | string) {
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+
+  const id = typeof identifier === 'string' ? identifier : radiusAxisIds[identifier ?? 0];
+
+  return radiusAxis[id];
 }

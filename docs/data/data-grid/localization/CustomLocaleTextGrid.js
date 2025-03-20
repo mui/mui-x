@@ -14,11 +14,7 @@ export default function CustomLocaleTextGrid() {
       <DataGrid
         {...data}
         localeText={{
-          toolbarDensity: 'Size',
-          toolbarDensityLabel: 'Size',
-          toolbarDensityCompact: 'Small',
-          toolbarDensityStandard: 'Medium',
-          toolbarDensityComfortable: 'Large',
+          toolbarQuickFilterPlaceholder: 'Search commodities',
         }}
         showToolbar
       />

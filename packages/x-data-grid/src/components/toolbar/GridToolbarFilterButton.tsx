@@ -9,6 +9,7 @@ import {
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
 import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -22,6 +23,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -71,6 +73,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
+    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -169,7 +173,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             }
             buttonProps.onPointerUp?.(event);
           }}
-          ref={ref}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>

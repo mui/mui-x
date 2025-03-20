@@ -1,0 +1,15 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "hidden": { "description": "Toggles visibility of the tabs allowing view switching." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "timeIcon": { "description": "Time tab icon." }
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "tab": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tab element" }
+  }
+}

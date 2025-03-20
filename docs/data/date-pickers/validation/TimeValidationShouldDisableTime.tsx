@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker, TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const shouldDisableTime: TimePickerProps['shouldDisableTime'] = (value, view) =>
@@ -16,7 +17,12 @@ export default function TimeValidationShouldDisableTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={['TimePicker', 'DateTimePicker', 'DateTimeRangePicker']}
+        components={[
+          'TimePicker',
+          'DateTimePicker',
+          'TimeRangePicker',
+          'DateTimeRangePicker',
+        ]}
       >
         <DemoItem label="TimePicker">
           <TimePicker
@@ -27,6 +33,12 @@ export default function TimeValidationShouldDisableTime() {
         <DemoItem label="DateTimePicker">
           <DateTimePicker
             defaultValue={defaultValue}
+            shouldDisableTime={shouldDisableTime}
+          />
+        </DemoItem>
+        <DemoItem label="TimeRangePicker" component="TimeRangePicker">
+          <TimeRangePicker
+            defaultValue={[defaultValue, defaultValue.add(30, 'minutes')]}
             shouldDisableTime={shouldDisableTime}
           />
         </DemoItem>

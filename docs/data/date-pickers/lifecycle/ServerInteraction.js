@@ -53,13 +53,13 @@ function debounce(func, wait = 500) {
 }
 
 function DateFieldWithAccept(props) {
-  const { value: valueProp, onAccept, onChange, ...other } = props;
+  const { value: valueProp, defaultValue, onAccept, onChange, ...other } = props;
 
   const [value, setValue] = useControlled({
     name: 'FieldAcceptValue',
     state: 'value',
     controlled: valueProp,
-    default: null,
+    default: defaultValue,
   });
 
   // Debounced function needs to be memoized to keep the same timeout between each render.

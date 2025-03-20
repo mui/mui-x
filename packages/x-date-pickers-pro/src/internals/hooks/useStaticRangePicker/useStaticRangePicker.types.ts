@@ -1,6 +1,6 @@
 import {
   BasePickerProps,
-  UsePickerParams,
+  UsePickerParameters,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   DateOrTimeViewWithMeridiem,
@@ -43,7 +43,7 @@ export interface UseStaticRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerRangeValue, TView, TExternalProps>,
+    UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;

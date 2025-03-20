@@ -38,7 +38,7 @@ const ToolbarRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
-  padding: vars.spacing(0.5),
+  padding: vars.spacing(0.75),
   borderBottom: `1px solid ${vars.colors.border.base}`,
 });
 

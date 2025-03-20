@@ -103,7 +103,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
   });
 
@@ -112,7 +112,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 

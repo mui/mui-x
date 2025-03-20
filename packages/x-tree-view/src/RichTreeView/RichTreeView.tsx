@@ -128,9 +128,9 @@ RichTreeView.propTypes = {
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
       getParentId: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
       setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
@@ -234,7 +234,7 @@ RichTreeView.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -246,7 +246,7 @@ RichTreeView.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -265,14 +265,14 @@ RichTreeView.propTypes = {
   onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

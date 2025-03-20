@@ -65,11 +65,6 @@ export default function ServerSideRowGroupingFullDataGrid() {
           apiRef={apiRef}
           initialState={initialState}
           showToolbar
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
           groupingColDef={{
             width: 250,
           }}

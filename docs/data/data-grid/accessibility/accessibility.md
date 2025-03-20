@@ -19,28 +19,13 @@ The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid
 
 ## Density
 
-You can change the density of the rows and the column header.
-
-### Density selection from the toolbar
-
-To enable the density selection from the toolbar, you can do one of the following:
-
-1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
-2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-
-The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
-
-{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
-
-To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
-
-### Set the density programmatically
-
 The Data Grid exposes the `density` prop which supports the following values:
 
 - `standard` (default)
 - `compact`
 - `comfortable`
+
+### Set the density programmatically
 
 You can set the density programmatically in one of the following ways:
 
@@ -70,9 +55,11 @@ You can set the density programmatically in one of the following ways:
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
+You can create a custom toolbar with a density selector that allows users to change the density of the Data Grid, as shown in the demo below.
 
-{{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
+{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
+
+See the [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example of how to create a settings menu that stores user preferences in local storage.
 
 ## Keyboard navigation
 

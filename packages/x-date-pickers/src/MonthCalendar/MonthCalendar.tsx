@@ -18,7 +18,7 @@ import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -126,7 +126,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'MonthCalendar',
     timezone: timezoneProp,
     value: valueProp,

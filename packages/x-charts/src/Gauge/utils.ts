@@ -1,6 +1,5 @@
-function deg2rad(angle: number) {
-  return (Math.PI * angle) / 180;
-}
+import { deg2rad } from '../internals/angleConversion';
+
 function getPoint(angle: number): [number, number] {
   const radAngle = deg2rad(angle);
   return [Math.sin(radAngle), -Math.cos(radAngle)];

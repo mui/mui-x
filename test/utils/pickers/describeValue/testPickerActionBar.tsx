@@ -7,6 +7,7 @@ import {
   adapterToUse,
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
+  isPickerRangeType,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
@@ -28,7 +29,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     return;
   }
 
-  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+  const isRangeType = isPickerRangeType(pickerParams.type);
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
@@ -93,13 +94,13 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onAccept,
           onClose,
           open: true,
-          value: values[0],
+          defaultValue: values[0],
           slotProps: { actionBar: { actions: ['cancel'] } },
           closeOnSelect: false,
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        setNewValue(values[1], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));

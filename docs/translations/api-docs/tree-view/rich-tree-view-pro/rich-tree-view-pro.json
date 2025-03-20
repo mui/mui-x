@@ -75,7 +75,7 @@
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemIds": "The ids of the expanded items."
       }
     },
@@ -89,7 +89,7 @@
     "onItemExpansionToggle": {
       "description": "Callback fired when a Tree Item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
@@ -120,7 +120,7 @@
     "onItemSelectionToggle": {
       "description": "Callback fired when a Tree Item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
@@ -128,7 +128,7 @@
     "onSelectedItemsChange": {
       "description": "Callback fired when Tree Items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },

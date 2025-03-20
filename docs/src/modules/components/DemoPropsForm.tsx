@@ -385,7 +385,6 @@ export default function ChartDemoPropsForm<
               <FormControl key={propName} size="small">
                 <FormLabel>{title}</FormLabel>
                 <Select
-                  placeholder="Select a variant..."
                   value={resolvedValue || 'none'}
                   onChange={(event) =>
                     onPropsChange((latestProps) => ({

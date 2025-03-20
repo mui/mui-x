@@ -19,6 +19,7 @@ import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -196,7 +197,8 @@ const useAggregatedData = () => {
  */
 function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
 

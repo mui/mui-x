@@ -17,7 +17,6 @@ import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -27,8 +26,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
 
 function CustomToolbar() {
-  const [downloadMenuOpen, setDownloadMenuOpen] = React.useState(false);
-  const downloadMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
+  const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
+  const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <Toolbar>
@@ -52,20 +51,14 @@ function CustomToolbar() {
 
       <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
 
-      <Tooltip title="Print">
-        <ExportPrint render={<ToolbarButton />}>
-          <PrintIcon fontSize="small" />
-        </ExportPrint>
-      </Tooltip>
-
-      <Tooltip title="Download">
+      <Tooltip title="Export">
         <ToolbarButton
-          ref={downloadMenuTriggerRef}
+          ref={exportMenuTriggerRef}
           id="export-menu-trigger"
           aria-controls="export-menu"
           aria-haspopup="true"
-          aria-expanded={downloadMenuOpen ? 'true' : undefined}
-          onClick={() => setDownloadMenuOpen(true)}
+          aria-expanded={exportMenuOpen ? 'true' : undefined}
+          onClick={() => setExportMenuOpen(true)}
         >
           <FileDownloadIcon fontSize="small" />
         </ToolbarButton>
@@ -73,14 +66,17 @@ function CustomToolbar() {
 
       <Menu
         id="export-menu"
-        anchorEl={downloadMenuTriggerRef.current}
-        open={downloadMenuOpen}
-        onClose={() => setDownloadMenuOpen(false)}
+        anchorEl={exportMenuTriggerRef.current}
+        open={exportMenuOpen}
+        onClose={() => setExportMenuOpen(false)}
         MenuListProps={{
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <ExportCsv render={<MenuItem />} onClick={() => setDownloadMenuOpen(false)}>
+        <ExportPrint render={<MenuItem />} onClick={() => setExportMenuOpen(false)}>
+          Print
+        </ExportPrint>
+        <ExportCsv render={<MenuItem />} onClick={() => setExportMenuOpen(false)}>
           Download as CSV
         </ExportCsv>
         {/* Available to MUI X Premium users */}

@@ -300,7 +300,7 @@ All the date-related props are now strictly typed to only accept the date format
 (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
 
 :::info
-See [Date and time types](/x/react-date-pickers/quickstart/#date-and-time-types) for more details.
+See [Date value types](/x/react-date-pickers/quickstart/#date-value-types) for more details.
 :::
 
 ## Field components

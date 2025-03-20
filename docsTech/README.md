@@ -20,7 +20,7 @@ In each package, the most used folders are:
   - `hooks/features` defines logics for end-users: selection, filtering, editing, ...
 - `DataGrid[Pro|Premium]/useDataGrid[Pro|Premium]Component.tsx` is the file in which all the hooks are added to the grid
 - `colDef` contains the default values for each [column type](https://mui.com/x/react-data-grid/column-definition/#column-types): rendering cell, filter operators, sorting method, ...
-- `models` define the TypeScript interfaces of the gird
+- `models` define the TypeScript interfaces of the grid
 
 ## How does it work?
 

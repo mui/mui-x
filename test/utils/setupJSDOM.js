@@ -17,4 +17,7 @@ window.getComputedStyle = function getComputedStyleMock() {
   };
 };
 
+// JSDOM has no support for pointer capture
+window.SVGElement.prototype.hasPointerCapture = () => false;
+
 module.exports = { ...coreExports, mochaHooks };

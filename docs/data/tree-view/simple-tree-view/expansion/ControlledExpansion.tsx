@@ -9,7 +9,7 @@ export default function ControlledExpansion() {
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
 
   const handleExpandedItemsChange = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemIds: string[],
   ) => {
     setExpandedItems(itemIds);
