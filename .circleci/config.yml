@@ -150,7 +150,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm vitest --project "jsdom/*" --reporter=hanging-process
+          command: pnpm vitest --project "jsdom/*" --reporter hanging-process --reporter default
 
   test_browser:
     <<: *default-job
@@ -176,7 +176,7 @@ jobs:
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm vitest --project "browser/*" --coverage --reporter=hanging-process
+                command: pnpm vitest --project "browser/*" --coverage --reporter hanging-process --reporter default
             - run:
                 name: Check coverage generated
                 command: |
