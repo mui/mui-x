@@ -70,6 +70,15 @@ commands:
         description: The version of React to use.
 
     steps:
+      - run:
+          name: Install fnm
+          command: |
+            curl -fsSL https://fnm.vercel.app/install | bash
+      - run:
+          name: Install Node.js
+          command: |
+            fnm install 23
+            fnm use 23
       - when:
           condition: << parameters.browsers >>
           steps:
