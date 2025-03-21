@@ -39,7 +39,7 @@ Same changes as in `@mui/x-data-grid-pro@7.28.1`.
 
 #### `@mui/x-tree-view-pro@7.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-- [TreeView] Allow reordering item to bottom (@jyash97) (#17065)
+- [TreeView] Allow moving an item after the last children of some other item (@jyash97) (#17065)
 
 ### Docs
 
