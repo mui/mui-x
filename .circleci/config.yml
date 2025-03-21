@@ -69,7 +69,6 @@ commands:
         default: << pipeline.parameters.react-version >>
         description: The version of React to use.
 
-    shell
     steps:
       - run:
           name: Install fnm
@@ -79,20 +78,17 @@ commands:
             apt install unzip
             curl -fsSL https://fnm.vercel.app/install >> install-fnm
             chmod +x ./install-fnm
-            ./install-fnm --skip-shell --install-dir /usr/local/bin
+            ./install-fnm --skip-shell
 
             echo '
             export FNM_PATH="/root/.local/share/fnm"
             export PATH="$FNM_PATH:$PATH"
             eval "`fnm env`"
-            echo $PATH
-            ' >> /root/.bashrc
+            ' >> $BASH_ENV
 
       - run:
           name: Install Node.js
           command: |
-            cat /root/.bashrc
-            echo $PATH
             fnm install 23
             fnm use 23
       - when:
@@ -446,7 +442,6 @@ workflows:
           <<: *default-context
           name: test_regressions_react_18
           react-version: ^18
-          shell: /bin/bash -eo pipefail --login
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
