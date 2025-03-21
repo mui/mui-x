@@ -16,7 +16,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
     <PivotPanelTrigger
       render={(triggerProps, state) => (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
-          <ToolbarButton {...triggerProps} color={state.enabled ? 'primary' : 'default'}>
+          <ToolbarButton {...triggerProps} color={state.active ? 'primary' : 'default'}>
             <rootProps.slots.pivotIcon fontSize="small" />
           </ToolbarButton>
         </rootProps.slots.baseTooltip>
