@@ -32,6 +32,12 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
+import { PickerRangeStep } from '../internals/hooks/useRangePickerStepNavigation';
+
+const STEPS: PickerRangeStep[] = [
+  { views: null, rangePosition: 'start' },
+  { views: null, rangePosition: 'end' },
+];
 
 const rendererInterceptor = function RendererInterceptor(
   props: PickerRendererInterceptorProps<PickerRangeValue, TimeViewWithMeridiem, any>,
@@ -152,6 +158,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     valueType: 'time',
     validator: validateTimeRange,
     rendererInterceptor,
+    steps: STEPS,
   });
 
   return renderPicker();

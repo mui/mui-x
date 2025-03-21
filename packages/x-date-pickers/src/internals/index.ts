@@ -106,6 +106,7 @@ export type {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
+export { useStepNavigation } from './hooks/useStepNavigation';
 export { useToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export type { PickerToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
@@ -162,9 +163,16 @@ export {
   isDatePickerView,
   mergeDateAndTime,
   formatMeridiem,
+  DATE_VIEWS,
 } from './utils/date-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
-export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
+export {
+  isTimeView,
+  isInternalTimeView,
+  resolveTimeFormat,
+  getMeridiem,
+  TIME_VIEWS,
+} from './utils/time-utils';
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,

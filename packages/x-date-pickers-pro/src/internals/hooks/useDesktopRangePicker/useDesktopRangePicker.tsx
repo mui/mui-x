@@ -18,6 +18,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
+import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -32,6 +33,7 @@ export const useDesktopRangePicker = <
   >,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -41,6 +43,11 @@ export const useDesktopRangePicker = <
   const fieldType = getRangeFieldType(slots.field);
   const viewContainerRole = fieldType === 'single-input' ? 'dialog' : 'tooltip';
   const rangePositionResponse = useRangePosition(props);
+
+  const getStepNavigation = useRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerRangeValue,
@@ -53,23 +60,8 @@ export const useDesktopRangePicker = <
     autoFocusView: viewContainerRole === 'dialog',
     viewContainerRole,
     localeText,
-    goToNextStep,
-    goToPreviousStep,
+    getStepNavigation,
   });
-
-  function goToNextStep() {
-    if (rangePositionResponse.rangePosition === 'start') {
-      rangePositionResponse.setRangePosition('end');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
-  }
-
-  function goToPreviousStep() {
-    if (rangePositionResponse.rangePosition === 'end') {
-      rangePositionResponse.setRangePosition('start');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
-  }
 
   const Field = slots.field;
 

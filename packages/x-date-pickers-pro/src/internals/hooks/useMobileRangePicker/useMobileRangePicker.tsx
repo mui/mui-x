@@ -22,6 +22,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
+import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -36,6 +37,7 @@ export const useMobileRangePicker = <
   >,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -61,18 +63,18 @@ export const useMobileRangePicker = <
     goToPreviousStep,
   });
 
+  const stepNavigation = useRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+    contextValue: providerProps.contextValue,
+  });
+
   function goToNextStep() {
-    if (rangePositionResponse.rangePosition === 'start') {
-      rangePositionResponse.setRangePosition('end');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
+    stepNavigation.goToNextStep();
   }
 
   function goToPreviousStep() {
-    if (rangePositionResponse.rangePosition === 'end') {
-      rangePositionResponse.setRangePosition('start');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
+    stepNavigation.goToPreviousStep();
   }
 
   const labelId = providerProps.privateContextValue.labelId;
