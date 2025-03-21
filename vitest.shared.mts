@@ -66,8 +66,6 @@ export default defineConfig({
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
-      // Use the threads pool to speed up the tests on CI.
-      pool: 'vmThreads',
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
@@ -81,9 +79,6 @@ export default defineConfig({
         },
         threads: {
           singleThread: true,
-        },
-        vmThreads: {
-          memoryLimit: 3584,
         },
       },
     }),
