@@ -543,7 +543,6 @@ describe('<DataGridPro /> - Cell editing', () => {
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-
         expect(() =>
           act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' })),
         ).toErrorDev(
