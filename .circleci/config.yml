@@ -41,7 +41,6 @@ default-job: &default-job
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_VERSION: << parameters.react-version >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
-  shell: /bin/bash -eo pipefail --login
   working_directory: /tmp/mui
   docker:
     - image: cimg/node:20.19
@@ -447,6 +446,7 @@ workflows:
           <<: *default-context
           name: test_regressions_react_18
           react-version: ^18
+          shell: /bin/bash -eo pipefail --login
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
