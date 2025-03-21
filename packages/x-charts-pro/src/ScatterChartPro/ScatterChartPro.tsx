@@ -328,6 +328,7 @@ ScatterChartPro.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      triggerTooltip: PropTypes.bool,
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
@@ -416,6 +417,7 @@ ScatterChartPro.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      triggerTooltip: PropTypes.bool,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
       zoom: PropTypes.oneOfType([

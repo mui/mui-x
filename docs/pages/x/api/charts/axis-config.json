@@ -55,6 +55,7 @@
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
+    "triggerTooltip": { "type": { "description": "boolean" } },
     "valueFormatter": {
       "type": {
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"

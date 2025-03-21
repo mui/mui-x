@@ -8,7 +8,10 @@ import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxisIndex,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
@@ -68,8 +71,8 @@ function MarkElement(props: MarkElementProps) {
     seriesId: id,
   });
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   const cx = useSpringValue(x, { immediate: skipAnimation });
   const cy = useSpringValue(y, { immediate: skipAnimation });
@@ -82,7 +85,7 @@ function MarkElement(props: MarkElementProps) {
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
     isFaded,
     color,
   };

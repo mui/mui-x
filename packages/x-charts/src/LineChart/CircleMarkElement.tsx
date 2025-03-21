@@ -7,7 +7,10 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxisIndex,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
@@ -54,8 +57,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     seriesId: id,
   });
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   const cx = useSpringValue(x, { immediate: skipAnimation });
   const cy = useSpringValue(y, { immediate: skipAnimation });
@@ -68,7 +71,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
     isFaded,
     color,
   };
