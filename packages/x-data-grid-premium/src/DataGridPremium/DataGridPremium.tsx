@@ -371,7 +371,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    pivoting: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
