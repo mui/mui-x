@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.28.1
+
+_Mar 21, 2025_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@jyash97, @nusr.
+
+Following are all team members who have contributed to this release:
+@arminmeh, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.28.1`
+
+- [DataGrid] Fix error while editing rows with custom id (@arminmeh) (#17050)
+
+#### `@mui/x-data-grid-pro@7.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.28.1`, plus:
+
+- [DataGridPro] Fix header select checkbox state with `checkboxSelectionVisibleOnly` and `paginationMode="server"` (@arminmeh) (#17032)
+
+#### `@mui/x-data-grid-premium@7.28.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.28.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view-pro@7.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [TreeView] Allow reordering item to bottom (@jyash97) (#17065)
+
+### Docs
+
+- [docs] Fix Data Grid advanced list view demo (#17066) @KenanYusuf
+- [docs] Fix custom detail panel toggle state update (@nusr) (#17018)
+
 ## 7.28.0
 
 _Mar 17, 2025_
