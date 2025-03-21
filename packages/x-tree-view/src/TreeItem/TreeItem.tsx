@@ -11,7 +11,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
+import { TreeItemProps } from './TreeItem.types';
 import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
 import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
