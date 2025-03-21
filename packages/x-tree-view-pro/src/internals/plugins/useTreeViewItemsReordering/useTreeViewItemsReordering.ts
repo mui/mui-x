@@ -57,6 +57,9 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       const targetItemIndex = selectorItemIndex(store.value, targetItemMeta.id);
       const draggedItemMeta = selectorItemMeta(store.value, currentReorder.draggedItemId)!;
       const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
+      const isTargetLastSibling =
+        targetItemIndex ===
+        selectorItemOrderedChildrenIds(store.value, targetItemMeta.parentId).length - 1;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -97,16 +100,17 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
               ? targetItemIndex - 1
               : targetItemIndex,
         },
-        'reorder-below': targetItemMeta.expandable
-          ? null
-          : {
-              parentId: targetItemMeta.parentId,
-              index:
-                targetItemMeta.parentId === draggedItemMeta.parentId &&
-                targetItemIndex > draggedItemIndex
-                  ? targetItemIndex
-                  : targetItemIndex + 1,
-            },
+        'reorder-below':
+          !targetItemMeta.expandable || isTargetLastSibling
+            ? {
+                parentId: targetItemMeta.parentId,
+                index:
+                  targetItemMeta.parentId === draggedItemMeta.parentId &&
+                  targetItemIndex > draggedItemIndex
+                    ? targetItemIndex
+                    : targetItemIndex + 1,
+              }
+            : null,
         'move-to-parent':
           targetItemMeta.parentId == null
             ? null
