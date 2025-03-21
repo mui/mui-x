@@ -84,12 +84,14 @@ commands:
             export FNM_PATH="/root/.local/share/fnm"
             export PATH="$FNM_PATH:$PATH"
             eval "`fnm env`"
+            echo $PATH
             ' >> /root/.bashrc
 
       - run:
           name: Install Node.js
           command: |
             cat /root/.bashrc
+            echo $PATH
             fnm install 23
             fnm use 23
       - when:
