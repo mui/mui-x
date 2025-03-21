@@ -7,7 +7,6 @@ import { expect } from 'chai';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   interpolate,
-  NumberArray,
 } from '@mui/x-charts-vendor/d3-interpolate';
 
 describe('d3-interpolate', () => {
