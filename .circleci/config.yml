@@ -82,9 +82,17 @@ commands:
           command: |
             cat /root/.bashrc
             source /root/.bashrc
+            FNM_PATH="/root/.local/share/fnm"
+            if [ -d "$FNM_PATH" ]; then
+              echo exists
+            else
+              echo not_exists
+            fi
             echo $PATH
             echo $FNM_PATH
             ls /root/.local/share/fnm
+            export PATH="$FNM_PATH:$PATH"
+            eval "`fnm env`"
             fnm install 23
             fnm use 23
       - when:
