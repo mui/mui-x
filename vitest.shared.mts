@@ -63,7 +63,11 @@ export default defineConfig({
     },
     // Disable isolation to speed up the tests.
     isolate: false,
+    // Performance improvements for the tests.
+    // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
+      // Use the threads pool to speed up the tests on CI.
+      pool: 'threads',
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.

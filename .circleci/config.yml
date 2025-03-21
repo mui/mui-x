@@ -150,8 +150,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          no_output_timeout: 30m
-          command: pnpm vitest --project "jsdom/*" --reporter dot
+          command: pnpm vitest --project "jsdom/*"
 
   test_browser:
     <<: *default-job
@@ -170,16 +169,14 @@ jobs:
           steps:
             - run:
                 name: Test Browser
-                no_output_timeout: 30m
-                command: pnpm vitest --project "browser/*" --reporter dot
+                command: pnpm vitest --project "browser/*"
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                no_output_timeout: 30m
-                command: pnpm vitest --project "browser/*" --reporter dot --coverage
+                command: pnpm vitest --project "browser/*" --coverage
             - run:
                 name: Check coverage generated
                 command: |
