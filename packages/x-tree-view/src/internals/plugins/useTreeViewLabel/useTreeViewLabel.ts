@@ -40,12 +40,11 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
   };
 
   useEnhancedEffect(() => {
-    const isItemEditable = params.isItemEditable;
     store.update((prevState) => ({
       ...prevState,
       label: {
         ...prevState.label,
-        isItemEditable: typeof isItemEditable === 'boolean' ? () => isItemEditable : isItemEditable,
+        isItemEditable: params.isItemEditable,
       },
     }));
   }, [store, params.isItemEditable]);
@@ -68,10 +67,9 @@ useTreeViewLabel.getDefaultizedParams = ({ params }) => ({
   isItemEditable: params.isItemEditable ?? false,
 });
 
-useTreeViewLabel.getInitialState = ({ isItemEditable }) => ({
+useTreeViewLabel.getInitialState = (params) => ({
   label: {
-    isItemEditable:
-      typeof isItemEditable === 'boolean' ? () => isItemEditable as boolean : isItemEditable,
+    isItemEditable: params.isItemEditable,
     editedItemId: null,
   },
 });

@@ -6,6 +6,8 @@ import {
   UseTreeViewItemsSignature,
   isTargetInDescendants,
   useSelector,
+  selectorIsAnItemEdited,
+  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
   UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
@@ -23,8 +25,10 @@ import {
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const { instance, store } =
-    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
+  const { instance, store } = useTreeViewContext<
+    [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature],
+    [UseTreeViewLabelSignature]
+  >();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
@@ -32,6 +36,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
   const draggedItemProperties = useSelector(store, selectorDraggedItemProperties, itemId);
   const canItemBeReordered = useSelector(store, selectorCanItemBeReordered);
   const isValidTarget = useSelector(store, selectorIsItemValidReorderingTarget, itemId);
+  const isEditing = useSelector(store, selectorIsAnItemEdited);
 
   return {
     propsEnhancers: {
@@ -40,7 +45,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
-        if (!canItemBeReordered) {
+        if (!canItemBeReordered || isEditing) {
           return {};
         }
 
@@ -74,6 +79,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
         const handleRootDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
+
           if (event.defaultMuiPrevented) {
             return;
           }
