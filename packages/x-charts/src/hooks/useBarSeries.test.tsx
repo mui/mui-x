@@ -1,8 +1,8 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useBarSeries, useBarSeriesContext } from './useBarSeries';
-import { BarSeriesType } from '../models';
+import { BarSeriesType, DefaultizedBarSeriesType } from '../models';
 import { BarChart } from '../BarChart';
 
 const mockSeries: BarSeriesType[] = [
@@ -61,9 +61,12 @@ describe('useBarSeries', () => {
       `Make sure that they exist and their series are using the "bar" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useBarSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedBarSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useBarSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useBarSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });
