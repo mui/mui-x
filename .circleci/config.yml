@@ -67,7 +67,7 @@ commands:
 
     steps:
       - run:
-          name: Install fnm
+          name: Install Node.js
           command: |
             apt update
             apt install curl
@@ -82,9 +82,6 @@ commands:
             ' >> $BASH_ENV
             rm ./install-fnm
 
-      - run:
-          name: Install Node.js
-          command: |
             fnm install 23
             fnm use 23
 

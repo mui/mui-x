@@ -1,7 +1,7 @@
 import url from 'url';
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
 import { replaceCodePlugin } from 'vite-plugin-replace';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
@@ -12,8 +12,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@mui/docs': path.resolve(currentDirectory, '../../node_modules/@mui/monorepo/packages/mui-docs/src'),
-      'docsx': path.resolve(currentDirectory, '../../docs'),
+      '@mui/docs': path.resolve(
+        currentDirectory,
+        '../../node_modules/@mui/monorepo/packages/mui-docs/src',
+      ),
+      docsx: path.resolve(currentDirectory, '../../docs'),
     },
   },
   worker: {
@@ -43,4 +46,4 @@ export default defineConfig({
       },
     },
   ],
-})
+});

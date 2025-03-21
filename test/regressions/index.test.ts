@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
-import { version } from '@mui/material'
+import { version } from '@mui/material';
 
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {

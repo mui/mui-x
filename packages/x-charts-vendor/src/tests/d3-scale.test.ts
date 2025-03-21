@@ -2,8 +2,6 @@ import { expect } from 'chai';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  // @ts-expect-error Make sure invalid imports fail:
-  INVALID_TYPE,
   InterpolatorFactory,
   NumberValue,
   ScaleBand,

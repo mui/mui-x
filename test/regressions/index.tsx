@@ -83,10 +83,14 @@ const tests: Test[] = [];
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
 const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true });
-console.log(requireDocs)
+console.log(requireDocs);
 
 Object.keys(requireDocs).forEach((path: string) => {
-  const [name, ...suiteArray] = path.replace('../../docs/data/', '').replace('.js', '').split('/').reverse();
+  const [name, ...suiteArray] = path
+    .replace('../../docs/data/', '')
+    .replace('.js', '')
+    .split('/')
+    .reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
@@ -107,7 +111,7 @@ Object.keys(requireDocs).forEach((path: string) => {
 
 // @ts-ignore
 const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
-console.log(requireRegressions)
+console.log(requireRegressions);
 Object.keys(requireRegressions).forEach((path: string) => {
   const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
