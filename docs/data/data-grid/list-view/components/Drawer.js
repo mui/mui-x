@@ -70,14 +70,12 @@ export function Drawer(props) {
       {...other}
       anchor={anchor}
       container={container}
-      slotProps={{
-        paper: {
-          sx: {
-            boxSizing: 'border-box',
-            ...(isBottomDrawer
-              ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
-              : { width }),
-          },
+      PaperProps={{
+        sx: {
+          boxSizing: 'border-box',
+          ...(isBottomDrawer
+            ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
+            : { width }),
         },
       }}
       disableSwipeToOpen
