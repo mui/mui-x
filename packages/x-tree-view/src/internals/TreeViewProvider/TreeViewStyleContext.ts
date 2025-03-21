@@ -23,15 +23,19 @@ export interface TreeViewClasses {
   itemErrorIcon: string;
 }
 
+export interface TreeViewStyleContextValue {
+  classes: Partial<TreeViewClasses>;
+}
+
 /**
  * @ignore - internal component.
  */
-export const TreeViewClassesContext = React.createContext<Partial<TreeViewClasses>>({});
+export const TreeViewStyleContext = React.createContext<TreeViewStyleContextValue>({ classes: {} });
 
 if (process.env.NODE_ENV !== 'production') {
-  TreeViewClassesContext.displayName = 'TreeViewItemClassesContext';
+  TreeViewStyleContext.displayName = 'TreeViewStyleContext';
 }
 
-export const useTreeViewClassesContext = () => {
-  return React.useContext(TreeViewClassesContext);
+export const useTreeViewStyleContext = () => {
+  return React.useContext(TreeViewStyleContext);
 };

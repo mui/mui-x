@@ -11,7 +11,7 @@ import {
 import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
-import { TreeViewClasses } from './TreeViewClassesContext';
+import { TreeViewClasses } from './TreeViewStyleContext';
 
 export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,

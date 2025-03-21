@@ -18,7 +18,7 @@ import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
-import { useTreeViewClassesContext } from '../internals/TreeViewProvider/TreeViewClassesContext';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -183,7 +183,7 @@ export const TreeItemCheckbox = styled(
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
-  const classesFromTreeView = useTreeViewClassesContext();
+  const { classes: classesFromTreeView } = useTreeViewStyleContext();
 
   const slots = {
     root: ['root', classesFromTreeView.item],

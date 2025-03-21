@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewAnyPluginSignature } from '../models';
-import { TreeViewClassesContext } from './TreeViewClassesContext';
+import { TreeViewStyleContext } from './TreeViewStyleContext';
 
 const EMPTY_OBJECT = {};
 
@@ -16,11 +16,14 @@ export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginS
 ) {
   const { contextValue, classes = EMPTY_OBJECT, children } = props;
 
+  // TODO: Add the icons to this context and drop useTreeViewIcons
+  const styleContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <TreeViewContext.Provider value={contextValue}>
-      <TreeViewClassesContext.Provider value={classes}>
+      <TreeViewStyleContext.Provider value={styleContextValue}>
         {contextValue.wrapRoot({ children })}
-      </TreeViewClassesContext.Provider>
+      </TreeViewStyleContext.Provider>
     </TreeViewContext.Provider>
   );
 }
