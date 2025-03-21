@@ -1,5 +1,9 @@
-import { GridDataSourceCache, GridGetRowsParams } from '../../../models/gridDataSource';
-import { GridRowId } from '../../../models/gridRows';
+import type {
+  GridDataSourceCache,
+  GridGetRowsParams,
+  GridGetRowsResponse,
+} from '../../../models/gridDataSource';
+import type { GridRowId } from '../../../models/gridRows';
 
 export interface GridDataSourceApiBase {
   /**
@@ -21,4 +25,13 @@ export interface GridDataSourceApi {
    * The data source API.
    */
   dataSource: GridDataSourceApiBase;
+}
+
+export interface GridDataSourcePrivateApi {
+  /**
+   * The method to get the cached data.
+   * @param {GridGetRowsParams} params The parameters to get the cached data.
+   * @returns {GridGetRowsResponse | undefined} The cached data.
+   */
+  getCacheData: (params: GridGetRowsParams) => GridGetRowsResponse | undefined;
 }
