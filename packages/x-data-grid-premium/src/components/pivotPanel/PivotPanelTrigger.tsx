@@ -13,13 +13,13 @@ import {
 
 export interface PivotPanelState {
   /**
-   * If `true`, the filter panel is open.
+   * If `true`, the pivot panel is open.
    */
   open: boolean;
   /**
-   * If `true`, pivot is enabled.
+   * If `true`, pivot is active.
    */
-  enabled: boolean;
+  active: boolean;
 }
 
 export type PivotPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
@@ -53,8 +53,8 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
     const panelId = useId();
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridPivotPanelOpenSelector);
-    const enabled = useGridSelector(apiRef, gridPivotActiveSelector);
-    const state = { open, enabled };
+    const active = useGridSelector(apiRef, gridPivotActiveSelector);
+    const state = { open, active };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

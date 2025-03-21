@@ -17,7 +17,7 @@ function CustomToolbar() {
           render={(triggerProps, state) => (
             <ToolbarButton
               {...triggerProps}
-              color={state.enabled ? 'primary' : 'default'}
+              color={state.active ? 'primary' : 'default'}
             />
           )}
         >
