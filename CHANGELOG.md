@@ -33,7 +33,9 @@ Same changes as in `@mui/x-data-grid@7.28.1`, plus:
 
 #### `@mui/x-data-grid-premium@7.28.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.28.1`.
+Same changes as in `@mui/x-data-grid-pro@7.28.1`, plus:
+
+- [DataGridPremium] Update column state correctly when grouping mode is updated with one grouping column (@arminmeh) (#17074)
 
 ### Tree View
 
