@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useSvgRef } from '../hooks';
+import { useChartContext } from '../context/ChartProvider';
 
 type MousePosition = {
   x: number;
@@ -15,44 +15,29 @@ export type UseMouseTrackerReturnValue = null | MousePosition;
  * @deprecated We recommend using vanilla JS to let popper track mouse position.
  */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
-  const svgRef = useSvgRef();
+  const { instance } = useChartContext();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const controller = new AbortController();
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
-        setMousePosition(null);
-      }
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
-        height: event.height,
-        pointerType: event.pointerType as MousePosition['pointerType'],
-      });
-    };
-
-    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
-    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
-    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
+    // Drag event is triggered by mobile touch or mouse drag.
+    const positionOnDragHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        setMousePosition({
+          x: state.event.clientX,
+          y: state.event.clientY,
+          height: state.event.height,
+          pointerType: state.event.pointerType as MousePosition['pointerType'],
+        });
+      },
+    );
 
     return () => {
-      // Calling `.abort()` removes ALL event listeners
-      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
-      controller.abort();
+      positionOnDragHandler.cleanup();
     };
-  }, [svgRef]);
+  }, [instance]);
 
   return mousePosition;
 }
@@ -60,38 +45,40 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
 type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
 
 export function usePointerType(): null | PointerType {
-  const svgRef = useSvgRef();
+  const { instance } = useChartContext();
 
-  // Use a ref to avoid rerendering on every mousemove event.
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
+    const removePointerHandler = instance.addInteractionListener('dragEnd', (state) => {
+      // TODO: We can check and only close when it is not a tap with `!state.tap`
+      // This would allow users to click/tap on the chart to display the tooltip.
 
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
+      // Only close the tooltip on mobile, which doesn't trigger a hover event.
+      if (!state.hovering) {
         setPointerType(null);
       }
-    };
+    });
 
-    const handleEnter = (event: PointerEvent) => {
-      setPointerType({
-        height: event.height,
-        pointerType: event.pointerType as PointerType['pointerType'],
-      });
-    };
-
-    element.addEventListener('pointerenter', handleEnter);
-    element.addEventListener('pointerup', handleOut);
+    // Move is mouse, Drag is both mouse and touch.
+    const setPointerHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        // @ts-expect-error tap doesn't exist on move.
+        if (!state.first && !state.tap) {
+          setPointerType({
+            height: state.event.height,
+            pointerType: state.event.pointerType as PointerType['pointerType'],
+          });
+        }
+      },
+    );
 
     return () => {
-      element.removeEventListener('pointerenter', handleEnter);
-      element.removeEventListener('pointerup', handleOut);
+      removePointerHandler.cleanup();
+      setPointerHandler.cleanup();
     };
-  }, [svgRef]);
+  }, [instance]);
 
   return pointerType;
 }

@@ -162,57 +162,47 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseLeave = () => {
-      instance.cleanInteraction?.();
-      instance.clearHighlight?.();
-    };
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const closestPoint = getClosestPoint(event);
-
-      if (closestPoint === 'outside-chart') {
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
-        return;
       }
+    });
 
-      if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        instance.removeItemInteraction?.();
-        instance.clearHighlight?.();
-        return;
-      }
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        const closestPoint = getClosestPoint(state.event);
 
-      const { seriesId, dataIndex } = closestPoint;
+        if (closestPoint === 'outside-chart') {
+          instance.cleanInteraction?.();
+          instance.clearHighlight?.();
+          return;
+        }
 
-      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
-      instance.setHighlight?.({
-        seriesId,
-        dataIndex,
-      });
-    };
+        if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
+          instance.removeItemInteraction?.();
+          instance.clearHighlight?.();
+          return;
+        }
 
-    const handleMouseClick = (event: MouseEvent) => {
-      if (!onItemClick) {
-        return;
-      }
-      const closestPoint = getClosestPoint(event);
+        const { seriesId, dataIndex } = closestPoint;
+        instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+        instance.setHighlight?.({
+          seriesId,
+          dataIndex,
+        });
 
-      if (typeof closestPoint === 'string') {
-        // No point fond for any reason
-        return;
-      }
+        if ('tap' in state && state.tap && onItemClick) {
+          onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
+        }
+      },
+    );
 
-      const { seriesId, dataIndex } = closestPoint;
-      onItemClick(event, { type: 'scatter', seriesId, dataIndex });
-    };
-
-    element.addEventListener('pointerleave', handleMouseLeave);
-    element.addEventListener('pointermove', handleMouseMove);
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('pointerleave', handleMouseLeave);
-      element.removeEventListener('pointermove', handleMouseMove);
-      element.removeEventListener('click', handleMouseClick);
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 
