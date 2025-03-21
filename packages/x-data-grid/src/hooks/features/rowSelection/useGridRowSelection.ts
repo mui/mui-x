@@ -199,7 +199,11 @@ export const useGridRowSelection = (
         return false;
       }
 
-      if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
+      if (
+        propIsRowSelectable &&
+        !!apiRef.current.getRow(id) &&
+        !propIsRowSelectable(apiRef.current.getRowParams(id))
+      ) {
         return false;
       }
 
