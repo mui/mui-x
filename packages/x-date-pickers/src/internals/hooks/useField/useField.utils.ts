@@ -154,22 +154,13 @@ export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
 };
 
 /**
- * Remove the leading zeroes to a digit section value.
+ * Make sure the value of a digit section have the right amount of leading zeros.
  * E.g.: `03` => `3`
  * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
  */
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
-  let cleanValueStr = valueStr;
-
-  // Remove the leading zeros
-  cleanValueStr = Number(cleanValueStr).toString();
-
-  // Add enough leading zeros to fill the section
-  while (cleanValueStr.length < size) {
-    cleanValueStr = `0${cleanValueStr}`;
-  }
-
-  return cleanValueStr;
+  // Remove the leading zeros and then add back as many as needed.
+  return Number(valueStr).toString().padStart(size, '0');
 };
 
 export const cleanDigitSectionValue = (
