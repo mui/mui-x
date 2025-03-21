@@ -13,12 +13,10 @@ import {
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });
@@ -101,12 +99,10 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describe('slots: field', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });
@@ -128,12 +124,10 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describe('slots: textField', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });
