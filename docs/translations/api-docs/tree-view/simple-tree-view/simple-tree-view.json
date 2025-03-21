@@ -117,8 +117,7 @@
     "itemLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item&#39;s label element"
-    },
-    "itemLoadingIcon": { "description": "Styles applied to the item&#39;s loading icon element" }
+    }
   },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",

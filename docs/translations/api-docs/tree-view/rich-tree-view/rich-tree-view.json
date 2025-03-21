@@ -140,8 +140,7 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the item&#39;s label input element (visible only",
       "conditions": "editing is enabled)"
-    },
-    "itemLoadingIcon": { "description": "Styles applied to the item&#39;s loading icon element" }
+    }
   },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
