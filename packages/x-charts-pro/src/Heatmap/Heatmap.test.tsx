@@ -8,13 +8,10 @@ import { Heatmap } from './Heatmap';
 describe('<Heatmap /> - License', () => {
   const { render } = createRenderer();
 
-  beforeEach(() => {
+  it('should render watermark when the license is missing', async () => {
     Object.keys(sharedLicenseStatuses).forEach((key) => {
       delete sharedLicenseStatuses[key];
     });
-  });
-
-  it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() =>
