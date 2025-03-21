@@ -138,7 +138,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event,
             itemId,
             keepExistingSelection: isMultiSelectEnabled,
-            shouldBeSelected: isMultiSelectEnabled ? undefined : true,
+            shouldBeSelected: undefined,
           });
         }
         break;
