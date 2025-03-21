@@ -220,7 +220,7 @@ In the following example, the **Company** column is not groupable through the in
 
 {{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Complex grouping values
+## Using groupingValueGetter for complex grouping value
 
 The grouping value must be either a string, a number, `null`, or `undefined`.
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
@@ -249,7 +249,7 @@ The demo below illustrates this behavior—movies are grouped by **Cinematic Uni
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Expanding groups on first load
+## Group expansion
 
 By default, all groups are initially displayed collapsed.
 You can change this behavior by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
@@ -257,7 +257,8 @@ To expand the whole tree, set `defaultGroupingExpansionDepth = -1`.
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic. This prop is a callback that receives a node as an argument.
+Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic. 
+This prop is a callback that receives a node as an argument.
 When defined, this callback always takes priority over the `defaultGroupingExpansionDepth` prop.
 
 ```tsx
@@ -266,7 +267,7 @@ isGroupExpandedByDefault={
 }
 ```
 
-The example below uses this pattern to only expand the **20th Century Fox** group on first load:
+The example below uses this pattern to render the Grid with the **20th Century Fox** group expanded:
 
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -325,7 +326,7 @@ In the example below, sorting and filtering from the **Company** grouping column
 If you're dynamically switching the `leafField` or `mainGroupingCriteria`, sorting and filtering models will not be cleaned up automatically, and the sorting or filtering will not be reapplied.
 :::
 
-## Automatic parent and children selection
+## Automatic parent and child selection
 
 By default, selecting a parent row also selects all of its descendants.
 You can customize this behavior using the `rowSelectionPropagation` prop.
@@ -337,8 +338,6 @@ type GridRowSelectionPropagation = {
   parents?: boolean; // default: true
 };
 ```
-
-### Row selection propagation
 
 When `rowSelectionPropagation.descendants` is set to `true`:
 
@@ -363,7 +362,7 @@ Row selection propagation has some limitations:
 
 - If `props.disableMultipleRowSelection` is set to `true`, then row selection propagation won't apply.
 
-- Row selection propagation is a client-side feature and does not support [server-side data sources](/x/react-data-grid/server-side-data/).
+- Row selection propagation is a client-side feature and does not support [server-side data](/x/react-data-grid/server-side-data/).
 
 - If you're using the state setter method `apiRef.current.setRowSelectionModel()`, you must explicitly compute the selection model with the rows that have propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel()` and pass it as shown below:
 
@@ -411,7 +410,7 @@ const rows = apiRef.current.getRowGroupChildren({
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The `apiRef.current.getRowGroupChildren` method is not compatible with [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/) because not all rows may be available to retrieve in any given instance.
+The `apiRef.current.getRowGroupChildren()` method is not compatible with [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/) because not all rows may be available to retrieve in any given instance.
 :::
 
 ## Row group panel 🚧
