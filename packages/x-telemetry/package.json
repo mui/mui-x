@@ -38,7 +38,7 @@
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "ci-info": "^4.2.0",
     "conf": "^5.0.0",
-    "is-docker": "^2.2.1",
+    "is-docker": "^3.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
