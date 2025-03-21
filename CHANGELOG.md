@@ -37,7 +37,13 @@ Same changes as in `@mui/x-data-grid-pro@7.28.1`.
 
 ### Tree View
 
+#### `@mui/x-tree-view@7.28.1`
+
+Internal changes.
+
 #### `@mui/x-tree-view-pro@7.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.28.1`, plus:
 
 - [TreeView] Allow moving an item after the last children of some other item (@jyash97) (#17065)
 
