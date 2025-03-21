@@ -44,7 +44,6 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
       const currentReorder = selectorCurrentItemReordering(store.value);
-
       if (!currentReorder) {
         throw new Error('There is no ongoing reordering.');
       }
@@ -59,7 +58,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       const draggedItemMeta = selectorItemMeta(store.value, currentReorder.draggedItemId)!;
       const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
       const isTargetLastSibling =
-        targetItemIndex === selectorItemOrderedChildrenIds(store.value, null).length - 1;
+        targetItemIndex ===
+        selectorItemOrderedChildrenIds(store.value, targetItemMeta.parentId).length - 1;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -100,7 +100,6 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
               ? targetItemIndex - 1
               : targetItemIndex,
         },
-        // For the last element allow reordering to the bottom
         'reorder-below':
           !targetItemMeta.expandable || isTargetLastSibling
             ? {
