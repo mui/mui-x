@@ -107,7 +107,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   });
 
   return (
-    <TreeViewProvider value={contextValue} classes={classes}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />

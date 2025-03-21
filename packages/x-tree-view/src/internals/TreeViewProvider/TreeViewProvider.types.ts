@@ -32,7 +32,7 @@ export type TreeViewContextValue<
   };
 
 export interface TreeViewProviderProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  value: TreeViewContextValue<TSignatures>;
+  contextValue: TreeViewContextValue<TSignatures>;
   children: React.ReactNode;
   classes: Partial<TreeViewClasses> | undefined;
 }

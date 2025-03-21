@@ -7,19 +7,19 @@ import { TreeViewClassesContext } from './TreeViewClassesContext';
 const EMPTY_OBJECT = {};
 
 /**
- * Sets up the contexts for the underlying TreeItem components.
+ * Sets up the contexts for the underlying Tree Item components.
  *
  * @ignore - do not document.
  */
 export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
   props: TreeViewProviderProps<TSignatures>,
 ) {
-  const { value, classes = EMPTY_OBJECT, children } = props;
+  const { contextValue, classes = EMPTY_OBJECT, children } = props;
 
   return (
-    <TreeViewContext.Provider value={value}>
+    <TreeViewContext.Provider value={contextValue}>
       <TreeViewClassesContext.Provider value={classes}>
-        {value.wrapRoot({ children })}
+        {contextValue.wrapRoot({ children })}
       </TreeViewClassesContext.Provider>
     </TreeViewContext.Provider>
   );

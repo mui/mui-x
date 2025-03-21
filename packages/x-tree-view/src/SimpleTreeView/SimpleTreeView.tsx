@@ -102,7 +102,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   });
 
   return (
-    <TreeViewProvider value={contextValue} classes={classes}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps} />
     </TreeViewProvider>
   );

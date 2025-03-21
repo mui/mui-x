@@ -115,7 +115,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider value={contextValue} classes={classes}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>
