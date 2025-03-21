@@ -16,6 +16,7 @@ import {
   UseViewsOptions,
   PickerRangeValue,
   PickerValue,
+  useApplyDefaultValuesToTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { TimeClockSlots, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
@@ -127,13 +128,14 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
   name: string,
 ): UseTimeRangePickerDefaultizedProps<Props> {
   const utils = useUtils();
-
   const themeProps = useThemeProps({
     props,
     name,
   });
 
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(themeProps);
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+
   const { openTo, views: defaultViews } = applyDefaultViewProps<TimeView>({
     views: themeProps.views,
     openTo: themeProps.openTo,
@@ -166,6 +168,7 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
 
   return {
     ...themeProps,
+    ...validationProps,
     localeText,
     timeSteps,
     openTo,
@@ -173,8 +176,6 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     thresholdToRenderTimeInASingleColumn,
     views,
     ampm,
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
     slots: {
       tabs: TimeRangePickerTabs,
       toolbar: TimeRangePickerToolbar,

@@ -5,9 +5,10 @@ import { PickerManager } from '@mui/x-date-pickers/models';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
-  getTimeFieldInternalPropsDefaults,
+  useApplyDefaultValuesToTimeValidationProps,
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
@@ -35,10 +36,8 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
-        ...internalProps,
-        ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
-      }),
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToTimeRangeFieldInternalProps,
       internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator, ampm],
@@ -57,6 +56,32 @@ function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
       return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
     }, [value, translations, utils]);
   };
+}
+
+function useApplyDefaultValuesToTimeRangeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(internalProps);
+
+  const ampm = React.useMemo(
+    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, utils],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format:
+        internalProps.format ?? (ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h),
+    }),
+    [internalProps, validationProps, ampm, utils],
+  );
 }
 
 export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>

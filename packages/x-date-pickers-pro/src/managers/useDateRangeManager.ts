@@ -4,9 +4,10 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
-  getDateFieldInternalPropsDefaults,
+  useApplyDefaultValuesToDateValidationProps,
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
@@ -33,10 +34,8 @@ export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends b
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
-        ...internalProps,
-        ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
-      }),
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToDateRangeFieldInternalProps,
       internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
@@ -50,6 +49,26 @@ function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
   return React.useMemo(() => {
     return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
   }, [value, translations, utils]);
+}
+
+function useApplyDefaultValuesToDateRangeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToDateValidationProps(internalProps);
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format: internalProps.format ?? utils.formats.keyboardDate,
+    }),
+    [internalProps, validationProps, utils],
+  );
 }
 
 export interface UseDateRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
