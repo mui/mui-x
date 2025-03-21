@@ -58,7 +58,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       const targetItemIndex = selectorItemIndex(store.value, targetItemMeta.id);
       const draggedItemMeta = selectorItemMeta(store.value, currentReorder.draggedItemId)!;
       const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
-      const totalItems = selectorItemOrderedChildrenIds(store.value, null).length;
+      const isTargetLastSibling =
+        targetItemIndex === selectorItemOrderedChildrenIds(store.value, null).length - 1;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -101,7 +102,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         },
         // For the last element allow reordering to the bottom
         'reorder-below':
-          !targetItemMeta.expandable || targetItemIndex + 1 === totalItems
+          !targetItemMeta.expandable || isTargetLastSibling
             ? {
                 parentId: targetItemMeta.parentId,
                 index:
