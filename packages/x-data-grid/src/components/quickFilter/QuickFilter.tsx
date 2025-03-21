@@ -147,10 +147,10 @@ function QuickFilter(props: QuickFilterProps) {
       if (expandedValue) {
         // Ensures the focus does not interupt CSS transitions and animations on the control
         requestAnimationFrame(() => {
-          controlRef.current?.focus();
+          controlRef.current?.focus({ preventScroll: true });
         });
       } else {
-        triggerRef.current?.focus();
+        triggerRef.current?.focus({ preventScroll: true });
       }
       previousExpandedValue.current = expandedValue;
     }
