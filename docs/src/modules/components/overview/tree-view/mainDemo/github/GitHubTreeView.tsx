@@ -104,7 +104,7 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
         },
       },
     },
-    '&[data-focused][data-selected]': {
+    '&[data-focused]:not([data-selected])': {
       backgroundColor: alpha(theme.palette.grey[600], 0.3),
       '&:hover': {
         backgroundColor: alpha(theme.palette.grey[600], 0.4),
