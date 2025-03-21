@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  useTheme as useMaterialTheme,
-  useColorScheme as useMaterialColorScheme,
-  Experimental_CssVarsProvider as MaterialCssVarsProvider,
-} from '@mui/material/styles';
+import { useColorScheme as useMaterialColorScheme } from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -103,30 +99,30 @@ function JoyDatePicker(props) {
  * This component is for syncing the theme mode of this demo with the MUI docs mode.
  * You might not need this component in your project.
  */
-function SyncThemeMode({ mode }) {
+function SyncThemeMode() {
   const { setMode } = useColorScheme();
-  const { setMode: setMaterialMode } = useMaterialColorScheme();
+  const { mode, systemMode } = useMaterialColorScheme();
   React.useEffect(() => {
-    setMode(mode);
-    setMaterialMode(mode);
-  }, [mode, setMode, setMaterialMode]);
+    if (mode === 'system') {
+      setMode(systemMode);
+    } else if (mode) {
+      setMode(mode);
+    }
+  }, [mode, setMode, systemMode]);
   return null;
 }
 
 export default function JoyV6Field() {
-  const materialTheme = useMaterialTheme();
   return (
-    <MaterialCssVarsProvider>
-      <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-        <SyncThemeMode mode={materialTheme.palette.mode} />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker
-            slotProps={{
-              field: { clearable: true },
-            }}
-          />
-        </LocalizationProvider>
-      </CssVarsProvider>
-    </MaterialCssVarsProvider>
+    <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+      <SyncThemeMode />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <JoyDatePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
+      </LocalizationProvider>
+    </CssVarsProvider>
   );
 }

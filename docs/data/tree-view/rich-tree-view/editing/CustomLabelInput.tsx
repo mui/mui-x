@@ -15,14 +15,14 @@ import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
   borderRadius: theme.shape.borderRadius,
   border: 'none',
   padding: '0 2px',
   boxSizing: 'border-box',
   width: 100,
   '&:focus': {
-    outline: `1px solid ${theme.palette.primary.main}`,
+    outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
 }));
 
