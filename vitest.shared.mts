@@ -6,6 +6,7 @@ const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 export default defineConfig({
+  // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
     'process.env.VITEST': '"true"',
@@ -55,6 +56,10 @@ export default defineConfig({
     // Required for some tests that contain early returns.
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
+    env: {
+      NODE_ENV: 'test',
+      VITEST: 'true',
+    },
     browser: {
       isolate: false,
       provider: 'playwright',
