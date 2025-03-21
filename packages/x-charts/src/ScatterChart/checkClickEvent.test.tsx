@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -46,9 +46,9 @@ describe('ScatterChart - click event', () => {
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   describeSkipIf(isJSDOM)('onItemClick - using voronoi', () => {
-    it('should provide the right context as second argument when clicking svg', () => {
+    it('should provide the right context as second argument when clicking svg', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -64,20 +64,26 @@ describe('ScatterChart - click event', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      fireEvent.click(svg, {
-        clientX: 10,
-        clientY: 10,
-      });
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 10, clientY: 10 },
+        },
+      ]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 0,
         seriesId: 's1',
       });
 
-      fireEvent.click(svg, {
-        clientX: 30,
-        clientY: 30,
-      });
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 30, clientY: 30 },
+        },
+      ]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 4,
@@ -87,9 +93,9 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.callCount).to.equal(2);
     });
 
-    it('should provide the right context as second argument when clicking mark', () => {
+    it('should provide the right context as second argument when clicking mark', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -105,11 +111,16 @@ describe('ScatterChart - click event', () => {
       );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 
-      fireEvent.click(marks[1], {
-        clientX: 99,
-        clientY: 2,
-      });
-
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[1],
+          coords: {
+            clientX: 99,
+            clientY: 2,
+          },
+        },
+      ]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
@@ -120,9 +131,9 @@ describe('ScatterChart - click event', () => {
   });
 
   describe('onItemClick - disabling voronoi', () => {
-    it('should not call onItemClick when clicking the SVG', () => {
+    it('should not call onItemClick when clicking the SVG', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -139,16 +150,19 @@ describe('ScatterChart - click event', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      fireEvent.click(svg, {
-        clientX: 10,
-        clientY: 10,
-      });
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 10, clientY: 10 },
+        },
+      ]);
       expect(onItemClick.callCount).to.equal(0);
     });
 
-    it('should provide the right context as second argument when clicking mark', () => {
+    it('should provide the right context as second argument when clicking mark', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -165,10 +179,16 @@ describe('ScatterChart - click event', () => {
       );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 
-      fireEvent.click(marks[1], {
-        clientX: 99,
-        clientY: 2,
-      });
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[1],
+          coords: {
+            clientX: 99,
+            clientY: 2,
+          },
+        },
+      ]);
 
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'scatter',

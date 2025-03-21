@@ -90,10 +90,6 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 export interface UseTreeItemLabelSlotOwnProps {
   children: React.ReactNode;
   onDoubleClick: TreeViewCancellableEventHandler<React.MouseEvent>;
-  /**
-   * Only defined when the `isItemEditable` experimental feature is enabled.
-   */
-  editable?: boolean;
 }
 
 export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &

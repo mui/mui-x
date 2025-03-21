@@ -78,8 +78,8 @@ export {
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
-  UseFieldParams,
-  UseFieldResponse,
+  UseFieldParameters,
+  UseFieldReturnValue,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -188,6 +188,8 @@ export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.typ
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
+
+export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
 export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
 export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
