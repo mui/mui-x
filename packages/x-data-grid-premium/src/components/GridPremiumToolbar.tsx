@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridToolbar, GridToolbarDivider, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
+import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
 import { ToolbarButton } from '@mui/x-data-grid-pro';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -13,18 +13,15 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   const { excelOptions, ...other } = props;
 
   const additionalItems = isPivotingAvailable(rootProps) ? (
-    <React.Fragment>
-      <GridToolbarDivider />
-      <PivotPanelTrigger
-        render={(triggerProps, state) => (
-          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
-            <ToolbarButton {...triggerProps} color={state.enabled ? 'primary' : 'default'}>
-              <rootProps.slots.pivotIcon fontSize="small" />
-            </ToolbarButton>
-          </rootProps.slots.baseTooltip>
-        )}
-      />
-    </React.Fragment>
+    <PivotPanelTrigger
+      render={(triggerProps, state) => (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
+          <ToolbarButton {...triggerProps} color={state.enabled ? 'primary' : 'default'}>
+            <rootProps.slots.pivotIcon fontSize="small" />
+          </ToolbarButton>
+        </rootProps.slots.baseTooltip>
+      )}
+    />
   ) : undefined;
 
   const additionalExportMenuItems = !props.excelOptions?.disableToolbarButton
