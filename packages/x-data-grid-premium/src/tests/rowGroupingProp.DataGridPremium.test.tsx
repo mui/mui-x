@@ -272,6 +272,34 @@ describe('<DataGridPremium /> - Row grouping', () => {
       ]);
     });
 
+    // https://github.com/mui/mui-x/issues/17046
+    it('should support rowGroupingColumnMode switch with one grouping column', () => {
+      const { setProps } = render(
+        <Test
+          rowGroupingModel={['category1']}
+          rowGroupingColumnMode="multiple"
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+
+      setProps({ rowGroupingColumnMode: 'single' });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+    });
+
     it('should respect the model grouping order when rowGroupingColumnMode = "single"', () => {
       render(
         <Test
