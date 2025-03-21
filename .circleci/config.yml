@@ -43,7 +43,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.19
+    - image: mcr.microsoft.com/playwright:v1.51.0-noble
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -73,9 +73,9 @@ commands:
       - run:
           name: Install fnm
           command: |
-            sudo apt update
-            sudo apt install curl
-            sudo apt install unzip
+            apt update
+            apt install curl
+            apt install unzip
             curl -fsSL https://fnm.vercel.app/install >> install-fnm
             chmod +x ./install-fnm
             ./install-fnm --skip-shell
@@ -261,8 +261,6 @@ jobs:
 
   test_browser:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -293,8 +291,6 @@ jobs:
             NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -305,8 +301,6 @@ jobs:
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -318,8 +312,6 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
