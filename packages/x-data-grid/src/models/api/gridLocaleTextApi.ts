@@ -234,6 +234,8 @@ export interface GridLocaleText {
   pivotDragToRows: string;
   pivotDragToColumns: string;
   pivotDragToValues: string;
+  pivotYearColumnHeaderName: string;
+  pivotQuarterColumnHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

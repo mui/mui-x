@@ -250,4 +250,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   pivotDragToRows: 'Drag here to create rows',
   pivotDragToColumns: 'Drag here to create columns',
   pivotDragToValues: 'Drag here to create values',
+  pivotYearColumnHeaderName: '(Year)',
+  pivotQuarterColumnHeaderName: '(Quarter)',
 };

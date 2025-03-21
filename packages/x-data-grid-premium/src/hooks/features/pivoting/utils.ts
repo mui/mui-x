@@ -8,6 +8,7 @@ import {
   isLeaf,
   GridSingleSelectColDef,
   gridStringOrNumberComparator,
+  GridLocaleTextApi,
 } from '@mui/x-data-grid-pro';
 import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -24,32 +25,34 @@ export const isPivotingAvailable = (
   return !props.disablePivoting;
 };
 
-export const defaultGetPivotDerivedColumns = (column: GridColDef): GridColDef[] | undefined => {
-  if (column.type === 'date') {
-    const field = column.field;
-    return [
-      {
-        // String column type to avoid formatting the value as 2,025 instead of 2025
-        field: `${field}-year`,
-        headerName: `${column.headerName} (Year)`,
-        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
-      },
+export const defaultGetPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'] =
+  (column, getLocaleText) => {
+    if (column.type === 'date') {
+      const field = column.field;
+      return [
+        {
+          // String column type to avoid formatting the value as 2,025 instead of 2025
+          field: `${field}-year`,
+          headerName: `${column.headerName} ${getLocaleText('pivotYearColumnHeaderName')}`,
+          valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+        },
 
-      {
-        field: `${field}-quarter`,
-        headerName: `${column.headerName} (Quarter)`,
-        valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
-      },
-    ];
-  }
+        {
+          field: `${field}-quarter`,
+          headerName: `${column.headerName} ${getLocaleText('pivotQuarterColumnHeaderName')}`,
+          valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
+        },
+      ];
+    }
 
-  return undefined;
-};
+    return undefined;
+  };
 
 export const getInitialColumns = (
   orderedFields: GridColumnsState['orderedFields'],
   lookup: GridColumnsState['lookup'],
   getPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'],
+  getLocaleText: GridLocaleTextApi['getLocaleText'],
 ) => {
   const initialColumns: Map<string, GridColDef> = new Map();
   for (let i = 0; i < orderedFields.length; i += 1) {
@@ -58,7 +61,7 @@ export const getInitialColumns = (
     if (!isGroupingColumn(field)) {
       initialColumns.set(field, column);
 
-      const derivedColumns = getPivotDerivedColumns?.(column);
+      const derivedColumns = getPivotDerivedColumns?.(column, getLocaleText);
       if (derivedColumns) {
         derivedColumns.forEach((col) => initialColumns.set(col.field, col));
       }

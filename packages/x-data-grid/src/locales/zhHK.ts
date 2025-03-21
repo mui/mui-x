@@ -247,6 +247,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // pivotDragToRows: 'Drag here to create rows',
   // pivotDragToColumns: 'Drag here to create columns',
   // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
 export const zhHK = getGridLocalization(zhHKGrid);

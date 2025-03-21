@@ -54,7 +54,7 @@ export const pivotingStateInitializer: GridStateInitializer<
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
   >
-> = (state, props) => {
+> = (state, props, apiRef) => {
   if (!isPivotingAvailableFn(props)) {
     return {
       ...state,
@@ -71,6 +71,7 @@ export const pivotingStateInitializer: GridStateInitializer<
     (state.columns?.orderedFields as GridColumnsState['orderedFields']) ?? [],
     (state.columns?.lookup as GridColumnsState['lookup']) ?? {},
     props.getPivotDerivedColumns,
+    apiRef.current.getLocaleText,
   );
 
   return {
@@ -145,6 +146,7 @@ export const useGridPivoting = (
       columnFields,
       columnsLookup,
       props.getPivotDerivedColumns,
+      apiRef.current.getLocaleText,
     );
 
     return { rows, columns: initialColumns };

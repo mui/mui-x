@@ -7,6 +7,7 @@ import {
   GridGetRowsError,
   GridUpdateRowError,
   type GridColDef,
+  GridLocaleTextApi,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -138,10 +139,16 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * Allows to generate derived columns from actual columns that will be used for pivoting.
    * Useful e.g. for date columns to generate year, quarter, month, etc.
    * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
    * @returns {GridColDef[] | undefined} The derived columns.
    * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
    */
-  getPivotDerivedColumns: ((column: GridColDef) => GridColDef[] | undefined) | null;
+  getPivotDerivedColumns:
+    | ((
+        column: GridColDef,
+        getLocaleText: GridLocaleTextApi['getLocaleText'],
+      ) => GridColDef[] | undefined)
+    | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
