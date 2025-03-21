@@ -76,7 +76,9 @@ commands:
             apt update
             apt install curl
             apt install unzip
-            curl -fsSL https://fnm.vercel.app/install --skip-shell | bash
+            curl -fsSL https://fnm.vercel.app/install >> install-fnm
+            chmod +x ./install-fnm
+            ./install-fnm --skip-shell
 
             echo '
             export FNM_PATH="/root/.local/share/fnm"
