@@ -25,10 +25,10 @@ import {
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const { instance, store } =
-    useTreeViewContext<
-      [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature, UseTreeViewLabelSignature]
-    >();
+  const { instance, store } = useTreeViewContext<
+    [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature],
+    [UseTreeViewLabelSignature]
+  >();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
@@ -89,7 +89,6 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
         const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnd?.(event);
-
           if (event.defaultMuiPrevented) {
             return;
           }
@@ -114,7 +113,6 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
         const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-
           if (event.defaultMuiPrevented || validActionsRef.current == null) {
             return;
           }

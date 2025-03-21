@@ -136,31 +136,25 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-<<<<<<< HEAD
-      const itemBeingEdited = selectorIsItemBeingEdited(store.value, itemId);
-      if (!itemBeingEdited) {
-        store.update((prevState) => ({
+      store.update((prevState) => {
+        const isItemBeingEditing = selectorIsItemBeingEdited(prevState, itemId);
+        if (isItemBeingEditing) {
+          return prevState;
+        }
+
+        return {
           ...prevState,
           itemsReordering: {
-=======
-      store.update((prevState) => ({
-        ...prevState,
-        itemsReordering: {
-          ...prevState.itemsReordering,
-          currentReorder: {
->>>>>>> master
-            targetItemId: itemId,
-            draggedItemId: itemId,
-            action: null,
-            newPosition: null,
+            ...prevState.itemsReordering,
+            currentReorder: {
+              targetItemId: itemId,
+              draggedItemId: itemId,
+              action: null,
+              newPosition: null,
+            },
           },
-<<<<<<< HEAD
-        }));
-      }
-=======
-        },
-      }));
->>>>>>> master
+        };
+      });
     },
     [store],
   );

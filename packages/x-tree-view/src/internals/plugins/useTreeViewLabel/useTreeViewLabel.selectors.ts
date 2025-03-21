@@ -18,6 +18,10 @@ export const selectorIsItemEditable = createSelector(
       return false;
     }
 
+    if (typeof labelState.isItemEditable === 'boolean') {
+      return labelState.isItemEditable;
+    }
+
     return labelState.isItemEditable(itemModel);
   },
 );
