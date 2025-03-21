@@ -169,14 +169,14 @@ jobs:
           steps:
             - run:
                 name: Test Browser
-                command: pnpm vitest --project "browser/*"
+                command: pnpm vitest --project "browser/*" --reporter hanging-process --reporter default
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm vitest --project "browser/*" --coverage --reporter hanging-process --reporter default
+                command: pnpm vitest --project "browser/*" --reporter hanging-process --reporter default --coverage
             - run:
                 name: Check coverage generated
                 command: |
