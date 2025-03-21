@@ -1,6 +1,11 @@
 name: Vale action
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+      - v7.x
+      - v6.x
 
 permissions: {}
 
