@@ -66,7 +66,7 @@ export function DrawerHeader(props: DrawerHeaderProps) {
 
 export interface DrawerProps extends Omit<MUISwipeableDrawerProps, 'onOpen'> {
   width?: number;
-  container?: () => HTMLElement;
+  container?: HTMLElement;
 }
 
 export function Drawer(props: DrawerProps) {
