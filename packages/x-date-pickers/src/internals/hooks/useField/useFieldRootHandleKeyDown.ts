@@ -195,8 +195,7 @@ function adjustSectionValue<TValue extends PickerValidValue>(
     const step =
       section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
 
-    const currentSectionValue = parseInt(removeLocalizedDigits(section.value, localizedDigits), 10);
-    let newSectionValueNumber = currentSectionValue + delta * step;
+    let newSectionValueNumber: number;
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
@@ -208,6 +207,12 @@ function adjustSectionValue<TValue extends PickerValidValue>(
       } else {
         newSectionValueNumber = sectionBoundaries.maximum;
       }
+    } else {
+      const currentSectionValue = parseInt(
+        removeLocalizedDigits(section.value, localizedDigits),
+        10,
+      );
+      newSectionValueNumber = currentSectionValue + delta * step;
     }
 
     if (newSectionValueNumber % step !== 0) {

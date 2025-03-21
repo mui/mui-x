@@ -19,7 +19,15 @@ import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 
 export interface HeatmapTooltipProps
-  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
+  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger?: 'item' | 'none';
+}
 
 const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes'] }) => {
   const { classes } = ownerState;
@@ -116,7 +124,7 @@ function HeatmapTooltip(props: HeatmapTooltipProps) {
   const classes = useUtilityClasses({ classes: props.classes });
 
   return (
-    <ChartsTooltipContainer {...props} classes={classes} trigger="item">
+    <ChartsTooltipContainer trigger="item" {...props} classes={classes}>
       <DefaultHeatmapTooltipContent classes={classes} />
     </ChartsTooltipContainer>
   );
@@ -350,6 +358,13 @@ HeatmapTooltip.propTypes = {
    * @default false
    */
   transition: PropTypes.bool,
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger: PropTypes.oneOf(['item', 'none']),
 } as any;
 
 export { HeatmapTooltip };

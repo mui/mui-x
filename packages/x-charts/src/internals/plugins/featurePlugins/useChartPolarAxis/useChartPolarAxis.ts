@@ -165,7 +165,10 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
         return;
       }
 
-      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
+      if (
+        'hasPointerCapture' in target &&
+        (target as HTMLElement).hasPointerCapture(event.pointerId)
+      ) {
         (target as HTMLElement).releasePointerCapture(event.pointerId);
       }
     };

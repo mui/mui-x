@@ -5,8 +5,7 @@ import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
-const toMinutesLabel = (minutes: number | string) =>
-  `${Number(minutes) < 10 ? `0${minutes}` : minutes} minutes`;
+const toMinutesLabel = (minutes: number | string) => `${String(minutes).padStart(2, '0')} minutes`;
 
 export const testMinutesViewValidation: DescribeValidationTestSuite = (
   ElementToTest,

@@ -1,17 +1,9 @@
-import { TreeViewAnyPluginSignature, TreeViewState } from '../../models';
 import {
   createSelector,
   TreeViewRootSelector,
   TreeViewRootSelectorForOptionalPlugin,
 } from '../../utils/selectors';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
-
-export type Temp<TSignature extends TreeViewAnyPluginSignature> = <
-  TSignatures extends [],
-  TOptionalSignatures extends [TSignature],
->(
-  state: TreeViewState<TSignatures, TOptionalSignatures>,
-) => TSignature['state'][keyof TSignature['state']];
 
 const selectorLazyLoading: TreeViewRootSelector<UseTreeViewLazyLoadingSignature> = (state) =>
   state.lazyLoading;

@@ -68,7 +68,11 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "transition": { "type": { "name": "bool" }, "default": "false" }
+    "transition": { "type": { "name": "bool" }, "default": "false" },
+    "trigger": {
+      "type": { "name": "enum", "description": "'item'<br>&#124;&nbsp;'none'" },
+      "default": "'item'"
+    }
   },
   "name": "HeatmapTooltip",
   "imports": [
