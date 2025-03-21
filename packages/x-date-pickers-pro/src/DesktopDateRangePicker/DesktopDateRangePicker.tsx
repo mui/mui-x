@@ -94,6 +94,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     valueManager: rangeValueManager,
     valueType: 'date',
     validator: validateDateRange,
+    steps: null,
   });
 
   return renderPicker();

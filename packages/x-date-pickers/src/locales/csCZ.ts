@@ -36,6 +36,8 @@ const csCZPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Vymazat',
   okButtonLabel: 'Potvrdit',
   todayButtonLabel: 'Dnes',
+  // nextStepButtonLabel: 'Next',
+  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vyberte datum',

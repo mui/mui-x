@@ -35,6 +35,8 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Resetten',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Vandaag',
+  // nextStepButtonLabel: 'Next',
+  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecteer datum',

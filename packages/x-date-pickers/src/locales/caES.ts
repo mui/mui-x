@@ -35,6 +35,8 @@ const caESPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Netejar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Avuí',
+  // nextStepButtonLabel: 'Next',
+  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleccionar data',

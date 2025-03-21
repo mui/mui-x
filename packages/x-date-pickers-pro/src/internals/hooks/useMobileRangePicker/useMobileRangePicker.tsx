@@ -22,6 +22,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
+import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -36,6 +37,7 @@ export const useMobileRangePicker = <
   >,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -57,7 +59,23 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     viewContainerRole: 'dialog',
     localeText,
+    goToNextStep,
+    goToPreviousStep,
   });
+
+  const stepNavigation = useRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+    contextValue: providerProps.contextValue,
+  });
+
+  function goToNextStep() {
+    stepNavigation.goToNextStep();
+  }
+
+  function goToPreviousStep() {
+    stepNavigation.goToPreviousStep();
+  }
 
   const labelId = providerProps.privateContextValue.labelId;
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;

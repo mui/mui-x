@@ -8,6 +8,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps } from '../useRangePosition';
+import { PickerRangeStep } from '../useRangePickerStepNavigation';
 
 export interface RangeOnlyPickerProps
   extends UsePickerNonStaticProps,
@@ -29,4 +30,10 @@ export interface UseRangePickerParams<
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;
+  /**
+   * Steps available for the picker.
+   * This will be used to generate the "previous" and "next" actions.
+   * If null, the picker will not have any step navigation.
+   */
+  steps: PickerRangeStep[] | null;
 }
