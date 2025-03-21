@@ -195,6 +195,12 @@
       "className": "MuiRichTreeView-itemLabelInput",
       "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
       "isGlobal": false
+    },
+    {
+      "key": "itemLoadingIcon",
+      "className": "MuiRichTreeView-itemLoadingIcon",
+      "description": "Styles applied to the item's loading icon element",
+      "isGlobal": false
     }
   ],
   "spread": true,

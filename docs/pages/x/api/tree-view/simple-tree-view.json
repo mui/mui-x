@@ -150,6 +150,12 @@
       "className": "MuiSimpleTreeView-itemLabel",
       "description": "Styles applied to the item's label element.",
       "isGlobal": false
+    },
+    {
+      "key": "itemLoadingIcon",
+      "className": "MuiSimpleTreeView-itemLoadingIcon",
+      "description": "Styles applied to the item's loading icon element",
+      "isGlobal": false
     }
   ],
   "spread": true,

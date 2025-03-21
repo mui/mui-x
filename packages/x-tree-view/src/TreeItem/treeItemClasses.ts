@@ -20,6 +20,8 @@ export interface TreeItemClasses {
   dragAndDropOverlay: string;
   /** Styles applied to the error icon element */
   errorIcon: string;
+  /** Styles applied to the loading icon element */
+  loadingIcon: string;
   /**
    * State class applied to the content element when the item is expanded.
    * @deprecated Use the `data-expanded` attribute instead.
@@ -68,6 +70,7 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'labelInput',
   'dragAndDropOverlay',
   'errorIcon',
+  'loadingIcon',
   // State classes, will be replaced by data-attrs in the next major
   'expanded',
   'selected',

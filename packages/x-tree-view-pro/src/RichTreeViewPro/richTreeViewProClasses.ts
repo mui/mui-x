@@ -23,5 +23,6 @@ export const richTreeViewProClasses: RichTreeViewProClasses = generateUtilityCla
     'itemLabelInput',
     'itemDragAndDropOverlay',
     'itemErrorIcon',
+    'itemLoadingIcon',
   ],
 );

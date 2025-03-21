@@ -3,7 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 export interface RichTreeViewClasses
-  extends Omit<TreeViewClasses, 'itemDragAndDropOverlay' | 'itemErrorIcon'> {}
+  extends Omit<TreeViewClasses, 'itemDragAndDropOverlay' | 'itemErrorIcon' | 'itemLoadingIcon'> {}
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
 

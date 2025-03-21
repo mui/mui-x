@@ -21,6 +21,8 @@ export interface TreeViewClasses {
   itemDragAndDropOverlay: string;
   /** Styles applied to the item's error icon element */
   itemErrorIcon: string;
+  /** Styles applied to the item's loading icon element */
+  itemLoadingIcon: string;
 }
 
 export interface TreeViewStyleContextValue {

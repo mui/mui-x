@@ -81,7 +81,7 @@
       "name": "loadingIcon",
       "description": "The component that is rendered when the item is in an loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
       "default": "TreeItemLoadingContainer",
-      "class": null
+      "class": "MuiTreeItem-loadingIcon"
     },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },

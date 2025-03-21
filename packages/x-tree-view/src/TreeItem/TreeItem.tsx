@@ -13,7 +13,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
 import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
-import { getTreeItemUtilityClass } from './treeItemClasses';
+import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -181,20 +181,36 @@ export const TreeItemCheckbox = styled(
   padding: 0,
 });
 
-const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) => {
   const { classes: classesFromTreeView } = useTreeViewStyleContext();
 
+  const classes = {
+    ...classesProp,
+    root: clsx(classesProp?.root, classesFromTreeView.root),
+    content: clsx(classesProp?.content, classesFromTreeView.itemContent),
+    iconContainer: clsx(classesProp?.iconContainer, classesFromTreeView.itemIconContainer),
+    checkbox: clsx(classesProp?.checkbox, classesFromTreeView.itemCheckbox),
+    label: clsx(classesProp?.label, classesFromTreeView.itemLabel),
+    groupTransition: clsx(classesProp?.groupTransition, classesFromTreeView.itemGroupTransition),
+    labelInput: clsx(classesProp?.labelInput, classesFromTreeView.itemLabelInput),
+    dragAndDropOverlay: clsx(
+      classesProp?.dragAndDropOverlay,
+      classesFromTreeView.itemDragAndDropOverlay,
+    ),
+    errorIcon: clsx(classesProp?.errorIcon, classesFromTreeView.itemErrorIcon),
+    loadingIcon: clsx(classesProp?.loadingIcon, classesFromTreeView.itemLoadingIcon),
+  };
+
   const slots = {
-    root: ['root', classesFromTreeView.item],
-    content: ['content', classesFromTreeView.itemContent],
-    iconContainer: ['iconContainer', classesFromTreeView.itemIconContainer],
-    checkbox: ['checkbox', classesFromTreeView.itemCheckbox],
-    label: ['label', classesFromTreeView.itemLabel],
-    groupTransition: ['groupTransition', classesFromTreeView.itemGroupTransition],
-    labelInput: ['labelInput', classesFromTreeView.itemLabelInput],
-    dragAndDropOverlay: ['dragAndDropOverlay', classesFromTreeView.itemDragAndDropOverlay],
-    errorIcon: ['errorIcon', classesFromTreeView.itemErrorIcon],
+    root: ['root'],
+    content: ['content'],
+    iconContainer: ['iconContainer'],
+    checkbox: ['checkbox'],
+    label: ['label'],
+    groupTransition: ['groupTransition'],
+    labelInput: ['labelInput'],
+    dragAndDropOverlay: ['dragAndDropOverlay'],
+    errorIcon: ['errorIcon'],
     loadingIcon: ['loadingIcon'],
     expanded: ['expanded'],
     editing: ['editing'],
@@ -227,7 +243,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    children,
+    slots = {},
+    slotProps = {},
+    classes: classesProp,
+    ...other
+  } = props;
 
   const {
     getContextProviderProps,
@@ -250,12 +276,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabled,
   });
 
-  const ownerState: TreeItemOwnerState = {
-    ...props,
-    ...status,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const Root: React.ElementType = slots.root ?? TreeItemRoot;
   const rootProps = useSlotProps({
