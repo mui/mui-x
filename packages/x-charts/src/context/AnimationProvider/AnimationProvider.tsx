@@ -1,6 +1,6 @@
 'use client';
-import { Globals, useIsomorphicLayoutEffect } from '@react-spring/web';
 import * as React from 'react';
+import { useIsomorphicLayoutEffect } from '../../internals/useIsomorphicLayoutEffect';
 import { AnimationProviderProps } from './Animation.types';
 import { AnimationContext } from './AnimationContext';
 
@@ -27,9 +27,6 @@ function AnimationProvider(props: AnimationProviderProps) {
       // This hook can remove animation but never activate it.
       const inputValue = event.matches || undefined;
       setSkipAnimation(inputValue);
-      Globals.assign({
-        skipAnimation: inputValue,
-      });
     };
 
     const mql = window.matchMedia('(prefers-reduced-motion)');
