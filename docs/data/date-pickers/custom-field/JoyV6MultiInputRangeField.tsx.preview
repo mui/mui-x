@@ -1,8 +1,6 @@
-<MaterialCssVarsProvider>
-  <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-    <SyncThemeMode mode={materialTheme.palette.mode} />
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <JoyDateRangePicker />
-    </LocalizationProvider>
-  </CssVarsProvider>
-</MaterialCssVarsProvider>
+<CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+  <SyncThemeMode />
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <JoyDateRangePicker />
+  </LocalizationProvider>
+</CssVarsProvider>
