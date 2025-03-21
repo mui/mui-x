@@ -60,10 +60,6 @@ default-context: &default-context
 commands:
   install_js:
     parameters:
-      browsers:
-        type: boolean
-        default: false
-        description: 'Set to true if you intend to any browser (for example with playwright).'
       react-version:
         type: string
         default: << pipeline.parameters.react-version >>
@@ -91,20 +87,10 @@ commands:
           command: |
             fnm install 23
             fnm use 23
-      - when:
-          condition: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                command: corepack enable
-      - when:
-          condition:
-            not: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                # See https://stackoverflow.com/a/73411601
-                command: corepack enable --install-directory ~/bin
+
+      - run:
+          name: Install pnpm package manager
+          command: corepack enable
 
       - run:
           name: View install environment
@@ -264,7 +250,6 @@ jobs:
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
@@ -294,7 +279,6 @@ jobs:
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
@@ -303,8 +287,7 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js:
-          browsers: true
+      - install_js
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -315,7 +298,6 @@ jobs:
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
