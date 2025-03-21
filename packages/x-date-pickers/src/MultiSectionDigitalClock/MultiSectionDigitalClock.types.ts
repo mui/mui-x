@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import MenuItem from '@mui/material/MenuItem';
+import { MenuItemProps } from '@mui/material/MenuItem';
+import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 import {
   BaseClockProps,
@@ -9,6 +9,7 @@ import {
 } from '../internals/models/props/time';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { PickerOwnerState } from '../models/pickers';
 
 export interface MultiSectionDigitalClockOption<TSectionValue extends number | string> {
   isDisabled?: (value: TSectionValue) => boolean;
@@ -26,16 +27,31 @@ export interface ExportedMultiSectionDigitalClockProps
 export interface MultiSectionDigitalClockViewProps<TSectionValue extends number | string>
   extends Pick<MultiSectionDigitalClockSectionProps<TSectionValue>, 'onChange' | 'items'> {}
 
+export interface MultiSectionDigitalClockSectionItemProps extends MenuItemProps {
+  onClick?: (event: MuiEvent<React.MouseEvent<HTMLLIElement>>) => void;
+}
+
 export interface MultiSectionDigitalClockSlots {
   /**
    * Component responsible for rendering a single multi section digital clock section item.
    * @default MenuItem from '@mui/material'
    */
-  digitalClockSectionItem?: React.ElementType;
+  digitalClockSectionItem?: React.ElementType<MultiSectionDigitalClockSectionItemProps>;
+}
+
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
 }
 
 export interface MultiSectionDigitalClockSlotProps {
-  digitalClockSectionItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
+  digitalClockSectionItem?: SlotComponentPropsFromProps<
+    MultiSectionDigitalClockSectionItemProps,
+    {},
+    MultiSectionDigitalClockSectionOwnerState
+  >;
 }
 
 export interface MultiSectionDigitalClockProps
