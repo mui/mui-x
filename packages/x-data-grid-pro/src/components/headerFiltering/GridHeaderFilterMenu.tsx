@@ -59,7 +59,7 @@ function GridHeaderFilterMenu({
   }
 
   return (
-    <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
+    <GridMenu position="bottom-end" open={open} target={target} onClose={hideMenu}>
       <rootProps.slots.baseMenuList
         aria-labelledby={labelledBy}
         id={id}
@@ -148,7 +148,15 @@ GridHeaderFilterMenu.propTypes = {
         inputRef: PropTypes.oneOfType([
           PropTypes.func,
           PropTypes.shape({
-            current: PropTypes.any.isRequired,
+            current: (props, propName) => {
+              if (props[propName] == null) {
+                return null;
+              }
+              if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+                return new Error(`Expected prop '${propName}' to be of type Element`);
+              }
+              return null;
+            },
           }),
         ]),
         isFilterActive: PropTypes.bool,

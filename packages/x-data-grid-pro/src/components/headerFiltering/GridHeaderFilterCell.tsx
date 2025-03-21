@@ -34,6 +34,7 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
+  vars,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -76,10 +77,10 @@ type OwnerState = DataGridProProcessedProps & {
 const StyledInputComponent = styled(GridFilterInputValue, {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderFilterInput',
-})(({ theme }) => ({
+})({
   flex: 1,
-  marginRight: theme.spacing(0.5),
-  marginBottom: theme.spacing(-0.25),
+  marginRight: vars.spacing(0.5),
+  marginBottom: vars.spacing(-0.25),
   '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
@@ -89,23 +90,23 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
+    paddingTop: vars.spacing(0.5),
+    paddingBottom: vars.spacing(0.5),
     height: 23,
   },
-}));
+});
 
 const OperatorLabel = styled('span', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderFilterOperatorLabel',
-})(({ theme }) => ({
+})({
   flex: 1,
-  marginRight: theme.spacing(0.5),
-  color: theme.palette.text.secondary,
+  marginRight: vars.spacing(0.5),
+  color: vars.colors.foreground.muted,
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
   overflow: 'hidden',
-}));
+});
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
@@ -474,7 +475,15 @@ GridHeaderFilterCell.propTypes = {
     inputRef: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.shape({
-        current: PropTypes.any.isRequired,
+        current: (props, propName) => {
+          if (props[propName] == null) {
+            return null;
+          }
+          if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+            return new Error(`Expected prop '${propName}' to be of type Element`);
+          }
+          return null;
+        },
       }),
     ]),
     isFilterActive: PropTypes.bool,

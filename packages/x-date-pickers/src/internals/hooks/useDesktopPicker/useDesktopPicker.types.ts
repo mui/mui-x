@@ -5,21 +5,18 @@ import {
   PickerPopperSlots,
   PickerPopperSlotProps,
 } from '../../components/PickerPopper/PickerPopper';
-import { UsePickerParams } from '../usePicker';
+import { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
 import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
-import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseDesktopPickerSlots
   extends Pick<
@@ -32,11 +29,6 @@ export interface UseDesktopPickerSlots
    * Component used to enter the date with the keyboard.
    */
   field: React.ElementType;
-  /**
-   * Form control with an input to render the value inside the default field.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
-   */
-  textField?: React.ElementType;
 }
 
 export interface ExportedUseDesktopPickerSlotProps<
@@ -55,9 +47,7 @@ export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure ex
   extends ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
-export interface DesktopOnlyPickerProps
-  extends UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps {
+export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -69,7 +59,7 @@ export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any>,
+  TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 > extends BasePickerProps<PickerValue, any, TError, TExternalProps>,
     MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
@@ -94,7 +84,7 @@ export interface UseDesktopPickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps>,
+    UsePickerParameters<PickerValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;

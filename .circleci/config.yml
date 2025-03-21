@@ -43,7 +43,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.17
+    - image: cimg/node:20.19
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -56,16 +56,6 @@ default-job: &default-job
 default-context: &default-context
   context:
     - org-global
-
-test-react-18-context: &test-react-18-context
-  <<: *default-context
-  react-version: ^18.0.0
-  filters:
-    branches:
-      only:
-        - master
-        - /^v.*\.x$/
-        - next
 
 commands:
   install_js:
@@ -102,19 +92,18 @@ commands:
             pnpm --version
       - when:
           condition:
-            not:
-              equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies without frozen lockfile
-                command: pnpm install --no-frozen-lockfile
-      - when:
-          condition:
             equal: [stable, << parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies
                 command: pnpm install
+      - unless:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
 
       - run:
           name: Resolve React version
@@ -241,8 +230,7 @@ jobs:
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
-            pnpm --filter @mui/x-date-pickers* prebuild
-            pnpm --filter @mui/x-date-pickers* build:types
+            pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
             if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
             then
                 exit 1
@@ -253,7 +241,7 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.50.0-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -285,7 +273,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.50.0-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -297,7 +285,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.50.0-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -310,7 +298,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.50.0-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -418,16 +406,22 @@ workflows:
           <<: *default-context
           name: test_types_additional
   test-react-18:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
       - test_unit:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_unit_react_18
+          react-version: ^18
       - test_browser:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_browser_react_18
+          react-version: ^18
       - test_regressions:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_regressions_react_18
+          react-version: ^18
       - test_e2e:
-          <<: *test-react-18-context
+          <<: *default-context
           name: test_e2e_react_18
+          react-version: ^18

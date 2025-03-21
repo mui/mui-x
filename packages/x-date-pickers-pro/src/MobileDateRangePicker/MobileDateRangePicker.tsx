@@ -14,7 +14,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../validation';
 
@@ -57,10 +57,12 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
+    // force current calendar position, since we only have one calendar
+    currentMonthCalendarPosition: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
-      field: MultiInputDateRangeField,
+      field: SingleInputDateRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -159,7 +161,8 @@ MobileDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

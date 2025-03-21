@@ -5,16 +5,19 @@ import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/conf
 import { SeriesProcessorResult } from '../../models/seriesConfig/seriesProcessor.types';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
-  dataset?: DatasetType;
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset?: Readonly<DatasetType>;
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series?: AllSeriesType<T>[];
+  series?: Readonly<AllSeriesType<T>[]>;
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors?: ChartsColorPalette;
   theme?: 'light' | 'dark';
@@ -27,10 +30,10 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
      * Each type of series has its own specificity.
      * Please refer to the appropriate docs page to learn more about it.
      */
-    series: AllSeriesType<T>[];
+    series: Readonly<AllSeriesType<T>[]>;
     /**
      * Color palette used to colorize multiple series.
-     * @default blueberryTwilightPalette
+     * @default rainbowSurgePalette
      */
     colors: ChartsColorPalette;
     theme: 'light' | 'dark';

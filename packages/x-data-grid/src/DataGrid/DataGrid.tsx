@@ -11,11 +11,13 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
@@ -52,8 +54,8 @@ interface DataGridComponent {
 }
 
 /**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGrid](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
@@ -153,6 +155,21 @@ DataGridRaw.propTypes = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * The data source object.
+   */
+  dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -294,6 +311,8 @@ DataGridRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -509,6 +528,11 @@ DataGridRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
+  /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
    */
@@ -710,11 +734,10 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -739,6 +762,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * Overridable components props dynamically passed to the component at rendering.
    */

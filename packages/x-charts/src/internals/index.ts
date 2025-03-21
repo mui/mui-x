@@ -12,6 +12,7 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
+export * from './createSeriesSelectorOfType';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -19,12 +20,21 @@ export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
+export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
+export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVoronoi';
 export * from './plugins/utils/selectors';
 
 export * from './store/useCharts';
 export * from './store/useStore';
 export * from './store/useSelector';
+
+// plugins configs
+
+export * from '../BarChart/BarChart.plugins';
+export * from '../LineChart/LineChart.plugins';
+export * from '../ScatterChart/ScatterChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';
@@ -34,7 +44,11 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
+export * from './stackSeries';
 export * from './getCurve';
+export * from './consumeSlots';
+export * from './consumeThemeProps';
+export * from './defaultizeMargin';
 
 // contexts
 

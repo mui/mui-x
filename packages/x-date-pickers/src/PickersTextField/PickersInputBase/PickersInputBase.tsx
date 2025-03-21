@@ -113,7 +113,8 @@ const PickersInputBaseSection = styled(PickersSectionListSection, {
   fontSize: 'inherit',
   letterSpacing: 'inherit',
   lineHeight: '1.4375em', // 23px
-  display: 'flex',
+  display: 'inline-block',
+  whiteSpace: 'nowrap',
 }));
 
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
@@ -364,10 +365,6 @@ PickersInputBase.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.

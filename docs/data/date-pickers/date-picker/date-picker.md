@@ -65,9 +65,18 @@ Responsive components can suffer some inconsistencies between testing environmen
 Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
+### Keyboard Date Picker (legacy)
+
+The current implementation of the Date Picker component replaces the experimental Keyboard Date Picker from Material UI.
+See the [migration documentation](/material-ui/migration/pickers-migration/#imports) for more information.
+
+For accessibility, all Picker components accept keyboard inputs.
+If your use case only calls for keyboard editing, you can use Field components: the Date Picker component can be edited via input or a calendar, whereas the Date Field can only be edited via input.
+See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
+
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDatePickers.js"}}
 

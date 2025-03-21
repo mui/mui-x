@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
-import { HighlightedProvider, HighlightedProviderProps } from '../context/HighlightedProvider';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
@@ -13,9 +12,7 @@ export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = Omit<
-  HighlightedProviderProps &
-    AnimationProviderProps &
-    ChartProviderProps<TSeries, TSignatures>['pluginParams'],
+  AnimationProviderProps & ChartProviderProps<TSeries, TSignatures>['pluginParams'],
   'children'
 > &
   Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'> & {
@@ -29,7 +26,7 @@ export type ChartDataProviderProps<
  *
  * Demos:
  *
- * - [Composition](https://mui.com/x/api/charts/composition/)
+ * - [Composition](https://mui.com/x/react-charts/composition/)
  *
  * API:
  *
@@ -43,7 +40,7 @@ export type ChartDataProviderProps<
  * >
  *   <ChartsSurface>
  *      <BarPlot />
- *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *      <ChartsXAxis axisId="x-axis" />
  *   </ChartsSurface>
  *   {'Custom Legend Component'}
  * </ChartDataProvider>
@@ -53,14 +50,11 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
-    useChartDataProviderProps(props);
+  const { children, animationProviderProps, chartProviderProps } = useChartDataProviderProps(props);
 
   return (
     <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
-      <HighlightedProvider {...highlightedProviderProps}>
-        <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-      </HighlightedProvider>
+      <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
     </ChartProvider>
   );
 }
@@ -74,18 +68,17 @@ ChartDataProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.any,
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.any,
-  /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
-   */
-  highlightedItem: PropTypes.any,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -94,15 +87,10 @@ ChartDataProvider.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.any,
-  /**
-   * The callback fired when the highlighted item changes.
-   *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
-   */
-  onHighlightChange: PropTypes.any,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.

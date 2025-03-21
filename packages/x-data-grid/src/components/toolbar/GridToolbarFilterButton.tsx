@@ -9,6 +9,8 @@ import {
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
+import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -21,6 +23,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -38,10 +41,10 @@ const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
   overridesResolver: (_props, styles) => styles.toolbarFilterList,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  margin: theme.spacing(1, 1, 0.5),
-  padding: theme.spacing(0, 1),
-}));
+})<{ ownerState: OwnerState }>({
+  margin: vars.spacing(1, 1, 0.5),
+  padding: vars.spacing(0, 1),
+});
 
 // FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
@@ -70,6 +73,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
+    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -168,7 +173,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             }
             buttonProps.onPointerUp?.(event);
           }}
-          ref={ref}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>

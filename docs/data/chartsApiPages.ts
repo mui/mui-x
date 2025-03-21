@@ -85,10 +85,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
-    pathname: '/x/api/charts/charts-on-axis-click-handler',
-    title: 'ChartsOnAxisClickHandler',
-  },
-  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -109,10 +105,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltipContainer',
   },
   {
-    pathname: '/x/api/charts/charts-voronoi-handler',
-    title: 'ChartsVoronoiHandler',
-  },
-  {
     pathname: '/x/api/charts/charts-x-axis',
     title: 'ChartsXAxis',
   },
@@ -123,6 +115,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/gauge',
@@ -207,6 +209,38 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-axis-highlight',
+    title: 'RadarAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
+  },
+  {
+    pathname: '/x/api/charts/radar-data-provider',
+    title: 'RadarDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-area',
+    title: 'RadarSeriesArea',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-marks',
+    title: 'RadarSeriesMarks',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
   },
   {
     pathname: '/x/api/charts/scatter',

@@ -29,6 +29,10 @@ export interface GridClasses {
    */
   aggregationColumnHeaderLabel: string;
   /**
+   * Styles applied to the aggregation row overlay wrapper.
+   */
+  aggregationRowOverlayWrapper: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -262,6 +266,14 @@ export interface GridClasses {
    */
   columnsManagementFooter: string;
   /**
+   * Styles applied to the columns management scroll area element.
+   */
+  columnsManagementScrollArea: string;
+  /**
+   * Styles applied to the columns management empty text element.
+   */
+  columnsManagementEmptyText: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -390,10 +402,10 @@ export interface GridClasses {
    */
   'main--hasPinnedRight': string;
   /**
-   * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * Styles applied to the main container element to hide the contents of the grid.
    * @ignore - do not document.
    */
-  'main--hasSkeletonLoadingOverlay': string;
+  'main--hiddenContent': string;
   /**
    * Styles applied to the menu element.
    */
@@ -588,6 +600,15 @@ export interface GridClasses {
    */
   sortIcon: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
+   * Styles applied to the shadow scroll area element.
+   * @ignore - do not document.
+   */
+  shadowScrollArea: string;
+  /**
    * Styles applied to the toolbar container element.
    */
   toolbarContainer: string;
@@ -690,6 +711,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
+  'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
   'booleanCell',
@@ -748,6 +770,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementHeader',
   'columnsManagementSearchInput',
   'columnsManagementFooter',
+  'columnsManagementScrollArea',
+  'columnsManagementEmptyText',
   'container--top',
   'container--bottom',
   'detailPanel',
@@ -779,7 +803,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
-  'main--hasSkeletonLoadingOverlay',
+  'main--hiddenContent',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -822,6 +846,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
+  'shadowScrollArea',
   'toolbarContainer',
   'toolbarFilterList',
   'toolbarPromptControl',

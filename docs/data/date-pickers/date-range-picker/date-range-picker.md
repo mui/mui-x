@@ -17,7 +17,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
+The component is built using the `SingleInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
 
 Check-out their documentation page for more information:
 
@@ -25,7 +25,7 @@ Check-out their documentation page for more information:
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-range-picker/#props).
-Some [MultiInputDateRangeField props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
+Some [SingleInputDateRangeField props](/x/api/date-pickers/single-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
@@ -67,9 +67,13 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateRangePickers.js"}}
+
+:::success
+The `name` prop is not available when using the Date Range Picker with the Multi Input Date Range Field.
+:::
 
 ## Customization
 
@@ -83,15 +87,14 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
-### Use a single input field
+### Use a multi input field
 
-You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
-In such case the Picker component can pass the `name` prop to the input.
+You can pass the `MultiInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
 
-{{"demo": "SingleInputDateRangePicker.js"}}
+{{"demo": "MultiInputDateRangePicker.js"}}
 
 :::info
-You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Add shortcuts

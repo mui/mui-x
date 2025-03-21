@@ -12,18 +12,15 @@ export interface UseChartInteractionInstance {
    */
   setItemInteraction: (newItem: ChartItemIdentifier<ChartSeriesType>) => void;
   /**
+   * Remove item interaction if the current if the provided item is still the one interacting.
+   * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
+   */
+  removeItemInteraction: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
+  /**
    * Set the new axis the user is interacting with.
    * @param {Partial<AxisInteractionData>} newAxis The new axis identifier.
    */
   setAxisInteraction: (newAxis: Partial<AxisInteractionData>) => void;
-  /**
-   * Enable the voronoi computation.
-   */
-  enableVoronoid: () => void;
-  /**
-   * Disable the voronoi computation.
-   */
-  disableVoronoid: () => void;
 }
 
 export type AxisInteractionData = {
@@ -49,11 +46,6 @@ export interface UseChartInteractionState {
      * The x- and y-axes currently interacting.
      */
     axis: AxisInteractionData;
-    /**
-     * Set to `true` when `VoronoiHandler` is active.
-     * Used to prevent collision with mouseEnter events.
-     */
-    isVoronoiEnabled?: boolean;
   };
 }
 

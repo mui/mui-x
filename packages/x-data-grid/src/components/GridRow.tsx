@@ -126,7 +126,10 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, rowId);
+  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
+    rowId,
+    editMode: rootProps.editMode,
+  });
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -473,7 +476,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
+      {scrollbarWidth !== 0 && (
+        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
+      )}
     </div>
   );
 });

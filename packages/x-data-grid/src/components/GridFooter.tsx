@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
-import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
+import { gridRowSelectionCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
@@ -15,7 +15,7 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
-    const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
+    const selectedRowCount = useGridSelector(apiRef, gridRowSelectionCountSelector);
     const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
     const selectedRowCountElement =
@@ -36,9 +36,7 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
 
     const paginationElement = rootProps.pagination &&
       !rootProps.hideFooterPagination &&
-      rootProps.slots.pagination && (
-        <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
-      );
+      rootProps.slots.pagination && <rootProps.slots.pagination />;
 
     return (
       <GridFooterContainer {...props} ref={ref}>

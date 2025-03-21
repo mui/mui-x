@@ -8,7 +8,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
 
 export interface BarElementClasses {
@@ -87,7 +87,7 @@ function BarElement(props: BarElementProps) {
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
     dataIndex,
@@ -111,7 +111,7 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      ...interactionProps,
       style,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',

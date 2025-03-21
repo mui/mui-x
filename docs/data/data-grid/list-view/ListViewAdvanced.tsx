@@ -300,9 +300,9 @@ export default function ListViewAdvanced(props: Props) {
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               listView: isListView,
               container,
               handleDelete,

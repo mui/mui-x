@@ -11,7 +11,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -78,9 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
           ...textFieldProps?.slotProps,
           input: {
             endAdornment: applying ? (
-              <rootProps.slots.baseInputAdornment position="end">
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              </rootProps.slots.baseInputAdornment>
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...textFieldProps?.slotProps?.input,
           },
@@ -128,7 +126,15 @@ GridFilterInputValue.propTypes = {
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
-      current: PropTypes.any.isRequired,
+      current: (props, propName) => {
+        if (props[propName] == null) {
+          return null;
+        }
+        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+          return new Error(`Expected prop '${propName}' to be of type Element`);
+        }
+        return null;
+      },
     }),
   ]),
   /**

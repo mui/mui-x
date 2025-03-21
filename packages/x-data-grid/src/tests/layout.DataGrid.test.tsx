@@ -11,7 +11,6 @@ import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridToolbar,
   DataGridProps,
   GridColDef,
   gridClasses,
@@ -969,22 +968,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('localeText', () => {
-    it('should replace the density selector button label text to "Size"', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            localeText={{ toolbarDensity: 'Size' }}
-          />
-        </div>,
-      );
-
-      expect(screen.getByText('Size')).not.to.equal(null);
-    });
-
     it('should support translations in the theme', () => {
       render(
         <ThemeProvider theme={createTheme({}, ptBR)}>
@@ -1000,20 +983,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
       function TestCase(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar {...props} />
           </div>
         );
       }
-      const { setProps } = render(<TestCase localeText={{ toolbarDensity: 'Density' }} />);
-      expect(screen.getByText('Density')).not.to.equal(null);
-      setProps({ localeText: { toolbarDensity: 'Densidade' } });
-      expect(screen.getByText('Densidade')).not.to.equal(null);
+      const { setProps } = render(
+        <TestCase localeText={{ toolbarQuickFilterPlaceholder: 'Recherche' }} />,
+      );
+      expect(screen.getByPlaceholderText('Recherche')).not.to.equal(null);
+      setProps({ localeText: { toolbarQuickFilterPlaceholder: 'Buscar' } });
+      expect(screen.getByPlaceholderText('Buscar')).not.to.equal(null);
     });
   });
 
@@ -1157,7 +1136,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       { field: 'username', width: 300 },
     ];
 
-    it('grid container', async () => {
+    it('grid container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'grid' }}>
@@ -1166,12 +1145,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
 
-    it('flex container', async () => {
+    it('flex container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'flex' }}>
@@ -1180,9 +1157,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
   });
 

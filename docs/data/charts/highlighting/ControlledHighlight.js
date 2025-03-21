@@ -32,6 +32,7 @@ export default function ControlledHighlight() {
 
   const handleHighLightedItem = (event) => {
     setHighLightedItem((prev) => ({
+      seriesId: 'A',
       ...prev,
       dataIndex: Number(event.target.value),
     }));

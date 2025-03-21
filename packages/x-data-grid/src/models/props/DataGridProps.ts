@@ -25,7 +25,7 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
+import { GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -33,8 +33,12 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource } from '../gridDataSource';
+import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
+import type {
+  GridGetRowsError,
+  GridUpdateRowError,
+} from '../../hooks/features/dataSource/gridDataSourceError';
 
 export interface GridExperimentalFeatures {
   /**
@@ -317,6 +321,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   showColumnVerticalBorder: boolean;
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: boolean;
+  /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
@@ -411,6 +420,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   classes?: Partial<GridClasses>;
   /**
+   * The data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache?: GridDataSourceCache | null;
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
@@ -493,6 +510,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -708,7 +730,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel?: GridInputRowSelectionModel;
+  rowSelectionModel?: GridRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
@@ -756,6 +778,8 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId?: GridRowIdGetter<R>;
   /**
@@ -859,7 +883,6 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
-  unstable_dataSource?: GridDataSource;
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */

@@ -19,6 +19,7 @@
 /r/x-pro-svg-link https://mui.com/x/introduction/licensing/#pro-plan 302
 /r/x-premium-svg https://mui.com/static/x/premium.svg 302
 /r/x-premium-svg-link https://mui.com/x/introduction/licensing/#premium-plan 302
+/r/x-telemetry-postinstall-troubleshoot https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cbug+%F0%9F%90%9B&projects=&template=1.bug.yml&title=MUI+X+Telemetry+failed+to+make+initialization 302
 
 # Legacy redirection
 # Added in chronological order (the last line is the most recent one)
@@ -61,5 +62,11 @@
 # 2024
 /x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
 /x/react-charts/tree-map/ /x/react-charts/treemap/ 301
+# 2025
+/x/react-charts/getting-started/ /x/react-charts/quickstart/ 301
+/x/react-data-grid/getting-started/ /x/react-data-grid/quickstart/ 301
+/x/react-date-pickers/getting-started/ /x/react-date-pickers/quickstart/ 301
+/x/react-tree-view/getting-started/ /x/react-tree-view/quickstart/ 301
+/x/react-data-grid/demo/ /x/react-data-grid/features/ 301
 
 # Proxies

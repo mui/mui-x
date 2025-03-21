@@ -41,6 +41,7 @@ const euPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Data eta ordua aukeratu',
   timePickerToolbarTitle: 'Ordua aukeratu',
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +59,12 @@ const euPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} astea`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Data aukeratu, aukeratutako data ${formattedDate} da` : 'Data aukeratu',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Ordua aukeratu, aukeratutako ordua ${formattedTime} da` : 'Ordua aukeratu',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Balioa garbitu',
 
   // Table labels

@@ -6,16 +6,17 @@ import { styled } from '@mui/material/styles';
 import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
-import getColor from './getColor';
+import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
-import { useBarSeries } from '../hooks/useSeries';
+import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 /**
  * Solution of the equations
@@ -89,7 +90,7 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    useBarSeries() ??
+    useBarSeriesContext() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
 
   const drawingArea = useDrawingArea();
@@ -119,7 +120,7 @@ const useAggregatedData = (): {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScaleErrors(verticalLayout, seriesId, xAxisId, xAxis, yAxisId, yAxis);
+      checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxis, yAxisId, yAxis);
 
       const baseScaleConfig = (
         verticalLayout ? xAxisConfig : yAxisConfig
@@ -138,10 +139,11 @@ const useAggregatedData = (): {
       });
       const barOffset = groupIndex * (barWidth + offset);
 
-      const { stackedData } = series[seriesId];
+      const { stackedData, data: currentSeriesData, layout } = series[seriesId];
 
-      return stackedData
-        .map((values, dataIndex: number) => {
+      return baseScaleConfig
+        .data!.map((baseValue, dataIndex: number) => {
+          const values = stackedData[dataIndex];
           const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
           const minValueCoord = Math.round(Math.min(...valueCoordinates));
@@ -152,19 +154,15 @@ const useAggregatedData = (): {
           const result = {
             seriesId,
             dataIndex,
-            layout: series[seriesId].layout,
-            x: verticalLayout
-              ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset
-              : minValueCoord,
-            y: verticalLayout
-              ? minValueCoord
-              : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
+            layout,
+            x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
+            y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
             xOrigin: xScale(0)!,
             yOrigin: yScale(0)!,
             height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
             width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
             color: colorGetter(dataIndex),
-            value: series[seriesId].data[dataIndex],
+            value: currentSeriesData[dataIndex],
             maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
           };
 
@@ -259,7 +257,8 @@ const BarPlotRoot = styled('g', {
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 

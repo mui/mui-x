@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useItemHighlighted } from '@mui/x-charts/context';
+import { useItemHighlighted } from '@mui/x-charts/hooks';
 import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
 import { HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 
@@ -76,7 +76,7 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
 function HeatmapItem(props: HeatmapItemProps) {
   const { seriesId, dataIndex, color, value, slotProps = {}, slots = {}, ...other } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'heatmap', seriesId, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId,
     dataIndex,
@@ -95,7 +95,7 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: { ...getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex }) },
+    additionalProps: interactionProps,
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,

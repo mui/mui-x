@@ -12,16 +12,17 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowEntry } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridDensityFactorSelector } from '../density/densitySelector';
-import { gridFilterModelSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
-import { gridPinnedRowsSelector } from './gridRowsSelector';
-import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
+import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
+import {
+  gridDimensionsSelector,
+  gridRowHeightSelector,
+} from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
-
+import { gridFocusedVirtualCellSelector } from '../virtualization/gridFocusedVirtualCellSelector';
 /* eslint-disable no-underscore-dangle */
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
@@ -29,11 +30,21 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
+  const baseRowHeight = gridRowHeightSelector(apiRef);
+  const dataRowCount = gridRowCountSelector(apiRef);
+  const pagination = gridPaginationSelector(apiRef);
+  const rowCount = Math.min(
+    pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
+    dataRowCount,
+  );
+
   return {
     ...state,
     rowsMeta: {
-      currentPageTotalHeight: 0,
-      positions: [],
+      currentPageTotalHeight: rowCount * baseRowHeight,
+      positions: Array.from({ length: rowCount }, (_, i) => i * baseRowHeight),
+      pinnedTopRowsTotalHeight: 0,
+      pinnedBottomRowsTotalHeight: 0,
     },
   };
 };
@@ -62,15 +73,9 @@ export const useGridRowsMeta = (
   const isHeightMetaValid = React.useRef(false);
 
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = useGridSelector(
-    apiRef,
-    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
-  );
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const getRowHeightEntry: GridRowsMetaPrivateApi['getRowHeightEntry'] = (rowId) => {
     let entry = heightCache.get(rowId);
@@ -92,7 +97,7 @@ export const useGridRowsMeta = (
     (row: GridRowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
       // mess the initial rowsMeta hydration :/
-      const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+      const baseRowHeight = gridDimensionsSelector(apiRef).rowHeight;
       eslintUseValue(rowHeight);
 
       const entry = apiRef.current.getRowHeightEntry(row.id);
@@ -158,8 +163,15 @@ export const useGridRowsMeta = (
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    pinnedRows.top.forEach(processHeightEntry);
-    pinnedRows.bottom.forEach(processHeightEntry);
+    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
+
+    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
 
     const positions: number[] = [];
     const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
@@ -176,15 +188,28 @@ export const useGridRowsMeta = (
       lastMeasuredRowIndex.current = Infinity;
     }
 
+    const didHeightsChange =
+      pinnedTopRowsTotalHeight !== apiRef.current.state.rowsMeta.pinnedTopRowsTotalHeight ||
+      pinnedBottomRowsTotalHeight !== apiRef.current.state.rowsMeta.pinnedBottomRowsTotalHeight ||
+      currentPageTotalHeight !== apiRef.current.state.rowsMeta.currentPageTotalHeight;
+
+    const rowsMeta = {
+      currentPageTotalHeight,
+      positions,
+      pinnedTopRowsTotalHeight,
+      pinnedBottomRowsTotalHeight,
+    };
+
     apiRef.current.setState((state) => {
       return {
         ...state,
-        rowsMeta: {
-          currentPageTotalHeight,
-          positions,
-        },
+        rowsMeta,
       };
     });
+
+    if (didHeightsChange) {
+      apiRef.current.updateDimensions();
+    }
 
     isHeightMetaValid.current = true;
   }, [apiRef, pinnedRows, currentPage.rows, processHeightEntry]);
@@ -236,6 +261,13 @@ export const useGridRowsMeta = (
               ? entry.borderBoxSize[0].blockSize
               : entry.contentRect.height;
           const rowId = (entry.target as any).__mui_id;
+          const focusedVirtualRowId = gridFocusedVirtualCellSelector(apiRef)?.id;
+          if (focusedVirtualRowId === rowId && height === 0) {
+            // Focused virtual row has 0 height.
+            // We don't want to store it to avoid scroll jumping.
+            // https://github.com/mui/mui-x/issues/14726
+            return;
+          }
           apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
         }
         if (!isHeightMetaValid.current) {
@@ -258,7 +290,7 @@ export const useGridRowsMeta = (
   // Because of variable row height this is needed for the virtualization
   useEnhancedEffect(() => {
     hydrateRowsMeta();
-  }, [filterModel, paginationState, sortModel, hydrateRowsMeta]);
+  }, [hydrateRowsMeta]);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getRowHeight,
