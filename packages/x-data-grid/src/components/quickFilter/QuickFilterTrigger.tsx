@@ -1,96 +1,68 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
-import { useToolbarContext } from './ToolbarContext';
+import { QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
-export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
+export type QuickFilterTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridSlotProps['baseIconButton']>;
+  render?: RenderProp<GridSlotProps['baseButton'], QuickFilterState>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className?: string | ((state: QuickFilterState) => string);
 };
 
 /**
- * A button for performing actions from the toolbar.
- * It renders the `baseIconButton` slot.
+ * A button that expands/collapses the quick filter.
+ * It renders the `baseButton` slot.
  *
  * Demos:
  *
- * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
+ * - [Quick Filter](https://mui.com/x/react-data-grid/components/quick-filter/)
  *
  * API:
  *
- * - [ToolbarButton API](https://mui.com/x/api/data-grid/toolbar-button/)
+ * - [QuickFilterTrigger API](https://mui.com/x/api/data-grid/quick-filter-trigger/)
  */
-const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function ToolbarButton(props, ref) {
-    const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
-    const id = useId();
+const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps>(
+  function QuickFilterTrigger(props, ref) {
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const handleRef = useForkRef(buttonRef, ref);
-    const {
-      focusableItemId,
-      registerItem,
-      unregisterItem,
-      onItemKeyDown,
-      onItemFocus,
-      onItemDisabled,
-    } = useToolbarContext();
+    const { state, controlId, onExpandedChange, triggerRef } = useQuickFilterContext();
+    const resolvedClassName = typeof className === 'function' ? className(state) : className;
+    const handleRef = useForkRef(triggerRef, ref);
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      onItemKeyDown(event);
-      onKeyDown?.(event);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onExpandedChange(!state.expanded);
+      onClick?.(event);
     };
 
-    const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
-      onItemFocus(id!);
-      onFocus?.(event);
-    };
-
-    React.useEffect(() => {
-      registerItem(id!, buttonRef);
-      return () => unregisterItem(id!);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const previousDisabled = React.useRef(disabled);
-    React.useEffect(() => {
-      if (previousDisabled.current !== disabled && disabled === true) {
-        onItemDisabled(id!, disabled);
-      }
-      previousDisabled.current = disabled;
-    }, [disabled, id, onItemDisabled]);
-
-    const previousAriaDisabled = React.useRef(ariaDisabled);
-    React.useEffect(() => {
-      if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
-        onItemDisabled(id!, true);
-      }
-      previousAriaDisabled.current = ariaDisabled;
-    }, [ariaDisabled, id, onItemDisabled]);
-
-    const element = useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
-      ...rootProps.slotProps?.baseIconButton,
-      tabIndex: focusableItemId === id ? 0 : -1,
-      ...other,
-      disabled,
-      'aria-disabled': ariaDisabled,
-      onKeyDown: handleKeyDown,
-      onFocus: handleFocus,
-      ref: handleRef,
-    });
+    const element = useGridComponentRenderer(
+      rootProps.slots.baseButton,
+      render,
+      {
+        ...rootProps.slotProps?.baseButton,
+        className: resolvedClassName,
+        'aria-controls': controlId,
+        'aria-expanded': state.expanded,
+        ...other,
+        onClick: handleClick,
+        ref: handleRef,
+      },
+      state,
+    );
 
     return <React.Fragment>{element}</React.Fragment>;
   },
 );
 
-ToolbarButton.propTypes = {
+QuickFilterTrigger.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -113,18 +85,35 @@ ToolbarButton.propTypes = {
    * @default false
    */
   centerRipple: PropTypes.bool,
-  className: PropTypes.string,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
+   * @default 'primary'
    */
-  color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  color: PropTypes.oneOf([
+    'error',
+    'info',
+    'inherit',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+  ]),
   component: PropTypes.elementType,
   /**
    * If `true`, the component is disabled.
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, no elevation is used.
+   * @default false
+   */
+  disableElevation: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple is disabled.
    * @default false
@@ -144,12 +133,9 @@ ToolbarButton.propTypes = {
    */
   disableTouchRipple: PropTypes.bool,
   /**
-   * If given, uses a negative margin to counteract the padding on one
-   * side (this is often helpful for aligning the left or right
-   * side of the icon with content above or below, without ruining the border
-   * size and shape).
+   * Element placed after the children.
    */
-  edge: PropTypes.oneOf(['end', 'start', false]),
+  endIcon: PropTypes.node,
   /**
    * If `true`, the base button will have a keyboard focus ripple.
    * @default false
@@ -164,7 +150,16 @@ ToolbarButton.propTypes = {
    * if needed.
    */
   focusVisibleClassName: PropTypes.string,
-  label: PropTypes.string,
+  /**
+   * If `true`, the button will take up the full width of its container.
+   * @default false
+   */
+  fullWidth: PropTypes.bool,
+  /**
+   * The URL to link to when the button is clicked.
+   * If defined, an `a` element will be used as the root node.
+   */
+  href: PropTypes.string,
   /**
    * The component used to render a link when the `href` prop is provided.
    * @default 'a'
@@ -184,6 +179,11 @@ ToolbarButton.propTypes = {
    */
   loadingIndicator: PropTypes.node,
   /**
+   * The loading indicator can be positioned on the start, end, or the center of the button.
+   * @default 'center'
+   */
+  loadingPosition: PropTypes.oneOf(['center', 'end', 'start']),
+  /**
    * Callback fired when the component is focused with a keyboard.
    * We trigger a `onFocus` callback too.
    */
@@ -197,6 +197,10 @@ ToolbarButton.propTypes = {
    * `small` is equivalent to the dense button styling.
    */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
+  /**
+   * Element placed before the children.
+   */
+  startIcon: PropTypes.node,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -215,6 +219,11 @@ ToolbarButton.propTypes = {
    * A ref that points to the `TouchRipple` element.
    */
   touchRippleRef: PropTypes.any,
+  /**
+   * The variant to use.
+   * @default 'text'
+   */
+  variant: PropTypes.oneOf(['contained', 'outlined', 'text']),
 } as any;
 
-export { ToolbarButton };
+export { QuickFilterTrigger };

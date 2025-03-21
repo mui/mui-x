@@ -16,23 +16,31 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
 import Tooltip from '@mui/material/Tooltip';
 
+type OwnerState = {
+  expanded: boolean;
+};
+
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
   marginLeft: 'auto',
 });
 
-const StyledToolbarButton = styled(ToolbarButton)(({ theme, ownerState }) => ({
-  gridArea: '1 / 1',
-  width: 'min-content',
-  height: 'min-content',
-  zIndex: 1,
-  opacity: ownerState.expanded ? 0 : 1,
-  pointerEvents: ownerState.expanded ? 'none' : 'auto',
-  transition: theme.transitions.create(['opacity']),
-}));
+const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(
+  ({ theme, ownerState }) => ({
+    gridArea: '1 / 1',
+    width: 'min-content',
+    height: 'min-content',
+    zIndex: 1,
+    opacity: ownerState.expanded ? 0 : 1,
+    pointerEvents: ownerState.expanded ? 'none' : 'auto',
+    transition: theme.transitions.create(['opacity']),
+  }),
+);
 
-const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
+const StyledTextField = styled(TextField)<{
+  ownerState: OwnerState;
+}>(({ theme, ownerState }) => ({
   gridArea: '1 / 1',
   overflowX: 'clip',
   width: ownerState.expanded ? 260 : 'var(--trigger-width)',
@@ -43,7 +51,7 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 function CustomToolbar() {
   return (
     <Toolbar>
-      <StyledQuickFilter>
+      <StyledQuickFilter defaultExpanded>
         <QuickFilterTrigger
           render={(triggerProps, state) => (
             <Tooltip title="Search" enterDelay={0}>
@@ -98,7 +106,7 @@ function CustomToolbar() {
   );
 }
 
-export default function GridQuickFilter() {
+export default function GridUncontrolledQuickFilter() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
