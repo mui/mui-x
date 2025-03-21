@@ -13,6 +13,7 @@ export default function FunnelCategoryAxis() {
           position: 'left',
           disableLine: true,
           disableTicks: true,
+          size: 60,
         }}
         {...funnelProps}
       />

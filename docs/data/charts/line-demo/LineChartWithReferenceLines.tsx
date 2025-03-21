@@ -28,6 +28,7 @@ export default function LineChartWithReferenceLines() {
         { data: uData, label: 'uv', type: 'line' },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
+      yAxis={[{ width: 50 }]}
       margin={margin}
     >
       <LinePlot />

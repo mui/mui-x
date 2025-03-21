@@ -27,6 +27,7 @@ export default function DashedLineChart() {
         { data: uData, label: 'uv', id: 'uvId' },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
+      yAxis={[{ width: 50 }]}
       sx={{
         [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
           strokeWidth: 1,

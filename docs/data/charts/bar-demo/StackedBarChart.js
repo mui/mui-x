@@ -22,6 +22,7 @@ export default function StackedBarChart() {
         { data: uData, label: 'uv', id: 'uvId', stack: 'total' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }

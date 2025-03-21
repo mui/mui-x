@@ -39,7 +39,7 @@ export default function AreaChartFillByValue() {
     <Stack direction="column" width="100%" spacing={1}>
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 50 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
         margin={margin}
@@ -61,7 +61,7 @@ export default function AreaChartFillByValue() {
 
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 50 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
         margin={margin}
