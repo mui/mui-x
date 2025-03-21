@@ -165,6 +165,7 @@ const pages: MuiPage[] = [
               },
             ],
           },
+          { pathname: '/x/react-data-grid/prompt', plan: 'premium', unstable: true },
         ],
       },
       {

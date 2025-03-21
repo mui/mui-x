@@ -473,6 +473,16 @@
       "required": true,
       "isProPlan": true
     },
+    "unstable_applyPromptResult": {
+      "type": { "description": "(result: PromptResponse) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "unstable_getPromptContext": {
+      "type": { "description": "(allowDataSampling?: boolean) =&gt; string" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true

@@ -58,11 +58,12 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     return null;
   }, [apiRef, nestedDataManager]);
 
-  const { api, strategyProcessor, events, cacheChunkManager, cache } = useGridDataSourceBase(
-    apiRef,
-    props,
-    { ...options, fetchRowChildren: nestedDataManager.queue, clearDataSourceState },
-  );
+  const { api, debouncedFetchRows, strategyProcessor, events, cacheChunkManager, cache } =
+    useGridDataSourceBase(apiRef, props, {
+      ...options,
+      fetchRowChildren: nestedDataManager.queue,
+      clearDataSourceState,
+    });
 
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
@@ -268,6 +269,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   return {
     api: { public: dataSourceApi, private: dataSourcePrivateApi },
+    debouncedFetchRows,
     strategyProcessor,
     events,
     setStrategyAvailability,

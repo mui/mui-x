@@ -95,6 +95,7 @@ import {
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
+import { useGridPrompt } from '../hooks/features/prompt/useGridPrompt';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: RefObject<GridApiPremium | null> | undefined,
@@ -195,6 +196,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
+  useGridPrompt(apiRef);
 
   return apiRef;
 };
