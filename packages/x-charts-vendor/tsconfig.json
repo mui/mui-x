@@ -3,5 +3,6 @@
   "compilerOptions": {
     "types": ["mocha", "node"]
   },
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"],
   "exclude": ["es", "lib", "jest.config.ts"]
 }
