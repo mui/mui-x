@@ -13,7 +13,7 @@ const CustomContent = styled('div')(({ theme }) => ({
   border: '1px solid',
   display: 'flex',
   '&:hover': {
-    backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
   },
   variants: [
     {
@@ -26,7 +26,7 @@ const CustomContent = styled('div')(({ theme }) => ({
     {
       props: ({ status }) => status.selected,
       style: {
-        backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
+        backgroundColor: alpha(theme.palette.primary.main, 0.4),
       },
     },
   ],
