@@ -23,7 +23,7 @@
       "description": "The minimum gap in pixels between two tick labels. If two tick labels are closer than this minimum gap, one of them will be hidden."
     },
     "tickLabelPlacement": {
-      "description": "The placement of ticks label. Can be the middle of the band, or the tick position. Only used if scale is &#39;band&#39;."
+      "description": "The placement of ticks label. Can be the middle of the band, or the tick position."
     },
     "tickLabelStyle": { "description": "The style applied to ticks text." },
     "tickMaxStep": {
