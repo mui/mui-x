@@ -1,8 +1,11 @@
 'use client';
 import * as React from 'react';
+import {
+  ANIMATION_DURATION_MS,
+  ANIMATION_TIMING_FUNCTION_JS,
+} from '@mui/x-charts/internals/animation';
 import { Transition } from './Transition';
 import { shallowEqual } from './shallowEqual';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from '../constants';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 export function useAnimate<Props extends {}, Elem extends Element>(

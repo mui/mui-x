@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import useForkRef from '@mui/utils/useForkRef';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '@mui/x-charts/internals';
 import { useAnimate } from '../internals/useAnimate';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';

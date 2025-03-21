@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '@mui/x-charts/internals';
 import { cleanId } from '../internals/cleanId';
 import { useChartId, useDrawingArea } from '../hooks';
 import { SeriesId } from '../models/seriesType/common';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../constants';
 
 interface AppearingMaskProps {
   id: SeriesId;

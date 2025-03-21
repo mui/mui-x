@@ -200,10 +200,7 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.24",
-    "react-dom": "^19.0.0",
-    "react": "^19.0.0",
-    "scheduler": "^0.25.0"
+    "@types/node": "^20.17.24"
   },
   "packageManager": "pnpm@10.6.3",
   "engines": {
