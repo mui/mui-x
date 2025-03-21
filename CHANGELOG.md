@@ -35,7 +35,9 @@ Same changes as in `@mui/x-data-grid@8.0.0-beta.1`, plus:
 
 #### `@mui/x-data-grid-premium@8.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.1`.
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.1`, plus:
+
+- [DataGridPremium] Update column state correctly when grouping mode is updated with one grouping column (#17069) @arminmeh
 
 ### Date and Time Pickers
 
