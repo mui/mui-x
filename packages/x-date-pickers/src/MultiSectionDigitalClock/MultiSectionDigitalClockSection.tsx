@@ -6,6 +6,8 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import { MuiEvent } from '@mui/x-internals/types';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -14,6 +16,8 @@ import type {
   MultiSectionDigitalClockOption,
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
+  MultiSectionDigitalClockSectionOwnerState,
+  MultiSectionDigitalClockSectionItemProps,
 } from './MultiSectionDigitalClock.types';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
@@ -21,7 +25,6 @@ import {
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 import { FormProps } from '../internals/models/formProps';
-import { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
@@ -41,13 +44,6 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
-}
-
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
-  /**
-   * `true` if this is not the initial render of the digital clock.
-   */
-  hasDigitalClockAlreadyBeenRendered: boolean;
 }
 
 const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
@@ -178,25 +174,75 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
-    React.useEffect(() => {
-      if (containerRef.current === null) {
-        return;
-      }
-      const activeItem = containerRef.current.querySelector<HTMLElement>(
-        '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
-      );
-      if (active && autoFocus && activeItem) {
-        activeItem.focus();
-      }
-      if (!activeItem || previousActive.current === activeItem) {
-        return;
-      }
-      previousActive.current = activeItem;
-      const offsetTop = activeItem.offsetTop;
-
-      // Subtracting the 4px of extra margin intended for the first visible section item
-      containerRef.current.scrollTop = offsetTop - 4;
+    const digitalClockSectionProps: MultiSectionDigitalClockSectionItemProps = useSlotProps({
+      elementType: DigitalClockSectionItem,
+      externalSlotProps: slotProps?.digitalClockSectionItem,
+      additionalProps: {
+        disableRipple: readOnly,
+        role: 'option',
+      },
+      ownerState,
+      className: classes.item,
     });
+
+    const handleFocusingAndScrolling = React.useCallback(
+      (optionIndex?: number) => {
+        if (containerRef.current === null) {
+          return;
+        }
+        let activeItem: HTMLElement | null = null;
+        if (optionIndex !== undefined) {
+          activeItem = containerRef.current.querySelector<HTMLElement>(
+            `[role="option"]:nth-child(${optionIndex + 1})`,
+          );
+        } else {
+          activeItem = containerRef.current.querySelector<HTMLElement>(
+            '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
+          );
+        }
+
+        if (active && autoFocus && activeItem) {
+          activeItem.focus();
+        }
+        if (!activeItem || previousActive.current === activeItem) {
+          return;
+        }
+        previousActive.current = activeItem;
+        const offsetTop = activeItem.offsetTop;
+
+        // Subtracting the 4px of extra margin intended for the first visible section item
+        containerRef.current.scrollTop = offsetTop - 4;
+      },
+      [active, autoFocus],
+    );
+
+    React.useEffect(() => {
+      handleFocusingAndScrolling();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleChange = React.useCallback(
+      (
+        event: MuiEvent<React.MouseEvent<HTMLLIElement>>,
+        sectionValue: TSectionValue,
+        index: number,
+      ) => {
+        if (readOnly) {
+          return;
+        }
+
+        if (digitalClockSectionProps.onClick) {
+          digitalClockSectionProps.onClick(event);
+        }
+
+        onChange(sectionValue);
+
+        if (!event.defaultMuiPrevented) {
+          handleFocusingAndScrolling(index);
+        }
+      },
+      [digitalClockSectionProps, handleFocusingAndScrolling, onChange, readOnly],
+    );
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
@@ -252,18 +298,17 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
           return (
             <DigitalClockSectionItem
               key={option.label}
-              onClick={() => !readOnly && onChange(option.value)}
+              {...digitalClockSectionProps}
+              onClick={(event: React.MouseEvent<HTMLLIElement>) =>
+                handleChange(event, option.value, index)
+              }
               selected={isSelected}
               disabled={isDisabled}
-              disableRipple={readOnly}
-              role="option"
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly || isDisabled || undefined}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
               tabIndex={tabIndex}
-              className={classes.item}
-              {...slotProps?.digitalClockSectionItem}
             >
               {option.label}
             </DigitalClockSectionItem>
