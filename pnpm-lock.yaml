@@ -1896,6 +1896,9 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      tsx:
+        specifier: ^4.19.3
+        version: 4.19.3
       vite:
         specifier: ^6.2.2
         version: 6.2.2(@types/node@20.17.24)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.3)(yaml@2.7.0)
