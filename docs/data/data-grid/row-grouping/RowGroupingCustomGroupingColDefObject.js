@@ -27,7 +27,7 @@ export default function RowGroupingCustomGroupingColDefObject() {
         disableRowSelectionOnClick
         initialState={initialState}
         groupingColDef={{
-          headerName: 'Director (by Company)',
+          headerName: 'Group',
         }}
       />
     </div>

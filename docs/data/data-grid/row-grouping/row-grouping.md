@@ -69,8 +69,6 @@ To display a grouping column for each criterion, set the `rowGroupingColumnMode`
 Use the `groupingColDef` prop to customize the rendering of the grouping column.
 You can override any property from the column definition (`GridColDef`) interface, with the exceptions of the `field`, the `type`, and the properties related to inline editing.
 
-The demo below changes the grouping column's `headerName` from **Group** to **Director (by Company)**:
-
 {{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
 By default, when using the object format, the properties are applied to all grouping columns.
@@ -257,7 +255,7 @@ To expand the whole tree, set `defaultGroupingExpansionDepth = -1`.
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic. 
+Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic.
 This prop is a callback that receives a node as an argument.
 When defined, this callback always takes priority over the `defaultGroupingExpansionDepth` prop.
 
