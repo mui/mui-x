@@ -87,9 +87,9 @@ If you want to access the grouping column field, for instance, to use it with co
 
 Group expansion for tree data works the same as describe in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
 
-## Automatic parent and children selection
+## Automatic parent and child selection
 
-The behavior for automatic parent and children selection is the same as for row grouping—see [the relevant section](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection) in that feature's documentation for details.
+The behavior for automatic parent and child selection is the same as for row grouping—see [the relevant section](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection) in that feature's documentation for details.
 
 ## Gaps in the tree
 
