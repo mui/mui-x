@@ -9,16 +9,6 @@ title: Data Grid - Pivoting
 The Data Grid Premium's pivoting feature lets users transform the data in their grid by reorganizing rows and columns, creating dynamic cross-tabulations of data.
 This makes it possible to analyze data from different angles and gain insights that would be difficult to see in the default grid view.
 
-:::warning
-The pivoting feature is currently in preview and the API is subject to change.
-You can enable it using the `experimentalFeatures` prop:
-
-```tsx
-<DataGridPremium experimentalFeatures={{ pivoting: true }} />
-```
-
-:::
-
 ## Quick start
 
 Pivoting is enabled by default and can be accessed through the icon in the toolbar.

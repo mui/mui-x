@@ -46,7 +46,6 @@ export default function GridPivotingMovies() {
           }}
           showToolbar
           columnGroupHeaderHeight={36}
-          experimentalFeatures={{ pivoting: true }}
           sx={{
             '& .MuiDataGrid-columnHeader--filledGroup': {
               '& .MuiDataGrid-columnHeaderTitleContainer': {

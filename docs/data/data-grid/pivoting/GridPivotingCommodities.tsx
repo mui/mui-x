@@ -67,7 +67,6 @@ export default function GridPivotingCommodities() {
           initialState={initialState}
           loading={loading}
           columnGroupHeaderHeight={36}
-          experimentalFeatures={{ pivoting: true }}
           pinnedColumns={pinnedColumns}
           pivotingColDef={pivotingColDef}
           slotProps={{

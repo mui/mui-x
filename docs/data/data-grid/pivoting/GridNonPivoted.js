@@ -113,7 +113,6 @@ export default function GridNonPivoted() {
         columns={columns}
         columnGroupHeaderHeight={36}
         showToolbar
-        experimentalFeatures={{ pivoting: true }}
         slotProps={{
           toolbar: {
             showQuickFilter: false,

@@ -127,14 +127,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
   function Test(props: Partial<DataGridPremiumProps>) {
     return (
       <div style={{ height: 600, width: '100%' }}>
-        <DataGridPremium
-          rows={ROWS}
-          columns={COLUMNS}
-          showToolbar
-          cellSelection
-          {...props}
-          experimentalFeatures={{ pivoting: true }}
-        />
+        <DataGridPremium rows={ROWS} columns={COLUMNS} showToolbar cellSelection {...props} />
       </div>
     );
   }

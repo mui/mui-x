@@ -57,7 +57,6 @@ export default function GridPivotingFinancial() {
             },
           }}
           columnGroupHeaderHeight={36}
-          experimentalFeatures={{ pivoting: true }}
           slotProps={{
             toolbar: {
               showQuickFilter: false,

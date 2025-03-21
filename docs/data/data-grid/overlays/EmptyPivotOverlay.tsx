@@ -64,7 +64,6 @@ export default function EmptyPivotOverlay() {
         initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
-        experimentalFeatures={{ pivoting: true }}
       />
     </div>
   );

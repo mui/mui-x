@@ -42,9 +42,6 @@ export default function GridPivotPanelTrigger() {
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
         showToolbar
-        experimentalFeatures={{
-          pivoting: true,
-        }}
       />
     </div>
   );

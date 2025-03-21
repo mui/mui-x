@@ -140,7 +140,6 @@ export default function GridPivotingMultipleValues() {
         initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
-        experimentalFeatures={{ pivoting: true }}
         slotProps={{
           toolbar: {
             showQuickFilter: false,

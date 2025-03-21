@@ -84,7 +84,6 @@ export default function GridGetPivotDerivedColumns() {
               model: pivotModel,
             },
           }}
-          experimentalFeatures={{ pivoting: true }}
           showToolbar
           columnGroupHeaderHeight={36}
           slotProps={{
