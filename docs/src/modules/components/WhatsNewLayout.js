@@ -28,8 +28,8 @@ const entries = [
         url: '/x/react-data-grid/row-spanning/',
       },
       {
-        title: 'Data Grid – Automatic parents and children selection',
-        url: '/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection',
+        title: 'Data Grid – Automatic parent and child selection',
+        url: '/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection',
       },
       {
         title: 'Date and Time Pickers – Support date-fns v4',
