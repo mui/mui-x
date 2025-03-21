@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from './animation';
 import { Transition } from './Transition';
-import { shallowEqual } from './shallowEqual';
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+import { shallowEqual } from '../shallowEqual';
 
 export function useAnimate<Props extends {}, Elem extends Element>(
   props: Props,
@@ -24,11 +24,11 @@ export function useAnimate<Props extends {}, Elem extends Element>(
   const elementRef = React.useRef<Elem>(null);
   const lastPropsRef = React.useRef(props);
 
-  useIsomorphicLayoutEffect(() => {
+  useEnhancedEffect(() => {
     lastPropsRef.current = props;
   }, [props]);
 
-  useIsomorphicLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (skip) {
       transitionRef.current?.finish();
     } else {

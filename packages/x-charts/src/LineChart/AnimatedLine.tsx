@@ -1,11 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
-import useForkRef from '@mui/utils/useForkRef';
-import { useAnimate } from '../internals/useAnimate';
-import { AppearingMask } from './AppearingMask';
 import type { LineElementOwnerState } from './LineElement';
+import { useAnimateLine } from '../hooks';
+import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: LineElementOwnerState;
@@ -15,32 +13,6 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
    * @default false
    */
   skipAnimation?: boolean;
-}
-
-type LineAnimatedProps = Pick<AnimatedLineProps, 'd' | 'skipAnimation'> & {
-  ref?: React.Ref<SVGPathElement>;
-};
-
-/** Animates a line of a line chart using a `path` element.
- * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
- * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
-export function useAnimateLine(props: LineAnimatedProps): {
-  ref: React.Ref<SVGPathElement>;
-  d: string;
-} {
-  const ref = useAnimate(
-    { d: props.d },
-    {
-      createInterpolator: (lastProps, newProps) => {
-        const interpolate = interpolateString(lastProps.d, newProps.d);
-        return (t) => ({ d: interpolate(t) });
-      },
-      applyProps: (element: SVGPathElement, { d }) => element.setAttribute('d', d),
-      skip: props.skipAnimation,
-    },
-  );
-
-  return { ref: useForkRef(ref, props.ref), d: props.d };
 }
 
 /**

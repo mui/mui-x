@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation';
+import clsx from 'clsx';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { cleanId } from '../internals/cleanId';
 import { useChartId, useDrawingArea } from '../hooks';
 import { SeriesId } from '../models/seriesType/common';
@@ -47,7 +48,7 @@ export function AppearingMask(props: AppearingMaskProps) {
     <React.Fragment>
       <clipPath id={clipId}>
         <AnimatedRect
-          className={props.skipAnimation ? '' : appearingMaskClasses.animate}
+          className={clsx(!props.skipAnimation && appearingMaskClasses.animate)}
           x={0}
           y={0}
           width={drawingArea.left + drawingArea.width + drawingArea.right}
