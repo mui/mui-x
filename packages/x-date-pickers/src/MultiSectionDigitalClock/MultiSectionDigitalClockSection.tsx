@@ -68,6 +68,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   width: 56,
   padding: 0,
   overflow: 'hidden',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
