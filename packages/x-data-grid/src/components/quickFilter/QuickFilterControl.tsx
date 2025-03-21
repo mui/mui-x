@@ -60,6 +60,9 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!state.expanded) {
+        onExpandedChange(true);
+      }
       onValueChange(event);
       onChange?.(event);
     };

@@ -196,6 +196,22 @@ describe('<DataGrid /> - Quick filter', () => {
       ).to.equal('true');
     });
 
+    it('should expand when the input changes value', () => {
+      render(<TestCase />);
+
+      fireEvent.focus(screen.getByRole<HTMLInputElement>('searchbox'));
+
+      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
+        target: { value: 'adidas' },
+      });
+
+      expect(
+        screen
+          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
+          .getAttribute('aria-expanded'),
+      ).to.equal('true');
+    });
+
     it('should collapse when the input is blurred with no value', () => {
       render(<TestCase />);
 
