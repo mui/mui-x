@@ -144,13 +144,13 @@ jobs:
   test_unit:
     <<: *default-job
     resource_class: medium
-    no_output_timeout: 30m
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
+          no_output_timeout: 30m
           command: pnpm vitest --project "jsdom/*" --reporter hanging-process
 
   test_browser:
@@ -158,7 +158,6 @@ jobs:
     docker:
       - image: mcr.microsoft.com/playwright:v1.51.0-noble
     resource_class: medium
-    no_output_timeout: 30m
     steps:
       - checkout
       - install_js:
@@ -171,6 +170,7 @@ jobs:
           steps:
             - run:
                 name: Test Browser
+                no_output_timeout: 30m
                 command: pnpm vitest --project "browser/*" --reporter hanging-process
       - when:
           condition:
@@ -178,6 +178,7 @@ jobs:
           steps:
             - run:
                 name: Test Browser + Coverage
+                no_output_timeout: 30m
                 command: pnpm vitest --project "browser/*" --reporter hanging-process --coverage
             - run:
                 name: Check coverage generated
