@@ -268,11 +268,14 @@ describe('useAnimate', () => {
 
     await user.click(screen.getByRole('button'));
 
-    const { promise: twoAnimationsFrames, resolve } = Promise.withResolvers<void>();
+    let resolve: () => void;
+    const twoAnimationFrames = new Promise<void>((res) => {
+      resolve = res;
+    });
     // Wait two frames to ensure the transition is stopped
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
 
-    await twoAnimationsFrames;
+    await twoAnimationFrames;
 
     // Clicking the button is async, so at most one more call could have happened
     expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + 1);
@@ -317,7 +320,10 @@ describe('useAnimate', () => {
 
     unmount();
 
-    const { promise: twoAnimationFrames, resolve } = Promise.withResolvers<void>();
+    let resolve: () => void;
+    const twoAnimationFrames = new Promise<void>((res) => {
+      resolve = res;
+    });
     // Wait two frames to ensure the transition is stopped
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
 
