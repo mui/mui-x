@@ -14,7 +14,8 @@ export type ChartInteraction =
   | 'move'
   | 'moveStart'
   | 'moveEnd'
-  | 'hover';
+  | 'hover'
+  | 'pointerMove';
 
 export type ChartInteractionHandler<
   Memo extends any,
@@ -49,6 +50,10 @@ export type AddInteractionListener = {
   <Memo extends any>(
     interaction: 'hover',
     callback: ChartInteractionHandler<Memo, 'hover', PointerEvent>,
+  ): InteractionListenerResult;
+  <Memo extends any>(
+    interaction: 'pointerMove',
+    callback: ChartInteractionHandler<Memo, 'move', PointerEvent>,
   ): InteractionListenerResult;
 };
 

@@ -67,6 +67,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       onMoveStart: (state) => retriggerEvent('moveStart', state),
       onMoveEnd: (state) => retriggerEvent('moveEnd', state),
       onHover: (state) => retriggerEvent('hover', state),
+      onPointerMove: (state) => retriggerEvent('pointerMove', state),
     },
     {
       target: svgRef,

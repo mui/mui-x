@@ -22,17 +22,14 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
 
   React.useEffect(() => {
     // Drag event is triggered by mobile touch or mouse drag.
-    const positionOnDragHandler = instance.addMultipleInteractionListeners(
-      ['move', 'drag'],
-      (state) => {
-        setMousePosition({
-          x: state.event.clientX,
-          y: state.event.clientY,
-          height: state.event.height,
-          pointerType: state.event.pointerType as MousePosition['pointerType'],
-        });
-      },
-    );
+    const positionOnDragHandler = instance.addInteractionListener('pointerMove', (state) => {
+      setMousePosition({
+        x: state.event.clientX,
+        y: state.event.clientY,
+        height: state.event.height,
+        pointerType: state.event.pointerType as MousePosition['pointerType'],
+      });
+    });
 
     return () => {
       positionOnDragHandler.cleanup();
