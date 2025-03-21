@@ -26,11 +26,22 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+    };
 
-  return composeClasses(slots, getRichTreeViewUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewRoot = styled('ul', {
@@ -104,7 +115,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>
