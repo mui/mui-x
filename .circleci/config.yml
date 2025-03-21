@@ -75,12 +75,12 @@ commands:
             curl -fsSL https://fnm.vercel.app/install >> install-fnm
             chmod +x ./install-fnm
             ./install-fnm --skip-shell
-
             echo '
             export FNM_PATH="/root/.local/share/fnm"
             export PATH="$FNM_PATH:$PATH"
             eval "`fnm env`"
             ' >> $BASH_ENV
+            rm ./install-fnm
 
       - run:
           name: Install Node.js
