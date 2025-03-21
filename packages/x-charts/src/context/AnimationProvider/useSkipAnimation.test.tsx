@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useSkipAnimation } from './useSkipAnimation';
 import { AnimationProvider } from './AnimationProvider';
 
@@ -28,20 +29,16 @@ describe('useSkipAnimation', () => {
     window.matchMedia = oldMatchMedia;
   });
 
-  it('should throw an error when parent context not present', function test() {
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X: Could not find the animation ref context.';
     const errorMessage2 =
-      'It looks like you rendered your component outside of a ChartsContainer parent component.';
+      'It looks like you rendered your component outside of a ChartContainer parent component.';
     const errorMessage3 = 'The above error occurred in the <UseSkipAnimation> component:';
-    const expextedError =
+    const expectedError =
       reactMajor < 19
         ? [errorMessage1, errorMessage2, errorMessage3]
         : `${errorMessage1}\n${errorMessage2}`;
@@ -52,7 +49,7 @@ describe('useSkipAnimation', () => {
           <UseSkipAnimation />
         </ErrorBoundary>,
       ),
-    ).toErrorDev(expextedError);
+    ).toErrorDev(expectedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(

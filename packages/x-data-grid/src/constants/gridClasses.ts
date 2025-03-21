@@ -29,6 +29,10 @@ export interface GridClasses {
    */
   aggregationColumnHeaderLabel: string;
   /**
+   * Styles applied to the aggregation row overlay wrapper.
+   */
+  aggregationRowOverlayWrapper: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -173,7 +177,14 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'columnHeader--siblingFocused': string;
-
+  /**
+   * Styles applied to the header filter input element.
+   */
+  columnHeaderFilterInput: string;
+  /**
+   * Styles applied to the header filter operator label element.
+   */
+  columnHeaderFilterOperatorLabel: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -206,6 +217,10 @@ export interface GridClasses {
    * Styles applied to the empty column group header cell.
    */
   'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
   /**
    * Styles applied to the column headers.
    */
@@ -251,6 +266,14 @@ export interface GridClasses {
    */
   columnsManagementFooter: string;
   /**
+   * Styles applied to the columns management scroll area element.
+   */
+  columnsManagementScrollArea: string;
+  /**
+   * Styles applied to the columns management empty text element.
+   */
+  columnsManagementEmptyText: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -262,10 +285,6 @@ export interface GridClasses {
    * Styles applied to the detail panel element.
    */
   detailPanel: string;
-  /**
-   * Styles applied to the detail panels wrapper element.
-   */
-  detailPanels: string;
   /**
    * Styles applied to the detail panel toggle cell element.
    */
@@ -383,10 +402,10 @@ export interface GridClasses {
    */
   'main--hasPinnedRight': string;
   /**
-   * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * Styles applied to the main container element to hide the contents of the grid.
    * @ignore - do not document.
    */
-  'main--hasSkeletonLoadingOverlay': string;
+  'main--hiddenContent': string;
   /**
    * Styles applied to the menu element.
    */
@@ -440,10 +459,6 @@ export interface GridClasses {
    * Styles applied to the virtualization render zone.
    */
   virtualScrollerRenderZone: string;
-  /**
-   * Styles applied to the pinned columns.
-   */
-  pinnedColumns: string;
   /**
    * Styles applied to the root element.
    */
@@ -585,6 +600,15 @@ export interface GridClasses {
    */
   sortIcon: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
+   * Styles applied to the shadow scroll area element.
+   * @ignore - do not document.
+   */
+  shadowScrollArea: string;
+  /**
    * Styles applied to the toolbar container element.
    */
   toolbarContainer: string;
@@ -672,10 +696,6 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
-  /**
-   * Styles applied to pinned rows render zones.
-   */
-  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -691,6 +711,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
+  'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
   'booleanCell',
@@ -728,6 +749,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
+  'columnHeader--filter',
+  'columnHeaderFilterInput',
+  'columnHeaderFilterOperatorLabel',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -746,10 +770,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementHeader',
   'columnsManagementSearchInput',
   'columnsManagementFooter',
+  'columnsManagementScrollArea',
+  'columnsManagementEmptyText',
   'container--top',
   'container--bottom',
   'detailPanel',
-  'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
   'footerCell',
@@ -778,7 +803,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
-  'main--hasSkeletonLoadingOverlay',
+  'main--hiddenContent',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -821,6 +846,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
+  'shadowScrollArea',
   'toolbarContainer',
   'toolbarFilterList',
   'toolbarPromptControl',
@@ -833,7 +859,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'pinnedColumns',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
@@ -849,5 +874,4 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
 ]);

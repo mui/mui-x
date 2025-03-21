@@ -66,3 +66,15 @@ The demo below shows different ways to set the y-axis range.
 They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
 
 {{"demo": "CustomDomainYAxis.js"}}
+
+## Color Customization
+
+You can customize the color of the sparkline by providing a color to the `color` prop.
+
+{{"demo": "ColorCustomization.js"}}
+
+The `color` prop also accepts a function that is called with the mode (`'light'` or `'dark'`), so you can adapt the color to user preferences.
+
+The following example shows a white line if this page is in dark mode, or a black one if it is in light mode.
+
+{{"demo": "ColorCustomizationMode.js"}}

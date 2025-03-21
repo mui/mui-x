@@ -6,8 +6,8 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -40,7 +40,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       fireEvent.click(screen.getByLabelText(/switch to year view/i));
       expect(handleViewChange.callCount).to.equal(1);
@@ -49,7 +49,7 @@ describe('<DesktopDatePicker />', () => {
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('day');
     });
@@ -66,7 +66,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       fireEvent.click(screen.getByLabelText(/switch to year view/i));
       expect(handleViewChange.callCount).to.equal(1);
@@ -75,7 +75,7 @@ describe('<DesktopDatePicker />', () => {
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
     });
@@ -85,7 +85,7 @@ describe('<DesktopDatePicker />', () => {
         <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} views={['year']} />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
 
@@ -93,7 +93,7 @@ describe('<DesktopDatePicker />', () => {
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       setProps({ views: ['month', 'year'] });
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
       clock.runToLast();
 
@@ -101,13 +101,10 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    it('should move the focus to the newly opened views', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should move the focus to the newly opened views', () => {
       render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
       expect(document.activeElement).to.have.text('2019');
 
       fireEvent.click(screen.getByText('2020'));
@@ -123,7 +120,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
 
@@ -131,7 +128,7 @@ describe('<DesktopDatePicker />', () => {
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       setProps({ view: 'year' });
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
       clock.runToLast();
 
@@ -140,7 +137,8 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('scroll', () => {
+  // JSDOM has neither layout nor window.scrollTo
+  describeSkipIf(isJSDOM)('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,
@@ -155,13 +153,6 @@ describe('<DesktopDatePicker />', () => {
           {children}
         </div>
       );
-    });
-
-    before(function beforeHook() {
-      // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        this.skip();
-      }
     });
 
     let originalScrollX: number;
@@ -245,7 +236,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       // Select year
       fireEvent.click(screen.getByRole('radio', { name: '2025' }));
@@ -272,7 +263,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
     });
@@ -285,7 +276,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
     });
@@ -298,7 +289,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
@@ -311,7 +302,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
 
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
@@ -356,7 +347,49 @@ describe('<DesktopDatePicker />', () => {
     expect(() => {
       render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
-      openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date' });
     }).toWarnDev('MUI X: `openTo="month"` is not a valid prop.');
+  });
+
+  describe('performance', () => {
+    it('should not re-render the `PickersActionBar` on date change', () => {
+      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+
+      render(
+        <DesktopDatePicker
+          slots={{ actionBar: React.memo(RenderCount) }}
+          closeOnSelect={false}
+          open
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
+    });
+
+    it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', () => {
+      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+      const actions: PickersActionBarAction[] = ['clear', 'today'];
+
+      const { setProps } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date('2018-01-01')}
+          slots={{ actionBar: React.memo(RenderCount) }}
+          slotProps={{ actionBar: () => ({ actions }) }}
+          closeOnSelect={false}
+          open
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+
+      setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
+    });
   });
 });

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
@@ -9,6 +10,7 @@ import {
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
+  gridRowNodeSelector,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
@@ -54,7 +56,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
@@ -62,7 +64,7 @@ export const useGridRowReorder = (
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
-  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
@@ -83,7 +85,7 @@ export const useGridRowReorder = (
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -113,7 +115,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
 
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return;
@@ -158,7 +160,7 @@ export const useGridRowReorder = (
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }

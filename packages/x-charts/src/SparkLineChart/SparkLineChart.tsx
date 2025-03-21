@@ -2,21 +2,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -34,7 +35,18 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
+  extends Omit<
+    ChartContainerProps,
+    | 'series'
+    | 'xAxis'
+    | 'yAxis'
+    | 'zAxis'
+    | 'radiusAxis'
+    | 'rotationAxis'
+    | 'margin'
+    | 'plugins'
+    | 'colors'
+  > {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -87,15 +99,11 @@ export interface SparkLineChartProps
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default 5
    */
-  margin?: Partial<CardinalDirections<number>>;
+  margin?: Partial<ChartMargin> | number;
   /**
    * Overridable component slots.
    * @default {}
@@ -106,14 +114,15 @@ export interface SparkLineChartProps
    * @default {}
    */
   slotProps?: SparkLineChartSlotProps;
+
+  /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color?: ChartsColor;
 }
 
-const SPARKLINE_DEFAULT_MARGIN = {
-  top: 5,
-  bottom: 5,
-  left: 5,
-  right: 5,
-};
+const SPARK_LINE_DEFAULT_MARGIN = 5;
 
 /**
  * Demos:
@@ -133,8 +142,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     yAxis,
     width,
     height,
-    margin = SPARKLINE_DEFAULT_MARGIN,
-    colors,
+    margin = SPARK_LINE_DEFAULT_MARGIN,
+    color,
     sx,
     showTooltip,
     showHighlight,
@@ -160,6 +169,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
+  const colors: ChartsColorPalette | undefined = React.useMemo(() => {
+    if (color == null) {
+      return undefined;
+    }
+
+    return typeof color === 'function' ? (mode: 'light' | 'dark') => [color(mode)] : [color];
+  }, [color]);
+
   return (
     <ChartContainer
       {...other}
@@ -183,12 +200,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
+          position: 'none',
         },
       ]}
       yAxis={[
         {
-          id: DEFAULT_X_AXIS_KEY,
+          id: DEFAULT_Y_AXIS_KEY,
           ...yAxis,
+          position: 'none',
         },
       ]}
       colors={colors}
@@ -199,14 +218,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && (
-        <BarPlot
-          skipAnimation
-          slots={slots}
-          slotProps={slotProps}
-          sx={{ shapeRendering: 'auto' }}
-        />
-      )}
+      {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
       {plotType === 'line' && (
         <React.Fragment>
@@ -229,6 +241,9 @@ SparkLineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * Set to `true` to fill spark line area.
    * Has no effect if plotType='bar'.
@@ -242,14 +257,16 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
-   * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
    */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
+    'bumpX',
+    'bumpY',
     'catmullRom',
     'linear',
     'monotoneX',
@@ -275,39 +292,62 @@ SparkLineChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the voronoi interaction are ignored.
+   */
+  disableVoronoi: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   * @default 5
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when clicking close to an item.
+   * This is only available for scatter plot for now.
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
+   */
+  onItemClick: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'
@@ -345,6 +385,7 @@ SparkLineChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Formatter used by the tooltip.
@@ -354,6 +395,11 @@ SparkLineChart.propTypes = {
    */
   valueFormatter: PropTypes.func,
   /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  voronoiMaxRadius: PropTypes.number,
+  /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
@@ -362,6 +408,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['x']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -394,13 +441,15 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
     fill: PropTypes.string,
+    height: PropTypes.number,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['bottom', 'top']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['bottom', 'none', 'top']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -413,6 +462,7 @@ SparkLineChart.propTypes = {
     ]),
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelMinGap: PropTypes.number,
     tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
     tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,
@@ -427,6 +477,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['y']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -465,7 +516,8 @@ SparkLineChart.propTypes = {
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['left', 'right']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['left', 'none', 'right']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -486,6 +538,7 @@ SparkLineChart.propTypes = {
     tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
     tickSize: PropTypes.number,
     valueFormatter: PropTypes.func,
+    width: PropTypes.number,
   }),
 } as any;
 

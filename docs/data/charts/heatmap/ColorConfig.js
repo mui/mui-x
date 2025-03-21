@@ -105,7 +105,7 @@ export default function ColorConfig() {
       height={400}
       width={600}
       xAxis={[{ data: xData }]}
-      yAxis={[{ data: yData }]}
+      yAxis={[{ data: yData, width: 70 }]}
       series={[{ data }]}
       zAxis={[
         {

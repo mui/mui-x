@@ -5,7 +5,7 @@
     "import { PieSeriesType } from '@mui/x-charts'"
   ],
   "properties": {
-    "data": { "type": { "description": "TData[]" }, "required": true },
+    "data": { "type": { "description": "Readonly&lt;TData[]&gt;" }, "required": true },
     "type": { "type": { "description": "'pie'" }, "required": true },
     "arcLabel": {
       "type": {
@@ -35,6 +35,7 @@
     "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
     "id": { "type": { "description": "SeriesId" } },
     "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
     "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },

@@ -51,7 +51,20 @@
     },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "button": {
+      "description": "Styles applied to the button element that represents a single year"
+    },
+    "disabled": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a disabled button element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "selected": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a selected button element"
+    }
+  },
   "slotDescriptions": {
     "yearButton": "Button displayed to render a single year in the <code>year</code> view."
   }

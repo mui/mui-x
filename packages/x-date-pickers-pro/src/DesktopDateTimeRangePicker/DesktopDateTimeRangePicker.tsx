@@ -1,19 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
-  PickerViewsRendererProps,
   resolveDateTimeFormat,
   useUtils,
   PickerRangeValue,
+  PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -26,52 +25,28 @@ import {
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
-import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import {
-  useDesktopRangePicker,
-  UseDesktopRangePickerProps,
-} from '../internals/hooks/useDesktopRangePicker';
+import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import {
-  DateTimeRangePickerRenderers,
-  useDateTimeRangePickerDefaultizedProps,
-} from '../DateTimeRangePicker/shared';
-import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
+import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { usePickerRangePositionContext } from '../hooks';
 
-const rendererInterceptor = function rendererInterceptor<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
-  popperView: DateTimeRangePickerView,
-  rendererProps: PickerViewsRendererProps<
-    PickerRangeValue,
-    DateTimeRangePickerView,
-    DefaultizedProps<
-      Omit<
-        UseDesktopRangePickerProps<
-          DateTimeRangePickerView,
-          TEnableAccessibleFieldDOMStructure,
-          any,
-          any
-        >,
-        'onChange' | 'sx' | 'className'
-      >,
-      'rangePosition' | 'onRangePositionChange' | 'openTo'
-    >,
-    {}
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, DateTimeRangePickerView, any>,
 ) {
-  const { openTo, rangePosition, ...otherProps } = rendererProps;
+  const { viewRenderers, popperView, rendererProps } = props;
+  const { openTo, ...otherProps } = rendererProps;
+  const { rangePosition } = usePickerRangePositionContext();
+
   const finalProps = {
     ...otherProps,
-    rangePosition,
     focusedView: null,
     sx: [
       {
@@ -88,7 +63,7 @@ const rendererInterceptor = function rendererInterceptor<
   const isTimeViewActive = isInternalTimeView(popperView);
   return (
     <React.Fragment>
-      {inViewRenderers.day?.({
+      {viewRenderers.day?.({
         ...rendererProps,
         availableRangePositions: [rangePosition],
         view: !isTimeViewActive ? popperView : 'day',
@@ -102,11 +77,9 @@ const rendererInterceptor = function rendererInterceptor<
         views={finalProps.views.filter(isInternalTimeView)}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
-          inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
+          viewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
             PickerRangeValue,
-            DateTimeRangePickerView,
-            any,
-            {}
+            any
           >
         }
         sx={[{ gridColumn: 3 }, ...finalProps.sx]}
@@ -146,7 +119,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any> = {
+  const viewRenderers: PickerViewRendererLookup<any, any, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -161,8 +134,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const views = !shouldHoursRendererContainMeridiemView
     ? defaultizedProps.views.filter((view) => view !== 'meridiem')
     : defaultizedProps.views;
-  const actionBarActions: PickersActionBarAction[] =
-    defaultizedProps.shouldRenderTimeInASingleColumn ? [] : ['accept'];
 
   const props = {
     ...defaultizedProps,
@@ -173,7 +144,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ampmInClock: true,
     calendars: defaultizedProps.calendars ?? 1,
     slots: {
-      field: MultiInputDateTimeRangeField,
+      field: SingleInputDateTimeRangeField,
       layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
@@ -182,7 +153,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: true,
@@ -192,10 +162,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: actionBarActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -204,6 +170,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -238,8 +205,8 @@ DesktopDateTimeRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -297,7 +264,8 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
@@ -332,12 +300,10 @@ DesktopDateTimeRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -386,7 +352,6 @@ DesktopDateTimeRangePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

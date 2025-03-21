@@ -3,10 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
-    "closeOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
@@ -21,7 +18,12 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
-    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use the <a href=\"https://next.mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+    },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" } },
@@ -95,7 +97,7 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
       }
     },
     "orientation": {
@@ -158,6 +160,7 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
+    "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -171,6 +174,14 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
+    "timeSteps": {
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: number, minutes?: number, seconds?: number }"
+      },
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -183,13 +194,13 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
       }
     },
     "viewRenderers": {
       "type": {
         "name": "shape",
-        "description": "{ day?: func, hours?: func, minutes?: func, month?: func, seconds?: func, year?: func }"
+        "description": "{ day?: func, hours?: func, meridiem?: func, minutes?: func, month?: func, seconds?: func, year?: func }"
       }
     },
     "views": {
@@ -216,7 +227,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": null
     },
@@ -224,6 +235,18 @@
       "name": "calendarHeader",
       "description": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
       "default": "PickersCalendarHeader",
+      "class": null
+    },
+    {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display in the button used to clean the value.",
+      "default": "ClearIcon",
       "class": null
     },
     {
@@ -239,8 +262,26 @@
       "class": null
     },
     {
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    {
       "name": "field",
       "description": "Component used to enter the date with the keyboard.",
+      "class": null
+    },
+    {
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
       "class": null
     },
     {
@@ -276,6 +317,17 @@
       "name": "nextIconButton",
       "description": "Button allowing to switch to the right view.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the Picker.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon to display in the button used to open the Picker.",
       "class": null
     },
     {
@@ -316,8 +368,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

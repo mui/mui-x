@@ -27,14 +27,7 @@
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid-premium';"
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiGridToolbarQuickFilter-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiGridToolbarQuickFilter",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",

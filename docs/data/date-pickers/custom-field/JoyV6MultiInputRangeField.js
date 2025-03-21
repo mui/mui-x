@@ -8,7 +8,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
-  styled,
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
@@ -18,161 +17,105 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
+import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+function JoyField(props) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    triggerRef,
     disabled,
     id,
     label,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     slotProps,
     inputRef,
     ...other
   } = props;
 
   return (
-    <FormControl disabled={disabled} id={id} ref={ref}>
+    <FormControl disabled={disabled} id={id}>
       <FormLabel>{label}</FormLabel>
       <Input
-        ref={ref}
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
         slotProps={{
           ...slotProps,
-          root: { ...slotProps?.root, ref: containerRef },
           input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
+        ref={triggerRef}
       />
     </FormControl>
   );
-});
+}
 
-const MultiInputJoyDateRangeFieldRoot = styled(
-  React.forwardRef((props, ref) => (
-    <Stack
-      ref={ref}
-      spacing={2}
-      direction="row"
-      alignItems="center"
-      overflow="auto"
-      {...props}
-    />
-  )),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Root',
-    overridesResolver: (props, styles) => styles.root,
-  },
-)({});
-
-const MultiInputJoyDateRangeFieldSeparator = styled(
-  (props) => (
-    <FormControl>
-      {/* Ensure that the separator is correctly aligned */}
-      <span />
-      <Typography {...props}>{props.children ?? ' — '}</Typography>
-    </FormControl>
-  ),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
-  },
-)({ marginTop: '25px' });
-
-const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
-  const {
-    slotProps,
-    value,
-    format,
-    onChange,
-    readOnly,
-    disabled,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    className,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-  } = props;
+function JoyMultiInputDateRangeField(props) {
+  const manager = useDateRangeManager({
+    enableAccessibleFieldDOMStructure: false,
+  });
+  const pickerContext = usePickerContext();
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  const { slotProps, ...otherForwardedProps } = forwardedProps;
 
   const startTextFieldProps = useSlotProps({
-    elementType: FormControl,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'start' },
+    additionalProps: { label: 'Start' },
+    ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
-    elementType: FormControl,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'end' },
+    additionalProps: { label: 'End' },
+    ownerState: { position: 'end' },
   });
 
-  const fieldResponse = useMultiInputDateRangeField({
-    sharedProps: {
-      value,
-      format,
-      onChange,
-      readOnly,
-      disabled,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      enableAccessibleFieldDOMStructure: false,
+  const fieldResponse = useMultiInputRangeField({
+    manager,
+    internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
+    rootProps: {
+      ref: pickerContext.rootRef,
+      spacing: 2,
+      overflow: 'auto',
+      direction: 'row',
+      alignItems: 'center',
+      ...otherForwardedProps,
     },
     startTextFieldProps,
     endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
   });
 
   return (
-    <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-      <JoyField {...fieldResponse.startDate} />
-      <MultiInputJoyDateRangeFieldSeparator />
-      <JoyField {...fieldResponse.endDate} />
-    </MultiInputJoyDateRangeFieldRoot>
+    <Stack {...fieldResponse.root}>
+      <JoyField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
+      <FormControl>
+        <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
+      </FormControl>
+      <JoyField {...fieldResponse.endTextField} />
+    </Stack>
   );
-});
+}
 
-const JoyDateRangePicker = React.forwardRef((props, ref) => {
+JoyMultiInputDateRangeField.fieldType = 'multi-input';
+
+function JoyDateRangePicker(props) {
   return (
     <DateRangePicker
-      ref={ref}
       {...props}
+      enableAccessibleFieldDOMStructure={false}
       slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

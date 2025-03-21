@@ -9,6 +9,17 @@
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
+- [Toolbar](/x/api/data-grid/toolbar/)
+- [ToolbarButton](/x/api/data-grid/toolbar-button/)
+- [ExportCsv](/x/api/data-grid/export-csv/)
+- [ExportExcel](/x/api/data-grid/export-excel/)
+- [ExportPrint](/x/api/data-grid/export-print/)
+- [QuickFilter](/x/api/data-grid/quick-filter/)
+- [QuickFilterControl](/x/api/data-grid/quick-filter-control/)
+- [QuickFilterClear](/x/api/data-grid/quick-filter-clear/)
+- [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
+- [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
 
 ## Interfaces
 
@@ -26,6 +37,7 @@
 - [GridRowParams](/x/api/data-grid/grid-row-params/)
 - [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params/)
 - [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function/)
+- [GridAggregationFunctionDataSource](/x/api/data-grid/grid-aggregation-function-data-source/)
 - [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options/)
 - [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options/)
 - [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options/)

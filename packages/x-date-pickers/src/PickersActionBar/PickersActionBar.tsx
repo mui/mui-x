@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { usePickerActionsContext } from '../hooks';
 
 export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
 
@@ -12,13 +13,11 @@ export interface PickersActionBarProps extends DialogActionsProps {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions?: PickersActionBarAction[];
-  onAccept: () => void;
-  onClear: () => void;
-  onCancel: () => void;
-  onSetToday: () => void;
 }
 
 const PickersActionBarRoot = styled(DialogActions, {
@@ -37,10 +36,12 @@ const PickersActionBarRoot = styled(DialogActions, {
  *
  * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
  */
-function PickersActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
+function PickersActionBarComponent(props: PickersActionBarProps) {
+  const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -50,28 +51,28 @@ function PickersActionBar(props: PickersActionBarProps) {
     switch (actionType) {
       case 'clear':
         return (
-          <Button data-testid="clear-action-button" onClick={onClear} key={actionType}>
+          <Button data-testid="clear-action-button" onClick={clearValue} key={actionType}>
             {translations.clearButtonLabel}
           </Button>
         );
 
       case 'cancel':
         return (
-          <Button onClick={onCancel} key={actionType}>
+          <Button onClick={cancelValueChanges} key={actionType}>
             {translations.cancelButtonLabel}
           </Button>
         );
 
       case 'accept':
         return (
-          <Button onClick={onAccept} key={actionType}>
+          <Button onClick={acceptValueChanges} key={actionType}>
             {translations.okButtonLabel}
           </Button>
         );
 
       case 'today':
         return (
-          <Button data-testid="today-action-button" onClick={onSetToday} key={actionType}>
+          <Button data-testid="today-action-button" onClick={setValueToToday} key={actionType}>
             {translations.todayButtonLabel}
           </Button>
         );
@@ -84,7 +85,7 @@ function PickersActionBar(props: PickersActionBarProps) {
   return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
-PickersActionBar.propTypes = {
+PickersActionBarComponent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -92,7 +93,9 @@ PickersActionBar.propTypes = {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
   /**
@@ -100,10 +103,6 @@ PickersActionBar.propTypes = {
    * @default false
    */
   disableSpacing: PropTypes.bool,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -113,5 +112,7 @@ PickersActionBar.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
+const PickersActionBar = React.memo(PickersActionBarComponent);
 
 export { PickersActionBar };

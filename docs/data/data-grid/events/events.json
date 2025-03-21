@@ -308,6 +308,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rootMount",
+    "description": "Fired when rootElementRef.current becomes available.",
+    "params": "HTMLElement",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
     "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",

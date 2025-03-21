@@ -17,7 +17,7 @@ import {
   DatePickerToolbarProps,
   ExportedDatePickerToolbarProps,
 } from './DatePickerToolbar';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { PickerValue } from '../internals/models';
 import { ValidateDatePropsToDefault } from '../validation/validateDate';
@@ -34,10 +34,11 @@ export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
-export type DatePickerViewRenderers<
-  TView extends DateView,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<PickerValue, TView, DateViewRendererProps<TView>, TAdditionalProps>;
+export type DatePickerViewRenderers<TView extends DateView> = PickerViewRendererLookup<
+  PickerValue,
+  TView,
+  DateViewRendererProps<TView>
+>;
 
 export interface BaseDatePickerProps
   extends BasePickerInputProps<PickerValue, DateView, DateValidationError>,

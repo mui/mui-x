@@ -16,7 +16,7 @@ export default function CustomPropsOpeningButton() {
             },
             // Targets the `InputAdornment` component.
             inputAdornment: {
-              position: 'start',
+              component: 'span',
             },
           }}
         />

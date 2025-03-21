@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
-} from '../hooks/useClearableField';
-import { ExportedPickersSectionListProps } from '../PickersSectionList';
-import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import {
-  BaseForwardedSingleInputFieldProps,
+  BaseSingleInputFieldProps,
   FieldRangeSection,
   PickerRangeValue,
   PickerValidValue,
 } from '../internals/models';
 import { PickerOwnerState } from './pickers';
+import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -142,15 +139,25 @@ export interface FieldOwnerState extends PickerOwnerState {
    * `true` if the field is read-only, `false` otherwise.
    */
   isFieldReadOnly: boolean;
+  /**
+   * `true` if the field is required, `false` otherwise.
+   */
+  isFieldRequired: boolean;
+  /**
+   * The direction of the field.
+   * Is equal to "ltr" when the field is in left-to-right direction.
+   * Is equal to "rtl" when the field is in right-to-left direction.
+   */
+  fieldDirection: 'ltr' | 'rtl';
 }
 
 /**
- * Props the prop `slotProps.field` of a picker can receive.
+ * Props the `slotProps.field` of a Picker can receive.
  */
 export type PickerFieldSlotProps<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = ExportedUseClearableFieldProps &
+> = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'
@@ -160,13 +167,20 @@ export type PickerFieldSlotProps<
   };
 
 /**
- * Props the text field receives when used with a single input picker.
+ * Props the text field receives when used inside a single input Picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
+> = Omit<
+  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
 >;
 
 /**

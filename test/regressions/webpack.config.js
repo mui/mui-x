@@ -5,7 +5,7 @@ const webpackBaseConfig = require('../../webpackBaseConfig');
 
 module.exports = {
   ...webpackBaseConfig,
-  entry: path.resolve(__dirname, 'index.js'),
+  entry: path.resolve(__dirname, 'index.tsx'),
   mode: process.env.NODE_ENV || 'development',
   optimization: {
     // Helps debugging and build perf.

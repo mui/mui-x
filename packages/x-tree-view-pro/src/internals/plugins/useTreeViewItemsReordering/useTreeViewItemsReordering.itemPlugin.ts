@@ -17,14 +17,15 @@ import {
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import {
-  selectorItemsReorderingDraggedItemProperties,
-  selectorItemsReorderingIsValidTarget,
+  selectorCanItemBeReordered,
+  selectorDraggedItemProperties,
+  selectorIsItemValidReorderingTarget,
 } from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const { instance, store, itemsReordering } =
+  const { instance, store } =
     useTreeViewContext<
       [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature, UseTreeViewLabelSignature]
     >();
@@ -32,13 +33,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const draggedItemProperties = useSelector(
-    store,
-    selectorItemsReorderingDraggedItemProperties,
-    itemId,
-  );
-  const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
-
+  const draggedItemProperties = useSelector(store, selectorDraggedItemProperties, itemId);
+  const canItemBeReordered = useSelector(store, selectorCanItemBeReordered);
+  const isValidTarget = useSelector(store, selectorIsItemValidReorderingTarget, itemId);
   const isEditing = useSelector(store, selectorIsAnItemEdited);
 
   return {
@@ -48,11 +45,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
-        if (
-          !itemsReordering.enabled ||
-          (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId)) ||
-          isEditing
-        ) {
+        if (!canItemBeReordered || isEditing) {
           return {};
         }
 

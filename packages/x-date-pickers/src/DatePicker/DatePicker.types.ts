@@ -3,13 +3,12 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { BaseSingleInputFieldProps, PickerValue } from '../internals/models';
+import { BaseSingleInputFieldProps } from '../internals/models';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import { DateValidationError } from '../models';
 import { ValidateDateProps } from '../validation/validateDate';
 
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
@@ -42,11 +41,14 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: boolean;
 }
 
 /**
- * Props the field can receive when used inside a date picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
+ * Props the field can receive when used inside a Date Picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
  */
-export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  ValidateDateProps &
-    BaseSingleInputFieldProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>;
+export type DatePickerFieldProps = ValidateDateProps & BaseSingleInputFieldProps;

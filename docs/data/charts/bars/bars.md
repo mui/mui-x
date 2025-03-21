@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -40,7 +40,7 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each other.
 
-{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -143,7 +143,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "BarClickNoSnap.js"}}
+{{"demo": "BarClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
@@ -159,14 +159,10 @@ If you're using composition, you can get those click event as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
-// ...
-
-<ChartContainer>
+<ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
-  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Animation

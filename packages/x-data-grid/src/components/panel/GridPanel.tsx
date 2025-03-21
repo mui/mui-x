@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../constants/cssVariables';
+import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridSlotProps } from '../../models/gridSlotsComponent';
+import { NotRendered } from '../../utils/assert';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -19,7 +22,9 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends Partial<React.ComponentProps<typeof GridPanelRoot>> {
+export interface GridPanelProps
+  extends Pick<GridSlotProps['basePopper'], 'id' | 'className' | 'target' | 'flip'> {
+  ref?: React.Ref<HTMLElement>;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -33,72 +38,49 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
   'paper',
 ]);
 
-const GridPanelRoot = styled(Popper, {
+const GridPanelRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
-  slot: 'Panel',
-  overridesResolver: (props, styles) => styles.panel,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: theme.zIndex.modal,
-}));
+  slot: 'panel',
+})<{ ownerState: OwnerState }>({
+  zIndex: vars.zIndex.panel,
+});
 
-const GridPaperRoot = styled(Paper, {
+const GridPanelContent = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Paper',
-  overridesResolver: (props, styles) => styles.paper,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  slot: 'panelContent',
+})<{ ownerState: OwnerState }>({
+  backgroundColor: vars.colors.background.overlay,
+  borderRadius: vars.radius.base,
+  boxShadow: vars.shadows.overlay,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
-  maxWidth: `calc(100vw - ${theme.spacing(0.5)})`,
+  maxWidth: `calc(100vw - ${vars.spacing(0.5)})`,
   overflow: 'auto',
-}));
+});
 
-const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
+  const variablesClass = useCSSVariablesClass();
 
-  const handleClickAway = React.useCallback(() => {
+  const onDidShow = useEventCallback(() => setIsPlaced(true));
+  const onDidHide = useEventCallback(() => setIsPlaced(false));
+
+  const handleClickAway = useEventCallback(() => {
     apiRef.current.hidePreferences();
-  }, [apiRef]);
+  });
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        apiRef.current.hidePreferences();
-      }
-    },
-    [apiRef],
-  );
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      apiRef.current.hidePreferences();
+    }
+  });
 
-  const modifiers = React.useMemo(
-    () => [
-      {
-        name: 'flip',
-        enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
-      },
-      {
-        name: 'isPlaced',
-        enabled: true,
-        phase: 'main' as const,
-        fn: () => {
-          setIsPlaced(true);
-        },
-        effect: () => () => {
-          setIsPlaced(false);
-        },
-      },
-    ],
-    [],
-  );
-
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const [fallbackTarget, setFallbackTarget] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -106,34 +88,35 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     );
 
     if (panelAnchor) {
-      setAnchorEl(panelAnchor);
+      setFallbackTarget(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!anchorEl) {
+  if (!fallbackTarget) {
     return null;
   }
 
   return (
     <GridPanelRoot
-      ref={ref}
-      placement="bottom-start"
-      className={clsx(classes.panel, className)}
+      as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      anchorEl={anchorEl}
-      modifiers={modifiers}
+      placement="bottom-start"
+      className={clsx(classes.panel, className, variablesClass)}
+      flip
+      onDidShow={onDidShow}
+      onDidHide={onDidHide}
+      onClickAway={handleClickAway}
+      clickAwayMouseEvent="onPointerUp"
+      clickAwayTouchEvent={false}
+      focusTrap
       {...other}
+      {...rootProps.slotProps?.basePopper}
+      target={props.target ?? fallbackTarget}
+      ref={ref}
     >
-      <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
-        <GridPaperRoot
-          className={classes.paper}
-          ownerState={rootProps}
-          elevation={8}
-          onKeyDown={handleKeyDown}
-        >
-          {isPlaced && children}
-        </GridPaperRoot>
-      </ClickAwayListener>
+      <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>
+        {isPlaced && children}
+      </GridPanelContent>
     </GridPanelRoot>
   );
 });
@@ -143,19 +126,16 @@ GridPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Popper render function or node.
-   */
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * If `true`, the component is shown.
-   */
+  className: PropTypes.string,
+  flip: PropTypes.bool,
+  id: PropTypes.string,
   open: PropTypes.bool.isRequired,
-  ownerState: PropTypes.object,
+  target: PropTypes /* @typescript-to-proptypes-ignore */.any,
 } as any;
 
 export { GridPanel };

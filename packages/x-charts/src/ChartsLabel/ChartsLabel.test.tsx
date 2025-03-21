@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ChartsLabel } from '@mui/x-charts/ChartsLabel/ChartsLabel';
-import { labelClasses } from '@mui/x-charts/ChartsLabel/labelClasses';
+import { labelClasses } from '@mui/x-charts/ChartsLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 describe('<ChartsLabel />', () => {
@@ -18,6 +18,13 @@ describe('<ChartsLabel />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: [
+      'themeVariants',
+      'themeStyleOverrides',
+      'themeCustomPalette',
+      'themeDefaultProps',
+      'componentProp',
+      'componentsProp',
+    ],
   }));
 });

@@ -1,0 +1,16 @@
+<ChartDataProvider
+  xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10] }]}
+  series={[
+    { id: 'a', type: 'line', data: [4, 6, 4, 9, 3, 5] },
+    { id: 'b', type: 'line', data: [3, 7, 8, 2, 4, 9] },
+  ]}
+  yAxis={[{ min: 0, max: 10 }]}
+  height={300}
+>
+  <ChartsSurface>
+    <LinePlot />
+    <ChartsXAxis />
+    <ChartsYAxis />
+  </ChartsSurface>
+  <ExtremaLabels />
+</ChartDataProvider>

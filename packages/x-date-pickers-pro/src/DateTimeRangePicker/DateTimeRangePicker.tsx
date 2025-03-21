@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
@@ -31,7 +32,7 @@ const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
@@ -67,8 +68,8 @@ DateTimeRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -132,7 +133,8 @@ DateTimeRangePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
@@ -167,12 +169,10 @@ DateTimeRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -221,7 +221,6 @@ DateTimeRangePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

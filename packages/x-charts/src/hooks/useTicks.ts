@@ -93,13 +93,15 @@ export function useTicks(
     valueFormatter,
     tickInterval,
     tickPlacement = 'extremities',
-    tickLabelPlacement = 'middle',
+    tickLabelPlacement: tickLabelPlacementProp,
   } = options;
 
   return React.useMemo(() => {
     // band scale
     if (isBandScale(scale)) {
       const domain = scale.domain();
+
+      const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
@@ -110,7 +112,7 @@ export function useTicks(
         return [
           ...filteredDomain.map((value) => ({
             value,
-            formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+            formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
             offset:
               scale(value)! -
               (scale.step() - scale.bandwidth()) / 2 +
@@ -141,7 +143,7 @@ export function useTicks(
 
       return filteredDomain.map((value) => ({
         value,
-        formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+        formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
@@ -153,14 +155,22 @@ export function useTicks(
     if (domain.some(isInfinity)) {
       return [];
     }
-
+    const tickLabelPlacement = tickLabelPlacementProp;
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
-    return ticks.map((value: any) => ({
-      value,
-      formattedValue:
-        valueFormatter?.(value, { location: 'tick' }) ?? scale.tickFormat(tickNumber)(value),
-      offset: scale(value),
-      labelOffset: 0,
-    }));
-  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
+    return ticks.map((value: any, i) => {
+      return {
+        value,
+        formattedValue:
+          valueFormatter?.(value, { location: 'tick', scale }) ??
+          scale.tickFormat(tickNumber)(value),
+        offset: scale(value),
+        // Allowing the label to be placed in the middle of a continuous scale is weird.
+        // But it is useful in some cases, like funnel categories with a linear scale.
+        labelOffset:
+          tickLabelPlacement === 'middle'
+            ? scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2
+            : 0,
+      };
+    });
+  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacementProp]);
 }

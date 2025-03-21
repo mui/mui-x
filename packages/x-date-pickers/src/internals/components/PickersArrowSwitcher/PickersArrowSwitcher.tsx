@@ -44,7 +44,7 @@ const PickersArrowSwitcherButton = styled(IconButton, {
 }>({
   variants: [
     {
-      props: { hidden: true },
+      props: { isButtonHidden: true },
       style: { visibility: 'hidden' },
     },
   ],
@@ -119,7 +119,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       edge: 'end',
       onClick: previousProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: previousProps.isHidden ?? false },
+    ownerState: { ...ownerState, isButtonHidden: previousProps.isHidden ?? false },
     className: clsx(classes.button, classes.previousIconButton),
   });
 
@@ -135,7 +135,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       edge: 'start',
       onClick: nextProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: nextProps.isHidden ?? false },
+    ownerState: { ...ownerState, isButtonHidden: nextProps.isHidden ?? false },
     className: clsx(classes.button, classes.nextIconButton),
   });
 

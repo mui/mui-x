@@ -43,7 +43,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.17
+    - image: cimg/node:20.19
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -64,6 +64,10 @@ commands:
         type: boolean
         default: false
         description: 'Set to true if you intend to any browser (for example with playwright).'
+      react-version:
+        type: string
+        default: << pipeline.parameters.react-version >>
+        description: The version of React to use.
 
     steps:
       - when:
@@ -86,9 +90,20 @@ commands:
           command: |
             node --version
             pnpm --version
-      - run:
-          name: Install js dependencies
-          command: pnpm install
+      - when:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies
+                command: pnpm install
+      - unless:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
 
       - run:
           name: Resolve React version
@@ -127,7 +142,8 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js
+      - install_js:
+          react-version: << parameters.react-version >>
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
@@ -196,12 +212,6 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: Sync RSC "use client" directives
-          command: pnpm rsc:build
-      - run:
-          name: '`pnpm rsc:build` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
           name: '`pnpm docs:link-check` changes committed?'
           command: |
             pnpm docs:link-check
@@ -220,8 +230,7 @@ jobs:
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
-            pnpm --filter @mui/x-date-pickers* prebuild
-            pnpm --filter @mui/x-date-pickers* build:types
+            pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
             if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
             then
                 exit 1
@@ -232,11 +241,12 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
           browsers: true
+          react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
           command: pnpm test:karma
@@ -263,18 +273,19 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
           browsers: true
+          react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
@@ -287,11 +298,12 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.1-noble
+      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
           browsers: true
+          react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
@@ -310,7 +322,6 @@ jobs:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
 workflows:
-  version: 2
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
@@ -394,3 +405,23 @@ workflows:
       - test_types:
           <<: *default-context
           name: test_types_additional
+  test-react-18:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit_react_18
+          react-version: ^18
+      - test_browser:
+          <<: *default-context
+          name: test_browser_react_18
+          react-version: ^18
+      - test_regressions:
+          <<: *default-context
+          name: test_regressions_react_18
+          react-version: ^18
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_react_18
+          react-version: ^18

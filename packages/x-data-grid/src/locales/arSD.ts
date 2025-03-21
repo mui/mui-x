@@ -1,4 +1,3 @@
-import { arSD as arSDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'لا توجد صفوف',
   noResultsOverlayLabel: 'لم يتم العثور على نتائج.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'الكثافة',
@@ -113,6 +114,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'أكبر من او يساوي',
   'headerFilterOperator<': 'اصغر من',
   'headerFilterOperator<=': 'اصغر من او يساوي',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'أي',
@@ -121,6 +123,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'القائمة',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'إظهار الأعمدة',
   columnMenuManageColumns: 'إدارة الأعمدة',
   columnMenuFilter: 'المرشِح',
@@ -180,6 +183,34 @@ const arSDGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
 
+  // Pagination
+  paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'انتقل إلى الصفحة الأولى';
+    }
+    if (type === 'last') {
+      return 'انتقل إلى الصفحة الأخيرة';
+    }
+    if (type === 'next') {
+      return 'انتقل إلى الصفحة التالية';
+    }
+    // if (type === 'previous') {
+    return 'انتقل إلى الصفحة السابقة';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'أعادة ترتيب الصفوف',
 
@@ -192,4 +223,4 @@ const arSDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'الحجم',
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);
+export const arSD: Localization = getGridLocalization(arSDGrid);

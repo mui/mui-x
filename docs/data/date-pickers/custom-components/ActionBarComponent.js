@@ -9,11 +9,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerActionsContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
+  const { actions, className } = props;
   const translations = usePickerTranslations();
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -28,7 +33,7 @@ function CustomActionBar(props) {
         return (
           <MenuItem
             onClick={() => {
-              onClear();
+              clearValue();
               setAnchorEl(null);
             }}
             key={actionType}
@@ -42,7 +47,7 @@ function CustomActionBar(props) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onCancel();
+              cancelValueChanges();
             }}
             key={actionType}
           >
@@ -55,7 +60,7 @@ function CustomActionBar(props) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onAccept();
+              acceptValueChanges();
             }}
             key={actionType}
           >
@@ -68,7 +73,7 @@ function CustomActionBar(props) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onSetToday();
+              setValueToToday();
             }}
             key={actionType}
           >

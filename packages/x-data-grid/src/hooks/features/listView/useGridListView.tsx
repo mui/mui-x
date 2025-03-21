@@ -1,4 +1,6 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridListColDef } from '../../../models/colDef/gridColDef';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -20,7 +22,7 @@ export const listViewStateInitializer: GridStateInitializer<
 });
 
 export function useGridListView(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listView' | 'unstable_listColumn'>,
 ) {
   /*
@@ -57,7 +59,7 @@ export function useGridListView(
   /*
    * EFFECTS
    */
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const listColumn = props.unstable_listColumn;
     if (listColumn) {
       apiRef.current.setState((state) => {
@@ -83,6 +85,6 @@ export function useGridListView(
   }, [props.unstable_listView, props.unstable_listColumn]);
 }
 
-function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  return gridDimensionsSelector(apiRef.current.state).viewportInnerSize.width;
+function getListColumnWidth(apiRef: RefObject<GridPrivateApiCommunity>) {
+  return gridDimensionsSelector(apiRef).viewportInnerSize.width;
 }

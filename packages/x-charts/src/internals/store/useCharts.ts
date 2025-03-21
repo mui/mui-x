@@ -12,33 +12,36 @@ import {
 import { CHART_CORE_PLUGINS, ChartCorePluginSignatures } from '../plugins/corePlugins';
 import { UseChartBaseProps } from './useCharts.types';
 import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
-
-export function useChartApiInitialization<T>(
-  inputApiRef: React.MutableRefObject<T | undefined> | undefined,
-): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
-
-  if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      // eslint-disable-next-line react-compiler/react-compiler
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
-  }
-
-  return fallbackPublicApiRef.current;
-}
+import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
+import { useChartModels } from './useChartModels';
 
 let globalId = 0;
 
+/**
+ * This is the main hook that setups the plugin system for the chart.
+ *
+ * It manages the data used to create the charts.
+ *
+ * @param inPlugins All the plugins that will be used in the chart.
+ * @param props The props passed to the chart.
+ * @param seriesConfig The set of helpers used for series-specific computation.
+ */
 export function useCharts<
+  TSeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-  TProps extends Partial<UseChartBaseProps<TSignatures>>,
->(inPlugins: ConvertSignaturesIntoPlugins<TSignatures>, props: TProps) {
+>(
+  inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
+  props: Partial<UseChartBaseProps<TSignatures>>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+) {
   type TSignaturesWithCorePluginSignatures = readonly [
     ...ChartCorePluginSignatures,
     ...TSignatures,
   ];
+
+  const chartId = useId();
 
   const plugins = React.useMemo(
     () =>
@@ -49,13 +52,17 @@ export function useCharts<
     [inPlugins],
   );
 
-  const defaultChartId = useId();
+  const pluginParams = extractPluginParamsFromProps<TSignatures, typeof props>({
+    plugins,
+    props,
+  });
+  pluginParams.id = pluginParams.id ?? chartId;
 
-  const pluginParams = { id: defaultChartId }; // To generate when plugins use params.
+  const models = useChartModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
-  const innerSvgRef: React.RefObject<SVGSVGElement> = React.useRef(null);
+  const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<ChartStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {
@@ -63,17 +70,15 @@ export function useCharts<
     globalId += 1;
 
     const initialState = {
-      // TODO remove when the interaction moves to plugin
-      interaction: {
-        item: null,
-        axis: { x: null, y: null },
-      },
       cacheKey: { id: globalId },
     } as ChartState<TSignaturesWithCorePluginSignatures> & UseChartInteractionState;
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(initialState, plugin.getInitialState({ id: defaultChartId }));
+        Object.assign(
+          initialState,
+          plugin.getInitialState(pluginParams, initialState, seriesConfig),
+        );
       }
     });
     storeRef.current = new ChartStore(initialState);
@@ -86,6 +91,8 @@ export function useCharts<
       plugins: plugins as ChartPlugin<ChartAnyPluginSignature>[],
       store: storeRef.current as ChartStore<any>,
       svgRef: innerSvgRef,
+      seriesConfig,
+      models,
     });
 
     if (pluginResponse.publicAPI) {
@@ -111,4 +118,20 @@ export function useCharts<
   );
 
   return { contextValue };
+}
+
+export function useChartApiInitialization<T>(
+  inputApiRef: React.RefObject<T | undefined> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
+
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      // eslint-disable-next-line react-compiler/react-compiler
+      inputApiRef.current = {} as T;
+    }
+    return inputApiRef.current;
+  }
+
+  return fallbackPublicApiRef.current;
 }

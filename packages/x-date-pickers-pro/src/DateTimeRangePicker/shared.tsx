@@ -9,7 +9,7 @@ import {
   BasePickerInputProps,
   PickerViewRendererLookup,
   BaseClockProps,
-  DesktopOnlyTimePickerProps,
+  DigitalTimePickerProps,
   applyDefaultViewProps,
   TimeViewWithMeridiem,
   resolveTimeViewsResponse,
@@ -76,19 +76,16 @@ export interface BaseDateTimeRangePickerSlotProps
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
-export type DateTimeRangePickerRenderers<
-  TView extends DateOrTimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerRangeValue,
-  TView,
-  Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
-    Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
-      'view' | 'slots' | 'slotProps'
-    > & { view: TView },
-  TAdditionalProps
->;
+type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
+  PickerViewRendererLookup<
+    PickerRangeValue,
+    TView,
+    Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
+      Omit<
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
+        'view' | 'slots' | 'slotProps'
+      > & { view: TView }
+  >;
 
 export interface BaseDateTimeRangePickerProps
   extends Omit<
@@ -97,7 +94,7 @@ export interface BaseDateTimeRangePickerProps
     >,
     ExportedDateRangeCalendarProps,
     ExportedValidateDateTimeRangeProps,
-    DesktopOnlyTimePickerProps,
+    DigitalTimePickerProps,
     Partial<
       Pick<UseViewsOptions<PickerRangeValue, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
     > {

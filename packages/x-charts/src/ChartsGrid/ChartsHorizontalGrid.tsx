@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DrawingAreaState } from '../context/DrawingAreaProvider';
 import { useTicks } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { GridLine } from './styledComponents';
@@ -7,7 +6,8 @@ import { ChartsGridClasses } from './chartsGridClasses';
 
 interface ChartsGridHorizontalProps {
   axis: AxisDefaultized<ScaleName, any, ChartsYAxisProps>;
-  drawingArea: DrawingAreaState;
+  start: number;
+  end: number;
   classes: Partial<ChartsGridClasses>;
 }
 
@@ -15,7 +15,7 @@ interface ChartsGridHorizontalProps {
  * @ignore - internal component.
  */
 export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
-  const { axis, drawingArea, classes } = props;
+  const { axis, start, end, classes } = props;
 
   const { scale, tickNumber, tickInterval } = axis;
 
@@ -25,11 +25,11 @@ export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
     <React.Fragment>
       {yTicks.map(({ value, offset }) => (
         <GridLine
-          key={`horizontal-${value}`}
+          key={`horizontal-${value.getTime?.() ?? value}`}
           y1={offset}
           y2={offset}
-          x1={drawingArea.left}
-          x2={drawingArea.left + drawingArea.width}
+          x1={start}
+          x2={end}
           className={classes.horizontalLine}
         />
       ))}

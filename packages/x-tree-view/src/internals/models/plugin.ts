@@ -16,7 +16,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   models: TreeViewUsedModels<TSignature>;
   store: TreeViewUsedStore<TSignature>;
-  rootRef: React.RefObject<HTMLUListElement>;
+  rootRef: React.RefObject<HTMLUListElement | null>;
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
 

@@ -1,4 +1,3 @@
-import { elGR as elGRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Δεν υπάρχουν καταχωρήσεις',
   noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Ύψος σειράς',
@@ -113,6 +114,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Μεγαλύτερο ή ίσο με',
   'headerFilterOperator<': 'Μικρότερο από',
   'headerFilterOperator<=': 'Μικρότερο ή ίσο με',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'οποιοδήποτε',
@@ -121,6 +123,7 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Μενού',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   columnMenuManageColumns: 'Διαχείριση στηλών',
   columnMenuFilter: 'Φίλτρο',
@@ -182,6 +185,35 @@ const elGRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Ανάπτυξη',
   collapseDetailPanel: 'Σύμπτυξη',
 
+  // Pagination
+  paginationRowsPerPage: 'Γραμμές ανα σελίδα:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Πρώτη σελίδα';
+    }
+    if (type === 'last') {
+      return 'Τελευταία σελίδα';
+    }
+    if (type === 'next') {
+      return 'Επόμενη σελίδα';
+    }
+
+    // if (type === "previous") {
+    return 'Προηγούμενη σελίδα';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Αναδιάταξη γραμμών',
 
@@ -194,4 +226,4 @@ const elGRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'μέγεθος',
 };
 
-export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);
+export const elGR: Localization = getGridLocalization(elGRGrid);

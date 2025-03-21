@@ -70,7 +70,16 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
         </rootProps.slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (
-        <rootProps.slots.baseMenuItem onClick={onSortMenuItemClick} iconStart="">
+        <rootProps.slots.baseMenuItem
+          onClick={onSortMenuItemClick}
+          iconStart={
+            rootProps.slots.columnMenuUnsortIcon ? (
+              <rootProps.slots.columnMenuUnsortIcon fontSize="small" />
+            ) : (
+              <span />
+            )
+          }
+        >
           {apiRef.current.getLocaleText('columnMenuUnsort')}
         </rootProps.slots.baseMenuItem>
       ) : null}

@@ -18,7 +18,6 @@ const Tableau10 = [
 ];
 
 const chartsParams = {
-  margin: { bottom: 20, left: 25, right: 5 },
   height: 300,
 };
 export default function BasicColor() {
@@ -29,7 +28,7 @@ export default function BasicColor() {
   };
 
   return (
-    <Stack direction="column" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+    <Stack direction="column" spacing={2}>
       <LineChart
         {...chartsParams}
         series={[
@@ -40,12 +39,7 @@ export default function BasicColor() {
           },
         ]}
       />
-      <ToggleButtonGroup
-        // orientation="vertical"
-        value={color}
-        exclusive
-        onChange={handleChange}
-      >
+      <ToggleButtonGroup value={color} exclusive onChange={handleChange}>
         {Tableau10.map((value) => (
           <ToggleButton key={value} value={value} sx={{ p: 1 }}>
             <div

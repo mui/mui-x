@@ -4,6 +4,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   noRowsLabel: 'No rows',
   noResultsOverlayLabel: 'No results found.',
+  noColumnsOverlayLabel: 'No columns',
+  noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Density',
@@ -112,6 +114,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   'headerFilterOperator>=': 'Greater than or equal to',
   'headerFilterOperator<': 'Less than',
   'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'any',
@@ -120,6 +123,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Show columns',
   columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
@@ -181,8 +185,28 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   expandDetailPanel: 'Expand',
   collapseDetailPanel: 'Collapse',
 
-  // Used core components translation keys
-  MuiTablePagination: {},
+  // Pagination
+  paginationRowsPerPage: 'Rows per page:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Go to first page';
+    }
+    if (type === 'last') {
+      return 'Go to last page';
+    }
+    if (type === 'next') {
+      return 'Go to next page';
+    }
+    // if (type === 'previous') {
+    return 'Go to previous page';
+  },
 
   // Row reordering text
   rowReorderingHeaderName: 'Row reordering',

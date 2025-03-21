@@ -1,7 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
+import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 import { useStore } from '../internals/store/useStore';
@@ -9,12 +8,13 @@ import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
-import { useXAxis, useYAxis } from '../hooks/useAxis';
-import { useZAxis } from '../hooks/useZAxis';
+import { useXAxes, useXAxis, useYAxes, useYAxis } from '../hooks/useAxis';
+import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { ChartsLabelMarkProps } from '../ChartsLabel';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,
@@ -33,9 +33,10 @@ interface SeriesItem<T extends CartesianChartSeriesType> {
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string;
   formattedLabel: string | null;
+  markType: ChartsLabelMarkProps['type'];
 }
 
-export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
+export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
 
@@ -49,9 +50,10 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
 
   const series = useSeries();
 
-  const { xAxis, yAxis } = useCartesianContext();
+  const { xAxis } = useXAxes();
+  const { yAxis } = useYAxes();
 
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
   const colorProcessors = useColorProcessor();
 
   if (axisData === null) {
@@ -104,19 +106,27 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
             value,
             formattedValue,
             formattedLabel,
-          } as SeriesItem<SeriesT>;
+            markType: seriesToAdd.labelMarkType,
+          };
         }
         return undefined;
       });
     })
-    .filter((item) => item != null);
+    .filter(function truthy<T>(
+      item: T,
+    ): item is T extends false | '' | 0 | null | undefined ? never : T {
+      return Boolean(item);
+    });
 
   const axisFormatter =
     usedAxis.valueFormatter ??
     ((v: string | number | Date) =>
       usedAxis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
 
-  const axisFormattedValue = axisFormatter(axisValue, { location: 'tooltip' });
+  const axisFormattedValue = axisFormatter(axisValue, {
+    location: 'tooltip',
+    scale: usedAxis.scale,
+  });
 
   return {
     axisDirection: xAxisHasData ? 'x' : 'y',

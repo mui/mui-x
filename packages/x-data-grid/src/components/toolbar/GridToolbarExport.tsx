@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
@@ -115,7 +116,7 @@ GridPrintExportMenuItem.propTypes = {
   }),
 } as any;
 
-const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
+const GridToolbarExport = forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
     const {
       csvOptions = {},

@@ -64,13 +64,11 @@ export type TreeViewItemItemReorderingValidActions = {
 export interface UseTreeViewItemsReorderingParameters {
   /**
    * If `true`, the reordering of items is enabled.
-   * Make sure to also enable the `itemsReordering` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering />`.
    * @default false
    */
   itemsReordering?: boolean;
   /**
-   * Used to determine if a given item can be reordered.
+   * Determine if a given item can be reordered.
    * @param {string} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
@@ -110,17 +108,13 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
 
 export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
-    draggedItemId: string;
-    targetItemId: string;
-    newPosition: TreeViewItemReorderPosition | null;
-    action: TreeViewItemsReorderingAction | null;
-  } | null;
-}
-
-interface UseTreeViewItemsReorderingContextValue {
-  itemsReordering: {
-    enabled: boolean;
-    isItemReorderable: ((itemId: string) => boolean) | undefined;
+    isItemReorderable: (itemId: string) => boolean;
+    currentReorder: {
+      draggedItemId: string;
+      targetItemId: string;
+      newPosition: TreeViewItemReorderPosition | null;
+      action: TreeViewItemsReorderingAction | null;
+    } | null;
   };
 }
 
@@ -129,8 +123,6 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewItemsReorderingDefaultizedParameters;
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
-  contextValue: UseTreeViewItemsReorderingContextValue;
-  experimentalFeatures: 'itemsReordering';
   dependencies: [UseTreeViewItemsSignature];
 }>;
 

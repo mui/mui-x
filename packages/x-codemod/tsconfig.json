@@ -11,7 +11,8 @@
       "moment-timezone",
       "node"
     ],
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/actual*.ts*"]

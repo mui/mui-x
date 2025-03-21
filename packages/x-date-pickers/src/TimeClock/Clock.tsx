@@ -42,6 +42,10 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
    * The current full date value.
    */
   value: PickerValidDate | null;
+  /**
+   * Minimum and maximum value of the clock.
+   */
+  viewRange: [number, number];
   className?: string;
   classes?: Partial<ClockClasses>;
 }
@@ -154,7 +158,10 @@ const ClockPin = styled('div', {
   transform: 'translate(-50%, -50%)',
 }));
 
-const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
+const meridiemButtonCommonStyles = (
+  theme: Theme,
+  clockMeridiemMode: ClockOwnerState['clockMeridiemMode'],
+) => ({
   zIndex: 1,
   bottom: 8,
   paddingLeft: 4,
@@ -162,7 +169,7 @@ const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
   width: CLOCK_HOUR_WIDTH,
   variants: [
     {
-      props: { meridiemMode },
+      props: { clockMeridiemMode },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
         color: (theme.vars || theme).palette.primary.contrastText,
@@ -225,6 +232,7 @@ export function Clock(inProps: ClockProps) {
     selectedId,
     type,
     viewValue,
+    viewRange: [minViewValue, maxViewValue],
     disabled = false,
     readOnly,
     className,
@@ -316,6 +324,10 @@ export function Clock(inProps: ClockProps) {
     }
   }, [autoFocus]);
 
+  const clampValue = (newValue: number) => Math.max(minViewValue, Math.min(maxViewValue, newValue));
+
+  const circleValue = (newValue: number) => (newValue + (maxViewValue + 1)) % (maxViewValue + 1);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // TODO: Why this early exit?
     if (isMoving.current) {
@@ -325,27 +337,27 @@ export function Clock(inProps: ClockProps) {
     switch (event.key) {
       case 'Home':
         // reset both hours and minutes
-        handleValueChange(0, 'partial');
+        handleValueChange(minViewValue, 'partial');
         event.preventDefault();
         break;
       case 'End':
-        handleValueChange(type === 'minutes' ? 59 : 23, 'partial');
+        handleValueChange(maxViewValue, 'partial');
         event.preventDefault();
         break;
       case 'ArrowUp':
-        handleValueChange(viewValue + keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue + keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'ArrowDown':
-        handleValueChange(viewValue - keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue - keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'PageUp':
-        handleValueChange(viewValue + 5, 'partial');
+        handleValueChange(clampValue(viewValue + 5), 'partial');
         event.preventDefault();
         break;
       case 'PageDown':
-        handleValueChange(viewValue - 5, 'partial');
+        handleValueChange(clampValue(viewValue - 5), 'partial');
         event.preventDefault();
         break;
       case 'Enter':
@@ -388,7 +400,7 @@ export function Clock(inProps: ClockProps) {
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value == null ? null : utils.format(value, 'fullTime'),
+            value == null ? null : utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
           )}
           ref={listboxRef}
           role="listbox"

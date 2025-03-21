@@ -120,7 +120,9 @@ function GridActionsCell(props: GridActionsCellProps) {
   const hideMenu = () => {
     setOpen(false);
   };
-  const toggleMenu = () => {
+  const toggleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     if (open) {
       hideMenu();
     } else {
@@ -235,7 +237,6 @@ function GridActionsCell(props: GridActionsCellProps) {
             className={gridClasses.menuList}
             onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
-            variant="menu"
             autoFocusItem
           >
             {menuButtons.map((button, index) =>

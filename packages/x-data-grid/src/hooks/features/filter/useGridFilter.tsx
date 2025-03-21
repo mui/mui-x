@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
@@ -14,7 +15,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { getDefaultGridFilterModel } from './gridFilterState';
+import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
@@ -34,6 +35,7 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
+import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -45,9 +47,7 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
-      filteredRowsLookup: {},
-      filteredChildrenCountLookup: {},
-      filteredDescendantCountLookup: {},
+      ...defaultGridFilterLookup,
     },
     visibleRowsLookup: {},
   };
@@ -59,7 +59,7 @@ const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> =
 };
 
 function getVisibleRowsLookupState(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
   return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
@@ -78,7 +78,7 @@ function createMemoizedValues() {
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -107,7 +107,7 @@ export const useGridFilter = (
 
   const updateFilteredRows = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const filterModel = gridFilterModelSelector(state, undefined, apiRef.current.instanceId);
+      const filterModel = gridFilterModelSelector(apiRef);
       const filterState = apiRef.current.getFilterState(filterModel);
 
       const newState = {
@@ -142,11 +142,6 @@ export const useGridFilter = (
   /**
    * API METHODS
    */
-  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
-    updateFilteredRows();
-    apiRef.current.forceUpdate();
-  }, [apiRef, updateFilteredRows]);
-
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
       const filterModel = gridFilterModelSelector(apiRef);
@@ -340,7 +335,7 @@ export const useGridFilter = (
 
   const filterApi: GridFilterApi = {
     setFilterLogicOperator,
-    unstable_applyFilters: applyFilters,
+    unstable_applyFilters: updateFilteredRows,
     deleteFilterItem,
     upsertFilterItem,
     upsertFilterItems,
@@ -360,6 +355,11 @@ export const useGridFilter = (
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const filterModelToExport = gridFilterModelSelector(apiRef);
+
+      // Remove the additional `fromInput` property from the filter model
+      filterModelToExport.items.forEach((item: ItemPlusTag) => {
+        delete item.fromInput;
+      });
 
       const shouldExportFilterModel =
         // Always export if the `exportOnlyDirtyModels` property is not activated
@@ -422,12 +422,12 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
-        return {
-          filteredRowsLookup: {},
-          filteredChildrenCountLookup: {},
-          filteredDescendantCountLookup: {},
-        };
+      if (
+        props.filterMode !== 'client' ||
+        !params.isRowMatchingFilters ||
+        (!params.filterModel.items.length && !params.filterModel.quickFilterValues?.length)
+      ) {
+        return defaultGridFilterLookup;
       }
 
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
@@ -455,7 +455,9 @@ export const useGridFilter = (
           filterCache,
         );
 
-        filteredRowsLookup[id] = isRowPassing;
+        if (!isRowPassing) {
+          filteredRowsLookup[id] = isRowPassing;
+        }
       }
 
       const footerId = 'auto-generated-group-footer-root';
@@ -518,11 +520,8 @@ export const useGridFilter = (
         visibleRowsLookup: getVisibleRowsLookupState(apiRef, state),
       };
     });
-    apiRef.current.forceUpdate();
   }, [apiRef]);
 
-  // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
-  // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);

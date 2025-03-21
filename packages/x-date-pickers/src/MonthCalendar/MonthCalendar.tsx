@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
@@ -10,14 +11,14 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickersMonth } from './PickersMonth';
+import { MonthCalendarButton } from './MonthCalendarButton';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
 import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -33,7 +34,10 @@ const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) =
 export function useMonthCalendarDefaultizedProps(
   props: MonthCalendarProps,
   name: string,
-): DefaultizedProps<MonthCalendarProps, 'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'> {
+): DefaultizedProps<
+  MonthCalendarProps,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'monthsPerRow'
+> {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
@@ -45,6 +49,7 @@ export function useMonthCalendarDefaultizedProps(
     disableFuture: false,
     disablePast: false,
     ...themeProps,
+    monthsPerRow: themeProps.monthsPerRow ?? 3,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -54,14 +59,26 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickerOwnerState }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
+})<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
   display: 'flex',
   flexWrap: 'wrap',
-  alignContent: 'stretch',
-  padding: '0 4px',
+  justifyContent: 'space-evenly',
+  rowGap: 16,
+  padding: '8px 0',
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
+  variants: [
+    {
+      props: { monthsPerRow: 3 },
+      style: { columnGap: 24 },
+    },
+    {
+      props: { monthsPerRow: 4 },
+      style: { columnGap: 0 },
+    },
+  ],
 });
 
 type MonthCalendarComponent = ((
@@ -83,6 +100,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 ) {
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
   const {
+    autoFocus,
     className,
     classes: classesProp,
     value: valueProp,
@@ -97,11 +115,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
-    autoFocus = false,
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
-    monthsPerRow = 3,
+    monthsPerRow,
     timezone: timezoneProp,
     gridLabelId,
     slots,
@@ -109,7 +126,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'MonthCalendar',
     timezone: timezoneProp,
     value: valueProp,
@@ -268,6 +285,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       ownerState={ownerState}
       role="radiogroup"
       aria-labelledby={gridLabelId}
+      monthsPerRow={monthsPerRow}
       {...other}
     >
       {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
@@ -278,7 +296,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
-          <PickersMonth
+          <MonthCalendarButton
             key={monthText}
             selected={isSelected}
             value={monthNumber}
@@ -291,12 +309,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
             aria-label={monthLabel}
-            monthsPerRow={monthsPerRow}
             slots={slots}
             slotProps={slotProps}
+            classes={classesProp}
           >
             {monthText}
-          </PickersMonth>
+          </MonthCalendarButton>
         );
       })}
     </MonthCalendarRoot>

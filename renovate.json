@@ -40,12 +40,13 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
+      "groupName": "react-docgen",
+      "matchPackageNames": ["react-docgen"],
+      "allowedVersions": "< 6.0.0"
     },
     {
-      "groupName": "React router",
-      "matchPackageNames": ["react-router", "react-router-dom"]
+      "groupName": "React",
+      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "typescript-eslint",
@@ -93,8 +94,7 @@
         "@mui/system",
         "@mui/types",
         "@mui/utils"
-      ],
-      "allowedVersions": "< 6.0.0"
+      ]
     },
     {
       "groupName": "MUI Internal",
@@ -116,6 +116,20 @@
     {
       "groupName": "Vite & Vitest",
       "matchPackageNames": ["@vitejs/**", "/vitest/"]
+    },
+    {
+      "groupName": "date-fns-v2",
+      "matchPackageNames": ["date-fns-v2"],
+      "allowedVersions": "< 3.0.0"
+    },
+    {
+      "groupName": "recast",
+      "matchPackageNames": ["recast"],
+      "allowedVersions": "< 0.23.10"
+    },
+    {
+      "groupName": "Tanstack query",
+      "matchPackageNames": ["@tanstack/*query*"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

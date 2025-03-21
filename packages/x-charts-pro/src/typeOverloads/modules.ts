@@ -1,11 +1,17 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import { AxisId, ZoomOptions } from '@mui/x-charts/internals';
 import {
   HeatmapItemIdentifier,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import { ZoomOptions } from '../context/ZoomProvider';
+import {
+  DefaultizedFunnelSeriesType,
+  FunnelItemIdentifier,
+  FunnelSeriesType,
+  FunnelValueType,
+} from '../FunnelChart/funnel.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -15,8 +21,23 @@ declare module '@mui/x-charts/internals' {
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
-      cartesian: true;
+      axisType: 'cartesian';
     };
+    funnel: {
+      seriesInput: Omit<DefaultizedProps<FunnelSeriesType, 'id'>, 'data'> & {
+        data: MakeRequired<FunnelValueType, 'color'>[];
+      };
+      series: DefaultizedFunnelSeriesType;
+      seriesProp: FunnelSeriesType;
+      itemIdentifier: FunnelItemIdentifier;
+      valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
+      axisType: 'cartesian';
+    };
+  }
+
+  interface DefaultizedZoomOptions extends Required<ZoomOptions> {
+    axisId: AxisId;
+    axisDirection: 'x' | 'y';
   }
 
   interface AxisConfigExtension {

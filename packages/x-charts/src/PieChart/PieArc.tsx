@@ -104,7 +104,7 @@ function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
 
   return (
     <PieArcRoot
@@ -120,6 +120,7 @@ function PieArc(props: PieArcProps) {
           })!,
       )}
       visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
+      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
@@ -130,7 +131,7 @@ function PieArc(props: PieArcProps) {
       strokeWidth={1}
       strokeLinejoin="round"
       {...other}
-      {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

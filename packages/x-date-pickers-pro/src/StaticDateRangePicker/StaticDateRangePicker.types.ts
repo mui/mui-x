@@ -12,11 +12,11 @@ import {
 
 export interface StaticDateRangePickerSlots
   extends BaseDateRangePickerSlots,
-    UseStaticRangePickerSlots<'day'> {}
+    UseStaticRangePickerSlots {}
 
 export interface StaticDateRangePickerSlotProps
   extends BaseDateRangePickerSlotProps,
-    Omit<UseStaticRangePickerSlotProps<'day'>, 'toolbar'> {}
+    Omit<UseStaticRangePickerSlotProps, 'toolbar'> {}
 
 export interface StaticDateRangePickerProps
   extends BaseDateRangePickerProps,

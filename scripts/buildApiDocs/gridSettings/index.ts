@@ -7,6 +7,27 @@ import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
+const COMPONENT_API_PAGES = [
+  'src/DataGridPremium/DataGridPremium.tsx',
+  'src/DataGridPro/DataGridPro.tsx',
+  'src/DataGrid/DataGrid.tsx',
+
+  'src/components/panel/filterPanel/GridFilterForm.tsx',
+  'src/components/panel/filterPanel/GridFilterPanel.tsx',
+  'src/components/toolbar/GridToolbarQuickFilter.tsx',
+
+  'src/components/toolbarV8/Toolbar.tsx',
+  'src/components/toolbarV8/ToolbarButton.tsx',
+  'src/components/export/ExportPrint.tsx',
+  'src/components/export/ExportCsv.tsx',
+  'src/components/export/ExportExcel.tsx',
+  'src/components/quickFilter/QuickFilter.tsx',
+  'src/components/quickFilter/QuickFilterControl.tsx',
+  'src/components/quickFilter/QuickFilterClear.tsx',
+  'src/components/filterPanel/FilterPanelTrigger.tsx',
+  'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
+];
+
 export const projectGridSettings: ProjectSettings = {
   output: {
     apiManifestPath: path.join(process.cwd(), 'docs/data/dataGridApiPages.ts'),
@@ -48,7 +69,6 @@ export default dataGridApiPages;
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
       entryPointPath: 'src/index.ts',
     },
-
     {
       name: 'data-grid-premium',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
@@ -58,16 +78,8 @@ export default dataGridApiPages;
   getApiPages: () => findApiPages('docs/pages/x/api/data-grid'),
   getComponentInfo,
   translationLanguages: LANGUAGES,
-  skipComponent(filename) {
-    return [
-      'src/DataGridPremium/DataGridPremium.tsx',
-      'src/DataGridPro/DataGridPro.tsx',
-      'src/DataGrid/DataGrid.tsx',
-      'src/components/panel/filterPanel/GridFilterForm.tsx',
-      'src/components/panel/filterPanel/GridFilterPanel.tsx',
-      'src/components/toolbar/GridToolbarQuickFilter.tsx',
-    ].every((validPath) => !filename.endsWith(validPath));
-  },
+  skipComponent: (filename) =>
+    COMPONENT_API_PAGES.every((validPath) => !filename.endsWith(validPath)),
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/data-grid',
   importTranslationPagesDirectory: 'docsx/translations/api-docs/data-grid',

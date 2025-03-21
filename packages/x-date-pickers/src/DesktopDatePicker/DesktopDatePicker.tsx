@@ -6,21 +6,22 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
+import { PickerLayoutOwnerState } from '../PickersLayout';
+import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -38,7 +39,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers
@@ -46,7 +46,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDatePicker');
 
-  const viewRenderers: DatePickerViewRenderers<DateView, any> = {
+  const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -56,11 +56,11 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
-      openPickerIcon: CalendarIcon,
       field: DateField,
       ...defaultizedProps.slots,
     },
@@ -69,12 +69,15 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+        actions: emptyActions,
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -83,15 +86,10 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullDate',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText?.openDatePickerDialogue,
-    }),
     validator: validateDate,
   });
 
@@ -112,8 +110,8 @@ DesktopDatePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -145,7 +143,8 @@ DesktopDatePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

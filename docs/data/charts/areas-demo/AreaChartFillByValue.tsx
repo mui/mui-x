@@ -5,22 +5,23 @@ import Stack from '@mui/material/Stack';
 import { useYScale, useDrawingArea } from '@mui/x-charts/hooks';
 import { LineChart, areaElementClasses } from '@mui/x-charts/LineChart';
 
+const margin = { right: 24, bottom: 0 };
 const data = [4000, 3000, -1000, 500, -2100, -250, 3490];
 const xData = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
 
-type ColorSwichProps = {
+type ColorSwitchProps = {
   threshold: number;
   color1: string;
   color2: string;
   id: string;
 };
 
-function ColorSwich({ threshold, color1, color2, id }: ColorSwichProps) {
+function ColorSwitch({ threshold, color1, color2, id }: ColorSwitchProps) {
   const { top, height, bottom } = useDrawingArea();
   const svgHeight = top + bottom + height;
 
   const scale = useYScale() as ScaleLinear<number, number>; // You can provide the axis Id if you have multiple ones
-  const y0 = scale(threshold); // The coordinate of of the origine
+  const y0 = scale(threshold); // The coordinate of the origin
   const off = y0 !== undefined ? y0 / svgHeight : 0;
 
   return (
@@ -45,42 +46,42 @@ export default function AreaChartFillByValue() {
     <Stack direction="column" width="100%" spacing={1}>
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ top: 20, bottom: 30, left: 75 }}
+        margin={margin}
         sx={{
           [`& .${areaElementClasses.root}`]: {
-            fill: 'url(#swich-color-id-1)',
+            fill: 'url(#switch-color-id-1)',
             filter: 'none', // Remove the default filter.
           },
         }}
       >
-        <ColorSwich
+        <ColorSwitch
           color1="#11B678" // green
           color2="#FF3143" // red
           threshold={0}
-          id="swich-color-id-1"
+          id="switch-color-id-1"
         />
-        <rect x={0} y={0} width={5} height="100%" fill="url(#swich-color-id-1)" />
+        <rect x={0} y={0} width={5} height="100%" fill="url(#switch-color-id-1)" />
       </LineChart>
 
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ top: 20, bottom: 30, left: 75 }}
+        margin={margin}
         sx={{
           [`& .${areaElementClasses.root}`]: {
-            fill: 'url(#swich-color-id-2)',
+            fill: 'url(#switch-color-id-2)',
             filter: 'none', // Remove the default filter.
           },
         }}
       >
-        <ColorPalette id="swich-color-id-2" />
+        <ColorPalette id="switch-color-id-2" />
 
-        <rect x={0} y={0} width={5} height="100%" fill="url(#swich-color-id-2)" />
+        <rect x={0} y={0} width={5} height="100%" fill="url(#switch-color-id-2)" />
       </LineChart>
     </Stack>
   );

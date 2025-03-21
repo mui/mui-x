@@ -17,14 +17,13 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile time view editing.
+The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing and `DigitalClock` for the time view editing.
 
 Check-out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
-- [Time Clock](/x/react-date-pickers/time-clock/)
 
 You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-time-picker/#props).
 Some [DateTimeField props](/x/api/date-pickers/date-time-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
@@ -48,10 +47,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopDateTimePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateTimePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 - The `DateTimePicker` component which renders `DesktopDateTimePicker` or `MobileDateTimePicker` depending on the device it runs on.
 
@@ -69,7 +68,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateTimePickers.js"}}
 

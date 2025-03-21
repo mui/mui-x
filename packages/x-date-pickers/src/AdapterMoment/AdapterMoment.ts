@@ -75,11 +75,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
 };
@@ -304,7 +302,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
       .join('');
   };
 
-  public isValid = (value: Moment | null) => {
+  public isValid = (value: Moment | null): value is Moment => {
     if (value == null) {
       return false;
     }

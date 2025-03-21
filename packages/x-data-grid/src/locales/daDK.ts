@@ -1,4 +1,3 @@
-import { daDK as daDKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tæthed',
@@ -113,6 +114,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',
@@ -121,6 +123,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filtrer',
@@ -180,6 +183,34 @@ const daDKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
 
+  // Pagination
+  paginationRowsPerPage: 'Rækker pr side:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå til den første side';
+    }
+    if (type === 'last') {
+      return 'Gå til den sidste side';
+    }
+    if (type === 'next') {
+      return 'Gå til den næste side';
+    }
+    // if (type === 'previous') {
+    return 'Gå til den forrige side';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Omarrangering af rækker',
 
@@ -192,4 +223,4 @@ const daDKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
+export const daDK: Localization = getGridLocalization(daDKGrid);

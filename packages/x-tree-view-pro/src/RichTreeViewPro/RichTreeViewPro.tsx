@@ -120,8 +120,10 @@ RichTreeViewPro.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
@@ -144,6 +146,15 @@ RichTreeViewPro.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getTreeItems: PropTypes.func,
+  }),
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
@@ -182,8 +193,7 @@ RichTreeViewPro.propTypes = {
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    itemsReordering: PropTypes.bool,
-    labelEditing: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.
@@ -216,17 +226,15 @@ RichTreeViewPro.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
-   * Determines if a given item is editable or not.
-   * Make sure to also enable the `labelEditing` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
-   * By default, the items are not editable.
+   * Determine if a given item can be edited.
    * @template R
    * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item is editable.
+   * @returns {boolean} `true` if the item can be edited.
+   * @default () => false
    */
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
-   * Used to determine if a given item can be reordered.
+   * Determine if a given item can be reordered.
    * @param {string} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
@@ -241,8 +249,6 @@ RichTreeViewPro.propTypes = {
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
-   * Make sure to also enable the `itemsReordering` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering />`.
    * @default false
    */
   itemsReordering: PropTypes.bool,
@@ -253,7 +259,7 @@ RichTreeViewPro.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -265,7 +271,7 @@ RichTreeViewPro.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -292,14 +298,14 @@ RichTreeViewPro.propTypes = {
   onItemPositionChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

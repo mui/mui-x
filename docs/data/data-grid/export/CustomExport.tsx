@@ -2,21 +2,20 @@ import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGrid,
-  GridToolbarContainer,
-  GridToolbarContainerProps,
-  GridToolbarExportContainer,
-  GridCsvExportMenuItem,
-  GridCsvExportOptions,
-  GridExportMenuItemProps,
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
   GridApi,
+  Toolbar,
+  ExportCsv,
+  ToolbarButton,
 } from '@mui/x-data-grid';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { ButtonProps } from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
-const getJson = (apiRef: React.MutableRefObject<GridApi>) => {
+const getJson = (apiRef: React.RefObject<GridApi>) => {
   // Select rows and columns
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
@@ -49,10 +48,9 @@ const exportBlob = (blob: Blob, filename: string) => {
   });
 };
 
-function JsonExportMenuItem(props: GridExportMenuItemProps<{}>) {
+function ExportJson(props: { onMenuItemClick: () => void }) {
+  const { onMenuItemClick } = props;
   const apiRef = useGridApiContext();
-
-  const { hideMenu } = props;
 
   return (
     <MenuItem
@@ -63,31 +61,54 @@ function JsonExportMenuItem(props: GridExportMenuItemProps<{}>) {
         });
         exportBlob(blob, 'DataGrid_demo.json');
 
-        // Hide the export menu after the export
-        hideMenu?.();
+        // Hides the export menu after the export
+        onMenuItemClick();
       }}
     >
-      Export JSON
+      Download as JSON
     </MenuItem>
   );
 }
 
-const csvOptions: GridCsvExportOptions = { delimiter: ';' };
+function ExportMenu() {
+  const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-function CustomExportButton(props: ButtonProps) {
   return (
-    <GridToolbarExportContainer {...props}>
-      <GridCsvExportMenuItem options={csvOptions} />
-      <JsonExportMenuItem />
-    </GridToolbarExportContainer>
+    <React.Fragment>
+      <Tooltip title="Export">
+        <ToolbarButton
+          ref={triggerRef}
+          id="export-menu-trigger"
+          aria-controls="export-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={() => setOpen(true)}
+        >
+          <FileDownloadIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+      <Menu
+        id="export-menu"
+        anchorEl={triggerRef.current}
+        open={open}
+        onClose={() => setOpen(false)}
+        MenuListProps={{
+          'aria-labelledby': 'export-menu-trigger',
+        }}
+      >
+        <ExportCsv render={<MenuItem />}>Download as CSV</ExportCsv>
+        <ExportJson onMenuItemClick={() => setOpen(false)} />
+      </Menu>
+    </React.Fragment>
   );
 }
 
-function CustomToolbar(props: GridToolbarContainerProps) {
+function CustomToolbar() {
   return (
-    <GridToolbarContainer {...props}>
-      <CustomExportButton />
-    </GridToolbarContainer>
+    <Toolbar>
+      <ExportMenu />
+    </Toolbar>
   );
 }
 
@@ -100,7 +121,12 @@ export default function CustomExport() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+      <DataGrid
+        {...data}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
+        showToolbar
+      />
     </div>
   );
 }

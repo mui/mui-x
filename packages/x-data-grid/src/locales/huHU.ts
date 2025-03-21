@@ -1,4 +1,3 @@
-import { huHU as huHUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nincsenek sorok',
   noResultsOverlayLabel: 'Nincs találat.',
+  noColumnsOverlayLabel: 'Nincsenek oszlopok',
+  noColumnsOverlayManageColumns: 'Oszlopok kezelése',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
@@ -53,7 +54,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nincsenek oszlopok',
   columnsManagementShowHideAllText: 'Összes',
   columnsManagementReset: 'Visszavon',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Törlés',
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
@@ -69,9 +70,9 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'tartalmazza:',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'nem tartalmazza',
   filterOperatorEquals: 'egyenlő ezzel:',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nem egyenlő',
   filterOperatorStartsWith: 'ezzel kezdődik:',
   filterOperatorEndsWith: 'ezzel végződik:',
   filterOperatorIs: 'a következő:',
@@ -92,13 +93,13 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Tartalmazza:',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Nem tartalmazza',
   headerFilterOperatorEquals: 'Egyenlő ezzel:',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nem egyenlő',
   headerFilterOperatorStartsWith: 'Ezzel kezdődik:',
   headerFilterOperatorEndsWith: 'Ezzel végződik:',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
+  headerFilterOperatorIs: 'Megegyezik',
+  headerFilterOperatorNot: 'Nem egyezik meg',
   headerFilterOperatorAfter: 'Ezutáni:',
   headerFilterOperatorOnOrAfter: 'Ekkori vagy ezutáni:',
   headerFilterOperatorBefore: 'Ezelőtti:',
@@ -112,6 +113,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
   'headerFilterOperator<': 'Kisebb mint',
   'headerFilterOperator<=': 'Kisebb vagy egyenlő',
+  headerFilterClear: 'Szűrő ürítése',
 
   // Filter values text
   filterValueAny: 'bármilyen',
@@ -120,6 +122,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Oszlopok megjelenítése',
   columnMenuManageColumns: 'Oszlopok kezelése',
   columnMenuFilter: 'Szűrők',
@@ -177,6 +180,34 @@ const huHUGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
 
+  // Pagination
+  paginationRowsPerPage: 'Sorok száma:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Első oldalra';
+    }
+    if (type === 'last') {
+      return 'Utolsó oldalra';
+    }
+    if (type === 'next') {
+      return 'Következő oldalra';
+    }
+    // if (type === 'previous') {
+    return 'Előző oldalra';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sorok újrarendezése',
 
@@ -189,4 +220,4 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Darabszám',
 };
 
-export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);
+export const huHU: Localization = getGridLocalization(huHUGrid);

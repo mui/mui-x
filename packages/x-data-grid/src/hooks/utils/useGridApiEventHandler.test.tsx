@@ -3,7 +3,8 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
-import { createUseGridApiEventHandler } from './useGridApiEventHandler';
+import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { useGridApiEventHandler, internal_registryContainer } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 
@@ -13,19 +14,12 @@ describe('useGridApiEventHandler', () => {
   const { render } = createRenderer();
 
   describe('FinalizationRegistry-based implementation', () => {
-    it('should unsubscribe event listeners registered by uncommitted components', async function test() {
-      if (
-        !/jsdom/.test(window.navigator.userAgent) ||
-        typeof FinalizationRegistry === 'undefined' ||
-        typeof global.gc === 'undefined'
-      ) {
-        // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
-        this.skip();
-      }
+    // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
+    testSkipIf(
+      !isJSDOM || typeof FinalizationRegistry === 'undefined' || typeof global.gc === 'undefined',
+    )('should unsubscribe event listeners registered by uncommitted components', async () => {
+      internal_registryContainer.current = new FinalizationRegistryBasedCleanupTracking();
 
-      const useGridApiEventHandler = createUseGridApiEventHandler({
-        registry: new FinalizationRegistryBasedCleanupTracking(),
-      });
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },
@@ -48,7 +42,7 @@ describe('useGridApiEventHandler', () => {
       expect(apiRef.current.subscribeEvent.callCount).to.equal(expectedCallCount);
 
       unmount();
-      global.gc(); // Triggers garbage collector
+      global.gc?.(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed
@@ -58,9 +52,8 @@ describe('useGridApiEventHandler', () => {
 
   describe('Timer-based implementation', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async () => {
-      const useGridApiEventHandler = createUseGridApiEventHandler({
-        registry: new TimerBasedCleanupTracking(50),
-      });
+      internal_registryContainer.current = new TimerBasedCleanupTracking(50);
+
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },

@@ -32,7 +32,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const stringInterpolator = useStringInterpolator(d);
 
   const transitionChange = useTransition([stringInterpolator], {
-    from: { value: 0 },
+    from: skipAnimation ? undefined : { value: 0 },
     to: { value: 1 },
     enter: { value: 1 },
     reset: false,
@@ -43,6 +43,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
       {transitionChange((style, interpolator) => (
         <animated.path
+          // @ts-expect-error
           d={style.value.to(interpolator)}
           fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           filter={

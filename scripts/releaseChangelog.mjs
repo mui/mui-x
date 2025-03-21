@@ -228,6 +228,7 @@ async function main(argv) {
         break;
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts-pro':
@@ -327,7 +328,7 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to the community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
   };
 
   const logTeamSection = () => {
@@ -358,7 +359,7 @@ ${logTeamSection()}
 ${logChangelogMessages('DataGrid')}
 #### \`@mui/x-data-grid@__VERSION__\`
 
-${logChangelogSection(dataGridCommits) || `No changes since \`@mui/x-data-grid@${lastRelease}\`.`}
+${logChangelogSection(dataGridCommits) || 'Internal changes.'}
 
 #### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -376,7 +377,7 @@ ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 
 ${logChangelogMessages('pickers')}
 #### \`@mui/x-date-pickers@__VERSION__\`
 
-${logChangelogSection(pickersCommits) || `No changes since \`@mui/x-date-pickers@${lastRelease}\`.`}
+${logChangelogSection(pickersCommits) || 'Internal changes.'}
 
 #### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -388,7 +389,7 @@ ${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' :
 ${logChangelogMessages('charts')}
 #### \`@mui/x-charts@__VERSION__\`
 
-${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
+${logChangelogSection(chartsCommits) || 'Internal changes.'}
 
 #### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -397,7 +398,7 @@ ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : '
 ### Tree View
 ${logChangelogMessages('TreeView')}
 #### \`@mui/x-tree-view@__VERSION__\` 
-${logChangelogSection(treeViewProCommits) || `No changes since \`@mui/x-tree-view-pro@${lastRelease}\`.`}
+${logChangelogSection(treeViewProCommits) || 'Internal changes.'}
 
 #### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 

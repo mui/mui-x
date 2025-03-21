@@ -1,6 +1,6 @@
 {
   "props": {
-    "autoFocus": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
@@ -99,20 +99,27 @@
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiMultiInputDateRangeField-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "MultiInputRangeFieldRoot",
+      "class": "MuiMultiInputDateRangeField-root"
     },
     {
-      "key": "separator",
-      "className": "MuiMultiInputDateRangeField-separator",
-      "description": "Styles applied to the separator element.",
-      "isGlobal": false
+      "name": "separator",
+      "description": "Element rendered between the two inputs.",
+      "default": "MultiInputRangeFieldSeparator",
+      "class": "MuiMultiInputDateRangeField-separator"
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMultiInputDateRangeField",
