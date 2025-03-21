@@ -37,7 +37,7 @@
     "@fingerprintjs/fingerprintjs": "^4.6.1",
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "ci-info": "^4.2.0",
-    "conf": "^5.0.0",
+    "conf": "^13.1.0",
     "is-docker": "^2.2.1",
     "node-machine-id": "^1.1.12"
   },
