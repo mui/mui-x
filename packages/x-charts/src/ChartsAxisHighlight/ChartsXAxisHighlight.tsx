@@ -4,7 +4,10 @@ import { getValueToPositionMapper, useXScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  selectorChartsInteractionXAxisValue,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
@@ -23,15 +26,15 @@ export default function ChartsXHighlight(props: {
 
   const xScale = useXScale();
 
-  const store = useStore();
-  const axisX = useSelector(store, selectorChartsInteractionXAxis);
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const axisXValue = useSelector(store, selectorChartsInteractionXAxisValue);
 
   const getXPosition = getValueToPositionMapper(xScale);
 
-  const isBandScaleX = type === 'band' && axisX !== null && isBandScale(xScale);
+  const isBandScaleX = type === 'band' && axisXValue !== null && isBandScale(xScale);
 
   if (process.env.NODE_ENV !== 'production') {
-    const isError = isBandScaleX && xScale(axisX.value) === undefined;
+    const isError = isBandScaleX && xScale(axisXValue) === undefined;
 
     if (isError) {
       console.error(
@@ -46,10 +49,10 @@ export default function ChartsXHighlight(props: {
 
   return (
     <React.Fragment>
-      {isBandScaleX && xScale(axisX.value) !== undefined && (
+      {isBandScaleX && xScale(axisXValue) !== undefined && (
         <ChartsAxisHighlightPath
           // @ts-expect-error, xScale value is checked in the statement above
-          d={`M ${xScale(axisX.value) - (xScale.step() - xScale.bandwidth()) / 2} ${
+          d={`M ${xScale(axisXValue) - (xScale.step() - xScale.bandwidth()) / 2} ${
             top
           } l ${xScale.step()} 0 l 0 ${height} l ${-xScale.step()} 0 Z`}
           className={classes.root}
@@ -57,9 +60,9 @@ export default function ChartsXHighlight(props: {
         />
       )}
 
-      {type === 'line' && axisX !== null && (
+      {type === 'line' && axisXValue !== null && (
         <ChartsAxisHighlightPath
-          d={`M ${getXPosition(axisX.value)} ${top} L ${getXPosition(axisX.value)} ${top + height}`}
+          d={`M ${getXPosition(axisXValue)} ${top} L ${getXPosition(axisXValue)} ${top + height}`}
           className={classes.root}
           ownerState={{ axisHighlight: 'line' }}
         />

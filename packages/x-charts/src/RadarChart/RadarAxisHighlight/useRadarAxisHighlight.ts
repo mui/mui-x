@@ -8,7 +8,10 @@ import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { selectorChartsInteractionXAxis } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxis,
+} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
 import { ChartInstance } from '../../internals/plugins/models';
@@ -82,7 +85,7 @@ export function useRadarAxisHighlight(
 
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
   const center = useSelector(store, selectorChartPolarCenter);
 
