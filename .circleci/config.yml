@@ -1,5 +1,7 @@
 version: 2.1
 
+shell: /bin/bash -eo pipefail --login
+
 parameters:
   browserstack-force:
     description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
@@ -69,6 +71,7 @@ commands:
         default: << pipeline.parameters.react-version >>
         description: The version of React to use.
 
+    shell
     steps:
       - run:
           name: Install fnm
