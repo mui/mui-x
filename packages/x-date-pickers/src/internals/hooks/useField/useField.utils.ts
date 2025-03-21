@@ -289,6 +289,10 @@ export const doesSectionFormatHaveLeadingZeros = (
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
+      // Remove once https://github.com/iamkun/dayjs/pull/2847 is merged and bump dayjs version
+      if (utils.lib === 'dayjs' && format === 'YY') {
+        return true;
+      }
       return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
     }
 
