@@ -62,7 +62,16 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   onClick: TreeViewCancellableEventHandler<React.MouseEvent>;
   onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
+  /**
+   * @deprecated Will be removed in the next major version. Please use the data-attrs instead.
+   */
   status: UseTreeItemStatus;
+  'data-expanded'?: '';
+  'data-selected'?: '';
+  'data-focused'?: '';
+  'data-disabled'?: '';
+  'data-editing'?: '';
+  'data-editable'?: '';
 }
 
 export interface UseTreeItemContentSlotOwnProps
