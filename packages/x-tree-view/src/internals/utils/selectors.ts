@@ -17,11 +17,14 @@ const cache = new WeakMap<
 /**
  * Type of a selector that take the whole tree view state as input and returns a value based on a required plugin.
  */
-export type TreeViewRootSelector<TSignature extends TreeViewAnyPluginSignature> = <
-  TSignatures extends [TSignature],
->(
+export type TreeViewRootSelector<
+  TSignature extends TreeViewAnyPluginSignature,
+  IsOptional extends boolean = false,
+> = <TSignatures extends [TSignature]>(
   state: TreeViewState<TSignatures>,
-) => TSignature['state'][keyof TSignature['state']];
+) => IsOptional extends true
+  ? TSignature['state'][keyof TSignature['state']] | undefined
+  : TSignature['state'][keyof TSignature['state']];
 
 /**
  * Type of a selector that take the whole tree view state as input and returns a value based on an optional plugin.

@@ -19,9 +19,9 @@ const mockSeries: HeatmapSeriesType[] = [
     type: 'heatmap',
     id: '2',
     data: [
-      [2, 0, 20],
+      [1, 0, 20],
       [1, 1, 70],
-      [0, 2, 90],
+      [1, 2, 90],
     ],
   },
 ];
@@ -32,7 +32,6 @@ const defaultProps = {
   width: 400,
   xAxis: [{ data: [1, 2, 3] }],
   yAxis: [{ data: ['A', 'B', 'C'] }],
-  slotProps: { tooltip: { trigger: 'none' as const } },
 };
 
 const options: any = {
