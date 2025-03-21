@@ -65,3 +65,6 @@ export * from '../models/z-axis';
 export * from '../models/axis';
 
 export * from './plugins/models';
+export { ANIMATION_TIMING_FUNCTION_JS } from '@mui/x-charts/internals/animation';
+export { ANIMATION_TIMING_FUNCTION } from '@mui/x-charts/internals/animation';
+export { ANIMATION_DURATION_MS } from '@mui/x-charts/internals/animation';
