@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { LineChart, AnimatedLine, AnimatedLineProps } from '@mui/x-charts/LineChart';
-import { useChartId, useDrawingArea, useXScale } from '@mui/x-charts/hooks';
+import { LineChart, AnimatedLine } from '@mui/x-charts/LineChart';
+import {
+  AnimatedLineProps,
+  useChartId,
+  useDrawingArea,
+  useXScale,
+} from '@mui/x-charts/hooks';
 import { SxProps, Theme } from '@mui/system';
 
 interface CustomAnimatedLineProps extends AnimatedLineProps {

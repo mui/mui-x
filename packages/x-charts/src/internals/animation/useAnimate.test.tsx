@@ -1,7 +1,7 @@
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
-import { useAnimate } from '@mui/x-charts/internals/useAnimate';
+import { useAnimate } from '@mui/x-charts/internals/animation/useAnimate';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 
 describe('useAnimate', () => {
@@ -52,16 +52,10 @@ describe('useAnimate', () => {
 
   it('animates from current props to new props', async () => {
     let calls = 0;
-    let firstCall: number | null = null;
     let lastCall: number | null = null;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
-
-      if (firstCall === null) {
-        firstCall = props.width;
-      }
-
       lastCall = props.width;
     }
 
@@ -97,16 +91,10 @@ describe('useAnimate', () => {
 
   it('animates from current state to new props if props change while animating', async () => {
     let calls = 0;
-    let firstCall: number | null = null;
     let lastCall: number | null = null;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
-
-      if (firstCall === null) {
-        firstCall = props.width;
-      }
-
       lastCall = props.width;
     }
 
@@ -160,16 +148,10 @@ describe('useAnimate', () => {
 
   it('jumps to end of animation if `skip` becomes true while animating', async () => {
     let calls = 0;
-    let firstCall: number | null = null;
     let lastCall: number | null = null;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
-
-      if (firstCall === null) {
-        firstCall = props.width;
-      }
-
       lastCall = props.width;
     }
 
@@ -229,16 +211,10 @@ describe('useAnimate', () => {
 
   it('stops animation when its ref is removed from the DOM', async () => {
     let calls = 0;
-    let firstCall: number | null = null;
     let lastCall: number | null = null;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
-
-      if (firstCall === null) {
-        firstCall = props.width;
-      }
-
       lastCall = props.width;
     }
 
@@ -283,15 +259,10 @@ describe('useAnimate', () => {
 
   it('stops animation when the hook is unmounted', async () => {
     let calls = 0;
-    let firstCall: number | null = null;
     let lastCall: number | null = null;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
-
-      if (firstCall === null) {
-        firstCall = props.width;
-      }
 
       lastCall = props.width;
     }
@@ -331,5 +302,40 @@ describe('useAnimate', () => {
 
     expect(lastCall).to.equal(lastCallBeforeUnmount);
     expect(calls).to.equal(numCallsBeforeUnmount);
+  });
+
+  it('applies final props if `skip` is true from the beginning', async () => {
+    let calls = 0;
+    let lastCall: number | null = null;
+
+    function applyProps(element: SVGPathElement, props: { width: number }) {
+      calls += 1;
+      lastCall = props.width;
+    }
+
+    function TestComponent({ width }: { width: number }) {
+      const ref = useAnimate(
+        { width },
+        {
+          createInterpolator: interpolateWidth,
+          applyProps,
+          initialProps: { width: 0 },
+          skip: true,
+        },
+      );
+
+      return (
+        <svg>
+          <path ref={ref} />
+        </svg>
+      );
+    }
+
+    render(<TestComponent width={1000} />);
+
+    await waitFor(() => {
+      expect(calls).to.equal(1);
+    });
+    expect(lastCall).to.equal(1000);
   });
 });

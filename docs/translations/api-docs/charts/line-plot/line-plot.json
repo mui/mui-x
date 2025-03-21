@@ -8,7 +8,6 @@
         "lineItemIdentifier": "The line item identifier."
       }
     },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
