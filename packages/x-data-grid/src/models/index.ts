@@ -21,7 +21,7 @@ export type { GridSlotsComponent } from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
 export * from './logger';
-export { MuiBaseEvent, MuiEvent } from '@mui/x-internals/types';
+export type { MuiBaseEvent, MuiEvent } from '@mui/x-internals/types';
 export * from './events';
 export type {
   GridSortCellParams,
