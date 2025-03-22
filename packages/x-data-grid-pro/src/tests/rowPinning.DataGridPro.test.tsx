@@ -12,7 +12,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import {
   $,
   grid,
@@ -24,7 +24,6 @@ import {
   getRows,
   microtasks,
 } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Row pinning', () => {
@@ -123,7 +122,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should keep rows pinned on rows scroll', () => {
+  testSkipIf(isJSDOM)('should keep rows pinned on rows scroll', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
@@ -134,7 +133,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     // scroll to the very bottom
     virtualScroller.scrollTop = 1000;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -374,7 +373,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(getActiveColumnHeader()).to.equal('1');
     });
 
-    it('should work with bottom pinned rows', () => {
+    it('should work with bottom pinned rows', async () => {
       function TestCase() {
         const data = getBasicGridData(5, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -392,29 +391,29 @@ describe('<DataGridPro /> - Row pinning', () => {
         );
       }
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned top');
       expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned top');
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
       expect(getActiveCellRowId()).to.equal('2');
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCellRowId()).to.equal('3');
 
-      fireEvent.keyDown(getCell(1, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCellRowId()).to.equal('4');
 
-      fireEvent.keyDown(getCell(2, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCellRowId()).to.equal('0');
 
-      fireEvent.keyDown(getCell(3, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCellRowId()).to.equal('1');
     });
 
     // Needs layouting
-    testSkipIf(isJSDOM)('should work with pinned columns', () => {
+    testSkipIf(isJSDOM)('should work with pinned columns', async () => {
       function TestCase() {
         const data = getBasicGridData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -439,40 +438,40 @@ describe('<DataGridPro /> - Row pinning', () => {
         );
       }
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
 
       // top-pinned row
-      fireUserEvent.mousePress(getCell(0, 3));
+      await user.click(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
       expect(getActiveCellRowId()).to.equal('1');
 
-      fireEvent.keyDown(getCell(0, 3), { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(getActiveCell()).to.equal('0-4');
 
-      fireEvent.keyDown(getCell(0, 4), { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(getActiveCell()).to.equal('0-5');
 
       // right-pinned column cell
-      fireEvent.keyDown(getCell(0, 5), { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(getActiveCell()).to.equal('0-6');
 
       // go through the right-pinned column all way down to bottom-pinned row
-      fireEvent.keyDown(getCell(0, 6), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('1-6');
       expect(getActiveCellRowId()).to.equal('2');
 
-      fireEvent.keyDown(getCell(1, 6), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('2-6');
       expect(getActiveCellRowId()).to.equal('3');
 
-      fireEvent.keyDown(getCell(2, 6), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('3-6');
       expect(getActiveCellRowId()).to.equal('4');
 
-      fireEvent.keyDown(getCell(3, 6), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('4-6');
       expect(getActiveCellRowId()).to.equal('0');
     });
@@ -669,7 +668,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should not be selectable', () => {
+  it('should not be selectable', async () => {
     let apiRef: RefObject<GridApi | null>;
 
     function TestCase() {
@@ -677,9 +676,9 @@ describe('<DataGridPro /> - Row pinning', () => {
       return <BaselineTestCase rowCount={20} colCount={5} apiRef={apiRef} />;
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
 
-    fireEvent.click(getCell(0, 0));
+    await user.click(getCell(0, 0));
     expect(apiRef!.current?.isRowSelected(0)).to.equal(false);
   });
 

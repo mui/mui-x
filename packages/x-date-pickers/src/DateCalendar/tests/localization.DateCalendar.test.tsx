@@ -9,27 +9,34 @@ import 'dayjs/locale/he';
 import 'dayjs/locale/fr';
 import 'moment/locale/he';
 import 'moment/locale/fr';
+import moment from 'moment';
 
 const ADAPTERS_TO_USE: AdapterName[] = ['date-fns', 'dayjs', 'luxon', 'moment'];
 
 describe('<DateCalendar /> - localization', () => {
   ADAPTERS_TO_USE.forEach((adapterName) => {
     describe(`with '${adapterName}'`, () => {
-      const { render } = createPickerRenderer({
-        locale: adapterName === 'date-fns' ? he : { code: 'he' },
-        adapterName,
-      });
+      describe('with wrapper', () => {
+        const { render } = createPickerRenderer({
+          locale: adapterName === 'date-fns' ? he : { code: 'he' },
+          adapterName,
+        });
 
-      it('should display correct week day labels in Hebrew locale ', () => {
-        render(<DateCalendar reduceAnimations />);
+        it('should display correct week day labels in Hebrew locale ', () => {
+          render(<DateCalendar reduceAnimations />);
 
-        expect(screen.getByText('א')).toBeVisible();
+          expect(screen.getByText('א')).toBeVisible();
+        });
       });
 
       describe('without wrapper', () => {
         const { render: renderWithoutWrapper } = createRenderer();
 
-        it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
+        it('should correctly switch between locale with week starting in Monday and week starting in Sunday', async () => {
+          if (adapterName === 'moment') {
+            moment.locale('en');
+          }
+
           const { setProps } = renderWithoutWrapper(
             <LocalizationProvider
               dateAdapter={availableAdapters[adapterName]}

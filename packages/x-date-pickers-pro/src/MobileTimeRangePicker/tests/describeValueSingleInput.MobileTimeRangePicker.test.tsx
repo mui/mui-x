@@ -11,7 +11,7 @@ import {
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
 
 describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
     render,
@@ -20,7 +20,6 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
     variant: 'mobile',
     initialFocus: 'start',
     fieldType: 'single-input',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],

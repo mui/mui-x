@@ -197,7 +197,7 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
     return this.locale;
   };
 
-  /* istanbul ignore next */
+  /* v8 ignore next */
   public is12HourCycleInCurrentLocale = () => {
     if (typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
       return true; // Luxon defaults to en-US if Intl not found
@@ -482,7 +482,7 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
-    /* istanbul ignore next */
+    /* v8 ignore next */
     return value.localWeekNumber ?? value.weekNumber;
   };
 

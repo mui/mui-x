@@ -10,11 +10,10 @@ import {
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
 describe('<DesktopTimeRangePicker /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(DesktopTimeRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'time-range',
     variant: 'desktop',
