@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -13,7 +13,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DateField /> - Selection', () => {
-  const { render } = createPickerRenderer({ clockConfig: new Date(2020, 0, 20) });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
   const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('Focus', () => {
@@ -56,7 +56,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
-    it('should select all on <Tab> focus (v6 only)', async () => {
+    it('should select all on <Tab> focus (v6 only)', () => {
       // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
@@ -65,16 +65,14 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
+      clock.runToLast();
       input.select();
 
-      await waitFor(() => {
-        expectFieldValueV6(input, 'MM/DD/YYYY');
-      });
-
-      expect(getCleanedSelectedContent()).to.equal('MM');
+      expectFieldValueV6(input, 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
-    it('should select all on <Tab> focus with start separator (v6 only)', async () => {
+    it('should select all on <Tab> focus with start separator (v6 only)', () => {
       // Test with non-accessible DOM structure
       renderWithProps({
         enableAccessibleFieldDOMStructure: false,
@@ -86,16 +84,14 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
+      clock.runToLast();
       input.select();
 
-      await waitFor(() => {
-        expectFieldValueV6(input, '- YYYY');
-      });
-
-      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      expectFieldValueV6(input, '- YYYY');
+      expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
-    it('should select day on mobile (v6 only)', async () => {
+    it('should select day on mobile (v6 only)', () => {
       // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
@@ -104,10 +100,8 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
-
-      await waitFor(() => {
-        expectFieldValueV6(input, 'MM/DD/YYYY');
-      });
+      clock.runToLast();
+      expectFieldValueV6(input, 'MM/DD/YYYY');
 
       input.setSelectionRange(3, 5);
       expect(input.selectionStart).to.equal(3);
