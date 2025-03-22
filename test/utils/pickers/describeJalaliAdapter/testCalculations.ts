@@ -22,7 +22,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.isEqual(testDateIso, null)).to.equal(false);
   });
 
-  it('Method: isValid', () => {
+  it('Method: isValid', async () => {
     expect(adapter.isValid(testDateIso)).to.equal(true);
     expect(adapter.isValid(null)).to.equal(false);
     if (adapter.lib !== 'moment-jalaali') {
