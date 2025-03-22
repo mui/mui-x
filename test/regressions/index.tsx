@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-import { setupTestLicenseKey } from '../utils/testLicense';
+import { setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
 
 setupTestLicenseKey();
@@ -83,8 +83,6 @@ const tests: Test[] = [];
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
 const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true });
-console.log(requireDocs);
-
 Object.keys(requireDocs).forEach((path: string) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
@@ -111,7 +109,6 @@ Object.keys(requireDocs).forEach((path: string) => {
 
 // @ts-ignore
 const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
-console.log(requireRegressions);
 Object.keys(requireRegressions).forEach((path: string) => {
   const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
