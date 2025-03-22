@@ -13,7 +13,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DateField /> - Selection', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clockConfig: new Date(2020, 0, 20) });
   const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('Focus', () => {
