@@ -165,6 +165,8 @@ describe('<MobileDatePicker />', () => {
       // Open and Dismiss the picker
       openPicker({ type: 'date' });
       await view.user.keyboard('[Escape]');
+
+      // Verify it's still a clean value
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
