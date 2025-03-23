@@ -166,7 +166,6 @@ export const useGridDataSourceLazyLoader = (
       return;
     }
 
-
     const pageToSkip = adjustRowParams({
       start: renderedRowsIntervalCache.current.firstRowToRender,
       end: renderedRowsIntervalCache.current.lastRowToRender,
@@ -176,7 +175,10 @@ export const useGridDataSourceLazyLoader = (
 
     for (let i = 0; i < rootChildrenCount; i += 1) {
       // replace the rows not in the viewport with skeleton rows
-      if (((pageToSkip.start as number) <= i && i <= pageToSkip.end) || tree[rootGroupChildren[i]]?.type === 'skeletonRow') {
+      if (
+        ((pageToSkip.start as number) <= i && i <= pageToSkip.end) ||
+        tree[rootGroupChildren[i]]?.type === 'skeletonRow'
+      ) {
         continue;
       }
 
@@ -198,10 +200,7 @@ export const useGridDataSourceLazyLoader = (
     }
 
     // Should only happen with VIEWPORT loading trigger
-    if (
-      pageRowCount !== -1 &&
-      pageRowCount !== undefined
-    ) {
+    if (pageRowCount !== -1 && pageRowCount !== undefined) {
       // fill the grid with skeleton rows
       for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
         const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
