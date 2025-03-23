@@ -126,8 +126,8 @@ importers:
         specifier: ^7.0.0-beta.4
         version: 7.0.0-beta.4(@types/react@19.0.10)(react@19.0.0)
       '@next/eslint-plugin-next':
-        specifier: 15.2.2
-        version: 15.2.2
+        specifier: 15.2.3
+        version: 15.2.3
       '@octokit/plugin-retry':
         specifier: ^7.1.4
         version: 7.1.4(@octokit/core@5.2.0)
@@ -3103,6 +3103,7 @@ packages:
   '@mui/base@7.0.0-beta.4':
     resolution: {integrity: sha512-WzFMFK9dy66fy941u/N0cmA1Yz4LfdNbkBtDK0GBV5ewBvQhSL2Z1+Xcf+lJB0yX6Xg9QvjDDgGcqBqEstyFAg==}
     engines: {node: '>=14.0.0'}
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3295,6 +3296,7 @@ packages:
   '@mui/styles@7.0.0-beta.4':
     resolution: {integrity: sha512-beq4IN0rq0pYx/bdDNkffmC9UgjncLjx8vuCIjbVcCrGiNMkQ/RvU+1GFahiNOMqfCwZ/tsi9z3CnpoIOuSvMw==}
     engines: {node: '>=14.0.0'}
+    deprecated: Deprecated, check the migration instruction in https://mui.com/material-ui/migration/migrating-from-jss/
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3376,8 +3378,8 @@ packages:
   '@next/env@15.2.2':
     resolution: {integrity: sha512-yWgopCfA9XDR8ZH3taB5nRKtKJ1Q5fYsTOuYkzIIoS8TJ0UAUKAGF73JnGszbjk2ufAQDj6mDdgsJAFx5CLtYQ==}
 
-  '@next/eslint-plugin-next@15.2.2':
-    resolution: {integrity: sha512-1+BzokFuFQIfLaRxUKf2u5In4xhPV7tUgKcK53ywvFl6+LXHWHpFkcV7VNeKlyQKUotwiq4fy/aDNF9EiUp4RQ==}
+  '@next/eslint-plugin-next@15.2.3':
+    resolution: {integrity: sha512-eNSOIMJtjs+dp4Ms1tB1PPPJUQHP3uZK+OQ7iFY9qXpGO6ojT6imCL+KcUOqE/GXGidWbBZJzYdgAdPHqeCEPA==}
 
   '@next/swc-darwin-arm64@15.2.2':
     resolution: {integrity: sha512-HNBRnz+bkZ+KfyOExpUxTMR0Ow8nkkcE6IlsdEa9W/rI7gefud19+Sn1xYKwB9pdCdxIP1lPru/ZfjfA+iT8pw==}
@@ -12460,7 +12462,7 @@ snapshots:
 
   '@next/env@15.2.2': {}
 
-  '@next/eslint-plugin-next@15.2.2':
+  '@next/eslint-plugin-next@15.2.3':
     dependencies:
       fast-glob: 3.3.1
 
