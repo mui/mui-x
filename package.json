@@ -99,7 +99,7 @@
     "@mui/material": "^7.0.0-beta.4",
     "@mui/monorepo": "github:mui/material-ui#260ed53760f179e3bb4f1f43e2f2712ecbf9fdd7",
     "@mui/utils": "^7.0.0-beta.4",
-    "@next/eslint-plugin-next": "15.2.2",
+    "@next/eslint-plugin-next": "15.2.3",
     "@octokit/plugin-retry": "^7.1.4",
     "@octokit/rest": "^21.1.1",
     "@playwright/test": "^1.51.0",
@@ -110,7 +110,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.16",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.24",
+    "@types/node": "^20.17.25",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/requestidlecallback": "^0.3.7",
@@ -190,7 +190,7 @@
     "remark": "^15.0.1",
     "rimraf": "^6.0.1",
     "serve": "^14.2.4",
-    "sinon": "^19.0.2",
+    "sinon": "^19.0.4",
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.14",
@@ -208,7 +208,7 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.24"
+    "@types/node": "^20.17.25"
   },
   "packageManager": "pnpm@10.6.3",
   "engines": {
