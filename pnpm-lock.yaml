@@ -387,8 +387,8 @@ importers:
         specifier: ^14.2.4
         version: 14.2.4
       sinon:
-        specifier: ^19.0.2
-        version: 19.0.2
+        specifier: ^19.0.4
+        version: 19.0.4
       stream-browserify:
         specifier: ^3.0.0
         version: 3.0.0
@@ -9396,8 +9396,8 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
-  sinon@19.0.2:
-    resolution: {integrity: sha512-euuToqM+PjO4UgXeLETsfQiuoyPXlqFezr6YZDFwHR3t4qaX0fZUe1MfPMznTL5f8BWrVS89KduLdMUsxFCO6g==}
+  sinon@19.0.4:
+    resolution: {integrity: sha512-myidFob7fjmYHJb+CHNLtAYScxn3sngGq4t75L2rCGGpE/k4OQVkN3KE5FsN+XkO2+fcDZ65PGvq3KHrlLAm7g==}
 
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
@@ -12228,7 +12228,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      sinon: 19.0.2
+      sinon: 19.0.4
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/react'
@@ -19685,7 +19685,7 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
-  sinon@19.0.2:
+  sinon@19.0.4:
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 13.0.5
