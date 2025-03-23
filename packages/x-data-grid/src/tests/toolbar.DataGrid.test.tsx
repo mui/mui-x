@@ -3,8 +3,7 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Toolbar', () => {
   const { render } = createRenderer();
