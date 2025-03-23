@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -59,9 +60,9 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree data', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -120,7 +121,7 @@ describe('<DataGridPro /> - Tree data', () => {
         'B.B.A.A',
         'C',
       ]);
-      act(() => apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]));
+      act(() => apiRef.current?.updateRows([{ name: 'A.A', _action: 'delete' }]));
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.B',
@@ -171,10 +172,10 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should keep children expansion when changing some of the rows', () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      act(() => apiRef.current.setRowChildrenExpansion('A', true));
-      clock.runToLast();
+      act(() => apiRef.current?.setRowChildrenExpansion('A', true));
+
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
-      act(() => apiRef.current.updateRows([{ name: 'B' }]));
+      act(() => apiRef.current?.updateRows([{ name: 'B' }]));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
     });
   });
@@ -274,7 +275,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
       const { setProps } = render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      act(() => apiRef.current.setRowChildrenExpansion('B', true));
+      act(() => apiRef.current?.setRowChildrenExpansion('B', true));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
       setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A']);
@@ -287,7 +288,7 @@ describe('<DataGridPro /> - Tree data', () => {
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
       expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
-      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current.state.rows
+      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
         .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
@@ -417,11 +418,11 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       act(() =>
-        apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
+        apiRef.current?.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
       );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       act(() =>
-        apiRef.current.updateColumns([
+        apiRef.current?.updateColumns([
           {
             field: 'name',
             headerName: 'New name',
@@ -616,7 +617,7 @@ describe('<DataGridPro /> - Tree data', () => {
       );
 
       const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
-        apiRef.current.state.filter;
+        apiRef.current!.state.filter;
 
       expect(filteredChildrenCountLookup.A).to.equal(3);
       expect(filteredDescendantCountLookup.A).to.equal(5);
@@ -628,11 +629,11 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(filteredDescendantCountLookup.C).to.equal(undefined);
 
       act(() => {
-        apiRef.current.updateRows([{ name: 'A.D' }]);
+        apiRef.current?.updateRows([{ name: 'A.D' }]);
       });
 
-      expect(apiRef.current.state.filter.filteredChildrenCountLookup.A).to.equal(4);
-      expect(apiRef.current.state.filter.filteredDescendantCountLookup.A).to.equal(6);
+      expect(apiRef.current?.state.filter.filteredChildrenCountLookup.A).to.equal(4);
+      expect(apiRef.current?.state.filter.filteredDescendantCountLookup.A).to.equal(6);
     });
   });
 

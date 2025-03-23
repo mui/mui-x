@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
+import type { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
 import type { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
 import type { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
@@ -14,10 +15,21 @@ import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { TreeViewPublicAPI } from '../../internals/models';
 import { useSelector } from '../../internals/hooks/useSelector';
-import { selectorIsItemExpanded } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import {
+  selectorIsItemExpandable,
+  selectorIsItemExpanded,
+} from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { selectorIsItemDisabled } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemSelected,
+  selectorIsMultiSelectEnabled,
+} from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorGetTreeItemError,
+  selectorIsItemLoading,
+  selectorIsLazyLoadingEnabled,
+} from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 import {
   selectorIsItemBeingEdited,
   selectorIsItemEditable,
@@ -46,7 +58,10 @@ type UseTreeItemUtilsMinimalPlugins = readonly [
  * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
  */
 
-export type UseTreeItemUtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
+export type UseTreeItemUtilsOptionalPlugins = readonly [
+  UseTreeViewLabelSignature,
+  UseTreeViewLazyLoadingSignature,
+];
 
 interface UseTreeItemUtilsReturnValue<
   TSignatures extends UseTreeItemUtilsMinimalPlugins,
@@ -60,9 +75,9 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-export const isItemExpandable = (reactChildren: React.ReactNode) => {
+export const itemHasChildren = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+    return reactChildren.length > 0 && reactChildren.some(itemHasChildren);
   }
   return Boolean(reactChildren);
 };
@@ -77,35 +92,36 @@ export const useTreeItemUtils = <
   itemId: string;
   children?: React.ReactNode;
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
-  const {
-    instance,
-    label,
-    store,
-    selection: { multiSelect },
-    publicAPI,
-  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
+  const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
+  const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
+  const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
+  const isMultiSelectEnabled = useSelector(store, selectorIsMultiSelectEnabled);
+
+  const loading = useSelector(store, (state) =>
+    isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
+  );
+  const error = useSelector(store, (state) =>
+    isLazyLoadingEnabled ? Boolean(selectorGetTreeItemError(state, itemId)) : false,
+  );
+  const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);
   const isSelected = useSelector(store, selectorIsItemSelected, itemId);
   const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
-  const isEditing = useSelector(store, (state) =>
-    label == null ? false : selectorIsItemBeingEdited(state, itemId),
-  );
-  const isEditable = useSelector(store, (state) =>
-    label == null
-      ? false
-      : selectorIsItemEditable(state, { itemId, isItemEditable: label.isItemEditable }),
-  );
+  const isEditing = useSelector(store, selectorIsItemBeingEdited, itemId);
+  const isEditable = useSelector(store, selectorIsItemEditable, itemId);
 
   const status: UseTreeItemStatus = {
-    expandable: isItemExpandable(children),
+    expandable: isExpandable,
     expanded: isExpanded,
     focused: isFocused,
     selected: isSelected,
     disabled: isDisabled,
     editing: isEditing,
     editable: isEditable,
+    loading,
+    error,
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -117,11 +133,12 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
-      instance.toggleItemExpansion(event, itemId);
+      // make sure the children selection is propagated again
+      instance.setItemExpansion({ event, itemId });
     }
   };
 
@@ -134,28 +151,28 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     if (multiple) {
       if (event.shiftKey) {
         instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectItem({ event, itemId, keepExistingSelection: true });
+        instance.setItemSelection({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem({ event, itemId, shouldBeSelected: true });
+      instance.setItemSelection({ event, itemId, shouldBeSelected: true });
     }
   };
 
   const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
-    if (multiSelect && hasShift) {
+    if (isMultiSelectEnabled && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem({
+      instance.setItemSelection({
         event,
         itemId,
-        keepExistingSelection: multiSelect,
+        keepExistingSelection: isMultiSelectEnabled,
         shouldBeSelected: event.target.checked,
       });
     }
@@ -165,6 +182,7 @@ export const useTreeItemUtils = <
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
     }
+
     if (isEditable) {
       if (isEditing) {
         instance.setEditedItemId(null);

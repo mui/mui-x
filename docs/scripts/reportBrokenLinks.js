@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const path = require('path');
 const fse = require('fs-extra');
-const { parseDocFolder, getAnchor } = require('@mui/monorepo/docs/scripts/reportBrokenLinks');
+const { parseDocFolder, getAnchor } = require('@mui/monorepo/docs/scripts/reportBrokenLinksLib');
 
 const docsSpaceRoot = path.join(__dirname, '../');
 

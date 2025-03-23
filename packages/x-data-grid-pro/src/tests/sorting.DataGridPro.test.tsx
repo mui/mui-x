@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -11,8 +12,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
@@ -37,9 +37,9 @@ describe('<DataGridPro /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
   };
 
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;
@@ -83,21 +83,21 @@ describe('<DataGridPro /> - Sorting', () => {
         brand: 'Hugo',
       },
     ];
-    act(() => apiRef.current.setRows(newRows));
+    act(() => apiRef.current?.setRows(newRows));
     expect(getColumnValues(0)).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
     renderBrandSortedAsc();
-    act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-    act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
+    act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+    act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Patagonia' }]));
     expect(getColumnValues(0)).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
   });
 
   it('should allow apiRef to setSortModel', () => {
     render(<TestCase />);
 
-    act(() => apiRef.current.setSortModel([{ field: 'brand', sort: 'desc' }]));
+    act(() => apiRef.current?.setSortModel([{ field: 'brand', sort: 'desc' }]));
     expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
 
@@ -118,7 +118,7 @@ describe('<DataGridPro /> - Sorting', () => {
       { field: 'brand', sort: 'asc' },
     ];
 
-    act(() => apiRef.current.setSortModel(sortModel));
+    act(() => apiRef.current?.setSortModel(sortModel));
     expect(getColumnValues(0)).to.deep.equal(['Puma', 'Adidas', 'Nike']);
   });
 
@@ -126,7 +126,7 @@ describe('<DataGridPro /> - Sorting', () => {
     ['shiftKey', 'metaKey', 'ctrlKey'].forEach((key) => {
       it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
         render(<TestCase />);
-        act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
+        act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
         expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         fireEvent.click(getColumnHeaderCell(0), { [key]: true });
         expect(getColumnValues(0)).to.deep.equal(['Puma', 'Adidas', 'Nike']);
@@ -136,7 +136,7 @@ describe('<DataGridPro /> - Sorting', () => {
     ['metaKey', 'ctrlKey'].forEach((key) => {
       it(`should do nothing when pressing Enter while ${key} is pressed`, () => {
         render(<TestCase />);
-        act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
+        act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
         expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         act(() => getColumnHeaderCell(1).focus());
         fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', [key]: true });
@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
     it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
       render(<TestCase />);
-      act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
+      act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       act(() => getColumnHeaderCell(0).focus());
       fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter', shiftKey: true });
@@ -155,7 +155,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
     it(`should not do a multi-sorting if no multiple key is pressed`, () => {
       render(<TestCase />);
-      act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
+      act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -163,54 +163,53 @@ describe('<DataGridPro /> - Sorting', () => {
 
     it('should not do a multi-sorting if disableMultipleColumnsSorting is true', () => {
       render(<TestCase disableMultipleColumnsSorting />);
-      act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
+      act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
   });
 
-  it('should prune rendering on cells', function test() {
-    // The number of renders depends on the user-agent
-    if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
-      this.skip();
-    }
+  // The number of renders depends on the user-agent
+  testSkipIf(!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM)(
+    'should prune rendering on cells',
+    () => {
+      let renderCellCount: number = 0;
 
-    let renderCellCount: number = 0;
+      function CounterRender(props: { value: string }) {
+        React.useEffect(() => {
+          if (props.value === 'Nike') {
+            renderCellCount += 1;
+          }
+        });
+        return <React.Fragment>{props.value}</React.Fragment>;
+      }
 
-    function CounterRender(props: { value: string }) {
-      React.useEffect(() => {
-        if (props.value === 'Nike') {
-          renderCellCount += 1;
-        }
-      });
-      return <React.Fragment>{props.value}</React.Fragment>;
-    }
+      const columns: GridColDef[] = [
+        {
+          field: 'brand',
+          renderCell: (params) => <CounterRender value={params.value} />,
+        },
+      ];
 
-    const columns: GridColDef[] = [
-      {
-        field: 'brand',
-        renderCell: (params) => <CounterRender value={params.value} />,
-      },
-    ];
+      function Test(props: Omit<DataGridProProps, 'columns' | 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
+          </div>
+        );
+      }
 
-    function Test(props: Omit<DataGridProProps, 'columns' | 'rows'>) {
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
-        </div>
-      );
-    }
-
-    const { setProps } = render(<Test />);
-    expect(renderCellCount).to.equal(1);
-    const cell = getCell(1, 0);
-    cell.focus();
-    fireEvent.click(cell);
-    expect(renderCellCount).to.equal(2);
-    setProps({ extra: true });
-    expect(renderCellCount).to.equal(2);
-  });
+      const { setProps } = render(<Test />);
+      expect(renderCellCount).to.equal(1);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.click(cell);
+      expect(renderCellCount).to.equal(2);
+      setProps({ extra: true });
+      expect(renderCellCount).to.equal(2);
+    },
+  );
 
   describe('control Sorting', () => {
     it('should update the sorting state when neither the model nor the onChange are set', () => {

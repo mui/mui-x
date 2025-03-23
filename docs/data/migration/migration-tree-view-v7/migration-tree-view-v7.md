@@ -68,6 +68,19 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## `@mui/material` peer dependency change
+
+The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
+This change should resolve ESM and CJS interoperability issues in various environments.
+
+:::info
+The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
+
+- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
+- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
+
+:::
+
 ### ✅ Use Simple Tree View instead of Tree View
 
 The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
@@ -129,8 +142,8 @@ This inconsistency has been solved, all the event manager now target the root of
 
 ```diff
 -<SimpleTreeView>
-+<SimpleTreeView onItemClick={handleItemClick}>
 -  <TreeItem onClick={handleItemClick}>
++<SimpleTreeView onItemClick={handleItemClick}>
 +  <TreeItem>
  </SimpleTreeView>
 ```
@@ -229,7 +242,9 @@ All the new Tree Item-related components and utils (introduced in the previous m
 + } from '@mui/x-tree-view/TreeItemLabelInput';
 ```
 
-## Stop using `publicAPI` methods in the render
+## `publicAPI` methods
+
+### Stop using `publicAPI` methods in the render
 
 The Tree Items are now memoized to improve the performances of the Tree View components.
 If you call a `publicAPI` method in the render of an item, it might not re-render and you might not have the new value.
@@ -267,6 +282,36 @@ If you need to access the tree item model inside the render, you can use the new
 
 :::success
 If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
+:::
+
+### Rename `publicAPI.selectItem()`
+
+The `selectItem` method has been renamed `setItemSelection`:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleSelectItem() {
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+ }
+```
+
+## Change `pubicAPI.setItemExpansion()` signature
+
+The `setItemExpansion` method now receives a single object instead of a list of parameters:
+
+```diff
+ const { publicAPI } = useTreeItemUtils();
+
+ const handleExpandItem() {
+-  publicAPI.setItemExpansion(event, props.itemId, true)
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+ }
+```
+
+:::success
+The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
 :::
 
 ## Apply the indentation on the item content instead of it's parent's group

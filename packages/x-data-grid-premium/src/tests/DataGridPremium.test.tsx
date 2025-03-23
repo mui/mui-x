@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium as DataGrid,
   DataGridPremiumProps as DataGridProps,
   GridApi,
-  GridToolbar,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -35,7 +35,7 @@ describe('<DataGrid /> - Quick filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProps>) {
     apiRef = useGridApiRef();
@@ -45,7 +45,7 @@ describe('<DataGrid /> - Quick filter', () => {
         <DataGrid
           {...baselineProps}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter
@@ -63,7 +63,7 @@ describe('<DataGrid /> - Quick filter', () => {
   }
 
   // https://github.com/mui/mui-x/issues/9677
-  it('should not fail when adding a grouping criterion', () => {
+  it('should not fail when adding a grouping criterion', async () => {
     const { setProps } = render(
       <TestCase
         rows={[
@@ -94,7 +94,7 @@ describe('<DataGrid /> - Quick filter', () => {
       />,
     );
 
-    act(() => apiRef.current.addRowGroupingCriteria('year'));
+    await act(() => apiRef.current?.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {

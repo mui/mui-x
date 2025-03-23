@@ -24,14 +24,14 @@ describe('<DesktopTimePicker />', () => {
       expect(screen.getByRole('option', { name: 'AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
+    it('should render single column Picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
       render(<DesktopTimePicker open thresholdToRenderTimeInASingleColumn={1000} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '09:35 AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "timeSteps.minutes" number', () => {
+    it('should render single column Picker given big enough "timeSteps.minutes" number', () => {
       render(<DesktopTimePicker open timeSteps={{ minutes: 60 }} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
@@ -75,13 +75,18 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -99,7 +104,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
@@ -113,8 +118,13 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -132,7 +142,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
@@ -151,8 +161,13 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -170,12 +185,17 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
       expect(onClose.callCount).to.equal(1);
     });
   });

@@ -30,16 +30,10 @@ const legendPlacement = {
     legend: {
       position: {
         vertical: 'middle',
-        horizontal: 'right',
+        horizontal: 'end',
       },
-      direction: 'column',
-      itemGap: 2,
+      direction: 'vertical',
     },
-  },
-  margin: {
-    top: 20,
-    right: 150,
-    left: 20,
   },
 };
 const series = [

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   useGridApiOptionHandler,
@@ -10,6 +11,7 @@ import {
   useGridVisibleRows,
   GridInfiniteLoaderPrivateApi,
   useTimeout,
+  gridHorizontalScrollbarHeightSelector,
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
@@ -30,15 +32,16 @@ const InfiniteLoadingTriggerElement = styled('div')({
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
+  const isReady = useGridSelector(apiRef, gridDimensionsSelector).isReady;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
-  const observer = React.useRef<IntersectionObserver>();
+  const observer = React.useRef<IntersectionObserver>(null);
   const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
@@ -62,20 +65,15 @@ export const useGridInfiniteLoader = (
     }
   });
 
-  const virtualScroller = apiRef.current.virtualScrollerRef.current;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const marginBottom =
-    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-
   React.useEffect(() => {
-    if (!isEnabled) {
-      return;
-    }
-    if (!virtualScroller) {
+    const virtualScroller = apiRef.current.virtualScrollerRef.current;
+    if (!isEnabled || !isReady || !virtualScroller) {
       return;
     }
     observer.current?.disconnect();
+
+    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
+    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
 
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
@@ -85,7 +83,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
+  }, [apiRef, isReady, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {

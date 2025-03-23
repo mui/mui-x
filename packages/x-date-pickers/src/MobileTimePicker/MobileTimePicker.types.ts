@@ -12,15 +12,13 @@ import {
 import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileTimePickerSlots<TView extends TimeViewWithMeridiem>
+export interface MobileTimePickerSlots
   extends BaseTimePickerSlots,
-    MakeOptional<UseMobilePickerSlots<TView>, 'field'> {}
+    MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileTimePickerSlotProps<
-  TView extends TimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseTimePickerSlotProps,
-    ExportedUseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure> {}
+export interface MobileTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseTimePickerSlotProps,
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileTimePickerProps<
   TView extends TimeViewWithMeridiem = TimeView,
@@ -31,10 +29,10 @@ export interface MobileTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileTimePickerSlots<TView>;
+  slots?: MobileTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileTimePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

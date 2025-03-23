@@ -1,4 +1,3 @@
-import { svSE as svSECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Inga rader',
   noResultsOverlayLabel: 'Inga resultat funna.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
@@ -113,6 +114,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Större eller lika med',
   'headerFilterOperator<': 'Mindre än',
   'headerFilterOperator<=': 'Mindre eller lika med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'något',
@@ -121,6 +123,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Visa kolumner',
   columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
@@ -182,6 +185,34 @@ const svSEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandera',
   collapseDetailPanel: 'Kollapsa',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per sida:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå till första sidan';
+    }
+    if (type === 'last') {
+      return 'Gå till sista sidan';
+    }
+    if (type === 'next') {
+      return 'Gå till nästa sida';
+    }
+    // if (type === 'previous') {
+    return 'Gå till föregående sida';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Ordna om rader',
 
@@ -194,4 +225,4 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'antal',
 };
 
-export const svSE: Localization = getGridLocalization(svSEGrid, svSECore);
+export const svSE: Localization = getGridLocalization(svSEGrid);

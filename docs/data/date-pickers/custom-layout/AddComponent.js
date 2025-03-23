@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
   usePickerLayout,
@@ -17,17 +16,22 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 
+import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
 function ActionList(props) {
-  const { onAccept, onClear, onCancel, onSetToday } = props;
+  const { className } = props;
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
+
   const actions = [
-    { text: 'Accept', method: onAccept },
-    { text: 'Clear', method: onClear },
-    { text: 'Cancel', method: onCancel },
-    { text: 'Today', method: onSetToday },
+    { text: 'Accept', method: acceptValueChanges },
+    { text: 'Clear', method: clearValue },
+    { text: 'Cancel', method: cancelValueChanges },
+    { text: 'Today', method: setValueToToday },
   ];
 
   return (
-    <List>
+    <List className={className}>
       {actions.map(({ text, method }) => (
         <ListItem key={text} disablePadding>
           <ListItemButton onClick={method}>

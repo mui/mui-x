@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColDef, gridClasses } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridRowsProp,
+  GridColDef,
+  gridClasses,
+  gridColumnLookupSelector,
+} from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
@@ -123,11 +131,8 @@ describe('<DataGrid /> - Columns', () => {
   });
 
   // https://github.com/mui/mui-x/issues/13719
-  it('should not crash when updating columns immediately after scrolling', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
+  // Needs layout
+  testSkipIf(isJSDOM)('should not crash when updating columns immediately after scrolling', () => {
     const data = [
       { id: 1, value: 'A' },
       { id: 2, value: 'B' },
@@ -160,5 +165,41 @@ describe('<DataGrid /> - Columns', () => {
     virtualScroller.dispatchEvent(new Event('scroll'));
 
     fireEvent.click(screen.getByText('Update columns'));
+  });
+
+  it('should revert to the default column properties if not specified otherwise', async () => {
+    const columns1: GridColDef[] = [{ field: 'status', type: 'string' }];
+    const columns2: GridColDef[] = [
+      { field: 'status', type: 'string', sortable: false, filterable: false },
+    ];
+
+    const apiRef: RefObject<GridApiCommunity | null> = { current: null };
+
+    function Component(props: { columns: DataGridProps['columns'] }) {
+      return (
+        <div style={{ height: 560, width: '100%' }}>
+          <DataGrid apiRef={apiRef} rows={[{ id: 1, status: 'pending' }]} {...props} />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<Component columns={columns1} />);
+
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: true,
+      filterable: true,
+    });
+
+    setProps({ columns: columns2 });
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: false,
+      filterable: false,
+    });
+
+    setProps({ columns: columns1 });
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: true,
+      filterable: true,
+    });
   });
 });

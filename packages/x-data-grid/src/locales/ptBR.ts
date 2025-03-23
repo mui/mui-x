@@ -1,4 +1,3 @@
-import { ptBR as ptBRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nenhuma linha',
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
@@ -114,6 +115,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Maior que ou igual a',
   'headerFilterOperator<': 'Menor que',
   'headerFilterOperator<=': 'Menor que ou igual a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualquer',
@@ -122,6 +124,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Exibir colunas',
   columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtrar',
@@ -183,6 +186,34 @@ const ptBRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
 
+  // Pagination
+  paginationRowsPerPage: 'Linhas por página:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ir para a primeira página';
+    }
+    if (type === 'last') {
+      return 'Ir para a última página';
+    }
+    if (type === 'next') {
+      return 'Ir para a próxima página';
+    }
+    // if (type === 'previous') {
+    return 'Ir para a página anterior';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reorganizar linhas',
 
@@ -195,4 +226,4 @@ const ptBRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamanho',
 };
 
-export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);
+export const ptBR: Localization = getGridLocalization(ptBRGrid);

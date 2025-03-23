@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
+import { DataGrid, GridDataSource } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 export default function ServerSideDataGrid() {
@@ -28,24 +28,16 @@ export default function ServerSideDataGrid() {
     [fetchRows],
   );
 
-  const initialStateWithPagination = React.useMemo(
-    () => ({
-      ...initialState,
-      pagination: {
-        paginationModel: { pageSize: 10, page: 0 },
-        rowCount: 0,
-      },
-    }),
-    [initialState],
-  );
-
   return (
     <div style={{ width: '100%', height: 400 }}>
-      <DataGridPro
+      <DataGrid
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         pagination
-        initialState={initialStateWithPagination}
+        initialState={{
+          ...initialState,
+          pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
+        }}
         pageSizeOptions={[10, 20, 50]}
       />
     </div>

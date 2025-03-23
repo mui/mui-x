@@ -7,7 +7,7 @@ import { BaseDateValidationProps, MonthValidationProps } from '../internals/mode
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { FormProps } from '../internals/models/formProps';
 
-export interface PickerMonthOwnerState extends PickerOwnerState {
+export interface MonthButtonOwnerState extends PickerOwnerState {
   isMonthSelected: boolean;
   isMonthDisabled: boolean;
 }
@@ -24,7 +24,7 @@ export interface MonthCalendarSlotProps {
   monthButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickerMonthOwnerState
+    MonthButtonOwnerState
   >;
 }
 

@@ -64,8 +64,8 @@ TimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -96,7 +96,8 @@ TimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

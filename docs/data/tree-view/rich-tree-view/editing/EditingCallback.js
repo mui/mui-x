@@ -21,7 +21,6 @@ export default function EditingCallback() {
       <Box sx={{ minHeight: 352, minWidth: 260 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          experimentalFeatures={{ labelEditing: true }}
           isItemEditable
           defaultExpandedItems={['grid', 'pickers']}
           onItemLabelChange={(itemId, label) => setLastEditedItem({ itemId, label })}

@@ -7,14 +7,12 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
 import { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
@@ -37,7 +35,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all time pickers
@@ -46,7 +43,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
@@ -69,7 +66,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -84,15 +80,10 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullTime',
-      contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: props.localeText?.openTimePickerDialogue,
-    }),
     validator: validateTime,
   });
 
@@ -123,8 +114,8 @@ MobileTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -149,7 +140,8 @@ MobileTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

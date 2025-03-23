@@ -1,4 +1,3 @@
-import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
+  noColumnsOverlayLabel: 'Žádné sloupce',
+  noColumnsOverlayManageColumns: 'Spravovat sloupce',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zobrazení',
@@ -39,15 +40,16 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Napište požadavek…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Napište nebo nahrajte požadavek…',
+  toolbarPromptControlRecordingPlaceholder: 'Naslouchám požadavku…',
+  toolbarPromptControlLabel: 'Vstup požadavku',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrát',
+  toolbarPromptControlRecordButtonActiveLabel: 'Zastavit nahrávání',
+  toolbarPromptControlSendActionLabel: 'Odeslat',
+  toolbarPromptControlSendActionAriaLabel: 'Odeslat požadavek',
+  toolbarPromptControlErrorMessage:
+    'Při zpracování požadavku došlo k chybě. Zkuste to prosím znovu s jiným požadavkem.',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -61,7 +63,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žádné sloupce',
   columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
   columnsManagementReset: 'Resetovat',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Vyčistit',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
@@ -77,9 +79,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'neobsahuje',
   filterOperatorEquals: 'rovná se',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nerovná se',
   filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -100,9 +102,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Neobsahuje',
   headerFilterOperatorEquals: 'Rovná se',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nerovná se',
   headerFilterOperatorStartsWith: 'Začíná na',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',
@@ -120,6 +122,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Větší než nebo rovno',
   'headerFilterOperator<': 'Menší než',
   'headerFilterOperator<=': 'Menší než nebo rovno',
+  headerFilterClear: 'Zrušit filtr',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -128,6 +131,7 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  columnMenuAriaLabel: (columnName: string) => `Možnosti sloupce ${columnName}`,
   columnMenuShowColumns: 'Zobrazit sloupce',
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
@@ -208,6 +212,30 @@ const csCZGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Rozbalit',
   collapseDetailPanel: 'Sbalit',
 
+  // Pagination
+  paginationRowsPerPage: 'Řádků na stránce:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} z ${count !== -1 ? count : `více než ${to}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to ? `přibližně ${estimated}` : `více než ${to}`;
+    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Jít na první stránku';
+    }
+    if (type === 'last') {
+      return 'Jít na poslední stránku';
+    }
+    if (type === 'next') {
+      return 'Jít na další stránku';
+    }
+    // if (type === 'previous') {
+    return 'Jít na předchozí stránku';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Přeuspořádávání řádků',
 
@@ -220,4 +248,4 @@ const csCZGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'počet',
 };
 
-export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);
+export const csCZ: Localization = getGridLocalization(csCZGrid);

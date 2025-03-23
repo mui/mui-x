@@ -17,22 +17,20 @@ const series = [
 export default function HiddenLegend() {
   const [isHidden, setIsHidden] = React.useState(false);
 
+  const Toggle = (
+    <FormControlLabel
+      checked={isHidden}
+      control={<Checkbox onChange={(event) => setIsHidden(event.target.checked)} />}
+      label="hide the legend"
+      labelPlacement="end"
+      sx={{ margin: 'auto' }}
+    />
+  );
+
   return (
     <Stack>
-      <FormControlLabel
-        checked={isHidden}
-        control={
-          <Checkbox onChange={(event) => setIsHidden(event.target.checked)} />
-        }
-        label="hide the legend"
-        labelPlacement="end"
-      />
-      <PieChart
-        series={series}
-        slotProps={{ legend: { hidden: isHidden } }}
-        width={400}
-        height={200}
-      />
+      {Toggle}
+      <PieChart series={series} hideLegend={isHidden} width={200} height={200} />
     </Stack>
   );
 }

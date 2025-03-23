@@ -1,11 +1,16 @@
+export { MultiInputDateRangeField } from './MultiInputDateRangeField';
+export type { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField';
+
 export {
-  MultiInputDateRangeField,
-  getMultiInputDateRangeFieldUtilityClass,
   multiInputDateRangeFieldClasses,
-} from './MultiInputDateRangeField';
-export { useMultiInputDateRangeField as unstable_useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
+  getMultiInputDateRangeFieldUtilityClass,
+} from './multiInputDateRangeFieldClasses';
 export type {
-  UseMultiInputDateRangeFieldProps,
-  UseMultiInputDateRangeFieldComponentProps,
-  MultiInputDateRangeFieldProps,
-} from './MultiInputDateRangeField.types';
+  MultiInputDateRangeFieldClassKey,
+  MultiInputDateRangeFieldClasses,
+} from './multiInputDateRangeFieldClasses';
+
+export type {
+  MultiInputRangeFieldSlots as MultiInputDateRangeFieldSlots,
+  MultiInputRangeFieldSlotProps as MultiInputDateRangeFieldSlotProps,
+} from '../internals/utils/createMultiInputRangeField';

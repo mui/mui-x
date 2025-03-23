@@ -46,10 +46,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopDatePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDatePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 - The `DatePicker` component which renders `DesktopDatePicker` or `MobileDatePicker` depending on the device it runs on.
 
@@ -65,9 +65,18 @@ Responsive components can suffer some inconsistencies between testing environmen
 Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
+### Keyboard Date Picker (legacy)
+
+The current implementation of the Date Picker component replaces the experimental Keyboard Date Picker from Material UI.
+See the [migration documentation](/material-ui/migration/pickers-migration/#imports) for more information.
+
+For accessibility, all Picker components accept keyboard inputs.
+If your use case only calls for keyboard editing, you can use Field components: the Date Picker component can be edited via input or a calendar, whereas the Date Field can only be edited via input.
+See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
+
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDatePickers.js"}}
 
@@ -123,12 +132,6 @@ You can enable the clearable behavior:
 
 :::info
 See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
-:::
-
-:::warning
-The clearable prop is not supported yet by the mobile Picker variants.
-
-See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
 :::
 
 ## Localization

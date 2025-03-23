@@ -19,7 +19,7 @@ export default function UseGridApiRef() {
 
   const apiRef = useGridApiRef();
 
-  const handleGoToPage1 = () => apiRef.current.setPage(1);
+  const handleGoToPage1 = () => apiRef.current?.setPage(1);
 
   return (
     <Stack spacing={1} sx={{ width: '100%' }} alignItems="flex-start">
@@ -32,6 +32,7 @@ export default function UseGridApiRef() {
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50, 100]}
         />
       </Box>
     </Stack>

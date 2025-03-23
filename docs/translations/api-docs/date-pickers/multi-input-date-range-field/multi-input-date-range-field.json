@@ -81,11 +81,10 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "separator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the separator element"
-    }
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "root": "Element rendered at the root.",
+    "separator": "Element rendered between the two inputs.",
+    "textField": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date."
   }
 }

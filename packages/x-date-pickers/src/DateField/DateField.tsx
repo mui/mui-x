@@ -1,16 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
-import { useClearableField } from '../hooks';
-import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
+import { CalendarIcon } from '../icons';
 
 type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -34,39 +30,28 @@ const DateField = React.forwardRef(function DateField<
     name: 'MuiDateField',
   });
 
-  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
+  const { slots, slotProps, ...other } = themeProps;
 
-  const ownerState = useFieldOwnerState(themeProps);
-
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-  const textFieldProps = useSlotProps({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField,
-    externalForwardedProps: other,
-    additionalProps: {
+  const textFieldProps = useFieldTextFieldProps<DateFieldProps<TEnableAccessibleFieldDOMStructure>>(
+    {
+      slotProps,
       ref: inRef,
+      externalForwardedProps: other,
     },
-    ownerState,
-  }) as DateFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  );
 
   const fieldResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={slots}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={CalendarIcon}
+    />
+  );
 }) as DateFieldComponent;
 
 DateField.propTypes = {
@@ -85,6 +70,12 @@ DateField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -132,7 +123,8 @@ DateField.propTypes = {
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
-   * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
+   * Props applied to the [`FormHelperText`](https://mui.com/material-ui/api/form-helper-text/) element.
+   * @deprecated Use `slotProps.formHelperText` instead. This prop will be removed in v7. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
    */
   FormHelperTextProps: PropTypes.object,
   /**
@@ -157,19 +149,22 @@ DateField.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
+   * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
    * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
+   * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in v7. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
    */
   InputLabelProps: PropTypes.object,
   /**
    * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in v7. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
    */
   inputProps: PropTypes.object,
   /**
    * Props applied to the Input element.
-   * It will be a [`FilledInput`](/material-ui/api/filled-input/),
-   * [`OutlinedInput`](/material-ui/api/outlined-input/) or [`Input`](/material-ui/api/input/)
+   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
+   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
    * component depending on the `variant` prop value.
+   * @deprecated Use `slotProps.input` instead. This prop will be removed in v7. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
    */
   InputProps: PropTypes.object,
   /**
@@ -228,6 +223,12 @@ DateField.propTypes = {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange: PropTypes.func,
+  /**
+   * The position at which the opening button is placed.
+   * If there is no Picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
@@ -307,6 +308,7 @@ DateField.propTypes = {
   shouldRespectLeadingZeros: PropTypes.bool,
   /**
    * The size of the component.
+   * @default 'medium'
    */
   size: PropTypes.oneOf(['medium', 'small']),
   /**

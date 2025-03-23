@@ -161,9 +161,11 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         ownerState={ownerState}
         {...other}
       >
-        <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
-          {label}
-        </InputLabel>
+        {label != null && label !== '' && (
+          <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
+            {label}
+          </InputLabel>
+        )}
         <PickersInputComponent
           elements={elements}
           areAllSectionsEmpty={areAllSectionsEmpty}
@@ -189,6 +191,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           name={name}
           role="group"
           aria-labelledby={inputLabelId}
+          aria-describedby={helperTextId}
+          aria-live={helperTextId ? 'polite' : undefined}
           {...InputProps}
         />
         {helperText && (

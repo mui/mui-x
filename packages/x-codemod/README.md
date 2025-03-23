@@ -143,6 +143,7 @@ npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`replace-legend-direction-values`](#replace-legend-direction-values)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
 - [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
@@ -154,6 +155,39 @@ Renames legend props to the corresponding slotProps.
  <LineChart
 -  legend={{ hiden: true}}
 +  slotProps={{ legend: { hiden: true} }}
+ />
+```
+
+#### `replace-legend-direction-values`
+
+Replace `row` and `column` values by `horizontal` and `vertical` respectively.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+-        direction: "row"
++        direction: "horizontal"
+      }
+    }}
+ />
+```
+
+#### `replace-legend-position-values`
+
+Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the legend component.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
  />
 ```
 
@@ -172,17 +206,24 @@ Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartCo
 +</ChartContainer>
 ```
 
-:::warning
-If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
-Verify the git diff to remove the duplicate.
+#### `rename-legend-position-type`
+
+Renames `LegendPosition` to `Position`.
 
 ```diff
- import { ChartContainer } from '@mui/x-charts/ChartContainer';
--import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
 ```
 
-:::
+> [!WARNING]
+> If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+> Verify the git diff to remove the duplicate.
+>
+> ```diff
+>  import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+> +import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> ```
 
 #### `rename-label-and-tick-font-size`
 
@@ -201,6 +242,73 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
  />
 ```
 
+#### `remove-on-axis-click-handler`
+
+Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` prop to its parent.
+
+> [!WARNING]
+> This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
+#### `rename-unstable-use-series`
+
+Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have now become stable.
+
+```diff
+  import {
+-   unstable_useSeries,
++   useSeries,
+-   unstable_usePieSeries,
++   usePieSeries,
+-   unstable_useLineSeries,
++   useLineSeries,
+-   unstable_useBarSeries,
++   useBarSeries,
+-   unstable_useScatterSeries,
++   useScatterSeries,
+  } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
+```
+
+#### `rename-sparkline-colors-to-color`
+
+Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its first element.
+
+```diff
+ <SparkLineChart
+-  colors={['red']}
++  color={'red'}
+ />
+```
+
+If `colors` is a function, it will be wrapped in another function that returns its first element.
+
+```diff
+ <SparkLineChart
+-  colors={fn}
++  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
+ />
+```
+
+If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
+
+```diff
+ <SparkLineChart
+-  colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++  /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++  color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+ />
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
@@ -216,6 +324,8 @@ npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+- [`remove-props`](#remove-props)
+- [`rename-props`](#rename-props)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -235,6 +345,49 @@ Remove feature flags for stabilized `experimentalFeatures`.
 npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
+#### `remove-props`
+
+Remove props that are no longer supported.
+
+The list includes these props:
+
+- `indeterminateCheckboxAction`
+- `rowPositionsDebounceMs`
+
+```diff
+ <DataGrid
+-  indeterminateCheckboxAction="deselect"
+-  rowPositionsDebounceMs={100}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+```
+
+#### `rename-props`
+
+Rename props to the new ones.
+
+The list includes these props:
+
+- `unstable_rowSpanning` to `rowSpanning`
+
+```diff
+ <DataGrid
+-  unstable_rowSpanning
++  rowSpanning
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
+```
+
 ### Pickers codemods
 
 #### `preset-safe` for Pickers v8.0.0
@@ -249,15 +402,58 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
-- [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+- [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
+- [`rename-type-imports`](#rename-type-imports)
 
-#### `rename-and-move-field-value-type`
+#### `rename-adapter-date-fns-imports`
 
-Renames `FieldValueType` to `PickerValueType`.
+> [!WARNING]
+> This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+> Usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+
+- Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+- Renames `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` imports to `AdapterDateFns` and `AdapterDateFnsJalali` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+```
+
+#### `rename-type-imports`
+
+Renames:
+
+- `usePickersTranslations` to `usePickerTranslations`
+- `usePickersContext` to `usePickerContext`
+- `FieldValueType` to `PickerValueType`
+- `RangeFieldSection` to `FieldRangeSection`
+- `PickerShortcutChangeImportance` to `PickerChangeImportance`
 
 ```diff
+-import { usePickersTranslations, usePickersContext } from '@mui/x-date-pickers/hooks';
++import { usePickerTranslations, usePickerContext } from '@mui/x-date-pickers/hooks';
 -import { FieldValueType } from '@mui/x-date-pickers';
 +import { PickerValueType } from '@mui/x-date-pickers';
+-import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
++import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+-import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
++import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 
  interface MyComponentProps {
 -  valueType: FieldValueType;
@@ -270,7 +466,7 @@ Renames `FieldValueType` to `PickerValueType`.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
+npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

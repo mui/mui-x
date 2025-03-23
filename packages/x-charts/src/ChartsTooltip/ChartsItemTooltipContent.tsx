@@ -7,11 +7,11 @@ import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses'
 import { useItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
-  ChartsTooltipMark,
   ChartsTooltipPaper,
   ChartsTooltipRow,
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
+import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
 export interface ChartsItemTooltipContentProps {
   /**
@@ -30,7 +30,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   if (!tooltipData) {
     return null;
   }
-  const { color, label, formattedValue } = tooltipData;
+  const { color, label, formattedValue, markType } = tooltipData;
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
@@ -38,7 +38,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
         <tbody>
           <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsTooltipMark color={color} className={classes.mark} />
+              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
             </ChartsTooltipCell>
             <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
               {label}

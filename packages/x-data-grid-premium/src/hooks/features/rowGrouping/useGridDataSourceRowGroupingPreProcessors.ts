@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId, gridRowTreeSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridStrategyProcessor,
@@ -16,7 +17,7 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
 export const useGridDataSourceRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
@@ -24,17 +25,17 @@ export const useGridDataSourceRowGroupingPreProcessors = (
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const createRowTreeForRowGrouping = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const getGroupKey = props.unstable_dataSource?.getGroupKey;
+      const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const getChildrenCount = props.unstable_dataSource?.getChildrenCount;
+      const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
@@ -97,12 +98,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         groupingName: RowGroupingStrategy.DataSource,
       });
     },
-    [
-      apiRef,
-      props.unstable_dataSource,
-      props.defaultGroupingExpansionDepth,
-      props.isGroupExpandedByDefault,
-    ],
+    [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {

@@ -1,39 +1,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
+import { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputMultipleValueProps = {
+export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
+  Omit<AutocompleteProps<string, true, false, true>, 'options'>
+> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
-} & GridFilterInputValueProps &
-  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
+};
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const {
-    item,
-    applyValue,
-    type,
-    apiRef,
-    focusElementRef,
-    color,
-    error,
-    helperText,
-    size,
-    variant = 'standard',
-    ...other
-  } = props;
-  const TextFieldProps = {
-    color,
-    error,
-    helperText,
-    size,
-    variant,
-  };
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
 
-  const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
+  const [options, setOptions] = React.useState<string[]>([]);
+  const [filterValueState, setFilterValueState] = React.useState(item.value || []);
 
   const rootProps = useGridRootProps();
 
@@ -60,48 +43,39 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     [applyValue, item, type],
   );
 
+  const handleInputChange = React.useCallback(
+    (event: React.SyntheticEvent, value: string) => {
+      if (value === '') {
+        setOptions([]);
+      } else {
+        setOptions([value]);
+      }
+    },
+    [setOptions],
+  );
+
+  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+    AutocompleteProps<string, true, false, true>
+  >;
+
   return (
-    <Autocomplete<string, true, false, true>
+    <BaseAutocomplete
       multiple
       freeSolo
-      options={[]}
-      filterOptions={(options, params) => {
-        const { inputValue } = params;
-        return inputValue == null || inputValue === '' ? [] : [inputValue];
-      }}
+      options={options}
       id={id}
       value={filterValueState}
       onChange={handleChange}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
-          const { key, ...tagProps } = getTagProps({ index });
-          return (
-            <rootProps.slots.baseChip
-              key={key}
-              variant="outlined"
-              size="small"
-              label={option}
-              {...tagProps}
-            />
-          );
-        })
-      }
-      renderInput={(params) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-          placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-            shrink: true,
-          }}
-          inputRef={focusElementRef}
-          type={type || 'text'}
-          {...TextFieldProps}
-          {...rootProps.slotProps?.baseTextField}
-        />
-      )}
-      {...other}
+      onInputChange={handleInputChange}
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+      slotProps={{
+        textField: {
+          type: type || 'text',
+          inputRef: focusElementRef,
+        },
+      }}
+      {...slotProps?.root}
     />
   );
 }
@@ -115,16 +89,43 @@ GridFilterInputMultipleValue.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: (props, propName) => {
+        if (props[propName] == null) {
+          return null;
+        }
+        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+          return new Error(`Expected prop '${propName}' to be of type Element`);
+        }
+        return null;
+      },
+    }),
+  ]),
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (for example `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
   type: PropTypes.oneOf(['date', 'datetime-local', 'number', 'text']),
 } as any;
 

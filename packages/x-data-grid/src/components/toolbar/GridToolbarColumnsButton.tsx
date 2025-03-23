@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 interface GridToolbarColumnsButtonProps {
   /**
@@ -17,7 +20,7 @@ interface GridToolbarColumnsButtonProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
+const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
@@ -27,7 +30,9 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 
     const showColumns = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (
@@ -61,7 +66,6 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
         {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={ref}
           id={columnButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
@@ -69,9 +73,16 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
-          onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+            buttonProps.onPointerUp?.(event);
+          }}
+          onClick={showColumns}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>

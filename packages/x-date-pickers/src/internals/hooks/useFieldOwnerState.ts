@@ -20,6 +20,6 @@ export function useFieldOwnerState(parameters: UseFieldOwnerStateParameters) {
   );
 }
 
-interface UseFieldOwnerStateParameters extends FormProps {
+export interface UseFieldOwnerStateParameters extends FormProps {
   required?: boolean;
 }

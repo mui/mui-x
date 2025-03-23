@@ -8,6 +8,9 @@ import {
 } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import useForkRef from '@mui/utils/useForkRef';
+import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -26,6 +29,7 @@ import {
   getValueOptions,
   isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -43,10 +47,10 @@ const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
   overridesResolver: (_props, styles) => styles.toolbarFilterList,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  margin: theme.spacing(1, 1, 0.5),
-  padding: theme.spacing(0, 1),
-}));
+})<{ ownerState: OwnerState }>({
+  margin: vars.spacing(1, 1, 0.5),
+  padding: vars.spacing(0, 1),
+});
 
 // FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
@@ -61,7 +65,7 @@ export interface GridToolbarFilterButtonProps {
   };
 }
 
-const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
+const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
@@ -75,13 +79,15 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
+    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
-        return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
+        return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement<any>;
       }
       if (activeFilters.length === 0) {
-        return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
+        return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement<any>;
       }
 
       const getOperatorLabel = (item: GridFilterItem): string =>
@@ -184,7 +190,6 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={ref}
           id={filterButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
@@ -201,9 +206,16 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
               <rootProps.slots.openFilterButtonIcon />
             </rootProps.slots.baseBadge>
           }
-          onClick={toggleFilter}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          onClick={toggleFilter}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+            buttonProps.onPointerUp?.(event);
+          }}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>

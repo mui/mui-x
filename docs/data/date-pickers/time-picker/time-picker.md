@@ -47,10 +47,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopTimePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileTimePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 - The `TimePicker` component which renders `DesktopTimePicker` or `MobileTimePicker` depending on the device it runs on.
 
@@ -68,7 +68,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsTimePickers.js"}}
 

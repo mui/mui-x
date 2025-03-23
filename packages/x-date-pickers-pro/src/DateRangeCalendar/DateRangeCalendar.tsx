@@ -16,17 +16,17 @@ import {
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
-  useDefaultReduceAnimations,
+  useReduceAnimations,
   useCalendarState,
   useDefaultDates,
   useUtils,
   PickerSelectionState,
-  useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useViews,
   PickerRangeValue,
   usePickerPrivateContext,
+  areDatesEqual,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -58,6 +58,7 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
+import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
 const releaseInfo = getReleaseInfo();
 
@@ -112,17 +113,17 @@ function useDateRangeCalendarDefaultizedProps(
 ): DateRangeCalendarDefaultizedProps {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
-  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
+  const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
 
   return {
     ...themeProps,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
-    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    reduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
@@ -187,8 +188,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     reduceAnimations,
     onMonthChange,
     rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp,
     calendars,
     currentMonthCalendarPosition = 1,
     slots,
@@ -196,6 +197,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     loading,
     renderLoading,
     disableHighlightToday,
+    focusedView: focusedViewProp,
+    onFocusedViewChange,
     readOnly,
     disabled,
     showDaysOutsideCurrentMonth,
@@ -214,7 +217,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+  const rangePositionContext = useNullablePickerRangePositionContext();
+
+  const { value, handleValueChange, timezone } = useControlledValue<
     PickerRangeValue,
     NonNullable<typeof onChange>
   >({
@@ -227,28 +232,29 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     valueManager: rangeValueManager,
   });
 
-  const { setValueAndGoToNextView, view } = useViews({
+  const { view, setFocusedView, focusedView, setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
     onChange: handleValueChange,
     onViewChange,
     autoFocus,
+    focusedView: focusedViewProp,
+    onFocusedViewChange,
   });
 
   const utils = useUtils();
-  const now = useNow(timezone);
   const id = useId();
 
-  const { rangePosition, onRangePositionChange } = useRangePosition({
-    rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+  const { rangePosition, setRangePosition } = useRangePosition({
+    rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.setRangePosition,
   });
 
   const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
-      onRangePositionChange(position);
+      setRangePosition(position);
     }
   });
 
@@ -270,7 +276,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
       if (isNextSectionAvailable) {
-        onRangePositionChange(nextSelection);
+        setRangePosition(nextSelection);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
@@ -292,8 +298,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   // This makes sure that `isWithinRange` works with any time in the start and end day.
   const valueDayRange = React.useMemo<PickerRangeValue>(
     () => [
-      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+      !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
     ],
     [value, utils],
   );
@@ -339,24 +345,39 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       shouldDisableDate(dayToTest, draggingDatePosition || rangePosition);
   }, [shouldDisableDate, rangePosition, draggingDatePosition]);
 
-  const {
-    calendarState,
-    changeFocusedDay,
-    changeMonth,
-    handleChangeMonth,
-    onMonthSwitchingAnimationEnd,
-  } = useCalendarState({
+  const { calendarState, setVisibleDate, onMonthSwitchingAnimationEnd } = useCalendarState({
     value: value[0] || value[1],
     referenceDate,
     disableFuture,
     disablePast,
-    disableSwitchToMonthOnDayFocus: true,
     maxDate,
     minDate,
     onMonthChange,
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
+    getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
+      const firstVisibleMonth = utils.addMonths(prevMonth, 1 - currentMonthCalendarPosition);
+      const lastVisibleMonth = utils.endOfMonth(utils.addMonths(firstVisibleMonth, calendars - 1));
+
+      // The new focused day is inside the visible calendars,
+      // Do not change the current month
+      if (utils.isWithinRange(visibleDate, [firstVisibleMonth, lastVisibleMonth])) {
+        return prevMonth;
+      }
+
+      // The new focused day is after the last visible month,
+      // Move the current month so that the new focused day is inside the first visible month
+      if (utils.isAfter(visibleDate, lastVisibleMonth)) {
+        return utils.startOfMonth(utils.addMonths(visibleDate, currentMonthCalendarPosition - 1));
+      }
+
+      // The new focused day is before the first visible month,
+      // Move the current month so that the new focused day is inside the last visible month
+      return utils.startOfMonth(
+        utils.addMonths(visibleDate, currentMonthCalendarPosition - calendars),
+      );
+    },
   });
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
@@ -369,7 +390,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         views: ['day'],
         view: 'day',
         currentMonth: calendarState.currentMonth,
-        onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+        onMonthChange: (month) => setVisibleDate({ target: month, reason: 'header-navigation' }),
         minDate,
         maxDate,
         disabled,
@@ -383,10 +404,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       ownerState,
     });
 
+  // TODO: Move this logic inside the render instead of using an effect
   const prevValue = React.useRef<PickerRangeValue | null>(null);
   React.useEffect(() => {
     const date = rangePosition === 'start' ? value[0] : value[1];
-    if (!date || !utils.isValid(date)) {
+    if (!utils.isValid(date)) {
       return;
     }
 
@@ -414,7 +436,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             utils.addMonths(date, -displayingMonthRange);
 
-      changeMonth(newMonth);
+      setVisibleDate({ target: newMonth, reason: 'controlled-value-change' });
     }
   }, [rangePosition, value]); // eslint-disable-line
 
@@ -448,11 +470,18 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   });
 
   const handleDayMouseEnter = useEventCallback(
-    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: PickerValidDate) => {
-      if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
-        setRangePreviewDay(newPreviewRequest);
+    (event: React.MouseEvent<HTMLDivElement>, newRangePreviewDay: PickerValidDate) => {
+      let cleanNewRangePreviewDay: PickerValidDate | null;
+      if (valueDayRange[0] == null && valueDayRange[1] == null) {
+        cleanNewRangePreviewDay = null;
+      } else if (isWithinRange(utils, newRangePreviewDay, valueDayRange)) {
+        cleanNewRangePreviewDay = null;
       } else {
-        setRangePreviewDay(null);
+        cleanNewRangePreviewDay = newRangePreviewDay;
+      }
+
+      if (!areDatesEqual(utils, cleanNewRangePreviewDay, rangePreviewDay)) {
+        setRangePreviewDay(cleanNewRangePreviewDay);
       }
     },
   );
@@ -530,27 +559,21 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     return Array.from({ length: calendars }).map((_, index) => utils.addMonths(firstMonth, index));
   }, [utils, calendarState.currentMonth, calendars, currentMonthCalendarPosition]);
 
-  const focusedMonth = React.useMemo(() => {
-    if (!autoFocus) {
-      return null;
+  const hasFocus = focusedView !== null;
+
+  const prevOpenViewRef = React.useRef(view);
+  React.useEffect(() => {
+    // If the view change and the focus was on the previous view
+    // Then we update the focus.
+    if (prevOpenViewRef.current === view) {
+      return;
     }
 
-    // The focus priority of the "day" view is as follows:
-    // 1. Month of the `start` date
-    // 2. Month of the `end` date
-    // 3. Month of the current date
-    // 4. First visible month
-
-    if (value[0] != null) {
-      return visibleMonths.find((month) => utils.isSameMonth(month, value[0]!));
+    if (focusedView === prevOpenViewRef.current) {
+      setFocusedView(view, true);
     }
-
-    if (value[1] != null) {
-      return visibleMonths.find((month) => utils.isSameMonth(month, value[1]!));
-    }
-
-    return visibleMonths.find((month) => utils.isSameMonth(month, now)) ?? visibleMonths[0];
-  }, [utils, value, visibleMonths, autoFocus, now]);
+    prevOpenViewRef.current = view;
+  }, [focusedView, setFocusedView, view]);
 
   return (
     <DateRangeCalendarRoot
@@ -578,20 +601,23 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
               {...baseDateValidationProps}
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
+              onFocusedDayChange={(focusedDate) =>
+                setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
+              }
               reduceAnimations={reduceAnimations}
               selectedDays={value}
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={month}
               TransitionProps={CalendarTransitionProps}
               shouldDisableDate={wrappedShouldDisableDate}
+              hasFocus={hasFocus}
+              onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
               showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
               dayOfWeekFormatter={dayOfWeekFormatter}
               loading={loading}
               renderLoading={renderLoading}
               slots={slotsForDayCalendar}
               slotProps={slotPropsForDayCalendar}
-              autoFocus={month === focusedMonth}
               fixedWeekNumber={fixedWeekNumber}
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}

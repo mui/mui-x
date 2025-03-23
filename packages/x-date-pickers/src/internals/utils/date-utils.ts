@@ -96,7 +96,7 @@ export const findClosestEnabledDate = ({
 export const replaceInvalidDateByNull = (
   utils: MuiPickersAdapter,
   value: PickerValidDate | null,
-): PickerValidDate | null => (value == null || !utils.isValid(value) ? null : value);
+): PickerValidDate | null => (!utils.isValid(value) ? null : value);
 
 export const applyDefaultDate = (
   utils: MuiPickersAdapter,

@@ -5,7 +5,7 @@ import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from 
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
-  locale?: Locale;
+  locale?: { code: string } | any;
   adapterName?: AdapterName;
   instance?: any;
 }
@@ -46,7 +46,7 @@ export function createPickerRenderer({
 
   return {
     clock,
-    render(node: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
+    render(node: React.ReactElement<any>, options?: Omit<RenderOptions, 'wrapper'>) {
       return clientRender(node, { ...options, wrapper: Wrapper });
     },
     adapter,

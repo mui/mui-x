@@ -12,16 +12,16 @@ import {
   TimeClockClassKey,
   ClockPointerClassKey,
 } from '../TimeClock';
-import { MonthCalendarClassKey, PickersMonthClassKey } from '../MonthCalendar';
+import { MonthCalendarClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
-import { PickersYearClassKey, YearCalendarClassKey } from '../YearCalendar';
+import { YearCalendarClassKey } from '../YearCalendar';
 import { PickersLayoutClassKey } from '../PickersLayout';
 import { DatePickerToolbarClassKey } from '../DatePicker';
 import { TimePickerToolbarClassKey } from '../TimePicker';
 import { DateTimePickerToolbarClassKey, DateTimePickerTabsClassKey } from '../DateTimePicker';
 import { PickersArrowSwitcherClassKey } from '../internals/components/PickersArrowSwitcher';
 import { PickersToolbarClassKey } from '../internals/components/pickersToolbarClasses';
-import { PickersPopperClassKey } from '../internals/components/pickersPopperClasses';
+import { PickerPopperClassKey } from '../internals/components/PickerPopper';
 import { PickersToolbarButtonClassKey } from '../internals/components/pickersToolbarButtonClasses';
 import { PickersToolbarTextClassKey } from '../internals/components/pickersToolbarTextClasses';
 import { DigitalClockClassKey } from '../DigitalClock';
@@ -58,13 +58,11 @@ export interface PickersComponentNameToClassKey {
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
   MuiPickersLayout: PickersLayoutClassKey;
-  MuiPickersMonth: PickersMonthClassKey;
-  MuiPickersPopper: PickersPopperClassKey;
+  MuiPickerPopper: PickerPopperClassKey;
   MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
-  MuiPickersYear: PickersYearClassKey;
   MuiTimeClock: TimeClockClassKey;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;

@@ -400,6 +400,10 @@ export interface GridEventLookup
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
+   * Fired when rootElementRef.current becomes available.
+   */
+  rootMount: { params: HTMLElement };
+  /**
    * Fired when the grid is unmounted.
    */
   unmount: {};
@@ -550,7 +554,12 @@ export interface GridEventLookup
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
    */
-  virtualScrollerContentSizeChange: {};
+  virtualScrollerContentSizeChange: {
+    params: {
+      columnsTotalWidth: number;
+      contentHeight: number;
+    };
+  };
   /**
    * Fired when the content is scrolled by the mouse wheel.
    * It's attached to the "mousewheel" event.

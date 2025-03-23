@@ -31,7 +31,7 @@ You have a few possible options to provide it:
 
 You can browse the documentation, find an example close to your use case, and then open it in a live editor:
 
-<a href="/x/react-date-pickers/getting-started/#render-your-first-component">
+<a href="/x/react-date-pickers/quickstart/#render-the-component">
 <span class="only-light-mode">
 <img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
 </span>
@@ -40,10 +40,10 @@ You can browse the documentation, find an example close to your use case, and th
 </span>
 </a>
 
-- [Data Grid](/x/react-data-grid/#mit-license-free-forever)
-- [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-- [Charts](/x/react-charts/getting-started/#self-contained-charts)
-- [Tree View](/x/react-tree-view/#simple-tree-view)
+- [Data Grid](/x/react-data-grid/#community-version-free-forever)
+- [Date Pickers](/x/react-date-pickers/quickstart/#render-the-component)
+- [Charts](/x/react-charts/quickstart/#self-contained-charts)
+- [Tree View](/x/react-tree-view/)
 
 #### Use starter templates
 

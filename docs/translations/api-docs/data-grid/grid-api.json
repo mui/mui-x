@@ -6,6 +6,7 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
+    "dataSource": { "description": "The data source API." },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
@@ -17,23 +18,20 @@
     "exportState": {
       "description": "Generates a serializable object containing the exportable parts of the DataGrid state.<br />These values can then be passed to the <code>initialState</code> prop or injected using the <code>restoreState</code> method."
     },
-    "forceUpdate": {
-      "description": "Forces the grid to rerender. It&#39;s often used after a state update."
-    },
     "getAllColumns": {
       "description": "Returns an array of <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> containing all the column definitions."
     },
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
     "getCellElement": {
-      "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>."
+      "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events."
     },
     "getCellMode": { "description": "Gets the mode of a cell." },
     "getCellParams": {
       "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events."
     },
     "getCellSelectionModel": {
-      "description": "Returns an object containing the selection state of the cells.<br />The keys of the object correpond to the row IDs.<br />The value of each key is another object whose keys are the fields and values are the selection state."
+      "description": "Returns an object containing the selection state of the cells.<br />The keys of the object correspond to the row IDs.<br />The value of each key is also an object, which has a column field for a key and a boolean value for its selection state."
     },
     "getCellValue": {
       "description": "Gets the value of a cell at the given <code>id</code> and <code>field</code>."
@@ -71,6 +69,9 @@
     },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
+    "getPropagatedRowSelectionModel": {
+      "description": "Returns the modified selection model after applying row selection propagation.<br /><br />Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>."
+    },
     "getRootDimensions": { "description": "Returns the dimensions of the grid" },
     "getRow": { "description": "Gets the row data with a given id." },
     "getRowElement": {
@@ -149,7 +150,7 @@
       "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>."
     },
     "setCellSelectionModel": {
-      "description": "Updates the selected cells to be those passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
+      "description": "Updates the cell selection model according to the value passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
     },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
@@ -204,7 +205,7 @@
     },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
-      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.<br />Any row already selected will be unselected."
+      "description": "Sets the new row selection model.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
     },
     "setSortModel": { "description": "Updates the sort model and triggers the sorting of rows." },
     "showColumnMenu": {
@@ -241,7 +242,6 @@
     },
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
-    "unstable_dataSource": { "description": "The data source API." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },

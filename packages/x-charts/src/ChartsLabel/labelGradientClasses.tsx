@@ -9,12 +9,12 @@ export interface ChartsLabelGradientClasses {
   /** Styles applied to the "mask" that gives shape to the gradient. */
   mask: string;
   /** Styles applied when direction is "column". */
-  column: string;
+  vertical: string;
   /** Styles applied when direction is "row". */
-  row: string;
+  horizontal: string;
+  /** Styles applied to the element filled by the gradient */
+  fill: string;
 }
-
-export type ChartsLabelGradientClassKey = keyof ChartsLabelGradientClasses;
 
 export function getLabelGradientUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelGradient', slot);
@@ -22,7 +22,7 @@ export function getLabelGradientUtilityClass(slot: string) {
 
 export const labelGradientClasses: ChartsLabelGradientClasses = generateUtilityClasses(
   'MuiChartsLabelGradient',
-  ['root', 'column', 'row', 'mask'],
+  ['root', 'vertical', 'horizontal', 'mask', 'fill'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
@@ -31,6 +31,7 @@ export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
   const slots = {
     root: ['root', direction],
     mask: ['mask'],
+    fill: ['fill'],
   };
 
   return composeClasses(slots, getLabelGradientUtilityClass, props.classes);

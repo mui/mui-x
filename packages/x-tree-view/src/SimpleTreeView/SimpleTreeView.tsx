@@ -18,11 +18,22 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      // itemLabelInput: ['itemLabelInput'], => feature not available on this component
+      itemCheckbox: ['itemCheckbox'],
+      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+    };
 
-  return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+    return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+  }, [classes]);
 };
 
 export const SimpleTreeViewRoot = styled('ul', {
@@ -91,7 +102,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps} />
     </TreeViewProvider>
   );
@@ -112,8 +123,10 @@ SimpleTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -186,7 +199,7 @@ SimpleTreeView.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -198,7 +211,7 @@ SimpleTreeView.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -211,14 +224,14 @@ SimpleTreeView.propTypes = {
   onItemFocus: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

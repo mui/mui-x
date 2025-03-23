@@ -1,9 +1,11 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridGetRowsError,
+  GridUpdateRowError,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -17,12 +19,17 @@ import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import {
+  GridDataSourcePremium as GridDataSource,
+  GridGetRowsParamsPremium as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -86,9 +93,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
@@ -118,11 +127,14 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
+  extends Omit<
+    DataGridProPropsWithoutDefaultValue<R>,
+    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiPremium>;
+  apiRef?: RefObject<GridApiPremium | null>;
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
@@ -188,4 +200,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+  /**
+   * Data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }

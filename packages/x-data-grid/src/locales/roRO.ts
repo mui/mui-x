@@ -1,4 +1,3 @@
-import { roRO as roROCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const roROGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Lipsă date',
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -114,6 +115,7 @@ const roROGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Mai mare sau egal cu',
   'headerFilterOperator<': 'Mai mic decât',
   'headerFilterOperator<=': 'Mai mic sau egal cu',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'Aleatoriu',
@@ -122,6 +124,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meniu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Afișează toate coloanele',
   columnMenuManageColumns: 'Gestionează coloane',
   columnMenuFilter: 'Filtru',
@@ -183,6 +186,34 @@ const roROGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Extindere',
   collapseDetailPanel: 'Restrângere',
 
+  // Pagination
+  paginationRowsPerPage: 'Rânduri pe pagină:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Mergi la prima pagină';
+    }
+    if (type === 'last') {
+      return 'Mergi la ultima pagină';
+    }
+    if (type === 'next') {
+      return 'Mergi la pagina următoare';
+    }
+    // if (type === 'previous') {
+    return 'Mergi la pagina precedentă';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordonare rânduri',
 
@@ -195,4 +226,4 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Numărul elementelor',
 };
 
-export const roRO: Localization = getGridLocalization(roROGrid, roROCore);
+export const roRO: Localization = getGridLocalization(roROGrid);

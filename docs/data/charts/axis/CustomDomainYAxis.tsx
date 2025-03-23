@@ -5,13 +5,10 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 const settings = {
-  valueFormatter: (value: number | null) => `${value}%`,
   height: 200,
-  showTooltip: true,
-  showHighlight: true,
   series: [{ data: [60, -15, 66, 68, 87, 82, 83, 85, 92, 75, 76, 50, 91] }],
-  margin: { top: 10, bottom: 20 },
-};
+  margin: { top: 10, bottom: 10 },
+} as const;
 
 // Extend a value to match a multiple of the step.
 function extend(value: number, step: number) {

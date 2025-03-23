@@ -17,15 +17,13 @@ export interface BarProps
   ownerState: BarElementOwnerState;
 }
 
-/**
- * @ignore - internal component.
- */
 export function AnimatedBarElement(props: BarProps) {
   const { ownerState, ...other } = props;
 
   return (
     <animated.rect
       {...other}
+      // @ts-expect-error
       filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
       opacity={ownerState.isFaded ? 0.3 : 1}
     />

@@ -3,11 +3,14 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useDrawingArea, useSvgRef } from '../hooks';
-import { useSize } from '../context/SizeProvider';
-import type { SizeContextState } from '../context/SizeProvider';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorChartContainerSize,
+  selectorChartPropsSize,
+} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -15,23 +18,16 @@ export interface ChartsSurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener?: boolean;
 }
 
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: Partial<Pick<SizeContextState, 'width' | 'height'>> }>(({ ownerState }) => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
   position: 'relative',
-  flexGrow: 1,
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
@@ -49,7 +45,7 @@ const ChartsSurfaceStyles = styled('svg', {
  *
  * Demos:
  *
- * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ * - [Composition](https://mui.com/x/api/charts/composition/)
  *
  * API:
  *
@@ -59,30 +55,21 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize, svgRef: containerRef, inHeight, inWidth } = useSize();
+  const store = useStore();
+  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
   const svgRef = useSvgRef();
-  const handleRef = useForkRef(containerRef, svgRef, ref);
+  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
+  const { children, className, title, desc, ...other } = themeProps;
 
-  const svgWidth = width + left + right;
-  const svgHeight = height + top + bottom;
-
-  const svgView = {
-    width: svgWidth,
-    height: svgHeight,
-    x: 0,
-    y: 0,
-  };
-
-  useAxisEvents(disableAxisListener);
+  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: inWidth, height: inHeight }}
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      ownerState={{ width: propsWidth, height: propsHeight }}
+      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
       {...other}
       ref={handleRef}
@@ -103,12 +90,6 @@ ChartsSurface.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

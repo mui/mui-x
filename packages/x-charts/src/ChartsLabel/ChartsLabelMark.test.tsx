@@ -3,7 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel/ChartsLabelMark';
-import { labelMarkClasses } from '@mui/x-charts/ChartsLabel/labelMarkClasses';
+import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
 describe('<ChartsLabelMark />', () => {
   const { render } = createRenderer();

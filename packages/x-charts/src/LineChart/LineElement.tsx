@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
 import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
@@ -100,7 +100,7 @@ function LineElement(props: LineElementProps) {
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -120,7 +120,7 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },

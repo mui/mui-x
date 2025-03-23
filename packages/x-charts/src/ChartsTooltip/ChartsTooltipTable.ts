@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 /**
@@ -12,7 +11,7 @@ export const ChartsTooltipPaper = styled('div', {
 })(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: (theme.vars || theme).shape?.borderRadius,
   border: `solid ${(theme.vars || theme).palette.divider} 1px`,
 }));
 
@@ -76,20 +75,4 @@ export const ChartsTooltipCell = styled('td', {
   'td:last-of-type&': {
     paddingRight: theme.spacing(1.5),
   },
-}));
-
-/**
- * @ignore - internal component.
- */
-export const ChartsTooltipMark = styled('div', {
-  name: 'MuiChartsTooltip',
-  slot: 'Mark',
-  overridesResolver: (props, styles) => styles.mark,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'color',
-})<{ color: string }>(({ theme, color }) => ({
-  width: theme.spacing(1),
-  height: theme.spacing(1),
-  borderRadius: '50%',
-  background: color,
-  boxSizing: 'content-box',
 }));

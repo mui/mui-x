@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
 import { ScatterValueType } from '@mui/x-charts/models';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -29,23 +29,17 @@ function getGaussianSeriesData(
   });
 }
 
-const legendPlacement = {
+const legendPlacement: Partial<ScatterChartProps> = {
   slotProps: {
     legend: {
       position: {
         vertical: 'middle',
-        horizontal: 'right',
+        horizontal: 'end',
       },
-      direction: 'column',
-      itemGap: 2,
+      direction: 'vertical',
     },
   },
-  margin: {
-    top: 20,
-    right: 150,
-    left: 20,
-  },
-} as const;
+};
 const series = [
   { label: 'Series 1', data: getGaussianSeriesData([-5, 0]) },
   { label: 'Series 2', data: getGaussianSeriesData([-4, 0]) },

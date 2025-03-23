@@ -69,9 +69,6 @@ export default function SendAllItemsToServer() {
           items={MUI_X_PRODUCTS}
           itemsReordering
           defaultExpandedItems={['grid', 'pickers']}
-          experimentalFeatures={{
-            itemsReordering: true,
-          }}
           onItemPositionChange={handleItemPositionChangeTreeViewA}
         />
       </Box>

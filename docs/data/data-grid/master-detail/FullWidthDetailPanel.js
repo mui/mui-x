@@ -21,11 +21,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 const getDetailPanelWidth = (gridDimensions) => {
-  return (
-    gridDimensions.viewportInnerSize.width +
-    gridDimensions.leftPinnedWidth +
-    gridDimensions.rightPinnedWidth
-  );
+  return gridDimensions.viewportInnerSize.width;
 };
 
 function DetailPanelContent({ row: rowProp }) {

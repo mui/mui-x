@@ -11,6 +11,7 @@ import {
 import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
+import { TreeViewClasses } from './TreeViewStyleContext';
 
 export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,
@@ -24,13 +25,14 @@ export type TreeViewContextValue<
     instance: TreeViewInstance<TSignatures, TOptionalSignatures>;
     publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
     store: TreeViewStore<TSignatures>;
-    rootRef: React.RefObject<HTMLUListElement>;
+    rootRef: React.RefObject<HTMLUListElement | null>;
     wrapItem: TreeItemWrapper<TSignatures>;
     wrapRoot: TreeRootWrapper;
     runItemPlugins: TreeViewItemPluginsRunner;
   };
 
 export interface TreeViewProviderProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  value: TreeViewContextValue<TSignatures>;
+  contextValue: TreeViewContextValue<TSignatures>;
   children: React.ReactNode;
+  classes: Partial<TreeViewClasses> | undefined;
 }

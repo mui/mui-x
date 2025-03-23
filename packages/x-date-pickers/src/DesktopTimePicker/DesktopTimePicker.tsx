@@ -7,21 +7,17 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView, PickerOwnerState } from '../models';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -44,7 +40,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all time pickers
@@ -63,7 +58,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
@@ -72,9 +67,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
@@ -94,7 +86,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -102,16 +93,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
         ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
-      },
-      actionBar: {
-        actions: actionBarActions,
-        ...defaultizedProps.slotProps?.actionBar,
       },
     },
   };
@@ -121,15 +107,10 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullTime',
-      contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: props.localeText?.openTimePickerDialogue,
-    }),
     validator: validateTime,
   });
 
@@ -160,8 +141,8 @@ DesktopTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -186,7 +167,8 @@ DesktopTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

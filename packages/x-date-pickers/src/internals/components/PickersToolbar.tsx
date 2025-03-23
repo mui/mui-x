@@ -6,13 +6,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 import { PickerToolbarOwnerState, useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
 
-export interface PickersToolbarProps<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
+export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -22,6 +18,7 @@ export interface PickersToolbarProps<
 const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
+    title: ['title'],
     content: ['content'],
   };
 
@@ -86,19 +83,12 @@ const PickersToolbarContent = styled('div', {
   ],
 });
 
-type PickersToolbarComponent = (<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
-    React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = ((
+  props: React.PropsWithChildren<PickersToolbarProps> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar(
+  inProps: React.PropsWithChildren<PickersToolbarProps>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
@@ -109,7 +99,6 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     toolbarTitle,
     hidden,
     titleId,
-    isLandscape,
     classes: inClasses,
     landscapeDirection,
     ...other
@@ -135,6 +124,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         color="text.secondary"
         variant="overline"
         id={titleId}
+        className={classes.title}
       >
         {toolbarTitle}
       </Typography>

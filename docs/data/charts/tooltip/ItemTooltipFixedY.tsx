@@ -73,7 +73,7 @@ export function ItemTooltipFixedY({ children }: React.PropsWithChildren) {
     const handleMove = (event: PointerEvent) => {
       positionRef.current = {
         x: event.clientX,
-        y: event.clientY,
+        y: (svgRef.current?.getBoundingClientRect().top ?? 0) + drawingArea.top,
       };
       popperRef.current?.update();
     };
@@ -105,8 +105,8 @@ export function ItemTooltipFixedY({ children }: React.PropsWithChildren) {
             y: positionRef.current.y,
             top: positionRef.current.y,
             left: positionRef.current.x,
-            right: positionRef.current.x,
-            bottom: positionRef.current.y,
+            right: 0,
+            bottom: 0,
             width: 0,
             height: 0,
             toJSON: () => '',

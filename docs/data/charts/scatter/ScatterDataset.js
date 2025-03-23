@@ -1,6 +1,18 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
+
+export default function ScatterDataset() {
+  return (
+    <ScatterChart
+      dataset={dataset}
+      series={[
+        { datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' },
+        { datasetKeys: { id: 'version', x: 'b1', y: 'b2' }, label: 'Series B' },
+      ]}
+      {...chartSetting}
+    />
+  );
+}
 
 const dataset = [
   {
@@ -79,26 +91,8 @@ const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
+      width: 60,
     },
   ],
-  sx: {
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translate(-20px, 0)',
-    },
-  },
-  width: 500,
   height: 300,
 };
-
-export default function ScatterDataset() {
-  return (
-    <ScatterChart
-      dataset={dataset}
-      series={[
-        { datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' },
-        { datasetKeys: { id: 'version', x: 'b1', y: 'b2' }, label: 'Series B' },
-      ]}
-      {...chartSetting}
-    />
-  );
-}

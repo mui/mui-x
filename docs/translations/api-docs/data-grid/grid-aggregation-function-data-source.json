@@ -1,0 +1,17 @@
+{
+  "interfaceDescription": "Grid aggregation function data source definition interface.",
+  "propertiesDescriptions": {
+    "columnTypes": {
+      "description": "Column types supported by this aggregation function.<br />If not defined, all types are supported (in most cases this property should be defined)."
+    },
+    "hasCellUnit": {
+      "description": "Indicates if the aggregated value has the same unit as the cells used to generate it.<br />It can be used to apply a custom cell renderer only if the aggregated value has the same unit."
+    },
+    "label": {
+      "description": "Label of the aggregation function.<br />Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used."
+    },
+    "valueFormatter": {
+      "description": "Function for applying a formatter to the aggregated value.<br />If not defined, the grid uses the formatter of the column."
+    }
+  }
+}

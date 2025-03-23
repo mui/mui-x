@@ -1,8 +1,7 @@
 import * as React from 'react';
-import {
-  unstable_useEventCallback as useEventCallback,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
@@ -42,7 +41,7 @@ import {
 import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -253,7 +252,7 @@ export const useGridCellEditing = (
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const isEditing = editingState[id] && editingState[id][field];
       return isEditing ? GridCellModes.Edit : GridCellModes.View;
     },
@@ -315,7 +314,6 @@ export const useGridCellEditing = (
 
         return { ...state, editRows: newEditingState };
       });
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -368,7 +366,7 @@ export const useGridCellEditing = (
         );
         // Check if still in edit mode before updating
         if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
-          const editingState = gridEditRowsStateSelector(apiRef.current.state);
+          const editingState = gridEditRowsStateSelector(apiRef);
           updateOrDeleteFieldState(id, field, {
             ...newProps,
             value: editingState[id][field].value,
@@ -411,7 +409,7 @@ export const useGridCellEditing = (
         return;
       }
 
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const { error, isProcessingProps } = editingState[id][field];
 
       if (error || isProcessingProps) {
@@ -438,7 +436,7 @@ export const useGridCellEditing = (
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -480,7 +478,7 @@ export const useGridCellEditing = (
         parsedValue = column.valueParser(value, row, column, apiRef);
       }
 
-      let editingState = gridEditRowsStateSelector(apiRef.current.state);
+      let editingState = gridEditRowsStateSelector(apiRef);
       let newProps: GridEditCellProps = {
         ...editingState[id][field],
         value: parsedValue,
@@ -504,7 +502,7 @@ export const useGridCellEditing = (
         return false;
       }
 
-      editingState = gridEditRowsStateSelector(apiRef.current.state);
+      editingState = gridEditRowsStateSelector(apiRef);
       newProps = { ...newProps, isProcessingProps: false };
       // We don't update the value with the one coming from the props pre-processing
       // because when the promise resolves it may be already outdated. The only
@@ -512,7 +510,7 @@ export const useGridCellEditing = (
       newProps.value = column.preProcessEditCellProps ? editingState[id][field].value : parsedValue;
       updateOrDeleteFieldState(id, field, newProps);
 
-      editingState = gridEditRowsStateSelector(apiRef.current.state);
+      editingState = gridEditRowsStateSelector(apiRef);
       return !editingState[id]?.[field]?.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
@@ -523,7 +521,7 @@ export const useGridCellEditing = (
   >(
     (id, field) => {
       const column = apiRef.current.getColumn(field);
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const row = apiRef.current.getRow(id)!;
 
       if (!editingState[id] || !editingState[id][field]) {
@@ -569,7 +567,7 @@ export const useGridCellEditing = (
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
         const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
-        const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
+        const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
         } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {

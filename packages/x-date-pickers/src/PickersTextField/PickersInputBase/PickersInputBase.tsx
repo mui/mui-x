@@ -113,7 +113,8 @@ const PickersInputBaseSection = styled(PickersSectionListSection, {
   fontSize: 'inherit',
   letterSpacing: 'inherit',
   lineHeight: '1.4375em', // 23px
-  display: 'flex',
+  display: 'inline-block',
+  whiteSpace: 'nowrap',
 }));
 
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
@@ -247,6 +248,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onFocus?.(event);
   };
 
+  const handleHiddenInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    handleInputFocus(event);
+  };
+
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onBlur?.(event);
     onBlur?.(event);
@@ -338,6 +343,9 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         readOnly={readOnly}
         required={muiFormControl.required}
         disabled={muiFormControl.disabled}
+        // Hidden input element cannot be focused, trigger the root focus instead
+        // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
+        onFocus={handleHiddenInputFocus}
         {...inputProps}
         ref={handleInputRef}
       />
@@ -357,10 +365,6 @@ PickersInputBase.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.

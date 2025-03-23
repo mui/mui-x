@@ -1,0 +1,16 @@
+{lastEditedItem ? (
+  <Typography>
+    The label of item with id <em>{lastEditedItem!.itemId}</em> has been edited
+    to <em>{lastEditedItem!.label}</em>
+  </Typography>
+) : (
+  <Typography>No item has been edited yet</Typography>
+)}
+<Box sx={{ minHeight: 352, minWidth: 260 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    isItemEditable
+    defaultExpandedItems={['grid', 'pickers']}
+    onItemLabelChange={(itemId, label) => setLastEditedItem({ itemId, label })}
+  />
+</Box>

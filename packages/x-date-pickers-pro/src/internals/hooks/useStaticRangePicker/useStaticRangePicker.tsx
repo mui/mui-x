@@ -1,20 +1,21 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
-  ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  mergeSx,
 } from '@mui/x-date-pickers/internals';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -31,60 +32,38 @@ export const useStaticRangePicker = <
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
-  ref,
   ...pickerParams
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const { rangePosition, onRangePositionChange } = useRangePosition(props);
+  const rangePositionResponse = useRangePosition(props);
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerRangeValue,
-    TView,
-    TExternalProps,
-    {}
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
-    autoFocusView: autoFocus ?? false,
-    fieldRef: undefined,
-    localeText,
-    additionalViewProps: {
-      rangePosition,
-      onRangePositionChange,
-    },
     variant: displayStaticWrapperAs,
+    autoFocusView: autoFocus ?? false,
+    viewContainerRole: null,
+    localeText,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
-    ...slotProps,
-    toolbar: {
-      ...slotProps?.toolbar,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseToolbarProps,
-  };
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
-      <Layout
-        {...layoutProps}
-        {...slotProps?.layout}
-        slots={slots}
-        slotProps={slotPropsForLayout}
-        sx={[
-          ...(Array.isArray(sx) ? sx : [sx]),
-          ...(Array.isArray(slotProps?.layout?.sx)
-            ? slotProps!.layout!.sx
-            : [slotProps?.layout?.sx]),
-        ]}
-        className={clsx(className, slotProps?.layout?.className)}
-        ref={ref}
-      >
-        {renderCurrentView()}
-      </Layout>
-    </PickerProvider>
+    <PickerRangePositionContext.Provider value={rangePositionResponse}>
+      <PickerProvider {...providerProps}>
+        <Layout
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotProps}
+          sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
+          className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
+          ref={providerProps.contextValue.rootRef}
+        >
+          {renderCurrentView()}
+        </Layout>
+      </PickerProvider>
+    </PickerRangePositionContext.Provider>
   );
 
   return { renderPicker };

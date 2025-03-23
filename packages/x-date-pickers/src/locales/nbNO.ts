@@ -25,10 +25,10 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   // DateRange labels
   start: 'Start',
   end: 'Slutt',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdato',
+  startTime: 'Starttid',
+  endDate: 'Sluttdato',
+  endTime: 'Slutttid',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -41,6 +41,7 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Velg dato & klokkeslett',
   timePickerToolbarTitle: 'Velg klokkeslett',
   dateRangePickerToolbarTitle: 'Velg datoperiode',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,12 +59,13 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Uke ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Velg dato, valgt dato er ${formattedDate}` : 'Velg dato',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Velg tid, valgt tid er ${formattedTime}` : 'Velg tid',
-  // fieldClearLabel: 'Clear',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Slett',
 
   // Table labels
   timeTableLabel: 'velg tid',
@@ -80,17 +82,17 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'År',
+  month: 'Måned',
+  day: 'Dag',
+  weekDay: 'Ukedag',
+  hours: 'Timer',
+  minutes: 'Minutter',
+  seconds: 'Sekunder',
+  meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Tøm',
 };
 
 export const nbNO = getPickersLocalization(nbNOPickers);

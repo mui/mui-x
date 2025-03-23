@@ -1,9 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import { DateRangeIcon } from '@mui/x-date-pickers/icons';
+import { ClearIcon, DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -29,7 +27,19 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
+const BrowserIconButton = styled('button', {
+  name: 'BrowserField',
+  slot: 'IconButton',
+})({
+  backgroundColor: 'transparent',
+  border: 0,
+  cursor: 'pointer',
+  '&:hover, &:focus': {
+    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  },
+});
+
+function BrowserSingleInputDateRangeField(props) {
   const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
@@ -45,37 +55,35 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     onInput,
     onPaste,
     onKeyDown,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
     // Can be passed to a hidden <input /> element
     onChange,
     value,
     // Can be passed to the button that clears the value
     onClear,
     clearable,
-    // Can be used to render a custom label
-    label,
     // Can be used to style the component
     areAllSectionsEmpty,
     disabled,
     readOnly,
     focused,
     error,
-    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
   } = fieldResponse;
 
   const pickerContext = usePickerContext();
-  const handleRef = useForkRef(InputPropsRef, ref);
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
   return (
     <BrowserFieldRoot
-      ref={handleRef}
       {...other}
+      ref={handleRef}
       style={{
         minWidth: 300,
       }}
     >
-      {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -89,27 +97,38 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
-      <InputAdornment position="end">
-        <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
-          <DateRangeIcon />
-        </IconButton>
-      </InputAdornment>
+      {clearable && value && (
+        <BrowserIconButton
+          type="button"
+          title="Clear"
+          tabIndex={-1}
+          onClick={onClear}
+          sx={{ marginLeft: 1 }}
+        >
+          <ClearIcon fontSize="small" />
+        </BrowserIconButton>
+      )}
+      <BrowserIconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        aria-label={openPickerAriaLabel}
+        sx={{ marginLeft: 1 }}
+      >
+        <DateRangeIcon />
+      </BrowserIconButton>
     </BrowserFieldRoot>
   );
-});
+}
 
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
-const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
+function BrowserSingleInputDateRangePicker(props) {
   return (
     <DateRangePicker
-      ref={ref}
       {...props}
       slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
     />
   );
-});
+}
 
 export default function BrowserV7SingleInputRangeField() {
   return (

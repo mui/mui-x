@@ -1,12 +1,5 @@
 import './typeOverloads';
 
-import { LicenseInfo as LicenseInfoExport } from '@mui/x-license';
-/**
- * @deprecated Use `@mui/x-license` package instead:
- * @example import { LicenseInfo } from '@mui/x-license';
- */
-export class LicenseInfo extends LicenseInfoExport {}
-
 export * from '@mui/x-data-grid/components';
 export * from '@mui/x-data-grid/constants';
 export * from '@mui/x-data-grid/hooks';
@@ -35,3 +28,16 @@ export {
 
 export { GridColumnHeaders } from './components/GridColumnHeaders';
 export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
+
+// Reexportable exports
+export type {
+  GridGetRowsParamsPro as GridGetRowsParams,
+  GridGetRowsResponsePro as GridGetRowsResponse,
+  GridDataSourcePro as GridDataSource,
+} from './hooks/features/dataSource/models';
+
+export type {
+  GridDataSourceApiBasePro as GridDataSourceApiBase,
+  GridDataSourceApiPro as GridDataSourceApi,
+  GridDataSourcePrivateApiPro as GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/models';

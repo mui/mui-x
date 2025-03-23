@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';
+import { GridSignature } from '../../constants/signature';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
@@ -36,7 +36,7 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
   (props) =>
     (props.paginationMode === 'server' &&
       props.rowCount == null &&
-      !props.unstable_dataSource &&
+      !props.dataSource &&
       [
         "MUI X: The `rowCount` prop must be passed using `paginationMode='server'`",
         'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',

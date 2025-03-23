@@ -11,7 +11,7 @@ import {
   TimePickerToolbar,
 } from './TimePickerToolbar';
 import { TimeValidationError } from '../models';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
@@ -30,14 +30,10 @@ export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export type TimePickerViewRenderers<
-  TView extends TimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
+export type TimePickerViewRenderers<TView extends TimeViewWithMeridiem> = PickerViewRendererLookup<
   PickerValue,
   TView,
-  TimeViewRendererProps<TView, BaseClockProps<TView>>,
-  TAdditionalProps
+  TimeViewRendererProps<TView, BaseClockProps<TView>>
 >;
 
 export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>

@@ -31,7 +31,7 @@ import { RenameDialog } from './components/RenameDialog';
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     listView: boolean;
-    container: () => HTMLElement;
+    container: HTMLElement;
     handleDelete: (ids: GridRowId[]) => void;
     handleUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   }
@@ -42,15 +42,14 @@ interface Props {
   window?: () => Window;
 }
 
-export default function ListViewAdvanced(props: Props) {
+export default function ListViewAdvanced({ window }: Props) {
   // This is used only for the example - renders the drawer inside the container
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const container = () => containerRef.current as HTMLElement;
+  const container = window !== undefined ? window().document.body : undefined;
 
   const theme = useTheme();
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
-  const isDocsDemo = props.window !== undefined;
+  const isDocsDemo = window !== undefined;
   const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
@@ -71,7 +70,7 @@ export default function ListViewAdvanced(props: Props) {
 
   const handleDelete = React.useCallback(
     (ids: GridRowId[]) => {
-      apiRef.current.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+      apiRef.current?.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
     },
     [apiRef],
   );
@@ -83,7 +82,7 @@ export default function ListViewAdvanced(props: Props) {
       value: string,
     ) => {
       const updatedAt = new Date().toISOString();
-      apiRef.current.updateRows([{ id, [field]: value, updatedAt }]);
+      apiRef.current?.updateRows([{ id, [field]: value, updatedAt }]);
     },
     [apiRef],
   );
@@ -121,13 +120,13 @@ export default function ListViewAdvanced(props: Props) {
 
       // Add temporary row
       setLoading(true);
-      apiRef.current.updateRows([row]);
+      apiRef.current?.updateRows([row]);
 
       // Simulate server response time
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-        apiRef.current.updateRows([uploadedRow]);
+        apiRef.current?.updateRows([uploadedRow]);
         setOverlayState({ overlay: 'actions', params: { row } });
         setLoading(false);
       }, timeout);
@@ -288,7 +287,6 @@ export default function ListViewAdvanced(props: Props) {
     <React.Fragment>
       <CSSBaseline />
       <div
-        ref={containerRef}
         style={{
           maxWidth: '100%',
           height: 600,
@@ -300,9 +298,9 @@ export default function ListViewAdvanced(props: Props) {
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
-              showQuickFilter: true,
               listView: isListView,
               container,
               handleDelete,

@@ -17,32 +17,39 @@ import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 function ReadOnlyDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
-  const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
   return (
     <TextField
-      {...other}
-      value={value == null ? '' : value.format(format)}
+      {...forwardedProps}
+      value={
+        pickerContext.value == null
+          ? ''
+          : pickerContext.value.format(pickerContext.fieldFormat)
+      }
       placeholder={parsedFormat}
       InputProps={{
-        ...InputProps,
+        ref: pickerContext.triggerRef,
         readOnly: true,
         endAdornment: <CalendarIcon color="action" />,
         sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
       }}
       error={hasValidationError}
+      focused={pickerContext.open}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      ref={pickerContext.rootRef}
+      name={pickerContext.name}
+      label={pickerContext.label}
     />
   );
 }

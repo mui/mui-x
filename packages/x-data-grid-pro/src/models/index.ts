@@ -1,9 +1,3 @@
-export type {
-  GridGetRowsParams,
-  GridGetRowsResponse,
-  GridDataSource,
-  GridDataSourceCache,
-} from '@mui/x-data-grid/internals';
 export * from './gridApiPro';
 export * from './gridGroupingColDefOverride';
 export * from './gridRowScrollEndParams';

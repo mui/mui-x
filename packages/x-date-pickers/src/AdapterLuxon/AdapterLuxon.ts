@@ -77,11 +77,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };
@@ -247,7 +245,7 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
     );
   };
 
-  public isValid = (value: DateTime | null): boolean => {
+  public isValid = (value: DateTime | null): value is DateTime => {
     if (value === null) {
       return false;
     }

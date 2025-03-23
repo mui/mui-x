@@ -20,11 +20,16 @@ module.exports = {
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
       '@mui/x-tree-view-pro': path.resolve(__dirname, './packages/x-tree-view-pro/src'),
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
+      '@mui/x-telemetry': path.resolve(__dirname, './packages/x-telemetry/src'),
       '@mui/x-internals': path.resolve(__dirname, './packages/x-internals/src'),
+      '@mui/material-nextjs': path.resolve(
+        __dirname,
+        './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
+      ),
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
-    extensions: ['.js', '.ts', '.tsx', '.d.ts'],
+    extensions: ['.js', '.mjs', '.ts', '.tsx', '.d.ts'],
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -35,7 +40,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/,
+        test: /\.(js|mjs|ts|tsx)$/,
         exclude: /node_modules\/.*\/node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {

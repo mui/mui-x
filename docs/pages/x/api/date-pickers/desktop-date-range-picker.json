@@ -5,10 +5,7 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
-    "closeOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "true" },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
@@ -32,7 +29,12 @@
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use the <a href=\"https://next.mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+    },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" } },
@@ -159,7 +161,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": null
     },
@@ -177,7 +179,7 @@
     },
     {
       "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
+      "description": "Icon to display in the button used to clean the value.",
       "default": "ClearIcon",
       "class": null
     },
@@ -190,7 +192,7 @@
     {
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
+      "default": "PickerPopperPaper",
       "class": null
     },
     {
@@ -205,15 +207,15 @@
       "default": "TrapFocus from '@mui/material'.",
       "class": null
     },
-    { "name": "field", "description": "", "class": null },
     {
-      "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input.",
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
       "class": null
     },
     {
-      "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
       "class": null
     },
     {
@@ -231,6 +233,17 @@
       "name": "nextIconButton",
       "description": "Button allowing to switch to the right view.",
       "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the Picker.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon to display in the button used to open the Picker.",
       "class": null
     },
     {
@@ -271,8 +284,8 @@
     },
     {
       "name": "textField",
-      "description": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
       "class": null
     },
     {

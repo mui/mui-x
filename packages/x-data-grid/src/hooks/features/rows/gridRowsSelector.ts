@@ -1,7 +1,12 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { GridRowId } from '../../../models/gridRows';
+import {
+  createRootSelector,
+  createSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
+export const gridRowsStateSelector = createRootSelector((state: GridStateCommunity) => state.rows);
 
 export const gridRowCountSelector = createSelector(
   gridRowsStateSelector,
@@ -24,7 +29,17 @@ export const gridRowsLookupSelector = createSelector(
   (rows) => rows.dataRowIdToModelLookup,
 );
 
+export const gridRowSelector = createSelector(
+  gridRowsLookupSelector,
+  (rows, id: GridRowId) => rows[id],
+);
+
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
+
+export const gridRowNodeSelector = createSelector(
+  gridRowTreeSelector,
+  (rowTree, rowId: GridRowId) => rowTree[rowId],
+);
 
 export const gridRowGroupsToFetchSelector = createSelector(
   gridRowsStateSelector,
@@ -51,10 +66,10 @@ export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
     }
 
     return (
-      entries
+      (entries
         .filter(([, nodeCount]) => nodeCount > 0)
         .map(([depth]) => Number(depth))
-        .sort((a, b) => b - a)[0] + 1
+        .sort((a, b) => b - a)[0] ?? 0) + 1
     );
   },
 );
