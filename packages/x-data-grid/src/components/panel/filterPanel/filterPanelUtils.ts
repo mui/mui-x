@@ -23,7 +23,7 @@ export function getValueOptions(
 
 export function getValueFromValueOptions(
   value: string,
-  valueOptions: any[] | undefined,
+  valueOptions: ValueOptions[] | undefined,
   getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>,
 ) {
   if (valueOptions === undefined) {
@@ -33,20 +33,25 @@ export function getValueFromValueOptions(
     const optionValue = getOptionValue(option);
     return String(optionValue) === String(value);
   });
+
+  if (result === undefined) {
+    return undefined;
+  }
+
   return getOptionValue(result);
 }
 
 /**
  * Find the option matching the given value in valueOptions and get its label
  * @param {string} value is used to extract label from valueOptions.
- * @param {any[] | undefined} valueOptions is used to extract label.
+ * @param {ValueOptions[] | undefined} valueOptions is used to extract label.
  * @param {NonNullable<GridSingleSelectColDef['getOptionLabel']>} getOptionLabel is used to get label from valueOption
  * @param {NonNullable<GridSingleSelectColDef['getOptionValue']>} getOptionValue is used to get value from valueOption
  * @returns {string | undefined} The label matching with the value.
  */
 export function getLabelFromValueOptions(
   value: string,
-  valueOptions: any[] | undefined,
+  valueOptions: ValueOptions[] | undefined,
   getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']> = (
     valueOption: ValueOptions,
   ) => (typeof valueOption === 'object' ? valueOption.label : valueOption),
@@ -61,5 +66,10 @@ export function getLabelFromValueOptions(
     const optionValue = getOptionValue(option);
     return String(optionValue) === String(value);
   });
+
+  if (result === undefined) {
+    return undefined;
+  }
+
   return getOptionLabel(result);
 }
