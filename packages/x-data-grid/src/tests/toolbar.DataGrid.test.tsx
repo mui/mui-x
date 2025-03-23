@@ -45,7 +45,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       await user.click(screen.getByLabelText('Columns'));
-      await user.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
+      await user.click(document.querySelector('[role="tooltip"] [name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
@@ -93,7 +93,7 @@ describe('<DataGrid /> - Toolbar', () => {
       const button = screen.getByRole('button', { name: 'Columns' });
       await user.click(button);
 
-      const column: HTMLElement = screen.getByRole('tooltip').querySelector('[name="id"]')!;
+      const column: HTMLElement = document.querySelector('[role="tooltip"] [name="id"]')!;
       await user.click(column);
 
       expect(column).toHaveFocus();
