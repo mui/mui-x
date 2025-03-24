@@ -22,11 +22,22 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
+      itemErrorIcon: ['itemErrorIcon'],
+    };
 
-  return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewProRoot = styled('ul', {
@@ -96,7 +107,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider contextValue={contextValue} classes={classes}>
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
