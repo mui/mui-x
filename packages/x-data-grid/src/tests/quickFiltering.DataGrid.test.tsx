@@ -89,6 +89,7 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
+      await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adid, nik');
 
       await waitFor(() => {
@@ -104,6 +105,7 @@ describe('<DataGrid /> - Quick filter', () => {
     it('should no prettify user input', async () => {
       const { user } = render(<TestCase />);
 
+      await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adidas   nike');
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
@@ -159,11 +161,9 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(-1);
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'false',
+      );
     });
 
     it('should be expanded by default if there is a value', () => {
@@ -171,130 +171,84 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(0);
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should expand when the trigger is clicked', () => {
-      render(<TestCase />);
+    it('should expand when the trigger is clicked', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should expand when the input changes value', () => {
-      render(<TestCase />);
+    it('should expand when the input changes value', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.focus(screen.getByRole<HTMLInputElement>('searchbox'));
+      await user.type(screen.getByRole<HTMLInputElement>('searchbox'), 'adidas');
 
-      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
-        target: { value: 'adidas' },
-      });
-
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should collapse when the input is blurred with no value', () => {
-      render(<TestCase />);
+    it('should collapse when the escape key is pressed with no value', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
 
-      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+      await user.keyboard('[Escape]');
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'false',
+      );
     });
 
-    it('should collapse when the escape key is pressed with no value', () => {
-      render(<TestCase />);
+    it('should clear the input when the escape key is pressed with a value and not collapse the input', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      // Wait for the input to be focused
-      clock.runToLast();
+      await user.type(screen.getByRole<HTMLInputElement>('searchbox'), 'adidas');
 
-      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
-        key: 'Escape',
-      });
-
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
-    });
-
-    it('should clear the input when the escape key is pressed with a value and not collapse the input', () => {
-      render(<TestCase />);
-
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
-      clock.runToLast();
-
-      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
-        target: { value: 'adidas' },
-      });
-      clock.runToLast();
-
-      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
-        key: 'Escape',
-      });
+      await user.keyboard('[Escape]');
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should clear the value when the clear button is clicked and focus to `the input', () => {
-      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+    it('should clear the value when the clear button is clicked and focus to `the input', async () => {
+      const { user } = render(
+        <TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />,
+      );
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear' }));
-      clock.runToLast();
+      await user.click(screen.getByRole('button', { name: 'Clear' }));
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
     });
 
-    it('should focus the input when the trigger is clicked and return focus to the trigger when collapsed', () => {
-      render(<TestCase />);
+    it('should focus the input when the trigger is clicked and return focus to the trigger when collapsed', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
-
-      // Wait for the input to be focused
-      clock.runToLast();
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
       expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
 
-      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+      await user.keyboard('[Escape]');
 
-      // Wait for the trigger to be focused
-      clock.runToLast();
-
-      expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' })).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Search' })).toHaveFocus();
     });
   });
 
@@ -302,6 +256,7 @@ describe('<DataGrid /> - Quick filter', () => {
     it('should return rows that match all values by default', async () => {
       const { user } = render(<TestCase />);
 
+      await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adid');
 
       await waitFor(() => {
@@ -323,6 +278,7 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
+      await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adid');
 
       await waitFor(() => {
