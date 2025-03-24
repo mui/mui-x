@@ -177,7 +177,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       .children[0];
 
     await act(async () => {
-      apiRef.current?.dataSource.fetchRows(firstChildId)
+      apiRef.current?.dataSource.fetchRows(firstChildId);
     });
 
     await waitFor(() => {
