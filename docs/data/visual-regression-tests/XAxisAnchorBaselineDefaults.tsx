@@ -40,7 +40,7 @@ export default function XAxisAnchorBaselineDefaults() {
       yAxis={[
         {
           valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          width: 50,
+          width: 60,
         },
       ]}
     />

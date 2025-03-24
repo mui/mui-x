@@ -85,7 +85,7 @@ export default function ExpandingStep() {
             type: 'bar',
           },
         ]}
-        height={200}
+        height={250}
         margin={{ bottom: 10 }}
         skipAnimation
       >

@@ -13,7 +13,7 @@ const stackStrategy = {
 } as const;
 
 const customize = {
-  height: 300,
+  height: 350,
   hideLegend: true,
 };
 
