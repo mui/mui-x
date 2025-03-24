@@ -2,7 +2,7 @@
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
-import { AxisId } from '../models/axis';
+import { AxisDefaultized, AxisId } from '../models/axis';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
@@ -30,6 +30,19 @@ export interface UseAxisTooltipReturnValue<
   seriesItems: SeriesItem<SeriesT>[];
 }
 
+export interface UseAxisTooltipParams {
+  /**
+   * If `true`, the hook returns an array with an object per active axis.
+   * @deprecated In future version, the `multipleAxes=true` will be the unique behavior
+   */
+  multipleAxes?: boolean;
+  /**
+   * The axis directions to consider.
+   * If not defined, all directions are considered
+   */
+  directions?: ('x' | 'y')[];
+}
+
 interface SeriesItem<T extends CartesianChartSeriesType> {
   seriesId: SeriesId;
   color: string;
@@ -39,7 +52,44 @@ interface SeriesItem<T extends CartesianChartSeriesType> {
   markType: ChartsLabelMarkProps['type'];
 }
 
-export function useAxisTooltip(): UseAxisTooltipReturnValue[] | null {
+function defaultAxisTooltipConfig(
+  axis: AxisDefaultized,
+  dataIndex: number,
+  axisDirection: 'x' | 'y',
+): UseAxisTooltipReturnValue {
+  const axisValue = axis.data?.[dataIndex] ?? null;
+
+  const axisFormatter =
+    axis.valueFormatter ??
+    ((v: string | number | Date) =>
+      axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
+
+  const axisFormattedValue = axisFormatter(axisValue, {
+    location: 'tooltip',
+    scale: axis.scale,
+  });
+
+  return {
+    axisDirection,
+    axisId: axis.id,
+    dataIndex,
+    axisValue,
+    axisFormattedValue,
+    seriesItems: [],
+  };
+}
+
+export function useAxisTooltip(
+  params: UseAxisTooltipParams & { multipleAxes: true },
+): UseAxisTooltipReturnValue[] | null;
+export function useAxisTooltip(
+  params?: UseAxisTooltipParams & { multipleAxes?: false },
+): UseAxisTooltipReturnValue | null;
+export function useAxisTooltip(
+  params: UseAxisTooltipParams = {},
+): UseAxisTooltipReturnValue | UseAxisTooltipReturnValue[] | null {
+  const { multipleAxes, directions } = params;
+
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
 
@@ -60,57 +110,27 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue[] | null {
     return null;
   }
 
-  const tooltipAxes: UseAxisTooltipReturnValue[] = [
-    ...tooltipXAxes.map(({ axisId, dataIndex }) => {
+  const tooltipAxes: UseAxisTooltipReturnValue[] = [];
+
+  if (directions === undefined || directions.includes('x')) {
+    tooltipXAxes.forEach(({ axisId, dataIndex }) => {
+      if (!multipleAxes && tooltipAxes.length > 1) {
+        return;
+      }
       const axis = xAxis[axisId];
+      tooltipAxes.push(defaultAxisTooltipConfig(axis, dataIndex, 'x'));
+    });
+  }
 
-      const axisValue = axis.data?.[dataIndex] ?? null;
-
-      const axisFormatter =
-        axis.valueFormatter ??
-        ((v: string | number | Date) =>
-          axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
-
-      const axisFormattedValue = axisFormatter(axisValue, {
-        location: 'tooltip',
-        scale: axis.scale,
-      });
-
-      return {
-        axisDirection: 'x' as const,
-        axisId,
-        dataIndex,
-        axisValue,
-        axisFormattedValue,
-        seriesItems: [],
-      };
-    }),
-
-    ...tooltipYAxes.map(({ axisId, dataIndex }) => {
+  if (directions === undefined || directions.includes('x')) {
+    tooltipYAxes.forEach(({ axisId, dataIndex }) => {
+      if (!multipleAxes && tooltipAxes.length > 1) {
+        return;
+      }
       const axis = yAxis[axisId];
-
-      const axisValue = axis.data?.[dataIndex] ?? null;
-
-      const axisFormatter =
-        axis.valueFormatter ??
-        ((v: string | number | Date) =>
-          axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
-
-      const axisFormattedValue = axisFormatter(axisValue, {
-        location: 'tooltip',
-        scale: axis.scale,
-      });
-
-      return {
-        axisDirection: 'y' as const,
-        axisId,
-        dataIndex,
-        axisValue,
-        axisFormattedValue,
-        seriesItems: [],
-      };
-    }),
-  ];
+      tooltipAxes.push(defaultAxisTooltipConfig(axis, dataIndex, 'y'));
+    });
+  }
 
   Object.keys(series)
     .filter(isCartesianSeriesType)
@@ -160,5 +180,8 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue[] | null {
       });
     });
 
+  if (!multipleAxes) {
+    return tooltipAxes.length === 0 ? tooltipAxes[0] : null;
+  }
   return tooltipAxes;
 }

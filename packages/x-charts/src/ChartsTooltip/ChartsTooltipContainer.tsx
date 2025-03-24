@@ -67,7 +67,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const isOpen = useSelector(
     store,
-    // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
       ? selectorChartsInteractionAxisTooltip
       : selectorChartsInteractionItemIsDefined,
