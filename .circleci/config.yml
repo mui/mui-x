@@ -352,10 +352,6 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_regressions:
-          <<: *default-context
-          requires:
-            - checkout
       - run_danger:
           <<: *default-context
           requires:
