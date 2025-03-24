@@ -7,7 +7,7 @@ import type { CommonOverlayProps } from './ChartsOverlay';
 const StyledText = styled('text')(({ theme }) => ({
   ...theme.typography.body2,
   stroke: 'none',
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
   shapeRendering: 'crispEdges',
   textAnchor: 'middle',
   dominantBaseline: 'middle',
