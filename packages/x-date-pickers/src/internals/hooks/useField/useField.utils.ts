@@ -1,5 +1,4 @@
 import {
-  AvailableAdjustKeyCode,
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
@@ -48,21 +47,6 @@ export const getDateSectionConfigFromFormatToken = (
     contentType: config.contentType,
     maxLength: config.maxLength,
   };
-};
-
-const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) => {
-  switch (keyCode) {
-    case 'ArrowUp':
-      return 1;
-    case 'ArrowDown':
-      return -1;
-    case 'PageUp':
-      return 5;
-    case 'PageDown':
-      return -5;
-    default:
-      return 0;
-  }
 };
 
 export const getDaysInWeekStr = (utils: MuiPickersAdapter, format: string) => {
@@ -170,22 +154,13 @@ export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
 };
 
 /**
- * Remove the leading zeroes to a digit section value.
+ * Make sure the value of a digit section have the right amount of leading zeros.
  * E.g.: `03` => `3`
  * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
  */
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
-  let cleanValueStr = valueStr;
-
-  // Remove the leading zeros
-  cleanValueStr = Number(cleanValueStr).toString();
-
-  // Add enough leading zeros to fill the section
-  while (cleanValueStr.length < size) {
-    cleanValueStr = `0${cleanValueStr}`;
-  }
-
-  return cleanValueStr;
+  // Remove the leading zeros and then add back as many as needed.
+  return Number(valueStr).toString().padStart(size, '0');
 };
 
 export const cleanDigitSectionValue = (
@@ -230,106 +205,6 @@ export const cleanDigitSectionValue = (
   }
 
   return applyLocalizedDigits(valueStr, localizedDigits);
-};
-
-export const adjustSectionValue = <TValue extends PickerValidValue>(
-  utils: MuiPickersAdapter,
-  timezone: PickersTimezone,
-  section: InferFieldSection<TValue>,
-  keyCode: AvailableAdjustKeyCode,
-  sectionsValueBoundaries: FieldSectionsValueBoundaries,
-  localizedDigits: string[],
-  activeDate: PickerValidDate | null,
-  stepsAttributes?: { minutesStep?: number },
-): string => {
-  const delta = getDeltaFromKeyCode(keyCode);
-  const isStart = keyCode === 'Home';
-  const isEnd = keyCode === 'End';
-
-  const shouldSetAbsolute = section.value === '' || isStart || isEnd;
-
-  const adjustDigitSection = () => {
-    const sectionBoundaries = sectionsValueBoundaries[section.type]({
-      currentDate: activeDate,
-      format: section.format,
-      contentType: section.contentType,
-    });
-
-    const getCleanValue = (value: number) =>
-      cleanDigitSectionValue(utils, value, sectionBoundaries, localizedDigits, section);
-
-    const step =
-      section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
-
-    const currentSectionValue = parseInt(removeLocalizedDigits(section.value, localizedDigits), 10);
-    let newSectionValueNumber = currentSectionValue + delta * step;
-
-    if (shouldSetAbsolute) {
-      if (section.type === 'year' && !isEnd && !isStart) {
-        return utils.formatByString(utils.date(undefined, timezone), section.format);
-      }
-
-      if (delta > 0 || isStart) {
-        newSectionValueNumber = sectionBoundaries.minimum;
-      } else {
-        newSectionValueNumber = sectionBoundaries.maximum;
-      }
-    }
-
-    if (newSectionValueNumber % step !== 0) {
-      if (delta < 0 || isStart) {
-        newSectionValueNumber += step - ((step + newSectionValueNumber) % step); // for JS -3 % 5 = -3 (should be 2)
-      }
-      if (delta > 0 || isEnd) {
-        newSectionValueNumber -= newSectionValueNumber % step;
-      }
-    }
-
-    if (newSectionValueNumber > sectionBoundaries.maximum) {
-      return getCleanValue(
-        sectionBoundaries.minimum +
-          ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
-      );
-    }
-
-    if (newSectionValueNumber < sectionBoundaries.minimum) {
-      return getCleanValue(
-        sectionBoundaries.maximum -
-          ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
-      );
-    }
-
-    return getCleanValue(newSectionValueNumber);
-  };
-
-  const adjustLetterSection = () => {
-    const options = getLetterEditingOptions(utils, timezone, section.type, section.format);
-    if (options.length === 0) {
-      return section.value;
-    }
-
-    if (shouldSetAbsolute) {
-      if (delta > 0 || isStart) {
-        return options[0];
-      }
-
-      return options[options.length - 1];
-    }
-
-    const currentOptionIndex = options.indexOf(section.value);
-    const newOptionIndex = (currentOptionIndex + delta) % options.length;
-    const clampedIndex = (newOptionIndex + options.length) % options.length;
-
-    return options[clampedIndex];
-  };
-
-  if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
-    return adjustDigitSection();
-  }
-
-  return adjustLetterSection();
 };
 
 export const getSectionVisibleValue = (
@@ -405,13 +280,11 @@ export const doesSectionFormatHaveLeadingZeros = (
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
-      if (isFourDigitYearFormat(utils, format)) {
-        const formatted0001 = utils.formatByString(utils.setYear(now, 1), format);
-        return formatted0001 === '0001';
+      // Remove once https://github.com/iamkun/dayjs/pull/2847 is merged and bump dayjs version
+      if (utils.lib === 'dayjs' && format === 'YY') {
+        return true;
       }
-
-      const formatted2001 = utils.formatByString(utils.setYear(now, 2001), format);
-      return formatted2001 === '01';
+      return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
     }
 
     case 'month': {

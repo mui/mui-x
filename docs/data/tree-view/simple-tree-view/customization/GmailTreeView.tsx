@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { styled, useTheme, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -53,13 +52,13 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   paddingRight: theme.spacing(1),
   paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   fontWeight: theme.typography.fontWeightMedium,
-  '&.expanded': {
+  '&[data-expanded]': {
     fontWeight: theme.typography.fontWeightRegular,
   },
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-  '&.focused, &.selected, &.selected.focused': {
+  '&[data-focused], &[data-selected], &[data-selected][data-focused]': {
     backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
     color: 'var(--tree-view-color)',
   },
@@ -108,15 +107,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   return (
     <TreeItemProvider {...getContextProviderProps()}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
-        <CustomTreeItemContent
-          {...getContentProps({
-            className: clsx('content', {
-              expanded: status.expanded,
-              selected: status.selected,
-              focused: status.focused,
-            }),
-          })}
-        >
+        <CustomTreeItemContent {...getContentProps()}>
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </CustomTreeItemIconContainer>

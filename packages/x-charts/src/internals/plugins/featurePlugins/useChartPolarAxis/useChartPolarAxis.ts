@@ -6,7 +6,6 @@ import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
-import { getAxisValue } from './getAxisValue';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import {
   selectorChartPolarCenter,
@@ -126,10 +125,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       // Test if it's in the drawing area
       if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
+          instance?.cleanInteraction();
           mousePosition.current.isInChart = false;
         }
         return;
@@ -141,22 +137,14 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       if (radiusSquare > maxRadius ** 2) {
         if (mousePosition.current.isInChart) {
-          store.update((prev) => ({
-            ...prev,
-            interaction: { item: null, axis: { x: null, y: null } },
-          }));
+          instance?.cleanInteraction();
           mousePosition.current.isInChart = false;
         }
         return;
       }
 
       mousePosition.current.isInChart = true;
-      const angle = svg2rotation(svgPoint.x, svgPoint.y);
-
-      instance.setAxisInteraction?.({
-        x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
-        y: null,
-      });
+      instance.setPointerCoordinate?.(svgPoint);
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -165,7 +153,10 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
         return;
       }
 
-      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
+      if (
+        'hasPointerCapture' in target &&
+        (target as HTMLElement).hasPointerCapture(event.pointerId)
+      ) {
         (target as HTMLElement).releasePointerCapture(event.pointerId);
       }
     };
