@@ -82,7 +82,7 @@ export class AdapterDateFns
   implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    /* v8 ignore next */
+    /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
         throw new Error(
@@ -98,6 +98,7 @@ export class AdapterDateFns
         );
       }
     }
+    /* v8 ignore stop */
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
 

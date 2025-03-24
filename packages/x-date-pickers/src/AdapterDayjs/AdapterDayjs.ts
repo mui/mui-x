@@ -208,7 +208,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       const timezone = defaultDayjs.tz.guess();
 
       // We can't change the system timezone in the tests
-      /* v8 ignore next */
+      /* v8 ignore next 3 */
       if (timezone !== 'UTC') {
         return defaultDayjs.tz(value, timezone);
       }
@@ -220,7 +220,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
-    /* v8 ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
@@ -229,12 +229,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
-    /* v8 ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
 
-    /* v8 ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
@@ -250,7 +250,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
-      /* v8 ignore next */
+      /* v8 ignore start */
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           'MUI X: Your locale has not been found.',
@@ -259,6 +259,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
           'fallback on English locale.',
         ]);
       }
+      /* v8 ignore stop */
       localeObject = locales.en;
     }
 
@@ -280,7 +281,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
       // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* v8 ignore next */
+      /* v8 ignore next 3 */
       // @ts-ignore
       if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
@@ -345,7 +346,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     if (timezone === 'UTC') {
-      /* v8 ignore next */
+      /* v8 ignore next 3 */
       if (!this.hasUTCPlugin()) {
         throw new Error(MISSING_UTC_PLUGIN);
       }

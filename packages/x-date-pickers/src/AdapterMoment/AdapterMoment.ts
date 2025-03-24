@@ -174,7 +174,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
-    /* v8 ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
@@ -235,7 +235,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
     }
 
     if (!this.hasTimezonePlugin()) {
-      /* v8 ignore next */
+      /* v8 ignore next 3 */
       if (timezone !== 'default') {
         throw new Error(MISSING_TIMEZONE_PLUGIN);
       }
