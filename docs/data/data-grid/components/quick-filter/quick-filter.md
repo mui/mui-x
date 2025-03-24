@@ -51,7 +51,7 @@ It renders the `baseIconButton` slot.
 ### Quick Filter Trigger
 
 `<QuickFilterTrigger />` is a button that expands and collapses the quick filter.
-It renders the `baseIconButton` slot.
+It renders the `baseButton` slot.
 
 ## Custom elements
 
