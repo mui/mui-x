@@ -953,7 +953,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid',
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
