@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -11,10 +11,10 @@ import {
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
-import { isJSDOM } from 'test/utils/skipIf';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Quick filter', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -59,21 +59,24 @@ describe('<DataGrid /> - Quick filter', () => {
   }
 
   describe('component', () => {
-    it('should apply filter', async () => {
-      const { user } = render(<TestCase />);
+    clock.withFakeTimers();
+
+    it('should apply filter', () => {
+      render(<TestCase />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      await user.type(screen.getByRole('searchbox'), 'a');
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'a' },
       });
+      clock.runToLast();
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
-    it('should allow to customize input splitting', async () => {
+    it('should allow to customize input splitting', () => {
       const onFilterModelChange = spy();
 
-      const { user } = render(
+      render(
         <TestCase
           onFilterModelChange={onFilterModelChange}
           slotProps={{
@@ -89,22 +92,25 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
-      await user.type(screen.getByRole('searchbox'), 'adid, nik');
-
-      await waitFor(() => {
-        expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
-          items: [],
-          logicOperator: 'and',
-          quickFilterValues: ['adid', 'nik'],
-          quickFilterLogicOperator: 'and',
-        });
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adid, nik' },
+      });
+      clock.runToLast();
+      expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
+        items: [],
+        logicOperator: 'and',
+        quickFilterValues: ['adid', 'nik'],
+        quickFilterLogicOperator: 'and',
       });
     });
 
-    it('should no prettify user input', async () => {
-      const { user } = render(<TestCase />);
+    it('should no prettify user input', () => {
+      render(<TestCase />);
 
-      await user.type(screen.getByRole('searchbox'), 'adidas   nike');
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adidas   nike' },
+      });
+      clock.runToLast();
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
     });
@@ -156,23 +162,26 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('quick filter logic', () => {
-    it('should return rows that match all values by default', async () => {
-      const { user } = render(<TestCase />);
+    clock.withFakeTimers();
 
-      await user.type(screen.getByRole('searchbox'), 'adid');
+    it('should return rows that match all values by default', () => {
+      render(<TestCase />);
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adid' },
       });
-      await user.type(screen.getByRole('searchbox'), ' nik');
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal([]);
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adid nik' },
       });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should return rows that match some values if quickFilterLogicOperator="or"', async () => {
-      const { user } = render(
+    it('should return rows that match some values if quickFilterLogicOperator="or"', () => {
+      render(
         <TestCase
           initialState={{
             filter: { filterModel: { items: [], quickFilterLogicOperator: GridLogicOperator.Or } },
@@ -180,21 +189,21 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      await user.type(screen.getByRole('searchbox'), 'adid');
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adid' },
       });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      await user.type(screen.getByRole('searchbox'), ' nik');
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'adid nik' },
       });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
     });
 
-    it('should ignore hidden columns by default', async () => {
-      const { user } = render(
+    it('should ignore hidden columns by default', () => {
+      render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -204,19 +213,17 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      await user.type(screen.getByRole('searchbox'), '1');
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal([]);
-      });
-
-      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
-
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', async () => {
-      const { user } = render(
+    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', () => {
+      render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -226,21 +233,17 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      await user.type(screen.getByRole('searchbox'), '1');
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
-
-      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Puma']);
-      });
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
     });
 
-    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', async () => {
-      const { user } = render(
+    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', () => {
+      render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -250,12 +253,12 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      await user.type(screen.getByRole('searchbox'), '1');
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal([]);
-      });
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
 
-      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -281,6 +284,7 @@ describe('<DataGrid /> - Quick filter', () => {
           quickFilterExcludeHiddenColumns: true,
         },
       });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -314,10 +318,12 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
 
       setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
     });
@@ -345,10 +351,12 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
     });
@@ -380,16 +388,20 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
     });
   });
 
   describe('column type: string', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -498,6 +510,8 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: number', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -550,6 +564,8 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: singleSelect', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -627,11 +643,11 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/6783
-  it('should not override user input when typing', async () => {
+  testSkipIf(isJSDOM)('should not override user input when typing', async () => {
     // Warning: this test doesn't fail consistently as it is timing-sensitive.
     const debounceMs = 50;
 
-    const { user } = render(
+    render(
       <TestCase
         slotProps={{
           toolbar: {
@@ -645,16 +661,16 @@ describe('<DataGrid /> - Quick filter', () => {
 
     expect(searchBox.value).to.equal('');
 
-    await user.type(screen.getByRole('searchbox'), `a`);
-    await act(() => sleep(debounceMs - 2));
+    fireEvent.change(searchBox, { target: { value: 'a' } });
+    await sleep(debounceMs - 2);
     expect(searchBox.value).to.equal('a');
 
-    await user.type(screen.getByRole('searchbox'), `b`);
-    await act(() => sleep(10));
+    fireEvent.change(searchBox, { target: { value: 'ab' } });
+    await sleep(10);
     expect(searchBox.value).to.equal('ab');
 
-    await user.type(screen.getByRole('searchbox'), `c`);
-    await act(() => sleep(debounceMs * 2));
+    fireEvent.change(searchBox, { target: { value: 'abc' } });
+    await sleep(debounceMs * 2);
     expect(searchBox.value).to.equal('abc');
   });
 
