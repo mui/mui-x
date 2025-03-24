@@ -148,6 +148,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
+    enableEnhancedDaySlot,
     ...other
   } = props;
 
@@ -402,6 +403,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               displayWeekNumber={displayWeekNumber}
               loading={loading}
               renderLoading={renderLoading}
+              enableEnhancedDaySlot={enableEnhancedDaySlot}
             />
           )}
         </div>

@@ -136,6 +136,7 @@ function useDateRangeCalendarDefaultizedProps(
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
+    enableEnhancedDaySlot: themeProps.enableEnhancedDaySlot ?? false,
   };
 }
 
@@ -216,7 +217,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
-    daySlot,
+    enableEnhancedDaySlot,
     ...other
   } = props;
 
@@ -574,13 +575,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   };
 
   const slotsForDayCalendar = {
-    day: daySlot === 'original' ? DateRangePickerDay : EnhancedPickersDay,
+    day: enableEnhancedDaySlot ? EnhancedPickersDay : DateRangePickerDay,
     ...slots,
   } as DayCalendarSlots;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
-    day: daySlot === 'original' ? getOriginalDaySlotProps : getEnhancedDaySlotProps,
+    day: enableEnhancedDaySlot ? getEnhancedDaySlotProps : getOriginalDaySlotProps,
   } as DayCalendarSlotProps;
 
   const calendarMonths = React.useMemo(

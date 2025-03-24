@@ -94,7 +94,7 @@ export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePi
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    daySlot: themeProps?.daySlot ?? 'original',
+    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       toolbar: DateRangePickerToolbar,
       ...themeProps.slots,

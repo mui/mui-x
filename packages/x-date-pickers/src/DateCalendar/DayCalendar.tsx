@@ -75,6 +75,11 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
   fixedWeekNumber?: number;
+  /**
+   * If `true`, day slot will use the v8 version.
+   * @default false
+   */
+  enableEnhancedDaySlot?: boolean;
 }
 
 export interface DayCalendarProps

@@ -39,11 +39,6 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    */
   slotProps?: DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
   /**
-   * If `enhanced`, day slot will use the v8 version.
-   * @default original
-   */
-  daySlot?: 'original' | 'enhanced';
-  /**
    * If `true`, the Picker will close after submitting the full date.
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
