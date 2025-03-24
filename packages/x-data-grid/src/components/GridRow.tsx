@@ -28,10 +28,7 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import {
-  gridRowMaximumTreeDepthSelector,
-  gridRowNodeSelector,
-} from '../hooks/features/rows/gridRowsSelector';
+import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
@@ -132,8 +129,8 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowReordering,
   );
   const handleRef = useForkRef(ref, refProp);
-  const rowNode = gridRowNodeSelector(apiRef, rowId);
-  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
+  const rowNode = apiRef.current.getRowNode(rowId)!;
+  const editing = useGridSelectorV8(apiRef, gridRowIsEditingSelector, {
     rowId,
     editMode: rootProps.editMode,
   });
