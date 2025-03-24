@@ -9,6 +9,7 @@ import {
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { translateZoom } from './useZoom.utils';
 
 export const usePanOnDrag = (
   {
@@ -54,42 +55,16 @@ export const usePanOnDrag = (
       });
       const movementX = point.x - originalPoint.x;
       const movementY = (point.y - originalPoint.y) * -1;
-      const newZoomData = state.memo.map((zoom) => {
-        const options = optionsLookup[zoom.axisId];
-        if (!options || !options.panning) {
-          return zoom;
-        }
-        const min = zoom.start;
-        const max = zoom.end;
-        const span = max - min;
-        const MIN_PERCENT = options.minStart;
-        const MAX_PERCENT = options.maxEnd;
-        const movement = options.axisDirection === 'x' ? movementX : movementY;
-        const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
-        let newMinPercent = min - (movement / dimension) * span;
-        let newMaxPercent = max - (movement / dimension) * span;
-        if (newMinPercent < MIN_PERCENT) {
-          newMinPercent = MIN_PERCENT;
-          newMaxPercent = newMinPercent + span;
-        }
-        if (newMaxPercent > MAX_PERCENT) {
-          newMaxPercent = MAX_PERCENT;
-          newMinPercent = newMaxPercent - span;
-        }
-        if (
-          newMinPercent < MIN_PERCENT ||
-          newMaxPercent > MAX_PERCENT ||
-          span < options.minSpan ||
-          span > options.maxSpan
-        ) {
-          return zoom;
-        }
-        return {
-          ...zoom,
-          start: newMinPercent,
-          end: newMaxPercent,
-        };
-      });
+      const newZoomData = translateZoom(
+        state.memo,
+        { x: movementX, y: movementY },
+        {
+          width: drawingArea.width,
+          height: drawingArea.height,
+        },
+        optionsLookup,
+      );
+
       setZoomDataCallback(newZoomData);
       return state.memo;
     });

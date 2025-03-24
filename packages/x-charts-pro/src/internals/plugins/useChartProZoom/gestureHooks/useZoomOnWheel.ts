@@ -15,7 +15,7 @@ import {
   getWheelScaleRatio,
   isSpanValid,
   zoomAtPoint,
-} from '../useChartProZoom.utils';
+} from './useZoom.utils';
 
 export const useZoomOnWheel = (
   {

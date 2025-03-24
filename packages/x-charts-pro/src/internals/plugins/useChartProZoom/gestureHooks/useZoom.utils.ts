@@ -113,10 +113,60 @@ export function getHorizontalCenterRatio(
   return (point.x - left) / width;
 }
 
+/**
+ * Get the ratio of the point in the vertical center of the area.
+ */
 export function getVerticalCenterRatio(
   point: { x: number; y: number },
   area: { top: number; height: number },
 ) {
   const { top, height } = area;
   return ((point.y - top) / height) * -1 + 1;
+}
+
+/**
+ * Translate the zoom data by a given movement.
+ */
+export function translateZoom(
+  currentZoom: readonly ZoomData[],
+  movement: { x: number; y: number },
+  drawingArea: { width: number; height: number },
+  optionsLookup: Record<string | number, DefaultizedZoomOptions>,
+) {
+  return currentZoom.map((zoom) => {
+    const options = optionsLookup[zoom.axisId];
+    if (!options || !options.panning) {
+      return zoom;
+    }
+    const min = zoom.start;
+    const max = zoom.end;
+    const span = max - min;
+    const MIN_PERCENT = options.minStart;
+    const MAX_PERCENT = options.maxEnd;
+    const displacement = options.axisDirection === 'x' ? movement.x : movement.y;
+    const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+    let newMinPercent = min - (displacement / dimension) * span;
+    let newMaxPercent = max - (displacement / dimension) * span;
+    if (newMinPercent < MIN_PERCENT) {
+      newMinPercent = MIN_PERCENT;
+      newMaxPercent = newMinPercent + span;
+    }
+    if (newMaxPercent > MAX_PERCENT) {
+      newMaxPercent = MAX_PERCENT;
+      newMinPercent = newMaxPercent - span;
+    }
+    if (
+      newMinPercent < MIN_PERCENT ||
+      newMaxPercent > MAX_PERCENT ||
+      span < options.minSpan ||
+      span > options.maxSpan
+    ) {
+      return zoom;
+    }
+    return {
+      ...zoom,
+      start: newMinPercent,
+      end: newMaxPercent,
+    };
+  });
 }
