@@ -731,8 +731,7 @@ describe('<DataGrid /> - Column spanning', () => {
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     // scroll to the very end
-    virtualScroller.scrollLeft = 1000;
-    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+    await act(async () => virtualScroller.scrollTo({ left: 1000, behavior: 'instant' }));
 
     expect(getCell(0, 5).offsetLeft).to.equal(
       getCell(1, 5).offsetLeft,
@@ -908,16 +907,22 @@ describe('<DataGrid /> - Column spanning', () => {
     );
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    // scroll to the very end
-    virtualScroller.scrollLeft = 1000;
-    // hide first row to trigger row virtualization
-    virtualScroller.scrollTop = rowHeight + 10;
-    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-
-    expect(getCell(5, 5).offsetLeft).to.equal(
-      getCell(4, 5).offsetLeft,
-      'last cells in both rows should be aligned after scroll',
+    await act(async () =>
+      virtualScroller.scrollTo({
+        // hide first row to trigger row virtualization
+        top: rowHeight + 10,
+        // scroll to the very end
+        left: 1000,
+        behavior: 'instant',
+      }),
     );
+
+    await waitFor(() => {
+      expect(getCell(5, 5).offsetLeft).to.equal(
+        getCell(4, 5).offsetLeft,
+        'last cells in both rows should be aligned after scroll',
+      );
+    });
 
     expect(getColumnHeaderCell(5).offsetLeft).to.equal(
       getCell(4, 5).offsetLeft,

@@ -176,7 +176,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
 
-    await act(() => apiRef.current?.dataSource.fetchRows(firstChildId));
+    await act(async () => {
+      apiRef.current?.dataSource.fetchRows(firstChildId);
+    });
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);

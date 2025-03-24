@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Toolbar', () => {
   const { render } = createRenderer();
@@ -36,8 +35,8 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('column selector', () => {
-    it('should hide "id" column when hiding it from the column selector', () => {
-      render(
+    it('should hide "id" column when hiding it from the column selector', async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} showToolbar />
         </div>,
@@ -45,13 +44,13 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(screen.getByLabelText('Columns'));
-      fireEvent.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
+      await user.click(screen.getByLabelText('Columns'));
+      await user.click(document.querySelector('[role="tooltip"] [name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
-    it('should show and hide all columns when clicking "Show/Hide All" checkbox from the column selector', () => {
+    it('should show and hide all columns when clicking "Show/Hide All" checkbox from the column selector', async () => {
       const customColumns = [
         {
           field: 'id',
@@ -61,7 +60,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      render(
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -76,11 +75,11 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByLabelText('Columns'));
+      await user.click(screen.getByLabelText('Columns'));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
@@ -94,13 +93,13 @@ describe('<DataGrid /> - Toolbar', () => {
       const button = screen.getByRole('button', { name: 'Columns' });
       await user.click(button);
 
-      const column: HTMLElement = screen.getByRole('tooltip').querySelector('[name="id"]')!;
+      const column: HTMLElement = document.querySelector('[role="tooltip"] [name="id"]')!;
       await user.click(column);
 
       expect(column).toHaveFocus();
     });
 
-    it('should allow to override search predicate function', () => {
+    it('should allow to override search predicate function', async () => {
       const customColumns = [
         {
           field: 'id',
@@ -121,7 +120,7 @@ describe('<DataGrid /> - Toolbar', () => {
         );
       };
 
-      render(
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -136,10 +135,10 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(screen.getByLabelText('Columns'));
+      await user.click(screen.getByLabelText('Columns'));
 
       const searchInput = document.querySelector('input[type="search"]')!;
-      fireEvent.change(searchInput, { target: { value: 'test' } });
+      await user.type(searchInput, 'test');
 
       expect(document.querySelector('[role="tooltip"] [name="id"]')).not.to.equal(null);
     });

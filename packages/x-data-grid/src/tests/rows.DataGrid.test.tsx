@@ -342,8 +342,7 @@ describe('<DataGrid /> - Rows', () => {
       const { user } = render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      const firstCell = getCell(0, 0);
-      firstCell.focus();
+      await user.click(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
       await user.keyboard('{ArrowRight}');
@@ -380,7 +379,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const firstCell = getCell(0, 0);
-      firstCell.focus();
+      await user.click(firstCell);
       expect(getActiveCell()).to.equal('0-0');
 
       await user.keyboard('{ArrowRight}');
@@ -423,9 +422,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      await act(() => {
-        firstCell.focus();
-      });
+      await user.click(firstCell);
 
       await user.keyboard('{ArrowRight}');
       expect(secondCell).to.have.property('tabIndex', -1);
@@ -435,9 +432,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      await act(() => {
-        printButton.focus();
-      });
+      await user.click(printButton);
       await user.keyboard('{ArrowRight}');
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
@@ -827,8 +822,8 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
+          // Scroll to measure all cells
+          await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
           expect(gridOffsetTop()).not.to.equal(0);
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
@@ -839,7 +834,7 @@ describe('<DataGrid /> - Rows', () => {
         },
       );
 
-      it('should position correctly the render zone when changing pageSize to a lower value', () => {
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
@@ -861,7 +856,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(gridOffsetTop()).to.equal(0);
-        apiRefPage.current?.setPageSize(5);
+        await act(async () => apiRefPage.current?.setPageSize(5));
         expect(gridOffsetTop()).to.equal(0);
       });
 
@@ -898,10 +893,8 @@ describe('<DataGrid /> - Rows', () => {
           expect(gridOffsetTop()).to.equal(0);
 
           const virtualScroller = grid('virtualScroller')!;
-          await act(async () => {
-            // Scroll to measure all cells
-            virtualScroller.scrollTo({ top: 10e6 });
-          });
+          // Scroll to measure all cells
+          await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
           await waitFor(() => {
             expect(gridOffsetTop()).not.to.equal(0);
           });
@@ -1085,27 +1078,27 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should allow to update one row at the time', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
     it('should allow adding rows', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('should allow to delete rows', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
-      await act(() => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 

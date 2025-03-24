@@ -170,8 +170,6 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    fireEvent.click(getCell(0, 0));
-
     expect(() => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
@@ -197,12 +195,12 @@ describe('<DataGrid /> - Cells', () => {
       const activeElementTextContent = document.activeElement?.textContent;
       const columnWidth = document.activeElement!.clientWidth;
 
-      const scrollTop = 10 * rowHeight;
-      fireEvent.scroll(virtualScroller, { target: { scrollTop } });
+      const tenRows = 10 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: tenRows } });
       expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
 
-      const scrollLeft = 10 * columnWidth;
-      fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
+      const tenColumns = 10 * columnWidth;
+      fireEvent.scroll(virtualScroller, { target: { scrollLeft: tenColumns } });
 
       expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
     },
@@ -231,14 +229,16 @@ describe('<DataGrid /> - Cells', () => {
       const thirdRowCell = getCell(2, 0);
       await user.click(thirdRowCell);
 
-      virtualScroller.scrollTop = 300;
+      const sixRows = 6 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: sixRows } });
       await waitFor(() => {
         expect(virtualScroller.scrollTop).to.equal(300);
       });
 
-      virtualScroller.scrollTop = 100;
+      const twoRows = 2 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: twoRows } });
       await waitFor(() => {
-        expect(virtualScroller.scrollTop).to.equal(100);
+        expect(virtualScroller.scrollTop).to.equal(twoRows);
       });
     },
   );
