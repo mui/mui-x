@@ -8,7 +8,7 @@ import { options } from '../utils/options';
 describe('PieChart', () => {
   const dataLength = 10;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
-    value: 50 + Math.sin(i / 5) * 25,
+    value: 50 + Math.sin(i / 5) * 100,
   }));
 
   bench(
