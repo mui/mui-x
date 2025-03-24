@@ -54,19 +54,17 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       return;
     }
 
-    const msgpack = await import('msgpack-lite');
-
     // TODO: batch events and send them in a single request when there will be more
     await fetchWithRetry(
       'https://x-telemetry.mui.com/v2/telemetry/record',
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-msgpack',
+          'Content-Type': 'application/json',
           'X-Telemetry-Client-Version': process.env.MUI_VERSION ?? '<dev>',
           'X-Telemetry-Node-Env': process.env.NODE_ENV ?? '<unknown>',
         },
-        body: msgpack.encode([eventPayload]),
+        body: JSON.stringify([eventPayload]),
       },
       sendMuiXTelemetryRetries,
     );

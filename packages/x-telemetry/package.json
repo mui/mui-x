@@ -39,13 +39,11 @@
     "ci-info": "^4.2.0",
     "conf": "^11.0.0",
     "is-docker": "^3.0.0",
-    "msgpack-lite": "^0.1.26",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.3",
     "@types/device-uuid": "^1.0.3",
-    "@types/msgpack-lite": "^0.1.11",
     "rimraf": "^6.0.1"
   },
   "engines": {
