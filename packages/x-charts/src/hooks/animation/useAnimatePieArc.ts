@@ -38,10 +38,15 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
 export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieArcReturnValue {
+  const [firstRender, setFirstRender] = React.useState(true);
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
   };
+
+  React.useEffect(() => {
+    setFirstRender(false);
+  }, []);
 
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
@@ -71,7 +76,8 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
     },
   );
 
-  const usedProps = props.skipAnimation ? props : initialProps;
+  // Only use the initial props on the first render.
+  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
 
   return {
     ref: useForkRef(ref, props.ref),
@@ -82,6 +88,6 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
       startAngle: usedProps.startAngle,
       endAngle: usedProps.endAngle,
     })!,
-    visibility: usedProps.startAngle === usedProps.endAngle ? 'hidden' : 'visible',
+    visibility: props.startAngle === props.endAngle ? 'hidden' : 'visible',
   };
 }
