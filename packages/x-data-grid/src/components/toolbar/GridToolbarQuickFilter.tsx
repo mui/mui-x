@@ -72,7 +72,7 @@ const GridQuickFilterRoot = styled('div', {
   marginLeft: 'auto',
 });
 
-const GridQuickFilterTrigger = styled(ToolbarButton, {
+const GridQuickFilterTrigger = styled(ToolbarButton as any, {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilterTrigger',
 })(({ ownerState }: { ownerState: OwnerState }) => ({
