@@ -101,7 +101,7 @@
     "@next/eslint-plugin-next": "15.2.3",
     "@octokit/plugin-retry": "^7.2.0",
     "@octokit/rest": "^21.1.1",
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.51.1",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.20.6",
     "@types/chai": "^4.3.20",
@@ -202,9 +202,9 @@
     "react-is": "^19.0.0",
     "@types/node": "^20.17.25"
   },
-  "packageManager": "pnpm@10.6.3",
+  "packageManager": "pnpm@10.6.5",
   "engines": {
-    "pnpm": "10.6.3"
+    "pnpm": "10.6.5"
   },
   "pnpm": {
     "patchedDependencies": {
