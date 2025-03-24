@@ -264,7 +264,7 @@ const baseSlots: GridBaseSlots = {
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseButton: MUIButton as GridBaseSlots['baseButton'],
-  baseIconButton: MUIButton as GridBaseSlots['baseIconButton'],
+  baseIconButton: MUIIconButton as GridBaseSlots['baseIconButton'],
   baseTooltip: MUITooltip,
   basePagination: BasePagination,
   basePopper: BasePopper,

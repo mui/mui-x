@@ -79,13 +79,25 @@ GridActionsCellItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  className: PropTypes.string,
   /**
    * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
    */
   component: PropTypes.elementType,
+  disabled: PropTypes.bool,
   icon: PropTypes.element,
   label: PropTypes.string.isRequired,
+  onBlur: PropTypes.func,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onFocus: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onKeyUp: PropTypes.func,
+  onPointerDown: PropTypes.func,
+  onPointerUp: PropTypes.func,
   showInMenu: PropTypes.bool,
+  style: PropTypes.object,
 } as any;
 
 export { GridActionsCellItem };

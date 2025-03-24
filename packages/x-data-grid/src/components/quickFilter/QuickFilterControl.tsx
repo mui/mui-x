@@ -119,8 +119,15 @@ QuickFilterControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onFocus: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onKeyUp: PropTypes.func,
+  onPointerDown: PropTypes.func,
+  onPointerUp: PropTypes.func,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.
