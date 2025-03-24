@@ -64,7 +64,7 @@ function shortenLabels(
     bottomBoundFactor = 2;
   }
 
-  if (angle > 90 && angle < 270) {
+  if (angle > 180) {
     [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
   }
 
