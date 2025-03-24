@@ -2,11 +2,11 @@
 title: React Data Grid - Pivot Panel component
 productId: x-data-grid
 components: PivotPanelTrigger
-packageName: '@mui/x-data-grid'
+packageName: '@mui/x-data-grid-premium'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Pivot Panel 🚧
+# Data Grid - Pivot Panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 <p class="description">Customize the Data Grid's pivot panel.</p>
 
@@ -27,7 +27,7 @@ The demo below shows how to add a pivot panel trigger to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { PivotPanelTrigger } from '@mui/x-data-grid';
+import { PivotPanelTrigger } from '@mui/x-data-grid-premium';
 
 <PivotPanelTrigger />;
 ```
