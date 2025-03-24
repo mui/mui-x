@@ -573,8 +573,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 17.1.2
-        version: 17.1.2(@babel/preset-env@7.26.9(@babel/core@7.26.10))
+        specifier: 17.3.0
+        version: 17.3.0(@babel/preset-env@7.26.9(@babel/core@7.26.10))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -640,7 +640,7 @@ importers:
         version: 0.14.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       recast:
         specifier: ^0.23.9
-        version: 0.23.9
+        version: 0.23.11
       rifm:
         specifier: 0.12.1
         version: 0.12.1(react@19.0.0)
@@ -987,8 +987,8 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       jscodeshift:
-        specifier: 17.1.2
-        version: 17.1.2(@babel/preset-env@7.26.9(@babel/core@7.26.10))
+        specifier: 17.3.0
+        version: 17.3.0(@babel/preset-env@7.26.9(@babel/core@7.26.10))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -7352,8 +7352,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jscodeshift@17.1.2:
-    resolution: {integrity: sha512-uime4vFOiZ1o3ICT4Sm/AbItHEVw2oCxQ3a0egYVy3JMMOctxe07H3SKL1v175YqjMt27jn1N+3+Bj9SKDNgdQ==}
+  jscodeshift@17.3.0:
+    resolution: {integrity: sha512-LjFrGOIORqXBU+jwfC9nbkjmQfFldtMIoS6d9z2LG/lkmyNXsJAySPT+2SWXJEoE68/bCWcxKpXH37npftgmow==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -9096,8 +9096,8 @@ packages:
     resolution: {integrity: sha512-E5qICoPoNL4yU0H0NoBDntNB0Q5oMSNh9usFctYniLBluTthi3RsQVBXIJNbApOlvSwW/RGxIuokPcAc59J5fQ==}
     engines: {node: '>= 4'}
 
-  recast@0.23.9:
-    resolution: {integrity: sha512-Hx/BGIbwj+Des3+xy5uAtAbdCyqK9y9wbBcDFDYanLS9JnMqf7OeF87HQwUimE87OEc72mr6tkKUKMBBL+hF9Q==}
+  recast@0.23.11:
+    resolution: {integrity: sha512-YTUo+Flmw4ZXiWfQKGcwwc11KnoRAYgzAE2E7mXKCjSviTKShtxBsN6YUUBB2gtaBzKzeKunxhUwNHQuRryhWA==}
     engines: {node: '>= 4'}
 
   rechoir@0.8.0:
@@ -17119,7 +17119,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jscodeshift@17.1.2(@babel/preset-env@7.26.9(@babel/core@7.26.10)):
+  jscodeshift@17.3.0(@babel/preset-env@7.26.9(@babel/core@7.26.10)):
     dependencies:
       '@babel/core': 7.26.10
       '@babel/parser': 7.26.10
@@ -17136,7 +17136,7 @@ snapshots:
       micromatch: 4.0.8
       neo-async: 2.6.2
       picocolors: 1.1.1
-      recast: 0.23.9
+      recast: 0.23.11
       tmp: 0.2.3
       write-file-atomic: 5.0.1
     optionalDependencies:
@@ -19323,7 +19323,7 @@ snapshots:
       source-map: 0.6.1
       tslib: 2.8.1
 
-  recast@0.23.9:
+  recast@0.23.11:
     dependencies:
       ast-types: 0.16.1
       esprima: 4.0.1
