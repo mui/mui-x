@@ -357,6 +357,7 @@
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
+  { "name": "UseAxisTooltipParams", "kind": "Interface" },
   { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },
   { "name": "useBarSeries", "kind": "Function" },
   { "name": "useBarSeriesContext", "kind": "Function" },

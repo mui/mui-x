@@ -15,6 +15,7 @@
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
+    "disableTooltipInteraction": { "type": { "description": "boolean" } },
     "domainLimit": {
       "type": {
         "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
@@ -55,7 +56,6 @@
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
-    "triggerTooltip": { "type": { "description": "boolean" } },
     "valueFormatter": {
       "type": {
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"

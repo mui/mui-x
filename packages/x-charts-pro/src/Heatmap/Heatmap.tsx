@@ -371,6 +371,7 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      disableTooltipInteraction: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       height: PropTypes.number,
@@ -406,7 +407,6 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
-      triggerTooltip: PropTypes.bool,
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
@@ -464,6 +464,7 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      disableTooltipInteraction: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
@@ -497,7 +498,6 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
-      triggerTooltip: PropTypes.bool,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
       zoom: PropTypes.oneOfType([

@@ -13,6 +13,9 @@
     },
     "disableLine": { "description": "If true, the axis line is disabled." },
     "disableTicks": { "description": "If true, the ticks are disabled." },
+    "disableTooltipInteraction": {
+      "description": "If <code>true</code>, the axis will be ignored by the tooltip with <code>trigger=&#39;axis&#39;</code>."
+    },
     "domainLimit": {
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
@@ -61,9 +64,6 @@
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
     },
     "tickSize": { "description": "The size of the ticks." },
-    "triggerTooltip": {
-      "description": "If <code>true</code>, the tooltip with <code>trigger=&#39;axis&#39;</code> will get values from this axis.<br />The default behavior is deduced from the series using the axis."
-    },
     "valueFormatter": { "description": "Formats the axis value." },
     "zoom": { "description": "" }
   }
