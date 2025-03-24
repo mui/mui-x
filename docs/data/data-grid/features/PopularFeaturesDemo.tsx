@@ -7,9 +7,11 @@ import {
   GridEventListener,
   GridRenderCellParams,
   GridRowParams,
-  GridToolbarContainer,
-  GridToolbarQuickFilter,
+  Toolbar,
   useGridApiRef,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
@@ -18,8 +20,12 @@ import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
-import { useTheme, alpha } from '@mui/material/styles';
+import { useTheme, alpha, styled } from '@mui/material/styles';
 import { yellow, blue, green } from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import CancelIcon from '@mui/icons-material/Cancel';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -291,13 +297,55 @@ function PlanTag(props: { plan: 'Premium' | 'Pro' | 'Community' }) {
   );
 }
 
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  padding: theme.spacing(1.5),
+  minHeight: 'auto',
+}));
+
+const StyledQuickFilter = styled(QuickFilter)({
+  margin: 0,
+  width: '100%',
+});
+
 function CustomToolbar() {
   return (
-    <GridToolbarContainer
-      sx={{ p: 2.5, borderBottom: '1px solid', borderColor: 'divider' }}
-    >
-      <GridToolbarQuickFilter />
-    </GridToolbarContainer>
+    <StyledToolbar>
+      <StyledQuickFilter>
+        <QuickFilterControl
+          render={({ ref, ...other }) => (
+            <TextField
+              {...other}
+              sx={{ width: '100%' }}
+              inputRef={ref}
+              aria-label="Search"
+              placeholder="Search by feature name or description"
+              size="small"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: other.value ? (
+                    <InputAdornment position="end">
+                      <QuickFilterClear
+                        edge="end"
+                        size="small"
+                        aria-label="Clear search"
+                        sx={{ marginRight: -0.75 }}
+                      >
+                        <CancelIcon fontSize="small" />
+                      </QuickFilterClear>
+                    </InputAdornment>
+                  ) : null,
+                },
+              }}
+            />
+          )}
+        />
+      </StyledQuickFilter>
+    </StyledToolbar>
   );
 }
 
