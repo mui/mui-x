@@ -45,6 +45,7 @@ function shortenLabels(
   visibleLabels: TickItemType[],
   drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
   maxWidth: number,
+  isRtl: boolean,
   tickLabelStyle: ChartsYAxisProps['tickLabelStyle'],
 ) {
   const shortenedLabels = new Map<TickItemType, string>();
@@ -65,6 +66,10 @@ function shortenLabels(
   }
 
   if (angle > 180) {
+    [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
+  }
+
+  if (isRtl) {
     [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
   }
 
@@ -256,7 +261,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   );
 
   const tickLabels = isHydrated
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, axisTickLabelProps.style)
+    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
     : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
 
   return (
