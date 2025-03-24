@@ -18,6 +18,7 @@ type UseAnimatePieArcParams = Pick<
 type UseAnimatePieArcReturnValue = {
   ref: React.Ref<SVGPathElement>;
   d: string;
+  visibility: 'hidden' | 'visible';
 };
 type PieArcInterpolatedProps = Pick<UseAnimatePieArcParams, 'startAngle' | 'endAngle'>;
 
@@ -59,6 +60,11 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
             })!
             .toString(),
         );
+
+        element.setAttribute(
+          'visibility',
+          animatedProps.startAngle === animatedProps.endAngle ? 'hidden' : 'visible',
+        );
       },
       initialProps,
       skip: props.skipAnimation,
@@ -76,5 +82,6 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
       startAngle: usedProps.startAngle,
       endAngle: usedProps.endAngle,
     })!,
+    visibility: usedProps.startAngle === usedProps.endAngle ? 'hidden' : 'visible',
   };
 }
