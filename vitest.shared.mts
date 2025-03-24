@@ -9,6 +9,9 @@ export default defineConfig({
   esbuild: {
     keepNames: true,
   },
+  build: {
+    minify: false,
+  },
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
