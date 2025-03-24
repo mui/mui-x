@@ -264,8 +264,7 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
     const step =
       section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
 
-    const currentSectionValue = parseInt(removeLocalizedDigits(section.value, localizedDigits), 10);
-    let newSectionValueNumber = currentSectionValue + delta * step;
+    let newSectionValueNumber: number;
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
@@ -277,6 +276,12 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
       } else {
         newSectionValueNumber = sectionBoundaries.maximum;
       }
+    } else {
+      const currentSectionValue = parseInt(
+        removeLocalizedDigits(section.value, localizedDigits),
+        10,
+      );
+      newSectionValueNumber = currentSectionValue + delta * step;
     }
 
     if (newSectionValueNumber % step !== 0) {
@@ -410,13 +415,11 @@ export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
-      if (isFourDigitYearFormat(utils, format)) {
-        const formatted0001 = utils.formatByString(utils.setYear(now, 1), format);
-        return formatted0001 === '0001';
+      // Remove once https://github.com/iamkun/dayjs/pull/2847 is merged and bump dayjs version
+      if (utils.lib === 'dayjs' && format === 'YY') {
+        return true;
       }
-
-      const formatted2001 = utils.formatByString(utils.setYear(now, 2001), format);
-      return formatted2001 === '01';
+      return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
     }
 
     case 'month': {
