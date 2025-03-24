@@ -2,11 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { interpolate as d3Interpolate } from '@mui/x-charts-vendor/d3-interpolate';
+import { timer as d3Timer } from '@mui/x-charts-vendor/d3-timer';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
 
@@ -55,7 +56,7 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled(animated.path, {
+const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
@@ -65,17 +66,78 @@ const PieArcRoot = styled(animated.path, {
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
 }));
 
+const DURATION = 500;
+
+function usePieArcAnimatedProps({
+  startAngle,
+  endAngle,
+  cornerRadius,
+  paddingAngle,
+  innerRadius,
+  outerRadius,
+}: PieArcProps): Pick<React.ComponentProps<'path'>, 'd'> {
+  const lastAngles = React.useRef({
+    startAngle: (startAngle + endAngle) / 2,
+    endAngle: (startAngle + endAngle) / 2,
+  });
+  const [d, setD] = React.useState<React.ComponentProps<'path'>['d']>(
+    () =>
+      d3Arc().cornerRadius(cornerRadius)({
+        padAngle: paddingAngle,
+        innerRadius,
+        outerRadius,
+        startAngle,
+        endAngle,
+      })!,
+  );
+
+  React.useEffect(() => {
+    const lastStartAngle = lastAngles.current.startAngle;
+    const lastEndAngle = lastAngles.current.endAngle;
+
+    const interpolateStartAngle = d3Interpolate(lastStartAngle, startAngle);
+    const interpolateEndAngle = d3Interpolate(lastEndAngle, endAngle);
+    const arc = d3Arc()
+      .cornerRadius(cornerRadius)
+      .padAngle(paddingAngle)
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius)
+      .startAngle((startAngle + endAngle) / 2)
+      .endAngle((startAngle + endAngle) / 2);
+
+    const timer = d3Timer((elapsed) => {
+      if (elapsed > DURATION) {
+        timer.stop();
+      }
+
+      const progress = Math.min(elapsed / DURATION, 1);
+
+      const sA = interpolateStartAngle(progress);
+      const eA = interpolateEndAngle(progress);
+      arc.startAngle(sA).endAngle(eA);
+
+      lastAngles.current = { startAngle: sA, endAngle: eA };
+
+      // @ts-expect-error it seems that the types are wrong since the function accepts no arguments.
+      setD(arc());
+    });
+
+    return () => timer.stop();
+  }, [cornerRadius, endAngle, innerRadius, outerRadius, paddingAngle, startAngle]);
+
+  return { d };
+}
+
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
-    cornerRadius: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
+    cornerRadius: number;
+    endAngle: number;
+    innerRadius: number;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
-    outerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
-    startAngle: SpringValue<number>;
+    outerRadius: number;
+    paddingAngle: number;
+    startAngle: number;
   };
-
 function PieArc(props: PieArcProps) {
   const {
     classes: innerClasses,
@@ -102,25 +164,15 @@ function PieArc(props: PieArcProps) {
     isFaded,
     isHighlighted,
   };
+  const { d } = usePieArcAnimatedProps(props);
   const classes = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
 
   return (
     <PieArcRoot
-      d={to(
-        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
-        (sA, eA, pA, iR, oR, cR) =>
-          d3Arc().cornerRadius(cR)({
-            padAngle: pA,
-            startAngle: sA,
-            endAngle: eA,
-            innerRadius: iR,
-            outerRadius: oR,
-          })!,
-      )}
-      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
-      // @ts-expect-error
+      d={d}
+      visibility={startAngle === endAngle ? 'hidden' : 'visible'}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}

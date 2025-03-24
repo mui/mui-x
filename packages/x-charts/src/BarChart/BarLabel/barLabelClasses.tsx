@@ -10,6 +10,8 @@ export interface BarLabelClasses {
   highlighted: string;
   /** Styles applied to the root element if it is faded. */
   faded: string;
+  /** Styles applied to the root element if animation is not skipped. */
+  animate: string;
 }
 
 export type BarLabelClassKey = keyof BarLabelClasses;
@@ -22,12 +24,19 @@ export const barLabelClasses = generateUtilityClasses('MuiBarLabel', [
   'root',
   'highlighted',
   'faded',
+  'animate',
 ]);
 
 export const useUtilityClasses = (ownerState: BarLabelOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
-    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${seriesId}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+      !skipAnimation && 'animate',
+    ],
   };
 
   return composeClasses(slots, getBarLabelUtilityClass, classes);
