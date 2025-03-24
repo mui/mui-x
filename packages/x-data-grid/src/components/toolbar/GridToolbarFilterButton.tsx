@@ -10,7 +10,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { vars } from '../../constants/cssVariables';
-import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -53,7 +52,7 @@ export interface GridToolbarFilterButtonProps {
   slotProps?: {
     button?: Partial<GridSlotProps['baseButton']>;
     tooltip?: Partial<GridSlotProps['baseTooltip']>;
-    badge?: Partial<BadgeProps>;
+    badge?: Partial<GridSlotProps['baseBadge']>;
   };
 }
 
