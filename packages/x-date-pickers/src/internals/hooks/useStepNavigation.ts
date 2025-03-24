@@ -57,7 +57,7 @@ export type UseStepNavigationReturnValue = (parameters: UseStepNavigationReturnV
   goToPreviousStep: () => void;
 };
 
-interface UseStepNavigationReturnValueParameters {
+export interface UseStepNavigationReturnValueParameters {
   initialView: DateOrTimeViewWithMeridiem;
   view: DateOrTimeViewWithMeridiem;
   setView: (view: any) => void;
