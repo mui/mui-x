@@ -6,13 +6,13 @@ import { usAirportPassengersData } from './airportData';
 const defaultYAxis = {
   scaleType: 'band',
   dataKey: 'code',
-  width: 100,
+  width: 80,
   valueFormatter: (value: any) =>
     usAirportPassengersData.find((item) => item.code === value)!.fullName,
   label: '0deg Axis Title',
 } as const;
 
-const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+const degrees = [-135, -45, 0, 45, 135];
 
 type AxisPosition = NonNullable<BarChartProps['yAxis']>[number]['position'];
 
