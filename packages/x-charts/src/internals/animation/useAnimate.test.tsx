@@ -16,6 +16,16 @@ describe('useAnimate', () => {
     return (t: number) => ({ width: interpolate(t) });
   }
 
+  function waitTwoFrames() {
+    let resolve: () => void;
+    const twoAnimationFrames = new Promise<void>((res) => {
+      resolve = res;
+    });
+    // Wait two frames to ensure no transition was initiated
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    return twoAnimationFrames;
+  }
+
   it('starts animating from initial props', async () => {
     let calls = 0;
     let firstCall: number | null = null;
@@ -232,13 +242,8 @@ describe('useAnimate', () => {
 
     render(<TestComponent width={1000} />);
 
-    let resolve: () => void;
-    const twoAnimationFrames = new Promise<void>((res) => {
-      resolve = res;
-    });
-    // Wait two frames to ensure the transition is stopped
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    await twoAnimationFrames;
+    // Wait two frames to ensure no transition was initiated
+    await waitTwoFrames();
 
     expect(calls).to.equal(0);
   });
@@ -336,14 +341,8 @@ describe('useAnimate', () => {
 
     await user.click(screen.getByRole('button'));
 
-    let resolve: () => void;
-    const twoAnimationFrames = new Promise<void>((res) => {
-      resolve = res;
-    });
     // Wait two frames to ensure the transition is stopped
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-
-    await twoAnimationFrames;
+    await waitTwoFrames();
 
     // Clicking the button is async, so at most one more call could have happened
     expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + 1);
@@ -383,14 +382,8 @@ describe('useAnimate', () => {
 
     unmount();
 
-    let resolve: () => void;
-    const twoAnimationFrames = new Promise<void>((res) => {
-      resolve = res;
-    });
     // Wait two frames to ensure the transition is stopped
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-
-    await twoAnimationFrames;
+    await waitTwoFrames();
 
     expect(lastCall).to.equal(lastCallBeforeUnmount);
     expect(calls).to.equal(numCallsBeforeUnmount);
