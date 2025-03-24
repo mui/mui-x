@@ -143,8 +143,10 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {

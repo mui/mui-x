@@ -1,8 +1,8 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useRadarSeries, useRadarSeriesContext } from './useRadarSeries';
-import { RadarSeriesType } from '../models';
+import { DefaultizedRadarSeriesType, RadarSeriesType } from '../models';
 import { Unstable_RadarChart as RadarChart } from '../RadarChart';
 
 const mockSeries: RadarSeriesType[] = [
@@ -62,9 +62,12 @@ describe('useRadarSeries', () => {
       `Make sure that they exist and their series are using the "radar" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useRadarSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedRadarSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useRadarSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useRadarSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });

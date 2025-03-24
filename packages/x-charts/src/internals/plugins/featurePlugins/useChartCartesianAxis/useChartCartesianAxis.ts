@@ -95,7 +95,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         return;
       }
 
-      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
+      if (
+        'hasPointerCapture' in target &&
+        (target as HTMLElement).hasPointerCapture(event.pointerId)
+      ) {
         (target as HTMLElement).releasePointerCapture(event.pointerId);
       }
     };
@@ -138,7 +141,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const svgPoint = getSVGPoint(element, event);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
-      isXAxis = xIndex >= 0;
+      isXAxis = xIndex !== -1;
 
       dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
 

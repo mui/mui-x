@@ -1,13 +1,6 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  FieldSectionType,
-  FieldSection,
-  PickersTimezone,
-  InferFieldSection,
-} from '../../../models';
+import { FieldSection, InferFieldSection } from '../../../models';
 import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -19,64 +12,8 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UpdateSectionValueParams } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { PickerValidValue } from '../../models';
-
-interface CharacterEditingQuery {
-  value: string;
-  sectionIndex: number;
-  sectionType: FieldSectionType;
-}
-
-export interface ApplyCharacterEditingParams {
-  keyPressed: string;
-  sectionIndex: number;
-}
-
-interface UseFieldCharacterEditingParams<TValue extends PickerValidValue> {
-  sections: InferFieldSection<TValue>[];
-  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  localizedDigits: string[];
-  setTempAndroidValueStr: (newValue: string | null) => void;
-  timezone: PickersTimezone;
-}
-
-export interface UseFieldCharacterEditingResponse {
-  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
-  resetCharacterQuery: () => void;
-}
-
-/**
- * The letter editing and the numeric editing each define a `CharacterEditingApplier`.
- * This function decides what the new section value should be and if the focus should switch to the next section.
- *
- * If it returns `null`, then the section value is not updated and the focus does not move.
- */
-type CharacterEditingApplier = (
-  params: ApplyCharacterEditingParams,
-) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
-
-/**
- * Function called by `applyQuery` which decides:
- * - what is the new section value ?
- * - should the query used to get this value be stored for the next key press ?
- *
- * If it returns `{ sectionValue: string; shouldGoToNextSection: boolean }`,
- * Then we store the query and update the section with the new value.
- *
- * If it returns `{ saveQuery: true` },
- * Then we store the query and don't update the section.
- *
- * If it returns `{ saveQuery: false },
- * Then we do nothing.
- */
-type QueryApplier<TValue extends PickerValidValue> = (
-  queryValue: string,
-  activeSection: InferFieldSection<TValue>,
-) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };
-
-const QUERY_LIFE_DURATION_MS = 5000;
 
 const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
   response: ReturnType<QueryApplier<TValue>>,
@@ -90,60 +27,44 @@ const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
  * 2. The letter editing when the user presses another key
  */
 export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
-  sections,
-  updateSectionValue,
-  sectionsValueBoundaries,
-  localizedDigits,
-  setTempAndroidValueStr,
-  timezone,
-}: UseFieldCharacterEditingParams<TValue>): UseFieldCharacterEditingResponse => {
+  stateResponse: {
+    // States and derived states
+    localizedDigits,
+    sectionsValueBoundaries,
+    state,
+    timezone,
+
+    // Methods to update the states
+    setCharacterQuery,
+    setTempAndroidValueStr,
+    updateSectionValue,
+  },
+}: UseFieldCharacterEditingParameters<TValue>): UseFieldCharacterEditingReturnValue => {
   const utils = useUtils();
 
-  const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
-
-  const resetQuery = useEventCallback(() => setQuery(null));
-
-  React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
-      resetQuery();
-    }
-  }, [sections, query, resetQuery]);
-
-  React.useEffect(() => {
-    if (query != null) {
-      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
-
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    return () => {};
-  }, [query, resetQuery]);
-
   const applyQuery = (
-    { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
+    { keyPressed, sectionIndex }: ApplyCharacterEditingParameters,
     getFirstSectionValueMatchingWithQuery: QueryApplier<TValue>,
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
-    const activeSection = sections[sectionIndex];
+    const activeSection = state.sections[sectionIndex];
 
     // The current query targets the section being editing
     // We can try to concatenate the value
     if (
-      query != null &&
-      (!isValidQueryValue || isValidQueryValue(query.value)) &&
-      query.sectionIndex === sectionIndex
+      state.characterQuery != null &&
+      (!isValidQueryValue || isValidQueryValue(state.characterQuery.value)) &&
+      state.characterQuery.sectionIndex === sectionIndex
     ) {
-      const concatenatedQueryValue = `${query.value}${cleanKeyPressed}`;
+      const concatenatedQueryValue = `${state.characterQuery.value}${cleanKeyPressed}`;
 
       const queryResponse = getFirstSectionValueMatchingWithQuery(
         concatenatedQueryValue,
         activeSection,
       );
       if (!isQueryResponseWithoutValue(queryResponse)) {
-        setQuery({
+        setCharacterQuery({
           sectionIndex,
           value: concatenatedQueryValue,
           sectionType: activeSection.type,
@@ -154,11 +75,11 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      resetQuery();
+      setCharacterQuery(null);
       return null;
     }
 
-    setQuery({
+    setCharacterQuery({
       sectionIndex,
       value: cleanKeyPressed,
       sectionType: activeSection.type,
@@ -397,8 +318,8 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
     );
   };
 
-  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
-    const section = sections[params.sectionIndex];
+  return useEventCallback((params: ApplyCharacterEditingParameters) => {
+    const section = state.sections[params.sectionIndex];
     const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
     const response = isNumericEditing
       ? applyNumericEditing({
@@ -417,9 +338,44 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
       shouldGoToNextSection: response.shouldGoToNextSection,
     });
   });
-
-  return {
-    applyCharacterEditing,
-    resetCharacterQuery: resetQuery,
-  };
 };
+
+export interface ApplyCharacterEditingParameters {
+  keyPressed: string;
+  sectionIndex: number;
+}
+
+interface UseFieldCharacterEditingParameters<TValue extends PickerValidValue> {
+  stateResponse: UseFieldStateReturnValue<TValue>;
+}
+
+export type UseFieldCharacterEditingReturnValue = (params: ApplyCharacterEditingParameters) => void;
+
+/**
+ * The letter editing and the numeric editing each define a `CharacterEditingApplier`.
+ * This function decides what the new section value should be and if the focus should switch to the next section.
+ *
+ * If it returns `null`, then the section value is not updated and the focus does not move.
+ */
+type CharacterEditingApplier = (
+  params: ApplyCharacterEditingParameters,
+) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
+
+/**
+ * Function called by `applyQuery` which decides:
+ * - what is the new section value ?
+ * - should the query used to get this value be stored for the next key press ?
+ *
+ * If it returns `{ sectionValue: string; shouldGoToNextSection: boolean }`,
+ * Then we store the query and update the section with the new value.
+ *
+ * If it returns `{ saveQuery: true` },
+ * Then we store the query and don't update the section.
+ *
+ * If it returns `{ saveQuery: false },
+ * Then we do nothing.
+ */
+type QueryApplier<TValue extends PickerValidValue> = (
+  queryValue: string,
+  activeSection: InferFieldSection<TValue>,
+) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };
