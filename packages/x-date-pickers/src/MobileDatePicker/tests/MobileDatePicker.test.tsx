@@ -164,9 +164,9 @@ describe('<MobileDatePicker />', () => {
 
       // Open and Dismiss the picker
       openPicker({ type: 'date' });
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      await // Verify it's still a clean value
+      await view.user.keyboard('[Escape]');
+
+      // Verify it's still a clean value
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
