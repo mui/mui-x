@@ -8,6 +8,7 @@ import {
   QuickFilterControl,
   QuickFilterClear,
   QuickFilterTrigger,
+  useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import TextField from '@mui/material/TextField';
@@ -16,23 +17,31 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
 import Tooltip from '@mui/material/Tooltip';
 
+type OwnerState = {
+  expanded: boolean;
+};
+
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
   marginLeft: 'auto',
 });
 
-const StyledToolbarButton = styled(ToolbarButton)(({ theme, ownerState }) => ({
-  gridArea: '1 / 1',
-  width: 'min-content',
-  height: 'min-content',
-  zIndex: 1,
-  opacity: ownerState.expanded ? 0 : 1,
-  pointerEvents: ownerState.expanded ? 'none' : 'auto',
-  transition: theme.transitions.create(['opacity']),
-}));
+const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(
+  ({ theme, ownerState }) => ({
+    gridArea: '1 / 1',
+    width: 'min-content',
+    height: 'min-content',
+    zIndex: 1,
+    opacity: ownerState.expanded ? 0 : 1,
+    pointerEvents: ownerState.expanded ? 'none' : 'auto',
+    transition: theme.transitions.create(['opacity']),
+  }),
+);
 
-const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
+const StyledTextField = styled(TextField)<{
+  ownerState: OwnerState;
+}>(({ theme, ownerState }) => ({
   gridArea: '1 / 1',
   overflowX: 'clip',
   width: ownerState.expanded ? 260 : 'var(--trigger-width)',
@@ -41,17 +50,34 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 }));
 
 function CustomToolbar() {
+  const [expanded, setExpanded] = React.useState(false);
+  const apiRef = useGridApiContext();
+
+  React.useEffect(() => {
+    const rootElement = apiRef.current.rootElementRef.current;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+        event.preventDefault();
+        setExpanded(true);
+      }
+    };
+
+    rootElement?.addEventListener('keydown', handleKeyDown);
+    return () => rootElement?.removeEventListener('keydown', handleKeyDown);
+  }, [apiRef]);
+
   return (
     <Toolbar>
-      <StyledQuickFilter>
+      <StyledQuickFilter expanded={expanded} onExpandedChange={setExpanded}>
         <QuickFilterTrigger
-          render={(triggerProps, state) => (
+          render={(triggerProps) => (
             <Tooltip title="Search" enterDelay={0}>
               <StyledToolbarButton
                 {...triggerProps}
-                ownerState={{ expanded: state.expanded }}
+                ownerState={{ expanded }}
                 color="default"
-                aria-disabled={state.expanded}
+                disabled={expanded}
               >
                 <SearchIcon fontSize="small" />
               </StyledToolbarButton>
@@ -62,7 +88,7 @@ function CustomToolbar() {
           render={({ ref, ...controlProps }, state) => (
             <StyledTextField
               {...controlProps}
-              ownerState={{ expanded: state.expanded }}
+              ownerState={{ expanded }}
               inputRef={ref}
               aria-label="Search"
               placeholder="Search..."
@@ -98,7 +124,7 @@ function CustomToolbar() {
   );
 }
 
-export default function GridQuickFilter() {
+export default function GridControlledQuickFilter() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,

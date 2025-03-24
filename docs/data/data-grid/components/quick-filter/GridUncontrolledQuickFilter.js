@@ -43,7 +43,7 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 function CustomToolbar() {
   return (
     <Toolbar>
-      <StyledQuickFilter>
+      <StyledQuickFilter defaultExpanded>
         <QuickFilterTrigger
           render={(triggerProps, state) => (
             <Tooltip title="Search" enterDelay={0}>
@@ -98,7 +98,7 @@ function CustomToolbar() {
   );
 }
 
-export default function GridQuickFilter() {
+export default function GridUncontrolledQuickFilter() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
