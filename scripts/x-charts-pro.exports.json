@@ -259,7 +259,7 @@
   { "name": "MarkPlotProps", "kind": "Interface" },
   { "name": "MarkPlotSlotProps", "kind": "Interface" },
   { "name": "MarkPlotSlots", "kind": "Interface" },
-  { "name": "PieArc", "kind": "Function" },
+  { "name": "PieArc", "kind": "Variable" },
   { "name": "pieArcClasses", "kind": "Variable" },
   { "name": "PieArcClasses", "kind": "Interface" },
   { "name": "PieArcClassKey", "kind": "TypeAlias" },

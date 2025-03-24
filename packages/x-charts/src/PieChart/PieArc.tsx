@@ -80,7 +80,7 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     skipAnimation: boolean;
   };
 
-function PieArc(props: PieArcProps) {
+const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
     classes: innerClasses,
     color,
@@ -118,6 +118,7 @@ function PieArc(props: PieArcProps) {
     outerRadius,
     paddingAngle,
     skipAnimation,
+    ref,
   });
 
   return (
@@ -136,7 +137,7 @@ function PieArc(props: PieArcProps) {
       {...animatedProps}
     />
   );
-}
+});
 
 PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
