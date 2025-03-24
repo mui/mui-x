@@ -99,7 +99,7 @@ export type BadgeProps = CommonProps & {
 };
 
 export type ButtonProps = CommonProps & {
-  ref?: Ref;
+  ref?: Ref<HTMLButtonElement>;
   children?: React.ReactNode;
   disabled?: boolean;
   id?: string;
