@@ -2,10 +2,14 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import useTimeout from '@mui/utils/useTimeout';
 import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
-import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
+import {
+  UseFieldDOMGetters,
+  UseFieldParameters,
+  UseFieldProps,
+  UseFieldReturnValue,
+} from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { FieldSectionType } from '../../../models';
 import { useSplitFieldProps } from '../../../hooks';
@@ -13,10 +17,11 @@ import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSe
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 import { PickerValidValue } from '../../models';
+import { syncSelectionToDOM } from './syncSelectionToDOM';
+import { useFieldRootProps } from './useFieldRootProps';
 
 export const useFieldV7TextField = <
   TValue extends PickerValidValue,
@@ -71,6 +76,20 @@ export const useFieldV7TextField = <
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
 
+  const domGetters = React.useMemo<UseFieldDOMGetters>(
+    () => ({
+      isReady: () => sectionListRef.current != null,
+      getRoot: () => sectionListRef.current!.getRoot(),
+      getSectionContainer: (sectionIndex: number) =>
+        sectionListRef.current!.getSectionContainer(sectionIndex),
+      getSectionContent: (sectionIndex: number) =>
+        sectionListRef.current!.getSectionContent(sectionIndex),
+      getSectionIndexFromDOMElement: (element: Element | null | undefined) =>
+        sectionListRef.current!.getSectionIndexFromDOMElement(element),
+    }),
+    [sectionListRef],
+  );
+
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
     // States and derived states
@@ -94,56 +113,6 @@ export const useFieldV7TextField = <
   const applyCharacterEditing = useFieldCharacterEditing({ stateResponse });
   const openPickerAriaLabel = useOpenPickerButtonAriaLabel(value);
   const [focused, setFocused] = React.useState(false);
-
-  function syncSelectionToDOM() {
-    if (!sectionListRef.current) {
-      return;
-    }
-
-    const selection = document.getSelection();
-    if (!selection) {
-      return;
-    }
-
-    if (parsedSelectedSections == null) {
-      // If the selection contains an element inside the field, we reset it.
-      if (
-        selection.rangeCount > 0 &&
-        sectionListRef.current.getRoot().contains(selection.getRangeAt(0).startContainer)
-      ) {
-        selection.removeAllRanges();
-      }
-
-      if (focused) {
-        sectionListRef.current.getRoot().blur();
-      }
-      return;
-    }
-
-    // On multi input range pickers we want to update selection range only for the active input
-    if (!sectionListRef.current.getRoot().contains(getActiveElement(document))) {
-      return;
-    }
-
-    const range = new window.Range();
-
-    let target: HTMLElement;
-    if (parsedSelectedSections === 'all') {
-      target = sectionListRef.current.getRoot();
-    } else {
-      const section = state.sections[parsedSelectedSections];
-      if (section.type === 'empty') {
-        target = sectionListRef.current.getSectionContainer(parsedSelectedSections);
-      } else {
-        target = sectionListRef.current.getSectionContent(parsedSelectedSections);
-      }
-    }
-
-    range.selectNodeContents(target);
-    target.focus();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
 
   function focusField(newSelectedSections: number | FieldSectionType = 0) {
     if (
@@ -176,133 +145,7 @@ export const useFieldV7TextField = <
 
     sectionListRef.current.getSectionContent(sectionIndex).innerHTML =
       section.value || section.placeholder;
-    syncSelectionToDOM();
-  });
-
-  const containerClickTimeout = useTimeout();
-  const handleContainerClick = useEventCallback((event: React.MouseEvent, ...args) => {
-    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
-    // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
-    if (event.isDefaultPrevented() || !sectionListRef.current) {
-      return;
-    }
-
-    setFocused(true);
-    onClick?.(event, ...(args as []));
-
-    if (parsedSelectedSections === 'all') {
-      containerClickTimeout.start(0, () => {
-        const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
-
-        if (cursorPosition === 0) {
-          setSelectedSections(sectionOrder.startIndex);
-          return;
-        }
-
-        let sectionIndex = 0;
-        let cursorOnStartOfSection = 0;
-
-        while (cursorOnStartOfSection < cursorPosition && sectionIndex < state.sections.length) {
-          const section = state.sections[sectionIndex];
-          sectionIndex += 1;
-          cursorOnStartOfSection += `${section.startSeparator}${
-            section.value || section.placeholder
-          }${section.endSeparator}`.length;
-        }
-
-        setSelectedSections(sectionIndex - 1);
-      });
-    } else if (!focused) {
-      setFocused(true);
-      setSelectedSections(sectionOrder.startIndex);
-    } else {
-      const hasClickedOnASection = sectionListRef.current.getRoot().contains(event.target as Node);
-
-      if (!hasClickedOnASection) {
-        setSelectedSections(sectionOrder.startIndex);
-      }
-    }
-  });
-
-  const handleContainerInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
-    onInput?.(event);
-
-    if (!sectionListRef.current || parsedSelectedSections !== 'all') {
-      return;
-    }
-
-    const target = event.target as HTMLSpanElement;
-    const keyPressed = target.textContent ?? '';
-
-    sectionListRef.current.getRoot().innerHTML = state.sections
-      .map(
-        (section) =>
-          `${section.startSeparator}${section.value || section.placeholder}${section.endSeparator}`,
-      )
-      .join('');
-    syncSelectionToDOM();
-
-    if (keyPressed.length === 0 || keyPressed.charCodeAt(0) === 10) {
-      clearValue();
-      setSelectedSections('all');
-    } else if (keyPressed.length > 1) {
-      updateValueFromValueStr(keyPressed);
-    } else {
-      if (parsedSelectedSections === 'all') {
-        setSelectedSections(0);
-      }
-      applyCharacterEditing({
-        keyPressed,
-        sectionIndex: 0,
-      });
-    }
-  });
-
-  const handleContainerPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
-    onPaste?.(event);
-    if (readOnly || parsedSelectedSections !== 'all') {
-      event.preventDefault();
-      return;
-    }
-
-    const pastedValue = event.clipboardData.getData('text');
-    event.preventDefault();
-    setCharacterQuery(null);
-    updateValueFromValueStr(pastedValue);
-  });
-
-  const handleContainerFocus = useEventCallback((event: React.FocusEvent) => {
-    onFocus?.(event);
-
-    if (focused || !sectionListRef.current) {
-      return;
-    }
-
-    const activeElement = getActiveElement(document);
-
-    setFocused(true);
-
-    const isFocusInsideASection =
-      sectionListRef.current.getSectionIndexFromDOMElement(activeElement) != null;
-    if (!isFocusInsideASection) {
-      setSelectedSections(sectionOrder.startIndex);
-    }
-  });
-
-  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
-    onBlur?.(event);
-    setTimeout(() => {
-      if (!sectionListRef.current) {
-        return;
-      }
-
-      const activeElement = getActiveElement(document);
-      const shouldBlur = !sectionListRef.current.getRoot().contains(activeElement);
-      if (shouldBlur) {
-        setFocused(false);
-        setSelectedSections(null);
-      }
-    });
+    syncSelectionToDOM({ focused, domGetters, stateResponse });
   });
 
   const getInputContainerClickHandler = useEventCallback(
@@ -316,6 +159,46 @@ export const useFieldV7TextField = <
       setSelectedSections(sectionIndex);
     },
   );
+
+  const rootProps = useFieldRootProps({
+    manager,
+    internalPropsWithDefaults,
+    stateResponse,
+    applyCharacterEditing,
+    focused,
+    setFocused,
+    domGetters,
+  });
+
+  const handleRootKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    rootProps.onKeyDown(event);
+  });
+
+  const handleRootBlur = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    onBlur?.(event);
+    rootProps.onBlur(event);
+  });
+
+  const handleRootFocus = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    onFocus?.(event);
+    rootProps.onFocus(event);
+  });
+
+  const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    onClick?.(event);
+    rootProps.onClick(event);
+  });
+
+  const handleRootPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
+    onPaste?.(event);
+    rootProps.onPaste(event);
+  });
+
+  const handleRootInput = useEventCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    onInput?.(event);
+    rootProps.onInput(event);
+  });
 
   const handleInputContentMouseUp = useEventCallback((event: React.MouseEvent) => {
     // Without this, the browser will remove the selected when clicking inside an already-selected section.
@@ -419,18 +302,6 @@ export const useFieldV7TextField = <
       setSelectedSections(sectionOrder.startIndex);
     }
   });
-
-  const handleContainerKeyDown = useFieldRootHandleKeyDown({
-    manager,
-    internalPropsWithDefaults,
-    stateResponse,
-  });
-  const wrappedHandleContainerKeyDown = useEventCallback(
-    (event: React.KeyboardEvent<HTMLSpanElement>) => {
-      onKeyDown?.(event);
-      handleContainerKeyDown(event);
-    },
-  );
 
   const isContainerEditable = parsedSelectedSections === 'all';
   const elements = React.useMemo<PickersSectionElement[]>(() => {
@@ -552,7 +423,7 @@ export const useFieldV7TextField = <
   }, [parsedSelectedSections, focused]);
 
   useEnhancedEffect(() => {
-    syncSelectionToDOM();
+    syncSelectionToDOM({ focused, domGetters, stateResponse });
   });
 
   React.useImperativeHandle(unstableFieldRef, () => ({
@@ -576,23 +447,24 @@ export const useFieldV7TextField = <
   return {
     // Forwarded
     ...forwardedProps,
+
+    // Root props
+    ...rootProps,
+    onBlur: handleRootBlur,
+    onClick: handleRootClick,
+    onFocus: handleRootFocus,
+    onInput: handleRootInput,
+    onPaste: handleRootPaste,
+    onKeyDown: handleRootKeyDown,
+    onClear: handleClear,
+
     error,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
     focused: focusedProp ?? focused,
     sectionListRef: handleSectionListRef,
-    onBlur: handleContainerBlur,
-    onClick: handleContainerClick,
-    onFocus: handleContainerFocus,
-    onInput: handleContainerInput,
-    onPaste: handleContainerPaste,
-    onKeyDown: wrappedHandleContainerKeyDown,
-    onClear: handleClear,
     // Additional
     enableAccessibleFieldDOMStructure: true,
     elements,
-    // TODO v7: Try to set to undefined when there is a section selected.
-    tabIndex: parsedSelectedSections === 0 ? -1 : 0,
-    contentEditable: isContainerEditable,
     value: valueStr,
     onChange: handleValueStrChange,
     areAllSectionsEmpty,
