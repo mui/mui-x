@@ -8,6 +8,7 @@ import {
   QuickFilterControl,
   QuickFilterClear,
   QuickFilterTrigger,
+  useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import TextField from '@mui/material/TextField';
@@ -42,17 +43,21 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 
 function CustomToolbar() {
   const [expanded, setExpanded] = React.useState(false);
+  const apiRef = useGridApiContext();
 
   React.useEffect(() => {
+    const rootElement = apiRef.current.rootElementRef.current;
+
     const handleKeyDown = (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'p') {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+        event.preventDefault();
         setExpanded(true);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    rootElement?.addEventListener('keydown', handleKeyDown);
+    return () => rootElement?.removeEventListener('keydown', handleKeyDown);
+  }, [apiRef]);
 
   return (
     <Toolbar>
