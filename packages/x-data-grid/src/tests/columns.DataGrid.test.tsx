@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -132,40 +132,42 @@ describe('<DataGrid /> - Columns', () => {
 
   // https://github.com/mui/mui-x/issues/13719
   // Needs layout
-  testSkipIf(isJSDOM)('should not crash when updating columns immediately after scrolling', () => {
-    const data = [
-      { id: 1, value: 'A' },
-      { id: 2, value: 'B' },
-      { id: 3, value: 'C' },
-      { id: 4, value: 'D' },
-      { id: 5, value: 'E' },
-      { id: 6, value: 'E' },
-      { id: 7, value: 'F' },
-      { id: 8, value: 'G' },
-      { id: 9, value: 'H' },
-    ];
+  testSkipIf(isJSDOM)(
+    'should not crash when updating columns immediately after scrolling',
+    async () => {
+      const data = [
+        { id: 1, value: 'A' },
+        { id: 2, value: 'B' },
+        { id: 3, value: 'C' },
+        { id: 4, value: 'D' },
+        { id: 5, value: 'E' },
+        { id: 6, value: 'E' },
+        { id: 7, value: 'F' },
+        { id: 8, value: 'G' },
+        { id: 9, value: 'H' },
+      ];
 
-    function DynamicVirtualizationRange() {
-      const [cols, setCols] = React.useState<GridColDef[]>([{ field: 'id' }, { field: 'value' }]);
+      function DynamicVirtualizationRange() {
+        const [cols, setCols] = React.useState<GridColDef[]>([{ field: 'id' }, { field: 'value' }]);
 
-      return (
-        <div style={{ width: '100%' }}>
-          <button onClick={() => setCols([{ field: 'id' }])}>Update columns</button>
-          <div style={{ height: 400 }}>
-            <DataGrid rows={data} columns={cols} />
+        return (
+          <div style={{ width: '100%' }}>
+            <button onClick={() => setCols([{ field: 'id' }])}>Update columns</button>
+            <div style={{ height: 400 }}>
+              <DataGrid rows={data} columns={cols} />
+            </div>
           </div>
-        </div>
-      );
-    }
+        );
+      }
 
-    render(<DynamicVirtualizationRange />);
+      const { user } = render(<DynamicVirtualizationRange />);
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    virtualScroller.scrollTop = 1_000;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      await act(async () => virtualScroller.scrollTo({ top: 1_000, behavior: 'instant' }));
 
-    fireEvent.click(screen.getByText('Update columns'));
-  });
+      await user.click(screen.getByText('Update columns'));
+    },
+  );
 
   it('should revert to the default column properties if not specified otherwise', async () => {
     const columns1: GridColDef[] = [{ field: 'status', type: 'string' }];
