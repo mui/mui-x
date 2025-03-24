@@ -244,7 +244,9 @@ describe('<DataGrid /> - Quick filter', () => {
 
       await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+      });
 
       await user.keyboard('[Escape]');
 
