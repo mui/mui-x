@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore next */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
 import {
@@ -144,10 +145,12 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value).locale('ar-SA') as unknown as R;
   };
 
+  /* v8 ignore next 3 */
   public getTimezone = (): string => {
     return 'default';
   };
 
+  /* v8 ignore next 3 */
   public setTimezone = (value: Moment): Moment => {
     return value;
   };

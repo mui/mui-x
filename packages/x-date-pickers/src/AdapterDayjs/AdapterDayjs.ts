@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore start */
 import defaultDayjs, { Dayjs } from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
@@ -8,6 +9,7 @@ import customParseFormatPlugin from 'dayjs/plugin/customParseFormat.js';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat.js';
 import isBetweenPlugin from 'dayjs/plugin/isBetween.js';
 import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
+/* v8 ignore stop */
 /* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
 import {
