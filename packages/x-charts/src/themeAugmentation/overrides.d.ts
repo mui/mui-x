@@ -1,5 +1,5 @@
 import { BarLabelClassKey } from '../BarChart';
-import { BarElementClassKey } from '../BarChart/BarElement';
+import { BarElementClassKey } from '../BarChart/barElementClasses';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { ChartsGridClassKey } from '../ChartsGrid';
 import { ChartsTooltipClassKey } from '../ChartsTooltip';

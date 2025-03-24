@@ -1,54 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
-
-export interface BarElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element if it is highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element if it is faded. */
-  faded: string;
-}
-
-export type BarElementClassKey = keyof BarElementClasses;
-
-export interface BarElementOwnerState {
-  id: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<BarElementClasses>;
-}
-
-export function getBarElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBarElement', slot);
-}
-
-export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
-  'root',
-  'highlighted',
-  'faded',
-]);
-
-const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getBarElementUtilityClass, classes);
-};
 
 export interface BarElementSlots {
   /**
@@ -73,6 +31,11 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
      * @default {}
      */
     slots?: BarElementSlots;
+
+    x: number;
+    y: number;
+    width: number;
+    height: number;
   };
 
 function BarElement(props: BarElementProps) {
@@ -85,6 +48,8 @@ function BarElement(props: BarElementProps) {
     slotProps,
     style,
     onClick,
+    skipAnimation,
+    layout,
     ...other
   } = props;
   const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
@@ -100,6 +65,8 @@ function BarElement(props: BarElementProps) {
     color,
     isFaded,
     isHighlighted,
+    skipAnimation,
+    layout,
   };
 
   const classes = useUtilityClasses(ownerState);
