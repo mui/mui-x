@@ -7,6 +7,10 @@ import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 describe('useAnimate', () => {
   const { render } = createRenderer();
 
+  /* Need to reduce interval to ensure we get the first call.
+   * The default of 50ms is too slow because a transition is happening every frame.  */
+  const RAF_INTERVAL = 3;
+
   function interpolateWidth(lastProps: { width: number }, newProps: { width: number }) {
     const interpolate = interpolateNumber(lastProps.width, newProps.width);
     return (t: number) => ({ width: interpolate(t) });
@@ -131,11 +135,7 @@ describe('useAnimate', () => {
       () => {
         expect(calls).to.equal(1);
       },
-      {
-        /* Need to reduce interval to ensure we get the first call.
-         * The default of 50ms is too slow because a transition is happening every frame.  */
-        interval: 3,
-      },
+      { interval: RAF_INTERVAL },
     );
 
     expect(lastCall).to.be.lessThan(lastIncreasingCall);
@@ -198,15 +198,107 @@ describe('useAnimate', () => {
       () => {
         expect(calls).to.equal(1);
       },
-      {
-        /* Need to reduce interval to ensure we get the first call.
-         * The default of 50ms is too slow because a transition is happening every frame.  */
-        interval: 3,
-      },
+      { interval: RAF_INTERVAL },
     );
 
     // Should jump to 0 immediately after first call
     expect(lastCall).to.equal(0);
+  });
+
+  it('does not start animation if `skip` is true from the beginning', async () => {
+    let calls = 0;
+
+    function applyProps() {
+      calls += 1;
+    }
+
+    function TestComponent({ width }: { width: number }) {
+      const ref = useAnimate(
+        { width },
+        {
+          createInterpolator: interpolateWidth,
+          applyProps,
+          initialProps: { width: 0 },
+          skip: true,
+        },
+      );
+
+      return (
+        <svg>
+          <path ref={ref} />
+        </svg>
+      );
+    }
+
+    render(<TestComponent width={1000} />);
+
+    let resolve: () => void;
+    const twoAnimationFrames = new Promise<void>((res) => {
+      resolve = res;
+    });
+    // Wait two frames to ensure the transition is stopped
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    await twoAnimationFrames;
+
+    expect(calls).to.equal(0);
+  });
+
+  it('resumes animation if `skip` becomes false after having been true', async () => {
+    let calls = 0;
+    let lastCall: number | null = null;
+
+    function applyProps(element: SVGPathElement, props: { width: number }) {
+      calls += 1;
+      lastCall = props.width;
+    }
+
+    function TestComponent({ width, skip }: { width: number; skip: boolean }) {
+      const ref = useAnimate(
+        { width },
+        {
+          createInterpolator: interpolateWidth,
+          applyProps,
+          initialProps: { width: 0 },
+          skip,
+        },
+      );
+
+      return (
+        <svg>
+          <path ref={ref} />
+        </svg>
+      );
+    }
+
+    const { rerender } = render(<TestComponent width={1000} skip={false} />);
+
+    await waitFor(
+      () => {
+        expect(calls).to.equal(1);
+      },
+      { interval: RAF_INTERVAL },
+    );
+    expect(lastCall).to.be.greaterThan(0);
+    expect(lastCall).to.be.lessThan(1000);
+
+    rerender(<TestComponent width={2000} skip />);
+
+    // Transition finishes immediately
+    await waitFor(() => {
+      expect(calls).to.equal(2);
+    });
+    expect(lastCall).to.equal(2000);
+
+    rerender(<TestComponent width={1000} skip={false} />);
+
+    await waitFor(
+      () => {
+        expect(calls).to.equal(3);
+      },
+      { interval: RAF_INTERVAL },
+    );
+    expect(lastCall).to.be.lessThan(2000);
+    expect(lastCall).to.be.greaterThan(1000);
   });
 
   it('stops animation when its ref is removed from the DOM', async () => {
@@ -302,40 +394,5 @@ describe('useAnimate', () => {
 
     expect(lastCall).to.equal(lastCallBeforeUnmount);
     expect(calls).to.equal(numCallsBeforeUnmount);
-  });
-
-  it('applies final props if `skip` is true from the beginning', async () => {
-    let calls = 0;
-    let lastCall: number | null = null;
-
-    function applyProps(element: SVGPathElement, props: { width: number }) {
-      calls += 1;
-      lastCall = props.width;
-    }
-
-    function TestComponent({ width }: { width: number }) {
-      const ref = useAnimate(
-        { width },
-        {
-          createInterpolator: interpolateWidth,
-          applyProps,
-          initialProps: { width: 0 },
-          skip: true,
-        },
-      );
-
-      return (
-        <svg>
-          <path ref={ref} />
-        </svg>
-      );
-    }
-
-    render(<TestComponent width={1000} />);
-
-    await waitFor(() => {
-      expect(calls).to.equal(1);
-    });
-    expect(lastCall).to.equal(1000);
   });
 });

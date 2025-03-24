@@ -5,13 +5,21 @@ import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from './animation
 import { Transition } from './Transition';
 import { shallowEqual } from '../shallowEqual';
 
+/** Animates a ref. The animation can be skipped by setting {@link skip} to true.
+ *
+ * - If {@link skip} is false, a transition will be started.
+ * - If {@link skip} is true and no transition is in progress, no transition will be started and {@link applyProps} will
+ *   never be called.
+ * - If {@link skip} becomes true and a transition is in progress, the transition will immediately end and
+ *   {@link applyProps} be called with the final value.
+ * */
 export function useAnimate<Props extends {}, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
     applyProps,
     skip,
-    initialProps,
+    initialProps = props,
   }: {
     createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
     applyProps: (element: Elem, props: Props) => void;
@@ -19,7 +27,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
     initialProps?: Props;
   },
 ) {
-  const lastInterpolatedPropsRef = React.useRef(initialProps ?? props);
+  const lastInterpolatedPropsRef = React.useRef(initialProps);
   const transitionRef = React.useRef<Transition>(null);
   const elementRef = React.useRef<Elem>(null);
   const lastPropsRef = React.useRef(props);
@@ -31,17 +39,18 @@ export function useAnimate<Props extends {}, Elem extends Element>(
   useEnhancedEffect(() => {
     if (skip) {
       transitionRef.current?.finish();
-    } else {
-      transitionRef.current?.resume();
+      transitionRef.current = null;
+      elementRef.current = null;
+      lastInterpolatedPropsRef.current = props;
     }
-  }, [skip]);
+  }, [props, skip]);
 
   const animate = React.useCallback(
     (element: Elem) => {
       const lastInterpolatedProps = lastInterpolatedPropsRef.current;
       const interpolate = createInterpolator(lastInterpolatedProps, props);
       transitionRef.current = new Transition(
-        skip ? 0 : ANIMATION_DURATION_MS,
+        ANIMATION_DURATION_MS,
         ANIMATION_TIMING_FUNCTION_JS,
         (t) => {
           const interpolatedProps = interpolate(t);
@@ -52,7 +61,7 @@ export function useAnimate<Props extends {}, Elem extends Element>(
         },
       );
     },
-    [applyProps, createInterpolator, props, skip],
+    [applyProps, createInterpolator, props],
   );
 
   const setRef = React.useCallback(
@@ -82,9 +91,11 @@ export function useAnimate<Props extends {}, Elem extends Element>(
 
       elementRef.current = element;
 
-      animate(element);
+      if (transitionRef.current || !skip) {
+        animate(element);
+      }
     },
-    [animate, props],
+    [animate, props, skip],
   );
 
   return setRef;
