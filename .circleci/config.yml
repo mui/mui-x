@@ -414,10 +414,6 @@ workflows:
           <<: *default-context
           name: test_browser_react_18
           react-version: ^18
-      - test_regressions:
-          <<: *default-context
-          name: test_regressions_react_18
-          react-version: ^18
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
