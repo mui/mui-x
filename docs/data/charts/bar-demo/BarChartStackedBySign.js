@@ -17,7 +17,6 @@ const xLabels = [
 export default function BarChartStackedBySign() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId', stack: 'stack1' },

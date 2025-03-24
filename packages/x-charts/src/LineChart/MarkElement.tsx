@@ -3,12 +3,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import { animated, to, useSpring } from '@react-spring/web';
+import { animated, to, useSpringValue } from '@react-spring/web';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxis,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
@@ -63,15 +66,22 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
+  const cx = useSpringValue(x, { immediate: skipAnimation });
+  const cy = useSpringValue(y, { immediate: skipAnimation });
+
+  React.useEffect(() => {
+    cy.start(y, { immediate: skipAnimation });
+    cx.start(x, { immediate: skipAnimation });
+  }, [cy, y, cx, x, skipAnimation]);
+
   const ownerState = {
     id,
     classes: innerClasses,
@@ -85,8 +95,8 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       style={{
-        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
-        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+        transform: to([cx, cy], (pX, pY) => `translate(${pX}px, ${pY}px)`),
+        transformOrigin: to([cx, cy], (pX, pY) => `${pX}px ${pY}px`),
       }}
       ownerState={ownerState}
       // @ts-expect-error
@@ -94,7 +104,7 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

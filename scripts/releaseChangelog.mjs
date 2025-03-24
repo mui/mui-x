@@ -228,6 +228,7 @@ async function main(argv) {
         break;
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts-pro':
@@ -327,7 +328,7 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to the community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
   };
 
   const logTeamSection = () => {

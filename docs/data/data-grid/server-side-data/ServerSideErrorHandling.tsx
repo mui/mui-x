@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -91,7 +90,7 @@ export default function ServerSideErrorHandling() {
         <Button
           onClick={() => {
             setError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -107,18 +106,16 @@ export default function ServerSideErrorHandling() {
         />
       </div>
       <div style={{ height: 400, position: 'relative' }}>
-        <DataGridPro
+        <DataGrid
           {...props}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(dataSourceError) =>
-            setError(dataSourceError.message)
-          }
-          unstable_dataSourceCache={null}
+          dataSource={dataSource}
+          onDataSourceError={(dataSourceError) => setError(dataSourceError.message)}
+          dataSourceCache={null}
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
         {error && <ErrorOverlay error={error} />}
       </div>

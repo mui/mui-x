@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { useUtils } from '@mui/x-date-pickers/internals';
+import { useUtils, usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -13,100 +13,57 @@ import {
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps
-  extends Omit<PickersDayProps, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
-  /**
-   * Set to `true` if the `day` is in a highlighted date range.
-   */
-  isHighlighting: boolean;
-  /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
-   */
-  isEndOfHighlighting: boolean;
-  /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
-   */
-  isStartOfHighlighting: boolean;
-  /**
-   * Set to `true` if the `day` is in a preview date range.
-   */
-  isPreviewing: boolean;
-  /**
-   * Set to `true` if the `day` is the end of a previewing date range.
-   */
-  isEndOfPreviewing: boolean;
-  /**
-   * Set to `true` if the `day` is the start of a previewing date range.
-   */
-  isStartOfPreviewing: boolean;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<DateRangePickerDayClasses>;
-  /**
-   * Indicates if the day should be visually selected.
-   */
-  isVisuallySelected?: boolean;
-  /**
-   * If `true`, the day can be dragged to change the current date range.
-   * @default false
-   */
-  draggable?: boolean;
-}
-
-type OwnerState = DateRangePickerDayProps & {
-  isEndOfMonth: boolean;
-  isStartOfMonth: boolean;
-  isFirstVisibleCell: boolean;
-  isLastVisibleCell: boolean;
-  isHiddenDayFiller: boolean;
-};
-
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (
+  classes: Partial<DateRangePickerDayClasses> | undefined,
+  ownerState: DateRangePickerDayOwnerState,
+) => {
   const {
-    isHighlighting,
-    outsideCurrentMonth,
-    isStartOfHighlighting,
-    isStartOfMonth,
-    isEndOfHighlighting,
-    isEndOfMonth,
-    isPreviewing,
-    isStartOfPreviewing,
-    isEndOfPreviewing,
-    isFirstVisibleCell,
-    isLastVisibleCell,
-    isHiddenDayFiller,
-    selected,
-    classes,
+    // Properties shared with PickersDay
+    isDaySelected,
+    isDayOutsideMonth,
+    // Range-specific properties (present in the Base UI implementation)
+    isDaySelectionStart,
+    isDaySelectionEnd,
+    isDayInsideSelection,
+    isDayPreviewStart,
+    isDayPreviewEnd,
+    isDayPreviewed,
+    // Range-specific properties (specific to the MUI implementation)
+    isDayStartOfMonth,
+    isDayEndOfMonth,
+    isDayFirstVisibleCell,
+    isDayLastVisibleCell,
+    isDayFillerCell,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
-      isHighlighting && 'rangeIntervalDayHighlight',
-      isStartOfHighlighting && 'rangeIntervalDayHighlightStart',
-      isEndOfHighlighting && 'rangeIntervalDayHighlightEnd',
-      outsideCurrentMonth && 'outsideCurrentMonth',
-      isStartOfMonth && 'startOfMonth',
-      isEndOfMonth && 'endOfMonth',
-      isFirstVisibleCell && 'firstVisibleCell',
-      isLastVisibleCell && 'lastVisibleCell',
-      isHiddenDayFiller && 'hiddenDayFiller',
+      isDaySelected && 'rangeIntervalDayHighlight',
+      isDaySelectionStart && 'rangeIntervalDayHighlightStart',
+      isDaySelectionEnd && 'rangeIntervalDayHighlightEnd',
+      isDayOutsideMonth && 'outsideCurrentMonth',
+      isDayStartOfMonth && 'startOfMonth',
+      isDayEndOfMonth && 'endOfMonth',
+      isDayFirstVisibleCell && 'firstVisibleCell',
+      isDayLastVisibleCell && 'lastVisibleCell',
+      isDayFillerCell && 'hiddenDayFiller',
     ],
     rangeIntervalPreview: [
       'rangeIntervalPreview',
-      isPreviewing && 'rangeIntervalDayPreview',
-      (isStartOfPreviewing || isStartOfMonth) && 'rangeIntervalDayPreviewStart',
-      (isEndOfPreviewing || isEndOfMonth) && 'rangeIntervalDayPreviewEnd',
+      isDayPreviewed && 'rangeIntervalDayPreview',
+      (isDayPreviewStart || isDayStartOfMonth) && 'rangeIntervalDayPreviewStart',
+      (isDayPreviewEnd || isDayEndOfMonth) && 'rangeIntervalDayPreviewEnd',
     ],
     day: [
       'day',
-      !selected && 'notSelectedDate',
-      !isHighlighting && 'dayOutsideRangeInterval',
-      !selected && isHighlighting && 'dayInsideRangeInterval',
+      !isDaySelected && 'notSelectedDate',
+      !isDaySelected && 'dayOutsideRangeInterval',
+      !isDayInsideSelection && 'dayInsideRangeInterval',
     ],
   };
 
@@ -159,10 +116,10 @@ const DateRangePickerDayRoot = styled('div', {
     },
     styles.root,
   ],
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
   variants: [
     {
-      props: { isHiddenDayFiller: false },
+      props: { isDayFillerCell: false },
       style: {
         [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
           ...startBorderStyle,
@@ -175,7 +132,7 @@ const DateRangePickerDayRoot = styled('div', {
       },
     },
     {
-      props: { isHiddenDayFiller: false, isHighlighting: true },
+      props: { isDayFillerCell: false, isHighlighting: true },
       style: {
         borderRadius: 0,
         color: (theme.vars || theme).palette.primary.contrastText,
@@ -188,10 +145,10 @@ const DateRangePickerDayRoot = styled('div', {
     },
     {
       props: ({
-        ownerState: { isHiddenDayFiller, isStartOfHighlighting, isFirstVisibleCell },
+        ownerState: { isDayFillerCell, isDaySelectionStart, isDayFirstVisibleCell },
       }: {
-        ownerState: OwnerState;
-      }) => !isHiddenDayFiller && (isStartOfHighlighting || isFirstVisibleCell),
+        ownerState: DateRangePickerDayOwnerState;
+      }) => !isDayFillerCell && (isDaySelectionStart || isDayFirstVisibleCell),
       style: {
         ...startBorderStyle,
         paddingLeft: 0,
@@ -199,10 +156,10 @@ const DateRangePickerDayRoot = styled('div', {
     },
     {
       props: ({
-        ownerState: { isHiddenDayFiller, isEndOfHighlighting, isLastVisibleCell },
+        ownerState: { isDayFillerCell, isDaySelectionEnd, isDayLastVisibleCell },
       }: {
-        ownerState: OwnerState;
-      }) => !isHiddenDayFiller && (isEndOfHighlighting || isLastVisibleCell),
+        ownerState: DateRangePickerDayOwnerState;
+      }) => !isDayFillerCell && (isDaySelectionEnd || isDayLastVisibleCell),
       style: {
         ...endBorderStyle,
         paddingRight: 0,
@@ -226,12 +183,12 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     styles.rangeIntervalPreview,
   ],
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
   variants: [
     {
-      props: { isPreviewing: true, isHiddenDayFiller: false },
+      props: { isDayPreviewed: true, isDayFillerCell: false },
       style: {
         borderRadius: 0,
         border: `2px dashed ${(theme.vars || theme).palette.divider}`,
@@ -241,10 +198,10 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     {
       props: ({
-        ownerState: { isPreviewing, isHiddenDayFiller, isStartOfPreviewing, isFirstVisibleCell },
+        ownerState: { isDayPreviewed, isDayFillerCell, isDayPreviewStart, isDayFirstVisibleCell },
       }: {
-        ownerState: OwnerState;
-      }) => isPreviewing && !isHiddenDayFiller && (isStartOfPreviewing || isFirstVisibleCell),
+        ownerState: DateRangePickerDayOwnerState;
+      }) => isDayPreviewed && !isDayFillerCell && (isDayPreviewStart || isDayFirstVisibleCell),
       style: {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
@@ -252,10 +209,10 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
     {
       props: ({
-        ownerState: { isPreviewing, isHiddenDayFiller, isEndOfPreviewing, isLastVisibleCell },
+        ownerState: { isDayPreviewed, isDayFillerCell, isDayPreviewEnd, isDayLastVisibleCell },
       }: {
-        ownerState: OwnerState;
-      }) => isPreviewing && !isHiddenDayFiller && (isEndOfPreviewing || isLastVisibleCell),
+        ownerState: DateRangePickerDayOwnerState;
+      }) => isDayPreviewed && !isDayFillerCell && (isDayPreviewEnd || isDayLastVisibleCell),
       style: {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
@@ -274,7 +231,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
     styles.day,
   ],
 })<{
-  ownerState: OwnerState;
+  ownerState: DateRangePickerDayOwnerState;
 }>({
   // Required to overlap preview border
   transform: 'scale(1.1)',
@@ -290,7 +247,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
       },
     },
   ],
-}) as (props: PickersDayProps & { ownerState: OwnerState }) => React.JSX.Element;
+}) as (props: PickersDayProps & { ownerState: DateRangePickerDayOwnerState }) => React.JSX.Element;
 
 type DateRangePickerDayComponent = (
   props: DateRangePickerDayProps & React.RefAttributes<HTMLButtonElement>,
@@ -303,44 +260,66 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
-    day,
-    outsideCurrentMonth,
+    classes: classesProp,
     isEndOfHighlighting,
     isEndOfPreviewing,
     isHighlighting,
     isPreviewing,
     isStartOfHighlighting,
     isStartOfPreviewing,
-    selected = false,
     isVisuallySelected,
     sx,
     draggable,
     isFirstVisibleCell,
     isLastVisibleCell,
+    day,
+    selected,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
     ...other
   } = props;
 
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
   const utils = useUtils();
 
-  const isEndOfMonth = utils.isSameDay(day, utils.endOfMonth(day));
-  const isStartOfMonth = utils.isSameDay(day, utils.startOfMonth(day));
-
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;
   const shouldRenderPreview = isPreviewing && !outsideCurrentMonth;
 
-  const ownerState = {
-    ...props,
+  const pickersDayOwnerState = usePickerDayOwnerState({
+    day,
     selected,
-    isStartOfMonth,
-    isEndOfMonth,
-    draggable,
-    isFirstVisibleCell,
-    isLastVisibleCell,
-    isHiddenDayFiller: outsideCurrentMonth && !other.showDaysOutsideCurrentMonth,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
+  });
+
+  const ownerState: DateRangePickerDayOwnerState = {
+    ...pickersDayOwnerState,
+    // Properties that the Base UI implementation will have
+    isDaySelectionStart: isStartOfHighlighting,
+    isDaySelectionEnd: isEndOfHighlighting,
+    isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
+    isDaySelected: isHighlighting,
+    isDayPreviewed: isPreviewing,
+    isDayPreviewStart: isStartOfPreviewing,
+    isDayPreviewEnd: isEndOfPreviewing,
+    isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
+    // Properties specific to the MUI implementation (some might be removed in the next major)
+    isDayStartOfMonth: utils.isSameDay(day, utils.startOfMonth(day)),
+    isDayEndOfMonth: utils.isSameDay(day, utils.endOfMonth(day)),
+    isDayFirstVisibleCell: isFirstVisibleCell,
+    isDayLastVisibleCell: isLastVisibleCell,
+    isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
   };
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   return (
     <DateRangePickerDayRoot
@@ -360,7 +339,12 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
           ref={ref}
           day={day}
           selected={isVisuallySelected}
+          disabled={disabled}
+          today={today}
           outsideCurrentMonth={outsideCurrentMonth}
+          disableMargin
+          disableHighlightToday={disableHighlightToday}
+          showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
           className={classes.day}
           ownerState={ownerState}
           draggable={draggable}

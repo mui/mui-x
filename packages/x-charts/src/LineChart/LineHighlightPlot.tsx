@@ -7,10 +7,13 @@ import { useSelector } from '../internals/store/useSelector';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxis,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {
@@ -47,13 +50,13 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
   const { instance } = useChartContext();
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
   const highlightedIndex = xAxisIdentifier?.index;

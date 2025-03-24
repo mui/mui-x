@@ -9,8 +9,9 @@ export default function BasicTimeRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={['MultiInputTimeRangeField', 'SingleInputTimeRangeField']}
+        components={['SingleInputTimeRangeField', 'MultiInputTimeRangeField']}
       >
+        <SingleInputTimeRangeField label="From - To" />
         <MultiInputTimeRangeField
           slotProps={{
             textField: ({ position }) => ({
@@ -18,7 +19,6 @@ export default function BasicTimeRangeField() {
             }),
           }}
         />
-        <SingleInputTimeRangeField label="From - To" />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -468,6 +468,34 @@ describe('<DataGridPremium /> - Row grouping', () => {
       ]);
     });
 
+    // https://github.com/mui/mui-x/issues/17046
+    it('should support rowGroupingColumnMode switch with one grouping column', () => {
+      const { setProps } = render(
+        <Test
+          rowGroupingModel={['category1']}
+          rowGroupingColumnMode="multiple"
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+
+      setProps({ rowGroupingColumnMode: 'single' });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+    });
+
     it('should respect the model grouping order when rowGroupingColumnMode = "single"', () => {
       render(
         <Test
@@ -1616,7 +1644,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
     });
 
-    it('should not use valueGetter to group the rows when defined', () => {
+    it('should use valueGetter to group the rows when defined', () => {
       render(
         <Test
           columns={[
@@ -1632,7 +1660,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'value Cat A (3)',
+        '',
+        '',
+        '',
+        'value Cat B (2)',
+        '',
+        '',
+      ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 

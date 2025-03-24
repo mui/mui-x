@@ -16,10 +16,18 @@ import {
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
-import { useHeatmapSeries } from '../hooks/useSeries';
+import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 
 export interface HeatmapTooltipProps
-  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
+  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger?: 'item' | 'none';
+}
 
 const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes'] }) => {
   const { classes } = ownerState;
@@ -44,7 +52,7 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
 
   const xAxis = useXAxis();
   const yAxis = useYAxis();
-  const heatmapSeries = useHeatmapSeries();
+  const heatmapSeries = useHeatmapSeriesContext();
 
   const tooltipData = useItemTooltip<'heatmap'>();
 
@@ -60,10 +68,12 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
   const [xIndex, yIndex] = value;
 
   const formattedX =
-    xAxis.valueFormatter?.(xAxis.data![xIndex], { location: 'tooltip' }) ??
-    xAxis.data![xIndex].toLocaleString();
+    xAxis.valueFormatter?.(xAxis.data![xIndex], {
+      location: 'tooltip',
+      scale: xAxis.scale,
+    }) ?? xAxis.data![xIndex].toLocaleString();
   const formattedY =
-    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip' }) ??
+    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
     yAxis.data![yIndex].toLocaleString();
   const formattedValue = series[seriesId].valueFormatter(value, {
     dataIndex: identifier.dataIndex,
@@ -114,7 +124,7 @@ function HeatmapTooltip(props: HeatmapTooltipProps) {
   const classes = useUtilityClasses({ classes: props.classes });
 
   return (
-    <ChartsTooltipContainer {...props} classes={classes} trigger="item">
+    <ChartsTooltipContainer trigger="item" {...props} classes={classes}>
       <DefaultHeatmapTooltipContent classes={classes} />
     </ChartsTooltipContainer>
   );
@@ -148,6 +158,8 @@ HeatmapTooltip.propTypes = {
   /**
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -155,6 +167,8 @@ HeatmapTooltip.propTypes = {
   }),
   /**
    * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({
@@ -344,6 +358,13 @@ HeatmapTooltip.propTypes = {
    * @default false
    */
   transition: PropTypes.bool,
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger: PropTypes.oneOf(['item', 'none']),
 } as any;
 
 export { HeatmapTooltip };

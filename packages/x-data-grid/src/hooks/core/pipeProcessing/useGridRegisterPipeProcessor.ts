@@ -11,6 +11,7 @@ export const useGridRegisterPipeProcessor = <
   apiRef: RefObject<PrivateApi>,
   group: G,
   callback: GridPipeProcessor<G>,
+  enabled: boolean = true,
 ) => {
   const cleanup = React.useRef<(() => void) | null>(null);
   const id = React.useRef(`mui-${Math.round(Math.random() * 1e9)}`);
@@ -20,14 +21,16 @@ export const useGridRegisterPipeProcessor = <
   }, [apiRef, callback, group]);
 
   useFirstRender(() => {
-    registerPreProcessor();
+    if (enabled) {
+      registerPreProcessor();
+    }
   });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-    } else {
+    } else if (enabled) {
       registerPreProcessor();
     }
 
@@ -37,5 +40,5 @@ export const useGridRegisterPipeProcessor = <
         cleanup.current = null;
       }
     };
-  }, [registerPreProcessor]);
+  }, [registerPreProcessor, enabled]);
 };

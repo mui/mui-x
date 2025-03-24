@@ -42,6 +42,7 @@ const skSKPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vyberte dátum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,11 +60,12 @@ const skSKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týždeň v roku`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vyberte dátum, vybraný dátum je ${formattedDate}` : 'Vyberte dátum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vyberte čas, vybraný čas je ${formattedTime}` : 'Vyberte čas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

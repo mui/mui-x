@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
+import { DateOrTimeViewWithMeridiem, isDatePickerView } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
@@ -15,6 +15,11 @@ export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeri
  * because otherwise some unwanted props would be passed to the HTML element.
  */
 export const renderDateRangeViewCalendar = ({
+  views,
+  view,
+  onViewChange,
+  focusedView,
+  onFocusedViewChange,
   value,
   defaultValue,
   referenceDate,
@@ -47,12 +52,14 @@ export const renderDateRangeViewCalendar = ({
   displayWeekNumber,
   timezone,
   availableRangePositions,
-  views,
-  view,
-  onViewChange,
   daySlot,
 }: DateRangeViewRendererProps<'day'>) => (
   <DateRangeCalendar
+    view={view}
+    views={views}
+    onViewChange={onViewChange}
+    focusedView={focusedView && isDatePickerView(focusedView) ? focusedView : null}
+    onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}
     referenceDate={referenceDate}
@@ -85,9 +92,6 @@ export const renderDateRangeViewCalendar = ({
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
     availableRangePositions={availableRangePositions}
-    view={view}
-    views={views}
-    onViewChange={onViewChange}
     daySlot={daySlot}
   />
 );

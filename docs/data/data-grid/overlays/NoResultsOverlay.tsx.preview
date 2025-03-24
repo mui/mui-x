@@ -1,0 +1,13 @@
+<DataGrid
+  {...data}
+  initialState={{
+    ...data.initialState,
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterValues: ['abc'],
+      },
+    },
+  }}
+  showToolbar
+/>

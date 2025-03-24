@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
-import { useHeatmapSeries } from '../hooks/useSeries';
+import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 import { HeatmapItem, HeatmapItemProps } from './HeatmapItem';
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
@@ -11,7 +11,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
   const colorScale = useZColorScale()!;
-  const series = useHeatmapSeries();
+  const series = useHeatmapSeriesContext();
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();

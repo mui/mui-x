@@ -2,6 +2,9 @@
   "componentDescription": "Orchestrates the data providers for the chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -9,7 +12,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."

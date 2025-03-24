@@ -8,7 +8,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
-  useGridDataSourceBase,
+  useGridDataSourceBasePro,
   useGridRegisterStrategyProcessor,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
@@ -20,7 +20,18 @@ import {
   GridGetRowsParamsPremium,
   GridGetRowsResponsePremium,
 } from './models';
-import { getKeyPremium } from './cache';
+
+function getKeyPremium(params: GridGetRowsParamsPremium) {
+  return JSON.stringify([
+    params.filterModel,
+    params.sortModel,
+    params.groupKeys,
+    params.groupFields,
+    params.start,
+    params.end,
+    params.aggregationModel,
+  ]);
+}
 
 const options = {
   cacheOptions: {
@@ -32,11 +43,8 @@ export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
-  const { api, strategyProcessor, events } = useGridDataSourceBase<GridPrivateApiPremium>(
-    apiRef,
-    props,
-    options,
-  );
+  const { api, strategyProcessor, events, setStrategyAvailability } =
+    useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, options);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const processDataSourceRows = React.useCallback<GridPipeProcessor<'processDataSourceRows'>>(
@@ -73,12 +81,12 @@ export const useGridDataSourcePremium = (
   >(
     (groupId, field) => {
       if (groupId === GRID_ROOT_GROUP_ID) {
-        return props.unstable_dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
+        return props.dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
       }
       const row = apiRef.current.getRow(groupId);
-      return props.unstable_dataSource?.getAggregatedValue?.(row, field);
+      return props.dataSource?.getAggregatedValue?.(row, field);
     },
-    [apiRef, props.unstable_dataSource],
+    [apiRef, props.dataSource],
   );
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
@@ -100,4 +108,8 @@ export const useGridDataSourcePremium = (
   Object.entries(events).forEach(([event, handler]) => {
     addEventHandler(apiRef, event as keyof GridEventLookup, handler);
   });
+
+  React.useEffect(() => {
+    setStrategyAvailability();
+  }, [setStrategyAvailability]);
 };

@@ -1,8 +1,13 @@
 <DataGridPremium
   columns={columns}
-  unstable_dataSource={dataSource}
+  dataSource={dataSource}
   treeData
   apiRef={apiRef}
-  initialState={initialState}
+  initialState={{
+    ...initialState,
+    aggregation: {
+      model: { rating: 'avg', website: 'size' },
+    },
+  }}
   aggregationFunctions={aggregationFunctions}
 />

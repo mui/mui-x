@@ -1,7 +1,7 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
+components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsGrid
 ---
 
 # Charts - Lines
@@ -109,7 +109,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClickNoSnap.js"}}
+{{"demo": "LineClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onAxisClick` and the others:
@@ -125,15 +125,11 @@ If you're using composition, you can get those click event as follow.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
-// ...
-
-<ChartContainer>
+<ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
-  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Styling
@@ -173,7 +169,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
 
 #### Expanding steps
 

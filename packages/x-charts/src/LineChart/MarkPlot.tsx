@@ -5,14 +5,15 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import getColor from './getColor';
+import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -58,9 +59,10 @@ export interface MarkPlotProps
  */
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 

@@ -5,7 +5,7 @@ import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } fro
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
-import { usePieSeries } from '../hooks/useSeries';
+import { usePieSeriesContext } from '../hooks/usePieSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useDrawingArea } from '../hooks';
 
@@ -38,7 +38,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  */
 function PiePlot(props: PiePlotProps) {
   const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
-  const seriesData = usePieSeries();
+  const seriesData = usePieSeriesContext();
   const { left, top, width, height } = useDrawingArea();
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 

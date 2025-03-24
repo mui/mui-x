@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
@@ -411,7 +409,7 @@ export const useGridColumnResize = (
       // Since during resizing we update the columns width outside of React, React is unable to
       // reapply the right style properties. We need to sync the state manually.
       // So we reapply the same logic as in https://github.com/mui/mui-x/blob/0511bf65543ca05d2602a5a3e0a6156f2fc8e759/packages/x-data-grid/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx#L405
-      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const columnsState = gridColumnsStateSelector(apiRef);
       refs.groupHeaderElements!.forEach((element) => {
         const fields = getFieldsFromGroupHeaderElem(element);
         const div = element as HTMLDivElement;
@@ -625,7 +623,6 @@ export const useGridColumnResize = (
         ...state,
         columnResize: { ...state.columnResize, resizingColumnField: field },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -635,7 +632,6 @@ export const useGridColumnResize = (
       ...state,
       columnResize: { ...state.columnResize, resizingColumnField: '' },
     }));
-    apiRef.current.forceUpdate();
   }, [apiRef]);
 
   const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
@@ -711,7 +707,7 @@ export const useGridColumnResize = (
       }
       isAutosizingRef.current = true;
 
-      const state = gridColumnsStateSelector(apiRef.current.state);
+      const state = gridColumnsStateSelector(apiRef);
       const options = {
         ...DEFAULT_GRID_AUTOSIZE_OPTIONS,
         ...userOptions,

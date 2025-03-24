@@ -1,5 +1,6 @@
 'use client';
 import {
+  ChartAnyPluginSignature,
   ChartSeriesType,
   useChartContainerProps,
   UseChartContainerPropsReturnValue,
@@ -7,41 +8,44 @@ import {
 import * as React from 'react';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { ALL_PLUGINS, AllPluginsType, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
 
-export type UseChartContainerProPropsReturnValue<TSeries extends ChartSeriesType> = Pick<
-  UseChartContainerPropsReturnValue<TSeries>,
+export type UseChartContainerProPropsReturnValue<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> = Pick<
+  UseChartContainerPropsReturnValue<TSeries, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
+  chartDataProviderProProps: ChartDataProviderProps<TSeries, TSignatures>;
 };
 
-export const useChartContainerProProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartContainerProProps<TSeries>,
+export const useChartContainerProProps = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerProPropsReturnValue<TSeries> => {
-  const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } = props;
-
-  const chartDataProviderProProps: Pick<
-    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
-    'initialZoom' | 'onZoomChange'
-  > = {
-    initialZoom,
-    onZoomChange,
-  };
+): UseChartContainerProPropsReturnValue<TSeries, TSignatures> => {
+  const { initialZoom, zoomData, onZoomChange, plugins, apiRef, ...baseProps } =
+    props as ChartContainerProProps<TSeries, AllPluginSignatures>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
     ref,
   );
 
+  const chartDataProviderProProps = {
+    ...chartDataProviderProps,
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    apiRef,
+    plugins: plugins ?? DEFAULT_PLUGINS,
+  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+
   return {
-    chartDataProviderProProps: {
-      ...chartDataProviderProps,
-      ...chartDataProviderProProps,
-      apiRef,
-      plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
-    },
+    chartDataProviderProProps,
     chartsSurfaceProps,
     children,
   };

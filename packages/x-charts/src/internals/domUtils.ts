@@ -6,7 +6,7 @@ function isSsr(): boolean {
 }
 
 interface StringCache {
-  widthCache: Record<string, any>;
+  widthCache: Record<string, { width: number; height: number }>;
   cacheCount: number;
 }
 
@@ -98,6 +98,7 @@ export const getStyleString = (style: React.CSSProperties) =>
     );
 
 let domCleanTimeout: NodeJS.Timeout | undefined;
+
 /**
  *
  * @param text The string to estimate

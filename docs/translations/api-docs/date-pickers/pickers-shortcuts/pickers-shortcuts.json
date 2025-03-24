@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "changeImportance": {
-      "description": "Importance of the change when picking a shortcut: - &quot;accept&quot;: fires <code>onChange</code>, fires <code>onAccept</code> and closes the picker. - &quot;set&quot;: fires <code>onChange</code> but do not fire <code>onAccept</code> and does not close the picker."
+      "description": "Importance of the change when picking a shortcut: - &quot;accept&quot;: fires <code>onChange</code>, fires <code>onAccept</code> and closes the Picker. - &quot;set&quot;: fires <code>onChange</code> but do not fire <code>onAccept</code> and does not close the Picker."
     },
     "dense": {
       "description": "If <code>true</code>, compact vertical padding designed for keyboard and mouse input is used for the list and list items. The prop is available to descendant components as the <code>dense</code> context."

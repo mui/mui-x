@@ -13,7 +13,8 @@ import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsLabelMarkProps } from '../ChartsLabel';
 
 export interface UseAxisTooltipReturnValue<
@@ -42,7 +43,7 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
 
   const xAxisHasData = defaultXAxis.data !== undefined && defaultXAxis.data.length !== 0;
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const axisData = useSelector(
     store,
     xAxisHasData ? selectorChartsInteractionXAxis : selectorChartsInteractionYAxis,
@@ -123,7 +124,10 @@ export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
     ((v: string | number | Date) =>
       usedAxis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
 
-  const axisFormattedValue = axisFormatter(axisValue, { location: 'tooltip' });
+  const axisFormattedValue = axisFormatter(axisValue, {
+    location: 'tooltip',
+    scale: usedAxis.scale,
+  });
 
   return {
     axisDirection: xAxisHasData ? 'x' : 'y',
