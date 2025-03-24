@@ -211,7 +211,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
-        dominantBaseline: 'auto',
+        dominantBaseline: 'text-before-edge',
         ...labelStyle,
       } as Partial<ChartsTextProps>['style'],
     } as Partial<ChartsTextProps>,
@@ -242,15 +242,17 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
   const labelRefPoint = {
-    x: positionSign * (axisWidth - labelHeight),
+    x: positionSign * axisWidth,
     y: top + height / 2,
   };
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxWidth = Math.max(
     0,
-    axisWidth - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
+    axisWidth -
+      (label ? getStringSize(label, axisLabelProps.style).height + AXIS_LABEL_TICK_LABEL_GAP : 0) -
+      tickSize -
+      TICK_LABEL_GAP,
   );
 
   const tickLabels = isHydrated
