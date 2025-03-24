@@ -25,7 +25,7 @@ export interface ChartsAxisTooltipContentProps {
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { classes: propClasses, sx } = props;
-  const tooltipData = useAxisTooltip();
+  const tooltipData = useAxisTooltip({ multipleAxes: true });
   const xAxis = useXAxis();
   const yAxis = useYAxis();
 
@@ -37,58 +37,49 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
-      <ChartsTooltipTable className={classes.table}>
-        {tooltipData.map(
-          ({ axisId, axisDirection, axisValue, axisFormattedValue, seriesItems }) => {
-            const axis = axisDirection === 'x' ? xAxis : yAxis;
-            return (
-              <React.Fragment key={axisId}>
-                {axisValue != null && !axis.hideTooltip && (
-                  <thead>
-                    <ChartsTooltipRow className={classes.row}>
-                      <ChartsTooltipCell
-                        colSpan={3}
-                        className={clsx(classes.cell, classes.axisValueCell)}
-                      >
-                        <Typography>{axisFormattedValue}</Typography>
-                      </ChartsTooltipCell>
-                    </ChartsTooltipRow>
-                  </thead>
-                )}
+      {tooltipData.map(({ axisId, axisDirection, axisValue, axisFormattedValue, seriesItems }) => {
+        const axis = axisDirection === 'x' ? xAxis : yAxis;
+        return (
+          <ChartsTooltipTable className={classes.table} key={axisId}>
+            {axisValue != null && !axis.hideTooltip && (
+              <Typography component="caption">{axisFormattedValue}</Typography>
+            )}
 
-                <tbody>
-                  {seriesItems.map(
-                    ({ seriesId, color, formattedValue, formattedLabel, markType }) => {
-                      if (formattedValue == null) {
-                        return null;
-                      }
-                      return (
-                        <ChartsTooltipRow key={seriesId} className={classes.row}>
-                          <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                            {color && (
-                              <ChartsLabelMark
-                                type={markType}
-                                color={color}
-                                className={classes.mark}
-                              />
-                            )}
-                          </ChartsTooltipCell>
-                          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                            {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
-                          </ChartsTooltipCell>
-                          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
-                            <Typography>{formattedValue}</Typography>
-                          </ChartsTooltipCell>
-                        </ChartsTooltipRow>
-                      );
-                    },
-                  )}
-                </tbody>
-              </React.Fragment>
-            );
-          },
-        )}
-      </ChartsTooltipTable>
+            <tbody>
+              {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
+                if (formattedValue == null) {
+                  return null;
+                }
+                return (
+                  <ChartsTooltipRow key={seriesId} className={classes.row}>
+                    <ChartsTooltipCell
+                      className={clsx(classes.markCell, classes.cell)}
+                      component="td"
+                      aria-hidden
+                    >
+                      {color && (
+                        <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+                      )}
+                    </ChartsTooltipCell>
+                    <ChartsTooltipCell
+                      className={clsx(classes.labelCell, classes.cell)}
+                      component="th"
+                    >
+                      {formattedLabel || null}
+                    </ChartsTooltipCell>
+                    <ChartsTooltipCell
+                      className={clsx(classes.valueCell, classes.cell)}
+                      component="td"
+                    >
+                      {formattedValue}
+                    </ChartsTooltipCell>
+                  </ChartsTooltipRow>
+                );
+              })}
+            </tbody>
+          </ChartsTooltipTable>
+        );
+      })}
     </ChartsTooltipPaper>
   );
 }

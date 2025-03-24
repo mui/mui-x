@@ -37,13 +37,17 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>
-            <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+            <ChartsTooltipCell
+              className={clsx(classes.markCell, classes.cell)}
+              component="td"
+              aria-hidden
+            >
               <ChartsLabelMark type={markType} color={color} className={classes.mark} />
             </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
               {label}
             </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
               {formattedValue}
             </ChartsTooltipCell>
           </ChartsTooltipRow>

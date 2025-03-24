@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import composeClasses from '@mui/utils/composeClasses';
+import Typography from '@mui/material/Typography';
 import {
   ChartsTooltipPaper,
   ChartsTooltipTable,
@@ -84,22 +85,23 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
   return (
     <ChartsTooltipPaper className={classes?.paper}>
       <ChartsTooltipTable className={classes?.table}>
-        <thead>
-          <ChartsTooltipRow className={classes?.row}>
-            <ChartsTooltipCell className={classes?.cell}>{formattedX}</ChartsTooltipCell>
-            {formattedX && formattedY && <ChartsTooltipCell />}
-            <ChartsTooltipCell className={classes?.cell}>{formattedY}</ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </thead>
+        <Typography component="caption">
+          <span>{formattedX}</span>
+          <span>{formattedY}</span>
+        </Typography>
         <tbody>
           <ChartsTooltipRow className={classes?.row}>
-            <ChartsTooltipCell className={clsx(classes?.markCell, classes?.cell)}>
+            <ChartsTooltipCell
+              className={clsx(classes?.markCell, classes?.cell)}
+              component="td"
+              aria-hidden
+            >
               <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
             </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)}>
+            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)} component="th">
               {seriesLabel}
             </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)}>
+            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)} component="td">
               {formattedValue}
             </ChartsTooltipCell>
           </ChartsTooltipRow>

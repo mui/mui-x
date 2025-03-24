@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 /**
@@ -24,8 +25,14 @@ export const ChartsTooltipTable = styled('table', {
   overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
-  '& thead td': {
+  '& caption': {
     borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
+    padding: theme.spacing(0.5, 1.5),
+    textAlign: 'start',
+    whiteSpace: 'nowrap',
+    '& span': {
+      marginRight: theme.spacing(1.5),
+    },
   },
 }));
 
@@ -48,11 +55,13 @@ export const ChartsTooltipRow = styled('tr', {
 /**
  * @ignore - internal component.
  */
-export const ChartsTooltipCell = styled('td', {
+export const ChartsTooltipCell = styled(Typography, {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
-  overridesResolver: (props, styles) => styles.cell,
-})(({ theme }) => ({
+  shouldForwardProp: () => true,
+})<{
+  component?: React.ElementType;
+}>(({ theme }) => ({
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
   [`&.${chartsTooltipClasses.labelCell}`]: {
