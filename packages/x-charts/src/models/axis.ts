@@ -392,10 +392,9 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    */
   domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
   /**
-   * If `true`, the tooltip with `trigger='axis'` will get values from this axis.
-   * The default behavior is deduced from the series using the axis.
+   * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
-  triggerTooltip?: boolean;
+  disableTooltipInteraction?: boolean;
 };
 
 export type PolarAxisConfig<
@@ -455,6 +454,10 @@ export type AxisDefaultized<
      * An indication of the expected number of ticks.
      */
     tickNumber: number;
+    /**
+     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
   } & (AxisProps extends ChartsXAxisProps
     ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
     : AxisProps extends ChartsYAxisProps
