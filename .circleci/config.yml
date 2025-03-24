@@ -352,6 +352,10 @@ workflows:
           <<: *default-context
           requires:
             - checkout
+      - test_regressions:
+          <<: *default-context
+          requires:
+            - checkout
       - run_danger:
           <<: *default-context
           requires:
@@ -412,10 +416,6 @@ workflows:
       - test_browser:
           <<: *default-context
           name: test_browser_react_18
-          react-version: ^18
-      - test_regressions:
-          <<: *default-context
-          name: test_regressions_react_18
           react-version: ^18
       - test_e2e:
           <<: *default-context
