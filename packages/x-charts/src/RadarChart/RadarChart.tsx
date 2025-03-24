@@ -22,11 +22,6 @@ export interface RadarChartProps
     Partial<RadarAxisHighlightProps>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
-   * Indicates if the chart should highlight items per axis or per series.
-   * @default 'axis'
-   */
-  highlight?: 'axis' | 'series' | 'none';
-  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;

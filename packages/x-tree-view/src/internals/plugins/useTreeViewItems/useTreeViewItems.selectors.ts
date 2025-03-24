@@ -58,10 +58,7 @@ export const selectorItemOrderedChildrenIds = createSelector(
  */
 export const selectorItemModel = createSelector(
   [selectorTreeViewItemsState, (_, itemId: string) => itemId],
-  (itemsState, itemId) => {
-    const a = itemsState.itemModelLookup[itemId];
-    return a;
-  },
+  (itemsState, itemId) => itemsState.itemModelLookup[itemId],
 );
 
 /**

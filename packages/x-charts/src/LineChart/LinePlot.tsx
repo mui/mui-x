@@ -20,6 +20,7 @@ import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -177,7 +178,8 @@ const useAggregatedData = () => {
  */
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
   return (

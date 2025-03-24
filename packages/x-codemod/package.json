@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.0.0-alpha.13",
+  "version": "8.0.0-beta.0",
   "bin": "./codemod.js",
   "private": false,
   "author": "MUI Team",
@@ -32,9 +32,9 @@
     "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.26.9",
-    "@babel/runtime": "^7.26.9",
-    "@babel/traverse": "^7.26.9",
+    "@babel/core": "^7.26.10",
+    "@babel/runtime": "^7.26.10",
+    "@babel/traverse": "^7.26.10",
     "@mui/x-internals": "workspace:*",
     "jscodeshift": "17.1.2",
     "yargs": "^17.7.2"

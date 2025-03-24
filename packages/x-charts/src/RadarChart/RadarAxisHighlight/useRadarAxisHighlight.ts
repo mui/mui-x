@@ -8,7 +8,10 @@ import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { selectorChartsInteractionXAxis } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxis,
+} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
 import { ChartInstance } from '../../internals/plugins/models';
@@ -59,6 +62,8 @@ interface UseRadarAxisHighlightReturnValue {
 interface Point {
   x: number;
   y: number;
+  r: number;
+  angle: number;
   value: number;
 }
 
@@ -80,7 +85,7 @@ export function useRadarAxisHighlight(
 
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
   const center = useSelector(store, selectorChartPolarCenter);
 
@@ -110,12 +115,15 @@ export function useRadarAxisHighlight(
     points: radarSeries.map((series) => {
       const value = series.data[highlightedIndex];
 
-      const [x, y] = instance.polar2svg(radiusScale(value)!, angle);
+      const r = radiusScale(value)!;
+      const [x, y] = instance.polar2svg(r, angle);
 
       const retrunedValue: Points = {
         highlighted: {
           x,
           y,
+          r,
+          angle,
           value,
         },
       };
@@ -139,6 +147,8 @@ export function useRadarAxisHighlight(
         retrunedValue.previous = {
           x: px,
           y: py,
+          r: prevR,
+          angle: prevAngle,
           value: prevValue,
         };
       }
@@ -151,6 +161,8 @@ export function useRadarAxisHighlight(
         retrunedValue.next = {
           x: nx,
           y: ny,
+          r: nextR,
+          angle: nextAngle,
           value: nextValue,
         };
       }

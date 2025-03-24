@@ -497,7 +497,7 @@ describeTreeView<
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should not un-select the focused item when Space is pressed', () => {
+        it('should un-select the focused item when Space is pressed', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['1'],
@@ -507,7 +507,7 @@ describeTreeView<
             view.getItemRoot('1').focus();
           });
           fireEvent.keyDown(view.getItemRoot('1'), { key: ' ' });
-          expect(view.isItemSelected('1')).to.equal(true);
+          expect(view.isItemSelected('1')).to.equal(false);
         });
 
         it('should not select the focused item when Space is pressed and disableSelection={true}', () => {

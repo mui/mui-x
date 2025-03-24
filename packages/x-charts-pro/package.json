@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.0.0-alpha.14",
+  "version": "8.0.0-beta.1",
   "description": "The Pro plan edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -39,8 +39,8 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.9",
-    "@mui/utils": "^5.16.6 || ^6.0.0 || ^7.0.0-alpha",
+    "@babel/runtime": "^7.26.10",
+    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -53,8 +53,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -67,8 +67,8 @@
     }
   },
   "devDependencies": {
-    "@mui/material": "^5.16.14",
-    "@mui/system": "^5.16.14",
+    "@mui/material": "^7.0.0-rc.0",
+    "@mui/system": "^7.0.0-rc.0",
     "@react-spring/core": "^9.7.5",
     "@react-spring/shared": "^9.7.5",
     "@types/prop-types": "^15.7.14",
