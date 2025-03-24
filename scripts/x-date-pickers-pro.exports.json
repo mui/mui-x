@@ -58,6 +58,7 @@
   { "name": "dateRangePickerDayClasses", "kind": "Variable" },
   { "name": "DateRangePickerDayClasses", "kind": "Interface" },
   { "name": "DateRangePickerDayClassKey", "kind": "TypeAlias" },
+  { "name": "DateRangePickerDayOwnerState", "kind": "Interface" },
   { "name": "DateRangePickerDayProps", "kind": "Interface" },
   { "name": "DateRangePickerFieldProps", "kind": "TypeAlias" },
   { "name": "DateRangePickerProps", "kind": "Interface" },

@@ -43,19 +43,16 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
 }
 
 function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
-  return function useOpenPickerButtonAriaLabel() {
+  return function useOpenPickerButtonAriaLabel(value: PickerValue) {
     const utils = useUtils();
     const translations = usePickerTranslations();
 
-    return React.useCallback(
-      (value: PickerValue) => {
-        const formatKey =
-          (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
-        const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
-        return translations.openTimePickerDialogue(formattedValue);
-      },
-      [translations, utils],
-    );
+    return React.useMemo(() => {
+      const formatKey =
+        (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+      const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
+      return translations.openTimePickerDialogue(formattedValue);
+    }, [value, translations, utils]);
   };
 }
 
