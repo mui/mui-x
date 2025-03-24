@@ -1,68 +1,7 @@
 {
   "props": {
-    "action": {
-      "type": {
-        "name": "union",
-        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
-      }
-    },
-    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
-    },
-    "disabled": { "type": { "name": "bool" } },
-    "disableElevation": { "type": { "name": "bool" }, "default": "false" },
-    "disableFocusRipple": { "type": { "name": "bool" }, "default": "false" },
-    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
-    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
-    "endIcon": { "type": { "name": "node" } },
-    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
-    "focusVisibleClassName": { "type": { "name": "string" } },
-    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
-    "href": { "type": { "name": "string" } },
-    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
-    "loading": { "type": { "name": "bool" }, "default": "null" },
-    "loadingIndicator": {
-      "type": { "name": "node" },
-      "default": "<CircularProgress color=\"inherit\" size={16} />"
-    },
-    "loadingPosition": {
-      "type": {
-        "name": "enum",
-        "description": "'center'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'"
-      },
-      "default": "'center'"
-    },
-    "onFocusVisible": { "type": { "name": "func" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "size": {
-      "type": {
-        "name": "enum",
-        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
-      }
-    },
-    "startIcon": { "type": { "name": "node" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
-    "TouchRippleProps": { "type": { "name": "object" } },
-    "touchRippleRef": { "type": { "name": "any" } },
-    "variant": {
-      "type": {
-        "name": "enum",
-        "description": "'contained'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'text'"
-      },
-      "default": "'text'"
-    }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "FilterPanelTrigger",
   "imports": [

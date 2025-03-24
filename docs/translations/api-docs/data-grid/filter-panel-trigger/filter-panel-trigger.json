@@ -1,68 +1,8 @@
 {
   "componentDescription": "A button that opens and closes the filter panel.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
-    "action": {
-      "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."
-    },
-    "centerRipple": {
-      "description": "If <code>true</code>, the ripples are centered. They won&#39;t start at the cursor interaction position."
-    },
     "className": { "description": "A function to customize rendering of the component." },
-    "color": {
-      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
-    },
-    "disabled": { "description": "If <code>true</code>, the component is disabled." },
-    "disableElevation": { "description": "If <code>true</code>, no elevation is used." },
-    "disableFocusRipple": {
-      "description": "If <code>true</code>, the  keyboard focus ripple is disabled."
-    },
-    "disableRipple": {
-      "description": "If <code>true</code>, the ripple effect is disabled.<br>⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure to highlight the element by applying separate styles with the <code>.Mui-focusVisible</code> class."
-    },
-    "disableTouchRipple": {
-      "description": "If <code>true</code>, the touch ripple effect is disabled."
-    },
-    "endIcon": { "description": "Element placed after the children." },
-    "focusRipple": {
-      "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
-    },
-    "focusVisibleClassName": {
-      "description": "This prop can help identify which element has keyboard focus. The class name will be applied when the element gains the focus through keyboard interaction. It&#39;s a polyfill for the <a href=\"https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo\">CSS :focus-visible selector</a>. The rationale for using this feature <a href=\"https://github.com/WICG/focus-visible/blob/HEAD/explainer.md\">is explained here</a>. A <a href=\"https://github.com/WICG/focus-visible\">polyfill can be used</a> to apply a <code>focus-visible</code> class to other components if needed."
-    },
-    "fullWidth": {
-      "description": "If <code>true</code>, the button will take up the full width of its container."
-    },
-    "href": {
-      "description": "The URL to link to when the button is clicked. If defined, an <code>a</code> element will be used as the root node."
-    },
-    "LinkComponent": {
-      "description": "The component used to render a link when the <code>href</code> prop is provided."
-    },
-    "loading": {
-      "description": "If <code>true</code>, the loading indicator is visible and the button is disabled. If <code>true \\| false</code>, the loading wrapper is always rendered before the children to prevent <a href=\"https://github.com/mui/material-ui/issues/27853\">Google Translation Crash</a>."
-    },
-    "loadingIndicator": {
-      "description": "Element placed before the children if the button is in loading state. The node should contain an element with <code>role=&quot;progressbar&quot;</code> with an accessible name. By default, it renders a <code>CircularProgress</code> that is labeled by the button itself."
-    },
-    "loadingPosition": {
-      "description": "The loading indicator can be positioned on the start, end, or the center of the button."
-    },
-    "onFocusVisible": {
-      "description": "Callback fired when the component is focused with a keyboard. We trigger a <code>onFocus</code> callback too."
-    },
-    "render": { "description": "A function to customize rendering of the component." },
-    "size": {
-      "description": "The size of the component. <code>small</code> is equivalent to the dense button styling."
-    },
-    "startIcon": { "description": "Element placed before the children." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
-    "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
-    "touchRippleRef": {
-      "description": "A ref that points to the <code>TouchRipple</code> element."
-    },
-    "variant": { "description": "The variant to use." }
+    "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {}
 }
