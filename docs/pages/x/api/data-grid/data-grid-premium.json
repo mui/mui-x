@@ -1109,6 +1109,12 @@
       "class": null
     },
     {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
+      "class": null
+    },
+    {
       "name": "columnMenuFilterIcon",
       "description": "Icon displayed in column menu for filter",
       "default": "GridFilterAltIcon",
@@ -2008,6 +2014,24 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGridPremium-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGridPremium-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGridPremium-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
       "isGlobal": false
     },
     {

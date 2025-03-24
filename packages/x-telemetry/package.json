@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.0.0-alpha.14",
+  "version": "8.0.0-beta.0",
   "description": "MUI X Telemetry",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -25,7 +25,7 @@
   },
   "sideEffects": false,
   "packageScripts": {
-    "postinstall": "node ./postinstall/index.js"
+    "postinstall": "node ./esm/postinstall/index.js"
   },
   "repository": {
     "type": "git",
@@ -34,15 +34,15 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.10",
-    "@fingerprintjs/fingerprintjs": "^4.6.1",
+    "@fingerprintjs/fingerprintjs": "^3.4.2",
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "ci-info": "^4.2.0",
-    "conf": "^5.0.0",
-    "is-docker": "^2.2.1",
+    "conf": "^11.0.0",
+    "is-docker": "^3.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.3",
+    "@mui/internal-test-utils": "^2.0.4",
     "@types/device-uuid": "^1.0.3",
     "rimraf": "^6.0.1"
   },

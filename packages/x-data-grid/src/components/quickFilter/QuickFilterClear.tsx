@@ -31,19 +31,25 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
  */
 const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
   function QuickFilterClear(props, ref) {
-    const { render, className, ...other } = props;
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const { state, clearValue } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      clearValue();
+      onClick?.(event);
+    };
 
     const element = useGridComponentRenderer(
       rootProps.slots.baseIconButton,
       render,
       {
         ...rootProps.slotProps?.baseIconButton,
-        onClick: clearValue,
         className: resolvedClassName,
+        tabIndex: -1,
         ...other,
+        onClick: handleClick,
         ref,
       },
       state,
@@ -136,6 +142,19 @@ QuickFilterClear.propTypes = {
    * @default 'a'
    */
   LinkComponent: PropTypes.elementType,
+  /**
+   * If `true`, the loading indicator is visible and the button is disabled.
+   * If `true | false`, the loading wrapper is always rendered before the children to prevent [Google Translation Crash](https://github.com/mui/material-ui/issues/27853).
+   * @default null
+   */
+  loading: PropTypes.bool,
+  /**
+   * Element placed before the children if the button is in loading state.
+   * The node should contain an element with `role="progressbar"` with an accessible name.
+   * By default, it renders a `CircularProgress` that is labeled by the button itself.
+   * @default <CircularProgress color="inherit" size={16} />
+   */
+  loadingIndicator: PropTypes.node,
   /**
    * Callback fired when the component is focused with a keyboard.
    * We trigger a `onFocus` callback too.

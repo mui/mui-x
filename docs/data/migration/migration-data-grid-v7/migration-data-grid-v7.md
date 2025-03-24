@@ -74,6 +74,19 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+## `@mui/material` peer dependency change
+
+The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
+This change should resolve ESM and CJS interoperability issues in various environments.
+
+:::info
+The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
+
+- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
+- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
+
+:::
+
 ### Setting license key
 
 The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.

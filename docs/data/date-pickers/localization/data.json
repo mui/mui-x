@@ -43,7 +43,7 @@
     "languageTag": "zh-HK",
     "importName": "zhHK",
     "localeName": "Chinese (Hong Kong)",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 52,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhHK.ts"
   },
@@ -51,7 +51,7 @@
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 52,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhCN.ts"
   },
@@ -59,7 +59,7 @@
     "languageTag": "zh-TW",
     "importName": "zhTW",
     "localeName": "Chinese (Taiwan)",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 52,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhTW.ts"
   },
@@ -115,7 +115,7 @@
     "languageTag": "de-DE",
     "importName": "deDE",
     "localeName": "German",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 52,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/deDE.ts"
   },

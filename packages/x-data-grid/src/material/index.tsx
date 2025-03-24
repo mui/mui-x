@@ -27,7 +27,7 @@ import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdo
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
-import MUIClickAwayListener from '@mui/material/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
@@ -69,8 +69,6 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export { useMaterialCSSVariables } from './variables';
-
-const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
 const InputAdornment = styled(MUIInputAdornment)({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
@@ -243,6 +241,7 @@ const iconSlots: GridIconSlotsComponent = {
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  columnMenuUnsortIcon: null,
   columnMenuFilterIcon: GridFilterAltIcon,
   columnMenuManageColumnsIcon: GridViewColumnIcon,
   columnMenuClearIcon: GridClearIcon,
@@ -559,7 +558,7 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIFocusTrap open disableEnforceFocus>
+    <MUIFocusTrap open disableEnforceFocus disableAutoFocus>
       <div tabIndex={-1}>{content}</div>
     </MUIFocusTrap>
   );

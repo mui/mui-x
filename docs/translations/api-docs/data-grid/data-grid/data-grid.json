@@ -1060,6 +1060,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar prompt control send button element"
     },
+    "toolbarQuickFilter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter root element"
+    },
+    "toolbarQuickFilterControl": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter control element"
+    },
+    "toolbarQuickFilterTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter trigger element"
+    },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the grouping column of the tree data"
@@ -1130,6 +1142,7 @@
     "columnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
     "columnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
     "columnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "columnMenuUnsortIcon": "Icon displayed in column menu for unsort",
     "columnReorderIcon": "Icon displayed on the column reorder button.",
     "columnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
     "columnSelectorIcon": "Icon displayed on the column menu selector tab.",

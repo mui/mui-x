@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { PieChart } from '@mui/x-charts/PieChart';
 
@@ -52,9 +52,9 @@ describe('PieChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', () => {
+    it('should provide the right context as second argument', async () => {
       const onItemClick = spy();
-      render(
+      const { user } = render(
         <PieChart
           {...config}
           series={[
@@ -71,14 +71,14 @@ describe('PieChart - click event', () => {
       );
       const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
-      fireEvent.click(slices[0]);
+      await user.click(slices[0]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      fireEvent.click(slices[1]);
+      await user.click(slices[1]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
