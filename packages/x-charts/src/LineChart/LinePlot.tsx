@@ -215,6 +215,11 @@ LinePlot.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
