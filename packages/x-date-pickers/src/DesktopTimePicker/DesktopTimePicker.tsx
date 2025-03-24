@@ -112,6 +112,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'time',
     validator: validateTime,
+    steps: null,
   });
 
   return renderPicker();

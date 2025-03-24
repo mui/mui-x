@@ -17,6 +17,7 @@ import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
+import { PickerStep } from '../useNonRangePickerStepNavigation';
 
 export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,
@@ -79,4 +80,10 @@ export interface UseMobilePickerParams<
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
+  /**
+   * Steps available for the picker.
+   * This will be used to generate the "previous" and "next" actions.
+   * If null, the picker will not have any step navigation.
+   */
+  steps: PickerStep[] | null;
 }

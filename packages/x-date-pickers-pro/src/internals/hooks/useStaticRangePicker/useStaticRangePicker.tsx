@@ -16,6 +16,7 @@ import {
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
+import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -32,11 +33,17 @@ export const useStaticRangePicker = <
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
   const rangePositionResponse = useRangePosition(props);
+
+  const getStepNavigation = useRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
 
   const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
@@ -45,23 +52,8 @@ export const useStaticRangePicker = <
     autoFocusView: autoFocus ?? false,
     viewContainerRole: null,
     localeText,
-    goToNextStep,
-    goToPreviousStep,
+    getStepNavigation,
   });
-
-  function goToNextStep() {
-    if (rangePositionResponse.rangePosition === 'start') {
-      rangePositionResponse.setRangePosition('end');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
-  }
-
-  function goToPreviousStep() {
-    if (rangePositionResponse.rangePosition === 'end') {
-      rangePositionResponse.setRangePosition('start');
-      providerProps.actionsContextValue.setView(providerProps.contextValue.views[0]);
-    }
-  }
 
   const Layout = slots?.layout ?? PickerStaticLayout;
 

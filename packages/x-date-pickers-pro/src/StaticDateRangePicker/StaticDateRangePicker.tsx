@@ -62,6 +62,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
     valueManager: rangeValueManager,
     valueType: 'date',
     validator: validateDateRange,
+    steps: null,
   });
 
   return renderPicker();

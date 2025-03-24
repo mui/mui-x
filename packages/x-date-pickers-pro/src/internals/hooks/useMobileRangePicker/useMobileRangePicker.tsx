@@ -48,6 +48,11 @@ export const useMobileRangePicker = <
   const rangePositionResponse = useRangePosition(props);
   const contextTranslations = usePickerTranslations();
 
+  const getStepNavigation = useRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
+
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerRangeValue,
     TView,
@@ -59,23 +64,8 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     viewContainerRole: 'dialog',
     localeText,
-    goToNextStep,
-    goToPreviousStep,
+    getStepNavigation,
   });
-
-  const stepNavigation = useRangePickerStepNavigation({
-    steps,
-    rangePositionResponse,
-    contextValue: providerProps.contextValue,
-  });
-
-  function goToNextStep() {
-    stepNavigation.goToNextStep();
-  }
-
-  function goToPreviousStep() {
-    stepNavigation.goToPreviousStep();
-  }
 
   const labelId = providerProps.privateContextValue.labelId;
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;

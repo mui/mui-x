@@ -11,6 +11,7 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { UseRangePositionProps } from '../useRangePosition';
+import { PickerRangeStep } from '../useRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
@@ -47,4 +48,10 @@ export interface UseStaticRangePickerParams<
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
+  /**
+   * Steps available for the picker.
+   * This will be used to generate the "previous" and "next" actions.
+   * If null, the picker will not have any step navigation.
+   */
+  steps: PickerRangeStep[] | null;
 }

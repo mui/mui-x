@@ -153,7 +153,7 @@ export const formatMeridiem = (utils: MuiPickersAdapter, meridiem: 'am' | 'pm') 
 
 export const DATE_VIEWS = ['year', 'month', 'day'] as const;
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
-  DATE_VIEWS.includes(view);
+  DATE_VIEWS.includes(view as any);
 
 export const resolveDateFormat = (
   utils: MuiPickersAdapter,
