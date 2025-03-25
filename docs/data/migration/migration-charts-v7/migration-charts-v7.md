@@ -174,6 +174,58 @@ Some helpers are provided to create your custom tooltip:
 - To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
+## Update Tooltip DOM structure
+
+The DOM structure of the tooltip content got modified as follow.
+If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
+
+### Axis tooltip
+
+The data relative to the axis value are moved from the `header` to the `caption` of the table.
+The series label cell is now a header cell `th` instead of `td`.
+
+```diff
+  <table>
+-   <header>
+-     <tr>
+-       <td colspan='3'>The formatted x-axis value</td>
+-     </tr>
+-   <header>
++   <caption>The formatted x-axis value</caption>
+    <body>
+      <tr>
+        <td><Mark color='red'/></td>
+-       <td>Series A</td>
++       <th>Series A</th>
+        <td>55</td>
+      </tr>
+    <body>
+  </table>
+```
+
+### Item tooltip
+
+The table of the item tooltip content got replaced by a paragraph.
+
+```diff
+- <table>
+-   <body>
+-     <tr>
+-       <td><Mark color='red'/></td>
+-       <td>Series A</td>
+-       <td>55</td>
+-     </tr>
+-   <body>
+- </table>
++ <div>
++   <Mark color='red'/>
++   <p>
++     <span>Series A</span>
++     <span>55</span>
++   </p>
++ </div>
+```
+
 ## Removing ResponsiveChartContainer ✅
 
 The `ResponsiveChartContainer` has been removed.
