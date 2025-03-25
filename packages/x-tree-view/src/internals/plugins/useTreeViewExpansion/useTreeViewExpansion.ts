@@ -136,7 +136,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     if (expandedItems !== undefined) {
       store.update((prevState) => ({
         ...prevState,
-        selection: { ...prevState.expansion, expandedItems },
+        expansion: { ...prevState.expansion, expandedItems },
       }));
     }
   }, [store, params.expandedItems]);

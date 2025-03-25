@@ -17,7 +17,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
       [
         `MUI X: A component is changing the ${
           isControlled ? '' : 'un'
-        }controlled ${state} state of a Tree View to be ${isControlled ? 'un' : ''}controlled.`,
+        }controlled ${state} state of Tree View to be ${isControlled ? 'un' : ''}controlled.`,
         'Elements should not switch from uncontrolled to controlled (or vice versa).',
         `Decide between using a controlled or uncontrolled ${state} ` +
           'element for the lifetime of the component.',
