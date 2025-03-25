@@ -17,6 +17,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
 import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Button(props) {
   return (
@@ -105,6 +106,7 @@ function CustomToolbar() {
     </Toolbar>
   );
 }
+const theme = createTheme({ colorSchemes: { light: true, dark: true } });
 
 export default function GridToolbarCustom({ window }) {
   const { data, loading } = useDemoData({
@@ -118,14 +120,16 @@ export default function GridToolbarCustom({ window }) {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <TailwindDemoContainer documentBody={documentBody}>
-        <DataGrid
-          {...data}
-          loading={loading}
-          slots={{ toolbar: CustomToolbar }}
-          showToolbar
-        />
-      </TailwindDemoContainer>
+      <ThemeProvider theme={theme}>
+        <TailwindDemoContainer documentBody={documentBody}>
+          <DataGrid
+            {...data}
+            loading={loading}
+            slots={{ toolbar: CustomToolbar }}
+            showToolbar
+          />
+        </TailwindDemoContainer>
+      </ThemeProvider>
     </div>
   );
 }

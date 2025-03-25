@@ -1,6 +1,4 @@
-<ThemeProvider
-  theme={createTheme({ colorSchemes: { light: true, dark: true } })}
->
+<ThemeProvider theme={theme}>
   <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
     <SyncThemeMode />
     <LocalizationProvider dateAdapter={AdapterDayjs}>
