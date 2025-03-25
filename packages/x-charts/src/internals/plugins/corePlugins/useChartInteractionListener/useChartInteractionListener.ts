@@ -36,9 +36,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 }) => {
   const listenersRef = React.useRef<ListenerRef>(new Map());
 
-  const retriggerEvent = React.useCallback((interaction: ChartInteraction, state: any) => {
+  const forwardEvent = React.useCallback((interaction: ChartInteraction, state: any) => {
     const listeners = listenersRef.current.get(interaction);
     const memo = !state.memo ? new Map<Function, any>() : state.memo;
+    state.interactionType = interaction;
 
     if (listeners) {
       listeners.forEach((callback) => {
@@ -54,20 +55,26 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
   useGesture(
     {
-      onDrag: (state) => retriggerEvent('drag', state),
-      onDragStart: (state) => retriggerEvent('dragStart', state),
-      onDragEnd: (state) => retriggerEvent('dragEnd', state),
-      onPinch: (state) => retriggerEvent('pinch', state),
-      onPinchStart: (state) => retriggerEvent('pinchStart', state),
-      onPinchEnd: (state) => retriggerEvent('pinchEnd', state),
-      onWheel: (state) => retriggerEvent('wheel', state),
-      onWheelStart: (state) => retriggerEvent('wheelStart', state),
-      onWheelEnd: (state) => retriggerEvent('wheelEnd', state),
-      onMove: (state) => retriggerEvent('move', state),
-      onMoveStart: (state) => retriggerEvent('moveStart', state),
-      onMoveEnd: (state) => retriggerEvent('moveEnd', state),
-      onHover: (state) => retriggerEvent('hover', state),
-      onPointerMove: (state) => retriggerEvent('pointerMove', state),
+      onDrag: (state) => forwardEvent('drag', state),
+      onDragStart: (state) => forwardEvent('dragStart', state),
+      onDragEnd: (state) => forwardEvent('dragEnd', state),
+      onPinch: (state) => forwardEvent('pinch', state),
+      onPinchStart: (state) => forwardEvent('pinchStart', state),
+      onPinchEnd: (state) => forwardEvent('pinchEnd', state),
+      onWheel: (state) => forwardEvent('wheel', state),
+      onWheelStart: (state) => forwardEvent('wheelStart', state),
+      onWheelEnd: (state) => forwardEvent('wheelEnd', state),
+      onMove: (state) => forwardEvent('move', state),
+      onMoveStart: (state) => forwardEvent('moveStart', state),
+      onMoveEnd: (state) => forwardEvent('moveEnd', state),
+      onHover: (state) => forwardEvent('hover', state),
+      onPointerDown: (state) => forwardEvent('pointerDown', state),
+      onPointerEnter: (state) => forwardEvent('pointerEnter', state),
+      onPointerOver: (state) => forwardEvent('pointerOver', state),
+      onPointerMove: (state) => forwardEvent('pointerMove', state),
+      onPointerLeave: (state) => forwardEvent('pointerLeave', state),
+      onPointerOut: (state) => forwardEvent('pointerOut', state),
+      onPointerUp: (state) => forwardEvent('pointerUp', state),
     },
     {
       target: svgRef,
@@ -78,7 +85,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         pointer: {
           // We can allow customizing the number of pointers
           buttons: 1,
-          keys: false,
           // Disable using `setPointerCapture` when testing, as it doesn't work properly.
           capture: process.env.NODE_ENV !== 'test',
         },

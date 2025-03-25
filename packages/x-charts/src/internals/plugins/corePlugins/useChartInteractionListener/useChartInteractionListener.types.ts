@@ -15,7 +15,13 @@ export type ChartInteraction =
   | 'moveStart'
   | 'moveEnd'
   | 'hover'
-  | 'pointerMove';
+  | 'pointerDown'
+  | 'pointerEnter'
+  | 'pointerOver'
+  | 'pointerMove'
+  | 'pointerLeave'
+  | 'pointerOut'
+  | 'pointerUp';
 
 export type ChartInteractionHandler<
   Memo extends any,
@@ -25,6 +31,7 @@ export type ChartInteractionHandler<
   state: Omit<FullGestureState<Key>, 'event' | 'memo'> & {
     event: EventType;
     memo: Memo;
+    interactionType: ChartInteraction;
   },
 ) => any | void;
 
@@ -52,7 +59,14 @@ export type AddInteractionListener = {
     callback: ChartInteractionHandler<Memo, 'hover', PointerEvent>,
   ): InteractionListenerResult;
   <Memo extends any>(
-    interaction: 'pointerMove',
+    interaction:
+      | 'pointerMove'
+      | 'pointerDown'
+      | 'pointerEnter'
+      | 'pointerOver'
+      | 'pointerLeave'
+      | 'pointerOut'
+      | 'pointerUp',
     callback: ChartInteractionHandler<Memo, 'move', PointerEvent>,
   ): InteractionListenerResult;
 };
