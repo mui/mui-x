@@ -36,7 +36,6 @@ const viVNPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hôm nay',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Chọn ngày',

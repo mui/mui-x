@@ -30,7 +30,6 @@ const mkPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Денес',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Избери датум',

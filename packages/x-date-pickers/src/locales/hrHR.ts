@@ -37,7 +37,6 @@ const hrHRPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'U redu',
   todayButtonLabel: 'Danas',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Odaberi datum',

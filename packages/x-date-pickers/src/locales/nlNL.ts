@@ -36,7 +36,6 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Vandaag',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecteer datum',

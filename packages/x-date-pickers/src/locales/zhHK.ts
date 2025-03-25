@@ -34,7 +34,6 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   okButtonLabel: '確認',
   todayButtonLabel: '今日',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: '選擇日期',

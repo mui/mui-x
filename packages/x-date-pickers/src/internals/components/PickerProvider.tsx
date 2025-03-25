@@ -177,6 +177,10 @@ export interface PickerContextValue<
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
+   * Whether the Picker is in its last step.
+   */
+  hasNextStep: boolean;
+  /**
    * The ref to attach to the popup's outermost element that contains the view, if any.
    * When using a built-in popup component, this property is automatically attached to the appropriate element.
    */
@@ -281,12 +285,6 @@ export interface PickerActionsContextValue<
    * On non-range pickers, it will do nothing.
    */
   goToNextStep: () => void;
-  /**
-   * Go to the previous step in the value picking process.
-   * On range pickers, if the user is currently picking the end date, it will move to the start date. Otherwise it will do nothing.
-   * On non-range pickers, it will do nothing.
-   */
-  goToPreviousStep: () => void;
 }
 
 export interface SetValueActionOptions<TError = string | null> {

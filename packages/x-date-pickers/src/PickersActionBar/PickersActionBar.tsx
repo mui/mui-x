@@ -5,9 +5,15 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { usePickerActionsContext } from '../hooks';
+import { usePickerActionsContext, usePickerContext } from '../hooks';
 
-export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'previous';
+export type PickersActionBarAction =
+  | 'clear'
+  | 'cancel'
+  | 'accept'
+  | 'today'
+  | 'next'
+  | 'nextOrAccept';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**
@@ -46,8 +52,8 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
     acceptValueChanges,
     cancelValueChanges,
     goToNextStep,
-    goToPreviousStep,
-  } = usePickerActionsContext();
+    hasNextStep,
+  } = usePickerContext();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -90,10 +96,17 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
           </Button>
         );
 
-      case 'previous':
+      case 'nextOrAccept':
+        if (hasNextStep) {
+          return (
+            <Button onClick={goToNextStep} key={actionType}>
+              {translations.nextStepButtonLabel}
+            </Button>
+          );
+        }
         return (
-          <Button onClick={goToPreviousStep} key={actionType}>
-            {translations.previousStepButtonLabel}
+          <Button onClick={acceptValueChanges} key={actionType}>
+            {translations.okButtonLabel}
           </Button>
         );
 

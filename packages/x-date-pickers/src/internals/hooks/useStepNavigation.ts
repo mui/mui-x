@@ -19,7 +19,6 @@ export function useStepNavigation<TStep extends {}>(
       isCurrentViewMatchingStep(parametersBis.view, step),
     );
 
-    const previousStep = currentStepIndex < 1 ? null : steps[currentStepIndex - 1];
     const nextStep =
       currentStepIndex === -1 || currentStepIndex === steps.length - 1
         ? null
@@ -27,18 +26,12 @@ export function useStepNavigation<TStep extends {}>(
 
     return {
       hasNextStep: nextStep != null,
-      hasPreviousStep: previousStep != null,
-      goToPreviousStep: () => {
-        if (previousStep == null) {
-          return;
-        }
-        onStepChange({ step: previousStep, ...parametersBis });
-      },
       goToNextStep: () => {
         if (nextStep == null) {
           return;
         }
-        onStepChange({ step: nextStep, ...parametersBis });
+
+        onStepChange({ ...parametersBis, step: nextStep });
       },
     };
   };
@@ -51,10 +44,8 @@ interface UseStepNavigationParameters<TStep extends {}> {
 }
 
 export type UseStepNavigationReturnValue = (parameters: UseStepNavigationReturnValueParameters) => {
-  hasPreviousStep: boolean;
   hasNextStep: boolean;
   goToNextStep: () => void;
-  goToPreviousStep: () => void;
 };
 
 export interface UseStepNavigationReturnValueParameters {

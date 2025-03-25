@@ -36,7 +36,6 @@ const esESPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleccionar fecha',

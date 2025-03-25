@@ -225,7 +225,6 @@ export const usePicker = <
 
   const stepNavigation = getStepNavigation({ setView, view, initialView: initialView ?? views[0] });
   const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
-  const wrappedGoToPreviousStep = useEventCallback(stepNavigation.goToPreviousStep);
 
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
@@ -237,7 +236,6 @@ export const usePicker = <
       cancelValueChanges,
       setView,
       goToNextStep: wrappedGoToNextStep,
-      goToPreviousStep: wrappedGoToPreviousStep,
     }),
     [
       setValue,
@@ -248,7 +246,6 @@ export const usePicker = <
       cancelValueChanges,
       setView,
       wrappedGoToNextStep,
-      wrappedGoToPreviousStep,
     ],
   );
 
@@ -270,6 +267,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      hasNextStep: stepNavigation.hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -292,6 +290,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
+      stepNavigation.hasNextStep,
       timezone,
       state.open,
       popperView,

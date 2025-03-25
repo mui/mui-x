@@ -14,7 +14,6 @@ import {
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
-  DATE_VIEWS,
   TIME_VIEWS,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
@@ -43,9 +42,9 @@ import { usePickerRangePositionContext } from '../hooks';
 import { PickerRangeStep } from '../internals/hooks/useRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
-  { views: DATE_VIEWS, rangePosition: 'start' },
+  { views: ['day'], rangePosition: 'start' },
   { views: TIME_VIEWS, rangePosition: 'start' },
-  { views: DATE_VIEWS, rangePosition: 'end' },
+  { views: ['day'], rangePosition: 'end' },
   { views: TIME_VIEWS, rangePosition: 'end' },
 ];
 

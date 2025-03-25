@@ -36,7 +36,6 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Tänään',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Valitse päivä',

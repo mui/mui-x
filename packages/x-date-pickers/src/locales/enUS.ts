@@ -30,7 +30,6 @@ const enUSPickers: PickersLocaleText = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Today',
   nextStepButtonLabel: 'Next',
-  previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Select date',

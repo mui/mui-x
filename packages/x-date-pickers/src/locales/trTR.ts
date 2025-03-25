@@ -36,7 +36,6 @@ const trTRPickers: Partial<PickersLocaleText> = {
   okButtonLabel: 'Tamam',
   todayButtonLabel: 'Bugün',
   // nextStepButtonLabel: 'Next',
-  // previousStepButtonLabel: 'Previous',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Tarih Seç',
