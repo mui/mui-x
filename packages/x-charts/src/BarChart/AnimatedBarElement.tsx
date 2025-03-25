@@ -1,36 +1,29 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
-import { barElementClasses, BarElementOwnerState } from './barElementClasses';
+import { BarElementOwnerState } from './barElementClasses';
+import { useAnimateBar } from '../hooks/animation/useAnimateBar';
 
 export interface BarProps extends Omit<React.SVGProps<SVGRectElement>, 'id' | 'color' | 'ref'> {
   ownerState: BarElementOwnerState;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  layout: 'horizontal' | 'vertical';
+  skipAnimation: boolean;
 }
-
-const AnimatedRect = styled('rect')({
-  [`&.${barElementClasses.root}.${barElementClasses.animate}`]: {
-    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-
-    [`&.${barElementClasses.vertical}`]: {
-      transitionProperty: 'x, width, y, height',
-    },
-
-    [`&.${barElementClasses.horizontal}`]: {
-      transitionProperty: 'x, width',
-    },
-  },
-});
 
 export function AnimatedBarElement(props: BarProps) {
   const { ownerState, ...other } = props;
 
+  const animatedProps = useAnimateBar(props);
+
   return (
-    <AnimatedRect
+    <rect
       {...other}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
       opacity={ownerState.isFaded ? 0.3 : 1}
+      {...animatedProps}
     />
   );
 }

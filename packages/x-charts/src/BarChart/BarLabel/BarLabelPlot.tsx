@@ -38,27 +38,22 @@ type BarLabelPlotProps = {
 function BarLabelPlot(props: BarLabelPlotProps) {
   const { bars, skipAnimation, ...other } = props;
 
-  const barLabelTransition = useTransition(bars, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: null,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
-
   return (
     <React.Fragment>
-      {barLabelTransition((style, { seriesId, dataIndex, color, value, width, height }) => (
+      {bars.map(({ x, y, seriesId, dataIndex, color, value, width, height, layout }) => (
         <BarLabelItem
+          key={`${seriesId}-${dataIndex}`}
           seriesId={seriesId}
           dataIndex={dataIndex}
           value={value}
           color={color}
+          x={x}
+          y={y}
           width={width}
           height={height}
+          skipAnimation={skipAnimation ?? false}
+          layout={layout ?? 'vertical'}
           {...other}
-          style={style}
         />
       ))}
     </React.Fragment>

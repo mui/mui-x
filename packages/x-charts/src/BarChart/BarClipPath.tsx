@@ -52,7 +52,7 @@ export function useAnimateBarClipRect(
 ): UseAnimateBarClipRectReturnValue {
   const [firstRender, setFirstRender] = React.useState(true);
   const initialProps = {
-    x: props.x + (props.ownerState.layout === 'vertical' ? 0 : props.width),
+    x: props.x,
     y: props.y + (props.ownerState.layout === 'vertical' ? props.height : 0),
     width: props.ownerState.layout === 'vertical' ? props.width : 0,
     height: props.ownerState.layout === 'vertical' ? 0 : props.height,
