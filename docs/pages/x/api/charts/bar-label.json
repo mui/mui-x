@@ -16,6 +16,12 @@
   ],
   "classes": [
     {
+      "key": "animate",
+      "className": "MuiBarLabel-animate",
+      "description": "Styles applied to the root element if it is animated.",
+      "isGlobal": false
+    },
+    {
       "key": "faded",
       "className": "MuiBarLabel-faded",
       "description": "Styles applied to the root element if it is faded.",
