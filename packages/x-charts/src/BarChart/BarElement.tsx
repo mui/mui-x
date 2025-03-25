@@ -102,6 +102,8 @@ BarElement.propTypes = {
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
