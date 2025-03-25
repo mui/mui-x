@@ -1,10 +1,14 @@
-<CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-  <SyncThemeMode />
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <JoySingleInputDateRangePicker
-      slotProps={{
-        field: { clearable: true },
-      }}
-    />
-  </LocalizationProvider>
-</CssVarsProvider>
+<ThemeProvider
+  theme={createTheme({ colorSchemes: { light: true, dark: true } })}
+>
+  <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+    <SyncThemeMode />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <JoySingleInputDateRangePicker
+        slotProps={{
+          field: { clearable: true },
+        }}
+      />
+    </LocalizationProvider>
+  </CssVarsProvider>
+</ThemeProvider>

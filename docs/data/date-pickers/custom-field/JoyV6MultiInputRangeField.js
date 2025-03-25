@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { useColorScheme as useMaterialColorScheme } from '@mui/material/styles';
+import {
+  ThemeProvider,
+  createTheme,
+  useColorScheme as useMaterialColorScheme,
+} from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
@@ -132,11 +136,15 @@ function SyncThemeMode() {
 
 export default function JoyV6MultiInputRangeField() {
   return (
-    <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-      <SyncThemeMode />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <JoyDateRangePicker />
-      </LocalizationProvider>
-    </CssVarsProvider>
+    <ThemeProvider
+      theme={createTheme({ colorSchemes: { light: true, dark: true } })}
+    >
+      <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+        <SyncThemeMode />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <JoyDateRangePicker />
+        </LocalizationProvider>
+      </CssVarsProvider>
+    </ThemeProvider>
   );
 }
