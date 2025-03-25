@@ -4,6 +4,11 @@ import renameProps from '../../../util/renameProps';
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const props = {
   unstable_rowSpanning: 'rowSpanning',
+  unstable_dataSource: 'dataSource',
+  unstable_dataSourceCache: 'dataSourceCache',
+  unstable_lazyLoading: 'lazyLoading',
+  unstable_lazyLoadingRequestThrottleMs: 'lazyLoadingRequestThrottleMs',
+  unstable_onDataSourceError: 'onDataSourceError',
 };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
