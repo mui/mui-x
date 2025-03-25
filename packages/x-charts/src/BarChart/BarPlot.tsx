@@ -286,7 +286,11 @@ function BarPlot(props: BarPlotProps) {
           return barElement;
         }
 
-        return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
+        return (
+          <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
+            {barElement}
+          </g>
+        );
       })}
       {barLabel && (
         <BarLabelPlot
