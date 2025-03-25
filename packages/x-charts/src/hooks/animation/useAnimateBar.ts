@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { useIsHydrated } from '../useIsHydrated';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import type { BarProps } from '../../BarChart/AnimatedBarElement';
 
@@ -31,17 +32,13 @@ function barPropsInterpolator(from: BarInterpolatedProps, to: BarInterpolatedPro
 }
 
 export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnValue {
-  const [firstRender, setFirstRender] = React.useState(true);
+  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.x,
     y: props.y + (props.layout === 'vertical' ? props.height : 0),
     width: props.layout === 'vertical' ? props.width : 0,
     height: props.layout === 'vertical' ? 0 : props.height,
   };
-
-  React.useEffect(() => {
-    setFirstRender(false);
-  }, []);
 
   const ref = useAnimate<BarInterpolatedProps, SVGRectElement>(
     {
@@ -63,8 +60,7 @@ export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnVa
     },
   );
 
-  // Only use the initial props on the first render.
-  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
+  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   return {
     ref,
