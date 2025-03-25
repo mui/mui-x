@@ -1385,6 +1385,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar prompt control send button element"
     },
+    "toolbarQuickFilter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter root element"
+    },
+    "toolbarQuickFilterControl": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter control element"
+    },
+    "toolbarQuickFilterTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar quick filter trigger element"
+    },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the grouping column of the tree data"

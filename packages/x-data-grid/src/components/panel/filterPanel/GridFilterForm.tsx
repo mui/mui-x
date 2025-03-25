@@ -6,7 +6,6 @@ import {
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../../constants/cssVariables';
@@ -338,7 +337,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const field = event.target.value as string;
         const column = apiRef.current.getColumn(field)!;
 
@@ -391,7 +390,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const operator = event.target.value as string;
 
         const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
@@ -410,7 +409,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeLogicOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const logicOperator =
           (event.target.value as string) === GridLogicOperator.And.toString()
             ? GridLogicOperator.And

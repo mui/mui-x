@@ -679,6 +679,18 @@ export interface GridClasses {
    */
   toolbarPromptControlSendButton: string;
   /**
+   * Styles applied to the toolbar quick filter root element.
+   */
+  toolbarQuickFilter: string;
+  /**
+   * Styles applied to the toolbar quick filter trigger element.
+   */
+  toolbarQuickFilterTrigger: string;
+  /**
+   * Styles applied to the toolbar quick filter control element.
+   */
+  toolbarQuickFilterControl: string;
+  /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
   withVerticalBorder: string;
@@ -977,6 +989,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'toolbarPromptControlRecordingIndicator',
   'toolbarPromptControlRecordButton',
   'toolbarPromptControlSendButton',
+  'toolbarQuickFilter',
+  'toolbarQuickFilterTrigger',
+  'toolbarQuickFilterControl',
   'virtualScroller',
   'virtualScroller--hasScrollX',
   'virtualScrollerContent',

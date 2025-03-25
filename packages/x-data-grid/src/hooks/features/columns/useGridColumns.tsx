@@ -99,7 +99,6 @@ export function useGridColumns(
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
-      apiRef.current.updateRenderContext?.();
     },
     [logger, apiRef],
   );

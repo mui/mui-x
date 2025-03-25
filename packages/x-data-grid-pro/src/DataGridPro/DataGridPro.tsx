@@ -143,6 +143,7 @@ DataGridProRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -1001,6 +1002,7 @@ DataGridProRaw.propTypes = {
       sort: PropTypes.oneOf(['asc', 'desc']),
     }),
   ),
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

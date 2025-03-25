@@ -66,6 +66,10 @@ const dataGridApiPages: MuiPage[] = [
     title: 'QuickFilterControl',
   },
   {
+    pathname: '/x/api/data-grid/quick-filter-trigger',
+    title: 'QuickFilterTrigger',
+  },
+  {
     pathname: '/x/api/data-grid/toolbar',
     title: 'Toolbar',
   },

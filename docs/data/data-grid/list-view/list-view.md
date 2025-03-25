@@ -49,7 +49,7 @@ The [editing feature](/x/react-data-grid/editing/) is not supported in list view
 
 The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens, as shown below.
 
-{{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 360, "height": 600}}
+{{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 400, "height": 600}}
 
 ## Feature compatibility
 
