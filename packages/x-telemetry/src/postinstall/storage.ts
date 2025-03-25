@@ -1,9 +1,8 @@
 import { randomBytes } from 'crypto';
-import path from 'path';
 import Conf from 'conf';
-import isDockerFunction from 'is-docker';
-import ciEnvironment from 'ci-info';
+import path from 'path';
 import notifyAboutMuiXTelemetry from './notify';
+import getEnvironmentInfo from './get-environment-info';
 
 // This is the key that specifies when the user was informed about telemetry collection.
 const TELEMETRY_KEY_NOTIFY_DATE = 'telemetry.notifiedAt';
@@ -13,7 +12,8 @@ const TELEMETRY_KEY_NOTIFY_DATE = 'telemetry.notifiedAt';
 const TELEMETRY_KEY_ID = `telemetry.anonymousId`;
 
 function getStorageDirectory(distDir: string): string | undefined {
-  const isLikelyEphemeral = ciEnvironment.isCI || isDockerFunction();
+  const env = getEnvironmentInfo();
+  const isLikelyEphemeral = env.isCI || env.isDocker;
 
   if (isLikelyEphemeral) {
     return path.join(distDir, 'cache');
@@ -23,19 +23,22 @@ function getStorageDirectory(distDir: string): string | undefined {
 }
 
 export class TelemetryStorage {
-  private readonly conf: Conf<any> | null;
-
-  constructor({ distDir }: { distDir: string }) {
+  public static init({ distDir }: { distDir: string }) {
     const storageDirectory = getStorageDirectory(distDir);
-
+    let conf: Conf<any> | null = null;
     try {
       // `conf` incorrectly throws a permission error during initialization
       // instead of waiting for first use. We need to handle it, otherwise the
       // process may crash.
-      this.conf = new Conf({ projectName: 'mui-x', cwd: storageDirectory });
+      conf = new Conf({ projectName: 'mui-x', cwd: storageDirectory });
     } catch (_) {
-      this.conf = null;
+      conf = null;
     }
+
+    return new TelemetryStorage(conf);
+  }
+
+  private constructor(private readonly conf: Conf<any> | null) {
     this.notify();
   }
 

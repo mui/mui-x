@@ -9,7 +9,7 @@
     "@babel/runtime": "^7.26.10",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
-    "@mui/material": "^7.0.0-beta.4",
+    "@mui/material": "^7.0.0-rc.0",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",

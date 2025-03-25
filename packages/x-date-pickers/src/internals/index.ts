@@ -117,6 +117,7 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 export type {
   PickerAnyManager,
   PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerValueManager,
@@ -199,6 +200,6 @@ export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTime
 
 export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
-export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
-export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
-export { getDateTimeFieldInternalPropsDefaults } from '../managers/useDateTimeManager';
+export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
+export { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';

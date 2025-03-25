@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
-  fireEvent,
   screen,
   act,
   ErrorBoundary,
@@ -35,11 +34,11 @@ import {
   getCell,
   $$,
 } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
 import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -99,7 +98,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  it('should ignore events coming from a portal in the cell', () => {
+  it('should ignore events coming from a portal in the cell', async () => {
     const handleRowClick = spy();
     function InputCell() {
       return <input type="text" name="input" />;
@@ -112,7 +111,7 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    render(
+    const { user } = render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           rows={[{ id: '1' }]}
@@ -130,9 +129,9 @@ describe('<DataGrid /> - Rows', () => {
         />
       </div>,
     );
-    fireEvent.click(document.querySelector('input[name="portal-input"]')!);
+    await user.click(document.querySelector('input[name="portal-input"]')!);
     expect(handleRowClick.callCount).to.equal(0);
-    fireEvent.click(document.querySelector('input[name="input"]')!);
+    await user.click(document.querySelector('input[name="input"]')!);
     expect(handleRowClick.callCount).to.equal(1);
   });
 
@@ -154,8 +153,8 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    expect(() => {
-      render(
+    expect(async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             columns={[
@@ -171,7 +170,7 @@ describe('<DataGrid /> - Rows', () => {
       const cell = document.querySelector(
         '[data-rowindex="0"] [role="gridcell"][data-field="age"]',
       )!;
-      fireEvent.click(cell);
+      await user.click(cell);
     }).not.toErrorDev();
   });
 
@@ -190,12 +189,12 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(2)).not.to.have.class('under-age');
     });
 
-    it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
+    it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', async () => {
       const { rows, columns } = getBasicGridData(4, 2);
 
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
-      render(
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             rows={rows}
@@ -210,7 +209,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(1)).not.to.have.class('first');
       expect(getRow(1)).not.to.have.class('last');
       expect(getRow(2)).to.have.class('last');
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      await user.click(screen.getByRole('button', { name: /next page/i }));
       expect(getRow(3)).to.have.class('first');
       expect(getRow(3)).to.have.class('last');
     });
@@ -285,12 +284,12 @@ describe('<DataGrid /> - Rows', () => {
       expect(screen.queryByText('print')).not.to.equal(null);
     });
 
-    it('should not select the row when clicking in an action', () => {
-      render(
+    it('should not select the row when clicking in an action', async () => {
+      const { user } = render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
+      await user.click(screen.getByRole('menuitem', { name: 'print' }));
       expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
@@ -328,7 +327,9 @@ describe('<DataGrid /> - Rows', () => {
 
       const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
       await user.click(more1);
-      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      await waitFor(() => {
+        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      });
 
       const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
       await user.click(more2);
@@ -337,19 +338,18 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should allow to move focus to another cell with the arrow keys', () => {
-      render(
+    it('should allow to move focus to another cell with the arrow keys', async () => {
+      const { user } = render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      const firstCell = getCell(0, 0);
-      firstCell.focus();
+      await user.click(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       const printButton = screen.getByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
 
-      fireEvent.keyDown(printButton, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expect(getActiveCell()).to.equal('0-0');
     });
 
@@ -369,8 +369,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).toHaveFocus();
     });
 
-    it('should allow to navigate between actions using the arrow keys', () => {
-      render(
+    it('should allow to navigate between actions using the arrow keys', async () => {
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -379,26 +379,26 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const firstCell = getCell(0, 0);
-      firstCell.focus();
+      await user.click(firstCell);
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       const printButton = screen.getByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
 
-      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
       expect(deleteButton).toHaveFocus();
 
-      fireEvent.keyDown(deleteButton, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expect(printButton).toHaveFocus();
 
-      fireEvent.keyDown(printButton, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expect(firstCell).toHaveFocus();
     });
 
-    it('should not move focus to first item when clicking in another item', () => {
-      render(
+    it('should not move focus to first item when clicking in another item', async () => {
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -407,7 +407,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
-      fireEvent.click(deleteButton);
+      await user.click(deleteButton);
       expect(deleteButton).toHaveFocus();
     });
 
@@ -422,9 +422,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      act(() => {
-        firstCell.focus();
-      });
+      await user.click(firstCell);
 
       await user.keyboard('{ArrowRight}');
       expect(secondCell).to.have.property('tabIndex', -1);
@@ -434,15 +432,13 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      act(() => {
-        printButton.focus();
-      });
+      await user.click(printButton);
       await user.keyboard('{ArrowRight}');
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
     });
 
-    it('should focus the last button if the clicked button removes itself', () => {
+    it('should focus the last button if the clicked button removes itself', async () => {
       let canDelete = true;
       function Test() {
         return (
@@ -464,13 +460,13 @@ describe('<DataGrid /> - Rows', () => {
           />
         );
       }
-      render(<Test />);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' }));
+      const { user } = render(<Test />);
+      await user.click(screen.getByRole('menuitem', { name: 'delete' }));
       expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
     });
 
-    it('should focus the last button if the currently focused button is removed', () => {
-      const { setProps } = render(
+    it('should focus the last button if the currently focused button is removed', async () => {
+      const { setProps, user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -478,7 +474,7 @@ describe('<DataGrid /> - Rows', () => {
           ]}
         />,
       );
-      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
+      await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
       expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
       setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
       expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
@@ -753,13 +749,14 @@ describe('<DataGrid /> - Rows', () => {
       it('should measure rows while scrolling', async () => {
         const columnHeaderHeight = 50;
         const border = 1;
+        const cellHeight = columnHeaderHeight + border * 2;
         render(
           <TestCase
             getBioContentHeight={() => 100}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 52 + border * 2}
+            height={cellHeight * 2}
           />,
         );
         const virtualScroller = grid('virtualScroller')!;
@@ -767,18 +764,14 @@ describe('<DataGrid /> - Rows', () => {
         await waitFor(() => {
           expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
         });
-        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
-        virtualScroller.dispatchEvent(new Event('scroll'));
 
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
-        });
-        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-        virtualScroller.dispatchEvent(new Event('scroll'));
-
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101);
-        });
+        // It calculates the entire height of the scrollbar whenever the scroll event happens
+        // https://stackblitz.com/edit/react-kejzfzfx?file=Demo.tsx%3AL26
+        // Scroll to measure all cells
+        await act(async () => virtualScroller.scrollTo({ top: 1, behavior: 'instant' }));
+        await waitFor(() =>
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101),
+        );
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
@@ -810,7 +803,6 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      // FIXME: We need a waitFor that works with fake clock
       const { userAgent } = window.navigator;
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when the 2nd page has less rows than the 1st page',
@@ -818,7 +810,7 @@ describe('<DataGrid /> - Rows', () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
-          render(
+          const { user } = render(
             <TestCase
               getBioContentHeight={() => measuredRowHeight}
               getRowHeight={() => 'auto'}
@@ -830,10 +822,11 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          virtualScroller.dispatchEvent(new Event('scroll'));
+          // Scroll to measure all cells
+          await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
+          expect(gridOffsetTop()).not.to.equal(0);
 
-          fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+          await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
             expect(gridOffsetTop()).to.equal(0);
@@ -841,12 +834,13 @@ describe('<DataGrid /> - Rows', () => {
         },
       );
 
-      it('should position correctly the render zone when changing pageSize to a lower value', () => {
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
+        const apiRefPage = React.createRef<GridApiCommunity>();
 
-        const { setProps } = render(
+        render(
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
@@ -857,23 +851,25 @@ describe('<DataGrid /> - Rows', () => {
             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
             pageSizeOptions={[5, 10]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
+            apiRef={apiRefPage}
             {...data}
           />,
         );
         expect(gridOffsetTop()).to.equal(0);
-        setProps({ pageSize: 5 });
+        await act(async () => apiRefPage.current?.setPageSize(5));
         expect(gridOffsetTop()).to.equal(0);
       });
 
       // In Chrome non-headless and Edge this test is flaky
-      testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
+      testSkipIf(!isJSDOM || !userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
         async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
+          const apiRefPage = React.createRef<GridApiCommunity>();
 
-          const { setProps } = render(
+          const { user } = render(
             <TestCase
               getBioContentHeight={() => measuredRowHeight}
               getRowHeight={() => 'auto'}
@@ -884,6 +880,7 @@ describe('<DataGrid /> - Rows', () => {
               initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
               pageSizeOptions={[10, 25]}
               height={columnHeaderHeight + 10 * measuredRowHeight}
+              apiRef={apiRefPage}
               {...data}
             />,
           );
@@ -891,11 +888,17 @@ describe('<DataGrid /> - Rows', () => {
           expect(gridOffsetTop()).to.equal(0);
 
           const virtualScroller = grid('virtualScroller')!;
-          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          virtualScroller.dispatchEvent(new Event('scroll'));
+          // Scroll to measure all cells
+          await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
+          await waitFor(() => {
+            expect(gridOffsetTop()).not.to.equal(0);
+          });
 
-          setProps({ pageSize: 10 });
-          fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+          await act(async () => {
+            apiRefPage.current?.setPageSize(10);
+          });
+
+          await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
             expect(gridOffsetTop()).to.equal(0);
@@ -916,9 +919,9 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    it('should be called with the correct params', () => {
+    it('should be called with the correct params', async () => {
       const getRowSpacing = stub().returns({});
-      render(
+      const { user } = render(
         <TestCase
           getRowSpacing={getRowSpacing}
           initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
@@ -941,7 +944,7 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       getRowSpacing.resetHistory();
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      await user.click(screen.getByRole('button', { name: /next page/i }));
 
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
@@ -1068,29 +1071,29 @@ describe('<DataGrid /> - Rows', () => {
       ).to.throw(/You cannot update several rows at once/);
     });
 
-    it('should allow to update one row at the time', () => {
+    it('should allow to update one row at the time', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
-    it('should allow adding rows', () => {
+    it('should allow adding rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
-      act(() => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
-    it('should allow to delete rows', () => {
+    it('should allow to delete rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
-      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
-      act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
-      act(() => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
@@ -1112,8 +1115,8 @@ describe('<DataGrid /> - Rows', () => {
   // needs virtualization
   testSkipIf(isJSDOM)(
     'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
-    () => {
-      render(
+    async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             columns={[{ field: 'id' }]}
@@ -1134,21 +1137,22 @@ describe('<DataGrid /> - Rows', () => {
       );
 
       const cell = getCell(0, 0);
-      fireUserEvent.mousePress(cell);
+      await user.click(cell);
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.scrollTop = 1000;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
 
       const focusedRow = getRow(0);
       expect(focusedRow.getAttribute('data-id')).to.equal('0');
       expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
       expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
 
-      const lastRow = getRow(9);
-      expect(lastRow.getAttribute('data-id')).to.equal('9');
-      expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
-      expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
+      const lastRow = 9;
+      await waitFor(async () => {
+        expect(getRow(lastRow).getAttribute('data-id')).to.equal('9');
+      });
+      expect(getRow(lastRow).getAttribute('data-rowindex')).to.equal('9');
+      expect(getRow(lastRow).getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
     },
   );
 });
