@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useAnimate } from '../internals/animation/useAnimate';
 import { getRadius, GetRadiusData } from './getRadius';
 
@@ -19,7 +20,7 @@ type UseAnimateBarClipRectParams = Pick<
 > & {
   ref?: React.Ref<SVGRectElement>;
 };
-type UseAnimateBarClipRectReturnValue = {
+type UseAnimateBarClipRectReturn = {
   ref: React.Ref<SVGRectElement>;
   style: React.CSSProperties;
 } & Pick<BarClipRectProps, 'x' | 'y' | 'width' | 'height'>;
@@ -49,18 +50,14 @@ function barClipRectPropsInterpolator(
 
 export function useAnimateBarClipRect(
   props: UseAnimateBarClipRectParams,
-): UseAnimateBarClipRectReturnValue {
-  const [firstRender, setFirstRender] = React.useState(true);
+): UseAnimateBarClipRectReturn {
+  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.x,
     y: props.y + (props.ownerState.layout === 'vertical' ? props.height : 0),
     width: props.ownerState.layout === 'vertical' ? props.width : 0,
     height: props.ownerState.layout === 'vertical' ? 0 : props.height,
   };
-
-  React.useEffect(() => {
-    setFirstRender(false);
-  }, []);
 
   const ref = useAnimate<BarClipRectInterpolatedProps, SVGRectElement>(
     {
@@ -88,7 +85,7 @@ export function useAnimateBarClipRect(
   );
 
   // Only use the initial props on the first render.
-  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
+  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   return {
     ref,

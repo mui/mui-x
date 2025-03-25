@@ -2,6 +2,7 @@ import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import useForkRef from '@mui/utils/useForkRef';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { useIsHydrated } from '../useIsHydrated';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import type { PieArcLabelProps } from '../../PieChart';
 
@@ -43,15 +44,11 @@ function pieArcLabelPropsInterpolator(
 export function useAnimatePieArcLabel(
   props: UseAnimatePieArcLabelParams,
 ): UseAnimatePieArcLabelReturn {
-  const [firstRender, setFirstRender] = React.useState(true);
+  const isHydrated = useIsHydrated();
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
   };
-
-  React.useEffect(() => {
-    setFirstRender(false);
-  }, []);
 
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
@@ -74,8 +71,7 @@ export function useAnimatePieArcLabel(
     },
   );
 
-  // Only use the initial props on the first render.
-  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
+  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   const [x, y] = d3Arc().cornerRadius(props.cornerRadius).centroid({
     padAngle: props.paddingAngle,

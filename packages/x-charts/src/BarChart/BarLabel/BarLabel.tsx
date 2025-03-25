@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { useIsHydrated } from '../../hooks/useIsHydrated';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import { barLabelClasses } from './barLabelClasses';
 import { BarLabelOwnerState } from './BarLabel.types';
@@ -57,17 +58,13 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
 }
 
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
-  const [firstRender, setFirstRender] = React.useState(true);
+  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.layout === 'vertical' ? props.x + props.width / 2 : props.x,
     y: props.layout === 'vertical' ? props.y + props.height : props.y + props.height / 2,
     width: props.width,
     height: props.height,
   };
-
-  React.useEffect(() => {
-    setFirstRender(false);
-  }, []);
 
   const ref = useAnimate(
     {
@@ -89,8 +86,7 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     },
   );
 
-  // Only use the initial props on the first render.
-  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
+  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   return {
     ref,
