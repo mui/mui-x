@@ -1,4 +1,4 @@
-import { timer, Timer, now, timeout } from '@mui/x-charts-vendor/d3-timer';
+import { timer, Timer, now, timeout, timerFlush } from '@mui/x-charts-vendor/d3-timer';
 
 /**
  * A resumable transition class inspired by d3-transition.
@@ -64,6 +64,7 @@ export class Transition {
     const time = now() - this.elapsed;
 
     this.timer = timer((elapsed) => this.timerCallback(elapsed), 0, time);
+    timerFlush();
 
     return this;
   }
