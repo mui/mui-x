@@ -29,37 +29,60 @@ export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
  */
 const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { render, ...other } = props;
+    const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
     const id = useId();
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const { focusableItemId, registerItem, unregisterItem, onItemKeyDown } = useToolbarContext();
+    const {
+      focusableItemId,
+      registerItem,
+      unregisterItem,
+      onItemKeyDown,
+      onItemFocus,
+      onItemDisabled,
+    } = useToolbarContext();
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      onItemKeyDown(event);
+      onKeyDown?.(event);
+    };
+
+    const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
+      onItemFocus(id!);
+      onFocus?.(event);
+    };
 
     React.useEffect(() => {
-      registerItem(id!);
+      registerItem(id!, buttonRef);
       return () => unregisterItem(id!);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const isInitialFocus = React.useRef(true);
+    const previousDisabled = React.useRef(disabled);
     React.useEffect(() => {
-      // Do not focus the item on initial render
-      if (focusableItemId && isInitialFocus.current) {
-        isInitialFocus.current = false;
-        return;
+      if (previousDisabled.current !== disabled && disabled === true) {
+        onItemDisabled(id!, disabled);
       }
+      previousDisabled.current = disabled;
+    }, [disabled, id, onItemDisabled]);
 
-      if (focusableItemId === id) {
-        buttonRef.current?.focus();
+    const previousAriaDisabled = React.useRef(ariaDisabled);
+    React.useEffect(() => {
+      if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
+        onItemDisabled(id!, true);
       }
-    }, [focusableItemId, id]);
+      previousAriaDisabled.current = ariaDisabled;
+    }, [ariaDisabled, id, onItemDisabled]);
 
     const element = useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
       ...rootProps.slotProps?.baseIconButton,
       tabIndex: focusableItemId === id ? 0 : -1,
-      onKeyDown: onItemKeyDown,
       ...other,
+      disabled,
+      'aria-disabled': ariaDisabled,
+      onKeyDown: handleKeyDown,
+      onFocus: handleFocus,
       ref: handleRef,
     });
 

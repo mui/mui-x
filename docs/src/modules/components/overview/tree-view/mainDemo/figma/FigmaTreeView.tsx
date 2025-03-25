@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
   ThemeOptions,
@@ -24,7 +23,6 @@ import {
   TreeItemIconContainer,
   TreeItemLabel,
   TreeItemRoot,
-  treeItemClasses,
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
@@ -85,8 +83,9 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   borderRadius: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
   marginBottom: theme.spacing(0.5),
 }));
+
 const CustomTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
-  '&.Mui-selected': {
+  '&[data-selected]': {
     backgroundColor: alpha(theme.palette.primary.main, 0.08),
     borderRadius: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
   },
@@ -119,10 +118,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <CustomTreeItemRoot
         {...getRootProps({
           ...other,
-          className: clsx(treeItemClasses.root, {
-            'Mui-selected': status.selected,
-            'Mui-disabled': status.disabled,
-          }),
+          ...(status.selected && { 'data-selected': '' }),
         })}
       >
         <CustomTreeItemContent {...getContentProps()}>

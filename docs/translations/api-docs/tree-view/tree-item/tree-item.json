@@ -20,32 +20,39 @@
   "classDescriptions": {
     "disabled": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the element",
-      "conditions": "disabled"
+      "nodeName": "the content element",
+      "conditions": "the item is disabled",
+      "deprecationInfo": "Use the <code>data-disabled</code> attribute instead."
     },
     "editable": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the content of the items that are editable"
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "the item is editable",
+      "deprecationInfo": "Use the <code>data-editable</code> attribute instead."
     },
     "editing": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "editing is enabled"
+      "conditions": "the item is being edited",
+      "deprecationInfo": "Use the <code>data-editing</code> attribute instead."
     },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "expanded"
+      "conditions": "the item is expanded",
+      "deprecationInfo": "Use the <code>data-expanded</code> attribute instead."
     },
     "focused": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "focused"
+      "conditions": "the item is focused",
+      "deprecationInfo": "Use the <code>data-focused</code> attribute instead."
     },
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
-      "conditions": "selected"
+      "conditions": "the item is selected",
+      "deprecationInfo": "Use the <code>data-selected</code> attribute instead."
     }
   },
   "slotDescriptions": {

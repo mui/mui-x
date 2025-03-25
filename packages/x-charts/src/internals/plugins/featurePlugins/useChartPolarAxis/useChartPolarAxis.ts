@@ -6,7 +6,6 @@ import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
-import { getAxisValue } from './getAxisValue';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import {
   selectorChartPolarCenter,

@@ -12,11 +12,12 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useXAxis } from '../hooks';
+import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsInteractionItemIsDefined,
   selectorChartsInteractionXAxisIsDefined,
   selectorChartsInteractionYAxisIsDefined,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartContext } from '../context/ChartProvider';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
@@ -69,7 +70,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const hasData = useSelector(
     store,
     // eslint-disable-next-line no-nested-ternary
