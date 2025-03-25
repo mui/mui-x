@@ -61,76 +61,21 @@ useCustomPlugin.getDefaultizedParams = ({ params }) => ({
 });
 ```
 
-### Controllable models
-
-A model is a value that can either be controlled or initialized using a prop.
-The Tree View contains several models like the `expandedItems` model which contains the ids of the items currently expanded.
-
-You can create your own models using the `models` property of your plugin:
-
-```ts
-useCustomPlugin.params = {
-  // ...other params
-  defaultCustomModel: true,
-  customModel: true,
-};
-
-useCustomPlugin.getDefaultizedParams = ({ params }) => ({
-  ...params,
-  // ... other defaultized params
-  defaultCustomModel: params.defaultCustomModel ?? false,
-});
-
-useCustomPlugin.models = {
-  customModel: {
-    getDefaultValue: (params) => defaultCustomModel,
-  },
-};
-```
-
-:::info
-When creating a model, you should always set a default value to your `defaultCustomModel` prop. This will initialize the component's internal state when the model is uncontrolled.
-See the [Params default value](/x/react-tree-view/rich-tree-view/headless/#params-default-value) section for more information.
-:::
-
-You can then use this model in your plugin (or in any other plugin) using the `models` parameter:
-
-```ts
-const useCustomPlugin = ({ models }) => {
-  React.useEffect(() => {
-    console.log(models.customModel.value);
-  });
-
-  const updateCustomModel = (newValue) =>
-    models.customModel.setControlledValue(newValue);
-
-  return {};
-};
-```
-
 ### Use elements from another plugin
 
-Your plugin can access the instance methods, the params and the models of any other plugin.
+Your plugin can access the instance methods, the params and the state of any other plugin.
 
 ```ts
-const useCustomPlugin = ({ models }) => {
+const useCustomPlugin = ({ store }) => {
   const handleSomeAction = () => {
     // Log the id of the items currently expanded
-    console.log(models.expandedItems.value);
-
-    // Collapse all the items
-    models.expandedItems.setValue([]);
+    console.log(store.value.expansion.expandedItems);
 
     // Check if an item is expanded
     const isExpanded = useSelector(selectorIsItemExpanded, 'some-item-id');
   };
 };
 ```
-
-:::warning
-Setting a model value in another plugin is wrong because it won't publish the associated callback.
-We probably need a new abstraction here so that a plugin is always responsible for its model updates.
-:::
 
 ### Define a plugin state
 
@@ -146,9 +91,12 @@ The Tree View instance is an object accessible in all the plugins and in the Tre
 It is the main way a plugin can provide features to the rest of the component.
 
 ```ts
-const useCustomPlugin = ({ models }) => {
+const useCustomPlugin = ({ store }) => {
   const toggleCustomModel = () =>
-    models.customModel.setValue(!models.customModel.value);
+    store.update((prevState) => ({
+      ...prevState,
+      customModel: !prevState.customModel,
+    }));
 
   return {
     instance: {
@@ -161,7 +109,7 @@ const useCustomPlugin = ({ models }) => {
 You can then use this instance method in any other plugin:
 
 ```ts
-const useOtherCustomPlugin = ({ models, instance }) => {
+const useOtherCustomPlugin = ({ instance }) => {
   const handleSomeAction = () => {
     instance.toggleCustomModel();
   };
@@ -171,10 +119,13 @@ const useOtherCustomPlugin = ({ models, instance }) => {
 ### Emit and receive events
 
 ```ts
-const useCustomPlugin = () => {
+const useCustomPlugin = ({ store }) => {
   const toggleCustomModel = () => {
-    const newValue = !models.customModel.value;
-    models.customModel.setValue(newValue);
+    const newValue = !selectorCustomModel(store.value);
+    store.update((prevState) => ({
+      ...prevState,
+      customModel: newValue,
+    }));
     publishTreeViewEvent(instance, 'toggleCustomModel', { value: newValue });
   };
 
@@ -279,8 +230,6 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   slots: UseCustomPluginSlots;
   // The slot props used by this plugin
   slotProps: UseCustomPluginSlotProps;
-  // The name of the models defined by your plugin
-  modelNames: UseCustomPluginModelNames;
   // The plugins this plugin needs to work correctly
   dependencies: UseCustomPluginDependantPlugins;
 }>;
@@ -314,8 +263,6 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
     };
   };
   contextValue: { customPlugin: { enabled: boolean } };
-  modelNames: 'customModel';
-  // We want to have access to the expansion models and methods of the expansion plugin.
   dependencies: [UseTreeViewExpansionSignature];
 }>;
 ```

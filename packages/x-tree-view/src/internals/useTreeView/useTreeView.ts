@@ -15,25 +15,28 @@ import {
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { useTreeViewModels } from './useTreeViewModels';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+  if (inputApiRef.current == null) {
+    inputApiRef.current = {} as T;
+  }
+  return inputApiRef.current;
+}
+
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
 ): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
+  const [fallbackPublicApi] = React.useState({});
 
   if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
+    return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApiRef.current;
+  return fallbackPublicApi as T;
 }
 
 let globalId: number = 0;
@@ -64,7 +67,6 @@ export const useTreeView = <
       props,
     });
 
-  const models = useTreeViewModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
   const instance = instanceRef.current as TreeViewInstance<TSignatures>;
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
@@ -105,7 +107,6 @@ export const useTreeView = <
       params: pluginParams,
       experimentalFeatures,
       rootRef: innerRootRef,
-      models,
       plugins,
       store: storeRef.current as TreeViewStore<any>,
     });
