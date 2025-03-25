@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
@@ -91,6 +92,7 @@ function EditToolbar(props) {
 }
 
 export default function FullFeaturedCrudGrid() {
+  const theme = useTheme();
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -174,8 +176,8 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
-              sx={{
-                color: 'primary.main',
+              style={{
+                color: theme.palette.primary.main,
               }}
               onClick={handleSaveClick(id)}
             />,

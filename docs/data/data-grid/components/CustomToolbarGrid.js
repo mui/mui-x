@@ -22,7 +22,7 @@ function CustomToolbar() {
       <GridToolbarExport
         slotProps={{
           tooltip: { title: 'Export data' },
-          button: { variant: 'outlined' },
+          button: { size: 'medium' },
         }}
       />
     </GridToolbarContainer>
