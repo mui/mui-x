@@ -142,7 +142,7 @@
     }
   ],
   "muiName": "MuiHeatmapTooltip",
-  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip.tsx",
+  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip/HeatmapTooltip.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false

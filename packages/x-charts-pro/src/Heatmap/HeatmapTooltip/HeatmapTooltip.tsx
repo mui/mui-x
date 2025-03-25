@@ -1,8 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -16,7 +14,8 @@ import {
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
-import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
+import { useHeatmapSeriesContext } from '../../hooks/useHeatmapSeries';
+import { HeatmapTooltipAxesValue } from './HeatmapTooltipAxesValue';
 
 export interface HeatmapTooltipProps
   extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
@@ -46,23 +45,6 @@ const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes']
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
-
-/**
- * @ignore - internal component.
- */
-const HeatmapTooltipAxesValue = styled(Typography, {
-  name: 'MuiChartsHeatmapTooltip',
-  slot: 'AxesValue',
-})(({ theme }) => ({
-  textAlign: 'start',
-  whiteSpace: 'nowrap',
-  padding: theme.spacing(0.5, 1.5),
-  color: (theme.vars || theme).palette.text.secondary,
-  borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
-  [`& span`]: {
-    marginRight: theme.spacing(1.5),
-  },
-}));
 
 function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'>) {
   const { classes } = props;
