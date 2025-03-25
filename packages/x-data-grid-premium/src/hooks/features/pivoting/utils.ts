@@ -58,7 +58,7 @@ export const getInitialColumns = (
   const initialColumns: Map<string, GridColDef> = new Map();
   for (let i = 0; i < orderedFields.length; i += 1) {
     const field = orderedFields[i];
-    const column = unwrapColumnFromAggregation({ column: lookup[field] });
+    const column = unwrapColumnFromAggregation(lookup[field]);
     if (!isGroupingColumn(field)) {
       initialColumns.set(field, column);
 

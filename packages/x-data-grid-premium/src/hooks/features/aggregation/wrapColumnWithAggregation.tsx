@@ -202,15 +202,11 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
 /**
  * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation cells.
  */
-export const wrapColumnWithAggregationValue = ({
-  column,
-  apiRef,
-  aggregationRule,
-}: {
-  column: GridBaseColDef;
-  apiRef: RefObject<GridApiPremium>;
-  aggregationRule: GridAggregationRule;
-}): GridBaseColDef => {
+export const wrapColumnWithAggregationValue = (
+  column: GridBaseColDef,
+  aggregationRule: GridAggregationRule,
+  apiRef: RefObject<GridApiPremium>,
+): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,
     field: string,
@@ -298,7 +294,7 @@ const isColumnWrappedWithAggregation = (
 /**
  * Remove the aggregation wrappers around the wrappable properties of the column.
  */
-export const unwrapColumnFromAggregation = ({ column }: { column: GridColDef }) => {
+export const unwrapColumnFromAggregation = (column: GridColDef) => {
   if (!isColumnWrappedWithAggregation(column)) {
     return column;
   }
