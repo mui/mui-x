@@ -128,7 +128,7 @@ describe('useAnimate', () => {
     const { rerender } = render(<TestComponent width={2000} />);
 
     await waitFor(() => {
-      expect(calls).to.be.greaterThan(0);
+      expect(calls).to.be.greaterThan(1);
     });
 
     // Should be animating from 1000 to 2000
@@ -143,7 +143,7 @@ describe('useAnimate', () => {
 
     await waitFor(
       () => {
-        expect(calls).to.equal(1);
+        expect(calls).to.equal(2);
       },
       { interval: RAF_INTERVAL },
     );
@@ -192,7 +192,7 @@ describe('useAnimate', () => {
     const { rerender } = render(<TestComponent width={2000} />);
 
     await waitFor(() => {
-      expect(calls).to.be.greaterThan(0);
+      expect(calls).to.be.greaterThan(1);
     });
 
     // Should be animating from 1000 to 2000
@@ -206,7 +206,7 @@ describe('useAnimate', () => {
 
     await waitFor(
       () => {
-        expect(calls).to.equal(1);
+        expect(calls).to.equal(2);
       },
       { interval: RAF_INTERVAL },
     );
@@ -279,7 +279,7 @@ describe('useAnimate', () => {
 
     await waitFor(
       () => {
-        expect(calls).to.equal(1);
+        expect(calls).to.equal(2);
       },
       { interval: RAF_INTERVAL },
     );
@@ -289,16 +289,19 @@ describe('useAnimate', () => {
     rerender(<TestComponent width={2000} skip />);
 
     // Transition finishes immediately
-    await waitFor(() => {
-      expect(calls).to.equal(2);
-    });
+    await waitFor(
+      () => {
+        expect(calls).to.equal(4);
+      },
+      { interval: RAF_INTERVAL },
+    );
     expect(lastCall).to.equal(2000);
 
     rerender(<TestComponent width={1000} skip={false} />);
 
     await waitFor(
       () => {
-        expect(calls).to.equal(3);
+        expect(calls).to.equal(6);
       },
       { interval: RAF_INTERVAL },
     );
