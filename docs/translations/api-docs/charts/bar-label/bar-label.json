@@ -2,6 +2,11 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {
+    "animate": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is animated"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",

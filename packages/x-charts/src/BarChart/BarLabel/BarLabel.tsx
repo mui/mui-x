@@ -139,9 +139,15 @@ BarLabel.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  skipAnimation: PropTypes.bool.isRequired,
+  width: PropTypes.number.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
 } as any;
 
 export { BarLabel };
