@@ -6,7 +6,7 @@ import { clampAngleRad } from '../../../clampAngle';
  * For a pointer coordinate, this function returns the value and dataIndex associated.
  * Returns `null` if the coordinate is outside of values.
  */
-export function getAxisValue(axisConfig: PolarAxisDefaultized, pointerValue: number) {
+export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isBandScale(scale)) {
@@ -20,17 +20,25 @@ export function getAxisValue(axisConfig: PolarAxisDefaultized, pointerValue: num
       : Math.floor(angleGap / scale.step());
 
   if (dataIndex < 0 || dataIndex >= axisData!.length) {
+    return -1;
+  }
+
+  return reverse ? axisData!.length - 1 - dataIndex : dataIndex;
+}
+
+/**
+ * For a pointer coordinate, this function returns the value and dataIndex associated.
+ * Returns `null` if the coordinate is outside of values.
+ */
+export function getAxisValue(
+  axisConfig: PolarAxisDefaultized,
+  pointerValue: number,
+): number | null {
+  const dataIndex = getAxisIndex(axisConfig, pointerValue);
+
+  if (dataIndex < 0) {
     return null;
   }
-  if (reverse) {
-    const reverseIndex = axisData!.length - 1 - dataIndex;
-    return {
-      index: reverseIndex,
-      value: axisData![reverseIndex],
-    };
-  }
-  return {
-    index: dataIndex,
-    value: axisData![dataIndex],
-  };
+
+  return axisConfig.data?.[dataIndex];
 }
