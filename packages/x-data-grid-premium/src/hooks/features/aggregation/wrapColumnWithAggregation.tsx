@@ -286,16 +286,21 @@ export const wrapColumnWithAggregationValue = ({
   return wrappedColumn;
 };
 
+const isColumnWrappedWithAggregation = (
+  column: GridColDef,
+): column is GridColDefWithAggregationWrappers => {
+  return (
+    typeof (column as GridColDefWithAggregationWrappers).aggregationWrappedProperties !==
+    'undefined'
+  );
+};
+
 /**
  * Remove the aggregation wrappers around the wrappable properties of the column.
  */
-export const unwrapColumnFromAggregation = ({
-  column,
-}: {
-  column: GridColDef | GridColDefWithAggregationWrappers;
-}) => {
-  if (!(column as GridColDefWithAggregationWrappers).aggregationWrappedProperties) {
-    return column as GridColDef;
+export const unwrapColumnFromAggregation = ({ column }: { column: GridColDef }) => {
+  if (!isColumnWrappedWithAggregation(column)) {
+    return column;
   }
   const { aggregationWrappedProperties, ...unwrappedColumn } =
     column as GridColDefWithAggregationWrappers;

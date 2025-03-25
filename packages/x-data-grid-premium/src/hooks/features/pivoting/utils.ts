@@ -16,6 +16,7 @@ import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
+import { unwrapColumnFromAggregation } from '../aggregation/wrapColumnWithAggregation';
 
 const columnGroupIdSeparator = '>->';
 
@@ -57,7 +58,7 @@ export const getInitialColumns = (
   const initialColumns: Map<string, GridColDef> = new Map();
   for (let i = 0; i < orderedFields.length; i += 1) {
     const field = orderedFields[i];
-    const column = lookup[field];
+    const column = unwrapColumnFromAggregation({ column: lookup[field] });
     if (!isGroupingColumn(field)) {
       initialColumns.set(field, column);
 
