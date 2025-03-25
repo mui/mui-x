@@ -17,12 +17,13 @@ export function useRangePickerStepNavigation(parameters: UseRangePickerStepNavig
 
       return step.views == null || step.views.includes(view);
     },
-    onStepChange: ({ step, initialView, setView, view }) => {
+    onStepChange: ({ step, initialView, setView, view, views }) => {
       if (step.rangePosition !== rangePositionResponse.rangePosition) {
         rangePositionResponse.setRangePosition(step.rangePosition);
       }
 
-      const targetView = step.views == null ? initialView : step.views[0];
+      const targetView =
+        step.views == null ? initialView : step.views.find((viewBis) => views.includes(viewBis));
       if (targetView !== view) {
         setView(targetView);
       }

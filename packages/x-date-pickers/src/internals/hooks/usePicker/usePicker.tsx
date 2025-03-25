@@ -223,7 +223,12 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
-  const stepNavigation = getStepNavigation({ setView, view, initialView: initialView ?? views[0] });
+  const stepNavigation = getStepNavigation({
+    setView,
+    view,
+    initialView: initialView ?? views[0],
+    views,
+  });
   const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
 
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(

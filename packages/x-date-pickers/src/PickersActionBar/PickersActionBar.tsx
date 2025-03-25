@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { usePickerActionsContext, usePickerContext } from '../hooks';
+import { usePickerContext } from '../hooks';
 
 export type PickersActionBarAction =
   | 'clear'
@@ -131,7 +131,7 @@ PickersActionBarComponent.propTypes = {
    * - `['cancel', 'accept']` for all other Pickers
    */
   actions: PropTypes.arrayOf(
-    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'previous', 'today']).isRequired,
+    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'nextOrAccept', 'today']).isRequired,
   ),
   /**
    * If `true`, the actions do not have additional margin.

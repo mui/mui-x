@@ -281,8 +281,7 @@ export interface PickerActionsContextValue<
   cancelValueChanges: () => void;
   /**
    * Go to the next step in the value picking process.
-   * On range pickers, if the user is currently picking the start date, it will move to the end date. Otherwise it will do nothing.
-   * On non-range pickers, it will do nothing.
+   * For example, on the Mobile Date Time Picker, if the user is editing the date, it will switch to editing the time.
    */
   goToNextStep: () => void;
 }

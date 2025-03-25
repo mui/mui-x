@@ -11,8 +11,9 @@ export function useNonRangePickerStepNavigation(
     isCurrentViewMatchingStep: (view, step) => {
       return step.views == null || step.views.includes(view);
     },
-    onStepChange: ({ step, initialView, setView, view }) => {
-      const targetView = step.views == null ? initialView : step.views[0];
+    onStepChange: ({ step, initialView, setView, view, views }) => {
+      const targetView =
+        step.views == null ? initialView : step.views.find((viewBis) => views.includes(viewBis));
       if (targetView !== view) {
         setView(targetView);
       }
