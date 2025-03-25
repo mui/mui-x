@@ -128,12 +128,12 @@ export function getVerticalCenterRatio(
  * Translate the zoom data by a given movement.
  */
 export function translateZoom(
-  currentZoom: readonly ZoomData[],
+  initialZoomData: readonly ZoomData[],
   movement: { x: number; y: number },
   drawingArea: { width: number; height: number },
   optionsLookup: Record<string | number, DefaultizedZoomOptions>,
 ) {
-  return currentZoom.map((zoom) => {
+  return initialZoomData.map((zoom) => {
     const options = optionsLookup[zoom.axisId];
     if (!options || !options.panning) {
       return zoom;
