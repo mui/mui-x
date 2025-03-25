@@ -46,7 +46,7 @@ export function useFieldRootProps<TValue extends PickerValidValue>(
   const handleClick = useEventCallback((event: React.MouseEvent) => {
     // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
     // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
-    if (event.isDefaultPrevented() || !domGetters.isReady()) {
+    if (!domGetters.isReady()) {
       return;
     }
     setFocused(true);
