@@ -37,7 +37,7 @@ export default function YAxisTickLabelOverflow() {
     <BarChartPro
       yAxis={yAxes}
       // Other props
-      width={2000}
+      width={850}
       height={400}
       dataset={usAirportPassengersData}
       layout="horizontal"

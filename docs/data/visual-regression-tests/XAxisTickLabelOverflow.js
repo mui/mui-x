@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-import { usAirportPassengersData } from './airportData';
+import { usAirportPassengersData } from 'docs/data/visual-regression-tests/airportData';
 
 const defaultXAxis = {
   scaleType: 'band',
