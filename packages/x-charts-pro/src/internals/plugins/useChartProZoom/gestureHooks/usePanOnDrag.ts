@@ -17,7 +17,6 @@ export const usePanOnDrag = (
     instance,
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
-  setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -70,23 +69,12 @@ export const usePanOnDrag = (
       return state.memo;
     });
 
-    const panStartHandler = instance.addInteractionListener('dragStart', () => {
-      setIsInteracting(true);
-    });
-
-    const panEndHandler = instance.addInteractionListener('dragEnd', () => {
-      setIsInteracting(false);
-    });
-
     return () => {
       panHandler.cleanup();
-      panStartHandler.cleanup();
-      panEndHandler.cleanup();
     };
   }, [
     instance,
     svgRef,
-    setIsInteracting,
     isPanEnabled,
     optionsLookup,
     drawingArea.width,

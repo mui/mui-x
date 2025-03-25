@@ -22,7 +22,6 @@ export const useZoomOnPinch = (
     instance,
     svgRef,
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
-  setIsInteracting: React.Dispatch<boolean>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -35,10 +34,6 @@ export const useZoomOnPinch = (
     if (element === null || !isZoomEnabled) {
       return () => {};
     }
-
-    const zoomStartHandler = instance.addInteractionListener('pinchStart', () => {
-      setIsInteracting(true);
-    });
 
     const zoomHandler = instance.addInteractionListener('pinch', (state) => {
       setZoomDataCallback((prevZoomData) => {
@@ -78,22 +73,8 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomEndHandler = instance.addInteractionListener('pinchEnd', () => {
-      setIsInteracting(false);
-    });
-
     return () => {
-      zoomStartHandler.cleanup();
       zoomHandler.cleanup();
-      zoomEndHandler.cleanup();
     };
-  }, [
-    svgRef,
-    drawingArea,
-    isZoomEnabled,
-    optionsLookup,
-    setIsInteracting,
-    instance,
-    setZoomDataCallback,
-  ]);
+  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 };
