@@ -1,5 +1,6 @@
-export const generateSvg2rotation = (center: { cx: number; cy: number }) => (x: number, y: number) =>
-  Math.atan2(x - center.cx, center.cy - y);
+export const generateSvg2rotation =
+  (center: { cx: number; cy: number }) => (x: number, y: number) =>
+    Math.atan2(x - center.cx, center.cy - y);
 
 export const generateSvg2polar =
   (center: { cx: number; cy: number }) =>
