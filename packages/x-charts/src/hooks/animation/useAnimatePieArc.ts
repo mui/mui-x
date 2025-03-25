@@ -4,6 +4,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import type { PieArcProps } from '../../PieChart';
+import { useIsHydrated } from '../useIsHydrated';
 
 type UseAnimatePieArcParams = Pick<
   PieArcProps,
@@ -38,15 +39,11 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
 export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieArcReturnValue {
-  const [firstRender, setFirstRender] = React.useState(true);
+  const isHydrated = useIsHydrated();
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
   };
-
-  React.useEffect(() => {
-    setFirstRender(false);
-  }, []);
 
   const ref = useAnimate(
     { startAngle: props.startAngle, endAngle: props.endAngle },
@@ -77,7 +74,7 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
   );
 
   // Only use the initial props on the first render.
-  const usedProps = !props.skipAnimation && firstRender ? initialProps : props;
+  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   return {
     ref: useForkRef(ref, props.ref),
