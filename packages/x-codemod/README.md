@@ -392,11 +392,13 @@ The list includes these props:
 -  unstable_dataSourceCache={dataSourceCache}
 -  unstable_lazyLoading
 -  unstable_lazyLoadingRequestThrottleMs={100}
+-  unstable_onDataSourceError={() => {}}
 +  rowSpanning
 +  dataSource={dataSource}
 +  dataSourceCache={dataSourceCache}
 +  lazyLoading
 +  lazyLoadingRequestThrottleMs={100}
++  onDataSourceError={() => {}}
  />
 ```
 
