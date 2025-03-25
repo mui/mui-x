@@ -3,9 +3,7 @@ import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-
-export const BrowserSpeechRecognition =
-  (globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition;
+import { BrowserSpeechRecognition } from '../../utils/speechRecognition';
 
 type SpeechRecognitionOptions = {
   onUpdate: (value: string) => void;
