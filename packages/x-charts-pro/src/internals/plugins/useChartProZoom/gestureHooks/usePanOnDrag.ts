@@ -23,8 +23,6 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
-  const ref = React.useRef<any | undefined>({});
-
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
     () => Object.values(optionsLookup).some((v) => v.panning) || false,
@@ -33,28 +31,6 @@ export const usePanOnDrag = (
 
   React.useEffect(() => {
     const element = svgRef.current;
-
-    console.log('instance', instance === ref.current.instance);
-    console.log('svgRef', svgRef === ref.current.svgRef);
-    console.log('setIsInteracting', setIsInteracting === ref.current.setIsInteracting);
-    console.log('isPanEnabled', isPanEnabled === ref.current.isPanEnabled);
-    console.log('optionsLookup', optionsLookup === ref.current.optionsLookup);
-    console.log('drawingArea.width', drawingArea.width === ref.current.width);
-    console.log('drawingArea.height', drawingArea.height === ref.current.height);
-    console.log('setZoomDataCallback', setZoomDataCallback === ref.current.setZoomDataCallback);
-    console.log('store', store === ref.current.store);
-
-    ref.current = {
-      instance,
-      svgRef,
-      setIsInteracting,
-      isPanEnabled,
-      optionsLookup,
-      width: drawingArea.width,
-      height: drawingArea.height,
-      setZoomDataCallback,
-      store,
-    };
 
     if (element === null || !isPanEnabled) {
       return () => {};

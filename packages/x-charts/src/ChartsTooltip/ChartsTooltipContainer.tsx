@@ -6,6 +6,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
@@ -84,14 +85,21 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperOpen = pointerType !== null && hasData; // tooltipHasData;
 
   React.useEffect(() => {
+    const update = rafThrottle(() => popperRef.current?.update());
+
     const positionHandler = instance.addMultipleInteractionListeners(['move', 'drag'], (state) => {
+      if (state.interactionType === 'move' && state.dragging && state.moving) {
+        return;
+      }
+
       // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x: state.event.clientX, y: state.event.clientY };
-      popperRef.current?.update();
+      update();
     });
 
     return () => {
       positionHandler.cleanup();
+      update.clear();
     };
   }, [positionRef, instance]);
 

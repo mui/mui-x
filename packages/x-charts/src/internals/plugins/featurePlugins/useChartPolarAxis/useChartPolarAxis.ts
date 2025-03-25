@@ -124,14 +124,13 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
         const isPointInside = instance.isPointInside(svgPoint, {
           targetElement: state.event.target as SVGElement,
         });
+        // Test if it's in the drawing area
         if (!isPointInside) {
           if (mousePosition.current.isInChart) {
-            store.update((prev) => ({
-              ...prev,
-              interaction: { item: null, axis: { x: null, y: null } },
-            }));
+            instance?.cleanInteraction();
             mousePosition.current.isInChart = false;
           }
+          return;
         }
 
         // Test if it's in the radar circle
@@ -140,22 +139,14 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
         if (radiusSquare > maxRadius ** 2) {
           if (mousePosition.current.isInChart) {
-            store.update((prev) => ({
-              ...prev,
-              interaction: { item: null, axis: { x: null, y: null } },
-            }));
+            instance?.cleanInteraction();
             mousePosition.current.isInChart = false;
           }
           return;
         }
 
         mousePosition.current.isInChart = true;
-        const angle = svg2rotation(svgPoint.x, svgPoint.y);
-
-        instance.setAxisInteraction?.({
-          x: getAxisValue(rotationAxisWithScale[usedRotationAxisId], angle),
-          y: null,
-        });
+        instance.setPointerCoordinate?.(svgPoint);
       },
     );
 

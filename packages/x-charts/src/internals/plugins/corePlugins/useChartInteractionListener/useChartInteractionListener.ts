@@ -78,9 +78,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     },
     {
       target: svgRef,
-      eventOptions: {
-        passive: false,
-      },
       drag: {
         pointer: {
           // We can allow customizing the number of pointers
@@ -90,6 +87,12 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         },
       },
       pinch: {},
+      wheel: {
+        eventOptions: {
+          passive: false,
+        },
+        preventDefault: true,
+      },
     },
   );
 

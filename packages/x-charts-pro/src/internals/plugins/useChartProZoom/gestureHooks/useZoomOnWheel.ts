@@ -55,19 +55,20 @@ export const useZoomOnWheel = (
       }
     });
 
-    const zoomOnWheelHandler = instance.addInteractionListener('wheel', (state) => {
-      const point = getSVGPoint(element, state.event);
+    const zoomOnWheelHandler = instance.addInteractionListener<readonly ZoomData[]>(
+      'wheel',
+      (state) => {
+        const point = getSVGPoint(element, state.event);
 
-      if (!instance.isPointInside(point)) {
-        return;
-      }
+        if (!instance.isPointInside(point)) {
+          return;
+        }
 
-      if (!state.last) {
-        state.event.preventDefault();
-      }
+        if (!state.memo) {
+          state.memo = store.getSnapshot().zoom.zoomData;
+        }
 
-      setZoomDataCallback((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
+        const newZoomData = state.memo.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
           if (!option) {
             return zoom;
@@ -86,8 +87,10 @@ export const useZoomOnWheel = (
 
           return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
         });
-      });
-    });
+
+        setZoomDataCallback(newZoomData);
+      },
+    );
 
     return () => {
       zoomOnWheelHandler.cleanup();
@@ -102,5 +105,6 @@ export const useZoomOnWheel = (
     setIsInteracting,
     instance,
     setZoomDataCallback,
+    store,
   ]);
 };

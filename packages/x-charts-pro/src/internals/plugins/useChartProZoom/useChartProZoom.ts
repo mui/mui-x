@@ -8,6 +8,7 @@ import {
   ZoomData,
   createZoomLookup,
 } from '@mui/x-charts/internals';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
@@ -83,29 +84,35 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [store],
   );
 
-  const setZoomDataCallback = React.useCallback(
-    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-      store.update((prevState) => {
-        const newZoomData =
-          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-        onZoomChange?.(newZoomData);
+  const setZoomDataCallback = React.useMemo(
+    () =>
+      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+        store.update((prevState) => {
+          const newZoomData =
+            typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+          onZoomChange?.(newZoomData);
+          if (prevState.zoom.isControlled) {
+            return prevState;
+          }
 
-        if (prevState.zoom.isControlled) {
-          return prevState;
-        }
-
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            zoomData: newZoomData,
-          },
-        };
-      });
-    },
+          return {
+            ...prevState,
+            zoom: {
+              ...prevState.zoom,
+              zoomData: newZoomData,
+            },
+          };
+        });
+      }),
 
     [onZoomChange, store],
   );
+
+  React.useEffect(() => {
+    return () => {
+      setZoomDataCallback.clear();
+    };
+  }, [setZoomDataCallback]);
 
   // Add events
   const pluginData = { store, instance, svgRef };

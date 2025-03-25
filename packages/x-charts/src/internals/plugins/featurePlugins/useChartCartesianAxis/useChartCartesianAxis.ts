@@ -67,10 +67,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  const mousePosition = React.useRef({
-    isInChart: false,
-  });
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || !element || params.disableAxisListener) {
@@ -80,7 +76,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     // Clean the interaction when the mouse leaves the chart.
     const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
       if (!state.hovering) {
-        mousePosition.current.isInChart = false;
         instance.cleanInteraction?.();
       }
     });
@@ -98,22 +93,13 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         const isPointInside = instance.isPointInside(svgPoint, {
           targetElement: state.event.target as SVGElement,
         });
+
         if (!isPointInside) {
-          if (mousePosition.current.isInChart) {
-            store.update((prev) => ({
-              ...prev,
-              interaction: { item: null, axis: { x: null, y: null } },
-            }));
-            mousePosition.current.isInChart = false;
-          }
+          instance.cleanInteraction?.();
+          return;
         }
 
-        mousePosition.current.isInChart = true;
-
-        instance.setAxisInteraction?.({
-          x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
-          y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
-        });
+        instance.setPointerCoordinate?.(svgPoint);
       },
     );
 
@@ -147,10 +133,8 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
-      if (axisInteractionRef.current.x === null && axisInteractionRef.current.y === null) {
-        const svgPoint = getSVGPoint(element, state.event);
 
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSVGPoint(element, state.event);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
