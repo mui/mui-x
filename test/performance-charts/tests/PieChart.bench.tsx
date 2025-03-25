@@ -28,7 +28,7 @@ describe('PieChart', () => {
       );
 
       const result = 1050;
-      await findByText(result.toLocaleString());
+      await findByText(result);
 
       cleanup();
     },
