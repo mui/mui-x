@@ -11,7 +11,7 @@ parameters:
     default: stable
   node-version:
     description: The version of node to be used
-    type: string
+    type: number
     default: 23
   workflow:
     description: The name of the workflow to run
@@ -70,7 +70,7 @@ commands:
         default: << pipeline.parameters.react-version >>
       node-version:
         description: The version of node to be used
-        type: string
+        type: number
         default: << pipeline.parameters.node-version >>
 
     steps:
