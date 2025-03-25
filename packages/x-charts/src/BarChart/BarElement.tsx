@@ -36,6 +36,8 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     y: number;
     width: number;
     height: number;
+    layout: 'horizontal' | 'vertical';
+    skipAnimation: boolean;
   };
 
 function BarElement(props: BarElementProps) {
@@ -65,8 +67,6 @@ function BarElement(props: BarElementProps) {
     color,
     isFaded,
     isHighlighted,
-    skipAnimation,
-    layout,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -84,6 +84,8 @@ function BarElement(props: BarElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       stroke: 'none',
       fill: color,
+      skipAnimation,
+      layout,
     },
     className: classes.root,
     ownerState,

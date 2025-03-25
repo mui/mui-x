@@ -10,12 +10,6 @@ export interface BarElementClasses {
   highlighted: string;
   /** Styles applied to the root element if it is faded. */
   faded: string;
-  /** Styles applied to the root element when animation is not skipped. */
-  animate: string;
-  /** Styles applied to the root element when layout is horizontal. */
-  horizontal: string;
-  /** Styles applied to the root element when layout is vertical. */
-  vertical: string;
 }
 
 export type BarElementClassKey = keyof BarElementClasses;
@@ -27,8 +21,6 @@ export interface BarElementOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<BarElementClasses>;
-  layout: 'horizontal' | 'vertical';
-  skipAnimation?: boolean;
 }
 
 export function getBarElementUtilityClass(slot: string) {
@@ -39,22 +31,12 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
   'root',
   'highlighted',
   'faded',
-  'animate',
-  'horizontal',
-  'vertical',
 ]);
 
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded, skipAnimation, layout } = ownerState;
+  const { classes, id, isHighlighted, isFaded } = ownerState;
   const slots = {
-    root: [
-      'root',
-      `series-${id}`,
-      isHighlighted && 'highlighted',
-      isFaded && 'faded',
-      !skipAnimation && 'animate',
-      layout === 'vertical' ? 'vertical' : 'horizontal',
-    ],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);
