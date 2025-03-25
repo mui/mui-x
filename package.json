@@ -91,17 +91,17 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.0.0-beta.4",
+    "@mui/icons-material": "^7.0.0-rc.0",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.20",
-    "@mui/internal-markdown": "^2.0.1",
-    "@mui/internal-test-utils": "^2.0.3",
-    "@mui/material": "^7.0.0-beta.4",
+    "@mui/internal-markdown": "^2.0.2",
+    "@mui/internal-test-utils": "^2.0.4",
+    "@mui/material": "^7.0.0-rc.0",
     "@mui/monorepo": "github:mui/material-ui#260ed53760f179e3bb4f1f43e2f2712ecbf9fdd7",
-    "@mui/utils": "^7.0.0-beta.4",
+    "@mui/utils": "^7.0.0-rc.0",
     "@next/eslint-plugin-next": "15.2.3",
     "@octokit/plugin-retry": "^7.2.0",
     "@octokit/rest": "^21.1.1",
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.51.1",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.20.6",
     "@types/chai": "^4.3.20",
@@ -116,8 +116,8 @@
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.4",
     "@types/yargs": "^17.0.33",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
-    "@typescript-eslint/parser": "^8.26.1",
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.27.0",
     "autoprefixer": "^10.4.21",
     "axe-core": "4.10.3",
     "babel-loader": "^10.0.0",
@@ -202,9 +202,9 @@
     "react-is": "^19.0.0",
     "@types/node": "^20.17.25"
   },
-  "packageManager": "pnpm@10.6.3",
+  "packageManager": "pnpm@10.6.5",
   "engines": {
-    "pnpm": "10.6.3"
+    "pnpm": "10.6.5"
   },
   "pnpm": {
     "patchedDependencies": {
