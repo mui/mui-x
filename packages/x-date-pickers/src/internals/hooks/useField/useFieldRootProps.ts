@@ -9,9 +9,16 @@ import { getActiveElement } from '../../utils/utils';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 
+/**
+ * Generate the props to pass to the root element of the field.
+ * It is not used by the non-accessible DOM structure (with an <input /> element for editing).
+ * It should be used in the MUI accessible DOM structure and the Base UI implementation.
+ * @param {UseFieldRootPropsParameters<TValue>} parameters The parameters of the hook.
+ * @returns {UseFieldRootPropsReturnValue} The props to forward to the root element of the field.
+ */
 export function useFieldRootProps<TValue extends PickerValidValue>(
   parameters: UseFieldRootPropsParameters<TValue>,
-): UseFieldRootProps {
+): UseFieldRootPropsReturnValue {
   const {
     manager,
     focused,
@@ -44,11 +51,10 @@ export function useFieldRootProps<TValue extends PickerValidValue>(
 
   const containerClickTimeout = useTimeout();
   const handleClick = useEventCallback((event: React.MouseEvent) => {
-    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
-    // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
     if (!domGetters.isReady()) {
       return;
     }
+
     setFocused(true);
 
     if (parsedSelectedSections === 'all') {
@@ -184,7 +190,7 @@ interface UseFieldRootPropsParameters<TValue extends PickerValidValue> {
   setFocused: (focused: boolean) => void;
 }
 
-interface UseFieldRootProps {
+interface UseFieldRootPropsReturnValue {
   onKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
   onBlur: React.FocusEventHandler<HTMLDivElement>;
   onFocus: React.FocusEventHandler<HTMLDivElement>;
