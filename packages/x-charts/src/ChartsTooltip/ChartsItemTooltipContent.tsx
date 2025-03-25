@@ -1,15 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useItemTooltip } from './useItemTooltip';
 import {
-  ChartsTooltipCell,
+  ChartsItemTooltipContainer,
+  ChartsItemTooltipText,
   ChartsTooltipPaper,
-  ChartsTooltipRow,
-  ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
@@ -34,25 +32,13 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
-      <ChartsTooltipTable className={classes.table}>
-        <tbody>
-          <ChartsTooltipRow className={classes.row}>
-            <ChartsTooltipCell
-              className={clsx(classes.markCell, classes.cell)}
-              component="td"
-              aria-hidden
-            >
-              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-              {label}
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-              {formattedValue}
-            </ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </tbody>
-      </ChartsTooltipTable>
+      <ChartsItemTooltipContainer>
+        <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+        <ChartsItemTooltipText>
+          <span className={classes.labelCell}>{label}</span>
+          <span className={classes.valueCell}>{formattedValue}</span>
+        </ChartsItemTooltipText>
+      </ChartsItemTooltipContainer>
     </ChartsTooltipPaper>
   );
 }

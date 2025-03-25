@@ -1,19 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import composeClasses from '@mui/utils/composeClasses';
-import Typography from '@mui/material/Typography';
 import {
   ChartsTooltipPaper,
-  ChartsTooltipTable,
-  ChartsTooltipRow,
-  ChartsTooltipCell,
   useItemTooltip,
   ChartsTooltipContainerProps,
   getChartsTooltipUtilityClass,
   ChartsTooltipContainer,
+  ChartsItemTooltipContainer,
+  ChartsItemTooltipText,
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
@@ -47,6 +46,23 @@ const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes']
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
+
+/**
+ * @ignore - internal component.
+ */
+const HeatmapTooltipAxesValue = styled(Typography, {
+  name: 'MuiChartsHeatmapTooltip',
+  slot: 'AxesValue',
+})(({ theme }) => ({
+  textAlign: 'start',
+  whiteSpace: 'nowrap',
+  padding: theme.spacing(0.5, 1.5),
+  color: (theme.vars || theme).palette.text.secondary,
+  borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
+  [`& span`]: {
+    marginRight: theme.spacing(1.5),
+  },
+}));
 
 function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'>) {
   const { classes } = props;
@@ -84,29 +100,18 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
 
   return (
     <ChartsTooltipPaper className={classes?.paper}>
-      <ChartsTooltipTable className={classes?.table}>
-        <Typography component="caption">
-          <span>{formattedX}</span>
-          <span>{formattedY}</span>
-        </Typography>
-        <tbody>
-          <ChartsTooltipRow className={classes?.row}>
-            <ChartsTooltipCell
-              className={clsx(classes?.markCell, classes?.cell)}
-              component="td"
-              aria-hidden
-            >
-              <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)} component="th">
-              {seriesLabel}
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)} component="td">
-              {formattedValue}
-            </ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </tbody>
-      </ChartsTooltipTable>
+      <HeatmapTooltipAxesValue>
+        <span>{formattedX}</span>
+        <span>{formattedY}</span>
+      </HeatmapTooltipAxesValue>
+
+      <ChartsItemTooltipContainer>
+        <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
+        <ChartsItemTooltipText>
+          <span className={classes?.labelCell}>{seriesLabel}</span>
+          <span className={classes?.valueCell}>{formattedValue}</span>
+        </ChartsItemTooltipText>
+      </ChartsItemTooltipContainer>
     </ChartsTooltipPaper>
   );
 }

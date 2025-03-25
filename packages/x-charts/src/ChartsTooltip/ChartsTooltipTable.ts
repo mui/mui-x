@@ -85,3 +85,36 @@ export const ChartsTooltipCell = styled(Typography, {
     paddingRight: theme.spacing(1.5),
   },
 }));
+
+/**
+ * @ignore - internal component.
+ */
+export const ChartsItemTooltipContainer = styled('div', {
+  name: 'MuiChartsItemTooltip',
+  slot: 'Container',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1.5),
+  display: 'flex',
+  alignItems: 'center',
+}));
+
+/**
+ * @ignore - internal component.
+ */
+export const ChartsItemTooltipText = styled(Typography, {
+  name: 'MuiChartsItemTooltip',
+  slot: 'Text',
+})(({ theme }) => ({
+  textAlign: 'start',
+  whiteSpace: 'nowrap',
+  color: (theme.vars || theme).palette.text.secondary,
+  [`& .${chartsTooltipClasses.labelCell}`]: {
+    paddingLeft: theme.spacing(1),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  [`& .${chartsTooltipClasses.valueCell}`]: {
+    color: (theme.vars || theme).palette.text.primary,
+    fontWeight: theme.typography.fontWeightMedium,
+    paddingLeft: theme.spacing(1.5),
+  },
+}));
