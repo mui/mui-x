@@ -24,8 +24,8 @@ Pivoting transforms your data by reorganizing it along three key dimensions: row
 
 ### Non-pivoted data
 
-The non-pivoted data is the data that you start with.
-It is the data that you see in the Data Grid before you pivot it.
+"Non-pivoted data" refers to the data as it's presented in the Data Grid before pivoting.
+The demo below shows the non-pivoted dataset used throughout this doc to illustrate key pivoting features.
 
 {{"demo": "GridNonPivoted.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -33,12 +33,12 @@ It is the data that you see in the Data Grid before you pivot it.
 
 The **Rows** menu defines how the data will be grouped vertically after pivoting.
 Each unique value in the fields selected for rows will become a new row in the pivot Data Grid.
-For example, if you pivot by `product`, each unique product name will become a row in your pivot data grid.
+For example, if you pivot by **Product**, each unique product name will become a row in the pivot Data Grid.
 
 {{"demo": "GridPivotingRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for rows, the rows will be grouped in the order of the selected fields.
-For example, if you pivot by `product` and `size` rows, each unique combination of `product` and `size` will become a row in your pivot data grid.
+For example, if you pivot with both **Product** and **Size** selected for rows, then each unique combination of the two will become a row in the pivot Data Grid.
 
 ### Values
 
@@ -50,24 +50,24 @@ By selecting **Product** for the pivot rows and **Sales** for the pivot values, 
 {{"demo": "GridPivotingValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for values, each field will add a new aggregated column to the pivot Data Grid.
-For example, if you pivot by `sales` and `profit` values, the pivot data grid will have two aggregated columns: `sales` and `profit`.
+For example, if you pivot with **Sales** and **Profit** for values, the pivot Data Grid will contain two corresponding aggregated columns.
 
 ### Columns
 
 The **Columns** menu defines how the data will be grouped horizontally after pivoting.
 Each unique value in the fields you select for columns will create a new column group in the pivot Data Grid.
-For example, if you pivot by `region`, each unique region will become a column group in your pivot data grid.
+For example, if you pivot by **Region** in the demo below, each unique region becomes a column group in the pivot Data Grid.
 
 {{"demo": "GridPivotingColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If multiple fields are selected for columns, the columns will be grouped in the order of the selected fields.
-For example, if you pivot by `region` and `quarter` columns, each unique combination of region and quarter will become a column in your pivot data grid.
+For example, if you pivot with **Region** and **Quarter** for columns, each unique combination of the two will become a column in the pivot Grid.
+Try selecting the **Quarter** checkbox in the **Columns** section in the demo above to see this.
 
 ### Pivoting in action
 
 In the demo below, the goal is to evaluate sales by region and quarter for each product and size available.
-To get that, we pivot a dataset of sales to have `product` and `size` fields as **rows**, `region` and `quarter` fields
-as **columns**, and `sales` and `profit` fields as aggregated **values**.
+To accomplish this, the dataset can be pivoted with **Product** and **Size** for rows; **Region** and **Quarter** for columns; and **Sales** and **Profit** for aggregated values.
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -143,7 +143,7 @@ To disable pivoting, set the `disablePivoting` prop to `true`:
 In pivot mode, it's often useful to group data by a year or quarter.
 The Data Grid automatically generates year and quarter columns for each **Date** column for this purpose.
 
-In the demo below, the `transactionDate` column is represented by additional columns in the pivot mode: `transactionDate-year` and `transactionDate-quarter`:
+In the demo below, the **Transaction Date** column is represented by additional columns in pivot mode: **Transaction Date (Year)** and **Transaction Date (Quarter)**:
 
 {{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
 
