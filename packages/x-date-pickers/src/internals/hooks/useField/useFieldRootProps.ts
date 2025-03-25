@@ -1,7 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerManager } from '../../../models';
-import { PickerValidValue } from '../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
 import { UseFieldStateReturnValue } from './useFieldState';
@@ -13,11 +12,11 @@ import { syncSelectionToDOM } from './syncSelectionToDOM';
  * Generate the props to pass to the root element of the field.
  * It is not used by the non-accessible DOM structure (with an <input /> element for editing).
  * It should be used in the MUI accessible DOM structure and the Base UI implementation.
- * @param {UseFieldRootPropsParameters<TValue>} parameters The parameters of the hook.
+ * @param {UseFieldRootPropsParameters} parameters The parameters of the hook.
  * @returns {UseFieldRootPropsReturnValue} The props to forward to the root element of the field.
  */
-export function useFieldRootProps<TValue extends PickerValidValue>(
-  parameters: UseFieldRootPropsParameters<TValue>,
+export function useFieldRootProps(
+  parameters: UseFieldRootPropsParameters,
 ): UseFieldRootPropsReturnValue {
   const {
     manager,
@@ -180,11 +179,11 @@ export function useFieldRootProps<TValue extends PickerValidValue>(
   };
 }
 
-interface UseFieldRootPropsParameters<TValue extends PickerValidValue> {
-  manager: PickerManager<TValue, any, any, any, any>;
-  stateResponse: UseFieldStateReturnValue<TValue>;
+interface UseFieldRootPropsParameters {
+  manager: PickerManager<any, any, any, any, any>;
+  stateResponse: UseFieldStateReturnValue<any>;
   applyCharacterEditing: UseFieldCharacterEditingReturnValue;
-  internalPropsWithDefaults: UseFieldInternalProps<TValue, any, any> & { minutesStep?: number };
+  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
   domGetters: UseFieldDOMGetters;
   focused: boolean;
   setFocused: (focused: boolean) => void;
