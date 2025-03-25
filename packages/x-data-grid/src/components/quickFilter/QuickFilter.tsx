@@ -206,7 +206,6 @@ function QuickFilter(props: QuickFilterProps) {
     render,
     {
       className: resolvedClassName,
-      'aria-controls': controlId,
       ...other,
       ref,
     },
