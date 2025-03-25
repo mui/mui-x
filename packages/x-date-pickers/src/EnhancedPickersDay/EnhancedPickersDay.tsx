@@ -370,6 +370,8 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay(
     ...other
   } = props;
 
+  console.log('EnhancedPickersDay', props);
+
   const ownerState = {
     isSelected: selected,
     isHighlightTodayDisabled: disableHighlightToday,

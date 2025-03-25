@@ -197,6 +197,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       toolbar: DateTimePickerToolbar,
       tabs: DateTimePickerTabs,

@@ -96,6 +96,7 @@ export function useDatePickerDefaultizedProps<Props extends BaseDatePickerProps>
       defaultViews: ['year', 'day'],
       defaultOpenTo: 'day',
     }),
+    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),

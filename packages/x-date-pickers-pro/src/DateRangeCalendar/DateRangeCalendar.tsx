@@ -134,6 +134,7 @@ function useDateRangeCalendarDefaultizedProps(
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
+    enableEnhancedDaySlot: themeProps.enableEnhancedDaySlot ?? false,
   };
 }
 
@@ -214,6 +215,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
+    enableEnhancedDaySlot,
+
     ...other
   } = props;
 
@@ -622,6 +625,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
               gridLabelId={labelId}
+              enableEnhancedDaySlot={enableEnhancedDaySlot}
             />
           </DateRangeCalendarMonthContainer>
         );

@@ -185,6 +185,7 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
           themeProps.disablePast ||
           themeProps.disableFuture,
       ),
+    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,
