@@ -112,6 +112,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
     id,
     label,
     labelId,
+    customProps,
     disabled,
     slotProps,
     onChange,
@@ -144,11 +145,13 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         onChange={onChange as any}
         {...rest}
         variant="outlined"
+        // @ts-ignore Issue with customProps
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={menuProps}
         size={size}
+        {...customProps}
       />
     </MUIFormControl>
   );
@@ -171,7 +174,7 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
 
 const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
   function BasePagination(props, ref) {
-    const { onRowsPerPageChange, disabled, ...rest } = props;
+    const { onRowsPerPageChange, customProps, disabled, ...rest } = props;
     const computedProps = React.useMemo(() => {
       if (!disabled) {
         return undefined;
@@ -201,9 +204,11 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
             estimated: estimatedRowCount,
           })
         }
+        // @ts-ignore Issue with customProps
         getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
         {...computedProps}
         {...rest}
+        {...customProps}
         ref={ref}
       />
     );
@@ -254,24 +259,24 @@ const iconSlots: GridIconSlotsComponent = {
 
 const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
-  baseBadge: MUIBadge,
+  baseBadge: BaseBadge,
   baseCheckbox: React.forwardRef(BaseCheckbox),
-  baseCircularProgress: MUICircularProgress,
-  baseDivider: MUIDivider,
+  baseCircularProgress: BaseCircularProgress,
+  baseDivider: BaseDivider,
   baseInput: BaseInput,
-  baseLinearProgress: MUILinearProgress,
+  baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
-  baseButton: MUIButton as GridBaseSlots['baseButton'],
-  baseIconButton: MUIIconButton as GridBaseSlots['baseIconButton'],
-  baseTooltip: MUITooltip,
+  baseButton: BaseButton,
+  baseIconButton: BaseIconButton,
+  baseTooltip: BaseTooltip,
   basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
-  baseSkeleton: MUISkeleton,
-  baseSwitch: MUISwitch,
+  baseSkeleton: BaseSkeleton,
+  baseSwitch: BaseSwitch,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -281,8 +286,13 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 
 export default materialSlots;
 
+function BaseBadge(props: GridSlotProps['baseBadge']) {
+  const { customProps, ...rest } = props;
+  return <MUIBadge {...rest} {...customProps} />;
+}
+
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, customProps, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -303,6 +313,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
     return (
       <Checkbox
         {...other}
+        {...customProps}
         className={className}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
@@ -317,6 +328,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       control={
         <Checkbox
           {...other}
+          {...customProps}
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
           touchRippleRef={rippleRef}
@@ -328,8 +340,49 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
   );
 }
 
+function BaseCircularProgress(props: GridSlotProps['baseCircularProgress']) {
+  const { customProps, ...rest } = props;
+  return <MUICircularProgress {...rest} {...customProps} />;
+}
+
+function BaseDivider(props: GridSlotProps['baseDivider']) {
+  const { customProps, ...rest } = props;
+  return <MUIDivider {...rest} {...customProps} />;
+}
+
+function BaseLinearProgress(props: GridSlotProps['baseLinearProgress']) {
+  const { customProps, ...rest } = props;
+  return <MUILinearProgress {...rest} {...customProps} />;
+}
+
+function BaseButton(props: GridSlotProps['baseButton']) {
+  const { customProps, ...rest } = props;
+  return <MUIButton {...rest} {...customProps} />;
+}
+
+function BaseIconButton(props: GridSlotProps['baseIconButton']) {
+  const { customProps, ...rest } = props;
+  return <MUIIconButton {...rest} {...customProps} />;
+}
+
+function BaseTooltip(props: GridSlotProps['baseTooltip']) {
+  const { customProps, ...rest } = props;
+  return <MUITooltip {...rest} {...customProps} />;
+}
+
+function BaseSkeleton(props: GridSlotProps['baseSkeleton']) {
+  const { customProps, ...rest } = props;
+  return <MUISkeleton {...rest} {...customProps} />;
+}
+
+function BaseSwitch(props: GridSlotProps['baseSwitch']) {
+  const { customProps, ...rest } = props;
+  return <MUISwitch {...rest} {...customProps} />;
+}
+
 function BaseMenuList(props: GridSlotProps['baseMenuList']) {
-  return <MUIMenuList {...props} />;
+  const { customProps, ...rest } = props;
+  return <MUIMenuList {...rest} {...customProps} />;
 }
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {

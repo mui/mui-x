@@ -39,6 +39,7 @@ import type {
   TooltipProps,
   TextFieldProps,
 } from './gridBaseSlots';
+import { MaterialBaseNativeProps } from './baseNativeProps.material';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -144,7 +145,11 @@ interface ElementSlotProps {
   root: RootProps;
 }
 
-export type GridSlotProps = BaseSlotProps & ElementSlotProps;
+type MaterialBaseSlotProps = {
+  [K in keyof BaseSlotProps]: BaseSlotProps[K] & { customProps: MaterialBaseNativeProps[K] };
+};
+
+export type GridSlotProps = MaterialBaseSlotProps & ElementSlotProps;
 
 /**
  * Overridable components props dynamically passed to the component at rendering.

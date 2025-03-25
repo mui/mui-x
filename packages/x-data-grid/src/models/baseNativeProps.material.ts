@@ -1,0 +1,40 @@
+import { AutocompleteProps } from '@mui/material/Autocomplete';
+import { BadgeProps } from '@mui/material/Badge';
+import { CheckboxProps } from '@mui/material/Checkbox';
+import { CircularProgressProps } from '@mui/material/CircularProgress';
+import { DividerProps } from '@mui/material/Divider';
+import { LinearProgressProps } from '@mui/material/LinearProgress';
+import { MenuListProps } from '@mui/material/MenuList';
+import { MenuItemProps } from '@mui/material/MenuItem';
+import { TextFieldProps } from '@mui/material/TextField';
+import { SwitchProps } from '@mui/material/Switch';
+import { ButtonProps } from '@mui/material/Button';
+import { IconButtonProps } from '@mui/material/IconButton';
+import { PaginationProps } from '@mui/material/Pagination';
+import { PopperProps } from '@mui/material/Popper';
+import { TooltipProps } from '@mui/material/Tooltip';
+import { InputProps } from '@mui/material/Input';
+import { SelectProps } from '@mui/material/Select';
+import { SkeletonProps } from '@mui/material/Skeleton';
+
+export interface MaterialBaseNativeProps {
+  baseAutocomplete: AutocompleteProps<string, true, false, true>;
+  baseBadge: BadgeProps;
+  baseCheckbox: CheckboxProps;
+  baseCircularProgress: CircularProgressProps;
+  baseDivider: DividerProps;
+  baseLinearProgress: LinearProgressProps;
+  baseMenuList: MenuListProps;
+  baseMenuItem: MenuItemProps;
+  baseTextField: TextFieldProps;
+  baseSwitch: SwitchProps;
+  baseButton: ButtonProps;
+  baseIconButton: IconButtonProps;
+  basePagination: PaginationProps;
+  basePopper: PopperProps;
+  baseTooltip: TooltipProps;
+  baseInput: InputProps;
+  baseSelect: SelectProps;
+  baseSelectOption: MenuItemProps | React.HTMLProps<HTMLOptionElement>;
+  baseSkeleton: SkeletonProps;
+}

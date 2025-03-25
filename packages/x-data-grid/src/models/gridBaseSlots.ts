@@ -12,6 +12,7 @@ type CommonProps = {
   onFocus?: React.FocusEventHandler;
   onBlur?: React.FocusEventHandler;
   [k: `aria-${string}`]: any;
+  [k: `data-${string}`]: any;
 };
 
 export interface AutocompleteFilterOptionsState<Value> {
