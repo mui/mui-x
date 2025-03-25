@@ -9,6 +9,10 @@ parameters:
     description: The version of react to be used
     type: string
     default: stable
+  node-version:
+    description: The version of node to be used
+    type: string
+    default: 23
   workflow:
     description: The name of the workflow to run
     type: string
@@ -61,9 +65,13 @@ commands:
   install_js:
     parameters:
       react-version:
+        description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
-        description: The version of React to use.
+      node-version:
+        description: The version of node to be used
+        type: string
+        default: << pipeline.parameters.node-version >>
 
     steps:
       - run:
@@ -85,8 +93,8 @@ commands:
 
             eval "$FNM_SETUP"
 
-            fnm install 23
-            fnm use 23
+            fnm install << parameters.node-version >>
+            fnm use << parameters.node-version >>
 
       - run:
           name: Install pnpm package manager
@@ -151,6 +159,7 @@ jobs:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
+          node-version: 20
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
