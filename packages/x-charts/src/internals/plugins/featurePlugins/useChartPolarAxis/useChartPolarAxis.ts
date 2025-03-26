@@ -75,19 +75,18 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }));
   }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
-  const svg2rotation = React.useCallback(
-    (x: number, y: number) => generateSvg2rotation({ cx: center.cx, cy: center.cy })(x, y),
+  const svg2rotation = React.useMemo(
+    () => generateSvg2rotation({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
 
-  const svg2polar = React.useCallback(
-    (x: number, y: number) => generateSvg2polar({ cx: center.cx, cy: center.cy })(x, y),
+  const svg2polar = React.useMemo(
+    () => generateSvg2polar({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
 
-  const polar2svg = React.useCallback(
-    (radius: number, rotation: number): [number, number] =>
-      generatePolar2svg({ cx: center.cx, cy: center.cy })(radius, rotation),
+  const polar2svg = React.useMemo(
+    () => generatePolar2svg({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
 
