@@ -324,6 +324,7 @@
   { "name": "StackOrderType", "kind": "TypeAlias" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Function" },
+  { "name": "useAxesTooltip", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
   { "name": "UseAxisTooltipParams", "kind": "Interface" },
   { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },

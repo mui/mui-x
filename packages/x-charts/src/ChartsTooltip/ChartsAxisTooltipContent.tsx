@@ -11,7 +11,7 @@ import {
   ChartsTooltipRow,
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
-import { useAxisTooltip } from './useAxisTooltip';
+import { useAxesTooltip } from './useAxesTooltip';
 import { useXAxis, useYAxis } from '../hooks';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
@@ -25,7 +25,7 @@ export interface ChartsAxisTooltipContentProps {
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { classes: propClasses, sx } = props;
-  const tooltipData = useAxisTooltip({ multipleAxes: true });
+  const tooltipData = useAxesTooltip();
   const xAxis = useXAxis();
   const yAxis = useYAxis();
 

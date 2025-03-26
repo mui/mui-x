@@ -33,7 +33,6 @@ export interface UseAxisTooltipReturnValue<
 export interface UseAxisTooltipParams {
   /**
    * If `true`, the hook returns an array with an object per active axis.
-   * @deprecated In future version, the `multipleAxes=true` will be the unique behavior
    */
   multipleAxes?: boolean;
   /**
@@ -79,6 +78,9 @@ function defaultAxisTooltipConfig(
   };
 }
 
+/**
+ * @deprecated Use `useAxesTooltip` instead.
+ */
 export function useAxisTooltip(
   params: UseAxisTooltipParams & { multipleAxes: true },
 ): UseAxisTooltipReturnValue[] | null;
