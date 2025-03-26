@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { RenderProp } from '@mui/x-data-grid';
 import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -35,7 +36,7 @@ export type PromptFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'class
    * @param {string} context The context of the prompt
    * @returns {Promise<PromptResponse>} The grid state updates
    */
-  onPrompt: (query: string, context: string) => Promise<PromptResponse>;
+  onPrompt: (query: string, context: string) => Promise<PromptResponse | undefined>;
   /**
    * Called when an error occurs.
    * @param {string} error The error message
@@ -84,7 +85,11 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
     apiRef.current.setLoading(true);
 
     onPrompt(value, context)
-      .then(apiRef.current.unstable_applyPromptResult)
+      .then((result) => {
+        if (result) {
+          apiRef.current.unstable_applyPromptResult(result);
+        }
+      })
       .catch((promptError) => {
         setError(apiRef.current.getLocaleText('toolbarPromptControlErrorMessage'));
         onError?.(promptError);
@@ -134,5 +139,35 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
 
   return <PromptFieldContext.Provider value={contextValue}>{element}</PromptFieldContext.Provider>;
 });
+
+PromptField.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Allow taking couple of random cell values from each column to improve the prompt context.
+   * If allowed, samples are taken from different rows.
+   * If not allowed, the column examples are used.
+   * @default false
+   */
+  allowDataSampling: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * Called when the new prompt is ready to be processed.
+   * Provides the prompt and the data context and expects the grid state updates to be returned.
+   * @param {string} query The query to process
+   * @param {string} context The context of the prompt
+   * @returns {Promise<PromptResponse>} The grid state updates
+   */
+  onPrompt: PropTypes.func.isRequired,
+  /**
+   * A function to customize rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
 
 export { PromptField };
