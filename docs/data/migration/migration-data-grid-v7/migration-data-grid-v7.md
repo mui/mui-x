@@ -216,7 +216,7 @@ You have to import it from `@mui/x-license` instead:
 
 - `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
-- The `showToolbar` prop is now required to display the toolbar.
+- ✅ The `showToolbar` prop is now required to display the toolbar.
 
   It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
 
