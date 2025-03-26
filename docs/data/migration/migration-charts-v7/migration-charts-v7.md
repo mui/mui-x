@@ -171,7 +171,7 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 
 Some helpers are provided to create your custom tooltip:
 
-- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxesTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Update Tooltip DOM structure
