@@ -1,7 +1,10 @@
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
 
 describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
@@ -50,8 +53,14 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
   });
 
-  it('should zoom on wheel', async () => {
-    const { user } = render(<LineChartPro {...lineChartProps} />, options);
+  it('should zoom on wheel', async function test() {
+    this.timeout(10000);
+
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
 
     expect(screen.queryByText('A')).not.to.equal(null);
     expect(screen.queryByText('B')).not.to.equal(null);
@@ -71,8 +80,11 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // And we do it 200 times which is the lowest number to trigger a zoom where both A and D are not visible
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
     }
 
+    expect(onZoomChange.callCount).to.equal(200);
     expect(screen.queryByText('A')).to.equal(null);
     expect(screen.queryByText('B')).not.to.equal(null);
     expect(screen.queryByText('C')).not.to.equal(null);
@@ -81,8 +93,11 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // scroll back
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
     }
 
+    expect(onZoomChange.callCount).to.equal(400);
     expect(screen.queryByText('A')).not.to.equal(null);
     expect(screen.queryByText('B')).not.to.equal(null);
     expect(screen.queryByText('C')).not.to.equal(null);
