@@ -610,9 +610,7 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
-    const currentRows = props.dataSource
-      ? gridDataRowsSelector(apiRef)
-      : props.rows;
+    const currentRows = props.dataSource ? gridDataRowsSelector(apiRef) : props.rows;
     const areNewRowsAlreadyInState =
       apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =
