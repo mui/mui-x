@@ -8,7 +8,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { mergeSx } from '../../utils/utils';
-import { useNonRangePickerStepNavigation } from '../useNonRangePickerStepNavigation';
+import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -32,7 +32,7 @@ export const useStaticPicker = <
 }: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const getStepNavigation = useNonRangePickerStepNavigation({ steps });
+  const getStepNavigation = createNonRangePickerStepNavigation({ steps });
 
   const { providerProps, renderCurrentView } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,

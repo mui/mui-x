@@ -8,7 +8,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import * as React from 'react';
 import { UseRangePositionProps } from '../hooks/useRangePosition';
-import { PickerRangeStep } from '../hooks/useRangePickerStepNavigation';
+import { PickerRangeStep } from '../utils/createRangePickerStepNavigation';
 
 /**
  * Props common to all range non-static pickers.

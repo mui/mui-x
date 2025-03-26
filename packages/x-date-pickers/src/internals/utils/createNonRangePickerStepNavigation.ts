@@ -1,8 +1,8 @@
 import { DateOrTimeViewWithMeridiem } from '../models/common';
-import { createStepNavigation } from '../utils/createStepNavigation';
+import { createStepNavigation } from './createStepNavigation';
 
-export function useNonRangePickerStepNavigation(
-  parameters: UseNonRangePickerStepNavigationParameters,
+export function createNonRangePickerStepNavigation(
+  parameters: CreateNonRangePickerStepNavigationParameters,
 ) {
   const { steps } = parameters;
 
@@ -29,6 +29,6 @@ export interface PickerStep {
   views: readonly DateOrTimeViewWithMeridiem[] | null;
 }
 
-interface UseNonRangePickerStepNavigationParameters {
+interface CreateNonRangePickerStepNavigationParameters {
   steps: PickerStep[] | null;
 }

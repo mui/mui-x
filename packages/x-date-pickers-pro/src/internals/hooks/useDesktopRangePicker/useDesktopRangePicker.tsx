@@ -18,7 +18,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
-import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -44,7 +44,7 @@ export const useDesktopRangePicker = <
   const viewContainerRole = fieldType === 'single-input' ? 'dialog' : 'tooltip';
   const rangePositionResponse = useRangePosition(props);
 
-  const getStepNavigation = useRangePickerStepNavigation({
+  const getStepNavigation = createRangePickerStepNavigation({
     steps,
     rangePositionResponse,
   });

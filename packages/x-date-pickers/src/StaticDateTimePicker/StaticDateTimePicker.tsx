@@ -20,7 +20,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/hooks/useNonRangePickerStepNavigation';
+import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
 

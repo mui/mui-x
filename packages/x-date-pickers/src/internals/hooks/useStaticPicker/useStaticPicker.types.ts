@@ -5,7 +5,7 @@ import {
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParameters, UsePickerProps } from '../usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { PickerStep } from '../useNonRangePickerStepNavigation';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 

@@ -32,7 +32,7 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
-import { PickerRangeStep } from '../internals/hooks/useRangePickerStepNavigation';
+import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },

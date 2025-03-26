@@ -17,7 +17,7 @@ import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import { PickerStep } from '../useNonRangePickerStepNavigation';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,

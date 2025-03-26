@@ -16,7 +16,7 @@ import {
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
-import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -40,7 +40,7 @@ export const useStaticRangePicker = <
 
   const rangePositionResponse = useRangePosition(props);
 
-  const getStepNavigation = useRangePickerStepNavigation({
+  const getStepNavigation = createRangePickerStepNavigation({
     steps,
     rangePositionResponse,
   });

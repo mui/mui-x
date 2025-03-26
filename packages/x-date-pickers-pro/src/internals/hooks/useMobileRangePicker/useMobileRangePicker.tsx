@@ -22,7 +22,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
-import { useRangePickerStepNavigation } from '../useRangePickerStepNavigation';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -48,7 +48,7 @@ export const useMobileRangePicker = <
   const rangePositionResponse = useRangePosition(props);
   const contextTranslations = usePickerTranslations();
 
-  const getStepNavigation = useRangePickerStepNavigation({
+  const getStepNavigation = createRangePickerStepNavigation({
     steps,
     rangePositionResponse,
   });

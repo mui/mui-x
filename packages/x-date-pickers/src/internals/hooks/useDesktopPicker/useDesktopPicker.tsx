@@ -7,7 +7,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
-import { useNonRangePickerStepNavigation } from '../useNonRangePickerStepNavigation';
+import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -31,7 +31,7 @@ export const useDesktopPicker = <
 }: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
-  const getStepNavigation = useNonRangePickerStepNavigation({ steps });
+  const getStepNavigation = createNonRangePickerStepNavigation({ steps });
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerValue,

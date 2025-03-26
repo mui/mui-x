@@ -26,7 +26,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { mergeSx } from '../internals/utils/utils';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/hooks/useNonRangePickerStepNavigation';
+import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 

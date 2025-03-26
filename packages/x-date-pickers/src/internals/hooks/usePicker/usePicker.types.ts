@@ -22,7 +22,7 @@ import { UseViewsOptions } from '../useViews';
 import { PickerProviderProps } from '../../components/PickerProvider';
 import { PickersInputLocaleText } from '../../../locales';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
-import { UseStepNavigationReturnValue } from '../../utils/createStepNavigation';
+import { CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
 
 /**
  * Props common to all Picker headless implementations.
@@ -172,7 +172,7 @@ export interface UsePickerParameters<
     PickerRendererInterceptorProps<TValue, TView, TExternalProps>
   >;
   props: TExternalProps;
-  getStepNavigation: UseStepNavigationReturnValue;
+  getStepNavigation: CreateStepNavigationReturnValue;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {

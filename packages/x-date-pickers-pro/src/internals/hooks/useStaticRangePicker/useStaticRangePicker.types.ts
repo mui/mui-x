@@ -11,7 +11,7 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { UseRangePositionProps } from '../useRangePosition';
-import { PickerRangeStep } from '../useRangePickerStepNavigation';
+import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 

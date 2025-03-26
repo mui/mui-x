@@ -37,7 +37,7 @@ import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField'
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
-import { PickerRangeStep } from '../internals/hooks/useRangePickerStepNavigation';
+import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },

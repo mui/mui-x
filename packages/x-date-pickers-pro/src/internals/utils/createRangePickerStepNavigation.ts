@@ -3,9 +3,11 @@ import {
   RangePosition,
   createStepNavigation,
 } from '@mui/x-date-pickers/internals';
-import { UseRangePositionResponse } from './useRangePosition';
+import { UseRangePositionResponse } from '../hooks/useRangePosition';
 
-export function useRangePickerStepNavigation(parameters: UseRangePickerStepNavigationParameters) {
+export function createRangePickerStepNavigation(
+  parameters: CreateRangePickerStepNavigationParameters,
+) {
   const { steps, rangePositionResponse } = parameters;
 
   return createStepNavigation({
@@ -40,7 +42,7 @@ export interface PickerRangeStep {
   rangePosition: RangePosition;
 }
 
-interface UseRangePickerStepNavigationParameters {
+interface CreateRangePickerStepNavigationParameters {
   steps: PickerRangeStep[] | null;
   rangePositionResponse: UseRangePositionResponse;
 }
