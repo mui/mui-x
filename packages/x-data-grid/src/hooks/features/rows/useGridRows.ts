@@ -19,6 +19,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowGroupsToFetchSelector,
   gridRowNodeSelector,
+  gridDataRowsSelector,
 } from './gridRowsSelector';
 import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
@@ -610,7 +611,7 @@ export const useGridRows = (
     }
 
     const currentRows = props.dataSource
-      ? Array.from(apiRef.current.getRowModels().values())
+      ? gridDataRowsSelector(apiRef)
       : props.rows;
     const areNewRowsAlreadyInState =
       apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
