@@ -78,7 +78,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     );
   }
 
-  return descendantCount !== 0 ? (
+  return descendantCount === -1 || descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
