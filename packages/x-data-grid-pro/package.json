@@ -71,8 +71,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0-rc.0",
-    "@mui/system": "^7.0.0-rc.0",
+    "@mui/material": "^7.0.0",
+    "@mui/system": "^7.0.0",
     "@types/prop-types": "^15.7.14",
     "@types/react-transition-group": "^4.4.12",
     "react": "^19.0.0",
