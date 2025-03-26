@@ -541,7 +541,7 @@
   { "name": "GridSearchIcon", "kind": "Variable" },
   { "name": "GridSelectedRowCount", "kind": "Variable" },
   { "name": "GridSeparatorIcon", "kind": "Variable" },
-  { "name": "GridShadowScrollArea", "kind": "Function" },
+  { "name": "GridShadowScrollArea", "kind": "Variable" },
   { "name": "GridShadowScrollAreaProps", "kind": "Interface" },
   { "name": "GridSignature", "kind": "Enum" },
   { "name": "GridSingleSelectColDef", "kind": "Interface" },

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
@@ -47,8 +48,6 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
         ...rootProps.slotProps?.baseTextField,
         value: state.value,
         className: resolvedClassName,
-        error: !!state.error,
-        helperText: state.error,
         ...other,
         onChange: handleChange,
         ref,
@@ -59,5 +58,70 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
     return <React.Fragment>{element}</React.Fragment>;
   },
 );
+
+PromptFieldControl.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  autoComplete: PropTypes.string,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  color: PropTypes.oneOf(['error', 'primary']),
+  disabled: PropTypes.bool,
+  error: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  helperText: PropTypes.string,
+  id: PropTypes.string,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  label: PropTypes.node,
+  onChange: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  placeholder: PropTypes.string,
+  /**
+   * A function to customize rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  role: PropTypes.string,
+  size: PropTypes.oneOf(['medium', 'small']),
+  slotProps: PropTypes.object,
+  style: PropTypes.object,
+  tabIndex: PropTypes.number,
+  type: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'button',
+      'checkbox',
+      'color',
+      'date',
+      'datetime-local',
+      'email',
+      'file',
+      'hidden',
+      'image',
+      'month',
+      'number',
+      'password',
+      'radio',
+      'range',
+      'reset',
+      'search',
+      'submit',
+      'tel',
+      'text',
+      'time',
+      'url',
+      'week',
+    ]),
+    PropTypes.object,
+  ]),
+  value: PropTypes.string,
+} as any;
 
 export { PromptFieldControl };
