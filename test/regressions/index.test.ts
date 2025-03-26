@@ -71,9 +71,6 @@ async function main() {
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
-
-      // Disable animations
-      '--force-prefers-reduced-motion',
     ],
     headless: false,
   });
@@ -152,6 +149,9 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
+
+        // Skip animations
+        await page.emulateMedia({ reducedMotion: 'reduce' });
 
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
