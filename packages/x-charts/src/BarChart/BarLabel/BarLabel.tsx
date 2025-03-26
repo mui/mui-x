@@ -65,28 +65,26 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     width: props.width,
     height: props.height,
   };
+  const currentProps = {
+    x: props.x + props.width / 2,
+    y: props.layout === 'vertical' ? props.y + props.height / 2 : props.y + props.height / 2,
+    width: props.width,
+    height: props.height,
+  };
 
-  const ref = useAnimate(
-    {
-      x: props.x + props.width / 2,
-      y: props.layout === 'vertical' ? props.y + props.height / 2 : props.y + props.height / 2,
-      width: props.width,
-      height: props.height,
+  const ref = useAnimate(currentProps, {
+    createInterpolator: barLabelPropsInterpolator,
+    applyProps(element, animatedProps) {
+      element.setAttribute('x', animatedProps.x.toString());
+      element.setAttribute('y', animatedProps.y.toString());
+      element.setAttribute('width', animatedProps.width.toString());
+      element.setAttribute('height', animatedProps.height.toString());
     },
-    {
-      createInterpolator: barLabelPropsInterpolator,
-      applyProps(element, animatedProps) {
-        element.setAttribute('x', animatedProps.x.toString());
-        element.setAttribute('y', animatedProps.y.toString());
-        element.setAttribute('width', animatedProps.width.toString());
-        element.setAttribute('height', animatedProps.height.toString());
-      },
-      initialProps,
-      skip: props.skipAnimation,
-    },
-  );
+    initialProps,
+    skip: props.skipAnimation,
+  });
 
-  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
+  const usedProps = props.skipAnimation || !isHydrated ? currentProps : initialProps;
 
   return {
     ref,
