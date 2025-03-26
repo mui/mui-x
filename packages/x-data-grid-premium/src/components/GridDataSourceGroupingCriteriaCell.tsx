@@ -105,7 +105,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
+    descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   let cellContent: React.ReactNode;

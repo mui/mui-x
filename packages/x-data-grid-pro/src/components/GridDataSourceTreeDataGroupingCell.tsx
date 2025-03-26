@@ -113,7 +113,7 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
+    descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   return (
