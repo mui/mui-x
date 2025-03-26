@@ -259,39 +259,43 @@ function BarPlot(props: BarPlotProps) {
             />
           );
         })}
-      {completedData.map(({ seriesId, dataIndex, color, maskId, layout, x, y, width, height }) => {
-        const barElement = (
-          <BarElement
-            key={`${seriesId}-${dataIndex}`}
-            id={seriesId}
-            dataIndex={dataIndex}
-            color={color}
-            skipAnimation={skipAnimation ?? false}
-            layout={layout ?? 'vertical'}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            {...other}
-            onClick={
-              onItemClick &&
-              ((event) => {
-                onItemClick(event, { type: 'bar', seriesId, dataIndex });
-              })
-            }
-          />
-        );
+      {completedData.map(
+        ({ seriesId, dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
+          const barElement = (
+            <BarElement
+              key={`${seriesId}-${dataIndex}`}
+              id={seriesId}
+              dataIndex={dataIndex}
+              color={color}
+              skipAnimation={skipAnimation ?? false}
+              layout={layout ?? 'vertical'}
+              x={x}
+              xOrigin={xOrigin}
+              y={y}
+              yOrigin={yOrigin}
+              width={width}
+              height={height}
+              {...other}
+              onClick={
+                onItemClick &&
+                ((event) => {
+                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                })
+              }
+            />
+          );
 
-        if (withoutBorderRadius) {
-          return barElement;
-        }
+          if (withoutBorderRadius) {
+            return barElement;
+          }
 
-        return (
-          <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
-            {barElement}
-          </g>
-        );
-      })}
+          return (
+            <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
+              {barElement}
+            </g>
+          );
+        },
+      )}
       {barLabel && (
         <BarLabelPlot
           bars={completedData}

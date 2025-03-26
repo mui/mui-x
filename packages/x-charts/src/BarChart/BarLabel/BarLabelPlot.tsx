@@ -16,22 +16,26 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 
   return (
     <React.Fragment>
-      {bars.map(({ x, y, seriesId, dataIndex, color, value, width, height, layout }) => (
-        <BarLabelItem
-          key={`${seriesId}-${dataIndex}`}
-          seriesId={seriesId}
-          dataIndex={dataIndex}
-          value={value}
-          color={color}
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          skipAnimation={skipAnimation ?? false}
-          layout={layout ?? 'vertical'}
-          {...other}
-        />
-      ))}
+      {bars.map(
+        ({ xOrigin, yOrigin, x, y, seriesId, dataIndex, color, value, width, height, layout }) => (
+          <BarLabelItem
+            key={`${seriesId}-${dataIndex}`}
+            seriesId={seriesId}
+            dataIndex={dataIndex}
+            value={value}
+            color={color}
+            xOrigin={xOrigin}
+            yOrigin={yOrigin}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            skipAnimation={skipAnimation ?? false}
+            layout={layout ?? 'vertical'}
+            {...other}
+          />
+        ),
+      )}
     </React.Fragment>
   );
 }

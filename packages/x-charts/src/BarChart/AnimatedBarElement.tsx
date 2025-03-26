@@ -13,16 +13,42 @@ export interface BarProps
   dataIndex: number;
   color: string;
   ownerState: BarElementOwnerState;
+  /**
+   * The position in the x-axis of the stack this bar belongs to.
+   */
+  xOrigin: number;
+  /**
+   * The position in the y-axis of the stack this bar belongs to.
+   */
+  yOrigin: number;
+  /**
+   * The position of the bar in the x-axis.
+   */
   x: number;
+  /**
+   * The position of the bar in the y-axis.
+   */
   y: number;
-  width: number;
+  /**
+   * The height of the bar.
+   */
   height: number;
-  layout: 'horizontal' | 'vertical';
+  /**
+   * The width of the bar.
+   */
+  width: number;
+  /**
+   * The orientation of the bar.
+   */
+  layout: 'vertical' | 'horizontal';
+  /**
+   * If true, no animations should be applied.
+   */
   skipAnimation: boolean;
 }
 
 export function AnimatedBarElement(props: BarProps) {
-  const { ownerState, skipAnimation, id, dataIndex, ...other } = props;
+  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } = props;
 
   const animatedProps = useAnimateBar(props);
 

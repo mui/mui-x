@@ -33,7 +33,9 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     slots?: BarElementSlots;
 
     x: number;
+    xOrigin: number;
     y: number;
+    yOrigin: number;
     width: number;
     height: number;
     layout: 'horizontal' | 'vertical';
@@ -53,7 +55,9 @@ function BarElement(props: BarElementProps) {
     skipAnimation,
     layout,
     x,
+    xOrigin,
     y,
+    yOrigin,
     width,
     height,
     ...other
@@ -87,7 +91,9 @@ function BarElement(props: BarElementProps) {
       dataIndex,
       color,
       x,
+      xOrigin,
       y,
+      yOrigin,
       width,
       height,
       style,
