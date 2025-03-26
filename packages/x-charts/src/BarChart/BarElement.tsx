@@ -83,6 +83,9 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...interactionProps,
+      id,
+      dataIndex,
+      color,
       x,
       y,
       width,
