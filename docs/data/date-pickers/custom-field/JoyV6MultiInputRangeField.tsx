@@ -153,14 +153,12 @@ function JoyDateRangePicker(props: DateRangePickerProps) {
  */
 function SyncThemeMode() {
   const { setMode } = useColorScheme();
-  const { mode, systemMode } = useMaterialColorScheme();
+  const { mode } = useMaterialColorScheme();
   React.useEffect(() => {
-    if (mode === 'system') {
-      setMode(systemMode!);
-    } else if (mode) {
+    if (mode) {
       setMode(mode);
     }
-  }, [mode, setMode, systemMode]);
+  }, [mode, setMode]);
   return null;
 }
 
