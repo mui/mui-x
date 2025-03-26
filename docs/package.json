@@ -33,7 +33,6 @@
     "@mui/lab": "^7.0.0-beta.9",
     "@mui/material": "^7.0.0",
     "@mui/material-nextjs": "^7.0.0",
-    "@mui/styles": "^7.0.0-beta.4",
     "@mui/system": "^7.0.0",
     "@mui/utils": "^7.0.0",
     "@mui/x-charts": "workspace:*",
