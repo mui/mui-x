@@ -23,7 +23,7 @@ type UseAnimatePieArcReturnValue = {
 };
 type PieArcInterpolatedProps = Pick<
   UseAnimatePieArcParams,
-  'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle'
+  'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle' | 'cornerRadius'
 >;
 
 function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
@@ -32,6 +32,7 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   const interpolateInnerRadius = interpolateNumber(from.innerRadius, to.innerRadius);
   const interpolateOuterRadius = interpolateNumber(from.outerRadius, to.outerRadius);
   const interpolatePaddingAngle = interpolateNumber(from.paddingAngle, to.paddingAngle);
+  const interpolateCornerRadius = interpolateNumber(from.cornerRadius, to.cornerRadius);
 
   return (t: number) => {
     return {
@@ -40,6 +41,7 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
       innerRadius: interpolateInnerRadius(t),
       outerRadius: interpolateOuterRadius(t),
       paddingAngle: interpolatePaddingAngle(t),
+      cornerRadius: interpolateCornerRadius(t),
     };
   };
 }
@@ -55,6 +57,7 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
     innerRadius: props.innerRadius,
     outerRadius: props.outerRadius,
     paddingAngle: props.paddingAngle,
+    cornerRadius: props.cornerRadius,
   };
 
   const ref = useAnimate(
@@ -64,6 +67,7 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
       innerRadius: props.innerRadius,
       outerRadius: props.outerRadius,
       paddingAngle: props.paddingAngle,
+      cornerRadius: props.cornerRadius,
     },
     {
       createInterpolator: pieArcPropsInterpolator,
@@ -71,10 +75,10 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
         element.setAttribute(
           'd',
           d3Arc()
-            .cornerRadius(props.cornerRadius)({
-              padAngle: props.paddingAngle,
-              innerRadius: props.innerRadius,
-              outerRadius: props.outerRadius,
+            .cornerRadius(animatedProps.cornerRadius)({
+              padAngle: animatedProps.paddingAngle,
+              innerRadius: animatedProps.innerRadius,
+              outerRadius: animatedProps.outerRadius,
               startAngle: animatedProps.startAngle,
               endAngle: animatedProps.endAngle,
             })!
@@ -91,18 +95,17 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
     },
   );
 
-  // Only use the initial props on the first render.
   const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
   return {
     ref: useForkRef(ref, props.ref),
-    d: d3Arc().cornerRadius(props.cornerRadius)({
+    d: d3Arc().cornerRadius(usedProps.cornerRadius)({
       padAngle: usedProps.paddingAngle,
       innerRadius: usedProps.innerRadius,
       outerRadius: usedProps.outerRadius,
       startAngle: usedProps.startAngle,
       endAngle: usedProps.endAngle,
     })!,
-    visibility: props.startAngle === props.endAngle ? 'hidden' : 'visible',
+    visibility: usedProps.startAngle === usedProps.endAngle ? 'hidden' : 'visible',
   };
 }

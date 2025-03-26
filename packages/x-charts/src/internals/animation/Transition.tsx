@@ -92,6 +92,7 @@ export class Transition {
     this.stop();
 
     timeout(() => this.timerCallback(this.duration));
+    timerFlush();
 
     return this;
   }
