@@ -82,6 +82,7 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
   const processPrompt = React.useCallback(() => {
     setLoading(true);
     setError(null);
+    setValue('');
     apiRef.current.setLoading(true);
 
     onPrompt(value, context)
