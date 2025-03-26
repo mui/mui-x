@@ -37,7 +37,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  const isLazyLoadingEnabled = params.dataSource?.getChildrenCount !== undefined;
+  const isLazyLoadingEnabled = !!params.dataSource;
   const firstRenderRef = React.useRef(true);
 
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -280,18 +280,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       setDataSourceError,
     },
     publicAPI: {},
-  };
-};
-
-useTreeViewLazyLoading.getDefaultizedParams = ({ params }) => {
-  const defaultDataSource = params?.dataSource ?? {
-    getChildrenCount: () => 0,
-    getTreeItems: () => Promise.resolve([]),
-  };
-
-  return {
-    ...params,
-    dataSource: defaultDataSource,
   };
 };
 
