@@ -257,7 +257,16 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       const textBox = await screen.findByRole('textbox', { name: 'Value' });
 
-      await user.type(textBox, '[Backspace>6/]Puma');
+      // Select the text
+      await user.pointer([
+        { target: textBox, offset: 0, keys: '[MouseLeft>]' },
+        { offset: 6 },
+        { keys: '[/MouseLeft]' },
+      ]);
+
+      await user.keyboard('[Backspace]');
+
+      await user.type(textBox, 'Puma');
 
       expect(textBox).to.have.value('Puma');
       await waitFor(() => {
