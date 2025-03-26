@@ -29,6 +29,17 @@ const Divider = styled(NotRendered<GridSlotProps['baseDivider']>, {
   margin: vars.spacing(0, 0.5),
 });
 
+const Label = styled('span')({
+  font: vars.typography.font.body,
+  fontWeight: vars.typography.fontWeight.medium,
+  fontSize: 16,
+  marginLeft: vars.spacing(0.5),
+  marginRight: 'auto',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+});
+
 function GridToolbar(props: GridToolbarProps) {
   const {
     showQuickFilter = true,
@@ -47,11 +58,12 @@ function GridToolbar(props: GridToolbarProps) {
     !csvOptions?.disableToolbarButton ||
     !printOptions?.disableToolbarButton ||
     additionalExportMenuItems;
-
   const closeExportMenu = () => setExportMenuOpen(false);
 
   return (
     <Toolbar>
+      {rootProps.label && <Label>{rootProps.label}</Label>}
+
       {!rootProps.disableColumnSelector && (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
           <ColumnsPanelTrigger render={<ToolbarButton />}>
@@ -101,7 +113,7 @@ function GridToolbar(props: GridToolbarProps) {
             target={exportMenuTriggerRef.current}
             open={exportMenuOpen}
             onClose={closeExportMenu}
-            position="bottom-start"
+            position="bottom-end"
           >
             <rootProps.slots.baseMenuList
               id={exportMenuId}
@@ -133,7 +145,12 @@ function GridToolbar(props: GridToolbarProps) {
         </React.Fragment>
       )}
 
-      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
+      {showQuickFilter && (
+        <React.Fragment>
+          <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
+          <GridToolbarQuickFilter {...quickFilterProps} />
+        </React.Fragment>
+      )}
     </Toolbar>
   );
 }

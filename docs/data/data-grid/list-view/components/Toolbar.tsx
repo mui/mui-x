@@ -42,7 +42,6 @@ type OwnerState = {
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
-  marginLeft: 'auto',
 });
 
 const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(

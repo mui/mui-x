@@ -37,6 +37,7 @@ const ToolbarRoot = styled('div', {
   flex: 0,
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'end',
   gap: vars.spacing(0.25),
   padding: vars.spacing(0.75),
   minHeight: 52,
