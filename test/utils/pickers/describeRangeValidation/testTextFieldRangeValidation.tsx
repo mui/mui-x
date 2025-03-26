@@ -63,7 +63,9 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
+          }
         />,
       );
 
@@ -91,7 +93,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
+        shouldDisableDate: (date: any) =>
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -105,7 +108,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: string) =>
             position === 'end' ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10')) : false
           }
         />,
@@ -132,7 +135,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: string) =>
           position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
@@ -147,7 +150,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: string) =>
             position === 'start'
               ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
@@ -175,7 +178,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], fieldType);
 
       setProps({
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: string) =>
           position === 'start'
             ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
@@ -188,7 +191,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     it('should apply disablePast', () => {
       const onErrorMock = spy();
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
@@ -226,7 +229,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     it('should apply disableFuture', () => {
       const onErrorMock = spy();
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
