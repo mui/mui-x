@@ -3,10 +3,13 @@ import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer'
 import { describeConformance } from 'test/utils/describeConformance';
 import { Unstable_RadarChart as RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
 import { expect } from 'chai';
+import { spy } from 'sinon';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const radarConfig: RadarChartProps = {
   height: 100,
   width: 100,
+  margin: 0,
   series: [{ data: [10, 15, 20, 25] }],
   radar: { metrics: ['A', 'B', 'C', 'D'] },
 };
@@ -38,5 +41,35 @@ describe('<RadarChart />', () => {
 
     const noDataOverlay = screen.getByText('No data to display');
     expect(noDataOverlay).toBeVisible();
+  });
+
+  it('should call onHighlightChange', async () => {
+    const onHighlightChange = spy();
+    const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
+
+    const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-root path')!;
+    await user.pointer({ target: path });
+
+    expect(onHighlightChange.callCount).to.equal(1);
+  });
+
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)('should call onHighlightChange', async () => {
+    const { user } = render(
+      <div
+        style={{
+          margin: -8, // Removes the body default margins
+          width: 100,
+          height: 100,
+        }}
+      >
+        <RadarChart {...radarConfig} />
+      </div>,
+    );
+
+    const svg = document.querySelector<HTMLElement>('svg')!;
+    await user.pointer([{ target: svg, coords: { clientX: 45, clientY: 45 } }]);
+
+    expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();
   });
 });
