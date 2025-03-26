@@ -124,7 +124,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} Spaltenmenü`,
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
@@ -188,18 +188,13 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Zeilen pro Seite:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} von ${count !== -1 ? count : `mehr als ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `ungefähr ${estimated}` : `mehr als ${to}`;
+    return `${from}–${to} von ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Zur ersten Seite';

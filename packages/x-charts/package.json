@@ -68,9 +68,9 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.3",
-    "@mui/material": "^7.0.0-beta.4",
-    "@mui/system": "^7.0.0-beta.4",
+    "@mui/internal-test-utils": "^2.0.4",
+    "@mui/material": "^7.0.0",
+    "@mui/system": "^7.0.0",
     "@react-spring/core": "^9.7.5",
     "@react-spring/shared": "^9.7.5",
     "@types/prop-types": "^15.7.14",

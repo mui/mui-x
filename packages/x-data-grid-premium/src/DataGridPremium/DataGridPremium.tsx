@@ -160,6 +160,7 @@ DataGridPremiumRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -1097,6 +1098,7 @@ DataGridPremiumRaw.propTypes = {
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: PropTypes.func,
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
