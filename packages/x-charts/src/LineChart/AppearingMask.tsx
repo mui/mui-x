@@ -25,14 +25,12 @@ export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses
 );
 
 const AnimatedRect = styled('rect')({
-  '&': {
-    animationName: 'animate-width',
-    animationTimingFunction: ANIMATION_TIMING_FUNCTION,
-    animationDuration: 0,
+  animationName: 'animate-width',
+  animationTimingFunction: ANIMATION_TIMING_FUNCTION,
+  animationDuration: '0s',
 
-    [`&.${appearingMaskClasses.animate}`]: {
-      animationDuration: `${ANIMATION_DURATION_MS}ms`,
-    },
+  [`&.${appearingMaskClasses.animate}`]: {
+    animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
 
   '@keyframes animate-width': {
