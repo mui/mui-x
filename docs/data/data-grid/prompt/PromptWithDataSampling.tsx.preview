@@ -1,7 +1,14 @@
 <DataGridPremium
   {...data}
   slots={{
-    toolbar: ToolbarWithPromptInput,
+    toolbar: Toolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      assistantPanelProps: {
+        allowDataSampling: true,
+      },
+    },
   }}
   showToolbar
 />
