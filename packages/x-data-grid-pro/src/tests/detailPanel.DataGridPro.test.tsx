@@ -48,7 +48,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   // Needs layout
   testSkipIf(isJSDOM)(
     'should not consider the height of the detail panels when rendering new rows during scroll',
-    () => {
+    async () => {
       const rowHeight = 50;
       render(
         <TestCase
@@ -65,8 +65,13 @@ describe('<DataGridPro /> - Detail panel', () => {
       );
       expect(getColumnValues(1)[0]).to.equal('0');
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
-      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () =>
+        virtualScroller.scrollTo({
+          // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
+          top: 250,
+          behavior: 'instant',
+        }),
+      );
       expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
     },
   );
@@ -259,16 +264,12 @@ describe('<DataGridPro /> - Detail panel', () => {
       await user.click(cell);
 
       await user.keyboard('[ArrowRight]');
-
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       expect(virtualScroller.scrollTop).to.equal(0);
 
       await user.keyboard('[ArrowRight]');
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       expect(virtualScroller.scrollTop).to.equal(0);
 
       await user.keyboard('[ArrowRight]');
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       expect(virtualScroller.scrollTop).to.equal(0);
     },
   );
@@ -535,11 +536,12 @@ describe('<DataGridPro /> - Detail panel', () => {
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
 
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-      virtualScroller.scrollTop = 500;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => virtualScroller.scrollTo({ top: 500, behavior: 'instant' }));
 
-      const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
-      expect(detailPanels.length).to.equal(0);
+      await waitFor(() => {
+        const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
+        expect(detailPanels.length).to.equal(0);
+      });
     },
   );
 
@@ -620,39 +622,39 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   describe('apiRef', () => {
     describe('toggleDetailPanel', () => {
-      it('should toggle the panel of the given row id', () => {
+      it('should toggle the panel of the given row id', async () => {
         render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
         expect(screen.queryByText('Detail')).to.equal(null);
-        act(() => apiRef.current?.toggleDetailPanel(0));
+        await act(async () => apiRef.current?.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).not.to.equal(null);
-        act(() => apiRef.current?.toggleDetailPanel(0));
+        await act(async () => apiRef.current?.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).to.equal(null);
       });
 
-      it('should not toggle the panel of a row without detail component', () => {
+      it('should not toggle the panel of a row without detail component', async () => {
         render(
           <TestCase
             rowHeight={50}
             getDetailPanelContent={({ id }) => (id === 0 ? <div>Detail</div> : null)}
           />,
         );
-        act(() => apiRef.current?.toggleDetailPanel(1));
+        await act(async () => apiRef.current?.toggleDetailPanel(1));
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
       });
 
       // See https://github.com/mui/mui-x/pull/8976
-      it('should not toggle the panel if the row id is of a different type', () => {
+      it('should not toggle the panel if the row id is of a different type', async () => {
         render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
         expect(screen.queryByText('Detail')).to.equal(null);
         // '0' !== 0
-        act(() => apiRef.current?.toggleDetailPanel('0'));
+        await act(async () => apiRef.current?.toggleDetailPanel('0'));
         expect(screen.queryByText('Detail')).to.equal(null);
       });
     });
 
     describe('getExpandedDetailPanels', () => {
-      it('should return a set of ids', () => {
+      it('should return a set of ids', async () => {
         render(
           <TestCase
             getDetailPanelContent={() => <div>Detail</div>}
@@ -663,7 +665,9 @@ describe('<DataGridPro /> - Detail panel', () => {
             }}
           />,
         );
-        act(() => expect(apiRef.current?.getExpandedDetailPanels()).to.deep.equal(new Set([0, 1])));
+        await act(async () =>
+          expect(apiRef.current?.getExpandedDetailPanels()).to.deep.equal(new Set([0, 1])),
+        );
       });
     });
 
@@ -682,7 +686,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 0')).not.to.equal(null);
         expect(screen.queryByText('Row 1')).to.equal(null);
         expect(screen.queryByText('Row 2')).to.equal(null);
-        act(() => apiRef.current?.setExpandedDetailPanels(new Set([1, 2])));
+        await act(async () => apiRef.current?.setExpandedDetailPanels(new Set([1, 2])));
         expect(screen.queryByText('Row 0')).to.equal(null);
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);
