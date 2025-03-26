@@ -16,8 +16,17 @@ export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
+  const generatedLabelId = 'data-grid-label';
+  const isLabelPropVisible = rootProps.showToolbar && !!rootProps.label;
+  const isLabelPropHidden = !rootProps.showToolbar && !!rootProps.label;
+  const ariaLabelledBy =
+    rootProps['aria-labelledby'] || (isLabelPropVisible ? generatedLabelId : undefined);
+  const ariaLabel = rootProps['aria-label'] || (isLabelPropHidden ? rootProps.label : undefined);
+
   return {
     role: 'grid',
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
     'aria-colcount': visibleColumns.length,
     'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
     'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),

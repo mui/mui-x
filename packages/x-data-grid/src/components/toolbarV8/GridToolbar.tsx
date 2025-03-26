@@ -14,6 +14,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { NotRendered } from '../../utils/assert';
 import { vars } from '../../constants/cssVariables';
+import { ToolbarLabel } from './ToolbarLabel';
 
 interface GridToolbarInternalProps {
   additionalExportMenuItems?: (onMenuItemClick: () => void) => React.ReactNode;
@@ -27,17 +28,6 @@ const Divider = styled(NotRendered<GridSlotProps['baseDivider']>, {
 })({
   height: '50%',
   margin: vars.spacing(0, 0.5),
-});
-
-const Label = styled('span')({
-  font: vars.typography.font.body,
-  fontWeight: vars.typography.fontWeight.medium,
-  fontSize: 16,
-  marginLeft: vars.spacing(0.5),
-  marginRight: 'auto',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
 });
 
 function GridToolbar(props: GridToolbarProps) {
@@ -62,7 +52,7 @@ function GridToolbar(props: GridToolbarProps) {
 
   return (
     <Toolbar>
-      {rootProps.label && <Label>{rootProps.label}</Label>}
+      {rootProps.label && <ToolbarLabel />}
 
       {!rootProps.disableColumnSelector && (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
