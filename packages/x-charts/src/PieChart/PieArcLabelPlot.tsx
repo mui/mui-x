@@ -138,6 +138,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
           formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
+          skipAnimation={skipAnimation ?? false}
           {...slotProps?.pieArcLabel}
         />
       ))}
