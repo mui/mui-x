@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_debounce as debounce } from '@mui/utils';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { QuickFilterContext, QuickFilterState } from './QuickFilterContext';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -10,7 +11,6 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridFilterModel } from '../../models';
-import { isDeepEqual } from '../../utils/utils';
 
 export type QuickFilterProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> & {
   /**
@@ -205,10 +205,7 @@ function QuickFilter(props: QuickFilterProps) {
     'div',
     render,
     {
-      role: 'toolbar',
       className: resolvedClassName,
-      'aria-orientation': 'horizontal',
-      'aria-controls': controlId,
       ...other,
       ref,
     },

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import * as React from 'react';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, GridToolbar } from '@mui/x-data-grid';
 import { DataGridPro, LicenseInfo } from '@mui/x-data-grid-pro';
 import { DataGridPremium, selectedGridRowsSelector } from '@mui/x-data-grid-premium';
 
@@ -37,6 +37,9 @@ const [rowSelectionModel1, setRowSelectionModel1] = React.useState([4, 5, 6]);
       ariaV8: true,
     }}
     unstable_rowSpanning
+    slots={{
+      toolbar: GridToolbar,
+    }}
   />
   <DataGridPremium
     {...props}
