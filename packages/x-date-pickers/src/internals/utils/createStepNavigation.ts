@@ -1,17 +1,20 @@
 import { DateOrTimeViewWithMeridiem } from '../models';
 
+/**
+ * Create an object that determines whether there is a next step and allows to go to the next step.
+ * @param {CreateStepNavigationParameters<TStep>} parameters The parameters of the createStepNavigation function
+ * @returns {CreateStepNavigationReturnValue} The return value of the createStepNavigation function
+ */
 export function createStepNavigation<TStep extends {}>(
   parameters: CreateStepNavigationParameters<TStep>,
-) {
+): CreateStepNavigationReturnValue {
   const { steps, isCurrentViewMatchingStep, onStepChange } = parameters;
 
-  return (parametersBis: CreateStepNavigationReturnValueParameters) => {
+  return (parametersBis) => {
     if (steps == null) {
       return {
-        hasPreviousStep: false,
         hasNextStep: false,
         goToNextStep: () => {},
-        goToPreviousStep: () => {},
       };
     }
 
@@ -46,7 +49,13 @@ interface CreateStepNavigationParameters<TStep extends {}> {
 export type CreateStepNavigationReturnValue = (
   parameters: CreateStepNavigationReturnValueParameters,
 ) => {
+  /**
+   * Whether there is a next step.
+   */
   hasNextStep: boolean;
+  /**
+   * Go to the next step if any.
+   */
   goToNextStep: () => void;
 };
 
