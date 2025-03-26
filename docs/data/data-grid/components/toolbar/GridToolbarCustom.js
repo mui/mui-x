@@ -106,7 +106,12 @@ function CustomToolbar() {
     </Toolbar>
   );
 }
-const theme = createTheme({ colorSchemes: { light: true, dark: true } });
+const theme = createTheme({
+  colorSchemes: { light: true, dark: true },
+  cssVariables: {
+    colorSchemeSelector: 'data-mui-color-scheme',
+  },
+});
 
 export default function GridToolbarCustom({ window }) {
   const { data, loading } = useDemoData({
@@ -117,7 +122,6 @@ export default function GridToolbarCustom({ window }) {
 
   // This is used only for the example, you can remove it.
   const documentBody = window !== undefined ? window().document.body : undefined;
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <ThemeProvider theme={theme}>
