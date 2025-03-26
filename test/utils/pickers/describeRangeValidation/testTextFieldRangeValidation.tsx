@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { SinonFakeTimers, spy, useFakeTimers } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
@@ -188,42 +188,53 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], fieldType);
     });
 
-    it('should apply disablePast', () => {
-      const onErrorMock = spy();
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={[now, now]} {...props} />;
-      }
-
-      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
-
-      let past: null | typeof now = null;
-      if (withDate) {
-        past = adapterToUse.addDays(now, -1);
-      } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
-        past = adapterToUse.addHours(now, -1);
-      }
-
-      if (past === null) {
-        return;
-      }
-
-      setProps({
-        value: [past, now],
+    describe('with fake timers', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
-      testInvalidStatus([true, false], fieldType);
+      it('should apply disablePast', async () => {
+        const onErrorMock = spy();
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={[now, now]} {...props} />;
+        }
 
-      setProps({
-        value: [past, past],
+        const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
+
+        let past: null | typeof now = null;
+        if (withDate) {
+          past = adapterToUse.addDays(now, -1);
+        } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
+          past = adapterToUse.addHours(now, -1);
+        }
+
+        if (past === null) {
+          return;
+        }
+
+        setProps({
+          value: [past, now],
+        });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        testInvalidStatus([true, false], fieldType);
+
+        setProps({
+          value: [past, past],
+        });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        testInvalidStatus([true, true], fieldType);
       });
-
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
-      testInvalidStatus([true, true], fieldType);
     });
 
     it('should apply disableFuture', () => {
