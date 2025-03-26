@@ -20,7 +20,7 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   const angleGap = clampAngleRad(pointerValue - Math.min(...scale.range()));
   const dataIndex =
     scale.bandwidth() === 0
-      ? Math.floor((angleGap + scale.step() / 2) / scale.step()) % axisData!.length
+      ? Math.floor((angleGap + scale.step() / 2) / scale.step()) % axisData.length
       : Math.floor(angleGap / scale.step());
 
   if (dataIndex < 0 || dataIndex >= axisData.length) {
