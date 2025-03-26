@@ -307,6 +307,12 @@ function AssistantPanel({ open, onClose, anchorEl }) {
         <Box sx={{ p: 1, borderTop: '1px solid', borderColor: 'divider' }}>
           <PromptField onPrompt={handlePrompt} onError={console.error}>
             <PromptFieldControl
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  // Prevents the `multiline` TextField from adding a new line
+                  event.preventDefault();
+                }
+              }}
               render={({ ref, ...controlProps }, state) => (
                 <TextField
                   {...controlProps}
