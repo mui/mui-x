@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent, reactMajor } from '@mui/internal-test-utils';
+import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -11,10 +11,10 @@ import {
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Quick filter', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -59,24 +59,21 @@ describe('<DataGrid /> - Quick filter', () => {
   }
 
   describe('component', () => {
-    clock.withFakeTimers();
-
-    it('should apply filter', () => {
-      render(<TestCase />);
+    it('should apply filter', async () => {
+      const { user } = render(<TestCase />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'a' },
-      });
-      clock.runToLast();
+      await user.type(screen.getByRole('searchbox'), 'a');
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      });
     });
 
-    it('should allow to customize input splitting', () => {
+    it('should allow to customize input splitting', async () => {
       const onFilterModelChange = spy();
 
-      render(
+      const { user } = render(
         <TestCase
           onFilterModelChange={onFilterModelChange}
           slotProps={{
@@ -92,25 +89,24 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adid, nik' },
-      });
-      clock.runToLast();
-      expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
-        items: [],
-        logicOperator: 'and',
-        quickFilterValues: ['adid', 'nik'],
-        quickFilterLogicOperator: 'and',
+      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.type(screen.getByRole('searchbox'), 'adid, nik');
+
+      await waitFor(() => {
+        expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
+          items: [],
+          logicOperator: 'and',
+          quickFilterValues: ['adid', 'nik'],
+          quickFilterLogicOperator: 'and',
+        });
       });
     });
 
-    it('should no prettify user input', () => {
-      render(<TestCase />);
+    it('should no prettify user input', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adidas   nike' },
-      });
-      clock.runToLast();
+      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.type(screen.getByRole('searchbox'), 'adidas   nike');
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
     });
@@ -165,11 +161,9 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(-1);
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'false',
+      );
     });
 
     it('should be expanded by default if there is a value', () => {
@@ -177,154 +171,108 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(0);
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should expand when the trigger is clicked', () => {
-      render(<TestCase />);
+    it('should expand when the trigger is clicked', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should expand when the input changes value', () => {
-      render(<TestCase />);
+    it('should expand when the input changes value', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.focus(screen.getByRole<HTMLInputElement>('searchbox'));
+      await user.type(screen.getByRole<HTMLInputElement>('searchbox'), 'adidas');
 
-      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
-        target: { value: 'adidas' },
-      });
-
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should collapse when the input is blurred with no value', () => {
-      render(<TestCase />);
+    it('should collapse when the escape key is pressed with no value', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
 
-      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+      await user.keyboard('[Escape]');
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'false',
+      );
     });
 
-    it('should collapse when the escape key is pressed with no value', () => {
-      render(<TestCase />);
+    it('should clear the input when the escape key is pressed with a value and not collapse the input', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      // Wait for the input to be focused
-      clock.runToLast();
+      await user.type(screen.getByRole<HTMLInputElement>('searchbox'), 'adidas');
 
-      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
-        key: 'Escape',
-      });
-
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('false');
-    });
-
-    it('should clear the input when the escape key is pressed with a value and not collapse the input', () => {
-      render(<TestCase />);
-
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
-      clock.runToLast();
-
-      fireEvent.change(screen.getByRole<HTMLInputElement>('searchbox'), {
-        target: { value: 'adidas' },
-      });
-      clock.runToLast();
-
-      fireEvent.keyDown(screen.getByRole<HTMLInputElement>('searchbox'), {
-        key: 'Escape',
-      });
+      await user.keyboard('[Escape]');
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
 
-      expect(
-        screen
-          .getByRole<HTMLButtonElement>('button', { name: 'Search' })
-          .getAttribute('aria-expanded'),
-      ).to.equal('true');
+      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
+        'true',
+      );
     });
 
-    it('should clear the value when the clear button is clicked and focus to `the input', () => {
-      render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+    it('should clear the value when the clear button is clicked and focus to `the input', async () => {
+      const { user } = render(
+        <TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />,
+      );
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear' }));
-      clock.runToLast();
+      await user.click(screen.getByRole('button', { name: 'Clear' }));
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
     });
 
-    it('should focus the input when the trigger is clicked and return focus to the trigger when collapsed', () => {
-      render(<TestCase />);
+    it('should focus the input when the trigger is clicked and return focus to the trigger when collapsed', async () => {
+      const { user } = render(<TestCase />);
 
-      fireEvent.click(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      // Wait for the input to be focused
-      clock.runToLast();
+      await waitFor(() => {
+        expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+      });
 
-      expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+      await user.keyboard('[Escape]');
 
-      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
-
-      // Wait for the trigger to be focused
-      clock.runToLast();
-
-      expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Search' })).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Search' })).toHaveFocus();
     });
   });
 
   describe('quick filter logic', () => {
-    clock.withFakeTimers();
+    it('should return rows that match all values by default', async () => {
+      const { user } = render(<TestCase />);
 
-    it('should return rows that match all values by default', () => {
-      render(<TestCase />);
+      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.type(screen.getByRole('searchbox'), 'adid');
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adid' },
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await user.type(screen.getByRole('searchbox'), ' nik');
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adid nik' },
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([]);
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should return rows that match some values if quickFilterLogicOperator="or"', () => {
-      render(
+    it('should return rows that match some values if quickFilterLogicOperator="or"', async () => {
+      const { user } = render(
         <TestCase
           initialState={{
             filter: { filterModel: { items: [], quickFilterLogicOperator: GridLogicOperator.Or } },
@@ -332,21 +280,22 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adid' },
-      });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.type(screen.getByRole('searchbox'), 'adid');
 
-      fireEvent.change(screen.getByRole('searchbox'), {
-        target: { value: 'adid nik' },
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+
+      await user.type(screen.getByRole('searchbox'), ' nik');
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+      });
     });
 
-    it('should ignore hidden columns by default', () => {
-      render(
+    it('should ignore hidden columns by default', async () => {
+      const { user } = render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -356,17 +305,19 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal([]);
+      await user.type(screen.getByRole('searchbox'), '1');
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
-      clock.runToLast();
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([]);
+      });
+
+      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
+
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', () => {
-      render(
+    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', async () => {
+      const { user } = render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -376,17 +327,21 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await user.type(screen.getByRole('searchbox'), '1');
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
+
+      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      });
     });
 
-    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', () => {
-      render(
+    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', async () => {
+      const { user } = render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
@@ -396,12 +351,12 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal([]);
+      await user.type(screen.getByRole('searchbox'), '1');
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([]);
+      });
 
-      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
-      clock.runToLast();
+      await user.type(screen.getByRole('searchbox'), '[Backspace]2');
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -427,7 +382,6 @@ describe('<DataGrid /> - Quick filter', () => {
           quickFilterExcludeHiddenColumns: true,
         },
       });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -461,12 +415,10 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
 
       setProps({ columnVisibilityModel: { brand: true } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
     });
@@ -494,12 +446,10 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: false } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: true } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
     });
@@ -531,20 +481,16 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: true } });
-      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
     });
   });
 
   describe('column type: string', () => {
-    clock.withFakeTimers();
-
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -653,8 +599,6 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: number', () => {
-    clock.withFakeTimers();
-
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -707,8 +651,6 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: singleSelect', () => {
-    clock.withFakeTimers();
-
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -786,11 +728,11 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/6783
-  testSkipIf(isJSDOM)('should not override user input when typing', async () => {
+  it('should not override user input when typing', async () => {
     // Warning: this test doesn't fail consistently as it is timing-sensitive.
     const debounceMs = 50;
 
-    render(
+    const { user } = render(
       <TestCase
         slotProps={{
           toolbar: {
@@ -804,16 +746,16 @@ describe('<DataGrid /> - Quick filter', () => {
 
     expect(searchBox.value).to.equal('');
 
-    fireEvent.change(searchBox, { target: { value: 'a' } });
-    await sleep(debounceMs - 2);
+    await user.type(screen.getByRole('searchbox'), `a`);
+    await act(() => sleep(debounceMs - 2));
     expect(searchBox.value).to.equal('a');
 
-    fireEvent.change(searchBox, { target: { value: 'ab' } });
-    await sleep(10);
+    await user.type(screen.getByRole('searchbox'), `b`);
+    await act(() => sleep(10));
     expect(searchBox.value).to.equal('ab');
 
-    fireEvent.change(searchBox, { target: { value: 'abc' } });
-    await sleep(debounceMs * 2);
+    await user.type(screen.getByRole('searchbox'), `c`);
+    await act(() => sleep(debounceMs * 2));
     expect(searchBox.value).to.equal('abc');
   });
 
