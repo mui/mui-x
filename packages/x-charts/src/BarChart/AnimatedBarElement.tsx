@@ -14,7 +14,7 @@ export interface BarProps extends Omit<React.SVGProps<SVGRectElement>, 'id' | 'c
 }
 
 export function AnimatedBarElement(props: BarProps) {
-  const { ownerState, ...other } = props;
+  const { ownerState, skipAnimation, ...other } = props;
 
   const animatedProps = useAnimateBar(props);
 
