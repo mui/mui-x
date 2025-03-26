@@ -93,6 +93,10 @@ export function useRadarAxisHighlight(
 
   const highlightedIndex = rotationAxisIndex;
 
+  if (!rotationScale) {
+    return null;
+  }
+
   if (highlightedIndex === null || highlightedIndex === -1) {
     return null;
   }
