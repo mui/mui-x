@@ -132,8 +132,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
 
     // scroll to the very bottom
-    virtualScroller.scrollTop = 1000;
-    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+    await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');

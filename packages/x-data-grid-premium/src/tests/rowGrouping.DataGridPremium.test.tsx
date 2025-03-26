@@ -22,8 +22,7 @@ import {
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;

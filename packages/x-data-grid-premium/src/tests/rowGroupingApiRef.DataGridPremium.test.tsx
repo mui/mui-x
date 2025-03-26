@@ -11,8 +11,7 @@ import {
   getGroupRowIdFromPath,
 } from '@mui/x-data-grid-premium';
 import { expect } from 'chai';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
