@@ -116,11 +116,11 @@ function SyncThemeMode() {
   return null;
 }
 
+const theme = createTheme({ colorSchemes: { light: true, dark: true } });
+
 export default function JoyV6Field() {
   return (
-    <ThemeProvider
-      theme={createTheme({ colorSchemes: { light: true, dark: true } })}
-    >
+    <ThemeProvider theme={theme}>
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode />
         <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -1,2 +1,10 @@
 Broken links found by `docs:link-check` that exist:
 
+- https://mui.com/system/styles/advanced/
+- https://mui.com/system/styles/advanced/#class-names
+- https://mui.com/system/styles/advanced/#server-side-rendering
+- https://mui.com/system/styles/advanced/#theme-nesting
+- https://mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator
+- https://mui.com/system/styles/api/#stylesprovider
+- https://mui.com/system/styles/api/#themeprovider
+- https://mui.com/system/styles/basics/
