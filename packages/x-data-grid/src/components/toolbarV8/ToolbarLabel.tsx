@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -70,5 +71,16 @@ const ToolbarLabel = forwardRef<HTMLSpanElement, ToolbarLabelProps>(
     return <React.Fragment>{element}</React.Fragment>;
   },
 );
+
+ToolbarLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
 
 export { ToolbarLabel };

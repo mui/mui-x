@@ -18,6 +18,7 @@ const COMPONENT_API_PAGES = [
 
   'src/components/toolbarV8/Toolbar.tsx',
   'src/components/toolbarV8/ToolbarButton.tsx',
+  'src/components/toolbarV8/ToolbarLabel.tsx',
   'src/components/export/ExportPrint.tsx',
   'src/components/export/ExportCsv.tsx',
   'src/components/export/ExportExcel.tsx',

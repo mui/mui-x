@@ -4,6 +4,7 @@ import {
   DataGrid,
   Toolbar,
   ToolbarButton,
+  ToolbarLabel,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
   ExportCsv,
@@ -30,7 +31,6 @@ import SearchIcon from '@mui/icons-material/Search';
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
-  marginLeft: 'auto',
 });
 
 const StyledToolbarButton = styled(ToolbarButton)(({ theme, ownerState }) => ({
@@ -57,6 +57,7 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
+      <ToolbarLabel />
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
@@ -94,8 +95,18 @@ function CustomToolbar() {
         anchorEl={exportMenuTriggerRef.current}
         open={exportMenuOpen}
         onClose={() => setExportMenuOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'export-menu-trigger',
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'export-menu-trigger',
+          },
         }}
       >
         <ExportPrint render={<MenuItem />} onClick={() => setExportMenuOpen(false)}>
@@ -178,6 +189,7 @@ export default function GridToolbar() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        label="Toolbar Demo"
         showToolbar
       />
     </div>

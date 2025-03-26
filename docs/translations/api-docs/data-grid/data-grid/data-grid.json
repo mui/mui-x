@@ -4,9 +4,9 @@
     "apiRef": {
       "description": "The ref object that allows Data Grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
-    "aria-label": { "description": "The label of the Data Grid." },
+    "aria-label": { "description": "The <code>aria-label</code> of the Data Grid." },
     "aria-labelledby": {
-      "description": "The id of the element containing a label for the Data Grid."
+      "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
       "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
@@ -162,6 +162,9 @@
     },
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
+    },
+    "label": {
+      "description": "The label of the Data Grid. If the <code>showToolbar</code> prop is <code>true</code>, the label will be displayed in the toolbar and associated to the grid with the <code>aria-labelledby</code> attribute. If the <code>showToolbar</code> prop is <code>false</code>, the label will not be visible but will be applied to to the <code>aria-label</code> attribute."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {

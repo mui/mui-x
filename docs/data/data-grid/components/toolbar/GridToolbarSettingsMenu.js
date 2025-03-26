@@ -58,8 +58,18 @@ function CustomToolbar(props) {
         anchorEl={settingsMenuTriggerRef.current}
         open={settingsMenuOpen}
         onClose={() => setSettingsMenuOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'settings-menu-trigger',
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'settings-menu-trigger',
+          },
         }}
       >
         {DENISTY_OPTIONS.map((option) => (

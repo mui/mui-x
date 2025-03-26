@@ -1,7 +1,7 @@
 ---
 title: React Data Grid - Toolbar component
 productId: x-data-grid
-components: Toolbar, ToolbarButton
+components: Toolbar, ToolbarButton, ToolbarLabel
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
@@ -21,9 +21,10 @@ To extend the default toolbar, the code in the demo below can be copied and cust
 ## Anatomy
 
 ```tsx
-import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import { Toolbar, ToolbarButton, ToolbarLabel } from '@mui/x-data-grid';
 
 <Toolbar>
+  <ToolbarLabel />
   <ToolbarButton />
 </Toolbar>;
 ```
@@ -37,6 +38,12 @@ It renders a styled `<div />` element.
 
 `<ToolbarButton />` is a button for performing actions from the toolbar.
 It renders the `baseIconButton` slot.
+
+### Toolbar Label
+
+`<ToolbarLabel />` is a label component that displays text in the toolbar.
+It renders a styled `<span />` element.
+By default, it displays the text from the DataGrid's `label` prop, but you can override this by providing your own content as `children` to the component.
 
 ## Recipes
 

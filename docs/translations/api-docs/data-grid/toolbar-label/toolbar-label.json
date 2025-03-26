@@ -1,0 +1,7 @@
+{
+  "componentDescription": "A label for the toolbar.\nIt renders a styled `<span />` element. By default, it uses the DataGrid's `label` prop as its content but can be overridden by providing `children`.",
+  "propDescriptions": {
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}

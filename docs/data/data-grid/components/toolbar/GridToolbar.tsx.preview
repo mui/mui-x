@@ -2,5 +2,6 @@
   {...data}
   loading={loading}
   slots={{ toolbar: CustomToolbar }}
+  label="Toolbar Demo"
   showToolbar
 />
