@@ -52,6 +52,10 @@ function BarElement(props: BarElementProps) {
     onClick,
     skipAnimation,
     layout,
+    x,
+    y,
+    width,
+    height,
     ...other
   } = props;
   const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
@@ -79,6 +83,10 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...interactionProps,
+      x,
+      y,
+      width,
+      height,
       style,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',

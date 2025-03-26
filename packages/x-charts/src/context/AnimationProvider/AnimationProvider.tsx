@@ -39,7 +39,7 @@ function AnimationProvider(props: AnimationProviderProps) {
     return () => {
       mql?.removeEventListener?.('change', handleMediaChange);
     };
-  }, []);
+  }, [isAnimationDisabledEnvironment]);
 
   const value = React.useMemo(
     () => ({
