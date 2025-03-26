@@ -43,7 +43,8 @@ describe('<RadarChart />', () => {
     expect(noDataOverlay).toBeVisible();
   });
 
-  it('should call onHighlightChange', async () => {
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)('should call onHighlightChange', async () => {
     const onHighlightChange = spy();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
@@ -53,8 +54,7 @@ describe('<RadarChart />', () => {
     expect(onHighlightChange.callCount).to.equal(1);
   });
 
-  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)('should call onHighlightChange', async () => {
+  testSkipIf(isJSDOM)('should highlight axis on hover', async () => {
     const { user } = render(
       <div
         style={{
