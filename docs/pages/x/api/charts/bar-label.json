@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "xOrigin": { "type": { "name": "number" }, "required": true },
+    "yOrigin": { "type": { "name": "number" }, "required": true }
+  },
   "name": "BarLabel",
   "imports": [
     "import { BarLabel } from '@mui/x-charts/BarChart';",

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useIsHydrated } from '../useIsHydrated';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import type { BarProps } from '../../BarChart/AnimatedBarElement';
 
@@ -32,7 +31,6 @@ function barPropsInterpolator(from: BarInterpolatedProps, to: BarInterpolatedPro
 }
 
 export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnValue {
-  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.layout === 'vertical' ? props.x : props.xOrigin,
     y: props.layout === 'vertical' ? props.yOrigin : props.y,
@@ -60,7 +58,7 @@ export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnVa
     },
   );
 
-  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
+  const usedProps = props.skipAnimation ? props : initialProps;
 
   return {
     ref,

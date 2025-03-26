@@ -131,6 +131,8 @@ BarElement.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  xOrigin: PropTypes.number.isRequired,
+  yOrigin: PropTypes.number.isRequired,
 } as any;
 
 export { BarElement };

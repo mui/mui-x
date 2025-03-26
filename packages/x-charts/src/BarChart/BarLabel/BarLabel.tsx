@@ -80,7 +80,15 @@ BarLabel.propTypes = {
   skipAnimation: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
+  /**
+   * x-coordinate of the stack this bar label belongs to.
+   */
+  xOrigin: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
+  /**
+   * y-coordinate of the stack this bar label belongs to.
+   */
+  yOrigin: PropTypes.number.isRequired,
 } as any;
 
 export { BarLabel };
