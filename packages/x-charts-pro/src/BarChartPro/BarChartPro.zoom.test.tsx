@@ -106,8 +106,13 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
+      const onZoomChange = sinon.spy();
       const { user } = render(
-        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+          onZoomChange={onZoomChange}
+        />,
         options,
       );
 
@@ -136,7 +141,10 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
           coords: { x: 90, y: 20 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
+      expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('A')).to.equal(null);
       expect(screen.queryByText('B')).to.equal(null);
       expect(screen.queryByText('C')).not.to.equal(null);
@@ -160,7 +168,10 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
           coords: { x: 300, y: 20 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
+      expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('A')).not.to.equal(null);
       expect(screen.queryByText('B')).to.equal(null);
       expect(screen.queryByText('C')).to.equal(null);

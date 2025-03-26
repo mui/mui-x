@@ -179,6 +179,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
           coords: { x: 100, y: 5 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
       expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('1.0')).to.equal(null);
@@ -208,6 +210,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
           coords: { x: 300, y: -200 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
       expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('2.0')).to.equal(null);

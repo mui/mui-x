@@ -106,8 +106,13 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
+      const onZoomChange = sinon.spy();
       const { user } = render(
-        <LineChartPro {...lineChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
+        <LineChartPro
+          {...lineChartProps}
+          initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+          onZoomChange={onZoomChange}
+        />,
         options,
       );
 
@@ -128,15 +133,18 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
           target: svg,
-          coords: { x: 115, y: 20 },
+          coords: { x: 135, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
           target: svg,
-          coords: { x: 115, y: 20 },
+          coords: { x: 135, y: 20 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
+      expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('A')).to.equal(null);
       expect(screen.queryByText('B')).to.equal(null);
       expect(screen.queryByText('C')).not.to.equal(null);
@@ -152,15 +160,18 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
           target: svg,
-          coords: { x: 300, y: 20 },
+          coords: { x: 400, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
           target: svg,
-          coords: { x: 300, y: 20 },
+          coords: { x: 400, y: 20 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => setTimeout(r, 17));
 
+      expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('A')).not.to.equal(null);
       expect(screen.queryByText('B')).to.equal(null);
       expect(screen.queryByText('C')).to.equal(null);
