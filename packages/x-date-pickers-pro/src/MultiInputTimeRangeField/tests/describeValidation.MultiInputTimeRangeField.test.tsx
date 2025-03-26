@@ -7,14 +7,12 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MultiInputTimeRangeField /> - Describe Validation', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
+  const { render } = createPickerRenderer({
     clockConfig: new Date(2018, 0, 10),
   });
 
   describeRangeValidation(MultiInputTimeRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
     fieldType: 'multi-input',
