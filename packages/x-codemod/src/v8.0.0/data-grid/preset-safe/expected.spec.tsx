@@ -1,6 +1,6 @@
 // @ts-nocheck
 import * as React from 'react';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, GridToolbar } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license';
 import { DataGridPremium, gridRowSelectionIdsSelector } from '@mui/x-data-grid-premium';
@@ -25,7 +25,12 @@ const [rowSelectionModel1, setRowSelectionModel1] = React.useState([4, 5, 6]);
       warnIfFocusStateIsNotSynced: true,
     }}
     rowSpanning />
-  <DataGridPremium rowSpanning />
+  <DataGridPremium
+    rowSpanning
+    slots={{
+      toolbar: GridToolbar,
+    }}
+    showToolbar />
   <DataGridPremium
     {...props}
   />
