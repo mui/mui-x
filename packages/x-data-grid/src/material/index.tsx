@@ -63,7 +63,7 @@ import {
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
-import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
+import type { GridSlotProps as P } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -96,7 +96,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 
 const Checkbox = styled(MUICheckbox, {
   shouldForwardProp: (prop) => prop !== 'density',
-})<{ density?: GridSlotProps['baseCheckbox']['density'] }>(({ theme }) => ({
+})<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
     {
       props: { density: 'compact' },
@@ -107,12 +107,12 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
+const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
     label,
     labelId,
-    customProps,
+    material,
     disabled,
     slotProps,
     onChange,
@@ -145,13 +145,13 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         onChange={onChange as any}
         {...rest}
         variant="outlined"
-        // @ts-ignore Issue with customProps
+        // @ts-ignore Issue with material
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={menuProps}
         size={size}
-        {...customProps}
+        {...material}
       />
     </MUIFormControl>
   );
@@ -172,9 +172,9 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
   },
 })) as typeof MUIPagination;
 
-const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
+const BasePagination = forwardRef<any, P['basePagination']>(
   function BasePagination(props, ref) {
-    const { onRowsPerPageChange, customProps, disabled, ...rest } = props;
+    const { onRowsPerPageChange, material, disabled, ...rest } = props;
     const computedProps = React.useMemo(() => {
       if (!disabled) {
         return undefined;
@@ -204,11 +204,11 @@ const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
             estimated: estimatedRowCount,
           })
         }
-        // @ts-ignore Issue with customProps
+        // @ts-ignore Issue with material
         getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
         {...computedProps}
         {...rest}
-        {...customProps}
+        {...material}
         ref={ref}
       />
     );
@@ -286,13 +286,13 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 
 export default materialSlots;
 
-function BaseBadge(props: GridSlotProps['baseBadge']) {
-  const { customProps, ...rest } = props;
-  return <MUIBadge {...rest} {...customProps} />;
+function BaseBadge(props: P['baseBadge']) {
+  const { material, ...rest } = props;
+  return <MUIBadge {...rest} {...material} />;
 }
 
-function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, customProps, ...other } = props;
+function BaseCheckbox(props: P['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
+  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -313,7 +313,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
     return (
       <Checkbox
         {...other}
-        {...customProps}
+        {...material}
         className={className}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
@@ -328,7 +328,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       control={
         <Checkbox
           {...other}
-          {...customProps}
+          {...material}
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
           touchRippleRef={rippleRef}
@@ -340,52 +340,52 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
   );
 }
 
-function BaseCircularProgress(props: GridSlotProps['baseCircularProgress']) {
-  const { customProps, ...rest } = props;
-  return <MUICircularProgress {...rest} {...customProps} />;
+function BaseCircularProgress(props: P['baseCircularProgress']) {
+  const { material, ...rest } = props;
+  return <MUICircularProgress {...rest} {...material} />;
 }
 
-function BaseDivider(props: GridSlotProps['baseDivider']) {
-  const { customProps, ...rest } = props;
-  return <MUIDivider {...rest} {...customProps} />;
+function BaseDivider(props: P['baseDivider']) {
+  const { material, ...rest } = props;
+  return <MUIDivider {...rest} {...material} />;
 }
 
-function BaseLinearProgress(props: GridSlotProps['baseLinearProgress']) {
-  const { customProps, ...rest } = props;
-  return <MUILinearProgress {...rest} {...customProps} />;
+function BaseLinearProgress(props: P['baseLinearProgress']) {
+  const { material, ...rest } = props;
+  return <MUILinearProgress {...rest} {...material} />;
 }
 
-function BaseButton(props: GridSlotProps['baseButton']) {
-  const { customProps, ...rest } = props;
-  return <MUIButton {...rest} {...customProps} />;
+function BaseButton(props: P['baseButton']) {
+  const { material, ...rest } = props;
+  return <MUIButton {...rest} {...material} />;
 }
 
-function BaseIconButton(props: GridSlotProps['baseIconButton']) {
-  const { customProps, ...rest } = props;
-  return <MUIIconButton {...rest} {...customProps} />;
+function BaseIconButton(props: P['baseIconButton']) {
+  const { material, ...rest } = props;
+  return <MUIIconButton {...rest} {...material} />;
 }
 
-function BaseTooltip(props: GridSlotProps['baseTooltip']) {
-  const { customProps, ...rest } = props;
-  return <MUITooltip {...rest} {...customProps} />;
+function BaseTooltip(props: P['baseTooltip']) {
+  const { material, ...rest } = props;
+  return <MUITooltip {...rest} {...material} />;
 }
 
-function BaseSkeleton(props: GridSlotProps['baseSkeleton']) {
-  const { customProps, ...rest } = props;
-  return <MUISkeleton {...rest} {...customProps} />;
+function BaseSkeleton(props: P['baseSkeleton']) {
+  const { material, ...rest } = props;
+  return <MUISkeleton {...rest} {...material} />;
 }
 
-function BaseSwitch(props: GridSlotProps['baseSwitch']) {
-  const { customProps, ...rest } = props;
-  return <MUISwitch {...rest} {...customProps} />;
+function BaseSwitch(props: P['baseSwitch']) {
+  const { material, ...rest } = props;
+  return <MUISwitch {...rest} {...material} />;
 }
 
-function BaseMenuList(props: GridSlotProps['baseMenuList']) {
-  const { customProps, ...rest } = props;
-  return <MUIMenuList {...rest} {...customProps} />;
+function BaseMenuList(props: P['baseMenuList']) {
+  const { material, ...rest } = props;
+  return <MUIMenuList {...rest} {...material} />;
 }
 
-function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
+function BaseMenuItem(props: P['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;
   if (inert) {
     (other as any).disableRipple = true;
@@ -397,7 +397,7 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   ]);
 }
 
-function BaseTextField(props: GridSlotProps['baseTextField']) {
+function BaseTextField(props: P['baseTextField']) {
   // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
   // translate the pattern.
   const { slotProps, ...rest } = props;
@@ -415,7 +415,7 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
   );
 }
 
-function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
+function BaseAutocomplete(props: P['baseAutocomplete']) {
   const rootProps = useGridRootProps();
   const {
     id,
@@ -478,11 +478,11 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
   );
 }
 
-function BaseInput(props: GridSlotProps['baseInput']) {
+function BaseInput(props: P['baseInput']) {
   return <MUIInputBase {...transformInputProps(props)} />;
 }
 
-function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
+function transformInputProps(props: P['baseInput'] | undefined) {
   if (!props) {
     return undefined;
   }
@@ -516,7 +516,7 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-function BasePopper(props: GridSlotProps['basePopper']) {
+function BasePopper(props: P['basePopper']) {
   const { flip, onDidShow, onDidHide } = props;
   const modifiers = React.useMemo(() => {
     const result = [] as NonNullable<MUIPopperProps['modifiers']>;
@@ -617,7 +617,7 @@ function focusTrapWrapper(props: PopperProps, content: any) {
   );
 }
 
-function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseSelectOption']>) {
+function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption']>) {
   if (native) {
     return <option {...props} />;
   }
