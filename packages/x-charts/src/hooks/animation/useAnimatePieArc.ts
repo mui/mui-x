@@ -21,16 +21,25 @@ type UseAnimatePieArcReturnValue = {
   d: string;
   visibility: 'hidden' | 'visible';
 };
-type PieArcInterpolatedProps = Pick<UseAnimatePieArcParams, 'startAngle' | 'endAngle'>;
+type PieArcInterpolatedProps = Pick<
+  UseAnimatePieArcParams,
+  'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle'
+>;
 
 function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
   const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
   const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
+  const interpolateInnerRadius = interpolateNumber(from.innerRadius, to.innerRadius);
+  const interpolateOuterRadius = interpolateNumber(from.outerRadius, to.outerRadius);
+  const interpolatePaddingAngle = interpolateNumber(from.paddingAngle, to.paddingAngle);
 
   return (t: number) => {
     return {
       startAngle: interpolateStartAngle(t),
       endAngle: interpolateEndAngle(t),
+      innerRadius: interpolateInnerRadius(t),
+      outerRadius: interpolateOuterRadius(t),
+      paddingAngle: interpolatePaddingAngle(t),
     };
   };
 }
@@ -43,10 +52,19 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
+    innerRadius: props.innerRadius,
+    outerRadius: props.outerRadius,
+    paddingAngle: props.paddingAngle,
   };
 
   const ref = useAnimate(
-    { startAngle: props.startAngle, endAngle: props.endAngle },
+    {
+      startAngle: props.startAngle,
+      endAngle: props.endAngle,
+      innerRadius: props.innerRadius,
+      outerRadius: props.outerRadius,
+      paddingAngle: props.paddingAngle,
+    },
     {
       createInterpolator: pieArcPropsInterpolator,
       applyProps(element, animatedProps) {
@@ -79,9 +97,9 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
   return {
     ref: useForkRef(ref, props.ref),
     d: d3Arc().cornerRadius(props.cornerRadius)({
-      padAngle: props.paddingAngle,
-      innerRadius: props.innerRadius,
-      outerRadius: props.outerRadius,
+      padAngle: usedProps.paddingAngle,
+      innerRadius: usedProps.innerRadius,
+      outerRadius: usedProps.outerRadius,
       startAngle: usedProps.startAngle,
       endAngle: usedProps.endAngle,
     })!,
