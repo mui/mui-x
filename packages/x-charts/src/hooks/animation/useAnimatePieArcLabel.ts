@@ -21,7 +21,10 @@ type UseAnimatePieArcLabelReturn = {
   x: number;
   y: number;
 };
-type PieArcLabelInterpolatedProps = Pick<UseAnimatePieArcLabelParams, 'startAngle' | 'endAngle'>;
+type PieArcLabelInterpolatedProps = Pick<
+  UseAnimatePieArcLabelParams,
+  'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle' | 'cornerRadius'
+>;
 
 function pieArcLabelPropsInterpolator(
   from: PieArcLabelInterpolatedProps,
@@ -29,11 +32,19 @@ function pieArcLabelPropsInterpolator(
 ) {
   const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
   const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
+  const interpolateInnerRadius = interpolateNumber(from.innerRadius, to.innerRadius);
+  const interpolateOuterRadius = interpolateNumber(from.outerRadius, to.outerRadius);
+  const interpolatePaddingAngle = interpolateNumber(from.paddingAngle, to.paddingAngle);
+  const interpolateCornerRadius = interpolateNumber(from.cornerRadius, to.cornerRadius);
 
   return (t: number) => {
     return {
       startAngle: interpolateStartAngle(t),
       endAngle: interpolateEndAngle(t),
+      innerRadius: interpolateInnerRadius(t),
+      outerRadius: interpolateOuterRadius(t),
+      paddingAngle: interpolatePaddingAngle(t),
+      cornerRadius: interpolateCornerRadius(t),
     };
   };
 }
@@ -48,19 +59,30 @@ export function useAnimatePieArcLabel(
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
+    innerRadius: props.innerRadius,
+    outerRadius: props.outerRadius,
+    paddingAngle: props.paddingAngle,
+    cornerRadius: props.cornerRadius,
   };
 
   const ref = useAnimate(
-    { startAngle: props.startAngle, endAngle: props.endAngle },
+    {
+      startAngle: props.startAngle,
+      endAngle: props.endAngle,
+      innerRadius: props.innerRadius,
+      outerRadius: props.outerRadius,
+      paddingAngle: props.paddingAngle,
+      cornerRadius: props.cornerRadius,
+    },
     {
       createInterpolator: pieArcLabelPropsInterpolator,
       applyProps(element, animatedProps) {
-        const [x, y] = d3Arc().cornerRadius(props.cornerRadius).centroid({
-          padAngle: props.paddingAngle,
+        const [x, y] = d3Arc().cornerRadius(animatedProps.cornerRadius).centroid({
+          padAngle: animatedProps.paddingAngle,
           startAngle: animatedProps.startAngle,
           endAngle: animatedProps.endAngle,
-          innerRadius: props.innerRadius,
-          outerRadius: props.outerRadius,
+          innerRadius: animatedProps.innerRadius,
+          outerRadius: animatedProps.outerRadius,
         });
 
         element.setAttribute('x', x.toString());
@@ -73,12 +95,12 @@ export function useAnimatePieArcLabel(
 
   const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
 
-  const [x, y] = d3Arc().cornerRadius(props.cornerRadius).centroid({
-    padAngle: props.paddingAngle,
+  const [x, y] = d3Arc().cornerRadius(usedProps.cornerRadius).centroid({
+    padAngle: usedProps.paddingAngle,
     startAngle: usedProps.startAngle,
     endAngle: usedProps.endAngle,
-    innerRadius: props.innerRadius,
-    outerRadius: props.outerRadius,
+    innerRadius: usedProps.innerRadius,
+    outerRadius: usedProps.outerRadius,
   });
 
   return {
