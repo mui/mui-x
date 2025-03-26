@@ -123,17 +123,17 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 5, y: 20 },
+          coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
           target: svg,
-          coords: { x: 100, y: 20 },
+          coords: { x: 115, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
           target: svg,
-          coords: { x: 100, y: 20 },
+          coords: { x: 115, y: 20 },
         },
       ]);
 
@@ -147,7 +147,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 5, y: 20 },
+          coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
