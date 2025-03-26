@@ -98,9 +98,9 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.3",
-    "@mui/material": "^7.0.0-beta.4",
-    "@mui/system": "^7.0.0-beta.4",
+    "@mui/internal-test-utils": "^2.0.4",
+    "@mui/material": "^7.0.0-rc.0",
+    "@mui/system": "^7.0.0-rc.0",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
