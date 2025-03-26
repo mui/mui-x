@@ -87,7 +87,7 @@ The migration to `@mui/material` v7 should not cause too many issues as it has l
 
 :::
 
-### Setting license key
+### ✅ Setting license key
 
 The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
 You have to import it from `@mui/x-license` instead:
@@ -112,7 +112,7 @@ You have to import it from `@mui/x-license` instead:
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
-- The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
+- ✅ The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
   The `exclude` selection type allows to select all rows except the ones in the `ids` set.
 
@@ -120,7 +120,6 @@ You have to import it from `@mui/x-license` instead:
 
   - `rowSelectionModel`
   - `onRowSelectionModelChange`
-  - `initialState.rowSelectionModel`
 
   ```diff
   -const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
@@ -150,25 +149,25 @@ You have to import it from `@mui/x-license` instead:
   ```
 
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
-- The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
-- The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
+- ✅ The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
+- ✅ The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
 
 ### Changes to the public API
 
 - ✅ The `rowPositionsDebounceMs` prop was removed.
-- The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
+- ✅ The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
 - The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
 - The `sanitizeFilterItemValue()` utility is not exported anymore.
-- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
+- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `gridRowIdSelector` method instead.
 
   ```diff
   -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
   -const rowId = idToIdLookup[id];
   +const rowsLookup = gridRowsLookupSelector(apiRef);
-  +const rowId = apiRef.current.getRowId(rowsLookup[id]);
+  +const rowId = gridRowIdSelector(apiRef, rowsLookup[id]);
   ```
 
 - ✅ The feature row spanning is now stable.
@@ -180,7 +179,7 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
-- The data source feature and its related props are now stable.
+- ✅ The data source feature and its related props are now stable.
 
   ```diff
    <DataGridPro
@@ -188,10 +187,12 @@ You have to import it from `@mui/x-license` instead:
   -  unstable_dataSourceCache={cache}
   -  unstable_lazyLoading
   -  unstable_lazyLoadingRequestThrottleMs={100}
+  -  unstable_onDataSourceError={() => {}}
   +  dataSource={dataSource}
   +  dataSourceCache={cache}
   +  lazyLoading
   +  lazyLoadingRequestThrottleMs={100}
+  +  onDataSourceError={() => {}}
    />
   ```
 
@@ -215,7 +216,7 @@ You have to import it from `@mui/x-license` instead:
 
 - `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
-- The `showToolbar` prop is now required to display the toolbar.
+- ✅ The `showToolbar` prop is now required to display the toolbar.
 
   It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
 
@@ -230,16 +231,16 @@ You have to import it from `@mui/x-license` instead:
 
 - The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
 
-- The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
+- The signature of `onDataSourceError()` has been updated to support future use-cases.
 
   ```diff
    <DataGrid
-  -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
+  -  onDataSourceError={(error: Error, params: GridGetRowsParams) => {
   -    if (params.filterModel) {
   -      // do something
   -    }
   -  }}
-  +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
+  +  onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
   +    if (error instanceof GridGetRowsError && error.params.filterModel) {
   +      // do something
   +    }
