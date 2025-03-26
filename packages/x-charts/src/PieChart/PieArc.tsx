@@ -142,10 +142,16 @@ PieArc.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  cornerRadius: PropTypes.any.isRequired,
   dataIndex: PropTypes.number.isRequired,
+  endAngle: PropTypes.any.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  innerRadius: PropTypes.any.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
+  outerRadius: PropTypes.any.isRequired,
+  paddingAngle: PropTypes.any.isRequired,
+  startAngle: PropTypes.any.isRequired,
 } as any;
 
 export { PieArc };
