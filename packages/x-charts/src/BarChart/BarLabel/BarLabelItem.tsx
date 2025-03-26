@@ -33,6 +33,14 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      */
     slots?: BarLabelSlots;
     /**
+     * The position in the x-axis of the stack this bar label belongs to.
+     */
+    xOrigin: number;
+    /**
+     * The position in the y-axis of the stack this bar label belongs to.
+     */
+    yOrigin: number;
+    /**
      * The position of the bar in the x-axis.
      */
     x: number;
@@ -82,6 +90,8 @@ function BarLabelItem(props: BarLabelItemProps) {
     barLabel,
     slots,
     slotProps,
+    xOrigin,
+    yOrigin,
     x,
     y,
     width,
@@ -115,6 +125,8 @@ function BarLabelItem(props: BarLabelItemProps) {
     externalSlotProps: slotProps?.barLabel,
     additionalProps: {
       ...other,
+      xOrigin,
+      yOrigin,
       x,
       y,
       width,

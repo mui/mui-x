@@ -6,7 +6,7 @@ import type { BarProps } from '../../BarChart/AnimatedBarElement';
 
 type UseAnimateBarParams = Pick<
   BarProps,
-  'x' | 'y' | 'width' | 'height' | 'skipAnimation' | 'layout'
+  'x' | 'y' | 'xOrigin' | 'yOrigin' | 'width' | 'height' | 'skipAnimation' | 'layout'
 > & {
   ref?: React.Ref<SVGRectElement>;
 };
@@ -34,8 +34,8 @@ function barPropsInterpolator(from: BarInterpolatedProps, to: BarInterpolatedPro
 export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnValue {
   const isHydrated = useIsHydrated();
   const initialProps = {
-    x: props.x,
-    y: props.y + (props.layout === 'vertical' ? props.height : 0),
+    x: props.layout === 'vertical' ? props.x : props.xOrigin,
+    y: props.layout === 'vertical' ? props.yOrigin : props.y,
     width: props.layout === 'vertical' ? props.width : 0,
     height: props.layout === 'vertical' ? 0 : props.height,
   };
