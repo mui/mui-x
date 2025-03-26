@@ -12,8 +12,7 @@ import {
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Filter', () => {
   const { render } = createRenderer();
@@ -256,9 +255,11 @@ describe('<DataGrid /> - Filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      await user.type(screen.getByRole('textbox', { name: 'Value' }), '{Backspace>6/}Puma');
+      const textBox = await screen.findByRole('textbox', { name: 'Value' });
 
-      expect(screen.getByRole('textbox', { name: 'Value' })).to.have.value('Puma');
+      await user.type(textBox, '[Backspace>6/]Puma');
+
+      expect(textBox).to.have.value('Puma');
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Puma']);
       });
