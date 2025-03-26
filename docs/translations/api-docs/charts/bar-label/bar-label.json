@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "xOrigin": { "description": "x-coordinate of the stack this bar label belongs to." },
+    "yOrigin": { "description": "y-coordinate of the stack this bar label belongs to." }
+  },
   "classDescriptions": {
     "animate": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

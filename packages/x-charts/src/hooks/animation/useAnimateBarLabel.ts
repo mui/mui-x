@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useIsHydrated } from '../useIsHydrated';
 import { useAnimate } from '../../internals/animation/useAnimate';
 import type { BarLabelProps } from '../../BarChart';
 
@@ -32,7 +31,6 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
 }
 
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
-  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.layout === 'vertical' ? props.x + props.width / 2 : props.xOrigin,
     y: props.layout === 'vertical' ? props.yOrigin : props.y + props.height / 2,
@@ -58,7 +56,7 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     skip: props.skipAnimation,
   });
 
-  const usedProps = props.skipAnimation || !isHydrated ? currentProps : initialProps;
+  const usedProps = props.skipAnimation ? currentProps : initialProps;
 
   return {
     ref,
