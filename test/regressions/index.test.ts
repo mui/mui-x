@@ -71,6 +71,9 @@ async function main() {
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
+
+      // Disable animations
+      '--force-prefers-reduced-motion',
     ],
     headless: false,
   });
