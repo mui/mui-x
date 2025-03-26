@@ -22,7 +22,7 @@ import { UseViewsOptions } from '../useViews';
 import { PickerProviderProps } from '../../components/PickerProvider';
 import { PickersInputLocaleText } from '../../../locales';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
-import { UseStepNavigationReturnValue } from '../useStepNavigation';
+import { UseStepNavigationReturnValue } from '../../utils/createStepNavigation';
 
 /**
  * Props common to all Picker headless implementations.

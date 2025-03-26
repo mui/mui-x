@@ -1,12 +1,12 @@
 import { DateOrTimeViewWithMeridiem } from '../models/common';
-import { useStepNavigation } from './useStepNavigation';
+import { createStepNavigation } from '../utils/createStepNavigation';
 
 export function useNonRangePickerStepNavigation(
   parameters: UseNonRangePickerStepNavigationParameters,
 ) {
   const { steps } = parameters;
 
-  return useStepNavigation({
+  return createStepNavigation({
     steps,
     isCurrentViewMatchingStep: (view, step) => {
       return step.views == null || step.views.includes(view);

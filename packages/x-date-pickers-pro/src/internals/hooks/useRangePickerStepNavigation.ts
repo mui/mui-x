@@ -1,14 +1,14 @@
 import {
   DateOrTimeViewWithMeridiem,
   RangePosition,
-  useStepNavigation,
+  createStepNavigation,
 } from '@mui/x-date-pickers/internals';
 import { UseRangePositionResponse } from './useRangePosition';
 
 export function useRangePickerStepNavigation(parameters: UseRangePickerStepNavigationParameters) {
   const { steps, rangePositionResponse } = parameters;
 
-  return useStepNavigation({
+  return createStepNavigation({
     steps,
     isCurrentViewMatchingStep: (view, step) => {
       if (step.rangePosition !== rangePositionResponse.rangePosition) {

@@ -1,11 +1,11 @@
 import { DateOrTimeViewWithMeridiem } from '../models';
 
-export function useStepNavigation<TStep extends {}>(
-  parameters: UseStepNavigationParameters<TStep>,
+export function createStepNavigation<TStep extends {}>(
+  parameters: CreateStepNavigationParameters<TStep>,
 ) {
   const { steps, isCurrentViewMatchingStep, onStepChange } = parameters;
 
-  return (parametersBis: UseStepNavigationReturnValueParameters) => {
+  return (parametersBis: CreateStepNavigationReturnValueParameters) => {
     if (steps == null) {
       return {
         hasPreviousStep: false,
@@ -37,18 +37,20 @@ export function useStepNavigation<TStep extends {}>(
   };
 }
 
-interface UseStepNavigationParameters<TStep extends {}> {
+interface CreateStepNavigationParameters<TStep extends {}> {
   steps: TStep[] | null;
   isCurrentViewMatchingStep: (view: DateOrTimeViewWithMeridiem, step: TStep) => boolean;
   onStepChange: (parameters: UseRangePickerStepNavigationOnStepChangeParameters<TStep>) => void;
 }
 
-export type UseStepNavigationReturnValue = (parameters: UseStepNavigationReturnValueParameters) => {
+export type CreateStepNavigationReturnValue = (
+  parameters: CreateStepNavigationReturnValueParameters,
+) => {
   hasNextStep: boolean;
   goToNextStep: () => void;
 };
 
-export interface UseStepNavigationReturnValueParameters {
+export interface CreateStepNavigationReturnValueParameters {
   initialView: DateOrTimeViewWithMeridiem;
   view: DateOrTimeViewWithMeridiem;
   views: readonly DateOrTimeViewWithMeridiem[];
@@ -56,6 +58,6 @@ export interface UseStepNavigationReturnValueParameters {
 }
 
 interface UseRangePickerStepNavigationOnStepChangeParameters<TStep extends {}>
-  extends UseStepNavigationReturnValueParameters {
+  extends CreateStepNavigationReturnValueParameters {
   step: TStep;
 }

@@ -106,7 +106,6 @@ export type {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
-export { useStepNavigation } from './hooks/useStepNavigation';
 export { useToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export type { PickerToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
@@ -156,6 +155,7 @@ export type {
   PickerValidValue,
 } from './models/value';
 
+export { createStepNavigation } from './utils/createStepNavigation';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
