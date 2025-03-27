@@ -7,52 +7,59 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   enhancedPickersDayClasses,
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
-import { EnhancedPickersDayProps, PickersDayOwnerState } from './EnhancedPickersDay.types';
+import { useUtils } from '../internals/hooks/useUtils';
+import { EnhancedPickersDayOwnerState, EnhancedPickersDayProps } from './EnhancedPickersDay.types';
+import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
 const DAY_SIZE = 40;
 
-const useUtilityClasses = (ownerState: PickersDayOwnerState) => {
+const useUtilityClasses = (ownerState: EnhancedPickersDayOwnerState) => {
   const {
-    isSelected,
-    isHighlightTodayDisabled,
-    isToday,
-    isDisabled,
-    isOutsideCurrentMonth,
-    isDayHidden,
-    isStartOfPreviewing,
-    isEndOfPreviewing,
-    isPreviewing,
-    isStartOfSelectedRange,
-    isEndOfSelectedRange,
-    isWithinSelectedRange,
-    isDragSelected,
-    isFirstDayOfWeek,
-    isLastDayOfWeek,
+    isDaySelected,
+    disableHighlightToday,
+    isDayCurrent,
+    isDayDisabled,
+    isDayOutsideMonth,
+    isDayFillerCell,
+    isDayPreviewStart,
+    isDayPreviewEnd,
+    isDayInsidePreview,
+    isDayPreviewed,
+    isDaySelectionStart,
+    isDaySelectionEnd,
+    isDayInsideSelection,
+    isDayStartOfWeek,
+    isDayEndOfWeek,
+    disableMargin,
+    isDayStartOfMonth,
+    isDayEndOfMonth,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
-      isSelected && !isDayHidden && 'selected',
-      isDisabled && 'disabled',
-      !isHighlightTodayDisabled && isToday && !isSelected && !isDayHidden && 'today',
-      isOutsideCurrentMonth && 'dayOutsideMonth',
-      isDayHidden && 'hiddenDay',
-      isStartOfPreviewing && 'startOfPreviewing',
-      isEndOfPreviewing && 'endOfPreviewing',
-      isPreviewing && 'previewing',
-      isStartOfSelectedRange && 'startOfSelectedRange',
-      isEndOfSelectedRange && 'endOfSelectedRange',
-      isWithinSelectedRange && 'withinSelectedRange',
-      isDragSelected && 'dragSelected',
-      isLastDayOfWeek && 'lastDayOfWeek',
-      isFirstDayOfWeek && 'firstDayOfWeek',
+      isDaySelected && !isDayFillerCell && 'selected',
+      isDayDisabled && 'disabled',
+      !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
+      isDayOutsideMonth && 'dayOutsideMonth',
+      isDayFillerCell && 'hiddenDay',
+      isDayPreviewStart && 'previewStart',
+      isDayPreviewEnd && 'previewEnd',
+      isDayInsidePreview && 'insidePreviewing',
+      isDaySelectionStart && 'selectionStart',
+      isDaySelectionEnd && 'selectionEnd',
+      isDayInsideSelection && 'insideSelection',
+      isDayEndOfWeek && 'endOfWeek',
+      isDayStartOfWeek && 'startOfWeek',
+      isDayPreviewed && 'previewed',
+      isDayStartOfMonth && 'startOfMonth',
+      isDayEndOfMonth && 'endOfMonth',
+      disableMargin && 'disableMargin',
     ],
   };
 
@@ -63,24 +70,24 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
   const { ownerState } = props;
   return [
     styles.root,
-    !ownerState.isHighlightTodayDisabled && ownerState.today && styles.today,
-    !ownerState.isOutsideCurrentMonth && styles.dayOutsideMonth,
-    ownerState.isDayHidden && styles.hiddenDay,
-    ownerState.isStartOfPreviewing && styles.startOfPreviewing,
-    ownerState.isEndOfPreviewing && styles.endOfPreviewing,
-    ownerState.isPreviewing && styles.previewing,
-    ownerState.isStartOfSelectedRange && styles.startOfSelectedRange,
-    ownerState.isEndOfSelectedRange && styles.endOfSelectedRange,
-    ownerState.isWithinSelectedRange && styles.withinSelectedRange,
+    !ownerState.disableHighlightToday && ownerState.today && styles.today,
+    !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+    ownerState.isDayFillerCell && styles.hiddenDay,
+    ownerState.isDayPreviewStart && styles.previewStart,
+    ownerState.isDayPreviewEnd && styles.previewEnd,
+    ownerState.isDayInsidePreview && styles.insidePreviewing,
+    ownerState.isDaySelectionStart && styles.selectionStart,
+    ownerState.isDaySelectionEnd && styles.selectionEnd,
+    ownerState.isDayInsideSelection && styles.insideSelection,
     ownerState.isDragSelected && styles.dragSelected,
-    ownerState.isFirstDayOfWeek && styles.firstDayOfWeek,
-    ownerState.isLastDayOfWeek && styles.lastDayOfWeek,
+    ownerState.isDayStartOfWeek && styles.startOfWeek,
+    ownerState.isDayEndOfWeek && styles.endOfWeek,
   ];
 };
 
 const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 const highlightStyles = (theme) => ({
-  zIndex: -1,
+  zIndex: 0,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
   width: '100%',
@@ -91,7 +98,7 @@ const highlightStyles = (theme) => ({
   boxSizing: 'content-box',
 });
 const previewStyles = (theme) => ({
-  zIndex: -1,
+  zIndex: 0,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
   width: 'calc(100% - 2px)',
@@ -149,33 +156,33 @@ const styleArg = ({ theme }) => ({
 
   variants: [
     {
-      props: { isSelected: true },
+      props: { isDaySelected: true },
       style: {
         ...selectedDayStyles(theme),
       },
     },
     {
-      props: { isDisabled: true },
+      props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
       },
     },
     {
-      props: { isDayHidden: true },
+      props: { isDayFillerCell: true },
       style: {
         visibility: 'hidden',
       },
     },
     {
-      props: { isOutsideCurrentMonth: true },
+      props: { isDayOutsideMonth: true },
       style: {
         color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
       props: {
-        isToday: true,
-        isSelected: false,
+        isDayCurrent: true,
+        isDaySelected: false,
       },
       style: {
         outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
@@ -183,7 +190,7 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { isStartOfPreviewing: true },
+      props: { isDayPreviewStart: true },
       style: {
         '::after': {
           ...previewStyles(theme),
@@ -195,7 +202,7 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { isStartOfPreviewing: true, isEndOfSelectedRange: false },
+      props: { isDayPreviewStart: true, isDaySelectionEnd: false },
       style: {
         '::after': {
           borderLeftColor: (theme.vars || theme).palette.divider,
@@ -204,7 +211,7 @@ const styleArg = ({ theme }) => ({
     },
 
     {
-      props: { isEndOfPreviewing: true },
+      props: { isDayPreviewEnd: true },
       style: {
         '::after': {
           ...previewStyles(theme),
@@ -216,7 +223,7 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { isEndOfPreviewing: true, isStartOfSelectedRange: false },
+      props: { isDayPreviewEnd: true, isDaySelectionStart: false },
       style: {
         '::after': {
           borderRightColor: (theme.vars || theme).palette.divider,
@@ -225,7 +232,7 @@ const styleArg = ({ theme }) => ({
     },
 
     {
-      props: { isPreviewing: true },
+      props: { isDayInsidePreview: true },
       style: {
         '::after': {
           ...previewStyles(theme),
@@ -236,7 +243,7 @@ const styleArg = ({ theme }) => ({
     },
 
     {
-      props: { isStartOfSelectedRange: true },
+      props: { isDaySelectionStart: true },
       style: {
         '::before': {
           ...highlightStyles(theme),
@@ -248,7 +255,7 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { isEndOfSelectedRange: true },
+      props: { isDaySelectionEnd: true },
       style: {
         '::before': {
           ...highlightStyles(theme),
@@ -260,7 +267,10 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { isWithinSelectedRange: true },
+      props: { isDayInsideSelection: true },
+      color: 'initial',
+      background: 'initial',
+
       style: {
         '::before': {
           ...highlightStyles(theme),
@@ -269,14 +279,9 @@ const styleArg = ({ theme }) => ({
         },
       },
     },
+
     {
-      props: { isDragSelected: true },
-      style: {
-        ...selectedDayStyles(theme),
-      },
-    },
-    {
-      props: { isLastDayOfWeek: true },
+      props: { isDayEndOfWeek: true },
       style: {
         '::after': {
           borderTopRightRadius: '50%',
@@ -295,7 +300,7 @@ const styleArg = ({ theme }) => ({
     },
     {
       props: {
-        isFirstDayOfWeek: true,
+        isDayStartOfWeek: true,
       },
       style: {
         '::after': {
@@ -320,7 +325,7 @@ const EnhancedPickersDayRoot = styled(ButtonBase, {
   name: 'MuiEnhancedPickersDay',
   slot: 'Root',
   overridesResolver,
-})<{ ownerState: PickersDayOwnerState }>(styleArg);
+})<{ ownerState: EnhancedPickersDayOwnerState }>(styleArg);
 
 type EnhancedPickersDayComponent = ((
   props: EnhancedPickersDayProps & React.RefAttributes<HTMLButtonElement>,
@@ -337,12 +342,12 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay(
     name: 'MuiEnhancedPickersDay',
   });
 
+  const utils = useUtils();
+
   const {
     autoFocus = false,
     className,
-    day,
-    disabled = false,
-    disableHighlightToday = false,
+    classes: classesProp,
     hidden,
     isAnimating,
     onClick,
@@ -352,47 +357,58 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay(
     onKeyDown = noop,
     onMouseDown = noop,
     onMouseEnter = noop,
-    outsideCurrentMonth,
-    selected = false,
-    showDaysOutsideCurrentMonth = false,
     children,
-    today: isToday = false,
     isFirstVisibleCell,
     isLastVisibleCell,
-    dayOfWeek,
-    isStartOfPreviewing = false,
-    isEndOfPreviewing = false,
-    isPreviewing = false,
-    isStartOfSelectedRange = false,
-    isEndOfSelectedRange = false,
-    isWithinSelectedRange = false,
-    isDragSelected = false,
+    day,
+    selected,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
+    isEndOfHighlighting,
+    isEndOfPreviewing,
+    isHighlighting,
+    isPreviewing,
+    isStartOfHighlighting,
+    isStartOfPreviewing,
+    isVisuallySelected,
     ...other
   } = props;
 
-  console.log('EnhancedPickersDay', props);
+  const pickersDayOwnerState = usePickerDayOwnerState({
+    day,
+    selected,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
+  });
 
-  const ownerState = {
-    isSelected: selected,
-    isHighlightTodayDisabled: disableHighlightToday,
-    isToday,
-    isDisabled: disabled,
-    isDayHidden: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
-    isOutsideCurrentMonth: outsideCurrentMonth && showDaysOutsideCurrentMonth,
-    isFirstDayOfWeek: dayOfWeek === 1,
-    isLastDayOfWeek: dayOfWeek === 7,
-    isStartOfPreviewing,
-    isEndOfPreviewing,
-    isPreviewing,
-    isStartOfSelectedRange,
-    isEndOfSelectedRange,
-    isWithinSelectedRange,
-    isDragSelected,
+  const ownerState: EnhancedPickersDayOwnerState = {
+    ...pickersDayOwnerState,
+    // Properties that the Base UI implementation will have
+    isDaySelectionStart: isStartOfHighlighting,
+    isDaySelectionEnd: isEndOfHighlighting,
+    isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
+    isDaySelected: isHighlighting || Boolean(selected),
+    isDayPreviewed: isPreviewing,
+    isDayPreviewStart: isStartOfPreviewing,
+    isDayPreviewEnd: isEndOfPreviewing,
+    isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
+    // Properties specific to the MUI implementation (some might be removed in the next major)
+    isDayStartOfMonth: utils.isSameDay(day, utils.startOfMonth(day)),
+    isDayEndOfMonth: utils.isSameDay(day, utils.endOfMonth(day)),
+    isDayFirstVisibleCell: isFirstVisibleCell,
+    isDayLastVisibleCell: isLastVisibleCell,
+    isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
   };
 
   const classes = useUtilityClasses(ownerState);
-
-  const utils = useUtils();
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);

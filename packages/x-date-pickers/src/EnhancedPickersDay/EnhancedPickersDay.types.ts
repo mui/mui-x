@@ -1,8 +1,5 @@
-import { ButtonBaseProps } from '@mui/material/ButtonBase';
-import { ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { EnhancedPickersDayClasses } from './enhancedPickersDayClasses';
-import { PickerValidDate } from '../models/pickers';
-import { ExtendMui } from '../internals/models/helpers';
+import { PickerDayOwnerState, PickersDayProps } from '../PickersDay';
 
 interface RangeDayProps {
   /**
@@ -40,126 +37,93 @@ interface RangeDayProps {
   draggable?: boolean;
 }
 
-export interface EnhancedPickersDayProps
-  extends ExportedPickersDayProps,
-    Omit<
-      ExtendMui<ButtonBaseProps>,
-      'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent' | 'draggable'
-    >,
-    Partial<RangeDayProps> {
+export interface EnhancedPickersDayProps extends Omit<PickersDayProps, 'classes'> {
+  /**
+   * Set to `true` if the `day` is in a highlighted date range.
+   */
+  isHighlighting: boolean;
+  /**
+   * Set to `true` if the `day` is the end of a highlighted date range.
+   */
+  isEndOfHighlighting: boolean;
+  /**
+   * Set to `true` if the `day` is the start of a highlighted date range.
+   */
+  isStartOfHighlighting: boolean;
+  /**
+   * Set to `true` if the `day` is in a preview date range.
+   */
+  isPreviewing: boolean;
+  /**
+   * Set to `true` if the `day` is the end of a previewing date range.
+   */
+  isEndOfPreviewing: boolean;
+  /**
+   * Set to `true` if the `day` is the start of a previewing date range.
+   */
+  isStartOfPreviewing: boolean;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<EnhancedPickersDayClasses>;
   /**
-   * The date to show.
+   * Indicates if the day should be visually selected.
    */
-  day: PickerValidDate;
+  isVisuallySelected?: boolean;
   /**
-   * If `true`, renders as disabled.
+   * If `true`, the day can be dragged to change the current date range.
    * @default false
    */
-  disabled?: boolean;
-
-  isAnimating?: boolean;
-  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onDaySelect: (day: PickerValidDate) => void;
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: boolean;
-  /**
-   * If `true`, day is the first visible cell of the month.
-   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isFirstVisibleCell: boolean;
-  /**
-   * If `true`, day is the last visible cell of the month.
-   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isLastVisibleCell: boolean;
-  /**
-   * If `true`, renders as selected.
-   * @default false
-   */
-  selected?: boolean;
-  /**
-   * If `true`, renders as today date.
-   * @default false
-   */
-  today?: boolean;
-  /**
-   * The number of the day in the week.
-   */
-  dayOfWeek: number;
+  draggable?: boolean;
 }
 
-export type PickersDayOwnerState = {
+export interface EnhancedPickersDayOwnerState extends PickerDayOwnerState {
   /**
-   * If `true`, the day has visibility:' hidden'.
-   * Usually needed for days outside the current month, if we don't want to show them .
+   * Whether the day is the first day of the selected range.
    */
-  isDayHidden?: boolean;
+  isDaySelectionStart: boolean;
   /**
-   * True if the day is the last day of the week (last column of the week container).
+   * Whether the day is the last day of the selected range.
    */
-  isLastDayOfWeek?: boolean;
+  isDaySelectionEnd: boolean;
   /**
-   * True if the day is the first day of the week (first column of the week container).
+   * Whether the day is within the selected range and is not its first or last day.
    */
-  isFirstDayOfWeek?: boolean;
+  isDayInsideSelection: boolean;
   /**
-   * True if the day is selected.
-   * Used for both range and simple calendars.
+   * Whether the day is within the preview range.
    */
-  isSelected: boolean;
+  isDayPreviewed: boolean;
   /**
-   * If `true` the current day will not be highlighted.
+   * Whether the day is the first day of the preview range.
    */
-  isHighlightTodayDisabled: boolean;
+  isDayPreviewStart: boolean;
   /**
-   * If `true`, the day is the current day.
+   * Whether the day is the last day of the preview range.
    */
-  isToday: boolean;
+  isDayPreviewEnd: boolean;
   /**
-   * If `true`, the day is disabled.
+   * Whether the day is within the preview range and is not its first or last day.
    */
-  isDisabled: boolean;
+  isDayInsidePreview: boolean;
   /**
-   * If `true`, the day is outside the month that is currently in view.
+   * Whether the day is the first day of the month.
    */
-  isOutsideCurrentMonth: boolean;
+  isDayStartOfMonth: boolean;
   /**
-   * If `true`, the day is the start hover range preview.
+   * Whether the day is the last day of the month.
    */
-  isStartOfPreviewing: boolean;
+  isDayEndOfMonth: boolean;
   /**
-   * If `true`, the day is the end hover range preview.
+   * Whether the day is the first visible cell of the month it's being rendered in.
    */
-  isEndOfPreviewing: boolean;
+  isDayFirstVisibleCell: boolean;
   /**
-   * If `true`, the day is in the hover range preview  - excluding the start and the end.
+   * Whether the day is the last visible cell of the month it's being rendered in.
    */
-  isPreviewing: boolean;
+  isDayLastVisibleCell: boolean;
   /**
-   * If `true`, the day is the start of the selected range.
-   * isSelected should be `true` as well.
+   * Whether the day is a filler day (its content is hidden).
    */
-  isStartOfSelectedRange: boolean;
-  /**
-   * If `true`, the day is the end of the selected range.
-   * isSelected should be `true` as well.
-   */
-  isEndOfSelectedRange: boolean;
-  /**
-   * If `true`, the day is in the selected range - excluding the start and the end.
-   */
-  isWithinSelectedRange: boolean;
-  /**
-   * If `true`, the day is being dragged.
-   */
-  isDragSelected: boolean;
-};
+  isDayFillerCell: boolean;
+}

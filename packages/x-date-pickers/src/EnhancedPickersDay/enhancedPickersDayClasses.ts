@@ -11,22 +11,25 @@ export interface EnhancedPickersDayClasses {
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
   dayOutsideMonth: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`. */
-  hiddenDay: string;
+  fillerCell: string;
   /** Styles applied to the root element if `disableHighlightToday=false` and `today=true`. */
   today: string;
   /** State class applied to the root element if `selected=true`. */
   selected: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
-  startOfPreviewing: string;
-  endOfPreviewing: string;
-  previewing: string;
-  startOfSelectedRange: string;
-  endOfSelectedRange: string;
-  withinSelectedRange: string;
-  dragSelected: string;
-  firstDayOfWeek: string;
-  lastDayOfWeek: string;
+  previewStart: string;
+  previewEnd: string;
+  insidePreviewing: string;
+  selectionStart: string;
+  selectionEnd: string;
+  insideSelection: string;
+  startOfWeek: string;
+  endOfWeek: string;
+  startOfMonth: string;
+  endOfMonth: string;
+  disableMargin: string;
+  previewed: string;
 }
 
 export type EnhancedPickersDayClassKey = keyof EnhancedPickersDayClasses;
@@ -44,15 +47,18 @@ export const enhancedPickersDayClasses = generateUtilityClasses<EnhancedPickersD
     'today',
     'selected',
     'disabled',
-    'hiddenDay',
-    'startOfPreviewing',
-    'endOfPreviewing',
-    'previewing',
-    'startOfSelectedRange',
-    'endOfSelectedRange',
-    'withinSelectedRange',
-    'dragSelected',
-    'firstDayOfWeek',
-    'lastDayOfWeek',
+    'fillerCell',
+    'previewStart',
+    'previewEnd',
+    'insidePreviewing',
+    'selectionStart',
+    'selectionEnd',
+    'insideSelection',
+    'startOfWeek',
+    'endOfWeek',
+    'disableMargin',
+    'startOfMonth',
+    'endOfMonth',
+    'previewed',
   ],
 );
