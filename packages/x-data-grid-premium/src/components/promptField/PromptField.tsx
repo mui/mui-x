@@ -75,7 +75,7 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
   const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
   const context = React.useMemo(
-    () => apiRef.current.unstable_getPromptContext(allowDataSampling),
+    () => apiRef.current.unstable_aiAssistant.getPromptContext(allowDataSampling),
     [apiRef, allowDataSampling],
   );
 
@@ -88,7 +88,7 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
     onPrompt(value, context)
       .then((result) => {
         if (result) {
-          apiRef.current.unstable_applyPromptResult(result);
+          apiRef.current.unstable_aiAssistant.applyPromptResult(result);
         }
       })
       .catch((promptError) => {

@@ -718,7 +718,6 @@
   { "name": "ToolbarProps", "kind": "TypeAlias" },
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "unstable_gridDefaultPromptResolver", "kind": "Function" },
-  { "name": "Unstable_GridToolbarPromptControl", "kind": "Function" },
   { "name": "unstable_PromptResponse", "kind": "TypeAlias" },
   { "name": "unstable_resetCleanupTracking", "kind": "Function" },
   { "name": "useFirstRender", "kind": "Variable" },
