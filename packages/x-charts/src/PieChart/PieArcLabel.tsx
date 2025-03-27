@@ -66,16 +66,13 @@ const PieArcLabelRoot = styled('text', {
   textAnchor: 'middle',
   dominantBaseline: 'middle',
   pointerEvents: 'none',
-
-  animationName: 'animateOpacity',
+  animationName: 'animate-opacity',
   animationDuration: '0s',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,
-
   [`&.${pieArcLabelClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
-
-  '@keyframes animateOpacity': {
+  '@keyframes animate-opacity': {
     from: { opacity: 0 },
   },
 }));
