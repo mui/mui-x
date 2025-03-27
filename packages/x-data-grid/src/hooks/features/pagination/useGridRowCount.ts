@@ -5,12 +5,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
-import {
-  useGridLogger,
-  useGridSelector,
-  useGridApiMethod,
-  useGridEvent,
-} from '../../utils';
+import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   gridPaginationRowCountSelector,

@@ -1,8 +1,4 @@
-export {
-  useGridEvent,
-  useGridEventPriority,
-  unstable_resetCleanupTracking,
-} from './useGridEvent';
+export { useGridEvent, useGridEventPriority, unstable_resetCleanupTracking } from './useGridEvent';
 export * from './useGridApiMethod';
 export * from './useGridLogger';
 export { useGridSelector } from './useGridSelector';

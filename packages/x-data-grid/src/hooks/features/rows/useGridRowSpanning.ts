@@ -352,16 +352,8 @@ export const useGridRowSpanning = (
   );
 
   useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(
-    apiRef,
-    'paginationModelChange',
-    runIf(props.rowSpanning, resetRowSpanningState),
-  );
-  useGridEvent(
-    apiRef,
-    'filteredRowsSet',
-    runIf(props.rowSpanning, resetRowSpanningState),
-  );
+  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {

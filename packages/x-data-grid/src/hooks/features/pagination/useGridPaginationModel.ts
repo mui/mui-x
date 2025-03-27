@@ -12,12 +12,7 @@ import {
   gridFilterActiveItemsSelector,
 } from '../filter/gridFilterSelector';
 import { gridDensityFactorSelector } from '../density';
-import {
-  useGridLogger,
-  useGridSelector,
-  useGridApiMethod,
-  useGridEvent,
-} from '../../utils';
+import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {

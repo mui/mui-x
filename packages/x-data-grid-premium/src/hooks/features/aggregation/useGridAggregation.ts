@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  gridColumnLookupSelector,
-  useGridEvent,
-  useGridApiMethod,
-} from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, useGridEvent, useGridApiMethod } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,

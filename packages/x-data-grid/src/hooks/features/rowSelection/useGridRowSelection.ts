@@ -873,16 +873,8 @@ export const useGridRowSelection = (
     'rowSelectionCheckboxChange',
     runIfRowSelectionIsEnabled(handleRowSelectionCheckboxChange),
   );
-  useGridEvent(
-    apiRef,
-    'headerSelectionCheckboxChange',
-    handleHeaderSelectionCheckboxChange,
-  );
-  useGridEvent(
-    apiRef,
-    'cellMouseDown',
-    runIfRowSelectionIsEnabled(preventSelectionOnShift),
-  );
+  useGridEvent(apiRef, 'headerSelectionCheckboxChange', handleHeaderSelectionCheckboxChange);
+  useGridEvent(apiRef, 'cellMouseDown', runIfRowSelectionIsEnabled(preventSelectionOnShift));
   useGridEvent(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
   /*

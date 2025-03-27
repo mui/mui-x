@@ -132,11 +132,7 @@ export const useGridLazyLoader = (
     [privateApiRef, isDisabled, sortModel],
   );
 
-  useGridEvent(
-    privateApiRef,
-    'renderedRowsIntervalChange',
-    handleRenderedRowsIntervalChange,
-  );
+  useGridEvent(privateApiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
   useGridEvent(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridEvent(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
   useGridEventPriority(privateApiRef, 'fetchRows', props.onFetchRows);
