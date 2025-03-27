@@ -69,7 +69,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
         }
         onRecordingChange(true);
 
-        instance.onresult = (event: any) => {
+        instance.onresult = (event: SpeechRecognitionEvent) => {
           finalResult = '';
           interimResult = '';
           if (typeof event.results === 'undefined') {
