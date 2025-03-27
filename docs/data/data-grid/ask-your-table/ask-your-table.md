@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Ask the table
+title: Ask Your Table - AI Assistant
 ---
 
-# Data Grid - Ask the table [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
+# Ask Your Table - AI Assistant [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
 
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
@@ -11,8 +11,8 @@ To use this feature, you need to have a prompt processing backend. MUI offers th
 Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
 :::
 
-Ask the table feature allows users to interact with the Data Grid component using natural language.
-Type the commands like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
+AI assistant feature allows users to interact with the Data Grid component using natural language.
+Type the prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
 :::success
 In supported browsers, the prompt can be entered using voice.
@@ -22,10 +22,10 @@ To increase the accuracy of the language processing, provide example values for 
 This can be done in the following ways.
 
 :::info
-Ask the table demos use a utility function `mockPromptResolver` to simulate the API that resolves user commands.
-In a real-world scenario, replace this with your own API.
+AI assistant demos use an utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
+In a real-world scenario, replace this with MUI's or your own API.
 
-`mockPromptResolver` can handle a predefined set of prompts:
+`mockPromptResolver()` can handle a predefined set of prompts:
 
 - `sort by name`
 - `sort by company name and employee name`
@@ -39,22 +39,24 @@ You can use suggestions to quickly enter prompts that are supported by the mock 
 ## Custom examples
 
 You can provide custom examples for the prompt processing through the `unstable_examples` prop in the `columns` array.
-The `unstable_examples` prop should be an array of possible values for that column.
+The `unstable_examples` prop should contain an array of possible values for that column.
 
-{{"demo": "PromptWithExamples.js", "bg": "inline"}}
+{{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 ## Use row data for examples
 
 Pass `allowDataSampling` flag to the `Unstable_GridToolbarPromptControl`, to let it use the row data to generate examples for the prompt processing.
 This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
 
-{{"demo": "PromptWithDataSampling.js", "bg": "inline"}}
+If you are using
+
+{{"demo": "AssistantWithDataSampling.js", "bg": "inline"}}
 
 ## Using Server-side data
 
 An example of combining prompt control with the [Server-side data](/x/react-data-grid/server-side-data/)
 
-{{"demo": "PromptWithDataSource.js", "bg": "inline"}}
+{{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
 ## Integration with MUI's API
 

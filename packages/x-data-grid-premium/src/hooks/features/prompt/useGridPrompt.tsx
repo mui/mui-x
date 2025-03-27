@@ -118,8 +118,10 @@ export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
   useGridApiMethod(
     apiRef,
     {
-      unstable_getPromptContext: getPromptContext,
-      unstable_applyPromptResult: applyPromptResult,
+      unstable_aiAssistant: {
+        getPromptContext,
+        applyPromptResult,
+      },
     },
     'public',
   );

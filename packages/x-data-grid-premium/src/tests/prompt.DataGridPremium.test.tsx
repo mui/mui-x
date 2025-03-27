@@ -12,10 +12,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import {
-  GridToolbarPromptControl,
-  GridToolbarPromptControlProps,
-} from '../components/promptControl/GridToolbarPromptControl';
+import { PromptField, PromptFieldControl, PromptFieldProps } from '../components/promptField';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -54,10 +51,12 @@ describe('<DataGridPremium /> - Prompt', () => {
   let apiRef: RefObject<GridApi | null>;
   const promptSpy = stub().resolves({});
 
-  function ToolbarWithPromptInput(props: GridToolbarPromptControlProps) {
+  function ToolbarWithPromptInput(props: PromptFieldProps) {
     return (
       <Toolbar>
-        <GridToolbarPromptControl {...props} onPrompt={promptSpy} />
+        <PromptField {...props} onPrompt={promptSpy}>
+          <PromptFieldControl />
+        </PromptField>
       </Toolbar>
     );
   }
@@ -95,9 +94,7 @@ describe('<DataGridPremium /> - Prompt', () => {
 
       const input = screen.getByRole('textbox');
       await user.type(input, 'Do something with the data');
-
-      const sendButton = screen.getByRole('button', { name: /send/i });
-      await user.click(sendButton);
+      await user.keyboard('{Enter}');
 
       expect(promptSpy.callCount).to.equal(1);
       expect(promptSpy.firstCall.args[1]).contains('Example1');
@@ -109,9 +106,7 @@ describe('<DataGridPremium /> - Prompt', () => {
 
       const input = screen.getByRole('textbox');
       await user.type(input, 'Do something with the data');
-
-      const sendButton = screen.getByRole('button', { name: /send/i });
-      await user.click(sendButton);
+      await user.keyboard('{Enter}');
 
       expect(promptSpy.callCount).to.equal(1);
       expect(promptSpy.firstCall.args[1]).not.contains('Example1');
@@ -123,11 +118,11 @@ describe('<DataGridPremium /> - Prompt', () => {
     it('should allow building the context', () => {
       render(<Test />);
 
-      const contextWithColumnExamples = apiRef.current?.unstable_getPromptContext();
+      const contextWithColumnExamples = apiRef.current?.unstable_aiAssistant.getPromptContext();
       expect(contextWithColumnExamples).contains('Example');
       expect(contextWithColumnExamples).not.contains('Cat');
 
-      const contextWithDataSamples = apiRef.current?.unstable_getPromptContext(true);
+      const contextWithDataSamples = apiRef.current?.unstable_aiAssistant.getPromptContext(true);
       expect(contextWithDataSamples).not.contains('Example');
       expect(contextWithDataSamples).contains('Cat');
     });
@@ -150,7 +145,7 @@ describe('<DataGridPremium /> - Prompt', () => {
       );
 
       act(() =>
-        apiRef.current?.unstable_applyPromptResult({
+        apiRef.current?.unstable_aiAssistant.applyPromptResult({
           select: 1,
           filters: [
             {

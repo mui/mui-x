@@ -51,7 +51,7 @@ function AssistantPanel({
   open,
   onClose,
   anchorEl,
-  allowDataSampling,
+  allowDataSampling = false,
 }: AssistantPanelProps) {
   const apiRef = useGridApiContext();
   const [promptHistory, setPromptHistory] = React.useState<
@@ -65,8 +65,8 @@ function AssistantPanel({
   const promptHistoryScrollAreaRef = React.useRef<HTMLDivElement>(null);
 
   const context = React.useMemo(
-    () => apiRef.current.unstable_getPromptContext(),
-    [apiRef],
+    () => apiRef.current.unstable_aiAssistant.getPromptContext(allowDataSampling),
+    [apiRef, allowDataSampling],
   );
 
   const suggestions = React.useMemo(() => {
@@ -89,7 +89,7 @@ function AssistantPanel({
 
       try {
         const result = await mockPromptResolver(prompt, promptContext);
-        apiRef.current.unstable_applyPromptResult(result);
+        apiRef.current.unstable_aiAssistant.applyPromptResult(result);
         setPromptHistory((prev) =>
           prev.map((item) =>
             item.time.getTime() === promptId ? { ...item, status: 'success' } : item,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { AssistantPanelProps } from './AssistantPanel';
+
 import { Toolbar } from './Toolbar';
 
 const VISIBLE_FIELDS = [
@@ -16,13 +16,7 @@ const VISIBLE_FIELDS = [
   'isAdmin',
 ];
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    assistantPanelProps: Partial<AssistantPanelProps>;
-  }
-}
-
-export default function PromptWithDataSampling() {
+export default function AssistantWithDataSampling() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
