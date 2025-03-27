@@ -1,6 +1,10 @@
 {
   "props": {
+    "height": { "type": { "name": "number" }, "required": true },
+    "width": { "type": { "name": "number" }, "required": true },
+    "x": { "type": { "name": "number" }, "required": true },
     "xOrigin": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true },
     "yOrigin": { "type": { "name": "number" }, "required": true }
   },
   "name": "BarLabel",

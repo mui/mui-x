@@ -14,7 +14,8 @@ type UseAnimatedAreaReturn = {
 
 /** Animates an area of a line chart using a `path` element.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
- * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
+ * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called.
+ */
 export function useAnimateArea(props: UseAnimateAreaParams): UseAnimatedAreaReturn {
   const ref = useAnimate(
     { d: props.d },

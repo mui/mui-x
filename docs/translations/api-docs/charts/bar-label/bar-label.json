@@ -1,7 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "height": { "description": "height of the bar this label belongs to" },
+    "width": { "description": "width of the bar this label belongs to" },
+    "x": { "description": "position in the x-axis of the bar this label belongs to" },
     "xOrigin": { "description": "x-coordinate of the stack this bar label belongs to." },
+    "y": { "description": "position in the y-axis of the bar this label belongs to" },
     "yOrigin": { "description": "y-coordinate of the stack this bar label belongs to." }
   },
   "classDescriptions": {

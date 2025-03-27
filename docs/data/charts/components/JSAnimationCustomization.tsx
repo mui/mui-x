@@ -1,30 +1,38 @@
 import { BarChart, BarLabelProps } from '@mui/x-charts/BarChart';
 import * as React from 'react';
 import { useAnimateBarLabel } from '@mui/x-charts/hooks';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 export default function JSAnimationCustomization() {
+  const [key, animate] = React.useReducer((v) => v + 1, 0);
+
   return (
-    <BarChart
-      xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
-      series={[
-        {
-          type: 'bar',
-          data: [5, 17, 11],
-        },
-        {
-          type: 'bar',
-          data: [0, 12, 15],
-        },
-        {
-          type: 'bar',
-          data: [1, 3, 9],
-        },
-      ]}
-      width={300}
-      height={400}
-      barLabel="value"
-      slots={{ barLabel: AnimatedBarLabel }}
-    />
+    <Stack>
+      <BarChart
+        key={key}
+        xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
+        series={[
+          {
+            type: 'bar',
+            data: [5, 17, 11],
+          },
+          {
+            type: 'bar',
+            data: [0, 12, 15],
+          },
+          {
+            type: 'bar',
+            data: [1, 3, 9],
+          },
+        ]}
+        width={300}
+        height={400}
+        barLabel="value"
+        slots={{ barLabel: AnimatedBarLabel }}
+      />
+      <Button onClick={() => animate()}>Run Animation</Button>
+    </Stack>
   );
 }
 
@@ -51,9 +59,9 @@ function AnimatedBarLabel(props: BarLabelProps) {
     xOrigin,
     x,
     yOrigin,
-    y,
+    y: y - 4,
     width,
-    height: -8,
+    height: 0,
     layout,
     skipAnimation,
   });

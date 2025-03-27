@@ -37,9 +37,13 @@ export type BarLabelProps = Omit<
     xOrigin: number;
     /** y-coordinate of the stack this bar label belongs to. */
     yOrigin: number;
+    /** position in the x-axis of the bar this label belongs to */
     x: number;
+    /** position in the y-axis of the bar this label belongs to */
     y: number;
+    /** width of the bar this label belongs to */
     width: number;
+    /** height of the bar this label belongs to */
     height: number;
   };
 
@@ -72,18 +76,30 @@ BarLabel.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * height of the bar this label belongs to
+   */
   height: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
+  /**
+   * width of the bar this label belongs to
+   */
   width: PropTypes.number.isRequired,
+  /**
+   * position in the x-axis of the bar this label belongs to
+   */
   x: PropTypes.number.isRequired,
   /**
    * x-coordinate of the stack this bar label belongs to.
    */
   xOrigin: PropTypes.number.isRequired,
+  /**
+   * position in the y-axis of the bar this label belongs to
+   */
   y: PropTypes.number.isRequired,
   /**
    * y-coordinate of the stack this bar label belongs to.
