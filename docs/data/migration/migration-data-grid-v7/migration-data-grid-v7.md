@@ -248,7 +248,8 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
-- The `useGridApiEventHandler()` has been renamed to `useGridEvent()`.
+- The `useGridApiEventHandler()` hook has been renamed to `useGridEvent()`.
+- The `useGridApiOptionHandler()` hook has been renamed to `useGridEventPriority()`.
 
 ### Behavioral changes
 
