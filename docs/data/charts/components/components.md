@@ -87,6 +87,28 @@ For example, you can use `useLineSeries` to obtain the series of a line chart an
 
 {{"demo": "SeriesDemo.js"}}
 
+### Animation
+
+Some elements of charts are animated, such as the bars in a bar chart or the slices in a pie chart.
+
+We prioritize CSS animations, but some animations aren't possible using CSS. In those cases, we use JavaScript to animate elements.
+
+The animations of elements that are animated using CSS can be customized by overriding the CSS classes:
+
+{{"demo": "CSSAnimationCustomization.js"}}
+
+When it isn't possible to leverage CSS animations, the default components are animated using custom hooks.
+
+If you want to use the default animations in custom components, you can use these hooks. They are available for each element that is animated using JavaScript and are prefixed with `useAnimate`, e.g., `useAnimateLine` or `useAnimatePieArcLabel`.
+
+In the example below, labels are positioned above the bars they refer to and are animated using the default animation:
+
+{{"demo": "JSAnimationCustomization.js"}}
+
+Alternatively, you can use own our animation library to create custom animations, such as React Spring:
+
+{{"demo": "ReactSpringAnimationCustomization.js"}}
+
 ## HTML components
 
 With the introduction of the `ChartDataProvider` in v8, the chart data can be accessed from any component.
