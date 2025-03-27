@@ -48,7 +48,7 @@ function pieArcLabelPropsInterpolator(
   };
 }
 
-/** Animates the label of pie slice.
+/** Animates the label of pie slice from its middle point to the centroid of the slice.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
 export function useAnimatePieArcLabel(
