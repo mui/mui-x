@@ -145,7 +145,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 
 - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
-  Both components below will respect the leading zeroes on digit sections:
+  Both components below respect the leading zeroes on digit sections:
 
   ```js
   <DatePicker
@@ -160,7 +160,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 - For the props forwarded to the `TextField`,
   you can have a look at the next section to see how the migration impact them.
 
-  Both components below will render a small size UI:
+  Both components below render a small size UI:
 
   ```js
   <DatePicker
@@ -175,9 +175,9 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 #### Migrate `slotProps.textField`
 
 If you are passing props to `slotProps.textField`,
-these props will now be received by `PickersTextField` and should keep working the same way as before.
+these props are now received by `PickersTextField` and should keep working the same way as before.
 
-Both components below will render a small size UI:
+Both components below render a small size UI:
 
 ```js
 <DatePicker
@@ -191,13 +191,13 @@ Both components below will render a small size UI:
 
 :::info
 If you are passing `inputProps` to `slotProps.textField`,
-these props will now be passed to the hidden `<input />` element.
+these props are now passed to the hidden `<input />` element.
 :::
 
 #### Migrate `slots.field`
 
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
-This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
+This new component needs to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
 You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section to have a concrete example.
 
@@ -312,6 +312,59 @@ const theme = createTheme({
 });
 ```
 
+### Clean the `ownerState`
+
+The `ownerState` is an object describing the current state of a given component to let you do more advanced customization.
+It is used in two different APIs:
+
+1. In the theme's `styleOverrides`, the `ownerState` is passed to the function that returns the style:
+
+```ts
+const theme = createTheme({
+  components: {
+    MuiDateCalendar: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          /** Style based on the ownerState */
+        }),
+      },
+    },
+  },
+});
+```
+
+2. In the `slotProps`, the `ownerState` is passed to the function that returns the custom props:
+
+```tsx
+<DatePicker
+  slotProps={{
+    actionBar: (ownerState) => ({
+      /** Props based on the ownerState */
+    }),
+  }}
+/>
+```
+
+Before version `v8.x`, the `ownerState` was equal to the props of the component that was defining it, plus some additional internal states if needed.
+This came with a few problems:
+
+- It is hard to know which parent defines the `ownerState` and therefore which props it contains (is the `actionBar` slot handled by `DatePicker`? by `DesktopDatePicker`? by `PickerLayout`?).
+
+- A lot of the properties of the `ownerState` were not meant for public usage, which made the evolution of the codebase complex because all the props received by an internal component becomes public API and changing them becomes a breaking change.
+
+- Some properties actually useful to customize a component were not present, if the component was not using them by default (if the built-in styles for the `actionBar` don't need to know if the picker is disabled, then the `ownerState` won't contain this information).
+
+- It is hard to understand which element some properties apply to. If the `ownerState` of the `monthButton` slot contains `disabled`, is it because the button is disabled or because the picker is disabled?
+
+To solve these issues, the `ownerState` has been reworked.
+All the component's `ownerState` contain a shared set of properties describing the state of the picker they are in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
+Some component's `ownerState` contain additional properties describing their own state (`isMonthDisabled` for the month button, `toolbarOrientation` for the toolbar, `isDaySelected` for the day button, ...).
+
+:::success
+Most of the properties needed to properly customize your component should be present in the `ownerState`.
+If you need some property that is currently not included, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
+:::
+
 ### ⏩ Field editing on mobile Pickers
 
 The field is now editable if rendered inside a mobile Picker.
@@ -382,8 +435,8 @@ This change causes a few breaking changes:
   ```diff
    const theme = createTheme({
      components: {
-  -    PickersMonth: {
-  +    MonthCalendar: {
+  -    MuiPickersMonth: {
+  +    MuiMonthCalendar: {
          styleOverrides: {
   -        monthButton: {
   +        button: {
@@ -423,8 +476,8 @@ This change causes a few breaking changes:
   ```diff
    const theme = createTheme({
      components: {
-  -    PickersYear: {
-  +    YearCalendar: {
+  -    MuiPickersYear: {
+  +    MuiYearCalendar: {
          styleOverrides: {
   -        yearButton: {
   +        button: {
@@ -827,10 +880,10 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
    // This contains a small behavior change.
    // If the picker is not controlled and has a default value,
-   // opening it and calling `acceptValueChanges` without any change will call `onAccept`
+   // opening it and calling `acceptValueChanges` without any change calls `onAccept`
    // with the default value.
-   // Whereas before, opening it and calling `onDimiss` without any change would
-   // not have called `onAccept`.
+   // Whereas before, opening it and calling `onDimiss` without any change
+   // did not call `onAccept`.
   -const { onDismiss } = props;
   +const { acceptValueChanges } = usePickerActionsContext();
   +const onDismiss = acceptValueChanges
