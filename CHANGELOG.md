@@ -28,6 +28,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix error caused by trying to render rows that are not in the state anymore (#17057) @arminmeh
 - [DataGrid] Refactor: remove more material (#16922) @romgrk
 - [DataGrid] Update Quick Filter component to be expandable (#16862) @KenanYusuf
+- [DataGrid] Fix crash when used with `@mui/styled-engine-sc` (#17154) @KenanYusuf 
 
 #### `@mui/x-data-grid-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -44,7 +45,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.2`.
 #### `@mui/x-date-pickers@8.0.0-beta.2`
 
 - [fields] Extract the props of each field slot into a standalone hook that the Base UI implementation can re-use (#17114) @flaviendelangle
-- [pickers] Fix visual regression in `DateRangeCalendar`'s day (#17148) @flaviendelangle
+- [pickers] Fix visual regression in Date Range Calendar's day (#17148) @flaviendelangle
 - [pickers] Remove all code duplication to apply default values to validation props (#17038) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -95,7 +96,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
 - [code-infra] Update some data-grid tests for vitest (#17078) @JCQuintas
 - [code-infra] Update some data-grid tests for vitest (#17104) @JCQuintas
 - [code-infra] Update some date-pickers tests for vitest (#17083) @JCQuintas
-- [infra] Update issue-status-label-handler.yml @michelengelen
+- [infra] Update `issue-status-label-handler.yml` @michelengelen
 - [infra] Added reusable issue status label handler workflow (#17145) @michelengelen
 - [infra] Switch to reusable 'stale issues/PRs' workflow (#17107) @michelengelen
 - [telemetry] Improve request body size, update dependencies, and optimize SSR handling (#17008) @hasdfa
