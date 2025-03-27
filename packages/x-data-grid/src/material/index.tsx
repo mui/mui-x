@@ -70,6 +70,8 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export { useMaterialCSSVariables } from './variables';
 
+/* eslint-disable material-ui/disallow-react-api-in-server-components */
+
 const InputAdornment = styled(MUIInputAdornment)({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: '-7px',
@@ -554,8 +556,6 @@ function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption'
   }
   return <MUIMenuItem {...props} />;
 }
-
-/* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
