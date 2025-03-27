@@ -8,14 +8,13 @@ import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import {
-  UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
-  selectorChartsInteractionXAxisValue,
-} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
 import { ChartInstance } from '../../internals/plugins/models';
+import {
+  selectorChartsInteractionRotationAxisIndex,
+  selectorChartsInteractionRotationAxisValue,
+} from '../../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 
 interface UseRadarAxisHighlightParams {
   /**
@@ -86,14 +85,19 @@ export function useRadarAxisHighlight(
 
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
-  const xAxisInteractionValue = useSelector(store, selectorChartsInteractionXAxisValue);
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const rotationAxisIndex = useSelector(store, selectorChartsInteractionRotationAxisIndex);
+  const rotationAxisValue = useSelector(store, selectorChartsInteractionRotationAxisValue);
+
   const center = useSelector(store, selectorChartPolarCenter);
 
-  const highlightedIndex = xAxisInteractionIndex;
+  const highlightedIndex = rotationAxisIndex;
 
-  if (highlightedIndex === null || highlightedIndex < 0) {
+  if (!rotationScale) {
+    return null;
+  }
+
+  if (highlightedIndex === null || highlightedIndex === -1) {
     return null;
   }
 
@@ -103,7 +107,7 @@ export function useRadarAxisHighlight(
 
   const metric = radiusAxisIds[highlightedIndex];
   const radiusScale = radiusAxis[metric].scale;
-  const angle = rotationScale(xAxisInteractionValue as unknown as string)!;
+  const angle = rotationScale(rotationAxisValue)!;
   const radius = radiusScale.range()[1];
 
   return {

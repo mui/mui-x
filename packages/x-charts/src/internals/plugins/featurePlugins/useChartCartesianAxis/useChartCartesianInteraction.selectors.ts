@@ -94,7 +94,12 @@ export const selectorChartsInteractionXAxisValue = createSelector(
     selectorChartsInteractionXAxisIndex,
     optionalGetAxisId,
   ],
-  (value, axes, index, id) => (value === null ? null : valueGetter(value, axes, index!, id)),
+  (x, xAxes, xIndex, id) => {
+    if (x === null || xIndex === null || xAxes.axisIds.length === 0) {
+      return null;
+    }
+    return valueGetter(x, xAxes, xIndex, id);
+  },
 );
 
 export const selectorChartsInteractionYAxisValues = createSelector(
@@ -114,7 +119,12 @@ export const selectorChartsInteractionYAxisValue = createSelector(
     selectorChartsInteractionYAxisIndex,
     optionalGetAxisId,
   ],
-  (value, axes, index, id) => (value === null ? null : valueGetter(value, axes, index!, id)),
+  (y, yAxes, yIndex, id) => {
+    if (y === null || yIndex === null || yAxes.axisIds.length === 0) {
+      return null;
+    }
+    return valueGetter(y, yAxes, yIndex, id);
+  },
 );
 
 /**
