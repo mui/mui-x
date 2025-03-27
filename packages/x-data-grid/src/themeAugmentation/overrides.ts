@@ -42,22 +42,58 @@ declare module '@mui/material/styles' {
 }
 
 declare module '@mui/x-data-grid' {
-  interface BaseAutocompletePropsOverrides { material?: Partial<AutocompleteProps<string, true, false, true>> }
-  interface BaseBadgePropsOverrides { material?: Partial<BadgeProps> }
-  interface BaseCheckboxPropsOverrides { material?: Partial<CheckboxProps> }
-  interface BaseCircularProgressPropsOverrides { material?: Partial<CircularProgressProps> }
-  interface BaseDividerPropsOverrides { material?: Partial<DividerProps> }
-  interface BaseLinearProgressPropsOverrides { material?: Partial<LinearProgressProps> }
-  interface BaseMenuListPropsOverrides { material?: Partial<MenuListProps> }
-  interface BaseMenuItemPropsOverrides { material?: Partial<MenuItemProps> }
-  interface BaseTextFieldPropsOverrides { material?: Partial<TextFieldProps> }
-  interface BaseSwitchPropsOverrides { material?: Partial<SwitchProps> }
-  interface BaseButtonPropsOverrides { material?: Partial<ButtonProps> }
-  interface BaseIconButtonPropsOverrides { material?: Partial<IconButtonProps> }
-  interface BasePaginationPropsOverrides { material?: Partial<PaginationProps> }
-  interface BasePopperPropsOverrides { material?: Partial<PopperProps> }
-  interface BaseTooltipPropsOverrides { material?: Partial<TooltipProps> }
-  interface BaseInputPropsOverrides { material?: Partial<InputProps> }
-  interface BaseSelectPropsOverrides { material?: Partial<SelectProps> }
-  interface BaseSkeletonPropsOverrides { material?: Partial<SkeletonProps> }
+  interface BaseAutocompletePropsOverrides {
+    material?: Partial<AutocompleteProps<string, true, false, true>>;
+  }
+  interface BaseBadgePropsOverrides {
+    material?: Partial<BadgeProps>;
+  }
+  interface BaseCheckboxPropsOverrides {
+    material?: Partial<CheckboxProps>;
+  }
+  interface BaseCircularProgressPropsOverrides {
+    material?: Partial<CircularProgressProps>;
+  }
+  interface BaseDividerPropsOverrides {
+    material?: Partial<DividerProps>;
+  }
+  interface BaseLinearProgressPropsOverrides {
+    material?: Partial<LinearProgressProps>;
+  }
+  interface BaseMenuListPropsOverrides {
+    material?: Partial<MenuListProps>;
+  }
+  interface BaseMenuItemPropsOverrides {
+    material?: Partial<MenuItemProps>;
+  }
+  interface BaseTextFieldPropsOverrides {
+    material?: Partial<TextFieldProps>;
+  }
+  interface BaseSwitchPropsOverrides {
+    material?: Partial<SwitchProps>;
+  }
+  interface BaseButtonPropsOverrides {
+    material?: Partial<ButtonProps>;
+  }
+  interface BaseIconButtonPropsOverrides {
+    material?: Partial<IconButtonProps>;
+  }
+  interface BasePaginationPropsOverrides {
+    material?: Partial<PaginationProps>;
+  }
+  interface BasePopperPropsOverrides {
+    material?: Partial<PopperProps>;
+  }
+  interface BaseTooltipPropsOverrides {
+    material?: Partial<TooltipProps>;
+  }
+  interface BaseInputPropsOverrides {
+    material?: Partial<InputProps>;
+  }
+  interface BaseSelectPropsOverrides {
+    material?: Partial<SelectProps>;
+  }
+  interface BaseSkeletonPropsOverrides {
+    material?: Partial<SkeletonProps>;
+  }
 }

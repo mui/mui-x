@@ -172,48 +172,46 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
   },
 })) as typeof MUIPagination;
 
-const BasePagination = forwardRef<any, P['basePagination']>(
-  function BasePagination(props, ref) {
-    const { onRowsPerPageChange, material, disabled, ...rest } = props;
-    const computedProps = React.useMemo(() => {
-      if (!disabled) {
-        return undefined;
+const BasePagination = forwardRef<any, P['basePagination']>(function BasePagination(props, ref) {
+  const { onRowsPerPageChange, material, disabled, ...rest } = props;
+  const computedProps = React.useMemo(() => {
+    if (!disabled) {
+      return undefined;
+    }
+    return {
+      backIconButtonProps: { disabled: true },
+      nextIconButtonProps: { disabled: true },
+    };
+  }, [disabled]);
+
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const { estimatedRowCount } = rootProps;
+
+  return (
+    <StyledPagination
+      component="div"
+      onRowsPerPageChange={useEventCallback(
+        (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+          onRowsPerPageChange?.(Number(event.target.value));
+        },
+      )}
+      labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
+      labelDisplayedRows={(params) =>
+        apiRef.current.getLocaleText('paginationDisplayedRows')({
+          ...params,
+          estimated: estimatedRowCount,
+        })
       }
-      return {
-        backIconButtonProps: { disabled: true },
-        nextIconButtonProps: { disabled: true },
-      };
-    }, [disabled]);
-
-    const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const { estimatedRowCount } = rootProps;
-
-    return (
-      <StyledPagination
-        component="div"
-        onRowsPerPageChange={useEventCallback(
-          (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-            onRowsPerPageChange?.(Number(event.target.value));
-          },
-        )}
-        labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
-        labelDisplayedRows={(params) =>
-          apiRef.current.getLocaleText('paginationDisplayedRows')({
-            ...params,
-            estimated: estimatedRowCount,
-          })
-        }
-        // @ts-ignore Issue with material
-        getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
-        {...computedProps}
-        {...rest}
-        {...material}
-        ref={ref}
-      />
-    );
-  },
-);
+      // @ts-ignore Issue with material
+      getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+      {...computedProps}
+      {...rest}
+      {...material}
+      ref={ref}
+    />
+  );
+});
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
