@@ -40,15 +40,15 @@ const PROMPT_SUGGESTIONS = [
   'Order companies by amount of people',
 ];
 
-function AssistantPanel({ open, onClose, anchorEl, allowDataSampling }) {
+function AssistantPanel({ open, onClose, anchorEl, allowDataSampling = false }) {
   const apiRef = useGridApiContext();
   const [promptHistory, setPromptHistory] = React.useState([]);
   const [suggestionsExpanded, setSuggestionsExpanded] = React.useState(false);
   const promptHistoryScrollAreaRef = React.useRef(null);
 
   const context = React.useMemo(
-    () => apiRef.current.unstable_getPromptContext(),
-    [apiRef],
+    () => apiRef.current.unstable_aiAssistant.getPromptContext(allowDataSampling),
+    [apiRef, allowDataSampling],
   );
 
   const suggestions = React.useMemo(() => {
@@ -71,7 +71,7 @@ function AssistantPanel({ open, onClose, anchorEl, allowDataSampling }) {
 
       try {
         const result = await mockPromptResolver(prompt, promptContext);
-        apiRef.current.unstable_applyPromptResult(result);
+        apiRef.current.unstable_aiAssistant.applyPromptResult(result);
         setPromptHistory((prev) =>
           prev.map((item) =>
             item.time.getTime() === promptId ? { ...item, status: 'success' } : item,

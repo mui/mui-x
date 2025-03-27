@@ -667,26 +667,6 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
-   * Styles applied to the toolbar prompt control element.
-   */
-  toolbarPromptControl: string;
-  /**
-   * Styles applied to the toolbar prompt control element when recording.
-   */
-  'toolbarPromptControl--recording': string;
-  /**
-   * Styles applied to the toolbar prompt control recording indicator element.
-   */
-  toolbarPromptControlRecordingIndicator: string;
-  /**
-   * Styles applied to the toolbar prompt control record button element.
-   */
-  toolbarPromptControlRecordButton: string;
-  /**
-   * Styles applied to the toolbar prompt control send button element.
-   */
-  toolbarPromptControlSendButton: string;
-  /**
    * Styles applied to the toolbar quick filter root element.
    */
   toolbarQuickFilter: string;
@@ -995,11 +975,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'toolbarLabel',
   'toolbarDivider',
   'toolbarFilterList',
-  'toolbarPromptControl',
-  'toolbarPromptControl--recording',
-  'toolbarPromptControlRecordingIndicator',
-  'toolbarPromptControlRecordButton',
-  'toolbarPromptControlSendButton',
   'toolbarQuickFilter',
   'toolbarQuickFilterTrigger',
   'toolbarQuickFilterControl',

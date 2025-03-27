@@ -245,10 +245,7 @@
     },
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
-    "unstable_applyPromptResult": {
-      "description": "Use the prompt processing result to update all relevant parts of the grid state."
-    },
-    "unstable_getPromptContext": { "description": "Get the context for the prompt." },
+    "unstable_aiAssistant": { "description": "The AI assistant API." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },
