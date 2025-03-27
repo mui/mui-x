@@ -59,18 +59,9 @@ ExportPrint.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   id: PropTypes.string,
-  onBlur: PropTypes.func,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onFocus: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onKeyUp: PropTypes.func,
-  onPointerDown: PropTypes.func,
-  onPointerUp: PropTypes.func,
   /**
    * The options to apply on the Print export.
    * @demos

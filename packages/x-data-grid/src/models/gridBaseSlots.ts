@@ -1,16 +1,8 @@
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
-type CommonProps = {
+type CommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
   className?: string;
   style?: React.CSSProperties;
-  onClick?: React.MouseEventHandler;
-  onDoubleClick?: React.MouseEventHandler;
-  onPointerUp?: React.MouseEventHandler;
-  onPointerDown?: React.MouseEventHandler;
-  onKeyDown?: React.KeyboardEventHandler;
-  onKeyUp?: React.KeyboardEventHandler;
-  onFocus?: React.FocusEventHandler;
-  onBlur?: React.FocusEventHandler;
   [k: `aria-${string}`]: any;
   [k: `data-${string}`]: any;
 };

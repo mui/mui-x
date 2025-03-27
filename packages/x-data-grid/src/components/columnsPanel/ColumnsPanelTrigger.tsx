@@ -101,21 +101,12 @@ ColumnsPanelTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   disabled: PropTypes.bool,
   id: PropTypes.string,
-  onBlur: PropTypes.func,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onFocus: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onKeyUp: PropTypes.func,
-  onPointerDown: PropTypes.func,
-  onPointerUp: PropTypes.func,
   /**
    * A function to customize rendering of the component.
    */
