@@ -13,8 +13,6 @@
       "node",
       "@mui/material/themeCssVarsAugmentation",
       "@emotion/styled",
-      "@react-spring/shared",
-      "@react-spring/core",
       "csstype"
     ]
   },
