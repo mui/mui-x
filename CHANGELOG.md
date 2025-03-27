@@ -11,6 +11,7 @@ _Mar 27, 2025_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 🔍 Update the Data Grid quick filter to be collapsed when not in use
 - 🐞 Bugfixes
 
 Special thanks go out to the community members for their valuable contributions:
