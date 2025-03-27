@@ -2,7 +2,7 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import removeProps from '../../../util/removeProps';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
-const props = ['indeterminateCheckboxAction', 'rowPositionsDebounceMs'];
+const props = ['indeterminateCheckboxAction', 'rowPositionsDebounceMs', 'resetPageOnSortFilter'];
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
