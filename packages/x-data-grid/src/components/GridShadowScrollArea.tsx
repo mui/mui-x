@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, keyframes } from '@mui/system';
+import { styled, keyframes, css } from '@mui/system';
 
 export interface GridShadowScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -29,7 +29,10 @@ const ShadowScrollArea = styled('div', {
     left: 0,
     width: '100%',
     height: '4px',
-    animation: `${reveal} linear both`,
+    // css helper function fixes: https://github.com/mui/mui-x/issues/17142
+    animation: css`
+      ${reveal} linear both
+    `,
     animationTimeline: '--scroll-timeline',
 
     // Custom property toggle trick:
