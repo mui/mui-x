@@ -1164,9 +1164,17 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar container element"
     },
+    "toolbarDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar divider element"
+    },
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
+    },
+    "toolbarLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar label element"
     },
     "toolbarPromptControl": {
       "description": "Styles applied to {{nodeName}}.",

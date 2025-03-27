@@ -4,7 +4,6 @@ import {
   DataGrid,
   Toolbar,
   ToolbarButton,
-  ToolbarLabel,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
   ExportCsv,
@@ -27,6 +26,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
+import Typography from '@mui/material/Typography';
 
 type OwnerState = {
   expanded: boolean;
@@ -65,7 +65,7 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <ToolbarLabel />
+      <Typography fontWeight="medium">Toolbar</Typography>
 
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
@@ -199,7 +199,6 @@ export default function GridToolbar() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        label="Toolbar Demo"
         showToolbar
       />
     </div>

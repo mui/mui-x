@@ -191,7 +191,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   const element = useGridComponentRenderer(ToolbarRoot, render, {
     role: 'toolbar',
     'aria-orientation': 'horizontal',
-    'aria-labelledby': 'data-grid-label',
+    'aria-label': rootProps.label || undefined,
     className: clsx(classes.root, className),
     ownerState: rootProps,
     ...other,

@@ -4,7 +4,6 @@ import {
   DataGrid,
   Toolbar,
   ToolbarButton,
-  ToolbarLabel,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
   ExportCsv,
@@ -27,6 +26,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
+import Typography from '@mui/material/Typography';
 
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
@@ -57,7 +57,8 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <ToolbarLabel />
+      <Typography fontWeight="medium">Toolbar</Typography>
+
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />

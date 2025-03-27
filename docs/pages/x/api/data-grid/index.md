@@ -12,7 +12,6 @@
 - [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
 - [Toolbar](/x/api/data-grid/toolbar/)
 - [ToolbarButton](/x/api/data-grid/toolbar-button/)
-- [ToolbarLabel](/x/api/data-grid/toolbar-label/)
 - [ExportCsv](/x/api/data-grid/export-csv/)
 - [ExportExcel](/x/api/data-grid/export-excel/)
 - [ExportPrint](/x/api/data-grid/export-print/)

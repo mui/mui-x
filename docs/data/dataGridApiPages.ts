@@ -72,9 +72,5 @@ const dataGridApiPages: MuiPage[] = [
     pathname: '/x/api/data-grid/toolbar-button',
     title: 'ToolbarButton',
   },
-  {
-    pathname: '/x/api/data-grid/toolbar-label',
-    title: 'ToolbarLabel',
-  },
 ];
 export default dataGridApiPages;

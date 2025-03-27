@@ -605,8 +605,6 @@
   { "name": "Toolbar", "kind": "Variable" },
   { "name": "ToolbarButton", "kind": "Variable" },
   { "name": "ToolbarButtonProps", "kind": "TypeAlias" },
-  { "name": "ToolbarLabel", "kind": "Variable" },
-  { "name": "ToolbarLabelProps", "kind": "TypeAlias" },
   { "name": "ToolbarProps", "kind": "TypeAlias" },
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Function" },
