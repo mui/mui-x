@@ -65,7 +65,9 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <Typography fontWeight="medium">Toolbar</Typography>
+      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+        Toolbar
+      </Typography>
 
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>

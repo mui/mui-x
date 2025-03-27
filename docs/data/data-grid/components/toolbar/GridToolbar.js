@@ -190,7 +190,6 @@ export default function GridToolbar() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        label="Toolbar Demo"
         showToolbar
       />
     </div>

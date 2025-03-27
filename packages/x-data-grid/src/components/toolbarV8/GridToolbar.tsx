@@ -58,6 +58,36 @@ const Label = styled('span', {
   whiteSpace: 'nowrap',
 });
 
+function GridToolbarDivider(props: GridSlotProps['baseDivider']) {
+  const { className, ...other } = props;
+  const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
+  return (
+    <Divider
+      as={rootProps.slots.baseDivider}
+      orientation="vertical"
+      className={classes.divider}
+      {...other}
+    />
+  );
+}
+
+GridToolbarDivider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+} as any;
+
+function GridToolbarLabel(props: React.HTMLAttributes<HTMLSpanElement>) {
+  const { className, ...other } = props;
+  const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
+  return <Label className={classes.label} {...other} />;
+}
+
 function GridToolbar(props: GridToolbarProps) {
   const {
     showQuickFilter = true,
@@ -68,7 +98,6 @@ function GridToolbar(props: GridToolbarProps) {
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
@@ -81,7 +110,7 @@ function GridToolbar(props: GridToolbarProps) {
 
   return (
     <Toolbar>
-      {rootProps.label && <Label className={classes.label}>{rootProps.label}</Label>}
+      {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
 
       {!rootProps.disableColumnSelector && (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
@@ -110,7 +139,7 @@ function GridToolbar(props: GridToolbarProps) {
       )}
 
       {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
-        <Divider as={rootProps.slots.baseDivider} orientation="vertical" />
+        <GridToolbarDivider />
       )}
 
       {showExportMenu && (
@@ -166,11 +195,7 @@ function GridToolbar(props: GridToolbarProps) {
 
       {showQuickFilter && (
         <React.Fragment>
-          <Divider
-            as={rootProps.slots.baseDivider}
-            className={classes.divider}
-            orientation="vertical"
-          />
+          <GridToolbarDivider />
           <GridToolbarQuickFilter {...quickFilterProps} />
         </React.Fragment>
       )}
@@ -213,4 +238,4 @@ GridToolbar.propTypes = {
   ]),
 } as any;
 
-export { GridToolbar };
+export { GridToolbar, GridToolbarDivider, GridToolbarLabel };

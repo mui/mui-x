@@ -530,8 +530,8 @@ DataGridPremiumRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * The label of the Data Grid.
-   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and associated to the grid with the `aria-labelledby` attribute.
-   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to to the `aria-label` attribute.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
    */
   label: PropTypes.string,
   /**
