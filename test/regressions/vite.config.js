@@ -30,6 +30,10 @@ export default defineConfig({
           from: '__RELEASE_INFO__',
           to: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
         },
+        {
+          from: 'DISABLE_CHANCE_RANDOM',
+          to: JSON.stringify(true),
+        },
       ],
     }),
     {
