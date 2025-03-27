@@ -248,6 +248,8 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
+- The `useGridApiEventHandler()` has been renamed to `useGridEvent()`.
+
 ### Behavioral changes
 
 - The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
