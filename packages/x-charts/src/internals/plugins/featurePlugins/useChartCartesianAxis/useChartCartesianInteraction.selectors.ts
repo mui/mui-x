@@ -164,7 +164,7 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
 /**
  * Return `true` if the axis tooltip has something to display.
  */
-export const selectorChartsInteractionTooltipAxis = createSelector(
+export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
