@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useAnimate } from '../internals/animation/useAnimate';
 import { getRadius, GetRadiusData } from './getRadius';
 
@@ -60,7 +59,6 @@ function barClipRectPropsInterpolator(
 export function useAnimateBarClipRect(
   props: UseAnimateBarClipRectParams,
 ): UseAnimateBarClipRectReturn {
-  const isHydrated = useIsHydrated();
   const initialProps = {
     x: props.x,
     y: props.y + (props.ownerState.layout === 'vertical' ? props.height : 0),
@@ -96,8 +94,7 @@ export function useAnimateBarClipRect(
     },
   );
 
-  // Only use the initial props on the first render.
-  const usedProps = props.skipAnimation || !isHydrated ? props : initialProps;
+  const usedProps = props.skipAnimation ? props : initialProps;
 
   return {
     ref,
