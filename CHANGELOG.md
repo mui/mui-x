@@ -28,7 +28,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix error caused by trying to render rows that are not in the state anymore (#17057) @arminmeh
 - [DataGrid] Refactor: remove more material (#16922) @romgrk
 - [DataGrid] Update Quick Filter component to be expandable (#16862) @KenanYusuf
-- [DataGrid] Fix crash when used with `@mui/styled-engine-sc` (#17154) @KenanYusuf 
+- [DataGrid] Fix crash when used with `@mui/styled-engine-sc` (#17154) @KenanYusuf
 
 #### `@mui/x-data-grid-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
