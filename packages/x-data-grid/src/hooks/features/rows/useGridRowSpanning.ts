@@ -13,7 +13,7 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { runIf } from '../../../utils/utils';
 import { gridPageSizeSelector } from '../pagination';
 import { gridDataRowIdsSelector } from './gridRowsSelector';
@@ -345,24 +345,24 @@ export const useGridRowSpanning = (
     updateRowSpanningState(renderContext, true);
   }, [apiRef, updateRowSpanningState]);
 
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'renderedRowsIntervalChange',
     runIf(props.rowSpanning, updateRowSpanningState),
   );
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridApiEventHandler(
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(
     apiRef,
     'paginationModelChange',
     runIf(props.rowSpanning, resetRowSpanningState),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'filteredRowsSet',
     runIf(props.rowSpanning, resetRowSpanningState),
   );
-  useGridApiEventHandler(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     if (!props.rowSpanning) {

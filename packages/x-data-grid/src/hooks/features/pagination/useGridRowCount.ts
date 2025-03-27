@@ -9,7 +9,7 @@ import {
   useGridLogger,
   useGridSelector,
   useGridApiMethod,
-  useGridApiEventHandler,
+  useGridEvent,
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
@@ -137,7 +137,7 @@ export const useGridRowCount = (
     [props.paginationMode, previousPageSize, rowCountState, apiRef],
   );
 
-  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
 
   /**
    * EFFECTS

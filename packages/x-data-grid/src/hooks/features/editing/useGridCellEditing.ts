@@ -4,9 +4,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  useGridApiEventHandler,
-  useGridApiOptionHandler,
-} from '../../utils/useGridApiEventHandler';
+  useGridEvent,
+  useGridEventPriority,
+} from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
@@ -240,15 +240,15 @@ export const useGridCellEditing = (
       }
     };
 
-  useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
-  useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
+  useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
+  useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
 
-  useGridApiEventHandler(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
-  useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
+  useGridEvent(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
+  useGridEvent(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
-  useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
+  useGridEventPriority(apiRef, 'cellEditStart', props.onCellEditStart);
+  useGridEventPriority(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {

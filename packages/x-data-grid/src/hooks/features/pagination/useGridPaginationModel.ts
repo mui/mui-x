@@ -16,7 +16,7 @@ import {
   useGridLogger,
   useGridSelector,
   useGridApiMethod,
-  useGridApiEventHandler,
+  useGridEvent,
 } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
@@ -303,11 +303,11 @@ export const useGridPaginationModel = (
     [apiRef, navigateToStart],
   );
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
-  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
-  useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridApiEventHandler(apiRef, 'sortModelChange', navigateToStart);
-  useGridApiEventHandler(apiRef, 'filterModelChange', handleFilterModelChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
+  useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
+  useGridEvent(apiRef, 'sortModelChange', navigateToStart);
+  useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**
    * EFFECTS
