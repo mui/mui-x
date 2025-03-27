@@ -155,19 +155,12 @@ PieArcLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  arcLabelRadius: PropTypes.any.isRequired,
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
-  cornerRadius: PropTypes.any.isRequired,
-  endAngle: PropTypes.any.isRequired,
   formattedArcLabel: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  innerRadius: PropTypes.any.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
-  outerRadius: PropTypes.any.isRequired,
-  paddingAngle: PropTypes.any.isRequired,
-  startAngle: PropTypes.any.isRequired,
 } as any;
 
 export { PieArcLabel };
