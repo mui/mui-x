@@ -85,7 +85,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   getFilters,
 }: ComputeCommonParams<T> & {
   axis?: AxisConfig[];
-  axisDirection: 'x' | 'y'; // | 'radius' | 'rotation';
+  axisDirection: 'x' | 'y';
 }) {
   if (allAxis === undefined) {
     return {

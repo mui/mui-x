@@ -7,7 +7,13 @@ import { CircularRadarGrid } from './CircularRadarGrid';
 
 function RadarGrid(props: RadarGridProps) {
   const { divisions = 5, shape = 'sharp' } = props;
-  const { center, corners, radius } = useRadarGridData();
+  const gridData = useRadarGridData();
+
+  if (gridData === null) {
+    return null;
+  }
+
+  const { center, corners, radius } = gridData;
 
   return shape === 'sharp' ? (
     <SharpRadarGrid divisions={divisions} corners={corners} center={center} radius={radius} />

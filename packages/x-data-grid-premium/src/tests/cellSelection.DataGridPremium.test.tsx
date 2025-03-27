@@ -3,7 +3,7 @@ import { stub, SinonStub, spy } from 'sinon';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
+import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -12,7 +12,6 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Cell selection', () => {
@@ -50,28 +49,29 @@ describe('<DataGridPremium /> - Cell selection', () => {
     );
   }
 
-  it('should select the cell clicked', () => {
-    render(<TestDataGridSelection />);
+  it('should select the cell clicked', async () => {
+    const { user } = render(<TestDataGridSelection />);
     expect(document.querySelector('.Mui-selected')).to.equal(null);
     const cell = getCell(0, 1);
-    fireEvent.click(cell);
+
+    await user.click(cell);
     expect(document.querySelector('.Mui-selected')).to.equal(cell);
   });
 
-  it('should unselect already selected cells when selecting a cell', () => {
-    render(<TestDataGridSelection />);
+  it('should unselect already selected cells when selecting a cell', async () => {
+    const { user } = render(<TestDataGridSelection />);
     const cell01 = getCell(0, 1);
-    fireEvent.click(cell01);
+    await user.click(cell01);
     expect(cell01).to.have.class('Mui-selected');
     const cell11 = getCell(1, 1);
-    fireEvent.click(cell11);
+    await user.click(cell11);
     expect(cell01).not.to.have.class('Mui-selected');
     expect(cell11).to.have.class('Mui-selected');
   });
 
   // https://github.com/mui/mui-x/issues/10777
-  it('should work with the paginated grid', () => {
-    render(
+  it('should work with the paginated grid', async () => {
+    const { user } = render(
       <TestDataGridSelection
         initialState={{ pagination: { paginationModel: { page: 0, pageSize: 3 }, rowCount: 4 } }}
         rowLength={30}
@@ -81,11 +81,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
       />,
     );
     const cell01 = getCell(2, 0);
-    fireEvent.click(cell01);
+    await user.click(cell01);
     expect(cell01).to.have.class('Mui-selected');
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
     const cell02 = getCell(5, 0);
-    fireEvent.click(cell02);
+    await user.click(cell02);
     expect(cell02).to.have.class('Mui-selected');
   });
 
@@ -104,38 +104,42 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(cell11).to.have.class('Mui-selected');
     });
 
-    it('should unselect the cell if the cell is already selected', () => {
-      render(<TestDataGridSelection />);
+    it('should unselect the cell if the cell is already selected', async () => {
+      const { user } = render(<TestDataGridSelection />);
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell = getCell(1, 1);
-      fireEvent.click(cell);
+      await user.click(cell);
       expect(cell).to.have.class('Mui-selected');
-      fireEvent.click(cell, { ctrlKey: true });
+      await user.keyboard('{Control>}');
+      await user.click(cell);
+      await user.keyboard('{/Control}');
       expect(cell).not.to.have.class('Mui-selected');
     });
   });
 
   describe('Shift + click', () => {
-    it('should select all cells between two cells', () => {
-      render(<TestDataGridSelection />);
+    it('should select all cells between two cells', async () => {
+      const { user } = render(<TestDataGridSelection />);
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireUserEvent.mousePress(getCell(2, 1), { shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
       expect(document.querySelectorAll('.Mui-selected')).to.have.length(3 * 2); // 3 rows with 2 cells each
     });
 
-    it('should call selectCellRange', () => {
-      render(<TestDataGridSelection />);
+    it('should call selectCellRange', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
 
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireUserEvent.mousePress(getCell(2, 1), { shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
         id: 2,
@@ -143,13 +147,14 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
     });
 
-    it('should add classes to the cells that are at the corners of a range', () => {
-      render(<TestDataGridSelection />);
+    it('should add classes to the cells that are at the corners of a range', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireUserEvent.mousePress(getCell(2, 2), { shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 2));
+      await user.keyboard('{/Shift}');
 
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeTop']);
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeLeft']);
@@ -167,26 +172,27 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
     });
 
-    it('should keep the focus on first clicked cell', () => {
-      render(<TestDataGridSelection />);
+    it('should keep the focus on first clicked cell', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
       expect(cell).toHaveFocus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.click(getCell(2, 1), { shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
       expect(cell).toHaveFocus();
     });
   });
 
   describe('Shift + arrow keys', () => {
-    it('should call selectCellRange when ArrowDown is pressed', () => {
-      render(<TestDataGridSelection />);
+    it('should call selectCellRange when ArrowDown is pressed', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 1, field: 'id' });
     });
@@ -204,14 +210,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
-    it('should call selectCellRange when ArrowLeft is pressed', () => {
-      render(<TestDataGridSelection />);
+    it('should call selectCellRange when ArrowLeft is pressed', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.keyDown(cell, { key: 'ArrowLeft', shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
@@ -219,14 +224,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
-    it('should call selectCellRange when ArrowRight is pressed', () => {
-      render(<TestDataGridSelection />);
+    it('should call selectCellRange when ArrowRight is pressed', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.keyDown(cell, { key: 'ArrowRight', shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
         id: 0,
@@ -234,36 +238,35 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
     });
 
-    it('should keep the focus on first clicked cell', () => {
-      render(<TestDataGridSelection />);
+    it('should keep the focus on first clicked cell', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
       expect(cell).toHaveFocus();
     });
   });
 
   describe('onCellSelectionModelChange', () => {
-    it('should update the selection state when a cell is selected', () => {
+    it('should update the selection state when a cell is selected', async () => {
       const onCellSelectionModelChange = spy();
-      render(
+      const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{}}
           onCellSelectionModelChange={onCellSelectionModelChange}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      await user.click(getCell(0, 0));
 
       expect(onCellSelectionModelChange.callCount).to.equal(1);
       expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
-    it('should add the new cell selection range to the existing state', () => {
+    it('should add the new cell selection range to the existing state', async () => {
       const onCellSelectionModelChange = spy();
-      render(
+      const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{ '0': { id: true } }}
           onCellSelectionModelChange={onCellSelectionModelChange}
@@ -271,8 +274,18 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       // Add a new cell range to the selection
-      fireEvent.mouseDown(getCell(2, 0), { ctrlKey: true });
-      fireEvent.mouseOver(getCell(3, 0), { ctrlKey: true });
+      const isMac = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+      await user.keyboard(isMac ? '{Meta>}' : '{Control>}');
+      await user.pointer([
+        // touch the screen at element1
+        { keys: '[MouseLeft>]', target: getCell(2, 0) },
+        // move the touch pointer to element2
+        { target: getCell(3, 0) },
+        // release the touch pointer at the last position (element2)
+        { keys: '[/MouseLeft]' },
+      ]);
+      await user.keyboard(isMac ? '{/Meta}' : '{/Control}');
 
       expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
         '0': { id: true },
@@ -284,7 +297,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('apiRef', () => {
     describe('selectCellRange', () => {
-      it('should select all cells within the given arguments if end > start', () => {
+      it('should select all cells within the given arguments if end > start', async () => {
         render(<TestDataGridSelection />);
         act(() =>
           apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
@@ -322,7 +335,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(2, 2)).to.have.class('Mui-selected');
       });
 
-      it('should discard previously selected cells and keep only the ones inside the range', () => {
+      it('should discard previously selected cells and keep only the ones inside the range', async () => {
         render(
           <TestDataGridSelection
             initialState={{ cellSelection: { 0: { id: true, currencyPair: true, price1M: true } } }}
@@ -366,14 +379,21 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
+  // JSDOM doesn't support scroll events
   describeSkipIf(isJSDOM)('Auto-scroll', () => {
-    it('should auto-scroll when the mouse approaches the bottom edge', () => {
+    beforeEach(() => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);
+    });
 
+    afterEach(() => {
+      (window.requestAnimationFrame as SinonStub).restore();
+    });
+
+    it('should auto-scroll when the mouse approaches the bottom edge', async () => {
       const rowHeight = 30;
       const columnHeaderHeight = 50;
       const border = 1;
-      render(
+      const { user } = render(
         <TestDataGridSelection
           rowLength={20}
           rowHeight={30}
@@ -383,34 +403,43 @@ describe('<DataGridPremium /> - Cell selection', () => {
         />,
       );
       const cell11 = getCell(1, 1);
-      fireEvent.mouseDown(cell11);
-      fireEvent.click(cell11);
-
+      const cell71 = getCell(7, 1);
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       const rect = virtualScroller.getBoundingClientRect();
-
       expect(virtualScroller.scrollTop).to.equal(0);
-      const cell71 = getCell(7, 1);
-      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 25 }); // 25=half speed
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: cell11 },
+        // 25=half speed
+        { target: cell71, coords: { x: rect.x, y: rect.y + rect.height - 25 } },
+        { keys: '[/MouseLeft]' },
+      ]);
       expect(virtualScroller.scrollTop).to.equal(10);
 
-      virtualScroller.scrollTop = 0;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      await act(async () => {
+        virtualScroller.scrollTop = 0;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
 
       expect(virtualScroller.scrollTop).to.equal(0);
-      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 0 }); // 0=full speed
-      expect(virtualScroller.scrollTop).to.equal(20);
 
-      (window.requestAnimationFrame as SinonStub).restore();
+      // Test is a bit flaky, so we wrap the pointer in a waitFor to retry
+      await waitFor(async () => {
+        await user.pointer([
+          { keys: '[MouseLeft>]', target: cell11 },
+          // 0=full speed
+          { target: cell71, coords: { x: rect.x, y: rect.y + rect.height + 0 } },
+          { keys: '[/MouseLeft]' },
+        ]);
+
+        expect(virtualScroller.scrollTop).to.equal(20);
+      });
     });
 
-    it('should auto-scroll when the mouse approaches the top edge', () => {
-      stub(window, 'requestAnimationFrame').callsFake(() => 0);
-
+    it('should auto-scroll when the mouse approaches the top edge', async () => {
       const rowHeight = 30;
       const columnHeaderHeight = 50;
       const border = 1;
-      render(
+      const { user } = render(
         <TestDataGridSelection
           rowLength={20}
           rowHeight={30}
@@ -419,31 +448,45 @@ describe('<DataGridPremium /> - Cell selection', () => {
           width={400}
         />,
       );
+      const cell11 = getCell(1, 1);
       const cell71 = getCell(7, 1);
-      fireEvent.mouseDown(cell71);
-      fireEvent.click(cell71);
 
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       const gridRect = grid('root')!.getBoundingClientRect();
 
-      virtualScroller.scrollTop = 30;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      await act(async () => {
+        virtualScroller.scrollTop = 30;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
       expect(virtualScroller.scrollTop).to.equal(30);
 
-      const cell11 = getCell(1, 1);
-      fireEvent.mouseOver(cell11, {
-        clientX: gridRect.x,
-        clientY: gridRect.y + border + columnHeaderHeight + 25, // 25=half speed
-      });
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: cell71 },
+        {
+          target: cell11,
+          coords: {
+            x: gridRect.x,
+            // 25=half speed
+            y: gridRect.y + border + columnHeaderHeight + 25,
+          },
+        },
+        { keys: '[/MouseLeft]' },
+      ]);
       expect(virtualScroller.scrollTop).to.equal(20);
 
-      fireEvent.mouseOver(cell11, {
-        clientX: gridRect.x,
-        clientY: gridRect.y + border + columnHeaderHeight + 0, // 0=full speed
-      });
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: cell71 },
+        {
+          target: cell11,
+          coords: {
+            x: gridRect.x,
+            // 0=full speed
+            y: gridRect.y + border + columnHeaderHeight + 0,
+          },
+        },
+        { keys: '[/MouseLeft]' },
+      ]);
       expect(virtualScroller.scrollTop).to.equal(0);
-
-      (window.requestAnimationFrame as SinonStub).restore();
     });
   });
 });

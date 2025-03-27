@@ -4,6 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { throttle } from '@mui/x-internals/throttle';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -30,7 +31,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { isDeepEqual } from '../../../utils/utils';
 
 type RootProps = Pick<
   DataGridProcessedProps,
