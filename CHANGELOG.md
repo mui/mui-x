@@ -5,6 +5,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.2
+
+_Mar 27, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@lhilgert9.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @hasdfa, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @mnajdova, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0-beta.2`
+
+- [DataGrid] Fix error caused by trying to render rows that are not in the state anymore (#17057) @arminmeh
+- [DataGrid] Refactor: remove more material (#16922) @romgrk
+- [DataGrid] Remove unwanted attributes from `QuickFilter` component (#17126) @KenanYusuf
+- [DataGrid] Update Quick Filter component to be expandable (#16862) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.2`, plus:
+
+- [DataGridPro] Data source: Allow expanding groups with unknown children (#17144) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.2`
+
+- [fields] Extract the props of each field slot into a standalone hook that the Base UI implementation can re-use (#17114) @flaviendelangle
+- [pickers] Fix visual regression in `DateRangeCalendar`'s day (#17148) @flaviendelangle
+- [pickers] Remove all code duplication to apply default values to validation props (#17038) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-beta.2`
+
+- [charts] Add pie benchmark (#17115) @JCQuintas
+- [charts] Fix CSS vars support for dark theme (#17106) @alexfauquette
+- [charts] Fix radar hover (#17134) @alexfauquette
+- [charts] Move axis interaction to selectors (#17039) @alexfauquette
+- [charts] Pie benchmark fix (#17125) @JCQuintas
+
+#### `@mui/x-charts-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.2`
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
+
+### `@mui/x-codemod@8.0.0-beta.1`
+
+- [codemod] Add `showToolbar` prop when using toolbar component (#17124) @MBilalShafi
+- [codemod] Add a few Data Grid codemods (#17121) @MBilalShafi
+
+### Docs
+
+- [docs] Fix example import for `ExportExcel` component (#17110) @KenanYusuf
+
+### Core
+
+- [code-infra] Remove `@mui/styles` dependency & patches (#17071) @mnajdova
+- [code-infra] Add more tests to slow screenshot tests (#17075) @JCQuintas
+- [code-infra] Fix pickers codecov (#17120) @JCQuintas
+- [code-infra] Move `isDeepEqual` to @mui/x-internals (#17129) @JCQuintas
+- [code-infra] Remove `test_regressions` step from React 18 pipeline (#17108) @LukasTy
+- [code-infra] Update more data-grid tests for vitest (#17146) @JCQuintas
+- [code-infra] Update some data-grid tests for vitest (#17078) @JCQuintas
+- [code-infra] Update some data-grid tests for vitest (#17104) @JCQuintas
+- [code-infra] Update some date-pickers tests for vitest (#17083) @JCQuintas
+- [infra] Update issue-status-label-handler.yml @michelengelen
+- [infra] Added reusable issue status label handler workflow (#17145) @michelengelen
+- [infra] Switch to reusable 'stale issues/PRs' workflow (#17107) @michelengelen
+- [telemetry] Improve request body size, update dependencies, and optimize SSR handling (#17008) @hasdfa
+
 ## 8.0.0-beta.1
 
 _Mar 21, 2025_
