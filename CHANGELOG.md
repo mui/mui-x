@@ -44,7 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.2`.
 
 #### `@mui/x-date-pickers@8.0.0-beta.2`
 
-- [fields] Extract the props of each field slot into a standalone hook that the Base UI implementation can re-use (#17114) @flaviendelangle
+- [fields] Extract the props of each field slot into a standalone hook for easier re-use (#17114) @flaviendelangle
 - [pickers] Fix visual regression in Date Range Calendar's day (#17148) @flaviendelangle
 - [pickers] Remove all code duplication to apply default values to validation props (#17038) @flaviendelangle
 
@@ -60,7 +60,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.2`.
 - [charts] Fix CSS vars support for dark theme (#17106) @alexfauquette
 - [charts] Fix radar hover (#17134) @alexfauquette
 - [charts] Move axis interaction to selectors (#17039) @alexfauquette
-- [charts] Pie benchmark fix (#17125) @JCQuintas
+- [charts] Fix Pie benchmark (#17125) @JCQuintas
 
 #### `@mui/x-charts-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -78,8 +78,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
 
 ### `@mui/x-codemod@8.0.0-beta.1`
 
-- [codemod] Add `showToolbar` prop when using toolbar component (#17124) @MBilalShafi
-- [codemod] Add a few Data Grid codemods (#17121) @MBilalShafi
+- [codemod] Add Data Grid codemods (#17121, #17124) @MBilalShafi
 
 ### Docs
 
@@ -92,9 +91,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
 - [code-infra] Fix pickers codecov (#17120) @JCQuintas
 - [code-infra] Move `isDeepEqual` to @mui/x-internals (#17129) @JCQuintas
 - [code-infra] Remove `test_regressions` step from React 18 pipeline (#17108) @LukasTy
-- [code-infra] Update more data-grid tests for vitest (#17146) @JCQuintas
-- [code-infra] Update some data-grid tests for vitest (#17078) @JCQuintas
-- [code-infra] Update some data-grid tests for vitest (#17104) @JCQuintas
+- [code-infra] Update some data-grid tests for vitest (#17078, #17104, #17146) @JCQuintas
 - [code-infra] Update some date-pickers tests for vitest (#17083) @JCQuintas
 - [infra] Update `issue-status-label-handler.yml` @michelengelen
 - [infra] Added reusable issue status label handler workflow (#17145) @michelengelen
