@@ -68,6 +68,7 @@ Same changes as in `@mui/x-charts@8.0.0-beta.2`.
 ### Tree View
 
 #### `@mui/x-tree-view@8.0.0-beta.2`
+
 Internal changes.
 
 #### `@mui/x-tree-view-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
