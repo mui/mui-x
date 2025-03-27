@@ -213,83 +213,12 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
   );
 });
 
-/* eslint-disable material-ui/disallow-react-api-in-server-components */
-
-const iconSlots: GridIconSlotsComponent = {
-  booleanCellTrueIcon: GridCheckIcon,
-  booleanCellFalseIcon: GridCloseIcon,
-  columnMenuIcon: GridTripleDotsVerticalIcon,
-  openFilterButtonIcon: GridFilterListIcon,
-  filterPanelDeleteIcon: GridCloseIcon,
-  columnFilteredIcon: GridFilterAltIcon,
-  columnSelectorIcon: GridColumnIcon,
-  columnUnsortedIcon: GridColumnUnsortedIcon,
-  columnSortedAscendingIcon: GridArrowUpwardIcon,
-  columnSortedDescendingIcon: GridArrowDownwardIcon,
-  columnResizeIcon: GridSeparatorIcon,
-  densityCompactIcon: GridViewHeadlineIcon,
-  densityStandardIcon: GridTableRowsIcon,
-  densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridDownloadIcon,
-  moreActionsIcon: GridMoreVertIcon,
-  treeDataCollapseIcon: GridExpandMoreIcon,
-  treeDataExpandIcon: GridKeyboardArrowRight,
-  groupingCriteriaCollapseIcon: GridExpandMoreIcon,
-  groupingCriteriaExpandIcon: GridKeyboardArrowRight,
-  detailPanelExpandIcon: GridAddIcon,
-  detailPanelCollapseIcon: GridRemoveIcon,
-  rowReorderIcon: GridDragIcon,
-  quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridClearIcon,
-  columnMenuHideIcon: GridVisibilityOffIcon,
-  columnMenuSortAscendingIcon: GridArrowUpwardIcon,
-  columnMenuSortDescendingIcon: GridArrowDownwardIcon,
-  columnMenuUnsortIcon: null,
-  columnMenuFilterIcon: GridFilterAltIcon,
-  columnMenuManageColumnsIcon: GridViewColumnIcon,
-  columnMenuClearIcon: GridClearIcon,
-  loadIcon: GridLoadIcon,
-  filterPanelAddIcon: GridAddIcon,
-  filterPanelRemoveAllIcon: GridDeleteForeverIcon,
-  columnReorderIcon: GridDragIcon,
-  menuItemCheckIcon: GridCheckIcon,
-};
-
-const baseSlots: GridBaseSlots = {
-  baseAutocomplete: BaseAutocomplete,
-  baseBadge: BaseBadge,
-  baseCheckbox: React.forwardRef(BaseCheckbox),
-  baseCircularProgress: BaseCircularProgress,
-  baseDivider: BaseDivider,
-  baseInput: BaseInput,
-  baseLinearProgress: BaseLinearProgress,
-  baseMenuList: BaseMenuList,
-  baseMenuItem: BaseMenuItem,
-  baseTextField: BaseTextField,
-  baseButton: BaseButton,
-  baseIconButton: BaseIconButton,
-  baseTooltip: BaseTooltip,
-  basePagination: BasePagination,
-  basePopper: BasePopper,
-  baseSelect: BaseSelect,
-  baseSelectOption: BaseSelectOption,
-  baseSkeleton: BaseSkeleton,
-  baseSwitch: BaseSwitch,
-};
-
-const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
-  ...baseSlots,
-  ...iconSlots,
-};
-
-export default materialSlots;
-
-function BaseBadge(props: P['baseBadge']) {
+const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref) {
   const { material, ...rest } = props;
-  return <MUIBadge {...rest} {...material} />;
-}
+  return <MUIBadge {...rest} {...material} ref={ref} />;
+});
 
-function BaseCheckbox(props: P['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
+const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
   const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
@@ -336,52 +265,56 @@ function BaseCheckbox(props: P['baseCheckbox'], ref: React.Ref<HTMLButtonElement
       fullWidth={fullWidth}
     />
   );
-}
+});
 
-function BaseCircularProgress(props: P['baseCircularProgress']) {
-  const { material, ...rest } = props;
-  return <MUICircularProgress {...rest} {...material} />;
-}
+const BaseCircularProgress = forwardRef<any, P['baseCircularProgress']>(
+  function BaseCircularProgress(props, ref) {
+    const { material, ...rest } = props;
+    return <MUICircularProgress {...rest} {...material} ref={ref} />;
+  },
+);
 
-function BaseDivider(props: P['baseDivider']) {
+const BaseDivider = forwardRef<any, P['baseDivider']>(function BaseDivider(props, ref) {
   const { material, ...rest } = props;
-  return <MUIDivider {...rest} {...material} />;
-}
+  return <MUIDivider {...rest} {...material} ref={ref} />;
+});
 
-function BaseLinearProgress(props: P['baseLinearProgress']) {
-  const { material, ...rest } = props;
-  return <MUILinearProgress {...rest} {...material} />;
-}
+const BaseLinearProgress = forwardRef<any, P['baseLinearProgress']>(
+  function BaseLinearProgress(props, ref) {
+    const { material, ...rest } = props;
+    return <MUILinearProgress {...rest} {...material} ref={ref} />;
+  },
+);
 
-function BaseButton(props: P['baseButton']) {
+const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, ref) {
   const { material, ...rest } = props;
-  return <MUIButton {...rest} {...material} />;
-}
+  return <MUIButton {...rest} {...material} ref={ref} />;
+});
 
-function BaseIconButton(props: P['baseIconButton']) {
+const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
   const { material, ...rest } = props;
-  return <MUIIconButton {...rest} {...material} />;
-}
+  return <MUIIconButton {...rest} {...material} ref={ref} />;
+});
 
-function BaseTooltip(props: P['baseTooltip']) {
+const BaseTooltip = forwardRef<any, P['baseTooltip']>(function BaseTooltip(props, ref) {
   const { material, ...rest } = props;
-  return <MUITooltip {...rest} {...material} />;
-}
+  return <MUITooltip {...rest} {...material} ref={ref} />;
+});
 
-function BaseSkeleton(props: P['baseSkeleton']) {
+const BaseSkeleton = forwardRef<any, P['baseSkeleton']>(function BaseSkeleton(props, ref) {
   const { material, ...rest } = props;
-  return <MUISkeleton {...rest} {...material} />;
-}
+  return <MUISkeleton {...rest} {...material} ref={ref} />;
+});
 
-function BaseSwitch(props: P['baseSwitch']) {
+const BaseSwitch = forwardRef<any, P['baseSwitch']>(function BaseSwitch(props, ref) {
   const { material, ...rest } = props;
-  return <MUISwitch {...rest} {...material} />;
-}
+  return <MUISwitch {...rest} {...material} ref={ref} />;
+});
 
-function BaseMenuList(props: P['baseMenuList']) {
+const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(props, ref) {
   const { material, ...rest } = props;
-  return <MUIMenuList {...rest} {...material} />;
-}
+  return <MUIMenuList {...rest} {...material} ref={ref} />;
+});
 
 function BaseMenuItem(props: P['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;
@@ -621,3 +554,74 @@ function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption'
   }
   return <MUIMenuItem {...props} />;
 }
+
+/* eslint-disable material-ui/disallow-react-api-in-server-components */
+
+const iconSlots: GridIconSlotsComponent = {
+  booleanCellTrueIcon: GridCheckIcon,
+  booleanCellFalseIcon: GridCloseIcon,
+  columnMenuIcon: GridTripleDotsVerticalIcon,
+  openFilterButtonIcon: GridFilterListIcon,
+  filterPanelDeleteIcon: GridCloseIcon,
+  columnFilteredIcon: GridFilterAltIcon,
+  columnSelectorIcon: GridColumnIcon,
+  columnUnsortedIcon: GridColumnUnsortedIcon,
+  columnSortedAscendingIcon: GridArrowUpwardIcon,
+  columnSortedDescendingIcon: GridArrowDownwardIcon,
+  columnResizeIcon: GridSeparatorIcon,
+  densityCompactIcon: GridViewHeadlineIcon,
+  densityStandardIcon: GridTableRowsIcon,
+  densityComfortableIcon: GridViewStreamIcon,
+  exportIcon: GridDownloadIcon,
+  moreActionsIcon: GridMoreVertIcon,
+  treeDataCollapseIcon: GridExpandMoreIcon,
+  treeDataExpandIcon: GridKeyboardArrowRight,
+  groupingCriteriaCollapseIcon: GridExpandMoreIcon,
+  groupingCriteriaExpandIcon: GridKeyboardArrowRight,
+  detailPanelExpandIcon: GridAddIcon,
+  detailPanelCollapseIcon: GridRemoveIcon,
+  rowReorderIcon: GridDragIcon,
+  quickFilterIcon: GridSearchIcon,
+  quickFilterClearIcon: GridClearIcon,
+  columnMenuHideIcon: GridVisibilityOffIcon,
+  columnMenuSortAscendingIcon: GridArrowUpwardIcon,
+  columnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  columnMenuUnsortIcon: null,
+  columnMenuFilterIcon: GridFilterAltIcon,
+  columnMenuManageColumnsIcon: GridViewColumnIcon,
+  columnMenuClearIcon: GridClearIcon,
+  loadIcon: GridLoadIcon,
+  filterPanelAddIcon: GridAddIcon,
+  filterPanelRemoveAllIcon: GridDeleteForeverIcon,
+  columnReorderIcon: GridDragIcon,
+  menuItemCheckIcon: GridCheckIcon,
+};
+
+const baseSlots: GridBaseSlots = {
+  baseAutocomplete: BaseAutocomplete,
+  baseBadge: BaseBadge,
+  baseCheckbox: BaseCheckbox,
+  baseCircularProgress: BaseCircularProgress,
+  baseDivider: BaseDivider,
+  baseInput: BaseInput,
+  baseLinearProgress: BaseLinearProgress,
+  baseMenuList: BaseMenuList,
+  baseMenuItem: BaseMenuItem,
+  baseTextField: BaseTextField,
+  baseButton: BaseButton,
+  baseIconButton: BaseIconButton,
+  baseTooltip: BaseTooltip,
+  basePagination: BasePagination,
+  basePopper: BasePopper,
+  baseSelect: BaseSelect,
+  baseSelectOption: BaseSelectOption,
+  baseSkeleton: BaseSkeleton,
+  baseSwitch: BaseSwitch,
+};
+
+const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
+  ...baseSlots,
+  ...iconSlots,
+};
+
+export default materialSlots;
