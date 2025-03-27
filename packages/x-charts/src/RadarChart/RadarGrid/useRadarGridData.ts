@@ -13,6 +13,10 @@ export function useRadarGridData() {
   const cx = drawingArea.left + drawingArea.width / 2;
   const cy = drawingArea.top + drawingArea.height / 2;
 
+  if (!rotationScale || rotationScale.domain().length === 0) {
+    return null;
+  }
+
   const metrics = rotationScale.domain() as (string | number)[];
   const angles = metrics.map((key) => rotationScale(key)!);
 

@@ -97,8 +97,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0-rc.0",
-    "@mui/system": "^7.0.0-rc.0",
+    "@mui/material": "^7.0.0",
+    "@mui/system": "^7.0.0",
     "@types/luxon": "^3.4.2",
     "@types/prop-types": "^15.7.14",
     "date-fns": "^4.1.0",

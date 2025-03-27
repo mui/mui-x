@@ -4,33 +4,45 @@ import { clampAngleRad } from '../../../clampAngle';
 
 /**
  * For a pointer coordinate, this function returns the value and dataIndex associated.
- * Returns `null` if the coordinate is outside of values.
+ * Returns `-1` if the coordinate does not match a value.
  */
-export function getAxisValue(axisConfig: PolarAxisDefaultized, pointerValue: number) {
+export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isBandScale(scale)) {
     throw new Error('MUI X: getAxisValue is not implemented for polare continuous axes.');
   }
 
+  if (!axisData) {
+    return -1;
+  }
+
   const angleGap = clampAngleRad(pointerValue - Math.min(...scale.range()));
   const dataIndex =
     scale.bandwidth() === 0
-      ? Math.floor((angleGap + scale.step() / 2) / scale.step()) % axisData!.length
+      ? Math.floor((angleGap + scale.step() / 2) / scale.step()) % axisData.length
       : Math.floor(angleGap / scale.step());
 
-  if (dataIndex < 0 || dataIndex >= axisData!.length) {
+  if (dataIndex < 0 || dataIndex >= axisData.length) {
+    return -1;
+  }
+
+  return reverse ? axisData!.length - 1 - dataIndex : dataIndex;
+}
+
+/**
+ * For a pointer coordinate, this function returns the value and dataIndex associated.
+ * Returns `null` if the coordinate is outside of values.
+ */
+export function getAxisValue(
+  axisConfig: PolarAxisDefaultized,
+  pointerValue: number,
+): number | null {
+  const dataIndex = getAxisIndex(axisConfig, pointerValue);
+
+  if (dataIndex < 0) {
     return null;
   }
-  if (reverse) {
-    const reverseIndex = axisData!.length - 1 - dataIndex;
-    return {
-      index: reverseIndex,
-      value: axisData![reverseIndex],
-    };
-  }
-  return {
-    index: dataIndex,
-    value: axisData![dataIndex],
-  };
+
+  return axisConfig.data?.[dataIndex];
 }
