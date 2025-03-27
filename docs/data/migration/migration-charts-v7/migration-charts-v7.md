@@ -176,7 +176,7 @@ Some helpers are provided to create your custom tooltip:
 
 ## Update Tooltip DOM structure
 
-The DOM structure of the tooltip content was modified as follow.
+The DOM structure of the tooltip content was modified as follows.
 If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
 
 ### Axis tooltip
