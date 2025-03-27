@@ -36,14 +36,8 @@ function ExportMenu() {
         anchorEl={triggerRef.current}
         open={open}
         onClose={() => setOpen(false)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
           list: {
             'aria-labelledby': 'export-menu-trigger',

@@ -57,7 +57,9 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <Typography fontWeight="medium">Toolbar</Typography>
+      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+        Toolbar
+      </Typography>
 
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
@@ -96,14 +98,8 @@ function CustomToolbar() {
         anchorEl={exportMenuTriggerRef.current}
         open={exportMenuOpen}
         onClose={() => setExportMenuOpen(false)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
           list: {
             'aria-labelledby': 'export-menu-trigger',

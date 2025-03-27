@@ -76,14 +76,8 @@ function CustomToolbar(props: ToolbarProps) {
         anchorEl={settingsMenuTriggerRef.current}
         open={settingsMenuOpen}
         onClose={() => setSettingsMenuOpen(false)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
           list: {
             'aria-labelledby': 'settings-menu-trigger',
