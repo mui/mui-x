@@ -119,18 +119,16 @@ export function useAxisTooltip(
       if (!multipleAxes && tooltipAxes.length > 1) {
         return;
       }
-      const axis = xAxis[axisId];
-      tooltipAxes.push(defaultAxisTooltipConfig(axis, dataIndex, 'x'));
+      tooltipAxes.push(defaultAxisTooltipConfig(xAxis[axisId], dataIndex, 'x'));
     });
   }
 
-  if (directions === undefined || directions.includes('x')) {
+  if (directions === undefined || directions.includes('y')) {
     tooltipYAxes.forEach(({ axisId, dataIndex }) => {
       if (!multipleAxes && tooltipAxes.length > 1) {
         return;
       }
-      const axis = yAxis[axisId];
-      tooltipAxes.push(defaultAxisTooltipConfig(axis, dataIndex, 'y'));
+      tooltipAxes.push(defaultAxisTooltipConfig(yAxis[axisId], dataIndex, 'y'));
     });
   }
 

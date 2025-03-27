@@ -128,9 +128,8 @@ export const selectorChartsInteractionYAxisValue = createSelector(
 );
 
 /**
- * Know if tooltip is active for y-axis
+ * Get x-axis ids and corresponding data index that should be display in the tooltip.
  */
-
 export const selectorChartsInteractionTooltipXAxes = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis],
   (value, axes) => {
@@ -145,6 +144,9 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
   },
 );
 
+/**
+ * Get y-axis ids and corresponding data index that should be display in the tooltip.
+ */
 export const selectorChartsInteractionTooltipYAxes = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis],
   (value, axes) => {
@@ -159,7 +161,10 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
   },
 );
 
-export const selectorChartsInteractionAxisTooltip = createSelector(
+/**
+ * Return `true` if the axis tooltip has something to display.
+ */
+export const selectorChartsInteractionTooltipAxis = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );

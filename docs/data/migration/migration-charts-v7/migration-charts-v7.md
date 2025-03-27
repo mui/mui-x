@@ -176,7 +176,7 @@ Some helpers are provided to create your custom tooltip:
 
 ## Update Tooltip DOM structure
 
-The DOM structure of the tooltip content got modified as follow.
+The DOM structure of the tooltip content was modified as follow.
 If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
 
 ### Axis tooltip
@@ -205,7 +205,7 @@ The series label cell is now a header cell `th` instead of `td`.
 
 ### Item tooltip
 
-The table of the item tooltip content got replaced by a paragraph.
+The table of the item tooltip content was replaced by a paragraph.
 
 ```diff
 - <table>
