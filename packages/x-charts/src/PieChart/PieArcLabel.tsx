@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { PieItemId } from '../models/seriesType/pie';
 
@@ -15,6 +16,8 @@ export interface PieArcLabelClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /** Styles applied to the root element when animation is not skipped. */
+  animate: string;
 }
 
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
@@ -24,6 +27,7 @@ interface PieArcLabelOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  skipAnimation: boolean;
   classes?: Partial<PieArcLabelClasses>;
 }
 
@@ -35,12 +39,19 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'animate',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+      !skipAnimation && 'animate',
+    ],
   };
 
   return composeClasses(slots, getPieArcLabelUtilityClass, classes);
@@ -55,6 +66,18 @@ const PieArcLabelRoot = styled('text', {
   textAnchor: 'middle',
   dominantBaseline: 'middle',
   pointerEvents: 'none',
+
+  animationName: 'animateOpacity',
+  animationDuration: '0s',
+  animationTimingFunction: ANIMATION_TIMING_FUNCTION,
+
+  [`&.${pieArcLabelClasses.animate}`]: {
+    animationDuration: `${ANIMATION_DURATION_MS}ms`,
+  },
+
+  '@keyframes animateOpacity': {
+    from: { opacity: 0 },
+  },
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
@@ -97,6 +120,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       color,
       isFaded,
       isHighlighted,
+      skipAnimation,
     };
     const classes = useUtilityClasses(ownerState);
 
