@@ -205,10 +205,7 @@ function QuickFilter(props: QuickFilterProps) {
     'div',
     render,
     {
-      role: 'toolbar',
       className: resolvedClassName,
-      'aria-orientation': 'horizontal',
-      'aria-controls': controlId,
       ...other,
       ref,
     },

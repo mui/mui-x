@@ -50,6 +50,7 @@ export function useFieldRootHandleKeyDown<TValue extends PickerValidValue>(
     if (disabled) {
       return;
     }
+
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
