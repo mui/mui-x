@@ -60,7 +60,7 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree data', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -173,7 +173,7 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       act(() => apiRef.current?.setRowChildrenExpansion('A', true));
-      clock.runToLast();
+
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
       act(() => apiRef.current?.updateRows([{ name: 'B' }]));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);

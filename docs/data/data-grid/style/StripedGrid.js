@@ -35,6 +35,9 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
         },
       },
     },
+    ...theme.applyStyles('dark', {
+      backgroundColor: theme.palette.grey[800],
+    }),
   },
 }));
 

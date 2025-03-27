@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
+import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -23,7 +23,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns visibility', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -121,8 +121,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     });
   });
 
-  it('should not hide column when resizing a column after hiding it and showing it again', () => {
-    render(
+  it('should not hide column when resizing a column after hiding it and showing it again', async () => {
+    const { user } = render(
       <TestDataGridPro
         initialState={{
           columns: { columnVisibilityModel: {} },
@@ -132,15 +132,28 @@ describe('<DataGridPro /> - Columns visibility', () => {
     );
 
     const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
-    fireEvent.click(showHideAllCheckbox);
+    await user.click(showHideAllCheckbox);
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
+    await user.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
     const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target: separator,
+        coords: { clientX: 100 },
+      },
+      {
+        target: separator,
+        coords: { clientX: 110 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: separator,
+        coords: { clientX: 110 },
+      },
+    ]);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
   });

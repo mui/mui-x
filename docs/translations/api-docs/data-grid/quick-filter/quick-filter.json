@@ -1,7 +1,10 @@
 {
-  "componentDescription": "The top level Quick Filter component that provides context to child components.\nIt does not render any DOM elements.",
+  "componentDescription": "The top level Quick Filter component that provides context to child components.\nIt renders a `<div />` element.",
   "propDescriptions": {
+    "className": { "description": "Override or extend the styles applied to the component." },
     "debounceMs": { "description": "The debounce time in milliseconds." },
+    "defaultExpanded": { "description": "The default expanded state of the quick filter control." },
+    "expanded": { "description": "The expanded state of the quick filter control." },
     "formatter": {
       "description": "Function responsible for formatting values of quick filter in a string when the model is modified",
       "typeDescriptions": {
@@ -9,13 +12,18 @@
         "string": "The string to display in the text field"
       }
     },
+    "onExpandedChange": {
+      "description": "Callback function that is called when the quick filter input is expanded or collapsed.",
+      "typeDescriptions": { "expanded": "The new expanded state of the quick filter control" }
+    },
     "parser": {
       "description": "Function responsible for parsing text input in an array of independent values for quick filtering.",
       "typeDescriptions": {
         "input": "The value entered by the user",
         "Array<any>": "The array of value on which quick filter is applied"
       }
-    }
+    },
+    "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {}
 }

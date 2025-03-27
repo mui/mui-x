@@ -35,7 +35,6 @@ describeTreeView<[UseTreeViewLazyLoadingSignature]>(
     describe('interaction', () => {
       it('should load children when expanding an item', async () => {
         const view = render({
-          experimentalFeatures: { lazyLoading: true },
           items: [{ id: '1', label: 'Item 1', childrenCount: 1 }],
           dataSource: {
             getChildrenCount: (item) => item?.childrenCount as number,
@@ -61,7 +60,6 @@ describeTreeView<[UseTreeViewLazyLoadingSignature]>(
 
       it('should not load children if item has no children', async () => {
         const view = render({
-          experimentalFeatures: { lazyLoading: true },
           items: [{ id: '1', label: 'Item 1', childrenCount: 0 }],
           dataSource: {
             getChildrenCount: (item) => item?.childrenCount as number,
@@ -95,7 +93,6 @@ describeTreeView<[UseTreeViewLazyLoadingSignature]>(
         };
 
         const view = render({
-          experimentalFeatures: { lazyLoading: true },
           items: [{ id: '1', label: 'Item 1', childrenCount: 1 }],
           dataSource: {
             getChildrenCount: (item) => item?.childrenCount as number,

@@ -3,9 +3,7 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
-  useDefaultDates,
   useUtils,
-  applyDefaultDate,
   BasePickerInputProps,
   PickerViewRendererLookup,
   BaseClockProps,
@@ -16,6 +14,7 @@ import {
   UseViewsOptions,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
+  useApplyDefaultValuesToDateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
@@ -129,13 +128,14 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
   name: string,
 ): UseDateTimeRangePickerDefaultizedProps<Props> {
   const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
+  const validationProps = useApplyDefaultValuesToDateTimeValidationProps(themeProps);
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+
   const { openTo, views: defaultViews } = applyDefaultViewProps<DateTimeRangePickerViewExternal>({
     views: themeProps.views,
     openTo: themeProps.openTo,
@@ -156,35 +156,13 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
 
   return {
     ...themeProps,
+    ...validationProps,
     timeSteps,
     openTo,
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
     ampm,
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(
-      utils,
-      themeProps.minDateTime ?? themeProps.minDate,
-      defaultDates.minDate,
-    ),
-    maxDate: applyDefaultDate(
-      utils,
-      themeProps.maxDateTime ?? themeProps.maxDate,
-      defaultDates.maxDate,
-    ),
-    minTime: themeProps.minDateTime ?? themeProps.minTime,
-    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
-    disableIgnoringDatePartForTimeValidation:
-      themeProps.disableIgnoringDatePartForTimeValidation ??
-      Boolean(
-        themeProps.minDateTime ||
-          themeProps.maxDateTime ||
-          // allow digital clocks to correctly check time validity: https://github.com/mui/mui-x/issues/12048
-          themeProps.disablePast ||
-          themeProps.disableFuture,
-      ),
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,

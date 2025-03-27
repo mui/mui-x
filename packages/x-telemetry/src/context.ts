@@ -6,6 +6,11 @@ export interface TelemetryContextType {
     isInitialized: boolean;
   };
   traits: Record<string, any> & {
+    fingerprint?: {
+      fullHash?: string | null;
+      coreHash?: string | null;
+      components?: Record<string, any> | null;
+    } | null;
     machineId?: string | null;
     projectId?: string | null;
     sessionId?: string | null;

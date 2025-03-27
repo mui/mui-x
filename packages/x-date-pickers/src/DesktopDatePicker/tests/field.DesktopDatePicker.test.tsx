@@ -1,4 +1,3 @@
-import { fireEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
@@ -13,17 +12,15 @@ import {
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });
 
-    it('should be able to reset a single section', () => {
+    it('should be able to reset a single section', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps(
         {
@@ -36,13 +33,13 @@ describe('<DesktopDatePicker /> - Field', () => {
       view.selectSection('month');
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM DD');
 
-      view.pressKey(0, 'N');
+      await view.user.keyboard('N');
       expectFieldValueV7(view.getSectionsContainer(), 'November DD');
 
-      view.pressKey(1, '4');
+      await view.user.keyboard('4');
       expectFieldValueV7(view.getSectionsContainer(), 'November 04');
 
-      view.pressKey(1, '');
+      await view.user.keyboard('[Backspace]');
       expectFieldValueV7(view.getSectionsContainer(), 'November DD');
 
       view.unmount();
@@ -60,13 +57,13 @@ describe('<DesktopDatePicker /> - Field', () => {
       view.selectSection('month');
       expectFieldPlaceholderV6(input, 'MMMM DD');
 
-      fireEvent.change(input, { target: { value: 'N DD' } }); // Press "N"
+      await view.user.keyboard('N');
       expectFieldValueV6(input, 'November DD');
 
-      fireEvent.change(input, { target: { value: 'November 4' } }); // Press "4"
+      await view.user.keyboard('4');
       expectFieldValueV6(input, 'November 04');
 
-      fireEvent.change(input, { target: { value: 'November ' } });
+      await view.user.keyboard('[Backspace]');
       expectFieldValueV6(input, 'November DD');
     });
 
@@ -101,12 +98,10 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describe('slots: field', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });
@@ -128,12 +123,10 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describe('slots: textField', () => {
-    const { render, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render } = createPickerRenderer({
       clockConfig: new Date('2018-01-01T10:05:05.000'),
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DesktopDatePicker,
     });

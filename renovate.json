@@ -90,7 +90,6 @@
         "@mui/lab",
         "@mui/material",
         "@mui/material-nextjs",
-        "@mui/styles",
         "@mui/system",
         "@mui/types",
         "@mui/utils"
@@ -130,6 +129,16 @@
     {
       "groupName": "Tanstack query",
       "matchPackageNames": ["@tanstack/*query*"]
+    },
+    {
+      "groupName": "fingerprintjs",
+      "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
+      "allowedVersions": "< 4.0.0"
+    },
+    {
+      "groupName": "conf",
+      "matchPackageNames": ["conf"],
+      "allowedVersions": "< 12.0.0"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

@@ -24,6 +24,7 @@ const COMPONENT_API_PAGES = [
   'src/components/quickFilter/QuickFilter.tsx',
   'src/components/quickFilter/QuickFilterControl.tsx',
   'src/components/quickFilter/QuickFilterClear.tsx',
+  'src/components/quickFilter/QuickFilterTrigger.tsx',
   'src/components/filterPanel/FilterPanelTrigger.tsx',
   'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
 ];

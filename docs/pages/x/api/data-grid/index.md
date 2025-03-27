@@ -18,6 +18,7 @@
 - [QuickFilter](/x/api/data-grid/quick-filter/)
 - [QuickFilterControl](/x/api/data-grid/quick-filter-control/)
 - [QuickFilterClear](/x/api/data-grid/quick-filter-clear/)
+- [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger/)
 - [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
 - [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
 

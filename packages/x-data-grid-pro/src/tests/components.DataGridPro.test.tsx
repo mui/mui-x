@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
@@ -52,7 +52,7 @@ describe('<DataGridPro/> - Components', () => {
         ['onDragOver', 'cellDragOver'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, async () => {
         const propHandler = spy();
         const eventHandler = spy();
         render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
@@ -72,7 +72,9 @@ describe('<DataGridPro/> - Components', () => {
 
         fireEvent[eventToFire](cell);
 
-        expect(propHandler.callCount).to.equal(1);
+        await waitFor(() => {
+          expect(propHandler.callCount).to.equal(1);
+        });
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
         expect(eventHandler.callCount).to.equal(1);
       });

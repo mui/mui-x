@@ -31,19 +31,25 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
  */
 const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
   function QuickFilterClear(props, ref) {
-    const { render, className, ...other } = props;
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const { state, clearValue } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      clearValue();
+      onClick?.(event);
+    };
 
     const element = useGridComponentRenderer(
       rootProps.slots.baseIconButton,
       render,
       {
         ...rootProps.slotProps?.baseIconButton,
-        onClick: clearValue,
         className: resolvedClassName,
+        tabIndex: -1,
         ...other,
+        onClick: handleClick,
         ref,
       },
       state,

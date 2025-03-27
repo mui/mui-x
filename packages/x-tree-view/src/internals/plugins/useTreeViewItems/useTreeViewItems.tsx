@@ -350,20 +350,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   ]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
-  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
+  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
     if (params.onItemClick) {
       params.onItemClick(event, itemId);
     }
   });
-
-  const pluginContextValue = React.useMemo(
-    () => ({
-      items: {
-        onItemClick: handleItemClick,
-      },
-    }),
-    [handleItemClick],
-  );
 
   return {
     getRootProps: () => ({
@@ -390,8 +381,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       setTreeViewLoading,
       setTreeViewError,
       removeChildren,
+      handleItemClick,
     },
-    contextValue: pluginContextValue,
   };
 };
 

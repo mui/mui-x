@@ -1787,6 +1787,24 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGrid-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGrid-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGrid-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
+      "isGlobal": false
+    },
+    {
       "key": "treeDataGroupingCell",
       "className": "MuiDataGrid-treeDataGroupingCell",
       "description": "Styles applied to the root of the grouping column of the tree data.",

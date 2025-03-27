@@ -1,8 +1,8 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useLineSeries, useLineSeriesContext } from './useLineSeries';
-import { LineSeriesType } from '../models';
+import { DefaultizedLineSeriesType, LineSeriesType } from '../models';
 import { LineChart } from '../LineChart';
 
 const mockSeries: LineSeriesType[] = [
@@ -61,9 +61,12 @@ describe('useLineSeries', () => {
       `Make sure that they exist and their series are using the "line" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useLineSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedLineSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useLineSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useLineSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });

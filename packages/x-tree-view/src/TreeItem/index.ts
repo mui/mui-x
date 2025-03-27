@@ -9,4 +9,5 @@ export {
 } from './TreeItem';
 export type { TreeItemProps, TreeItemSlots, TreeItemSlotProps } from './TreeItem.types';
 
-export * from './treeItemClasses';
+export { getTreeItemUtilityClass, treeItemClasses } from './treeItemClasses';
+export type { TreeItemClassKey, TreeItemClasses } from './treeItemClasses';

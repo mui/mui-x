@@ -154,22 +154,13 @@ export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
 };
 
 /**
- * Remove the leading zeroes to a digit section value.
+ * Make sure the value of a digit section have the right amount of leading zeros.
  * E.g.: `03` => `3`
  * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
  */
 export const cleanLeadingZeros = (valueStr: string, size: number) => {
-  let cleanValueStr = valueStr;
-
-  // Remove the leading zeros
-  cleanValueStr = Number(cleanValueStr).toString();
-
-  // Add enough leading zeros to fill the section
-  while (cleanValueStr.length < size) {
-    cleanValueStr = `0${cleanValueStr}`;
-  }
-
-  return cleanValueStr;
+  // Remove the leading zeros and then add back as many as needed.
+  return Number(valueStr).toString().padStart(size, '0');
 };
 
 export const cleanDigitSectionValue = (
@@ -289,13 +280,11 @@ export const doesSectionFormatHaveLeadingZeros = (
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
-      if (isFourDigitYearFormat(utils, format)) {
-        const formatted0001 = utils.formatByString(utils.setYear(now, 1), format);
-        return formatted0001 === '0001';
+      // Remove once https://github.com/iamkun/dayjs/pull/2847 is merged and bump dayjs version
+      if (utils.lib === 'dayjs' && format === 'YY') {
+        return true;
       }
-
-      const formatted2001 = utils.formatByString(utils.setYear(now, 2001), format);
-      return formatted2001 === '01';
+      return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
     }
 
     case 'month': {
@@ -696,75 +685,4 @@ export const parseSelectedSections = (
   }
 
   return selectedSections;
-};
-
-export const getSectionValueText = (
-  section: FieldSection,
-  utils: MuiPickersAdapter,
-): string | undefined => {
-  if (!section.value) {
-    return undefined;
-  }
-  switch (section.type) {
-    case 'month': {
-      if (section.contentType === 'digit') {
-        return utils.format(utils.setMonth(utils.date(), Number(section.value) - 1), 'month');
-      }
-      const parsedDate = utils.parse(section.value, section.format);
-      return parsedDate ? utils.format(parsedDate, 'month') : undefined;
-    }
-    case 'day':
-      return section.contentType === 'digit'
-        ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
-            'dayOfMonthFull',
-          )
-        : section.value;
-    case 'weekDay':
-      // TODO: improve by providing the label of the week day
-      return undefined;
-    default:
-      return undefined;
-  }
-};
-
-export const getSectionValueNow = (
-  section: FieldSection,
-  utils: MuiPickersAdapter,
-): number | undefined => {
-  if (!section.value) {
-    return undefined;
-  }
-  switch (section.type) {
-    case 'weekDay': {
-      if (section.contentType === 'letter') {
-        // TODO: improve by resolving the week day number from a letter week day
-        return undefined;
-      }
-      return Number(section.value);
-    }
-    case 'meridiem': {
-      const parsedDate = utils.parse(
-        `01:00 ${section.value}`,
-        `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
-      );
-      if (parsedDate) {
-        return utils.getHours(parsedDate) >= 12 ? 1 : 0;
-      }
-      return undefined;
-    }
-    case 'day':
-      return section.contentType === 'digit-with-letter'
-        ? parseInt(section.value, 10)
-        : Number(section.value);
-    case 'month': {
-      if (section.contentType === 'digit') {
-        return Number(section.value);
-      }
-      const parsedDate = utils.parse(section.value, section.format);
-      return parsedDate ? utils.getMonth(parsedDate) + 1 : undefined;
-    }
-    default:
-      return section.contentType !== 'letter' ? Number(section.value) : undefined;
-  }
 };

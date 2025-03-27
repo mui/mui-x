@@ -5,6 +5,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.1
+
+_Mar 21, 2025_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@jyash97.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0-beta.1`
+
+- [DataGrid] Fix error caused by `forwardRef` to `ClickAwayListener` (#17049) @arminmeh
+- [DataGrid] Fix error while editing rows with custom id (#17048) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.1`, plus:
+
+- [DataGridPro] Fix header select checkbox state with `checkboxSelectionVisibleOnly` and `paginationMode="server"` (#17026) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.1`, plus:
+
+- [DataGridPremium] Update column state correctly when grouping mode is updated with one grouping column (#17069) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.1`
+
+- [fields] Clean the `useField` hook (part 1) (#16944) @flaviendelangle
+- [fields] Improve the check for year in `doesSectionFormatHaveLeadingZeros` (#17051) @flaviendelangle
+- [pickers] Deprecate the `disableOpenPicker` prop (#17040) @flaviendelangle
+- [pickers] Simplify the `cleanLeadingZeros` method (#17063) @flaviendelangle
+- [pickers] Use the new `ownerState` in `PickersDay` and `DateRangePickerDay` (#17035) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.1`, plus:
+
+- [DateRangePicker] Use desktop media query constant on range pickers (#17052) @flaviendelangle
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-beta.1`
+
+- [charts] Fix horizontal bar with multiple axes (#17059) @alexfauquette
+
+#### `@mui/x-charts-pro@8.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.1`, plus:
+
+- [charts-pro] Allow disabling Heatmap tooltip (#17060) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.1`.
+
+### Docs
+
+- [docs] Fix 404 (#17033) @alexfauquette
+- [docs] Fix Data Grid advanced list view demo (#17064) @KenanYusuf
+
 ## 8.0.0-beta.0
 
 <img width="100%" alt="MUI X v8 Beta is live" src="https://github.com/user-attachments/assets/61ec4dd8-c946-456b-8b45-d51de8772f5d">

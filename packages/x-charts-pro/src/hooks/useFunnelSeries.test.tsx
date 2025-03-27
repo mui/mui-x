@@ -1,8 +1,12 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
-import { Unstable_FunnelChart as FunnelChart, FunnelSeriesType } from '../FunnelChart';
+import {
+  DefaultizedFunnelSeriesType,
+  Unstable_FunnelChart as FunnelChart,
+  FunnelSeriesType,
+} from '../FunnelChart';
 
 const mockSeries: FunnelSeriesType[] = [
   {
@@ -60,9 +64,12 @@ describe('useFunnelSeries', () => {
       `Make sure that they exist and their series are using the "funnel" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useFunnelSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedFunnelSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useFunnelSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useFunnelSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });

@@ -11,7 +11,13 @@ import {
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { AxisId } from '../models/axis';
+import {
+  AxisId,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  PolarAxisDefaultized,
+  ScaleName,
+} from '../models/axis';
 
 /**
  * Get all the x-axes.
@@ -92,7 +98,9 @@ export function useRadiusAxes() {
   return { radiusAxis, radiusAxisIds };
 }
 
-export function useRotationAxis(identifier?: number | string) {
+export function useRotationAxis(
+  identifier?: number | string,
+): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
     store,
@@ -104,7 +112,9 @@ export function useRotationAxis(identifier?: number | string) {
   return rotationAxis[id];
 }
 
-export function useRadiusAxis(identifier?: number | string) {
+export function useRadiusAxis(
+  identifier?: number | string,
+): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
 

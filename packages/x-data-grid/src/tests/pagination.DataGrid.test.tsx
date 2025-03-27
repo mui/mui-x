@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { spy, stub, SinonStub, SinonSpy } from 'sinon';
+import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import {
   createRenderer,
@@ -463,11 +463,6 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
-      // Using a fake clock also affects `requestAnimationFrame`
-      // Calling clock.tick() should call the callback passed, but it doesn't work
-      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
-      stub(window, 'cancelAnimationFrame');
-
       const onPaginationModelChange = spy();
 
       const nbRows = 27;
@@ -512,9 +507,6 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(
         expectedViewportRowsLengthAfter,
       );
-
-      (window.requestAnimationFrame as SinonStub).restore();
-      (window.cancelAnimationFrame as SinonStub).restore();
     });
   });
 

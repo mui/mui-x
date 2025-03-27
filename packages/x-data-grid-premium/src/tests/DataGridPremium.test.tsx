@@ -12,7 +12,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Quick filter', () => {
+describe('<DataGridPremium />', () => {
   const { render } = createRenderer();
 
   const baselineProps = {

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SvgIconProps } from '@mui/material/SvgIcon';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRowMaximumTreeDepthSelector } from '../../hooks/features/rows/gridRowsSelector';
@@ -25,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridBooleanCellProps extends GridRenderCellParams, Omit<SvgIconProps, 'tabIndex' | 'id'> {
+interface GridBooleanCellProps extends GridRenderCellParams {
   hideDescendantCount?: boolean;
 }
 

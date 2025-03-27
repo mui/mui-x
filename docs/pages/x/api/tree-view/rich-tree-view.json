@@ -156,10 +156,47 @@
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
-      "class": null
+      "class": "MuiRichTreeView-item"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeView-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiRichTreeView-itemContent",
+      "description": "Styles applied to the item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemGroupTransition",
+      "className": "MuiRichTreeView-itemGroupTransition",
+      "description": "Styles applied to the item's transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemIconContainer",
+      "className": "MuiRichTreeView-itemIconContainer",
+      "description": "Styles applied to the item's icon container element icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabel",
+      "className": "MuiRichTreeView-itemLabel",
+      "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabelInput",
+      "className": "MuiRichTreeView-itemLabelInput",
+      "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeView",

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -17,7 +18,6 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { isDeepEqual } from '../../../utils/utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {

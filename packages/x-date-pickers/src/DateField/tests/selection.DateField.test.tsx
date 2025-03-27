@@ -14,7 +14,7 @@ import {
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateField });
+  const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('Focus', () => {
     it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {

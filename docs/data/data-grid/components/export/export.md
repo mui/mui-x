@@ -19,7 +19,8 @@ The demo below shows how to add export triggers to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { ExportPrint, ExportCsv, ExportExcel } from '@mui/x-data-grid';
+import { ExportPrint, ExportCsv } from '@mui/x-data-grid';
+import { ExportExcel } from '@mui/x-data-grid-premium';
 
 <ExportPrint />
 <ExportCsv />
@@ -36,7 +37,7 @@ It renders the `baseButton` slot.
 `<ExportCsv />` is a button that triggers a CSV export.
 It renders the `baseButton` slot.
 
-### Export Excel
+### Export Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 `<ExportExcel />` is a button that triggers an Excel export.
 It renders the `baseButton` slot.

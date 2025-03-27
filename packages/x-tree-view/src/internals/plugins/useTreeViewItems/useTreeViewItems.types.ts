@@ -13,6 +13,7 @@ export type AddItemsParameters<R> = {
   depth: number;
   getChildrenCount?: (item: R) => number;
 };
+
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
@@ -87,6 +88,12 @@ export interface UseTreeViewItemsInstance<R extends {}>
    * @param {Error | null} error The error on the tree view.
    */
   setTreeViewError: (error: Error | null) => void;
+  /**
+   * Event handler to fire when the `content` slot of a given Tree Item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item being clicked.
+   */
+  handleItemClick: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -184,12 +191,6 @@ export interface UseTreeViewItemsState<R extends {}> {
   };
 }
 
-interface UseTreeViewItemsContextValue {
-  items: {
-    onItemClick: (event: React.MouseEvent, itemId: string) => void;
-  };
-}
-
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
@@ -197,5 +198,4 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
-  contextValue: UseTreeViewItemsContextValue;
 }>;

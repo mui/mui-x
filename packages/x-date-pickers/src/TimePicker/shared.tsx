@@ -17,6 +17,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { ValidateTimePropsToDefault } from '../validation/validateTime';
+import { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
 
 export interface BaseTimePickerSlots extends TimeClockSlots {
   /**
@@ -79,6 +80,7 @@ export function useTimePickerDefaultizedProps<
     name,
   });
 
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(themeProps);
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
@@ -94,6 +96,7 @@ export function useTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
+    ...validationProps,
     ampm,
     localeText,
     ...applyDefaultViewProps({
@@ -102,8 +105,6 @@ export function useTimePickerDefaultizedProps<
       defaultViews: ['hours', 'minutes'] as TView[],
       defaultOpenTo: 'hours' as TView,
     }),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
       ...themeProps.slots,

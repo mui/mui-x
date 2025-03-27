@@ -8,7 +8,6 @@ import {
   PickerManagerFieldInternalPropsWithDefaults,
   PickerManagerValue,
 } from '../../models';
-import { useLocalizationContext } from '../useUtils';
 import { useNullablePickerContext } from '../useNullablePickerContext';
 import { useNullableFieldPrivateContext } from '../useNullableFieldPrivateContext';
 
@@ -20,8 +19,13 @@ import { useNullableFieldPrivateContext } from '../useNullableFieldPrivateContex
 export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyManager>(
   parameters: UseFieldInternalPropsWithDefaultsParameters<TManager>,
 ): PickerManagerFieldInternalPropsWithDefaults<TManager> {
-  const { manager, internalProps, skipContextFieldRefAssignment } = parameters;
-  const localizationContext = useLocalizationContext();
+  const {
+    manager: {
+      internal_useApplyDefaultValuesToFieldInternalProps: useApplyDefaultValuesToFieldInternalProps,
+    },
+    internalProps,
+    skipContextFieldRefAssignment,
+  } = parameters;
   const pickerContext = useNullablePickerContext();
   const fieldPrivateContext = useNullableFieldPrivateContext();
 
@@ -44,12 +48,11 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
     [setValue],
   );
 
-  return React.useMemo(() => {
-    let internalPropsWithDefaultsFromContext = internalProps;
+  const internalPropsWithDefaultsFromContext = React.useMemo(() => {
     // If one of the context is null,
     // Then the field is used as a standalone component and the other context will be null as well.
     if (fieldPrivateContext != null && pickerContext != null) {
-      internalPropsWithDefaultsFromContext = {
+      return {
         value: pickerContext.value,
         onChange: handleChangeFromPicker,
         timezone: pickerContext.timezone,
@@ -67,19 +70,10 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
       };
     }
 
-    return manager.internal_applyDefaultsToFieldInternalProps({
-      ...localizationContext,
-      internalProps: internalPropsWithDefaultsFromContext,
-    });
-  }, [
-    manager,
-    localizationContext,
-    pickerContext,
-    fieldPrivateContext,
-    internalProps,
-    handleChangeFromPicker,
-    handleFieldRef,
-  ]);
+    return internalProps;
+  }, [pickerContext, fieldPrivateContext, internalProps, handleChangeFromPicker, handleFieldRef]);
+
+  return useApplyDefaultValuesToFieldInternalProps(internalPropsWithDefaultsFromContext);
 }
 
 interface UseFieldInternalPropsWithDefaultsParameters<TManager extends PickerAnyManager> {

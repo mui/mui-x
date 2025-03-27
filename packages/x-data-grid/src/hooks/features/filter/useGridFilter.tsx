@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -34,7 +35,6 @@ import {
   shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { isDeepEqual } from '../../../utils/utils';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 
 export const filterStateInitializer: GridStateInitializer<

@@ -13,9 +13,8 @@ import {
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { YearCalendarButton } from './YearCalendarButton';
-import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass, YearCalendarClasses } from './yearCalendarClasses';
-import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
@@ -23,6 +22,7 @@ import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 
 const useUtilityClasses = (classes: Partial<YearCalendarClasses> | undefined) => {
   const slots = {
@@ -39,21 +39,14 @@ function useYearCalendarDefaultizedProps(
   YearCalendarProps,
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow' | 'yearsOrder'
 > {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
+  const themeProps = useThemeProps({ props, name });
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
-    disablePast: false,
-    disableFuture: false,
     ...themeProps,
+    ...validationProps,
     yearsPerRow: themeProps.yearsPerRow ?? 3,
     yearsOrder: themeProps.yearsOrder ?? 'asc',
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

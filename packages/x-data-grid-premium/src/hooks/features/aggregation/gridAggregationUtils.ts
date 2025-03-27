@@ -12,10 +12,10 @@ import {
   addPinnedRow,
   GridColumnRawLookup,
   GridHydrateRowsValue,
-  isDeepEqual,
   insertNodeInTree,
   removeNodeFromTree,
 } from '@mui/x-data-grid-pro/internals';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   GridAggregationFunction,
   GridAggregationFunctionDataSource,

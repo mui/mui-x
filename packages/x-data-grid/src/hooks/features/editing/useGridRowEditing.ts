@@ -535,7 +535,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(row.id);
+      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {

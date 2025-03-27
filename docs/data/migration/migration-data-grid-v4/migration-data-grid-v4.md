@@ -25,7 +25,7 @@ The alternative is to install Material UI v5 and configure it to keep Material�
 Using Material UI v4 with v5 can be achieved with the following steps:
 
 1. First, make sure you have Material UI v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
-1. Add a custom [`createGenerateClassName`](/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+1. Add a custom [`createGenerateClassName`](https://v6.mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';

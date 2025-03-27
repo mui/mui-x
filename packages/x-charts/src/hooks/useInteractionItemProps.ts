@@ -6,7 +6,10 @@ import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 const onPointerDown = (event: React.PointerEvent) => {
-  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+  if (
+    'hasPointerCapture' in event.currentTarget &&
+    event.currentTarget.hasPointerCapture(event.pointerId)
+  ) {
     event.currentTarget.releasePointerCapture(event.pointerId);
   }
 };

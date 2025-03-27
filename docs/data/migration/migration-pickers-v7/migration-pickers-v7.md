@@ -456,6 +456,40 @@ Here are two concrete examples:
 1. The user cleans the year, the rendered value is `01/01/YYYY`, `onChange` is fired with `null`.
 2. The user enters a new year, the rendered value is `01/01/2026`, `onChange` is fired with the new date.
 
+### ⏩ Deprecate the `disableOpenPicker` prop
+
+The `disableOpenPicker` prop has been deprecated on all Picker components and will be removed in the next major release (v9.0.0).
+If you only want to allow editing through the field, you can use the [field component](/x/react-date-pickers/fields/) directly:
+
+```diff
+-<DatePicker disableOpenPicker />
++<DateField />
+
+-<TimePicker disableOpenPicker />
++<TimeField />
+
+-<DateTimePicker disableOpenPicker />
++<DateTimeField />
+```
+
+```diff
+-<DateRangePicker disableOpenPicker>
++<SingleInputDateRangeField> // If you want a single input for both dates.
++<MultiInputDateRangeField> // If you want one input for each date.
+
+-<TimeRangePicker disableOpenPicker>
++<SingleInputTimeRangeField> // If you want a single input for both dates.
++<MultiInputTimeRangeField> // If you want one input for each date.
+
+-<DateTimeRangePicker disableOpenPicker>
++<SingleInputDateTimeRangeField> // If you want a single input for both dates.
++<MultiInputDateTimeRangeField> // If you want one input for each date.
+```
+
+:::success
+Using the field instead of the picker significantly decreases your bundle size since all the view components won't be bundled anymore.
+:::
+
 ### ⏩ Update default `closeOnSelect` and Action Bar `actions` values
 
 The default value of the `closeOnSelect` prop has been updated to `false` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`, which still have `closeOnSelect` set to `true`.

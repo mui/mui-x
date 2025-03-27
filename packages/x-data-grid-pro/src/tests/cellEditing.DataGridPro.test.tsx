@@ -537,7 +537,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
-      it('should stay in edit mode if processRowUpdate throws an error', async () => {
+      it('should stay in edit mode if processRowUpdate throws an error', () => {
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
         };

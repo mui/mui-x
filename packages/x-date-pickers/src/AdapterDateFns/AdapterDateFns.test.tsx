@@ -103,15 +103,13 @@ describe('<AdapterDateFns />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { fr, de }[localeKey];
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'date-fns',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
