@@ -8,6 +8,7 @@ import { useUtils } from '../useUtils';
 import { usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import { FieldRangeSection } from '../../models';
 
 /**
  * Generate the props to pass to the content element of each section of the field.
@@ -183,6 +184,7 @@ export function useFieldSectionContentProps(
         contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
         id: `${id}-${section.type}`,
+        'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
         autoCapitalize: isEditable ? 'off' : undefined,
         autoCorrect: isEditable ? 'off' : undefined,
