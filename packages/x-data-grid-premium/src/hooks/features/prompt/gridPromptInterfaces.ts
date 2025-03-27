@@ -33,17 +33,22 @@ export type PromptResponse = {
  */
 export interface GridPromptApi {
   /**
-   * Get the context for the prompt.
-   * @param {boolean} allowDataSampling Whether to use grid data as examples in the context.
-   * If true, random cell values from each column are used to make the context more detailed and the response more accurate.
-   * If false, the samples are only generated from the unstable_examples property of the column(s).
-   * Default is false.
-   * @returns {string} The context for the prompt.
+   * The AI assistant API.
    */
-  unstable_getPromptContext: (allowDataSampling?: boolean) => string;
-  /**
-   * Use the prompt processing result to update all relevant parts of the grid state.
-   * @param {PromptResponse} result The result of the prompt.
-   */
-  unstable_applyPromptResult: (result: PromptResponse) => void;
+  unstable_aiAssistant: {
+    /**
+     * Get the context for the prompt.
+     * @param {boolean} allowDataSampling Whether to use grid data as examples in the context.
+     * If true, random cell values from each column are used to make the context more detailed and the response more accurate.
+     * If false, the samples are only generated from the unstable_examples property of the column(s).
+     * Default is false.
+     * @returns {string} The context for the prompt.
+     */
+    getPromptContext: (allowDataSampling?: boolean) => string;
+    /**
+     * Use the prompt processing result to update all relevant parts of the grid state.
+     * @param {PromptResponse} result The result of the prompt.
+     */
+    applyPromptResult: (result: PromptResponse) => void;
+  };
 }

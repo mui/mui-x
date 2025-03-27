@@ -165,7 +165,7 @@ const pages: MuiPage[] = [
               },
             ],
           },
-          { pathname: '/x/react-data-grid/prompt', plan: 'premium', unstable: true },
+          { pathname: '/x/react-data-grid/ask-your-table', plan: 'premium', unstable: true },
         ],
       },
       {

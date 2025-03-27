@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridDataSource,
-  GridGetRowsResponse,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { AssistantPanelProps } from './AssistantPanel';
+
 import { Toolbar } from './Toolbar';
 
 const VISIBLE_FIELDS = [
@@ -30,15 +28,9 @@ const aggregationFunctions = {
   size: {},
 };
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    assistantPanelProps: Partial<AssistantPanelProps>;
-  }
-}
-
-export default function PromptWithDataSource() {
+export default function AssistantWithDataSource() {
   const apiRef = useGridApiRef();
-  const { columns, initialState, fetchRows } = useMockServer<GridGetRowsResponse>(
+  const { columns, initialState, fetchRows } = useMockServer(
     {
       dataSet: 'Employee',
       visibleFields: VISIBLE_FIELDS,
@@ -49,7 +41,7 @@ export default function PromptWithDataSource() {
     { useCursorPagination: false },
   );
 
-  const dataSource: GridDataSource = React.useMemo(
+  const dataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
