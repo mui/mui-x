@@ -1,10 +1,10 @@
 import * as React from 'react';
 import 'dayjs/locale/de';
-import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 
 const germanLocale = deDE.components.MuiLocalizationProvider.defaultProps.localeText;
 export default function FieldPlaceholder() {
