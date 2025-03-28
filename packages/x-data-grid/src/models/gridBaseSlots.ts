@@ -134,6 +134,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
 };
 
 export type DividerProps = {
+  className?: string;
   orientation?: 'horizontal' | 'vertical';
 };
 

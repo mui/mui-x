@@ -32,6 +32,12 @@ import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
+import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+
+const STEPS: PickerRangeStep[] = [
+  { views: null, rangePosition: 'start' },
+  { views: null, rangePosition: 'end' },
+];
 
 const rendererInterceptor = function rendererInterceptor(
   props: PickerRendererInterceptorProps<PickerRangeValue, TimeViewWithMeridiem, any>,
@@ -137,6 +143,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     valueType: 'time',
     validator: validateTimeRange,
     rendererInterceptor,
+    steps: STEPS,
   });
 
   return renderPicker();

@@ -35,6 +35,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Wyczyść',
   okButtonLabel: 'Zatwierdź',
   todayButtonLabel: 'Dzisiaj',
+  nextStepButtonLabel: 'Następny',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Wybierz datę',

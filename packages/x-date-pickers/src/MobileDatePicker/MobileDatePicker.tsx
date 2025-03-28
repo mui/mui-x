@@ -81,6 +81,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     validator: validateDate,
+    steps: null,
   });
 
   return renderPicker();
