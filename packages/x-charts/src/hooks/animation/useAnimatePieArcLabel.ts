@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import useForkRef from '@mui/utils/useForkRef';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimate } from '../../internals/animation/useAnimate';
+import { useAnimateRef } from '../../internals/animation/useAnimate';
 import type { PieArcLabelProps } from '../../PieChart';
 
 type UseAnimatePieArcLabelParams = Pick<
@@ -63,7 +62,7 @@ export function useAnimatePieArcLabel(
     cornerRadius: props.cornerRadius,
   };
 
-  const ref = useAnimate(
+  return useAnimateRef(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
@@ -74,7 +73,7 @@ export function useAnimatePieArcLabel(
     },
     {
       createInterpolator: pieArcLabelPropsInterpolator,
-      applyProps(element, animatedProps) {
+      transformProps: (animatedProps) => {
         const [x, y] = d3Arc().cornerRadius(animatedProps.cornerRadius).centroid({
           padAngle: animatedProps.paddingAngle,
           startAngle: animatedProps.startAngle,
@@ -83,27 +82,15 @@ export function useAnimatePieArcLabel(
           outerRadius: animatedProps.outerRadius,
         });
 
+        return { x, y };
+      },
+      applyProps(element, { x, y }) {
         element.setAttribute('x', x.toString());
         element.setAttribute('y', y.toString());
       },
       initialProps,
       skip: props.skipAnimation,
+      ref: props.ref,
     },
   );
-
-  const usedProps = props.skipAnimation ? props : initialProps;
-
-  const [x, y] = d3Arc().cornerRadius(usedProps.cornerRadius).centroid({
-    padAngle: usedProps.paddingAngle,
-    startAngle: usedProps.startAngle,
-    endAngle: usedProps.endAngle,
-    innerRadius: usedProps.innerRadius,
-    outerRadius: usedProps.outerRadius,
-  });
-
-  return {
-    ref: useForkRef(ref, props.ref),
-    x,
-    y,
-  };
 }

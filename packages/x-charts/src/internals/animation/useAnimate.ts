@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useForkRef from '@mui/utils/useForkRef';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION_JS } from './animation';
 import { Transition } from './Transition';
 import { shallowEqual } from '../shallowEqual';
@@ -99,4 +100,45 @@ export function useAnimate<Props extends {}, Elem extends Element>(
   );
 
   return setRef;
+}
+
+interface UseAnimateRefParams<Props extends {}, Elem extends Element, T extends {} = Props> {
+  createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
+  transformProps: (props: Props) => T;
+  applyProps: (element: Elem, props: T) => void;
+  skip?: boolean;
+  initialProps?: Props;
+  ref?: React.Ref<Elem>;
+}
+
+type UseAnimateRefReturn<Elem extends Element, T extends {}> = Omit<T, 'ref'> & {
+  ref: React.Ref<Elem>;
+};
+
+export function useAnimateRef<Props extends {}, Elem extends Element, T extends {} = Props>(
+  props: Props,
+  {
+    createInterpolator,
+    transformProps,
+    applyProps,
+    skip,
+    initialProps = props,
+    ref,
+  }: UseAnimateRefParams<Props, Elem, T>,
+): UseAnimateRefReturn<Elem, T> {
+  const transform = transformProps ?? ((p) => p);
+
+  const animateRef = useAnimate<Props, Elem>(props, {
+    initialProps,
+    createInterpolator,
+    applyProps: (element, animatedProps) => applyProps(element, transform(animatedProps)),
+    skip,
+  });
+
+  const usedProps = skip ? props : initialProps;
+
+  return {
+    ...transformProps(usedProps),
+    ref: useForkRef(animateRef, ref),
+  };
 }
