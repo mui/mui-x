@@ -51,6 +51,9 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Printare',
   toolbarExportExcel: 'Download în format Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Caută',
   columnsManagementNoColumns: 'Nicio coloană',
@@ -224,6 +227,17 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minim',
   aggregationFunctionLabelMax: 'Maxim',
   aggregationFunctionLabelSize: 'Numărul elementelor',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const roRO: Localization = getGridLocalization(roROGrid);

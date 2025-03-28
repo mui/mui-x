@@ -57,6 +57,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Štampaj',
   toolbarExportExcel: 'Preuzmi kao Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Traži',
   columnsManagementNoColumns: 'Nema stupaca',
@@ -242,6 +245,17 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'veličina',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const hrHR = getGridLocalization(hrHRGrid);

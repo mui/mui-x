@@ -49,6 +49,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '打印',
   toolbarExportExcel: '导出至Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: '搜索',
   columnsManagementNoColumns: '没有列',
@@ -213,6 +216,17 @@ const zhCNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小',
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '大小',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid);

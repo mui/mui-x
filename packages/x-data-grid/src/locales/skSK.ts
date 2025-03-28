@@ -58,6 +58,9 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Vytlačiť',
   toolbarExportExcel: 'Stiahnuť ako Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Vyhľadať',
   columnsManagementNoColumns: 'Žiadne stĺpce',
@@ -246,6 +249,17 @@ const skSKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'počet',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid);

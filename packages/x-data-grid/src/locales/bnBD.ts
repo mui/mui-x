@@ -51,6 +51,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'প্রিন্ট করুন',
   toolbarExportExcel: 'Excel হিসাবে ডাউনলোড করুন',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'অনুসন্ধান',
   columnsManagementNoColumns: 'কোনো কলাম নেই',
@@ -224,6 +227,17 @@ const bnBDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'সর্বনিম্ন',
   aggregationFunctionLabelMax: 'সর্বোচ্চ',
   aggregationFunctionLabelSize: 'মাপ',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const bnBD: Localization = getGridLocalization(bnBDGrid);

@@ -73,6 +73,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Спампаваць у фармаце Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
@@ -252,6 +255,17 @@ const beBYGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мінімум',
   aggregationFunctionLabelMax: 'максімум',
   aggregationFunctionLabelSize: 'памер',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const beBY: Localization = getGridLocalization(beBYGrid);

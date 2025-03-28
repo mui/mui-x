@@ -50,6 +50,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'In',
   toolbarExportExcel: 'Xuất Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Tìm kiếm',
   columnsManagementNoColumns: 'Không có cột',
@@ -221,6 +224,17 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Tối thiểu',
   aggregationFunctionLabelMax: 'Tối đa',
   aggregationFunctionLabelSize: 'Kích cỡ',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid);

@@ -50,6 +50,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Skriv ut',
   toolbarExportExcel: 'Last ned som Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Søk',
   columnsManagementNoColumns: 'Ingen kolonner',
@@ -221,6 +224,17 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'størrelse',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

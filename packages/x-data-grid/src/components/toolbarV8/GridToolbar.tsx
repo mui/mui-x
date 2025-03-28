@@ -19,6 +19,7 @@ import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 interface GridToolbarInternalProps {
+  additionalItems?: React.ReactNode;
   additionalExportMenuItems?: (onMenuItemClick: () => void) => React.ReactNode;
 }
 
@@ -94,6 +95,7 @@ function GridToolbar(props: GridToolbarProps) {
     quickFilterProps,
     csvOptions,
     printOptions,
+    additionalItems,
     additionalExportMenuItems,
   } = props;
   const apiRef = useGridApiContext();
@@ -137,6 +139,8 @@ function GridToolbar(props: GridToolbarProps) {
           />
         </rootProps.slots.baseTooltip>
       )}
+
+      {additionalItems}
 
       {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
         <GridToolbarDivider />
@@ -209,6 +213,7 @@ GridToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   additionalExportMenuItems: PropTypes.func,
+  additionalItems: PropTypes.node,
   csvOptions: PropTypes.object,
   printOptions: PropTypes.object,
   /**

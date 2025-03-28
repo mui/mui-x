@@ -51,6 +51,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Drucken',
   toolbarExportExcel: 'Download als Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Suche',
   columnsManagementNoColumns: 'Keine Spalten',
@@ -219,6 +222,17 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minimum',
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Anzahl',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);

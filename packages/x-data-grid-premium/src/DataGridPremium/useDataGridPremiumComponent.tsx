@@ -95,6 +95,7 @@ import {
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
+import { useGridPrompt, aiAssistantStateInitializer } from '../hooks/features/prompt/useGridPrompt';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: RefObject<GridApiPremium | null> | undefined,
@@ -151,7 +152,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
-
+  useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
@@ -195,6 +196,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
+  useGridPrompt(apiRef, props);
 
   return apiRef;
 };
