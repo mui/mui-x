@@ -36,7 +36,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Törlés',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Ma',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Következő',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Dátum kiválasztása',

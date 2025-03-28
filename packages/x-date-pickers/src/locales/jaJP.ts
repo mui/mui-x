@@ -36,7 +36,7 @@ const jaJPPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'クリア',
   okButtonLabel: '確定',
   todayButtonLabel: '今日',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: '来',
 
   // Toolbar titles
   datePickerToolbarTitle: '日付を選択',

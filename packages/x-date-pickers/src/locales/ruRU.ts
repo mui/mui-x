@@ -36,7 +36,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Очистить',
   okButtonLabel: 'Ок',
   todayButtonLabel: 'Сегодня',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Следующий',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Выбрать дату',

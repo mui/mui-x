@@ -35,7 +35,7 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Limpar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoje',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Próximo',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecione a data',

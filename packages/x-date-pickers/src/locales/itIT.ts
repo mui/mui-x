@@ -35,7 +35,7 @@ const itITPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Sgomberare',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Oggi',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Successivo',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleziona data',

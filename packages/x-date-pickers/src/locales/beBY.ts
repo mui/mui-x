@@ -36,7 +36,7 @@ const beBYPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Ачысціць',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сёння',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Наступны',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Абраць дату',

@@ -36,7 +36,7 @@ const daDKPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Ryd',
   okButtonLabel: 'OK',
   todayButtonLabel: 'I dag',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Næste',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vælg dato',

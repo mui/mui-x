@@ -35,7 +35,7 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Очистити',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сьогодні',
-  // nextStepButtonLabel: 'Next',
+  nextStepButtonLabel: 'Наступний',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Вибрати дату',
