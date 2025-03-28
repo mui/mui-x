@@ -58,6 +58,9 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Vytisknout',
   toolbarExportExcel: 'Stáhnout jako Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Hledat sloupce',
   columnsManagementNoColumns: 'Žádné sloupce',
@@ -246,6 +249,17 @@ const csCZGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'počet',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid);

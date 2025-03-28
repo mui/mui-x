@@ -50,6 +50,9 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Prenta',
   toolbarExportExcel: 'Hlaða niður sem Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
@@ -221,6 +224,17 @@ const isISGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'stærð',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const isIS: Localization = getGridLocalization(isISGrid);

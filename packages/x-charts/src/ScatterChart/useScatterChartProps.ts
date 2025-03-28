@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -45,9 +46,13 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
+  const seriesWithDefault = React.useMemo(
+    () => series.map((s) => ({ type: 'scatter' as const, ...s })),
+    [series],
+  );
   const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
-    series: series.map((s) => ({ type: 'scatter' as const, ...s })),
+    series: seriesWithDefault,
     width,
     height,
     margin,

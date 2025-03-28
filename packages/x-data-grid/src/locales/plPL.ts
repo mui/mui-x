@@ -50,6 +50,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Drukuj',
   toolbarExportExcel: 'Pobierz jako plik Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Szukaj',
   columnsManagementNoColumns: 'Brak kolumn',
@@ -219,6 +222,17 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'minimum',
   aggregationFunctionLabelMax: 'maximum',
   aggregationFunctionLabelSize: 'rozmiar',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid);

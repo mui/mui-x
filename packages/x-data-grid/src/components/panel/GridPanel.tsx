@@ -100,7 +100,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     <GridPanelRoot
       as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      placement="bottom-start"
+      placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
       flip
       onDidShow={onDidShow}

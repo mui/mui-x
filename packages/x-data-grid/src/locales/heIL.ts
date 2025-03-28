@@ -50,6 +50,9 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'הדפסה',
   toolbarExportExcel: 'ייצוא ל- Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'חיפוש',
   columnsManagementNoColumns: 'אין עמודות',
@@ -221,6 +224,17 @@ const heILGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'מינימום',
   aggregationFunctionLabelMax: 'מקסימום',
   aggregationFunctionLabelSize: 'גודל',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid);

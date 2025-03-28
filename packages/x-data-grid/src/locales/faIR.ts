@@ -50,6 +50,9 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'چاپ',
   toolbarExportExcel: 'دانلود به صورت اکسل',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'جستجو',
   columnsManagementNoColumns: 'بدون سطر',
@@ -223,6 +226,17 @@ const faIRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'حداقل',
   aggregationFunctionLabelMax: 'حداکثر',
   aggregationFunctionLabelSize: 'اندازه',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid);

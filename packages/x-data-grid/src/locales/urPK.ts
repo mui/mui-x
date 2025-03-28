@@ -50,6 +50,9 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'پرنٹ کریں',
   toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'تلاش',
   columnsManagementNoColumns: 'کوئی کالم نہیں',
@@ -221,6 +224,17 @@ const urPKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'کم از کم',
   aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
   aggregationFunctionLabelSize: 'سائز',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid);

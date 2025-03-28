@@ -49,6 +49,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '印刷',
   toolbarExportExcel: 'Excelダウンロード',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: '検索',
   columnsManagementNoColumns: 'カラムなし',
@@ -218,6 +221,17 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小値',
   aggregationFunctionLabelMax: '最大値',
   aggregationFunctionLabelSize: 'サイズ',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid);

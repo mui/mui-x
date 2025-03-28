@@ -50,6 +50,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Skriv ut',
   toolbarExportExcel: 'Ladda ner som Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',
@@ -223,6 +226,17 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'antal',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const svSE: Localization = getGridLocalization(svSEGrid);

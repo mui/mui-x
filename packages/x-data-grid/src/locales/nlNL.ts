@@ -50,6 +50,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Zoeken',
   columnsManagementNoColumns: 'Geen kolommen',
@@ -223,6 +226,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'grootte',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid);

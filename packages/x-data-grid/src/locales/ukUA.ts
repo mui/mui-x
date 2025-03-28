@@ -75,6 +75,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Пошук',
   columnsManagementNoColumns: 'Немає стовпців',
@@ -254,6 +257,17 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid);

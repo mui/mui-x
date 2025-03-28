@@ -51,6 +51,9 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Imprimir',
   toolbarExportExcel: 'Descargar como Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Buscar',
   columnsManagementNoColumns: 'Sin columnas',
@@ -224,6 +227,17 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'mínimo',
   aggregationFunctionLabelMax: 'máximo',
   aggregationFunctionLabelSize: 'tamaño',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid);

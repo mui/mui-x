@@ -49,6 +49,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Nyomtatás',
   toolbarExportExcel: 'Mentés Excel fájlként',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Keresés',
   columnsManagementNoColumns: 'Nincsenek oszlopok',
@@ -218,6 +221,17 @@ const huHUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minimum',
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Darabszám',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid);

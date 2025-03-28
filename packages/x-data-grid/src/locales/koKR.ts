@@ -50,6 +50,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '프린트',
   toolbarExportExcel: 'Excel로 내보내기',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: '검색',
   columnsManagementNoColumns: '열이 없습니다.',
@@ -219,6 +222,17 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '최소값',
   aggregationFunctionLabelMax: '최대값',
   aggregationFunctionLabelSize: '크기',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

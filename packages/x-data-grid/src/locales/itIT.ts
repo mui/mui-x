@@ -50,6 +50,9 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Stampa',
   toolbarExportExcel: 'Scarica come Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Cerca',
   columnsManagementNoColumns: 'Nessuna colonna',
@@ -223,6 +226,17 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'minimo',
   aggregationFunctionLabelMax: 'massimo',
   aggregationFunctionLabelSize: 'numero di elementi',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid);

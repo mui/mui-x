@@ -604,6 +604,14 @@ export interface GridClasses {
    */
   toolbar: string;
   /**
+   * Styles applied to the toolbar label element.
+   */
+  toolbarLabel: string;
+  /**
+   * Styles applied to the toolbar divider element.
+   */
+  toolbarDivider: string;
+  /**
    * Styles applied to the shadow scroll area element.
    * @ignore - do not document.
    */
@@ -840,6 +848,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'sortIcon',
   'shadowScrollArea',
   'toolbarContainer',
+  'toolbar',
+  'toolbarLabel',
+  'toolbarDivider',
   'toolbarFilterList',
   'toolbarQuickFilter',
   'toolbarQuickFilterTrigger',

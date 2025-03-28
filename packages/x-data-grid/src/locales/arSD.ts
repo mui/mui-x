@@ -50,6 +50,9 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'طباعة',
   toolbarExportExcel: 'تحميل كملف الإكسل',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
@@ -221,6 +224,17 @@ const arSDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'الحد الادنى',
   aggregationFunctionLabelMax: 'الحد الاقصى',
   aggregationFunctionLabelSize: 'الحجم',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid);

@@ -85,7 +85,7 @@ const GridToolbarExportContainer = forwardRef<
         open={open}
         target={buttonRef.current}
         onClose={handleMenuClose}
-        position="bottom-start"
+        position="bottom-end"
       >
         <rootProps.slots.baseMenuList
           id={exportMenuId}

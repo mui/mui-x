@@ -54,6 +54,7 @@ export default function DataGridPremiumDemo() {
     <Box sx={{ height: 520, width: '100%' }}>
       <DataGridPremium
         {...data}
+        label="Data Grid Premium"
         apiRef={apiRef}
         loading={loading}
         disableRowSelectionOnClick

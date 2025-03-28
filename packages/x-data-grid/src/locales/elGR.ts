@@ -50,6 +50,9 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportExcel: 'Λήψη ως Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
@@ -224,6 +227,17 @@ const elGRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'ελάχιστο',
   aggregationFunctionLabelMax: 'μέγιστο',
   aggregationFunctionLabelSize: 'μέγεθος',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);

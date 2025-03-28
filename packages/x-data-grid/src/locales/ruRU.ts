@@ -75,6 +75,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Печать',
   toolbarExportExcel: 'Скачать в формате Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Поиск',
   columnsManagementNoColumns: 'Нет столбцов',
@@ -254,6 +257,17 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'счет',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid);

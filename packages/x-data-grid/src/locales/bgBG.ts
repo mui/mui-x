@@ -49,6 +49,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Принтиране',
   toolbarExportExcel: 'Изтегли като Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Търсене',
   columnsManagementNoColumns: 'Няма колони',
@@ -221,6 +224,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'размер',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid);

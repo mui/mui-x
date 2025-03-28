@@ -49,6 +49,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '列印',
   toolbarExportExcel: '匯出 Excel',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: '搜尋',
   columnsManagementNoColumns: '沒有欄位',
@@ -212,6 +215,17 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小',
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '尺寸',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid);

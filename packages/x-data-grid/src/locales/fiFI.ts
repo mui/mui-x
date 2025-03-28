@@ -50,6 +50,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Tulosta',
   toolbarExportExcel: 'Lataa Excel-muodossa',
 
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Hae',
   columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
@@ -223,6 +226,17 @@ const fiFIGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min.',
   aggregationFunctionLabelMax: 'maks.',
   aggregationFunctionLabelSize: 'koko',
+
+  // AI Assistant panel
+  // assistantPanelTitle: 'AI Assistant',
+  // assistantPanelNoHistory: 'No prompt history',
+  // assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldSend: 'Send',
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid);
