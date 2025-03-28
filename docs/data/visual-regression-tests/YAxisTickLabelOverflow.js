@@ -1,46 +1,46 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { BarChartProps } from '@mui/x-charts/BarChart';
+
 import { usAirportPassengersData } from './airportData';
 
-const defaultXAxis = {
+const defaultYAxis = {
   scaleType: 'band',
   dataKey: 'code',
-  height: 80,
-  valueFormatter: (value: any) =>
-    usAirportPassengersData.find((item) => item.code === value)!.fullName,
+  width: 80,
+  valueFormatter: (value) =>
+    usAirportPassengersData.find((item) => item.code === value).fullName,
   label: '0deg Axis Title',
-} as const;
+};
 
-const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+const degrees = [-135, -45, 0, 45, 135];
 
-type AxisPosition = NonNullable<BarChartProps['xAxis']>[number]['position'];
-
-const xAxes = degrees
+const yAxes = degrees
   .map((angle) => ({
-    ...defaultXAxis,
-    position: 'bottom' as AxisPosition,
+    ...defaultYAxis,
+    position: 'left',
     id: `angle${angle}`,
     label: `${angle}deg Axis Title`,
     tickLabelStyle: { angle },
   }))
   .concat(
     degrees.map((angle) => ({
-      ...defaultXAxis,
-      id: `top-angle${angle}`,
+      ...defaultYAxis,
+      id: `right-angle${angle}`,
       label: `${angle}deg Axis Title`,
-      position: 'top',
+      position: 'right',
       tickLabelStyle: { angle },
     })),
-  ) satisfies BarChartProps['xAxis'];
+  );
 
-export default function XAxisTickLabelOverflow() {
+export default function YAxisTickLabelOverflow() {
   return (
     <BarChartPro
-      xAxis={xAxes}
+      yAxis={yAxes}
       // Other props
-      height={1600}
+      width={850}
+      height={400}
       dataset={usAirportPassengersData}
+      layout="horizontal"
       series={[
         { dataKey: '2018', label: '2018' },
         { dataKey: '2019', label: '2019' },
@@ -49,10 +49,9 @@ export default function XAxisTickLabelOverflow() {
         { dataKey: '2022', label: '2022' },
       ]}
       hideLegend
-      yAxis={[
+      xAxis={[
         {
           valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          width: 60,
         },
       ]}
     />
