@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimateRef } from '../../internals/animation/useAnimate';
+import { useAnimate } from '@mui/x-charts/hooks/animation/useAnimate';
 import type { PieArcLabelProps } from '../../PieChart';
 
 type UseAnimatePieArcLabelParams = Pick<
@@ -62,7 +62,7 @@ export function useAnimatePieArcLabel(
     cornerRadius: props.cornerRadius,
   };
 
-  return useAnimateRef(
+  return useAnimate(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,

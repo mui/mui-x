@@ -1,11 +1,12 @@
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import * as React from 'react';
-import { useAnimateRef } from '../../internals/animation/useAnimate';
+import { useAnimate } from '@mui/x-charts/hooks/animation/useAnimate';
 import type { AnimatedLineProps } from '../../LineChart';
 
 type UseAnimateLineParams = Pick<AnimatedLineProps, 'd' | 'skipAnimation'> & {
   ref?: React.Ref<SVGPathElement>;
 };
+
 type UseAnimatedReturnValue = {
   ref: React.Ref<SVGPathElement>;
   d: string;
@@ -15,7 +16,7 @@ type UseAnimatedReturnValue = {
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
 export function useAnimateLine(props: UseAnimateLineParams): UseAnimatedReturnValue {
-  return useAnimateRef(
+  return useAnimate(
     { d: props.d },
     {
       createInterpolator: (lastProps, newProps) => {
@@ -25,6 +26,7 @@ export function useAnimateLine(props: UseAnimateLineParams): UseAnimatedReturnVa
       applyProps: (element: SVGPathElement, { d }) => element.setAttribute('d', d),
       skip: props.skipAnimation,
       transformProps: (p) => p,
+      ref: props.ref,
     },
   );
 }
