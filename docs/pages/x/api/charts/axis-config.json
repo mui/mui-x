@@ -15,6 +15,7 @@
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
+    "disableTooltipInteraction": { "type": { "description": "boolean" } },
     "domainLimit": {
       "type": {
         "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"

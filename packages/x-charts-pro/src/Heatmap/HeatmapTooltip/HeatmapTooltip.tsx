@@ -1,22 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   ChartsTooltipPaper,
-  ChartsTooltipTable,
-  ChartsTooltipRow,
-  ChartsTooltipCell,
   useItemTooltip,
   ChartsTooltipContainerProps,
   getChartsTooltipUtilityClass,
   ChartsTooltipContainer,
+  ChartsItemTooltipContainer,
+  ChartsItemTooltipText,
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
-import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
+import { useHeatmapSeriesContext } from '../../hooks/useHeatmapSeries';
+import { HeatmapTooltipAxesValue } from './HeatmapTooltipAxesValue';
 
 export interface HeatmapTooltipProps
   extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
@@ -83,28 +82,18 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
 
   return (
     <ChartsTooltipPaper className={classes?.paper}>
-      <ChartsTooltipTable className={classes?.table}>
-        <thead>
-          <ChartsTooltipRow className={classes?.row}>
-            <ChartsTooltipCell className={classes?.cell}>{formattedX}</ChartsTooltipCell>
-            {formattedX && formattedY && <ChartsTooltipCell />}
-            <ChartsTooltipCell className={classes?.cell}>{formattedY}</ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </thead>
-        <tbody>
-          <ChartsTooltipRow className={classes?.row}>
-            <ChartsTooltipCell className={clsx(classes?.markCell, classes?.cell)}>
-              <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)}>
-              {seriesLabel}
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)}>
-              {formattedValue}
-            </ChartsTooltipCell>
-          </ChartsTooltipRow>
-        </tbody>
-      </ChartsTooltipTable>
+      <HeatmapTooltipAxesValue>
+        <span>{formattedX}</span>
+        <span>{formattedY}</span>
+      </HeatmapTooltipAxesValue>
+
+      <ChartsItemTooltipContainer>
+        <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
+        <ChartsItemTooltipText>
+          <span className={classes?.labelCell}>{seriesLabel}</span>
+          <span className={classes?.valueCell}>{formattedValue}</span>
+        </ChartsItemTooltipText>
+      </ChartsItemTooltipContainer>
     </ChartsTooltipPaper>
   );
 }

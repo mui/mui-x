@@ -7,7 +7,7 @@ import type {
 import type { ColorProcessor } from './colorProcessor.types';
 import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
 import type { LegendGetter } from './legendGetter.types';
-import type { TooltipGetter } from './tooltipGetter.types';
+import type { AxisTriggeringTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import { PolarExtremumGetter } from './polarExtremumGetter.types';
 import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 
@@ -21,12 +21,17 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       yExtremumGetter: CartesianExtremumGetter<TSeriesType>;
+      axisTriggeringTooltipGetter?: AxisTriggeringTooltipGetter<TSeriesType, 'x' | 'y'>;
     }
   : {}) &
   (TSeriesType extends PolarChartSeriesType
     ? {
         rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
         radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
+        axisTriggeringTooltipGetter?: AxisTriggeringTooltipGetter<
+          TSeriesType,
+          'rotation' | 'radius'
+        >;
       }
     : {});
 
