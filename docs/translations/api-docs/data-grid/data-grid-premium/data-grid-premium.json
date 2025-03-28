@@ -6,6 +6,11 @@
     "aggregationRowsScope": {
       "description": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows."
     },
+    "aiAssistantHistory": { "description": "The history of the AI Assistant." },
+    "aiAssistantPanelOpen": {
+      "description": "If <code>true</code>, the AI Assistant panel is open."
+    },
+    "aiAssistantSuggestions": { "description": "The suggestions of the AI Assistant." },
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
@@ -59,6 +64,7 @@
     "density": { "description": "Set the density of the Data Grid." },
     "detailPanelExpandedRowIds": { "description": "The row ids to show the detail panel." },
     "disableAggregation": { "description": "If <code>true</code>, aggregation is disabled." },
+    "disableAiAssistant": { "description": "If <code>true</code>, the AI Assistant is disabled." },
     "disableAutosize": {
       "description": "If <code>true</code>, column autosizing on header separator double-click is disabled."
     },
@@ -1444,6 +1450,7 @@
     }
   },
   "slotDescriptions": {
+    "assistantIcon": "Icon used for the AI Assistant icon",
     "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
@@ -1532,6 +1539,7 @@
     "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
     "pivotSearchClearIcon": "Icon used for the clear button in the sidebar search field",
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
+    "promptIcon": "Icon used for the prompt icon",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",

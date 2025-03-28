@@ -13,6 +13,16 @@
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
     },
+    "aiAssistantHistory": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ createdAt: Date, prompt: string, response: { aggregation: object, error?: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;{ column: string, operator: string, value: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;number&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;bool }&gt;, grouping: Array&lt;{ column: string }&gt;, select: number, sorting: Array&lt;{ column: string, direction: 'asc'<br>&#124;&nbsp;'desc' }&gt; } }&gt;"
+      }
+    },
+    "aiAssistantPanelOpen": { "type": { "name": "bool" }, "default": "false" },
+    "aiAssistantSuggestions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" }
+    },
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -60,6 +70,7 @@
     },
     "detailPanelExpandedRowIds": { "type": { "name": "instanceOf", "description": "Set" } },
     "disableAggregation": { "type": { "name": "bool" }, "default": "false" },
+    "disableAiAssistant": { "type": { "name": "bool" }, "default": "false" },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenSorting": { "type": { "name": "bool" }, "default": "false" },
@@ -1311,6 +1322,18 @@
       "description": "Icon displayed in the collapsible to indicate if it is open or closed.",
       "default": "GridExpandMoreIcon",
       "class": "MuiDataGridPremium-collapsibleIcon"
+    },
+    {
+      "name": "assistantIcon",
+      "description": "Icon used for the AI Assistant icon",
+      "default": "GridAssistantIcon",
+      "class": null
+    },
+    {
+      "name": "promptIcon",
+      "description": "Icon used for the prompt icon",
+      "default": "GridPromptIcon",
+      "class": null
     }
   ],
   "classes": [

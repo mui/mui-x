@@ -54,6 +54,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
 
+  // Toolbar AI Assistant button
+  toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   columnsManagementSearchTitle: 'Search',
   columnsManagementNoColumns: 'No columns',
@@ -252,4 +255,15 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   pivotDragToValues: 'Drag here to create values',
   pivotYearColumnHeaderName: '(Year)',
   pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  assistantPanelTitle: 'AI Assistant',
+  assistantPanelNoHistory: 'No prompt history',
+  assistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Type a prompt…',
+  promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  promptFieldSend: 'Send',
 };

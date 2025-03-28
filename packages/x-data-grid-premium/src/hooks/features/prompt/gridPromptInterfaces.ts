@@ -1,3 +1,15 @@
+export type GridAiAssistantState = {
+  panelOpen: boolean;
+  history: PromptHistory;
+  suggestions: string[];
+};
+
+export type PromptHistory = {
+  prompt: string;
+  createdAt: Date;
+  response: PromptResponse;
+}[];
+
 export type Sort = {
   column: string;
   direction: 'asc' | 'desc';
@@ -50,5 +62,10 @@ export interface GridPromptApi {
      * @param {PromptResponse} result The result of the prompt.
      */
     applyPromptResult: (result: PromptResponse) => void;
+    /**
+     * Sets whether the AI Assistant panel is open.
+     * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the AI Assistant panel open state.
+     */
+    setAiAssistantPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   };
 }

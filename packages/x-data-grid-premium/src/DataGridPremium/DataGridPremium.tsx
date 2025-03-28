@@ -121,6 +121,54 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
+   * The history of the AI Assistant.
+   */
+  aiAssistantHistory: PropTypes.arrayOf(
+    PropTypes.shape({
+      createdAt: PropTypes.instanceOf(Date).isRequired,
+      prompt: PropTypes.string.isRequired,
+      response: PropTypes.shape({
+        aggregation: PropTypes.object.isRequired,
+        error: PropTypes.string,
+        filterOperator: PropTypes.oneOf(['and', 'or']),
+        filters: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+            operator: PropTypes.string.isRequired,
+            value: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string),
+              PropTypes.arrayOf(PropTypes.number),
+              PropTypes.number,
+              PropTypes.string,
+              PropTypes.bool,
+            ]).isRequired,
+          }),
+        ).isRequired,
+        grouping: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+          }),
+        ).isRequired,
+        select: PropTypes.number.isRequired,
+        sorting: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+            direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
+          }),
+        ).isRequired,
+      }).isRequired,
+    }),
+  ),
+  /**
+   * If `true`, the AI Assistant panel is open.
+   * @default false
+   */
+  aiAssistantPanelOpen: PropTypes.bool,
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions: PropTypes.arrayOf(PropTypes.string),
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
@@ -262,6 +310,11 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   disableAggregation: PropTypes.bool,
+  /**
+   * If `true`, the AI Assistant is disabled.
+   * @default false
+   */
+  disableAiAssistant: PropTypes.bool,
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false

@@ -13,6 +13,8 @@ import type {
   GridPivotingInitialState,
   GridPivotingState,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import { GridAiAssistantState } from '../hooks/features/prompt/gridPromptInterfaces';
+
 /**
  * The state of Data Grid Premium.
  */
@@ -21,6 +23,7 @@ export interface GridStatePremium extends GridStatePro {
   aggregation: GridAggregationState;
   cellSelection: GridCellSelectionModel;
   pivoting: GridPivotingState;
+  aiAssistant: GridAiAssistantState;
 }
 
 /**
@@ -31,4 +34,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   aggregation?: GridAggregationInitialState;
   cellSelection?: GridCellSelectionModel;
   pivoting?: GridPivotingInitialState;
+  aiAssistant?: GridAiAssistantState;
 }
