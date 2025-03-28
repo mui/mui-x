@@ -56,6 +56,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.2`.
 
 #### `@mui/x-charts@8.0.0-beta.2`
 
+- [charts] Memoize axes and series with default (#17156)
 - [charts] Add pie benchmark (#17115) @JCQuintas
 - [charts] Fix CSS vars support for dark theme (#17106) @alexfauquette
 - [charts] Fix radar hover (#17134) @alexfauquette
