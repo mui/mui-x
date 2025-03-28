@@ -1,13 +1,27 @@
 import * as React from 'react';
-import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid/internals';
+import { ToolbarButton } from '@mui/x-data-grid-pro';
+import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { AiAssistantPanelTrigger } from './aiAssistantPanel/AiAssistantPanelTrigger';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
+
+  const additionalItems = (
+    <AiAssistantPanelTrigger
+      render={(triggerProps) => (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarAssistant')}>
+          <ToolbarButton {...triggerProps} color="default">
+            <rootProps.slots.assistantIcon fontSize="small" />
+          </ToolbarButton>
+        </rootProps.slots.baseTooltip>
+      )}
+    />
+  );
 
   const additionalExportMenuItems = !props.excelOptions?.disableToolbarButton
     ? (onMenuItemClick: () => void) => (
@@ -21,5 +35,11 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
       )
     : undefined;
 
-  return <GridToolbar {...other} additionalExportMenuItems={additionalExportMenuItems} />;
+  return (
+    <GridToolbar
+      {...other}
+      additionalItems={additionalItems}
+      additionalExportMenuItems={additionalExportMenuItems}
+    />
+  );
 }

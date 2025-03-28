@@ -9,16 +9,58 @@ import {
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
-import { getValueOptions, getVisibleRows } from '@mui/x-data-grid-pro/internals';
+import {
+  getValueOptions,
+  getVisibleRows,
+  GridStateInitializer,
+} from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { PromptResponse } from './gridPromptInterfaces';
+import { GridAiAssistantState, GridPromptApi, PromptResponse } from './gridPromptInterfaces';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 
 const DEFAULT_SAMPLE_COUNT = 5;
 
-export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
+export const aiAssistantStateInitializer: GridStateInitializer<
+  Pick<
+    DataGridPremiumProcessedProps,
+    | 'initialState'
+    | 'aiAssistantPanelOpen'
+    | 'aiAssistantHistory'
+    | 'aiAssistantSuggestions'
+    | 'disableAiAssistant'
+  >
+> = (state, props) => {
+  if (!isAiAssistantAvailableFn(props)) {
+    return {
+      ...state,
+      aiAssistant: {
+        panelOpen: false,
+        history: [],
+        suggestions: [],
+      } as GridAiAssistantState,
+    };
+  }
+
+  return {
+    ...state,
+    aiAssistant: {
+      panelOpen: props.aiAssistantPanelOpen ?? props.initialState?.aiAssistant?.panelOpen ?? false,
+      history: props.aiAssistantHistory ?? props.initialState?.aiAssistant?.history ?? [],
+      suggestions:
+        props.aiAssistantSuggestions ?? props.initialState?.aiAssistant?.suggestions ?? [],
+    } as GridAiAssistantState,
+  };
+};
+
+export const useGridPrompt = (
+  apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'disableAiAssistant'>,
+) => {
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
+  const isAiAssistantAvailable = isAiAssistantAvailableFn(props);
 
   const collectSampleData = React.useCallback(() => {
     const columnExamples: Record<string, any[]> = {};
@@ -115,12 +157,32 @@ export const useGridPrompt = (apiRef: RefObject<GridPrivateApiPremium>) => {
     [apiRef, columnsLookup],
   );
 
+  const setAiAssistantPanelOpen = React.useCallback<
+    GridPromptApi['unstable_aiAssistant']['setAiAssistantPanelOpen']
+  >(
+    (callback) => {
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          panelOpen:
+            typeof callback === 'function' ? callback(state.aiAssistant?.panelOpen) : callback,
+        },
+      }));
+    },
+    [apiRef, isAiAssistantAvailable],
+  );
+
   useGridApiMethod(
     apiRef,
     {
       unstable_aiAssistant: {
         getPromptContext,
         applyPromptResult,
+        setAiAssistantPanelOpen,
       },
     },
     'public',
