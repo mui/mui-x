@@ -51,7 +51,7 @@ useGridEvent(apiRef, 'rowClick', handleEvent);
 This hook can only be used inside the scope of the Data Grid (that is inside component slots or cell renderers).
 :::
 
-The following demo shows how to subscribe to the `rowClick` event using `useGridEvent`—try it out by clicking on any row:
+The following demo shows how to subscribe to the `rowClick` event using `useGridEvent()`—try it out by clicking on any row:
 
 {{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
 
