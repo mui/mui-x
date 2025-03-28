@@ -42,13 +42,10 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
-    // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
-    newDeps['@mui/material'] =
-      versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
+    newDeps['@mui/material'] = '^6';
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/icons-material'] = '^6';
     }
     return newDeps;
   },
