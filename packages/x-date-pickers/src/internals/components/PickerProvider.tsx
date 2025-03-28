@@ -177,7 +177,7 @@ export interface PickerContextValue<
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
-   * Whether the Picker is in its last step.
+   * Whether the Picker has any value picking steps left.
    */
   hasNextStep: boolean;
   /**
