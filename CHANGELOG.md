@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.28.2
+
+_Mar 28, 2025_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@flaviendelangle, @LukasTy, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.28.2`
+
+- [DataGrid] Fix error caused by trying to render rows that are not in the state anymore (#17117) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.28.2`.
+
+#### `@mui/x-data-grid-premium@7.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.28.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.28.2`
+
+- [fields] Improve the check for year in `doesSectionFormatHaveLeadingZeros` (#17112) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.28.2`.
+
+### Core
+
+- [code-infra] Remove `test_regressions` step from React 18 pipeline (#17109) @LukasTy
+
 ## 7.28.1
 
 _Mar 21, 2025_
