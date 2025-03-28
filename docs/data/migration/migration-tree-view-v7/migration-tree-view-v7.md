@@ -30,13 +30,13 @@ Described below are the steps needed to migrate from v7 to v8.
 
 ## Package layout changes
 
-MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
 
-MUI X v8 packages are compatible with Material UI v7 out of the box.
-We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
 
-Material UI v6 and v5 are still supported, but require some additional steps if you are importing the packages in Node.js environment.
-Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+Material UI v6 and v5 are still supported, but require some additional steps if you are importing the packages in Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
 
 ## Run codemods
 

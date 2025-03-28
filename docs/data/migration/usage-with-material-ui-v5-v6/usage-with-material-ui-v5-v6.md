@@ -1,23 +1,23 @@
 ---
-title: Usage with Material UI v5 and v6
+title: Usage with Material UI v5 and v6
 ---
 
-# Usage with Material UI v5/v6
+# Usage with Material UI v5/v6
 
-<p class="description">This guide describes the changes needed to use the Data Grid with Material UI v5/v6.</p>
+<p class="description">This guide describes the changes needed to use the Data Grid with Material UI v5/v6.</p>
 
 ## Package layout changes
 
-MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
 
-MUI X v8 packages are compatible with Material UI v7 out of the box.
-We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
 
-Material UI v6 and v5 are still supported, but require some additional steps if you are importing the packages in Node.js environment.
+Material UI v6 and v5 are still supported, but require some additional steps if you are importing the packages in Node.js environment.
 
 ### General recommendations
 
-Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
+Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
 
 ```bash
 node --conditions=require index.mjs
@@ -42,7 +42,7 @@ export default defineConfig({
 
 ### Next.js Pages router
 
-Update Next.js configuration to pass the `require` condition and transpile MUI X packages:
+Update Next.js configuration to pass the `require` condition and transpile MUI X packages:
 
 ```ts
 // next.config.js
