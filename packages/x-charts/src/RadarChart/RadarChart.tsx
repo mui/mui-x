@@ -9,7 +9,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 
@@ -61,8 +61,9 @@ const RadarChart = React.forwardRef(function RadarChart(
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
-          <RadarSeriesPlot />
+          <RadarSeriesArea />
           {highlight === 'axis' && <RadarAxisHighlight {...radarAxisHighlight} />}
+          <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>

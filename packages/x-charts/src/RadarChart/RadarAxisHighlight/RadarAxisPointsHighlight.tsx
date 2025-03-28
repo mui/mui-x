@@ -30,22 +30,26 @@ export function RadarAxisPointsHighlight(props: RadarAxisPointsHighlightProps) {
       <path
         d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
         stroke={(theme.vars || theme).palette.text.primary}
-        strokeWidth={3}
+        strokeWidth={1}
         className={classes?.line}
         pointerEvents="none"
+        strokeDasharray='4 4'
       />
 
       {points.map(({ highlighted }, seriesIndex) => {
         return (
-          <circle
-            key={series[seriesIndex].id}
-            fill={series[seriesIndex].color}
-            cx={highlighted.x}
-            cy={highlighted.y}
-            r={8}
-            className={classes?.dot}
-            pointerEvents="none"
-          />
+          series[seriesIndex].showMark && (
+            <circle
+              key={series[seriesIndex].id}
+              fill={series[seriesIndex].color}
+              cx={highlighted.x}
+              cy={highlighted.y}
+              r={8}
+              className={classes?.dot}
+              opacity={0.5}
+              pointerEvents="none"
+            />
+          )
         );
       })}
     </g>
