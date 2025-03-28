@@ -89,6 +89,9 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
       );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],

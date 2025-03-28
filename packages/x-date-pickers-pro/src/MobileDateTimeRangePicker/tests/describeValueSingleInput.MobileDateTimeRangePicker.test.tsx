@@ -77,11 +77,21 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
         ];
       }
 
+      // if we want to set the end date, we firstly need to switch to end date "range position"
+      if (setEndDate) {
+        fireEvent.click(
+          screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
+        );
+      }
+
       fireEvent.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
       );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],
