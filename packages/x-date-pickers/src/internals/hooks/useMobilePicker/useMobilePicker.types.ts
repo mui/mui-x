@@ -82,7 +82,7 @@ export interface UseMobilePickerParams<
   props: TExternalProps;
   /**
    * Steps available for the picker.
-   * This will be used to generate the "previous" and "next" actions.
+   * This will be used to define the behavior of navigation actions.
    * If null, the picker will not have any step navigation.
    */
   steps: PickerStep[] | null;
