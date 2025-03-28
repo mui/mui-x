@@ -56,6 +56,9 @@ export interface GridLocaleText {
   // Toolbar pivot button
   toolbarPivot: string;
 
+  // Toolbar AI Assistant button
+  toolbarAssistant: React.ReactNode;
+
   // Columns management text
   columnsManagementSearchTitle: string;
   columnsManagementNoColumns: string;
@@ -236,6 +239,17 @@ export interface GridLocaleText {
   pivotDragToValues: string;
   pivotYearColumnHeaderName: string;
   pivotQuarterColumnHeaderName: string;
+
+  // Assistant panel
+  assistantPanelTitle: string;
+  assistantPanelNoHistory: string;
+  assistantSuggestions: string;
+
+  // Prompt field
+  promptFieldLabel: string;
+  promptFieldPlaceholder: string;
+  promptFieldPlaceholderWithRecording: string;
+  promptFieldSend: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

@@ -102,7 +102,7 @@ import {
   useGridPivoting,
 } from '../hooks/features/pivoting/useGridPivoting';
 import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
-import { useGridPrompt } from '../hooks/features/prompt/useGridPrompt';
+import { useGridPrompt, aiAssistantStateInitializer } from '../hooks/features/prompt/useGridPrompt';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -172,6 +172,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
+  useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
 
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
@@ -217,7 +218,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
-  useGridPrompt(apiRef);
+  useGridPrompt(apiRef, props);
 
   return props;
 };

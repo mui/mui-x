@@ -86,4 +86,14 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridExpandMoreIcon
    */
   collapsibleIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the AI Assistant icon
+   * @default GridAssistantIcon
+   */
+  assistantIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the prompt icon
+   * @default GridPromptIcon
+   */
+  promptIcon: React.JSXElementConstructor<any>;
 }

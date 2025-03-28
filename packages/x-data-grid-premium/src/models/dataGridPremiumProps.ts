@@ -36,6 +36,7 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import { PromptHistory } from '../hooks/features/prompt/gridPromptInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -149,6 +150,16 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
         getLocaleText: GridLocaleTextApi['getLocaleText'],
       ) => GridColDef[] | undefined)
     | null;
+  /**
+   * If `true`, the AI Assistant panel is open.
+   * @default false
+   */
+  aiAssistantPanelOpen: boolean;
+  /**
+   * If `true`, the AI Assistant is disabled.
+   * @default false
+   */
+  disableAiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -279,4 +290,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
         originalColumnField: GridColDef['field'],
         columnGroupPath: string[],
       ) => Partial<GridPivotingColDefOverrides> | undefined);
+  /**
+   * The history of the AI Assistant.
+   */
+  aiAssistantHistory?: PromptHistory;
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions?: string[];
 }
