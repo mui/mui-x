@@ -1,7 +1,7 @@
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
-import { useAnimate } from '@mui/x-charts/internals/animation/useAnimate';
+import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 
 describe('useAnimate', () => {
@@ -42,7 +42,7 @@ describe('useAnimate', () => {
     }
 
     function TestComponent() {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width: 100 },
         { initialProps: { width: 0 }, createInterpolator: interpolateWidth, applyProps },
       );
@@ -74,7 +74,10 @@ describe('useAnimate', () => {
     }
 
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimate({ width }, { createInterpolator: interpolateWidth, applyProps });
+      const ref = useAnimateInternal(
+        { width },
+        { createInterpolator: interpolateWidth, applyProps },
+      );
 
       return (
         <svg>
@@ -113,7 +116,7 @@ describe('useAnimate', () => {
     }
 
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 1000 } },
       );
@@ -172,7 +175,7 @@ describe('useAnimate', () => {
       width: number;
       skipAnimation?: boolean;
     }) {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -223,7 +226,7 @@ describe('useAnimate', () => {
     }
 
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -258,7 +261,7 @@ describe('useAnimate', () => {
     }
 
     function TestComponent({ width, skip }: { width: number; skip: boolean }) {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -320,7 +323,7 @@ describe('useAnimate', () => {
 
     function TestComponent({ width }: { width: number }) {
       const [mountPath, setMountPath] = React.useState(true);
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );
@@ -362,7 +365,7 @@ describe('useAnimate', () => {
     }
 
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimate(
+      const ref = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );

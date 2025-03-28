@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimate } from '../../internals/animation/useAnimate';
+import { useAnimate } from '@mui/x-charts/hooks/animation/useAnimate';
 import type { BarProps } from '../../BarChart/AnimatedBarElement';
 
 type UseAnimateBarParams = Pick<
@@ -45,7 +45,7 @@ export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnVa
     height: props.layout === 'vertical' ? 0 : props.height,
   };
 
-  const ref = useAnimate<BarInterpolatedProps, SVGRectElement>(
+  return useAnimate(
     {
       x: props.x,
       y: props.y,
@@ -60,18 +60,10 @@ export function useAnimateBar(props: UseAnimateBarParams): UseAnimateBarReturnVa
         element.setAttribute('width', animatedProps.width.toString());
         element.setAttribute('height', animatedProps.height.toString());
       },
+      transformProps: (p) => p,
       initialProps,
       skip: props.skipAnimation,
+      ref: props.ref,
     },
   );
-
-  const usedProps = props.skipAnimation ? props : initialProps;
-
-  return {
-    ref,
-    x: usedProps.x,
-    y: usedProps.y,
-    width: usedProps.width,
-    height: usedProps.height,
-  };
 }
