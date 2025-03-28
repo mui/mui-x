@@ -172,9 +172,12 @@ export const useGridDataSourceLazyLoader = (
     } as GridGetRowsParams);
 
     let hasChanged = false;
+    const isInitialPage =
+      renderedRowsIntervalCache.current.firstRowToRender === 0 &&
+      renderedRowsIntervalCache.current.lastRowToRender === 0;
 
     for (let i = 0; i < rootChildrenCount; i += 1) {
-      if (pageToSkip.start === 0 && pageToSkip.end === 0) {
+      if (isInitialPage) {
         break;
       }
       // replace the rows not in the viewport with skeleton rows
