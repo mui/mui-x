@@ -7,12 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 28, 2025_
 
-We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
-Following are all team members who have contributed to this release:
-@flaviendelangle.
+Team members who have contributed to this release:
+@flaviendelangle, @LukasTy, @arminmeh.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -39,26 +39,6 @@ Same changes as in `@mui/x-data-grid-pro@7.28.2`.
 #### `@mui/x-date-pickers-pro@7.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.28.2`.
-
-### Charts
-
-#### `@mui/x-charts@7.28.2`
-
-Internal changes.
-
-#### `@mui/x-charts-pro@7.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@7.28.2`.
-
-### Tree View
-
-#### `@mui/x-tree-view@7.28.2`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@7.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@7.28.2`.
 
 ### Core
 
