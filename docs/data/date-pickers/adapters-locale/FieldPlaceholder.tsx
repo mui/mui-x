@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'dayjs/locale/de';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

@@ -16,7 +16,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -41,6 +40,7 @@ import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
+import { DemoContainer } from '../../../data/date-pickers/_shared/DemoContainer';
 
 const ComponentSection = styled('div')(({ theme }) => ({
   display: 'flex',

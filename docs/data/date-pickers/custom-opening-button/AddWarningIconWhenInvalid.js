@@ -4,8 +4,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { DemoContainer } from '../_shared/DemoContainer';
 
 function CustomInputAdornment(props) {
   const { hasError, children, sx, ...other } = props;
