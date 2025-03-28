@@ -96,8 +96,6 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   // Use a ref to avoid rerendering on every mousemove event.
   const mousePosition = React.useRef({
     isInChart: false,
-    x: -1,
-    y: -1,
   });
 
   React.useEffect(() => {
@@ -106,73 +104,56 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const handleOut = () => {
-      mousePosition.current = {
-        isInChart: false,
-        x: -1,
-        y: -1,
-      };
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction?.();
+      }
+    });
 
-      instance.cleanInteraction?.();
-    };
+    // Move is mouse, Drag is both mouse and touch.
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        const target =
+          'targetTouches' in state.event
+            ? (state.event as any as TouchEvent).targetTouches[0]
+            : state.event;
+        const svgPoint = getSVGPoint(element, target);
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
-
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
-
-      // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
-        if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
-          mousePosition.current.isInChart = false;
+        const isPointInside = instance.isPointInside(svgPoint, {
+          targetElement: state.event.target as SVGElement,
+        });
+        // Test if it's in the drawing area
+        if (!isPointInside) {
+          if (mousePosition.current.isInChart) {
+            instance?.cleanInteraction();
+            mousePosition.current.isInChart = false;
+          }
+          return;
         }
-        return;
-      }
 
-      // Test if it's in the radar circle
-      const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
-      const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
+        // Test if it's in the radar circle
+        const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
+        const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
 
-      if (radiusSquare > maxRadius ** 2) {
-        if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
-          mousePosition.current.isInChart = false;
+        if (radiusSquare > maxRadius ** 2) {
+          if (mousePosition.current.isInChart) {
+            instance?.cleanInteraction();
+            mousePosition.current.isInChart = false;
+          }
+          return;
         }
-        return;
-      }
 
-      mousePosition.current.isInChart = true;
-      instance.setPointerCoordinate?.(svgPoint);
-    };
+        mousePosition.current.isInChart = true;
+        instance.setPointerCoordinate?.(svgPoint);
+      },
+    );
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
-
-      if (
-        'hasPointerCapture' in target &&
-        (target as HTMLElement).hasPointerCapture(event.pointerId)
-      ) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
-
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerout', handleOut);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerout', handleOut);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [
     svgRef,

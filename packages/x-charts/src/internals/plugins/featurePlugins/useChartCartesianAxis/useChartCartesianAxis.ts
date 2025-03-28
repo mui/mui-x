@@ -69,49 +69,43 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || !element || params.disableAxisListener) {
       return () => {};
     }
 
-    const handleOut = () => {
-      instance.cleanInteraction?.();
-    };
-
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
-
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+    // Clean the interaction when the mouse leaves the chart.
+    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
+      if (!state.hovering) {
         instance.cleanInteraction?.();
-        return;
       }
+    });
 
-      instance.setPointerCoordinate?.(svgPoint);
-    };
+    // Move is mouse, Drag is both mouse and touch.
+    const setInteractionHandler = instance.addMultipleInteractionListeners(
+      ['move', 'drag'],
+      (state) => {
+        const target =
+          'targetTouches' in state.event
+            ? (state.event as any as TouchEvent).targetTouches[0]
+            : state.event;
+        const svgPoint = getSVGPoint(element, target);
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+        const isPointInside = instance.isPointInside(svgPoint, {
+          targetElement: state.event.target as SVGElement,
+        });
 
-      if (
-        'hasPointerCapture' in target &&
-        (target as HTMLElement).hasPointerCapture(event.pointerId)
-      ) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
+        if (!isPointInside) {
+          instance.cleanInteraction?.();
+          return;
+        }
 
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
+        instance.setPointerCoordinate?.(svgPoint);
+      },
+    );
+
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      cleanInteractionHandler.cleanup();
+      setInteractionHandler.cleanup();
     };
   }, [
     svgRef,
@@ -132,13 +126,15 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const handleMouseClick = (event: MouseEvent) => {
-      event.preventDefault();
+    const axisClickHandler = instance.addInteractionListener('drag', (state) => {
+      if (!state.tap) {
+        return;
+      }
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSVGPoint(element, state.event);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
@@ -171,12 +167,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           });
         });
 
-      onAxisClick(event, { dataIndex, axisValue, seriesValues });
-    };
+      onAxisClick(state.event, { dataIndex, axisValue, seriesValues });
+    });
 
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('click', handleMouseClick);
+      axisClickHandler.cleanup();
     };
   }, [
     params.onAxisClick,
@@ -188,6 +183,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     yAxisIds,
     usedXAxis,
     usedYAxis,
+    instance,
   ]);
 
   return {};

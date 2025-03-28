@@ -6,7 +6,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
@@ -19,6 +19,7 @@ import {
   selectorChartsInteractionYAxisIsDefined,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useChartContext } from '../context/ChartProvider';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -62,8 +63,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     name: 'MuiChartsTooltipContainer',
   });
   const { trigger = 'axis', classes, children, ...other } = props;
+  const { instance } = useChartContext();
 
-  const svgRef = useSvgRef();
   const pointerType = usePointerType();
   const xAxis = useXAxis();
 
@@ -71,7 +72,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isOpen = useSelector(
+  const hasData = useSelector(
     store,
     // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
@@ -81,26 +82,26 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
+  const popperOpen = pointerType !== null && hasData; // tooltipHasData;
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
+    const update = rafThrottle(() => popperRef.current?.update());
 
-    const handleMove = (event: PointerEvent) => {
+    const positionHandler = instance.addMultipleInteractionListeners(['move', 'drag'], (state) => {
+      if (state.interactionType === 'move' && state.dragging && state.moving) {
+        return;
+      }
+
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
-      popperRef.current?.update();
-    };
-
-    element.addEventListener('pointermove', handleMove);
+      positionRef.current = { x: state.event.clientX, y: state.event.clientY };
+      update();
+    });
 
     return () => {
-      element.removeEventListener('pointermove', handleMove);
+      positionHandler.cleanup();
+      update.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [positionRef, instance]);
 
   const anchorEl = React.useMemo(
     () => ({
