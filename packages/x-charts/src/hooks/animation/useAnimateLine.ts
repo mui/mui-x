@@ -1,6 +1,6 @@
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import * as React from 'react';
-import { useAnimate } from '@mui/x-charts/hooks/animation/useAnimate';
+import { useAnimate } from './useAnimate';
 import type { AnimatedLineProps } from '../../LineChart';
 
 type UseAnimateLineParams = Pick<AnimatedLineProps, 'd' | 'skipAnimation'> & {

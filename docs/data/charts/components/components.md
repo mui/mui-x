@@ -110,7 +110,10 @@ The following hooks are available:
 - `useAnimatePieArc`;
 - `useAnimatePieArcLabel`.
 
-In the example below, labels are positioned above the bars they refer to and are animated using the default animation:
+{{"demo": "JSDefaultAnimation.js"}}
+
+You can also use the `useAnimate` hook, in case you want to customize the default animations.
+In the example below, labels are positioned above the bars they refer to and are animated using the `useAnimation` hook:
 
 {{"demo": "JSAnimationCustomization.js"}}
 
