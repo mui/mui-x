@@ -3,7 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
-import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
+import { PickersActionBar } from '../PickersActionBar';
 import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';

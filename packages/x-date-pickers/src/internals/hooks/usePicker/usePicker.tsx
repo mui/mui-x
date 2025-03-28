@@ -99,15 +99,24 @@ export const usePicker = <
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({ props, valueManager, validator });
 
-  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
-    useViews({
-      view: viewProp,
-      views,
-      openTo,
-      onChange: setValueFromView,
-      onViewChange,
-      autoFocus: autoFocusView,
-    });
+  const {
+    view,
+    setView,
+    defaultView,
+    focusedView,
+    setFocusedView,
+    setValueAndGoToNextView,
+    goToNextStep,
+    hasNextStep,
+  } = useViews({
+    view: viewProp,
+    views,
+    openTo,
+    onChange: setValueFromView,
+    onViewChange,
+    autoFocus: autoFocusView,
+    getStepNavigation,
+  });
 
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
@@ -225,13 +234,7 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
-  const stepNavigation = getStepNavigation({
-    setView,
-    view,
-    initialView: initialView ?? views[0],
-    views,
-  });
-  const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
+  const wrappedGoToNextStep = useEventCallback(goToNextStep);
 
   const defaultActionBarActions = React.useMemo<PickersActionBarAction[]>(() => {
     if (closeOnSelect) {
@@ -282,7 +285,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
-      hasNextStep: stepNavigation.hasNextStep,
+      hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -305,7 +308,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
-      stepNavigation.hasNextStep,
+      hasNextStep,
       timezone,
       state.open,
       popperView,
@@ -382,7 +385,7 @@ export const usePicker = <
       views,
       timezone,
       value: viewValue,
-      onChange: setValueFromView,
+      onChange: setValueAndGoToNextView,
       view: popperView,
       onViewChange: setView,
       showViewSwitcher: timeViewsCount > 1,
