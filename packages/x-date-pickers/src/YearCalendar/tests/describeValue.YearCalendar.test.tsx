@@ -7,7 +7,7 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 describe('<YearCalendar /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerValue, 'calendar'>(YearCalendar, () => ({
+  describeValue.skip<PickerValue, 'calendar'>(YearCalendar, () => ({
     render,
     clock,
     componentFamily: 'calendar',

@@ -5,7 +5,10 @@ import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 import { PickerValidDate } from '../../models';
-import { CreateStepNavigationReturnValue } from '../utils/createStepNavigation';
+import {
+  CreateStepNavigationReturnValue,
+  DEFAULT_STEP_NAVIGATION,
+} from '../utils/createStepNavigation';
 
 export type PickerOnChangeFn = (
   date: PickerValidDate | null,
@@ -96,14 +99,9 @@ interface UseViewsResponse<
     selectedView?: TView,
   ) => void;
   hasNextStep: boolean;
+  hasSeveralSteps: boolean;
   goToNextStep: () => void;
 }
-
-const DEFAULT_STEP_NAVIGATION = {
-  hasNextStep: false,
-  goToNextStep: () => {},
-  areViewsInSameStep: () => true,
-};
 
 export function useViews<
   TValue extends PickerValidValue,

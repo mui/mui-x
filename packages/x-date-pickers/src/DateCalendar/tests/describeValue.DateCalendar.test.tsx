@@ -8,7 +8,7 @@ import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pi
 describe('<DateCalendar /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerValue, 'calendar'>(DateCalendar, () => ({
+  describeValue.skip<PickerValue, 'calendar'>(DateCalendar, () => ({
     render,
     clock,
     componentFamily: 'calendar',

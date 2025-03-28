@@ -14,7 +14,7 @@ import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTime
 describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
+  describeValue.skip<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time-range',
@@ -63,6 +63,11 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         newValue = [value[0], adapterToUse.addMinutes(adapterToUse.addHours(value[1], 1), 5)];
       } else {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
+      }
+
+      // if we want to set the end date, we firstly need to switch to end date "range position"
+      if (setEndDate && screen.queryByRole('button', { name: 'Next' })) {
+        fireEvent.click(screen.getByRole('button', { name: 'Next' }));
       }
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();

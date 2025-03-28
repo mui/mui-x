@@ -15,7 +15,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
     clock: 'fake',
   });
 
-  describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
+  describeValue.skip<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

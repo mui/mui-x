@@ -108,6 +108,7 @@ export const usePicker = <
     setValueAndGoToNextView,
     goToNextStep,
     hasNextStep,
+    hasSeveralSteps,
   } = useViews({
     view: viewProp,
     views,
@@ -237,12 +238,12 @@ export const usePicker = <
   const wrappedGoToNextStep = useEventCallback(goToNextStep);
 
   const defaultActionBarActions = React.useMemo<PickersActionBarAction[]>(() => {
-    if (closeOnSelect) {
+    if (closeOnSelect && !hasSeveralSteps) {
       return [];
     }
 
     return ['cancel', 'nextOrAccept'];
-  }, [closeOnSelect]);
+  }, [closeOnSelect, hasSeveralSteps]);
 
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({

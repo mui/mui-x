@@ -1,5 +1,12 @@
 import { DateOrTimeViewWithMeridiem } from '../models';
 
+export const DEFAULT_STEP_NAVIGATION = {
+  hasNextStep: false,
+  hasSeveralSteps: false,
+  goToNextStep: () => {},
+  areViewsInSameStep: () => true,
+};
+
 /**
  * Create an object that determines whether there is a next step and allows to go to the next step.
  * @param {CreateStepNavigationParameters<TStep>} parameters The parameters of the createStepNavigation function
@@ -12,11 +19,7 @@ export function createStepNavigation<TStep extends {}>(
 
   return (parametersBis) => {
     if (steps == null) {
-      return {
-        hasNextStep: false,
-        goToNextStep: () => {},
-        areViewsInSameStep: () => true,
-      };
+      return DEFAULT_STEP_NAVIGATION;
     }
 
     const currentStepIndex = steps.findIndex((step) =>
@@ -30,6 +33,7 @@ export function createStepNavigation<TStep extends {}>(
 
     return {
       hasNextStep: nextStep != null,
+      hasSeveralSteps: steps.length > 1,
       goToNextStep: () => {
         if (nextStep == null) {
           return;
@@ -59,6 +63,10 @@ export type CreateStepNavigationReturnValue = (
    * Whether there is a next step.
    */
   hasNextStep: boolean;
+  /**
+   * Whether there are several steps.
+   */
+  hasSeveralSteps: boolean;
   /**
    * Go to the next step if any.
    */
