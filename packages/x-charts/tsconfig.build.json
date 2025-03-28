@@ -8,6 +8,7 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
+    "tsBuildInfoFile": "./tsconfig.build.tsbuildinfo",
     "rootDir": "./src",
     "types": [
       "node",
