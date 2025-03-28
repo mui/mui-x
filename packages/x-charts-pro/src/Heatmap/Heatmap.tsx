@@ -142,7 +142,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const defaultizedXAxis = React.useMemo(
+  const xAxisWithDefault = React.useMemo(
     () =>
       (xAxis && xAxis.length > 0 ? xAxis : [{ id: DEFAULT_X_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
@@ -153,7 +153,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     [series, xAxis],
   );
 
-  const defaultizedYAxis = React.useMemo(
+  const yAxisWithDefault = React.useMemo(
     () =>
       (yAxis && yAxis.length > 0 ? yAxis : [{ id: DEFAULT_Y_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
@@ -164,7 +164,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     [series, yAxis],
   );
 
-  const defaultizedZAxis = React.useMemo(
+  const zAxisWithDefault = React.useMemo(
     () =>
       zAxis ?? [
         {
@@ -192,9 +192,9 @@ const Heatmap = React.forwardRef(function Heatmap(
       width={width}
       height={height}
       margin={margin}
-      xAxis={defaultizedXAxis}
-      yAxis={defaultizedYAxis}
-      zAxis={defaultizedZAxis}
+      xAxis={xAxisWithDefault}
+      yAxis={yAxisWithDefault}
+      zAxis={zAxisWithDefault}
       colors={colors}
       dataset={dataset}
       sx={sx}
