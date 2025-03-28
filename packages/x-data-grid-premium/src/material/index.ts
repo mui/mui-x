@@ -5,6 +5,8 @@ import {
   GridFunctionsIcon,
   GridSendPromptIcon,
   GridRecordPromptIcon,
+  GridAssistantIcon,
+  GridPromptIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -13,6 +15,8 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   columnMenuAggregationIcon: GridFunctionsIcon,
   toolbarPromptSendIcon: GridSendPromptIcon,
   toolbarPromptRecordIcon: GridRecordPromptIcon,
+  assistantIcon: GridAssistantIcon,
+  promptIcon: GridPromptIcon,
 };
 
 const materialSlots = {

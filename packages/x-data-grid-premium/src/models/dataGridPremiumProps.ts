@@ -30,6 +30,7 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import { PromptHistory } from '../hooks/features/prompt/gridPromptInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -124,6 +125,16 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the AI Assistant panel is open.
+   * @default false
+   */
+  aiAssistantPanelOpen: boolean;
+  /**
+   * If `true`, the AI Assistant is disabled.
+   * @default false
+   */
+  disableAiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -209,4 +220,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * The history of the AI Assistant.
+   */
+  aiAssistantHistory?: PromptHistory;
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions?: string[];
 }

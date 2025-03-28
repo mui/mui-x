@@ -52,6 +52,9 @@ export interface GridLocaleText {
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
 
+  // Toolbar AI Assistant button
+  toolbarAssistant: React.ReactNode;
+
   // Columns management text
   columnsManagementSearchTitle: string;
   columnsManagementNoColumns: string;
@@ -202,6 +205,17 @@ export interface GridLocaleText {
     estimated: number | undefined;
   }) => string;
   paginationItemAriaLabel: (type: 'first' | 'last' | 'previous' | 'next') => string;
+
+  // Assistant panel
+  assistantPanelTitle: string;
+  assistantPanelNoHistory: string;
+  assistantSuggestions: string;
+
+  // Prompt field
+  promptFieldLabel: string;
+  promptFieldPlaceholder: string;
+  promptFieldPlaceholderWithRecording: string;
+  promptFieldSend: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;
