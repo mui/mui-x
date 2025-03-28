@@ -17,14 +17,15 @@ Material UI v6 and v5 are still supported, but require some additional steps if 
 
 ### General recommendations
 
-- Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
-  ```bash
-  node --conditions=require index.mjs
-  ```
+Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
+
+```bash
+node --conditions=require index.mjs
+```
 
 ### Vite
 
-Update Vite configuration to pass `require` condition:
+Update Vite configuration to pass the `require` condition:
 
 ```ts
 // vite.config.js
@@ -41,7 +42,7 @@ export default defineConfig({
 
 ### Next.js Pages router
 
-Update Next.js configuration to pass `require` condition and transpile MUI X packages:
+Update Next.js configuration to pass the `require` condition and transpile MUI X packages:
 
 ```ts
 // next.config.js
@@ -62,5 +63,20 @@ export default {
     '@mui/x-tree-view',
     '@mui/x-tree-view-pro',
   ],
+};
+```
+
+### Webpack
+
+Update Webpack configuration to pass the `require` condition:
+
+```ts
+// webpack.config.js
+
+export default {
+  // ...
+  resolve: {
+    conditionNames: ['require', '...'], // '...' is important here – it keeps the default webpack conditionNames
+  },
 };
 ```
