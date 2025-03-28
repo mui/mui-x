@@ -174,6 +174,9 @@ export const useGridDataSourceLazyLoader = (
     let hasChanged = false;
 
     for (let i = 0; i < rootChildrenCount; i += 1) {
+      if (pageToSkip.start === 0 && pageToSkip.end === 0) {
+        break;
+      }
       // replace the rows not in the viewport with skeleton rows
       if (
         ((pageToSkip.start as number) <= i && i <= pageToSkip.end) ||
@@ -200,7 +203,7 @@ export const useGridDataSourceLazyLoader = (
     }
 
     // Should only happen with VIEWPORT loading trigger
-    if (pageRowCount !== -1 && pageRowCount !== undefined) {
+    if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
       // fill the grid with skeleton rows
       for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
         const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
