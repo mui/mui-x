@@ -99,7 +99,8 @@ The animations of elements that are animated using CSS can be customized by over
 
 When it isn't possible to leverage CSS animations, the default components are animated using custom hooks.
 
-If you want to use the default animations in custom components, you can use these hooks. They are available for each element that is animated using JavaScript and are prefixed with `useAnimate`, e.g., `useAnimateLine` or `useAnimatePieArcLabel`.
+If you want to use the default animations in custom components, you can use these hooks.
+They are available for each element that is animated using JavaScript and are prefixed with `useAnimate`, e.g., `useAnimateLine` or `useAnimatePieArcLabel`.
 
 In the example below, labels are positioned above the bars they refer to and are animated using the default animation:
 
