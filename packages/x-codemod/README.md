@@ -329,6 +329,7 @@ The list includes these transformers
 - [`rename-imports`](#rename-imports)
 - [`reform-row-selection-model`](#reform-row-selection-model)
 - [`rename-package`](#rename-package)
+- [`add-showToolbar-prop`](#add-showToolbar-prop)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -462,6 +463,25 @@ Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-
 
 ```bash
 npx @mui/x-codemod@next v8.0.0/data-grid/rename-package <path>
+```
+
+#### `add-showToolbar-prop`
+
+Adds the `showToolbar` prop to the Data Grid components that are using `slots.toolbar` prop.
+
+```diff
+ <DataGridPremium
+  slots={{
+    toolbar: GridToolbar,
+  }}
++ showToolbar
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/add-showToolbar-prop <path>
 ```
 
 ### Pickers codemods
