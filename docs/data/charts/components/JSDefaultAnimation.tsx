@@ -1,11 +1,11 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarLabelProps } from '@mui/x-charts/BarChart';
 import * as React from 'react';
-import { useAnimate } from '@mui/x-charts/hooks';
+import { useAnimateBarLabel } from '@mui/x-charts/hooks';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
+import { styled } from '@mui/material/styles';
 
-export default function JSAnimationCustomization() {
+export default function JSDefaultAnimation() {
   const [key, animate] = React.useReducer((v) => v + 1, 0);
 
   return (
@@ -37,7 +37,13 @@ export default function JSAnimationCustomization() {
   );
 }
 
-function AnimatedBarLabel(props) {
+const Text = styled('text')(({ theme }) => ({
+  ...theme?.typography?.body2,
+  stroke: 'none',
+  fill: (theme.vars || theme)?.palette?.text?.primary,
+}));
+
+function AnimatedBarLabel(props: BarLabelProps) {
   const {
     seriesId,
     dataIndex,
@@ -56,21 +62,23 @@ function AnimatedBarLabel(props) {
     ...otherProps
   } = props;
 
-  const animatedProps = useAnimate(
-    { x: x + width / 2, y: y - 2 },
-    {
-      initialProps: { x: x + width / 2, y: yOrigin },
-      createInterpolator: interpolateObject,
-      transformProps: (p) => p,
-      applyProps: (element, p) => {
-        element.setAttribute('x', p.x.toString());
-        element.setAttribute('y', p.y.toString());
-      },
-      skip: skipAnimation,
-    },
-  );
+  const animatedProps = useAnimateBarLabel({
+    xOrigin,
+    x,
+    yOrigin,
+    y,
+    width,
+    height,
+    layout,
+    skipAnimation,
+  });
 
   return (
-    <text {...otherProps} fill={color} textAnchor="middle" {...animatedProps} />
+    <Text
+      {...otherProps}
+      textAnchor="middle"
+      dominantBaseline="central"
+      {...animatedProps}
+    />
   );
 }
