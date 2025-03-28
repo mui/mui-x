@@ -80,7 +80,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       </div>
     );
   }
-  return descendantCount > 0 ? (
+
+  return descendantCount === -1 || descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
@@ -112,7 +113,7 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   return (
