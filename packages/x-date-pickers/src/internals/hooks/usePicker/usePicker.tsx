@@ -28,6 +28,7 @@ import { useViews } from '../useViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
+import type { PickersActionBarAction } from '../../../PickersActionBar';
 
 export const usePicker = <
   TValue extends PickerValidValue,
@@ -58,6 +59,7 @@ export const usePicker = <
     reduceAnimations: reduceAnimationsProp,
     orientation: orientationProp,
     disableOpenPicker,
+    closeOnSelect,
     // Form props
     disabled,
     readOnly,
@@ -231,6 +233,14 @@ export const usePicker = <
   });
   const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
 
+  const defaultActionBarActions = React.useMemo<PickersActionBarAction[]>(() => {
+    if (closeOnSelect) {
+      return [];
+    }
+
+    return ['cancel', 'nextOrAccept'];
+  }, [closeOnSelect]);
+
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
       setValue,
@@ -315,6 +325,7 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
     }),
     [
       dismissViews,
@@ -324,6 +335,7 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
     ],
   );
 
@@ -370,7 +382,7 @@ export const usePicker = <
       views,
       timezone,
       value: viewValue,
-      onChange: setValueAndGoToNextView,
+      onChange: setValueFromView,
       view: popperView,
       onViewChange: setView,
       showViewSwitcher: timeViewsCount > 1,

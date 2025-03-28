@@ -41,7 +41,7 @@ interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubCo
 const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState, defaultActionBarActions } = usePickerPrivateContext();
   const { view } = usePickerContext();
   const isRtl = useRtl();
 
@@ -63,7 +63,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      actions: ['cancel', 'accept'] as PickersActionBarAction[],
+      actions: defaultActionBarActions,
     },
     className: classes.actionBar,
     ownerState,
