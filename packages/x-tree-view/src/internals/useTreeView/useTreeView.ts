@@ -58,7 +58,7 @@ export const useTreeView = <
     [inPlugins],
   );
 
-  const { pluginParams, forwardedProps, apiRef, experimentalFeatures, slots, slotProps } =
+  const { pluginParams, forwardedProps, apiRef, experimentalFeatures } =
     extractPluginParamsFromProps<TSignatures, typeof props>({
       plugins,
       props,
@@ -87,7 +87,7 @@ export const useTreeView = <
     storeRef.current = new TreeViewStore(initialState);
   }
 
-  const baseContextValue = useTreeViewBuildContext<TSignatures>({
+  const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
     publicAPI,
@@ -99,13 +99,10 @@ export const useTreeView = <
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
 
-  const pluginContextValues: any[] = [];
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
       params: pluginParams,
-      slots,
-      slotProps,
       experimentalFeatures,
       rootRef: innerRootRef,
       models,
@@ -123,10 +120,6 @@ export const useTreeView = <
 
     if (pluginResponse.instance) {
       Object.assign(instance, pluginResponse.instance);
-    }
-
-    if (pluginResponse.contextValue) {
-      pluginContextValues.push(pluginResponse.contextValue);
     }
   };
 
@@ -148,12 +141,6 @@ export const useTreeView = <
 
     return rootProps;
   };
-
-  const contextValue = React.useMemo(() => {
-    const copiedBaseContextValue = { ...baseContextValue };
-    return Object.assign(copiedBaseContextValue, ...pluginContextValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseContextValue, ...pluginContextValues]);
 
   return {
     getRootProps,

@@ -6,13 +6,10 @@ import {
   describeTreeView,
   DescribeTreeViewRendererUtils,
 } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewIconsSignature,
-} from '@mui/x-tree-view/internals';
+import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
+describeTreeView<[UseTreeViewExpansionSignature]>(
   'useTreeItem hook',
   ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
     describe('role prop', () => {

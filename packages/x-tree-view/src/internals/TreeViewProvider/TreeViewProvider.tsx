@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewAnyPluginSignature } from '../models';
-import { TreeViewStyleContext } from './TreeViewStyleContext';
+import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
 
 const EMPTY_OBJECT = {};
 
@@ -14,10 +14,38 @@ const EMPTY_OBJECT = {};
 export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
   props: TreeViewProviderProps<TSignatures>,
 ) {
-  const { contextValue, classes = EMPTY_OBJECT, children } = props;
+  const {
+    contextValue,
+    classes = EMPTY_OBJECT,
+    slots = EMPTY_OBJECT as TreeViewSlots,
+    slotProps = EMPTY_OBJECT as TreeViewSlotProps,
+    children,
+  } = props;
 
-  // TODO: Add the icons to this context and drop useTreeViewIcons
-  const styleContextValue = React.useMemo(() => ({ classes }), [classes]);
+  const styleContextValue = React.useMemo(
+    () => ({
+      classes,
+      slots: {
+        collapseIcon: slots.collapseIcon,
+        expandIcon: slots.expandIcon,
+        endIcon: slots.endIcon,
+      },
+      slotProps: {
+        collapseIcon: slotProps.collapseIcon,
+        expandIcon: slotProps.expandIcon,
+        endIcon: slotProps.endIcon,
+      },
+    }),
+    [
+      classes,
+      slots.collapseIcon,
+      slots.expandIcon,
+      slots.endIcon,
+      slotProps.collapseIcon,
+      slotProps.expandIcon,
+      slotProps.endIcon,
+    ],
+  );
 
   return (
     <TreeViewContext.Provider value={contextValue}>

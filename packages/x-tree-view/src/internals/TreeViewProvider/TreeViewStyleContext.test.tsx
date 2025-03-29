@@ -4,13 +4,10 @@ import {
   describeTreeView,
   DescribeTreeViewRendererReturnValue,
 } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewIconsSignature,
-} from '@mui/x-tree-view/internals';
+import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 
-describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
-  'useTreeViewItemCustomization plugin',
+describeTreeView<[UseTreeViewExpansionSignature]>(
+  'TreeViewStyleContext component',
   ({ render }) => {
     describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {
       const getIconTestId = (view: DescribeTreeViewRendererReturnValue<any>, itemId: string) =>
