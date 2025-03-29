@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     Component: SingleInputDateRangeField,
@@ -37,16 +37,15 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
 
-    it('should select all on <Tab> focus (v6 only)', () => {
+    it('should select all on <Tab> focus (v6 only)', async () => {
       // Test with non-accessible DOM structure
-      renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
-      // Simulate a <Tab> focus interaction on desktop
-      act(() => {
-        input.focus();
+      await user.tab();
+
+      await act(async () => {
+        input.select();
       });
-      clock.runToLast();
-      input.select();
 
       expectFieldValueV6(input, 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');

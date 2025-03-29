@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 describe('<YearCalendar /> - Keyboard', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2000, 0, 1) });
+  const { render } = createPickerRenderer({ clockConfig: new Date(2000, 0, 1) });
 
   const RTL_THEME = createTheme({
     direction: 'rtl',

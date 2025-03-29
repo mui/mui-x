@@ -10,11 +10,10 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDatePicker /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'picker'>(DesktopDatePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date',
     variant: 'desktop',

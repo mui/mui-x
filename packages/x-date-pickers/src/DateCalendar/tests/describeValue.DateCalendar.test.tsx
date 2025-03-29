@@ -6,11 +6,10 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pickers';
 
 describe('<DateCalendar /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'calendar'>(DateCalendar, () => ({
     render,
-    clock,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,

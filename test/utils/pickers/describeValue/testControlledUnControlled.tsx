@@ -24,7 +24,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     emptyValue,
     assertRenderedValue,
     setNewValue,
-    clock,
     ...pickerParams
   } = options;
 
@@ -145,10 +144,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       it('should call onChange when updating a value defined with `props.value`', () => {
         const onChange = spy();
 
-        const useControlledElement = (props) => {
+        const useControlledElement = (props: any) => {
           const [value, setValue] = React.useState(props?.value || null);
           const handleChange = React.useCallback(
-            (newValue) => {
+            (newValue: any) => {
               setValue(newValue);
               props?.onChange(newValue);
             },
