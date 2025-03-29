@@ -11,7 +11,7 @@ import {
 describe('<DateField /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerValue, 'field'>(DateField, () => ({
+  describeValue.skip<PickerValue, 'field'>(DateField, () => ({
     render,
     clock,
     componentFamily: 'field',

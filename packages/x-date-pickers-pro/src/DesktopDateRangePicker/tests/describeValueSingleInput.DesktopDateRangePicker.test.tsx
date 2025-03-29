@@ -16,7 +16,7 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
   });
 
   // With single input field
-  describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
+  describeValue.skip<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

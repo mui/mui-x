@@ -5,6 +5,10 @@ import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 import { PickerValidDate } from '../../models';
+import {
+  CreateStepNavigationReturnValue,
+  DEFAULT_STEP_NAVIGATION,
+} from '../utils/createStepNavigation';
 
 export type PickerOnChangeFn = (
   date: PickerValidDate | null,
@@ -64,12 +68,16 @@ export interface UseViewsOptions<
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
   onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
+  getStepNavigation?: CreateStepNavigationReturnValue;
 }
 
 export interface ExportedUseViewsOptions<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
+> extends Omit<
+    MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'>,
+    'getStepNavigation'
+  > {}
 
 let warnedOnceNotValidView = false;
 
@@ -90,6 +98,9 @@ interface UseViewsResponse<
     currentViewSelectionState?: PickerSelectionState,
     selectedView?: TView,
   ) => void;
+  hasNextStep: boolean;
+  hasSeveralSteps: boolean;
+  goToNextStep: () => void;
 }
 
 export function useViews<
@@ -104,6 +115,7 @@ export function useViews<
   autoFocus,
   focusedView: inFocusedView,
   onFocusedViewChange,
+  getStepNavigation,
 }: UseViewsOptions<TValue, TView>): UseViewsResponse<TValue, TView> {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidView) {
@@ -142,6 +154,15 @@ export function useViews<
     controlled: inFocusedView,
     default: defaultFocusedView.current,
   });
+
+  const stepNavigation = getStepNavigation
+    ? getStepNavigation({
+        setView,
+        view,
+        defaultView: defaultView.current,
+        views,
+      })
+    : DEFAULT_STEP_NAVIGATION;
 
   React.useEffect(() => {
     // Update the current view when `openTo` or `views` props change
@@ -204,21 +225,22 @@ export function useViews<
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
       onChange(value, globalSelectionState, selectedView);
-      // Detects if the selected view is not the active one.
-      // Can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
-      if (selectedView && selectedView !== view) {
-        const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
-        if (nextViewAfterSelected) {
-          // move to next view after the selected one
-          handleChangeView(nextViewAfterSelected);
-        }
-      } else if (isSelectionFinishedOnCurrentView) {
-        goToNextView();
+
+      // The selected view can be different from the active view,
+      // This can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
+      const currentView = selectedView ?? view;
+      const viewToNavigateTo = views[views.indexOf(currentView) + 1];
+      if (
+        viewToNavigateTo != null &&
+        stepNavigation.areViewsInSameStep(currentView, viewToNavigateTo)
+      ) {
+        handleChangeView(viewToNavigateTo);
       }
     },
   );
 
   return {
+    ...stepNavigation,
     view,
     setView: handleChangeView,
     focusedView,

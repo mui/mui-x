@@ -10,8 +10,6 @@ import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
-import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
-import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -24,8 +22,6 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
   props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -77,10 +73,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: emptyActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 

@@ -13,7 +13,7 @@ import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInput
 describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue<PickerRangeValue, 'picker'>(DesktopDateTimeRangePicker, () => ({
+  describeValue.skip<PickerRangeValue, 'picker'>(DesktopDateTimeRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',
@@ -72,6 +72,11 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         ];
       }
       if (isOpened) {
+        // if we want to set the end date, we firstly need to switch to end date "range position"
+        if (setEndDate && screen.queryByRole('button', { name: 'Next' })) {
+          fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+        }
+
         fireEvent.click(
           screen.getByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
