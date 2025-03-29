@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { animated } from '@react-spring/web';
+import { animated, AnimatedProps } from '@react-spring/web';
 import PropTypes from 'prop-types';
 import { barLabelClasses } from './barLabelClasses';
 import { BarLabelOwnerState } from './BarLabel.types';
@@ -28,7 +28,16 @@ export const BarLabelComponent = styled(animated.text, {
   },
 }));
 
-export type BarLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> & BarLabelOwnerState;
+export type BarLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id' | 'style'> &
+  BarLabelOwnerState & {
+    style: Omit<React.SVGProps<SVGTextElement>['style'], 'x' | 'y' | 'height' | 'width'> &
+      AnimatedProps<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }>;
+  };
 
 function BarLabel(inProps: BarLabelProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarLabel' });

@@ -127,6 +127,12 @@ In the example we display a `'High'` text on values higher than 10, and hide val
 
 {{"demo": "CustomLabels.js"}}
 
+You can further customize the labels by providing a component to the `barLabel` slot.
+
+In the example below, we position the labels above the bars they refer to.
+
+{{"demo": "LabelsAboveBars.js"}}
+
 ## Click event
 
 Bar charts provides two click handlers:
