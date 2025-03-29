@@ -15,25 +15,28 @@ import {
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { useTreeViewModels } from './useTreeViewModels';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+  if (inputApiRef.current == null) {
+    inputApiRef.current = {} as T;
+  }
+  return inputApiRef.current;
+}
+
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
 ): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
+  const [fallbackPublicApi] = React.useState({});
 
   if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
+    return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApiRef.current;
+  return fallbackPublicApi as T;
 }
 
 let globalId: number = 0;
@@ -58,13 +61,12 @@ export const useTreeView = <
     [inPlugins],
   );
 
-  const { pluginParams, forwardedProps, apiRef, experimentalFeatures, slots, slotProps } =
+  const { pluginParams, forwardedProps, apiRef, experimentalFeatures } =
     extractPluginParamsFromProps<TSignatures, typeof props>({
       plugins,
       props,
     });
 
-  const models = useTreeViewModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
   const instance = instanceRef.current as TreeViewInstance<TSignatures>;
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
@@ -87,7 +89,7 @@ export const useTreeView = <
     storeRef.current = new TreeViewStore(initialState);
   }
 
-  const baseContextValue = useTreeViewBuildContext<TSignatures>({
+  const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
     publicAPI,
@@ -99,16 +101,12 @@ export const useTreeView = <
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
 
-  const pluginContextValues: any[] = [];
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
       params: pluginParams,
-      slots,
-      slotProps,
       experimentalFeatures,
       rootRef: innerRootRef,
-      models,
       plugins,
       store: storeRef.current as TreeViewStore<any>,
     });
@@ -123,10 +121,6 @@ export const useTreeView = <
 
     if (pluginResponse.instance) {
       Object.assign(instance, pluginResponse.instance);
-    }
-
-    if (pluginResponse.contextValue) {
-      pluginContextValues.push(pluginResponse.contextValue);
     }
   };
 
@@ -148,12 +142,6 @@ export const useTreeView = <
 
     return rootProps;
   };
-
-  const contextValue = React.useMemo(() => {
-    const copiedBaseContextValue = { ...baseContextValue };
-    return Object.assign(copiedBaseContextValue, ...pluginContextValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseContextValue, ...pluginContextValues]);
 
   return {
     getRootProps,

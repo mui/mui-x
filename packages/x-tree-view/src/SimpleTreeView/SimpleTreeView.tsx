@@ -68,7 +68,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
-  const ownerState = props as SimpleTreeViewProps<any>;
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
@@ -86,10 +86,9 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   >({
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props: { ...props, items: EMPTY_ITEMS },
+    props: { ...other, items: EMPTY_ITEMS },
   });
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? SimpleTreeViewRoot;
@@ -98,11 +97,16 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     externalSlotProps: slotProps?.root,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState,
+    ownerState: props as SimpleTreeViewProps<any>,
   });
 
   return (
-    <TreeViewProvider contextValue={contextValue} classes={classes}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps} />
     </TreeViewProvider>
   );

@@ -59,7 +59,7 @@ export interface UseTreeViewSelectionInstance extends UseTreeViewSelectionPublic
   ) => void;
 }
 
-type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
+export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
   ? string[]
   : string | null;
 
@@ -141,8 +141,7 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
 
 export interface UseTreeViewSelectionState {
   selection: {
-    rawSelectedItems: TreeViewSelectionValue<boolean>;
-    selectedItemsMap: Map<string, true>;
+    selectedItems: TreeViewSelectionValue<boolean>;
     isEnabled: boolean;
     isMultiSelectEnabled: boolean;
     isCheckboxSelectionEnabled: boolean;
@@ -155,7 +154,6 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewSelectionDefaultizedParameters<any>;
   instance: UseTreeViewSelectionInstance;
   publicAPI: UseTreeViewSelectionPublicAPI;
-  modelNames: 'selectedItems';
   state: UseTreeViewSelectionState;
   dependencies: [
     UseTreeViewItemsSignature,
