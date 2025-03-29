@@ -280,6 +280,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const xTicks = useTicks({
     scale: xScale,
+    scaleType: settings.scaleType,
     tickNumber,
     valueFormatter,
     tickInterval,
@@ -486,7 +487,6 @@ ChartsXAxis.propTypes = {
   tickLabelMinGap: PropTypes.number,
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
-   * Only used if scale is 'band'.
    * @default 'middle'
    */
   tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),

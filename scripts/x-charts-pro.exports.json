@@ -19,6 +19,7 @@
   { "name": "AXIS_LABEL_DEFAULT_HEIGHT", "kind": "Variable" },
   { "name": "axisClasses", "kind": "Variable" },
   { "name": "AxisConfig", "kind": "TypeAlias" },
+  { "name": "AxisValueFormatterContext", "kind": "TypeAlias" },
   { "name": "BarChart", "kind": "Variable" },
   { "name": "BarChartPro", "kind": "Variable" },
   { "name": "BarChartProProps", "kind": "Interface" },

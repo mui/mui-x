@@ -45,7 +45,7 @@
       "description": "Defines which ticks get its label displayed. Its value can be:<br />- &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one.<br />- a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones."
     },
     "tickLabelPlacement": {
-      "description": "The placement of ticks label. Can be the middle of the band, or the tick position.<br />Only used if scale is &#39;band&#39;."
+      "description": "The placement of ticks label. Can be the middle of the band, or the tick position."
     },
     "tickLabelStyle": { "description": "The style applied to ticks text." },
     "tickMaxStep": {
