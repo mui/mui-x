@@ -68,6 +68,8 @@ import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+import './augmentation';
+
 export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
