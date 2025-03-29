@@ -124,7 +124,7 @@ function GridToolbar(props: GridToolbarProps) {
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
           <FilterPanelTrigger
             render={(triggerProps, state) => (
-              <ToolbarButton {...triggerProps} color="default">
+              <ToolbarButton {...triggerProps}>
                 <rootProps.slots.baseBadge
                   badgeContent={state.filterCount}
                   color="primary"

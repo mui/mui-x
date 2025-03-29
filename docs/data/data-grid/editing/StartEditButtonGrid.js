@@ -45,7 +45,7 @@ function EditToolbar(props) {
     });
   };
 
-  const handleMouseDown = (event) => {
+  const handlePointerDown = (event) => {
     // Keep the focus in the cell
     event.preventDefault();
   };
@@ -63,7 +63,7 @@ function EditToolbar(props) {
       </Tooltip>
       {cellMode === 'edit' && (
         <Tooltip title="Cancel">
-          <ToolbarButton onClick={handleCancel} onMouseDown={handleMouseDown}>
+          <ToolbarButton onClick={handleCancel} onPointerDown={handlePointerDown}>
             <CancelIcon fontSize="small" />
           </ToolbarButton>
         </Tooltip>
