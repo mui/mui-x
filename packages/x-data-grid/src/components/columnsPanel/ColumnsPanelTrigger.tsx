@@ -46,7 +46,7 @@ export type ColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classN
  */
 const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerProps>(
   function ColumnsPanelTrigger(props, ref) {
-    const { render, className, onClick, ...other } = props;
+    const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
@@ -72,6 +72,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       if (open) {
         event.stopPropagation();
       }
+      onPointerUp?.(event);
     };
 
     const element = useGridComponentRenderer(
