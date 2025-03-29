@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, waitForElementToBeRemoved } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
+import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();
@@ -36,4 +37,74 @@ describe('<BarChart />', () => {
 
     expect(screen.getByText('No data to display')).toBeVisible();
   });
+
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)(
+    'should hide tooltip if the item the tooltip was showing is removed',
+    async () => {
+      const { rerender, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          series={[{ data: [10] }]}
+          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          hideLegend
+          skipAnimation
+        />,
+      );
+
+      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      await user.hover(bar);
+
+      expect(await screen.findByRole('tooltip')).toBeVisible();
+
+      rerender(
+        <BarChart
+          height={100}
+          width={100}
+          series={[{ data: [] }]}
+          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          hideLegend
+          skipAnimation
+        />,
+      );
+
+      await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+    },
+  );
+
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)(
+    'should hide tooltip if the series of the item the tooltip was showing is removed',
+    async () => {
+      const { rerender, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          series={[{ data: [10] }]}
+          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          hideLegend
+          skipAnimation
+        />,
+      );
+
+      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      await user.hover(bar);
+
+      expect(await screen.findByRole('tooltip')).toBeVisible();
+
+      rerender(
+        <BarChart
+          height={100}
+          width={100}
+          series={[]}
+          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          hideLegend
+          skipAnimation
+        />,
+      );
+
+      await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+    },
+  );
 });
