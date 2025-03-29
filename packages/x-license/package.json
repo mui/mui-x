@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.10",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/utils": "^7.0.0",
     "@mui/x-internals": "workspace:*",
     "@mui/x-telemetry": "workspace:*"
   },
