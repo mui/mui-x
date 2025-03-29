@@ -43,6 +43,8 @@ import {
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
+import type { GridUpdateRowParams } from '../../../models/gridDataSource';
+import { GridUpdateRowError } from '../dataSource';
 
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -56,6 +58,8 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
+    | 'dataSource'
+    | 'onDataSourceError'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -534,7 +538,51 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
-      if (processRowUpdate) {
+      if (props.dataSource?.updateRow) {
+        const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
+          prevRowModesModel.current[id].mode = GridRowModes.Edit;
+          // Revert the mode in the rowModesModel prop back to "edit"
+          updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
+
+          if (typeof props.onDataSourceError === 'function') {
+            props.onDataSourceError(
+              new GridUpdateRowError({
+                message: errorThrown?.message,
+                params: updateParams,
+                cause: errorThrown,
+              }),
+            );
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+              ],
+              'error',
+            );
+          }
+        };
+
+        try {
+          Promise.resolve(
+            props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
+          )
+            .then((finalRowUpdate) => {
+              apiRef.current.updateRows([finalRowUpdate]);
+              if (finalRowUpdate !== row) {
+                // Reset the outdated cache
+                apiRef.current.dataSource.cache.clear();
+              }
+              finishRowEditMode();
+            })
+            .catch((errorThrown) =>
+              handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate }),
+            );
+        } catch (errorThrown) {
+          handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate });
+        }
+      } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
           // The row might have been deleted
           if (prevRowModesModel.current[id]) {
