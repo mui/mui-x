@@ -3,10 +3,10 @@ import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import useForkRef from '@mui/utils/useForkRef';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from '../../internals/animation/useAnimate';
-import type { PieArcProps } from '../../PieChart';
+import type { PieArcLabelProps } from '../../PieChart';
 
-type UseAnimatePieArcParams = Pick<
-  PieArcProps,
+type UseAnimatePieArcLabelParams = Pick<
+  PieArcLabelProps,
   | 'startAngle'
   | 'endAngle'
   | 'cornerRadius'
@@ -14,18 +14,21 @@ type UseAnimatePieArcParams = Pick<
   | 'innerRadius'
   | 'outerRadius'
   | 'skipAnimation'
-> & { ref?: React.Ref<SVGPathElement> };
-type UseAnimatePieArcReturnValue = {
-  ref: React.Ref<SVGPathElement>;
-  d: string;
-  visibility: 'hidden' | 'visible';
+> & { ref?: React.Ref<SVGTextElement> };
+type UseAnimatePieArcLabelReturn = {
+  ref: React.Ref<SVGTextElement>;
+  x: number;
+  y: number;
 };
-type PieArcInterpolatedProps = Pick<
-  UseAnimatePieArcParams,
+type PieArcLabelInterpolatedProps = Pick<
+  UseAnimatePieArcLabelParams,
   'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle' | 'cornerRadius'
 >;
 
-function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterpolatedProps) {
+function pieArcLabelPropsInterpolator(
+  from: PieArcLabelInterpolatedProps,
+  to: PieArcLabelInterpolatedProps,
+) {
   const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
   const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
   const interpolateInnerRadius = interpolateNumber(from.innerRadius, to.innerRadius);
@@ -45,10 +48,12 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   };
 }
 
-/** Animates a slice of a pie chart by increasing the start and end angles from the middle angle to their final values.
+/** Animates the label of pie slice from its middle point to the centroid of the slice.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
-export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieArcReturnValue {
+export function useAnimatePieArcLabel(
+  props: UseAnimatePieArcLabelParams,
+): UseAnimatePieArcLabelReturn {
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
@@ -68,25 +73,18 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
       cornerRadius: props.cornerRadius,
     },
     {
-      createInterpolator: pieArcPropsInterpolator,
+      createInterpolator: pieArcLabelPropsInterpolator,
       applyProps(element, animatedProps) {
-        element.setAttribute(
-          'd',
-          d3Arc()
-            .cornerRadius(animatedProps.cornerRadius)({
-              padAngle: animatedProps.paddingAngle,
-              innerRadius: animatedProps.innerRadius,
-              outerRadius: animatedProps.outerRadius,
-              startAngle: animatedProps.startAngle,
-              endAngle: animatedProps.endAngle,
-            })!
-            .toString(),
-        );
+        const [x, y] = d3Arc().cornerRadius(animatedProps.cornerRadius).centroid({
+          padAngle: animatedProps.paddingAngle,
+          startAngle: animatedProps.startAngle,
+          endAngle: animatedProps.endAngle,
+          innerRadius: animatedProps.innerRadius,
+          outerRadius: animatedProps.outerRadius,
+        });
 
-        element.setAttribute(
-          'visibility',
-          animatedProps.startAngle === animatedProps.endAngle ? 'hidden' : 'visible',
-        );
+        element.setAttribute('x', x.toString());
+        element.setAttribute('y', y.toString());
       },
       initialProps,
       skip: props.skipAnimation,
@@ -95,15 +93,17 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
 
   const usedProps = props.skipAnimation ? props : initialProps;
 
+  const [x, y] = d3Arc().cornerRadius(usedProps.cornerRadius).centroid({
+    padAngle: usedProps.paddingAngle,
+    startAngle: usedProps.startAngle,
+    endAngle: usedProps.endAngle,
+    innerRadius: usedProps.innerRadius,
+    outerRadius: usedProps.outerRadius,
+  });
+
   return {
     ref: useForkRef(ref, props.ref),
-    d: d3Arc().cornerRadius(usedProps.cornerRadius)({
-      padAngle: usedProps.paddingAngle,
-      innerRadius: usedProps.innerRadius,
-      outerRadius: usedProps.outerRadius,
-      startAngle: usedProps.startAngle,
-      endAngle: usedProps.endAngle,
-    })!,
-    visibility: usedProps.startAngle === usedProps.endAngle ? 'hidden' : 'visible',
+    x,
+    y,
   };
 }
