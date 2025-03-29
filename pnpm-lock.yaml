@@ -738,12 +738,6 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      '@react-spring/rafz':
-        specifier: ^9.7.5
-        version: 9.7.5
-      '@react-spring/web':
-        specifier: ^9.7.5
-        version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -772,12 +766,6 @@ importers:
       '@mui/system':
         specifier: ^7.0.0
         version: 7.0.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
-      '@react-spring/core':
-        specifier: ^9.7.5
-        version: 9.7.5(react@19.0.0)
-      '@react-spring/shared':
-        specifier: ^9.7.5
-        version: 9.7.5(react@19.0.0)
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14
@@ -827,12 +815,6 @@ importers:
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
-      '@react-spring/rafz':
-        specifier: ^9.7.5
-        version: 9.7.5
-      '@react-spring/web':
-        specifier: ^9.7.5
-        version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -846,12 +828,6 @@ importers:
       '@mui/system':
         specifier: ^7.0.0
         version: 7.0.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
-      '@react-spring/core':
-        specifier: ^9.7.5
-        version: 9.7.5(react@19.0.0)
-      '@react-spring/shared':
-        specifier: ^9.7.5
-        version: 9.7.5(react@19.0.0)
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14

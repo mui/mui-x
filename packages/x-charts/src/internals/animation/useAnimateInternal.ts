@@ -7,13 +7,15 @@ import { shallowEqual } from '../shallowEqual';
 
 /** Animates a ref. The animation can be skipped by setting {@link skip} to true.
  *
+ * If possible, prefer {@link useAnimate}.
+ *
  * - If {@link skip} is false, a transition will be started.
  * - If {@link skip} is true and no transition is in progress, no transition will be started and {@link applyProps} will
  *   never be called.
  * - If {@link skip} becomes true and a transition is in progress, the transition will immediately end and
  *   {@link applyProps} be called with the final value.
  * */
-export function useAnimate<Props extends {}, Elem extends Element>(
+export function useAnimateInternal<Props extends {}, Elem extends Element>(
   props: Props,
   {
     createInterpolator,
