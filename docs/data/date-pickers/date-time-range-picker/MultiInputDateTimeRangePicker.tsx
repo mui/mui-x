@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer } from '../_shared/DemoContainer';
 
 export default function MultiInputDateTimeRangePicker() {
   return (

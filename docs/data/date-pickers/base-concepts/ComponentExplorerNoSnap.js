@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -14,6 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // eslint-disable-next-line no-restricted-imports
 import * as exportedElements from '@mui/x-date-pickers-pro';
 import Typography from '@mui/material/Typography';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 
 const camelCaseToKebabCase = (str) =>
   str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
