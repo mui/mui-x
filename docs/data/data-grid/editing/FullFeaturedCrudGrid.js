@@ -176,8 +176,10 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
-              style={{
-                color: theme.palette.primary.main,
+              material={{
+                sx: {
+                  color: 'primary.main',
+                },
               }}
               onClick={handleSaveClick(id)}
             />,
