@@ -1,4 +1,4 @@
-import type { MuiBaseEvent, MuiEvent } from '../muiEvent';
+import type { MuiBaseEvent, MuiEvent } from '@mui/x-internals/types';
 import type { GridCallbackDetails } from '../api/gridCallbackDetails';
 import type { GridEventLookup, GridEvents } from './gridEventLookup';
 
