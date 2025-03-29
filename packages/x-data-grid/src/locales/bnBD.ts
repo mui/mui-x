@@ -7,6 +7,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'কোনো ফলাফল পাওয়া যায়নি।',
   noColumnsOverlayLabel: 'কোনো কলাম নেই',
   noColumnsOverlayManageColumns: 'কলাম পরিচালনা করুন',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'ঘনত্ব',
@@ -50,6 +51,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'CSV হিসাবে ডাউনলোড করুন',
   toolbarExportPrint: 'প্রিন্ট করুন',
   toolbarExportExcel: 'Excel হিসাবে ডাউনলোড করুন',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'অনুসন্ধান',
@@ -132,6 +136,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'সাজানো বাতিল করুন',
   columnMenuSortAsc: 'ASC অনুযায়ী সাজান',
   columnMenuSortDesc: 'DESC অনুযায়ী সাজান',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -224,6 +229,35 @@ const bnBDGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'সর্বনিম্ন',
   aggregationFunctionLabelMax: 'সর্বোচ্চ',
   aggregationFunctionLabelSize: 'মাপ',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
 export const bnBD: Localization = getGridLocalization(bnBDGrid);

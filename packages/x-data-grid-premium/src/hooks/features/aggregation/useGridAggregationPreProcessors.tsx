@@ -56,17 +56,11 @@ export const useGridAggregationPreProcessors = (
         let column = columnsState.lookup[field];
 
         if (haveAggregationColumnValue) {
-          column = unwrapColumnFromAggregation({
-            column,
-          });
+          column = unwrapColumnFromAggregation(column);
         }
 
         if (shouldHaveAggregationValue) {
-          column = wrapColumnWithAggregationValue({
-            column,
-            aggregationRule: aggregationRules[field],
-            apiRef,
-          });
+          column = wrapColumnWithAggregationValue(column, aggregationRules[field], apiRef);
         }
 
         columnsState.lookup[field] = column;

@@ -60,7 +60,6 @@ export const useGridKeyboardNavigation = (
     | 'pagination'
     | 'paginationMode'
     | 'getRowId'
-    | 'experimentalFeatures'
     | 'signature'
     | 'headerFilters'
     | 'unstable_listView'
