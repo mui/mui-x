@@ -18,7 +18,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderWithProps, values, setNewValue, clock, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
     options;
 
   const isRangeType = isPickerRangeType(pickerParams.type);
