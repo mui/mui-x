@@ -109,7 +109,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date: any, position: any) =>
+          shouldDisableDate={(date: any, position: string) =>
             position === 'end' ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10')) : false
           }
         />,
@@ -136,7 +136,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date: any, position: any) =>
+        shouldDisableDate: (date: any, position: string) =>
           position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
@@ -151,7 +151,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date: any, position: any) =>
+          shouldDisableDate={(date: any, position: string) =>
             position === 'start'
               ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
@@ -179,7 +179,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], fieldType);
 
       setProps({
-        shouldDisableDate: (date: any, position: any) =>
+        shouldDisableDate: (date: any, position: string) =>
           position === 'start'
             ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,

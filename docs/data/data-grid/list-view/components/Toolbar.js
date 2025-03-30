@@ -28,7 +28,6 @@ import { ToolbarFilterItem } from './ToolbarFilterItem';
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
-  marginLeft: 'auto',
 });
 
 const StyledToolbarButton = styled(ToolbarButton)(({ theme, ownerState }) => ({

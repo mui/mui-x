@@ -69,7 +69,6 @@ const GridQuickFilterRoot = styled('div', {
 })({
   display: 'grid',
   alignItems: 'center',
-  marginLeft: 'auto',
 });
 
 const GridQuickFilterTrigger = styled(ToolbarButton, {

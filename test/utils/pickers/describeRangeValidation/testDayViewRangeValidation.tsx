@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
+import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 
@@ -31,10 +32,10 @@ const testMonthSwitcherAreDisable = (areDisable: [boolean, boolean]) => {
   }
 };
 
-export function testDayViewRangeValidation(
-  ElementToTest: React.FunctionComponent<any>,
-  getOptions: any,
-) {
+export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
+  ElementToTest,
+  getOptions,
+) => {
   const { componentFamily, views, variant = 'desktop' } = getOptions();
   describeSkipIf(!views.includes('day') || componentFamily === 'field')(
     'validation in day view:',
@@ -180,4 +181,4 @@ export function testDayViewRangeValidation(
       });
     },
   );
-}
+};

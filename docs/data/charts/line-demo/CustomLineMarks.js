@@ -33,6 +33,7 @@ export default function CustomLineMarks() {
         },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
+      yAxis={[{ width: 50 }]}
       margin={margin}
     />
   );
