@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -39,6 +38,11 @@ import type {
   GridGetRowsError,
   GridUpdateRowError,
 } from '../../hooks/features/dataSource/gridDataSourceError';
+
+type CommonProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 export interface GridExperimentalFeatures {
   /**
@@ -765,13 +769,19 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label'?: string;
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby'?: string;
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label?: string;
   /**
    * Set of columns of type [[GridColDef]][].
    */

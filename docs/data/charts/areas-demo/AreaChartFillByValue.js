@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import { useYScale, useDrawingArea } from '@mui/x-charts/hooks';
 import { LineChart, areaElementClasses } from '@mui/x-charts/LineChart';
 
+const margin = { right: 24, bottom: 0 };
 const data = [4000, 3000, -1000, 500, -2100, -250, 3490];
 const xData = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
 
@@ -38,10 +39,10 @@ export default function AreaChartFillByValue() {
     <Stack direction="column" width="100%" spacing={1}>
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 50 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ bottom: 0 }}
+        margin={margin}
         sx={{
           [`& .${areaElementClasses.root}`]: {
             fill: 'url(#switch-color-id-1)',
@@ -60,10 +61,10 @@ export default function AreaChartFillByValue() {
 
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
-        yAxis={[{ min: -3000, max: 4000, width: 40 }]}
+        yAxis={[{ min: -3000, max: 4000, width: 50 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ bottom: 0 }}
+        margin={margin}
         sx={{
           [`& .${areaElementClasses.root}`]: {
             fill: 'url(#switch-color-id-2)',

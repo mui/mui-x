@@ -2,11 +2,14 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
-  getTimeFieldInternalPropsDefaults,
+  useApplyDefaultValuesToTimeValidationProps,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -15,6 +18,7 @@ import {
   ExportedValidateTimeRangeProps,
   ValidateTimeRangeProps,
 } from '../validation/validateTimeRange';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -22,6 +26,7 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
   const {
     enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
     dateSeparator,
+    ampm,
   } = parameters;
 
   return React.useMemo(
@@ -31,26 +36,57 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
-        ...internalProps,
-        ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
-      }),
-      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        // TODO: Use ampm prop?
-        const ampm = utils.is12HourCycleInCurrentLocale();
-        const formattedValue = utils.isValid(value[0])
-          ? utils.format(value[0], ampm ? 'fullTime12h' : 'fullTime24h')
-          : null;
-        return localeText.openTimePickerDialogue(formattedValue);
-      },
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToTimeRangeFieldInternalProps,
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
-    [enableAccessibleFieldDOMStructure, dateSeparator],
+    [enableAccessibleFieldDOMStructure, dateSeparator, ampm],
+  );
+}
+
+function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
+  return function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
+    const utils = useUtils();
+    const translations = usePickerTranslations();
+
+    return React.useMemo(() => {
+      const formatKey =
+        (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+
+      return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
+    }, [value, translations, utils]);
+  };
+}
+
+function useApplyDefaultValuesToTimeRangeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(internalProps);
+
+  const ampm = React.useMemo(
+    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, utils],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format:
+        internalProps.format ?? (ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h),
+    }),
+    [internalProps, validationProps, ampm, utils],
   );
 }
 
 export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps {
+  extends RangeFieldSeparatorProps,
+    AmPmProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 

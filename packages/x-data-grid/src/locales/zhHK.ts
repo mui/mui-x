@@ -1,4 +1,3 @@
-import { zhHK as zhHKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -6,8 +5,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有行',
   noResultsOverlayLabel: '未找到結果。',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: '沒有欄目',
+  noColumnsOverlayManageColumns: '管理欄目',
 
   // Density selector toolbar button text
   toolbarDensity: '密度',
@@ -34,15 +33,15 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: '清除',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: '輸入提示詞',
+  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
+  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
+  toolbarPromptControlLabel: '提示詞輸入',
+  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
+  toolbarPromptControlSendActionLabel: '發送',
+  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
+  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重試。',
 
   // Export selector toolbar button text
   toolbarExport: '出口',
@@ -56,7 +55,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '沒有列',
   columnsManagementShowHideAllText: '顯示/隱藏所有',
   columnsManagementReset: '重置',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',
@@ -124,6 +123,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄目選單`,
   columnMenuShowColumns: '顯示欄目',
   columnMenuManageColumns: '管理欄目',
   columnMenuFilter: '篩選',
@@ -183,6 +183,28 @@ const zhHKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '擴張',
   collapseDetailPanel: '坍塌',
 
+  // Pagination
+  paginationRowsPerPage: '每頁行數:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
+    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一頁';
+    }
+    if (type === 'last') {
+      return '最後一頁';
+    }
+    if (type === 'next') {
+      return '下一頁';
+    }
+    return '上一頁';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '行重新排序',
 
@@ -195,4 +217,4 @@ const zhHKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '尺寸',
 };
 
-export const zhHK = getGridLocalization(zhHKGrid, zhHKCore);
+export const zhHK = getGridLocalization(zhHKGrid);

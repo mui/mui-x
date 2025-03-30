@@ -58,3 +58,11 @@ export const selectorChartRadiusAxis = createSelector(
       axisDirection: 'radius',
     }),
 );
+
+export const selectorChartPolarCenter = createSelector(
+  [selectorChartDrawingArea],
+  (drawingArea) => ({
+    cx: drawingArea.left + drawingArea.width / 2,
+    cy: drawingArea.top + drawingArea.height / 2,
+  }),
+);

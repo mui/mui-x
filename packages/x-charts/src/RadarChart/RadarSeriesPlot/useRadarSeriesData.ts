@@ -1,9 +1,10 @@
 import { useRotationScale } from '../../hooks/useScale';
-import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { SeriesId } from '../../models/seriesType/common';
+import { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { useChartContext } from '../../context/ChartProvider/useChartContext';
 
 /**
  * This hook provides all the data needed to display radar series.
@@ -11,19 +12,16 @@ import { SeriesId } from '../../models/seriesType/common';
  * @returns
  */
 export function useRadarSeriesData(querySeriesId?: SeriesId) {
+  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
   const radarSeries = useRadarSeries(querySeriesId === undefined ? undefined : [querySeriesId]);
 
-  const drawingArea = useDrawingArea();
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
 
-  const cx = drawingArea.left + drawingArea.width / 2;
-  const cy = drawingArea.top + drawingArea.height / 2;
-
-  const metrics = rotationScale.domain() as (string | number)[];
-  const angles = metrics.map((key) => rotationScale(key)!);
+  const metrics = (rotationScale?.domain() as (string | number)[]) ?? [];
+  const angles = metrics.map((key) => rotationScale?.(key)!);
 
   return radarSeries.map((series) => {
     const seriesId = series.id;
@@ -41,9 +39,10 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
         const r = radiusAxis[metrics[dataIndex]].scale(value)!;
         const angle = angles[dataIndex];
+        const [x, y] = instance.polar2svg(r, angle);
         return {
-          x: cx + r * Math.sin(angle),
-          y: cy - r * Math.cos(angle),
+          x,
+          y,
           isItemHighlighted: highlighted,
           isItemFaded: faded,
           dataIndex,

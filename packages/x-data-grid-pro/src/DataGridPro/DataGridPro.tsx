@@ -81,11 +81,11 @@ DataGridProRaw.propTypes = {
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -138,6 +138,7 @@ DataGridProRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -482,6 +483,12 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
   /**
    * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
@@ -996,6 +1003,7 @@ DataGridProRaw.propTypes = {
       sort: PropTypes.oneOf(['asc', 'desc']),
     }),
   ),
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

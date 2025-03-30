@@ -1,0 +1,15 @@
+<BarChart
+  xAxis={xAxes}
+  // Other props
+  width={600}
+  height={900}
+  dataset={usAirportPassengers}
+  series={[{ dataKey: '2022', label: '2022' }]}
+  hideLegend
+  yAxis={[
+    {
+      valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+      width: 60,
+    },
+  ]}
+/>

@@ -1,4 +1,3 @@
-import { deDE as deDECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -125,6 +124,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} Spaltenmenü`,
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
@@ -186,6 +186,29 @@ const deDEGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Zeilen pro Seite:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} von ${count !== -1 ? count : `mehr als ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `ungefähr ${estimated}` : `mehr als ${to}`;
+    return `${from}–${to} von ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Zur ersten Seite';
+    }
+    if (type === 'last') {
+      return 'Zur letzten Seite';
+    }
+    if (type === 'next') {
+      return 'Zur nächsten Seite';
+    }
+    // if (type === 'previous') {
+    return 'Zur vorherigen Seite';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reihen neu ordnen',
 
@@ -198,4 +221,4 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Anzahl',
 };
 
-export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
+export const deDE: Localization = getGridLocalization(deDEGrid);

@@ -1,50 +1,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
 import { useRadarGridData } from './useRadarGridData';
-
-export interface RadarGridProps {
-  /**
-   * The number of divisions in the radar grid.
-   * @default 5
-   */
-  divisions?: number;
-}
+import { SharpRadarGrid } from './SharpRadarGrid';
+import { RadarGridProps } from './RadarGrid.types';
+import { CircularRadarGrid } from './CircularRadarGrid';
 
 function RadarGrid(props: RadarGridProps) {
-  const { divisions = 5 } = props;
-  const { center, corners } = useRadarGridData();
+  const { divisions = 5, shape = 'sharp' } = props;
+  const gridData = useRadarGridData();
 
-  const theme = useTheme();
+  if (gridData === null) {
+    return null;
+  }
 
-  const divisionRatio = Array.from({ length: divisions }, (_, index) => (index + 1) / divisions);
+  const { center, corners, radius } = gridData;
 
-  return (
-    <React.Fragment>
-      {corners.map(({ x, y }, i) => (
-        <path
-          key={i}
-          d={`M ${center.x} ${center.y} L ${x} ${y}`}
-          stroke={(theme.vars || theme).palette.text.primary}
-          strokeWidth={1}
-          fill="none"
-        />
-      ))}
-      {divisionRatio.map((ratio) => (
-        <path
-          key={ratio}
-          d={`M ${corners
-            .map(
-              ({ x, y }) =>
-                `${center.x * (1 - ratio) + ratio * x} ${center.y * (1 - ratio) + ratio * y}`,
-            )
-            .join(' L ')} Z`}
-          stroke={(theme.vars || theme).palette.text.primary}
-          strokeWidth={1}
-          fill="none"
-        />
-      ))}
-    </React.Fragment>
+  return shape === 'sharp' ? (
+    <SharpRadarGrid divisions={divisions} corners={corners} center={center} radius={radius} />
+  ) : (
+    <CircularRadarGrid divisions={divisions} corners={corners} center={center} radius={radius} />
   );
 }
 
@@ -58,6 +32,11 @@ RadarGrid.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
 } as any;
 
 export { RadarGrid };

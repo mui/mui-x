@@ -44,6 +44,7 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
+export { PickersToolbarText } from './components/PickersToolbarText';
 export type {
   PickersToolbarTextProps,
   ExportedPickersToolbarTextProps,
@@ -60,9 +61,14 @@ export type {
 } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
+export {
+  DAY_MARGIN,
+  DIALOG_WIDTH,
+  VIEW_HEIGHT,
+  MULTI_SECTION_CLOCK_SECTION_WIDTH,
+} from './constants/dimensions';
 
-export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
+export { useControlledValue } from './hooks/useControlledValue';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
@@ -72,8 +78,8 @@ export {
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
-  UseFieldParams,
-  UseFieldResponse,
+  UseFieldParameters,
+  UseFieldReturnValue,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -110,6 +116,7 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 export type {
   PickerAnyManager,
   PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerValueManager,
@@ -117,7 +124,12 @@ export type {
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
-export type { BaseClockProps, DigitalTimePickerProps, AmPmProps } from './models/props/time';
+export type {
+  BaseClockProps,
+  ExportedBaseClockProps,
+  DigitalTimePickerProps,
+  AmPmProps,
+} from './models/props/time';
 export type { ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { FormProps } from './models/formProps';
@@ -143,6 +155,7 @@ export type {
   PickerValidValue,
 } from './models/value';
 
+export { createStepNavigation } from './utils/createStepNavigation';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
@@ -151,9 +164,17 @@ export {
   isDatePickerView,
   mergeDateAndTime,
   formatMeridiem,
+  DATE_VIEWS,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
+export {
+  isTimeView,
+  isInternalTimeView,
+  resolveTimeFormat,
+  getMeridiem,
+  TIME_VIEWS,
+} from './utils/time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
@@ -175,10 +196,10 @@ export type {
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
-export { isInternalTimeView, isTimeView } from './utils/time-utils';
-
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 
-export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
-export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
-export { getDateTimeFieldInternalPropsDefaults } from '../managers/useDateTimeManager';
+export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+
+export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
+export { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';

@@ -1,13 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { animated, useSpring } from '@react-spring/web';
+import { styled, useTheme } from '@mui/material/styles';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxis,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
@@ -22,6 +25,14 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      */
     dataIndex: number;
   };
+
+const Circle = styled('circle')({
+  [`&.${markElementClasses.animate}`]: {
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'cx, cy',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
+  },
+});
 
 /**
  * The line mark element that only render circle for performance improvement.
@@ -49,30 +60,29 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <animated.circle
+    <Circle
       {...other}
-      // @ts-expect-error
-      cx={position.x}
-      cy={position.y}
+      cx={x}
+      cy={y}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
@@ -80,7 +90,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

@@ -80,11 +80,6 @@ export default function NoResultsOverlayCustom() {
             },
           },
         }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
       />
     </div>
   );

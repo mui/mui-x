@@ -26,10 +26,10 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { useGridApiOptionHandler } from '../../utils';
+import { useGridEventPriority } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import {
@@ -397,6 +397,7 @@ export const useGridVirtualScroller = () => {
     if (!params.rows && !currentPage.range) {
       return [];
     }
+    const rowTree = gridRowTreeSelector(apiRef);
 
     let baseRenderContext = renderContext;
     if (params.renderContext) {
@@ -453,6 +454,17 @@ export const useGridVirtualScroller = () => {
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
+
+      // In certain cases, the state might already be updated and `currentPage.rows` (which sets `rowModels`)
+      // contains stale data.
+      // In that case, skip any further row processing.
+      // See:
+      // - https://github.com/mui/mui-x/issues/16638
+      // - https://github.com/mui/mui-x/issues/17022
+      if (!rowTree[id]) {
+        return;
+      }
+
       const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
@@ -686,9 +698,9 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
-  useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 
   return {
     renderContext,
