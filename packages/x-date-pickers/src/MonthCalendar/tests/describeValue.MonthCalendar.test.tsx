@@ -18,9 +18,7 @@ describe('<MonthCalendar /> - Describe Value', () => {
         .find((cell) => cell.getAttribute('tabindex') === '0');
       expect(activeMonth).not.to.equal(null);
       if (expectedValue == null) {
-        expect(activeMonth).to.have.text(
-          adapterToUse.format(adapterToUse.date(), 'monthShort').toString(),
-        );
+        expect(activeMonth).to.have.attribute('aria-checked', 'false');
       } else {
         expect(activeMonth).to.have.text(
           adapterToUse.format(expectedValue, 'monthShort').toString(),
