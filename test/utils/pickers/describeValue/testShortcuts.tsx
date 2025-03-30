@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { describeSkipIf } from '../../skipIf';
 
@@ -44,11 +44,8 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      await waitFor(() => {
-        screen.findByRole('button', { name: 'Test shortcut' });
-      });
+      const shortcut = await screen.findByRole('button', { name: 'Test shortcut' });
 
-      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
