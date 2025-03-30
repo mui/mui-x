@@ -2,11 +2,10 @@ import { createPickerRenderer, describeRangeValidation } from 'test/utils/picker
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
 describe('<DesktopTimeRangePicker /> - Describe Validation', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeRangeValidation(DesktopTimeRangePicker, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'desktop',

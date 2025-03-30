@@ -12,14 +12,14 @@ const CustomContent = styled('div')(({ theme }) => ({
   border: '1px solid',
   display: 'flex',
   '&:hover': {
-    backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
   },
   '&[data-disabled]': {
     opacity: 0.5,
     backgroundColor: theme.palette.action.disabledBackground,
   },
   '&[data-selected]': {
-    backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
+    backgroundColor: alpha(theme.palette.primary.main, 0.4),
   },
 }));
 

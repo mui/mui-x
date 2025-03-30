@@ -8,24 +8,42 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisR
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis],
-  (x, xAxes) => (x === null ? null : getAxisIndex(xAxes.axis[xAxes.axisIds[0]], x)),
+  (x, xAxes) => {
+    if (x === null || !xAxes.axis[xAxes.axisIds[0]]) {
+      return null;
+    }
+    return getAxisIndex(xAxes.axis[xAxes.axisIds[0]], x);
+  },
 );
 
 export const selectorChartsInteractionXAxisValue = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, selectorChartsInteractionXAxisIndex],
-  (x, xAxes, xIndex) =>
-    x === null ? null : getAxisValue(xAxes.axis[xAxes.axisIds[0]], x, xIndex!),
+  (x, xAxes, xIndex) => {
+    if (x === null || xIndex === null || !xAxes.axis[xAxes.axisIds[0]]) {
+      return null;
+    }
+    return getAxisValue(xAxes.axis[xAxes.axisIds[0]], x, xIndex);
+  },
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis],
-  (y, yAxes) => (y === null ? null : getAxisIndex(yAxes.axis[yAxes.axisIds[0]], y)),
+  (y, yAxes) => {
+    if (y === null || !yAxes.axis[yAxes.axisIds[0]]) {
+      return null;
+    }
+    return getAxisIndex(yAxes.axis[yAxes.axisIds[0]], y);
+  },
 );
 
 export const selectorChartsInteractionYAxisValue = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, selectorChartsInteractionYAxisIndex],
-  (y, yAxes, yIndex) =>
-    y === null ? null : getAxisValue(yAxes.axis[yAxes.axisIds[0]], y, yIndex!),
+  (y, yAxes, yIndex) => {
+    if (y === null || yIndex === null || !yAxes.axis[yAxes.axisIds[0]]) {
+      return null;
+    }
+    return getAxisValue(yAxes.axis[yAxes.axisIds[0]], y, yIndex);
+  },
 );
 
 export type AxisValueIdentifier = {

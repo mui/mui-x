@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-beta.1",
+  "version": "8.0.0-beta.2",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -91,13 +91,13 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.0.0-rc.0",
+    "@mui/icons-material": "^7.0.0",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.20",
     "@mui/internal-markdown": "^2.0.2",
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0-rc.0",
-    "@mui/monorepo": "github:mui/material-ui#260ed53760f179e3bb4f1f43e2f2712ecbf9fdd7",
-    "@mui/utils": "^7.0.0-rc.0",
+    "@mui/material": "^7.0.0",
+    "@mui/monorepo": "github:mui/material-ui#22aa7db2ed23df3b43530e9fdb57bc1051221457",
+    "@mui/utils": "^7.0.0",
     "@next/eslint-plugin-next": "15.2.3",
     "@octokit/plugin-retry": "^7.2.0",
     "@octokit/rest": "^21.1.1",
@@ -209,14 +209,7 @@
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
-      "jss-plugin-rule-value-function": "patches/jss-plugin-rule-value-function.patch",
-      "jss-plugin-global": "patches/jss-plugin-global.patch",
-      "jss-plugin-nested": "patches/jss-plugin-nested.patch",
-      "jss-plugin-camel-case": "patches/jss-plugin-camel-case.patch",
-      "jss-plugin-default-unit": "patches/jss-plugin-default-unit.patch",
-      "jss-plugin-vendor-prefixer": "patches/jss-plugin-vendor-prefixer.patch",
-      "jss-plugin-props-sort": "patches/jss-plugin-props-sort.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
     }
   }
 }

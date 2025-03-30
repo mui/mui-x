@@ -36,6 +36,7 @@ const hrHRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Izbriši',
   okButtonLabel: 'U redu',
   todayButtonLabel: 'Danas',
+  nextStepButtonLabel: 'Naredni',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Odaberi datum',

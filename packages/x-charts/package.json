@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.0.0-beta.1",
+  "version": "8.0.0-beta.2",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.js",
@@ -45,6 +45,7 @@
     "@mui/x-internals": "workspace:*",
     "@react-spring/rafz": "^9.7.5",
     "@react-spring/web": "^9.7.5",
+    "bezier-easing": "^2.1.0",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-is": "^18.3.1 || ^19.0.0",
@@ -69,8 +70,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0-rc.0",
-    "@mui/system": "^7.0.0-rc.0",
+    "@mui/material": "^7.0.0",
+    "@mui/system": "^7.0.0",
     "@react-spring/core": "^9.7.5",
     "@react-spring/shared": "^9.7.5",
     "@types/prop-types": "^15.7.14",
