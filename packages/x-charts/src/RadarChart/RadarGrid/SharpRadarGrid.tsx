@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { RadarGridRenderProps } from './RadarGrid.types';
+import { chartsGridClasses } from './radarGridClasses';
 
 /**
  * @ignore - internal component.
@@ -19,7 +20,9 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
           d={`M ${center.x} ${center.y} L ${x} ${y}`}
           stroke={(theme.vars || theme).palette.text.primary}
           strokeWidth={1}
+          strokeOpacity={0.3}
           fill="none"
+          className={chartsGridClasses.radial}
         />
       ))}
       {divisionRatio.map((ratio) => (
@@ -33,7 +36,9 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
             .join(' L ')} Z`}
           stroke={(theme.vars || theme).palette.text.primary}
           strokeWidth={1}
+          strokeOpacity={0.3}
           fill="none"
+          className={chartsGridClasses.divider}
         />
       ))}
     </React.Fragment>

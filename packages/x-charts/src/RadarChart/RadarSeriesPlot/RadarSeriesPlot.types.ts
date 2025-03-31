@@ -22,4 +22,9 @@ export interface RadarSeriesMarksProps
 
 export interface RadarSeriesAreaProps
   extends CommonRadarSeriesPlotProps,
-    React.SVGAttributes<SVGPathElement> {}
+    React.SVGAttributes<SVGPathElement> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<RadarSeriesPlotClasses>;
+}

@@ -3,23 +3,43 @@ import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
+import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
 
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const { seriesId, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
 
+  const interactionProps = useInteractionAllItemProps(seriesCoordinates);
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+
+  const classes = useUtilityClasses(props.classes);
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color }) => (
-        <path
-          key={id}
-          d={getAreaPath(points)}
-          fill={color}
-          stroke={color}
-          fillOpacity={0.4}
-          {...other}
-        />
-      ))}
+      {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea }, seriesIndex) => {
+        const isItemHighlighted = isHighlighted({ seriesId: id });
+        const isItemFaded = !isItemHighlighted && isFaded({ seriesId: id });
+
+        return (
+          <path
+            key={id}
+            d={getAreaPath(points)}
+            {...interactionProps[seriesIndex]}
+            fill={fillArea ? color : 'transparent'}
+            stroke={color}
+            className={
+              (isItemHighlighted && classes.highlighted) ||
+              (isItemFaded && classes.faded) ||
+              undefined
+            }
+            strokeOpacity={isItemFaded ? 0.5 : 1}
+            fillOpacity={isItemFaded ? 0.1 : 0.4}
+            strokeWidth={isItemHighlighted ? 2 : 1}
+            {...other}
+          />
+        );
+      })}
     </React.Fragment>
   );
 }

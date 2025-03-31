@@ -34,8 +34,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     hideLegend,
     divisions,
     shape,
-    axisHighlightShape,
     highlight = 'axis',
+    classes,
     ...other
   } = props;
 
@@ -70,7 +70,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
   const radarGrid: RadarGridProps = { divisions, shape };
 
   const radarAxisHighlight: RadarAxisHighlightProps = {
-    axisHighlightShape: axisHighlightShape ?? (series.length > 1 ? 'points' : 'slice'),
+    classes,
   };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;

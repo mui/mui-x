@@ -29,6 +29,12 @@ You can plot multiple series on the same radar chart.
 
 {{"demo": "MultiSeriesRadar.js"}}
 
+## Series options
+
+Radar series support `hideMark` and `fillArea` parametter to modify the rendering of the series.
+
+{{"demo": "DemoRadarVisualisation.js"}}
+
 ## Axis
 
 The `metrics` property of `radar` takes an array with one item per corner of the radar.
@@ -63,12 +69,7 @@ The radar chart displays a grid behind the series that can be configured with:
 ### Axis Highlight
 
 By default the radar highlight values of a same axis.
-This axis highlight has two visualizations available with the prop `axisHighlightShape`:
-
-- `'points'` Displays points on each highlighted value (best with multiple series).
-- `'slice'` Displays a slice around the highlighted value. (best with a single series).
-
-With composition you can add this behavior with the `<RadarAxisHighlight axisHighlightShape='slice' />` component.
+With composition you can add this behavior with the `<RadarAxisHighlight />` component.
 
 {{"demo": "DemoRadarAxisHighlight.js" }}
 

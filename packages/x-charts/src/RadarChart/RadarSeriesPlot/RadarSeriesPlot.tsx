@@ -17,7 +17,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <g className={classes.root}>
-      {seriesCoordinates?.map(({ seriesId, points, color, showMark }, seriesIndex) => {
+      {seriesCoordinates?.map(({ seriesId, points, color, hideMark }, seriesIndex) => {
         const isItemHighlighted = isHighlighted({ seriesId });
         const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
 
@@ -40,9 +40,9 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                 fillOpacity={isItemFaded ? 0.1 : 0.4}
               />
             }
-            {showMark &&
+            {!hideMark &&
               points.map((point, index) => (
-                <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
+                <circle key={index} cx={point.x} cy={point.y} r={3} fill={color} stroke={color} />
               ))}
           </g>
         );

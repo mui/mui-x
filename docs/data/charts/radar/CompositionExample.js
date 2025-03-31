@@ -26,7 +26,7 @@ export default function CompositionExample() {
           <RadarSeriesArea fill="transparent" strokeWidth={3} seriesId="usa-id" />
           <RadarSeriesMarks />
           <RadarMetricLabels />
-          <RadarAxisHighlight axisHighlightShape="points" />
+          <RadarAxisHighlight />
         </ChartsSurface>
       </Stack>
     </RadarDataProvider>
@@ -39,11 +39,13 @@ const series = [
     id: 'usa-id',
     label: 'USA',
     data: [6.65, 2.76, 5.15, 0.19, 0.07, 0.12],
+    fillArea: true,
   },
   {
     id: 'australia-id',
     label: 'Australia',
     data: [5.52, 5.5, 3.19, 0.51, 0.15, 0.11],
+    fillArea: true,
   },
 ];
 

@@ -9,21 +9,24 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color }) => (
-        <g key={id}>
-          {points.map((point, index) => (
-            <circle
-              key={index}
-              cx={point.x}
-              cy={point.y}
-              r={5}
-              fill={color}
-              stroke={color}
-              {...other}
-            />
-          ))}
-        </g>
-      ))}
+      {seriesCoordinates?.map(
+        ({ seriesId: id, points, color, hideMark }) =>
+          !hideMark && (
+            <g key={id}>
+              {points.map((point, index) => (
+                <circle
+                  key={index}
+                  cx={point.x}
+                  cy={point.y}
+                  r={3}
+                  fill={color}
+                  stroke={color}
+                  {...other}
+                />
+              ))}
+            </g>
+          ),
+      )}
     </React.Fragment>
   );
 }
