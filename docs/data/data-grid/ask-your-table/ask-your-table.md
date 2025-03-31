@@ -7,12 +7,14 @@ title: Ask Your Table - AI Assistant
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
-To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on.
+To use this feature, you need to have a prompt processing backend. MUI offers this [service](/x/react-data-grid/ask-your-table/#with-muis-service) as a part of a premium package add-on.
 Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
 :::
 
 AI assistant feature allows users to interact with the Data Grid component using natural language.
 Type the prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
+
+To enable client-side of this feature, pass `unstable_enableAiAssistant` prop.
 
 :::success
 In supported browsers, the prompt can be entered using voice.
@@ -23,7 +25,7 @@ This can be done in the following ways.
 
 :::info
 AI assistant demos use an utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
-In a real-world scenario, replace this with MUI's or your own API.
+In a real-world scenario, replace this with [MUI's](/x/react-data-grid/ask-your-table/#with-muis-service) or [your own](/x/react-data-grid/ask-your-table/#with-custom-service) processing service.
 
 `mockPromptResolver()` can handle a predefined set of prompts:
 
@@ -38,17 +40,36 @@ You can use suggestions to quickly enter prompts that are supported by the mock 
 
 ## Custom examples
 
-You can provide custom examples for the prompt processing through the `unstable_examples` prop in the `columns` array.
+You can provide custom examples as a context for the prompt processing through the `unstable_examples` prop in the `columns` array.
 The `unstable_examples` prop should contain an array of possible values for that column.
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 ## Use row data for examples
 
-Pass `allowDataSampling` flag to the `Unstable_GridToolbarPromptControl`, to let it use the row data to generate examples for the prompt processing.
+Pass `allowDataSampling` slot prop, to allow use of the row data to generate column examples.
 This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
 
-If you are using
+Data is collected randomly on the cell level, which means that the examples per column might not come from the same rows.
+
+```ts
+slotProps={{
+  toolbar: {
+    assistantPanelProps: {
+      allowDataSampling: true,
+    },
+  },
+}}
+```
+
+For `getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
+
+```ts
+const context = React.useMemo(
+  () => apiRef.current.unstable_aiAssistant.getPromptContext(allowDataSampling),
+  [apiRef, allowDataSampling],
+);
+```
 
 {{"demo": "AssistantWithDataSampling.js", "bg": "inline"}}
 
@@ -58,46 +79,84 @@ An example of combining prompt control with the [Server-side data](/x/react-data
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
-## Integration with MUI's API
+## Processing service integration
 
-To integrate with MUI's API, you need an API key.
-Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's API.
+Natural language prompts have to be processed with some service to understand what kind of state changes must be applied to the Data Grid to match the user's request.
+You can use MUI's processing service or build it by yourself.
 
-This is an example of a Fastify proxy for the prompt requests
+### With MUI's service
 
-```ts
-fastify.register(proxy, {
-  upstream: 'https://api.mui.com',
-  prefix: '/api/my-custom-path',
-  rewritePrefix: '/api/v1/datagrid/prompt',
-  replyOptions: {
-    rewriteRequestHeaders: (_, headers) => ({
-      ...headers,
-      'x-api-key': process.env.MUI_DATAGRID_API_KEY,
-    }),
-  },
-});
-```
+Data Grid provides all necessary pieces to make the service integration easy.
 
-To make the integration easier, use the `unstable_gridDefaultPromptResolver` from `@mui/x-data-grid-premium` package.
-It will add necessary headers and stringify the body in the right format for you.
+1. Enable the AI Assistant feature by adding `unstable_enableAiAssistant` prop.
+   A new toolbar button will appear in the default [`<Toolbar />`](/x/react-data-grid/components/toolbar/).
+   This button opens `<AssistantPanel />` that can take user's prompts.
+2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API for our processing service.
 
-The example below shows a code that adds an additional prompt context for better results and uses `unstable_gridDefaultPromptResolver` to avoid dealing with the request details.
+   :::error
+   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's service.
 
-```ts
-const PROMPT_RESOLVER_PROXY_BASE_URL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://api.my-proxy.com';
+   This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
-function processPrompt(query: string, context: string) {
-  const additionalContext = `The rows represent: List of employees with their company, position and start date`;
+   ```ts
+   fastify.register(proxy, {
+     upstream: 'https://api.mui.com',
+     prefix: '/api/my-custom-path',
+     rewritePrefix: '/api/v1/datagrid/prompt',
+     replyOptions: {
+       rewriteRequestHeaders: (_, headers) => ({
+         ...headers,
+         'x-api-key': process.env.MUI_DATAGRID_API_KEY,
+       }),
+     },
+   });
+   ```
 
-  return unstable_gridDefaultPromptResolver(
-    `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-    query,
-    context,
-    additionalContext,
-  );
-}
-```
+   :::
+
+3. Add `unstable_onPrompt()` to pass the user's prompts to the service.
+   Service's response will be used internally to make the necessary state updates.
+
+   :::success
+   You can implement `unstable_onPrompt()` with `unstable_gridDefaultPromptResolver()`.
+   It will add necessary headers and stringify the body in the right format for you.
+
+   In addition to this, it allows you to add an additional prompt context to achieve better processing results.
+
+   ```ts
+   const PROMPT_RESOLVER_PROXY_BASE_URL =
+     process.env.NODE_ENV === 'development'
+       ? 'http://localhost:3000'
+       : 'https://api.my-proxy.com';
+
+   function processPrompt(query: string, context: string) {
+     const additionalContext = `The rows represent: List of employees with their company, position and start date`;
+
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       additionalContext,
+     );
+   }
+   ```
+
+   :::
+
+### With custom service
+
+Use pieces of the AI Assistant feature to build your own prompt processing service.
+
+- `<GridAiAssistantPanel />` and `<GridPromptField />` components can be used to build custom UI.
+- [`unstable_aiAssistant`](/x/api/data-grid/grid-api/#grid-api-prop-unstable_aiAssistant) API can be used to build the context using `getPromptContext()` and to apply the processing with `applyPromptResult(response: PromptResponse)` methods.
+- `unstable_gridDefaultPromptResolver()` can be used to pass the prompt and the context(s) with the necessary headers to the processing service.
+
+Mix and match these with your custom components/methods to implement the processing the way you need it in your project.
+
+You can use completely custom solution and apply the processing result using other Grid's APIs like [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without a need to structure it as `PromptResponse`.
+
+## API
+
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
