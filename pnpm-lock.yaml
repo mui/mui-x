@@ -336,8 +336,8 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-timezone:
-        specifier: ^0.5.47
-        version: 0.5.47
+        specifier: ^0.5.48
+        version: 0.5.48
       nyc:
         specifier: ^17.1.0
         version: 17.1.0
@@ -573,8 +573,8 @@ importers:
         specifier: ^0.10.4
         version: 0.10.4
       moment-timezone:
-        specifier: ^0.5.47
-        version: 0.5.47
+        specifier: ^0.5.48
+        version: 0.5.48
       next:
         specifier: ^15.2.4
         version: 15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -988,8 +988,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       moment-timezone:
-        specifier: ^0.5.47
-        version: 0.5.47
+        specifier: ^0.5.48
+        version: 0.5.48
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1310,8 +1310,8 @@ importers:
         specifier: ^0.10.4
         version: 0.10.4
       moment-timezone:
-        specifier: ^0.5.47
-        version: 0.5.47
+        specifier: ^0.5.48
+        version: 0.5.48
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -8085,8 +8085,8 @@ packages:
   moment-jalaali@0.10.4:
     resolution: {integrity: sha512-/eD0HeyvATznb5iE0G1BHjKRZAFEpJ9ZNUkcHwXhNgt1WJJVVzHD7+uDmqzZWVFLdbGme2gvIXKb3ezDYOXcZA==}
 
-  moment-timezone@0.5.47:
-    resolution: {integrity: sha512-UbNt/JAWS0m/NJOebR0QMRHBk0hu03r5dx9GK8Cs0AS3I81yDcOc9k+DytPItgVvBP7J6Mf6U2n3BPAacAV9oA==}
+  moment-timezone@0.5.48:
+    resolution: {integrity: sha512-f22b8LV1gbTO2ms2j2z13MuPogNoh5UzxL3nzNAYKGraILnbGc9NEE6dyiiiLv46DGRb8A4kg8UKWLjPthxBHw==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -18112,9 +18112,9 @@ snapshots:
     dependencies:
       jalaali-js: 1.2.8
       moment: 2.30.1
-      moment-timezone: 0.5.47
+      moment-timezone: 0.5.48
 
-  moment-timezone@0.5.47:
+  moment-timezone@0.5.48:
     dependencies:
       moment: 2.30.1
 

@@ -175,7 +175,7 @@
     "markdownlint-cli2": "^0.17.2",
     "mocha": "^11.1.0",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.47",
+    "moment-timezone": "^0.5.48",
     "nyc": "^17.1.0",
     "prettier": "^3.5.3",
     "pretty-quick": "^4.1.1",
