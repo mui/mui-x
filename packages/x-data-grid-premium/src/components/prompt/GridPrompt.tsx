@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { PromptHistory } from '../../hooks/features/prompt/gridPromptInterfaces';
+import { PromptHistory } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = PromptHistory[number] & { onRerun: () => void };

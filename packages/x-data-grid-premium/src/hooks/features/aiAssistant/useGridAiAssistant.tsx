@@ -15,7 +15,11 @@ import {
   GridStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { GridAiAssistantState, GridPromptApi, PromptResponse } from './gridPromptInterfaces';
+import {
+  GridAiAssistantApi,
+  GridAiAssistantState,
+  PromptResponse,
+} from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 
@@ -53,7 +57,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
   };
 };
 
-export const useGridPrompt = (
+export const useGridAiAssistant = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'enableAiAssistant'>,
 ) => {
@@ -158,7 +162,7 @@ export const useGridPrompt = (
   );
 
   const setAiAssistantPanelOpen = React.useCallback<
-    GridPromptApi['unstable_aiAssistant']['setAiAssistantPanelOpen']
+    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantPanelOpen']
   >(
     (callback) => {
       if (!isAiAssistantAvailable) {
@@ -177,7 +181,7 @@ export const useGridPrompt = (
   );
 
   const setAiAssistantHistory = React.useCallback<
-    GridPromptApi['unstable_aiAssistant']['setAiAssistantHistory']
+    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantHistory']
   >(
     (callback) => {
       apiRef.current.setState((state) => ({

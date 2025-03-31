@@ -3,5 +3,5 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 export const isAiAssistantAvailable = (
   props: Pick<DataGridPremiumProcessedProps, 'enableAiAssistant'>,
 ) => {
-  return props.enableAiAssistant;
+  return !!props.enableAiAssistant;
 };

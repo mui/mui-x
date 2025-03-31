@@ -5,7 +5,7 @@ import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { PromptFieldContext, PromptFieldState } from './PromptFieldContext';
-import { PromptResponse } from '../../hooks/features/prompt/gridPromptInterfaces';
+import { PromptResponse } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export type PromptFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> & {

@@ -36,7 +36,10 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import { PromptHistory, PromptResponse } from '../hooks/features/prompt/gridPromptInterfaces';
+import {
+  PromptHistory,
+  PromptResponse,
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
