@@ -233,7 +233,7 @@ export interface GridLocaleText {
   aiAssistantPanelTitle: string;
   aiAssistantPanelNoHistory: string;
   aiAssistantSuggestions: string;
-
+  aiAssistantSuggestionsMore: (count: number) => string;
   // Prompt
   promptProcessingError: string;
   promptRerun: string;

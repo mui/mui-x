@@ -879,6 +879,10 @@ export interface GridClasses {
    */
   promptIconContainer: string;
   /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIcon: string;
+  /**
    * Styles applied to the prompt error element.
    */
   promptError: string;
@@ -1107,6 +1111,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'promptContent',
   'promptText',
   'promptTime',
+  'promptIcon',
   'promptIconContainer',
   'promptError',
   'promptAction',

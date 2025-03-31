@@ -80,8 +80,8 @@ export default function AssistantWithDataSource() {
         suggestions: [
           'Sort by name',
           'Show people from the EU',
-          // 'Sort by company name and employee name',
-          // 'Order companies by amount of people',
+          'Sort by company name and employee name',
+          'Order companies by amount of people',
         ],
       },
     },
