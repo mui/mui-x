@@ -35,17 +35,6 @@ export interface GridLocaleText {
   toolbarQuickFilterLabel: string;
   toolbarQuickFilterDeleteIconLabel: string;
 
-  // Prompt control toolbar field
-  toolbarPromptControlPlaceholder: string;
-  toolbarPromptControlWithRecordingPlaceholder: string;
-  toolbarPromptControlRecordingPlaceholder: string;
-  toolbarPromptControlLabel: string;
-  toolbarPromptControlRecordButtonDefaultLabel: string;
-  toolbarPromptControlRecordButtonActiveLabel: string;
-  toolbarPromptControlSendActionLabel: string;
-  toolbarPromptControlSendActionAriaLabel: string;
-  toolbarPromptControlErrorMessage: string;
-
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
@@ -240,16 +229,24 @@ export interface GridLocaleText {
   pivotYearColumnHeaderName: string;
   pivotQuarterColumnHeaderName: string;
 
-  // Assistant panel
-  assistantPanelTitle: string;
-  assistantPanelNoHistory: string;
-  assistantSuggestions: string;
+  // AI Assistant panel
+  aiAssistantPanelTitle: string;
+  aiAssistantPanelNoHistory: string;
+  aiAssistantSuggestions: string;
+
+  // Prompt
+  promptProcessingError: string;
+  promptRerun: string;
 
   // Prompt field
   promptFieldLabel: string;
   promptFieldPlaceholder: string;
   promptFieldPlaceholderWithRecording: string;
+  promptFieldPlaceholderListening: string;
+  promptFieldSpeechRecognitionNotSupported: string;
   promptFieldSend: string;
+  promptFieldRecord: string;
+  promptFieldStopRecording: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

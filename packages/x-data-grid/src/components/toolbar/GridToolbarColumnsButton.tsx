@@ -9,7 +9,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 
 interface GridToolbarColumnsButtonProps {
   /**
@@ -35,7 +35,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
+    const { columnsPanelTriggerRef } = useGridPanelContext();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 

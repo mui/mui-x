@@ -1,8 +1,0 @@
-<DataGridPremium
-  {...data}
-  columns={columns}
-  slots={{
-    toolbar: Toolbar,
-  }}
-  showToolbar
-/>

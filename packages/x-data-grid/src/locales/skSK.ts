@@ -40,18 +40,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Zadajte požiadavku…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Zadajte alebo nahrajte požiadavku…',
-  toolbarPromptControlRecordingPlaceholder: 'Počúvam požiadavku…',
-  toolbarPromptControlLabel: 'Vstup požiadavky',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrávať',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zastaviť nahrávanie',
-  toolbarPromptControlSendActionLabel: 'Odoslať',
-  toolbarPromptControlSendActionAriaLabel: 'Odoslať požiadavku',
-  toolbarPromptControlErrorMessage:
-    'Pri spracovaní požiadavky došlo k chybe. Skúste to znova s inou požiadavkou.',
-
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -61,6 +49,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Vyhľadať',
@@ -280,6 +271,25 @@ const skSKGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid);

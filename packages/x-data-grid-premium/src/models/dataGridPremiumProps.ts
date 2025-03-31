@@ -36,7 +36,7 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import { PromptHistory } from '../hooks/features/prompt/gridPromptInterfaces';
+import { PromptHistory, PromptResponse } from '../hooks/features/prompt/gridPromptInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -151,15 +151,10 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
       ) => GridColDef[] | undefined)
     | null;
   /**
-   * If `true`, the AI Assistant panel is open.
+   * If `true`, the AI Assistant is enabled.
    * @default false
    */
-  aiAssistantPanelOpen: boolean;
-  /**
-   * If `true`, the AI Assistant is disabled.
-   * @default false
-   */
-  disableAiAssistant: boolean;
+  enableAiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -291,6 +286,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
         columnGroupPath: string[],
       ) => Partial<GridPivotingColDefOverrides> | undefined);
   /**
+   * If `true`, the AI Assistant panel is open.
+   */
+  aiAssistantPanelOpen?: boolean;
+  /**
    * The history of the AI Assistant.
    */
   aiAssistantHistory?: PromptHistory;
@@ -298,4 +297,15 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * The suggestions of the AI Assistant.
    */
   aiAssistantSuggestions?: string[];
+  /**
+   * If `true`, the AI Assistant is allowed to sample data.
+   */
+  allowAiAssistantDataSampling?: boolean;
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt?: (prompt: string, promptContext: string) => Promise<PromptResponse>;
 }

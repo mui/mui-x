@@ -33,18 +33,6 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Escriba un prompt…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Escriba o grabe un prompt…',
-  toolbarPromptControlRecordingPlaceholder: 'Esperando por un prompt…',
-  toolbarPromptControlLabel: 'Introduzca un prompt',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Grabar',
-  toolbarPromptControlRecordButtonActiveLabel: 'Parar de grabar',
-  toolbarPromptControlSendActionLabel: 'Enviar',
-  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
-  toolbarPromptControlErrorMessage:
-    'Ocurrió un error mientras se procesaba la petición. Por favor, intente de nuevo con otro prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -54,6 +42,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Buscar',
@@ -258,6 +249,25 @@ const esESGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid);

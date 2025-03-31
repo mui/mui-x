@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { useDemoData } from '@mui/x-data-grid-generator';
-import { AssistantPanelProps } from './AssistantPanel';
-import { Toolbar } from './Toolbar';
+import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = [
   'name',
@@ -16,12 +14,6 @@ const VISIBLE_FIELDS = [
   'isAdmin',
 ];
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    assistantPanelProps: Partial<AssistantPanelProps>;
-  }
-}
-
 export default function AssistantWithDataSampling() {
   const { data } = useDemoData({
     dataSet: 'Employee',
@@ -33,16 +25,19 @@ export default function AssistantWithDataSampling() {
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         {...data}
-        slots={{
-          toolbar: Toolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            assistantPanelProps: {
-              allowDataSampling: true,
-            },
+        initialState={{
+          aiAssistant: {
+            suggestions: [
+              'Sort by name',
+              'Show people from the EU',
+              // 'Sort by company name and employee name',
+              // 'Order companies by amount of people',
+            ],
           },
         }}
+        allowAiAssistantDataSampling
+        enableAiAssistant
+        onPrompt={mockPromptResolver}
         showToolbar
       />
     </div>

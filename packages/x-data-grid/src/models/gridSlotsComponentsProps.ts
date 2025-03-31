@@ -23,6 +23,7 @@ import type {
   BadgeProps,
   ButtonProps,
   CheckboxProps,
+  ChipProps,
   CircularProgressProps,
   DividerProps,
   IconButtonProps,

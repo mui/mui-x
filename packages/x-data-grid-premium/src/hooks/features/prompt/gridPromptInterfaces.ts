@@ -4,10 +4,12 @@ export type GridAiAssistantState = {
   suggestions: string[];
 };
 
+export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
+
 export type PromptHistory = {
-  prompt: string;
+  value: string;
   createdAt: Date;
-  response: PromptResponse;
+  response: PromptResponse | null;
 }[];
 
 export type Sort = {
@@ -67,5 +69,12 @@ export interface GridPromptApi {
      * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the AI Assistant panel open state.
      */
     setAiAssistantPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+    /**
+     * Sets the history of the AI Assistant.
+     * @param {PromptHistory | ((prevHistory: PromptHistory) => PromptHistory)} history - The new history of the AI Assistant.
+     */
+    setAiAssistantHistory: (
+      history: PromptHistory | ((prevHistory: PromptHistory) => PromptHistory),
+    ) => void;
   };
 }
