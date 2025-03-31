@@ -80,13 +80,6 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  /**
-   * Switch between different axis highlight visualization.
-   * - points: display points on each highlighted value. Recommended for radar with multiple series.
-   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
-   * The default value is computed depending on the number of series provided.
-   */
-  axisHighlightShape: PropTypes.oneOf(['points', 'slice']),
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.

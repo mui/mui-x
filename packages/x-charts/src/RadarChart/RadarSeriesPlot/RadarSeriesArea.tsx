@@ -50,6 +50,10 @@ RadarSeriesArea.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
    * The id of the series to display.
    * If undefined all series are displayed.
    */
