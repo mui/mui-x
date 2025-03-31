@@ -12,8 +12,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 
 const skSKPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Ďalší mesiac',
-  nextMonth: 'Predchádzajúci mesiac',
+  previousMonth: 'Predchádzajúci mesiac',
+  nextMonth: 'Ďalší mesiac',
 
   // View navigation
   openPreviousView: 'Otvoriť predchádzajúce zobrazenie',
