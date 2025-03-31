@@ -178,7 +178,7 @@ With media query, you have to start your `sx` object with `@media print` key, su
 />
 ```
 
-With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity).
 
 ```jsx
 // Default toolbar:
