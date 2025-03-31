@@ -229,6 +229,11 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
+      // Close the picker to reset the range position on range pickers
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+
       // Change the value
       let newValueBis = setNewValue(newValue, { isOpened: true, selectSection, pressKey });
       if (isRangeType) {
@@ -255,8 +260,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         );
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
       }
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose and onAccept with the live value when pressing Escape', () => {

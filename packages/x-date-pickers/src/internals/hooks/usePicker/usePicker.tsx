@@ -41,6 +41,7 @@ export const usePicker = <
   valueType,
   variant,
   validator,
+  onClose,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
   localeText,
@@ -97,7 +98,12 @@ export const usePicker = <
   const rootRef = useForkRef(ref, rootRefObject);
 
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
-    useValueAndOpenStates<TValue, TView, TExternalProps>({ props, valueManager, validator });
+    useValueAndOpenStates<TValue, TView, TExternalProps>({
+      props,
+      valueManager,
+      validator,
+      onClose,
+    });
 
   const {
     view,

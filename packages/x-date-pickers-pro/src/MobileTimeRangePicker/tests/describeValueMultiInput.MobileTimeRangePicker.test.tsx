@@ -65,20 +65,10 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
       }
 
-      // if we want to set the end date, we firstly need to switch to end date "range position"
-      if (setEndDate && screen.queryByRole('button', { name: 'Next' })) {
-        fireEvent.click(screen.getByRole('button', { name: 'Next' }));
-      }
+      // Go to the start date or the end date
+      fireEvent.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      // if we want to set the end time, we firstly need to switch to end time "range position"
-      if (setEndDate) {
-        const toolbarHourButtons = screen.getAllByRole('button', {
-          name: adapterToUse.format(value[1], hasMeridiem ? 'hours12h' : 'hours24h'),
-        });
-        fireEvent.click(toolbarHourButtons[toolbarHourButtons.length - 1]);
-      }
-
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],
         hasMeridiem ? 'hours12h' : 'hours24h',

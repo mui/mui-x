@@ -61,6 +61,7 @@ export const useDesktopRangePicker = <
     viewContainerRole,
     localeText,
     getStepNavigation,
+    onClose: () => rangePositionResponse.setRangePosition('start'),
   });
 
   const Field = slots.field;

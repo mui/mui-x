@@ -16,7 +16,7 @@ export function useValueAndOpenStates<
 >(parameters: UsePickerDateStateParameters<TValue, TView, TExternalProps>) {
   type TError = InferError<TExternalProps>;
 
-  const { props, valueManager, validator } = parameters;
+  const { props, valueManager, validator, onClose } = parameters;
   const {
     value: valueProp,
     defaultValue: defaultValueProp,
@@ -27,7 +27,7 @@ export function useValueAndOpenStates<
     closeOnSelect,
     open: openProp,
     onOpen,
-    onClose,
+    onClose: onCloseProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(defaultValueProp);
@@ -113,8 +113,9 @@ export function useValueAndOpenStates<
       onOpen();
     }
 
-    if (!newOpen && onClose) {
-      onClose();
+    if (!newOpen) {
+      onCloseProp?.();
+      onClose?.();
     }
   });
 
@@ -238,4 +239,5 @@ interface UsePickerDateStateParameters<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  onClose: () => void | undefined;
 }

@@ -65,6 +65,7 @@ export const useMobileRangePicker = <
     viewContainerRole: 'dialog',
     localeText,
     getStepNavigation,
+    onClose: () => rangePositionResponse.setRangePosition('start'),
   });
 
   const labelId = providerProps.privateContextValue.labelId;
