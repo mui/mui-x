@@ -11,7 +11,7 @@ import { GridSlotProps, useGridSelector } from '@mui/x-data-grid-pro';
 import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridAiAssistantPanelOpenSelector } from '../../hooks/features/prompt/gridAiAssistantSelectors';
+import { gridAiAssistantPanelOpenSelector } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 
 export interface AiAssistantPanelState {
   /**

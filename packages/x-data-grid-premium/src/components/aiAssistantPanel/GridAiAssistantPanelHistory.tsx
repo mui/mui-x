@@ -4,7 +4,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { PromptHistory } from '../../hooks/features/prompt/gridPromptInterfaces';
+import { PromptHistory } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { GridPrompt } from '../prompt';
 
 type GridAiAssistantPanelHistoryProps = {

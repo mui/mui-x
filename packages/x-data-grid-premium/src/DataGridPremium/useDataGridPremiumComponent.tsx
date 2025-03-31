@@ -95,7 +95,10 @@ import {
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
-import { useGridPrompt, aiAssistantStateInitializer } from '../hooks/features/prompt/useGridPrompt';
+import {
+  useGridAiAssistant,
+  aiAssistantStateInitializer,
+} from '../hooks/features/aiAssistant/useGridAiAssistant';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: RefObject<GridApiPremium | null> | undefined,
@@ -196,7 +199,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
-  useGridPrompt(apiRef, props);
+  useGridAiAssistant(apiRef, props);
 
   return apiRef;
 };

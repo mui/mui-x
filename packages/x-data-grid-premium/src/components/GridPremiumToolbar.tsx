@@ -5,7 +5,7 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
-import { isAiAssistantAvailable } from '../hooks/features/prompt/utils';
+import { isAiAssistantAvailable } from '../hooks/features/aiAssistant/utils';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
