@@ -3,7 +3,6 @@ import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer'
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
 import { expect } from 'chai';
-import { waitForElementToBeRemoved } from '@mui/internal-test-utils';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -57,11 +56,10 @@ describe('<PieChart />', () => {
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
-    const tooltip = screen.getByRole('tooltip');
 
     rerender(<PieChart height={100} width={100} series={[{ data: [] }]} hideLegend />);
 
-    await waitForElementToBeRemoved(tooltip);
+    expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 
   it('should hide tooltip if the series of the item the tooltip was showing is removed', async () => {
@@ -73,10 +71,9 @@ describe('<PieChart />', () => {
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
-    const tooltip = screen.getByRole('tooltip');
 
     rerender(<PieChart height={100} width={100} series={[]} hideLegend />);
 
-    await waitForElementToBeRemoved(tooltip);
+    expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 });
