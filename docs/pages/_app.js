@@ -39,7 +39,7 @@ function getMuiPackageVersion(packageName, commitRef) {
 }
 
 ponyfillGlobal.muiDocConfig = {
-  csbIncludePeerDependencies: (deps, { versions }) => {
+  csbIncludePeerDependencies: (deps) => {
     const newDeps = { ...deps };
 
     newDeps['@mui/material'] = '^6';
