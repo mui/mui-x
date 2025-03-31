@@ -10,7 +10,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { ButtonProps } from '@mui/material/Button';
 import type { IconButtonProps } from '@mui/material/IconButton';
-import type { PaginationProps } from '@mui/material/Pagination';
+import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputProps } from '@mui/material/Input';
@@ -55,7 +55,7 @@ declare module '@mui/x-data-grid' {
     material?: Partial<IconButtonProps>;
   }
   interface BasePaginationPropsOverrides {
-    material?: Partial<PaginationProps>;
+    material?: Partial<TablePaginationProps>;
   }
   interface BasePopperPropsOverrides {
     material?: Partial<PopperProps>;

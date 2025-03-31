@@ -207,7 +207,6 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
           estimated: estimatedRowCount,
         })
       }
-      // @ts-ignore Issue with material
       getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
       {...computedProps}
       {...rest}
