@@ -42,7 +42,9 @@ export default defineConfig({
 
 ### Next.js Pages router
 
-Update Next.js configuration to pass the `require` condition and transpile MUI X packages:
+With [Next.js App router](https://nextjs.org/docs#app-router-vs-pages-router), you don't need to do anything.
+
+With Next.js Pages router, update Next.js configuration to pass the `require` condition and transpile MUI X packages:
 
 ```ts
 // next.config.js
