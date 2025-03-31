@@ -1,12 +1,18 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "classes": { "description": "Override or extend the styles applied to the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
     "divisions": { "description": "The number of divisions in the radar grid." },
+    "getStripeColor": {
+      "description": "Get strip fill color. Set it to <code>null</code> to remove stripes",
+      "typeDescriptions": {
+        "index": "The index of the stripe band.",
+        "string": "The color to fill the stripe."
+      }
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -42,12 +48,5 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {
-    "dot": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every highlight dot" },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the highlighted axis line element"
-    },
-    "root": { "description": "Styles applied to the root element." }
-  }
+  "classDescriptions": {}
 }

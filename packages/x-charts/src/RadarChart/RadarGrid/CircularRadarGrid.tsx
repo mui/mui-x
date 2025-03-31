@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import { RadarGridRenderProps } from './RadarGrid.types';
-import { chartsGridClasses } from './radarGridClasses';
 
 /**
  * @ignore - internal component.
  */
 export function CircularRadarGrid(props: RadarGridRenderProps) {
-  const { center, corners, divisions, radius } = props;
-  const theme = useTheme();
+  const { center, corners, divisions, radius, strokeColor, classes } = props;
 
   const divisionRadius = Array.from(
     { length: divisions },
@@ -21,11 +18,11 @@ export function CircularRadarGrid(props: RadarGridRenderProps) {
         <path
           key={i}
           d={`M ${center.x} ${center.y} L ${x} ${y}`}
-          stroke={(theme.vars || theme).palette.text.primary}
+          stroke={strokeColor}
           strokeWidth={1}
           strokeOpacity={0.3}
           fill="none"
-          className={chartsGridClasses.radial}
+          className={classes?.radial}
         />
       ))}
       {divisionRadius.map((r) => (
@@ -34,11 +31,11 @@ export function CircularRadarGrid(props: RadarGridRenderProps) {
           cx={center.x}
           cy={center.y}
           r={r}
-          stroke={(theme.vars || theme).palette.text.primary}
+          stroke={strokeColor}
           strokeWidth={1}
           strokeOpacity={0.3}
           fill="none"
-          className={chartsGridClasses.divider}
+          className={classes?.divider}
         />
       ))}
     </React.Fragment>

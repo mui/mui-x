@@ -1,6 +1,16 @@
 {
   "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "getStripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
+    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
@@ -12,7 +22,26 @@
     "import { RadarGrid } from '@mui/x-charts';",
     "import { RadarGrid } from '@mui/x-charts-pro';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "divider",
+      "className": "MuiRadarGrid-divider",
+      "description": "Styles applied to every divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "radial",
+      "className": "MuiRadarGrid-radial",
+      "description": "Styles applied to every radial line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "stripe",
+      "className": "MuiRadarGrid-stripe",
+      "description": "Styles applied to every stripe element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiRadarGrid",
   "filename": "/packages/x-charts/src/RadarChart/RadarGrid/RadarGrid.tsx",
   "inheritance": null,

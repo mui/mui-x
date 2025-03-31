@@ -31,7 +31,7 @@ You can plot multiple series on the same radar chart.
 
 ## Series options
 
-Radar series support `hideMark` and `fillArea` parametter to modify the rendering of the series.
+Radar series support `hideMark` and `fillArea` parameter to modify the rendering of the series.
 
 {{"demo": "DemoRadarVisualisation.js"}}
 
@@ -55,6 +55,7 @@ The radar chart displays a grid behind the series that can be configured with:
 - `startAngle` The rotation angle of the entire chart in degrees.
 - `divisions` The number of divisions of the grid.
 - `shape` The grid shape that can be `circular` or `sharp`.
+- `getStripeColor` The call back that defines stripe colors. Set it to `null` to remove stripes.
 
 {{"demo": "DemoRadar.js" }}
 

@@ -6,7 +6,6 @@ import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
-import { RadarAxisHighlightProps } from './RadarAxisHighlight';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -34,8 +33,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     hideLegend,
     divisions,
     shape,
+    getStripeColor,
     highlight = 'axis',
-    classes,
     ...other
   } = props;
 
@@ -67,11 +66,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     sx,
   };
 
-  const radarGrid: RadarGridProps = { divisions, shape };
-
-  const radarAxisHighlight: RadarAxisHighlightProps = {
-    classes,
-  };
+  const radarGrid: RadarGridProps = { divisions, shape, getStripeColor };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 
@@ -81,7 +76,6 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
-    radarAxisHighlight,
     overlayProps,
     legendProps,
     children,

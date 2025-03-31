@@ -18,8 +18,8 @@ export interface RadarChartSlotProps {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
-    RadarGridProps,
-    Partial<RadarAxisHighlightProps>,
+    Omit<RadarGridProps, 'classes'>,
+    Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * If `true`, the legend is not rendered.
@@ -47,7 +47,6 @@ const RadarChart = React.forwardRef(function RadarChart(
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
-    radarAxisHighlight,
     overlayProps,
     legendProps,
     highlight,
@@ -62,7 +61,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea />
-          {highlight === 'axis' && <RadarAxisHighlight {...radarAxisHighlight} />}
+          {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
           {children}
@@ -81,10 +80,6 @@ RadarChart.propTypes = {
     current: PropTypes.object,
   }),
   children: PropTypes.node,
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -103,6 +98,13 @@ RadarChart.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  /**
+   * Get strip fill color. Set it to `null` to remove stripes
+   * @param {number} index The index of the stripe band.
+   * @returns {string} The color to fill the stripe.
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary | 'none'
+   */
+  getStripeColor: PropTypes.func,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

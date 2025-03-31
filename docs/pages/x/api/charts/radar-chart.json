@@ -11,13 +11,21 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "getStripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary | 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
+    },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
@@ -67,26 +75,7 @@
     "import { RadarChart } from '@mui/x-charts';",
     "import { RadarChart } from '@mui/x-charts-pro';"
   ],
-  "classes": [
-    {
-      "key": "dot",
-      "className": "MuiRadarChart-dot",
-      "description": "Styles applied to every highlight dot.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiRadarChart-line",
-      "description": "Styles applied to the highlighted axis line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiRadarChart-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiRadarChart",
