@@ -1223,7 +1223,7 @@
       "name": "promptIcon",
       "description": "Icon used for the prompt",
       "default": "GridPromptIcon",
-      "class": null
+      "class": "MuiDataGridPremium-promptIcon"
     },
     {
       "name": "promptSendIcon",
