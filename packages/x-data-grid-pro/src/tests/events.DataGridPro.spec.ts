@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   useGridApiContext,
-  useGridApiEventHandler,
+  useGridEvent,
   GridRowParams,
   GridCellParams,
 } from '@mui/x-data-grid-pro';
@@ -10,19 +10,19 @@ function TestEvents() {
   const apiRef = useGridApiContext();
 
   // @ts-expect-error Argument of type '(params: GridRowParams) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', (params: GridRowParams) => {});
+  useGridEvent(apiRef, 'cellClick', (params: GridRowParams) => {});
 
   // @ts-expect-error Argument of type '(params: GridRowParams) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', (params: GridRowParams) => {});
+  useGridEvent(apiRef, 'cellClick', (params: GridRowParams) => {});
 
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'cellClick',
     // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {},
   );
 
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'cellClick',
     // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
@@ -36,25 +36,25 @@ function TestEvents() {
   ) => {};
 
   // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClickWrongParams);
+  useGridEvent(apiRef, 'cellClick', handleCellClickWrongParams);
 
   // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClickWrongParams);
+  useGridEvent(apiRef, 'cellClick', handleCellClickWrongParams);
 
   // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClickWrongEvents);
+  useGridEvent(apiRef, 'cellClick', handleCellClickWrongEvents);
 
   // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClickWrongEvents);
+  useGridEvent(apiRef, 'cellClick', handleCellClickWrongEvents);
 
   // @ts-expect-error  Argument of type '"cellTripleClick"' is not assignable to parameter of type '"resize" | "debouncedResize" | "unmount" | "cellModeChange" | "cellClick" | "cellDoubleClick" | "cellMouseDown" | "cellMouseUp" | "cellKeyDown" | "cellFocusIn" | ... 49 more'
-  useGridApiEventHandler(apiRef, 'cellTripleClick', () => {});
+  useGridEvent(apiRef, 'cellTripleClick', () => {});
 
   // should work with valid string event name
-  useGridApiEventHandler(apiRef, 'cellClick', () => {});
+  useGridEvent(apiRef, 'cellClick', () => {});
 
   // should work with enum event name
-  useGridApiEventHandler(apiRef, 'cellClick', () => {});
+  useGridEvent(apiRef, 'cellClick', () => {});
 
   return null;
 }
