@@ -56,16 +56,15 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
 
   const [x, y] = instance.polar2svg(radius, highlightedAngle);
   return (
-    <g className={classes?.root}>
+    <g className={classes.root}>
       <path
         d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
         stroke={(theme.vars || theme).palette.text.primary}
         strokeWidth={1}
-        className={classes?.line}
+        className={classes.line}
         pointerEvents="none"
         strokeDasharray="4 4"
       />
-
       {points.map(({ highlighted }, seriesIndex) => {
         return (
           <circle
@@ -73,7 +72,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
             fill={series[seriesIndex].color}
             cx={highlighted.x}
             cy={highlighted.y}
-            className={classes?.dot}
+            className={classes.dot}
             pointerEvents="none"
             {...(series[seriesIndex].hideMark ? highlightMark : highlightMarkShadow)}
           />
