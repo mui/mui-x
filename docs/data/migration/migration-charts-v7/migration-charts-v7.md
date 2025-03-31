@@ -17,6 +17,10 @@ With the v8 you can now:
 - Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
 - Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
+:::success
+This guide is also available in <a href="/static/md/migration-charts-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
 In `package.json`, change the version of the charts package to `next`.

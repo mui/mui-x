@@ -10,6 +10,10 @@ productId: x-tree-view
 
 This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
 
+:::success
+This guide is also available in <a href="/static/md/migration-tree-view-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
 In `package.json`, change the version of the Tree View package to `next`.
