@@ -1848,6 +1848,12 @@
       "isGlobal": false
     },
     {
+      "key": "promptIcon",
+      "className": "MuiDataGrid-promptIcon",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptIconContainer",
       "className": "MuiDataGrid-promptIconContainer",
       "description": "Styles applied to the prompt icon element.",

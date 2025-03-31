@@ -1983,6 +1983,12 @@
       "isGlobal": false
     },
     {
+      "key": "promptIcon",
+      "className": "MuiDataGridPro-promptIcon",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptIconContainer",
       "className": "MuiDataGridPro-promptIconContainer",
       "description": "Styles applied to the prompt icon element.",

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { useGridSelector, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import {
+  useGridSelector,
+  getDataGridUtilityClass,
+  gridClasses,
+  NotRendered,
+  GridSlotProps,
+} from '@mui/x-data-grid-pro';
 import { vars, useGridPanelContext } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
@@ -32,18 +38,23 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const AiAssistantPanelRoot = styled('div', {
+const AiAssistantPanelRoot = styled(NotRendered<GridSlotProps['panel']>, {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanel',
 })<{ ownerState: OwnerState }>({
-  fontFamily: vars.typography.fontFamily.base,
-  width: 400,
+  [`& .${gridClasses.paper}`]: {
+    flexDirection: 'column',
+    width: 400,
+    maxHeight: 'none',
+    overflow: 'hidden',
+  },
 });
 
 const AiAssistantPanelHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelHeader',
 })<{ ownerState: OwnerState }>({
+  flexShrink: 0,
   display: 'flex',
   alignItems: 'center',
   width: '100%',
@@ -66,10 +77,12 @@ const AiAssistantPanelBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelBody',
 })<{ ownerState: OwnerState }>({
+  flexGrow: 0,
+  flexShrink: 0,
+  height: 220,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: 220,
 });
 
 const AiAssistantPanelEmptyText = styled('span', {
@@ -84,6 +97,7 @@ const AiAssistantPanelFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelFooter',
 })<{ ownerState: OwnerState }>({
+  flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing(1),
@@ -161,50 +175,47 @@ function GridAiAssistantPanel() {
   );
 
   return (
-    <rootProps.slots.panel
+    <AiAssistantPanelRoot
+      as={rootProps.slots.panel}
       open={open}
       target={aiAssistantPanelTriggerRef.current}
+      className={classes.root}
+      ownerState={rootProps}
       onClose={() => apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(false)}
       {...rootProps.slotProps?.panel}
     >
-      <AiAssistantPanelRoot className={classes.root} ownerState={rootProps}>
-        <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
-          <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
-            {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
-          </AiAssistantPanelTitle>
-          <rootProps.slots.baseIconButton
-            onClick={() => apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(false)}
-          >
-            <rootProps.slots.aiAssistantCloseIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
-        </AiAssistantPanelHeader>
-        <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
-          {history.length > 0 ? (
-            <GridAiAssistantPanelHistory
-              open={open}
-              history={history}
-              onRerunPrompt={handlePrompt}
-            />
-          ) : (
-            <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
-              {apiRef.current.getLocaleText('aiAssistantPanelNoHistory')}
-            </AiAssistantPanelEmptyText>
-          )}
-        </AiAssistantPanelBody>
-        <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
-          <GridPromptField
-            onPrompt={handlePrompt}
-            allowDataSampling={rootProps.allowAiAssistantDataSampling}
+      <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
+        <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
+          {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
+        </AiAssistantPanelTitle>
+        <rootProps.slots.baseIconButton
+          onClick={() => apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(false)}
+        >
+          <rootProps.slots.aiAssistantCloseIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </AiAssistantPanelHeader>
+      <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
+        {history.length > 0 ? (
+          <GridAiAssistantPanelHistory open={open} history={history} onRerunPrompt={handlePrompt} />
+        ) : (
+          <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
+            {apiRef.current.getLocaleText('aiAssistantPanelNoHistory')}
+          </AiAssistantPanelEmptyText>
+        )}
+      </AiAssistantPanelBody>
+      <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
+        <GridPromptField
+          onPrompt={handlePrompt}
+          allowDataSampling={rootProps.allowAiAssistantDataSampling}
+        />
+        {suggestions.length > 0 && (
+          <GridAiAssistantPanelSuggestions
+            suggestions={suggestions}
+            onSuggestionClick={handlePrompt}
           />
-          {suggestions.length > 0 && (
-            <GridAiAssistantPanelSuggestions
-              suggestions={suggestions}
-              onSuggestionClick={handlePrompt}
-            />
-          )}
-        </AiAssistantPanelFooter>
-      </AiAssistantPanelRoot>
-    </rootProps.slots.panel>
+        )}
+      </AiAssistantPanelFooter>
+    </AiAssistantPanelRoot>
   );
 }
 

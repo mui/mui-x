@@ -254,6 +254,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // aiAssistantPanelTitle: 'AI Assistant',
   // aiAssistantPanelNoHistory: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
+  // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
   // promptFieldLabel: 'Prompt',

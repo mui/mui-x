@@ -1221,6 +1221,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt error element"
     },
+    "promptIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
     "promptIconContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt icon element"

@@ -114,6 +114,7 @@ const PromptIcon = styled('svg', {
   name: 'MuiDataGrid',
   slot: 'PromptIcon',
 })<{ ownerState: OwnerState }>`
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   padding: ${vars.spacing(1)};
