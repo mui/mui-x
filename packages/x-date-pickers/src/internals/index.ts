@@ -155,6 +155,7 @@ export type {
   PickerValidValue,
 } from './models/value';
 
+export { createStepNavigation } from './utils/createStepNavigation';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
@@ -163,9 +164,16 @@ export {
   isDatePickerView,
   mergeDateAndTime,
   formatMeridiem,
+  DATE_VIEWS,
 } from './utils/date-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
-export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
+export {
+  isTimeView,
+  isInternalTimeView,
+  resolveTimeFormat,
+  getMeridiem,
+  TIME_VIEWS,
+} from './utils/time-utils';
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,

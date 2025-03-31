@@ -14,10 +14,10 @@ import {
   ExportedPickersLayoutSlots,
 } from '@mui/x-date-pickers/PickersLayout';
 import {
-  RangeOnlyPickerProps,
-  UseRangePickerParams,
+  NonStaticRangePickerProps,
+  NonStaticRangePickerHookParameters,
   UseRangePickerProps,
-} from '../models/useRangePicker';
+} from '../../models';
 
 export interface UseDesktopRangePickerSlots
   extends PickerPopperSlots,
@@ -42,7 +42,7 @@ export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructu
   >;
 }
 
-export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
+export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -76,4 +76,4 @@ export interface UseDesktopRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps> {}
+> extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

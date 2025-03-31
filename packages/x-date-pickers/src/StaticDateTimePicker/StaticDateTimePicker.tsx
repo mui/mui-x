@@ -20,6 +20,11 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { digitalClockClasses } from '../DigitalClock';
+import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import { DATE_VIEWS } from '../internals/utils/date-utils';
+import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
+
+const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
 type StaticDateTimePickerComponent = ((
   props: StaticDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -123,6 +128,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     validator: validateDateTime,
+    steps: STEPS,
   });
 
   return renderPicker();

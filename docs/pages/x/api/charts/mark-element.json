@@ -8,7 +8,7 @@
       },
       "required": true
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
+    "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
   "imports": [
@@ -17,6 +17,12 @@
     "import { MarkElement } from '@mui/x-charts-pro';"
   ],
   "classes": [
+    {
+      "key": "animate",
+      "className": "MuiMarkElement-animate",
+      "description": "Styles applied to the root element when animation is not skipped.",
+      "isGlobal": false
+    },
     {
       "key": "faded",
       "className": "MuiMarkElement-faded",

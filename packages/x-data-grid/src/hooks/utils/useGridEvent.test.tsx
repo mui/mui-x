@@ -4,13 +4,13 @@ import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
 import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
-import { useGridApiEventHandler, internal_registryContainer } from './useGridApiEventHandler';
+import { useGridEvent, internal_registryContainer } from './useGridEvent';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 
 const noop = spy();
 
-describe('useGridApiEventHandler', () => {
+describe('useGridEvent', () => {
   const { render } = createRenderer();
 
   describe('FinalizationRegistry-based implementation', () => {
@@ -26,7 +26,7 @@ describe('useGridApiEventHandler', () => {
       };
 
       function Test() {
-        useGridApiEventHandler(apiRef as any, 'cellClick', noop);
+        useGridEvent(apiRef as any, 'cellClick', noop);
         return null;
       }
 
@@ -60,7 +60,7 @@ describe('useGridApiEventHandler', () => {
       };
 
       function Test() {
-        useGridApiEventHandler(apiRef as any, 'cellClick', noop);
+        useGridEvent(apiRef as any, 'cellClick', noop);
         return null;
       }
 

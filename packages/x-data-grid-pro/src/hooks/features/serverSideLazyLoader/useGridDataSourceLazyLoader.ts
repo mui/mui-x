@@ -3,7 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import { unstable_debounce as debounce } from '@mui/utils';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   gridSortModelSelector,
   gridFilterModelSelector,
   GridEventListener,
@@ -429,29 +429,29 @@ export const useGridDataSourceLazyLoader = (
     handleDataUpdate,
   );
 
-  useGridApiEventHandler(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
+  useGridEvent(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'rowCountChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleRowCountChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'scrollPositionChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleScrolling),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'renderedRowsIntervalChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, throttledHandleRenderedRowsIntervalChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'sortModelChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridSortModelChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'filterModelChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),

@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
@@ -55,13 +56,18 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
+  const seriesWithDefault = React.useMemo(
+    () =>
+      series.map((s) => ({
+        disableHighlight: !!disableLineItemHighlight,
+        type: 'line' as const,
+        ...s,
+      })),
+    [disableLineItemHighlight, series],
+  );
   const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
-    series: series.map((s) => ({
-      disableHighlight: !!disableLineItemHighlight,
-      type: 'line' as const,
-      ...s,
-    })),
+    series: seriesWithDefault,
     width,
     height,
     margin,

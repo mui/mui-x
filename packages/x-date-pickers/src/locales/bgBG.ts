@@ -35,6 +35,7 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Изчисти',
   okButtonLabel: 'ОК',
   todayButtonLabel: 'Днес',
+  nextStepButtonLabel: 'Следващ',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Избери дата',

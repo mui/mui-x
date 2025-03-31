@@ -26,11 +26,11 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
+import Typography from '@mui/material/Typography';
 
 const StyledQuickFilter = styled(QuickFilter)({
   display: 'grid',
   alignItems: 'center',
-  marginLeft: 'auto',
 });
 
 const StyledToolbarButton = styled(ToolbarButton)(({ theme, ownerState }) => ({
@@ -57,6 +57,10 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
+      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+        Toolbar
+      </Typography>
+
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
@@ -94,8 +98,12 @@ function CustomToolbar() {
         anchorEl={exportMenuTriggerRef.current}
         open={exportMenuOpen}
         onClose={() => setExportMenuOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'export-menu-trigger',
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'export-menu-trigger',
+          },
         }}
       >
         <ExportPrint render={<MenuItem />} onClick={() => setExportMenuOpen(false)}>

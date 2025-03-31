@@ -29,7 +29,7 @@ import {
 import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { useGridApiOptionHandler } from '../../utils';
+import { useGridEventPriority } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import {
@@ -698,9 +698,9 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
-  useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 
   return {
     renderContext,

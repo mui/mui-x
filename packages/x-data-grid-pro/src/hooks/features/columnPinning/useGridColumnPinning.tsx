@@ -6,7 +6,7 @@ import {
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
   useGridApiMethod,
-  useGridApiEventHandler,
+  useGridEvent,
   GridEventListener,
   GridPinnedColumnPosition,
   gridColumnFieldsSelector,
@@ -328,7 +328,7 @@ export const useGridColumnPinning = (
       newOrderedFieldsBeforePinningColumns;
   };
 
-  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
+  useGridEvent(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
   React.useEffect(() => {
     if (props.pinnedColumns) {
