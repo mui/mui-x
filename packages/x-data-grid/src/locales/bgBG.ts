@@ -31,23 +31,15 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
-  // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
   toolbarExportExcel: 'Изтегли като Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Търсене',
@@ -221,6 +213,25 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'размер',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid);

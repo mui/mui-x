@@ -31,6 +31,7 @@ export interface GridPanelProps
    */
   classes?: Partial<GridPanelClasses>;
   open: boolean;
+  onClose?: () => void;
 }
 
 export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
@@ -60,7 +61,7 @@ const GridPanelContent = styled('div', {
 });
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, onClose, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
@@ -71,12 +72,12 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const onDidHide = useEventCallback(() => setIsPlaced(false));
 
   const handleClickAway = useEventCallback(() => {
-    apiRef.current.hidePreferences();
+    onClose?.();
   });
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
-      apiRef.current.hidePreferences();
+      onClose?.();
     }
   });
 
@@ -134,6 +135,7 @@ GridPanel.propTypes = {
   className: PropTypes.string,
   flip: PropTypes.bool,
   id: PropTypes.string,
+  onClose: PropTypes.func,
   open: PropTypes.bool.isRequired,
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
 } as any;

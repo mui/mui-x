@@ -4,24 +4,25 @@ import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { AiAssistantPanelTrigger } from './aiAssistantPanel/AiAssistantPanelTrigger';
+import { AiAssistantPanelTrigger } from './aiAssistantPanel';
+import { isAiAssistantAvailable } from '../hooks/features/prompt/utils';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const additionalItems = (
+  const additionalItems = isAiAssistantAvailable(rootProps) ? (
     <AiAssistantPanelTrigger
       render={(triggerProps) => (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarAssistant')}>
           <ToolbarButton {...triggerProps} color="default">
-            <rootProps.slots.assistantIcon fontSize="small" />
+            <rootProps.slots.aiAssistantIcon fontSize="small" />
           </ToolbarButton>
         </rootProps.slots.baseTooltip>
       )}
     />
-  );
+  ) : undefined;
 
   const additionalExportMenuItems = !props.excelOptions?.disableToolbarButton
     ? (onMenuItemClick: () => void) => (

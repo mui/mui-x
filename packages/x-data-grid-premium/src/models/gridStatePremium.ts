@@ -9,7 +9,10 @@ import type {
   GridAggregationInitialState,
   GridCellSelectionModel,
 } from '../hooks';
-import { GridAiAssistantState } from '../hooks/features/prompt/gridPromptInterfaces';
+import {
+  GridAiAssistantInitialState,
+  GridAiAssistantState,
+} from '../hooks/features/prompt/gridPromptInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -28,5 +31,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
   aggregation?: GridAggregationInitialState;
   cellSelection?: GridCellSelectionModel;
-  aiAssistant?: GridAiAssistantState;
+  aiAssistant?: GridAiAssistantInitialState;
 }

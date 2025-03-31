@@ -31,24 +31,15 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '검색',
   toolbarQuickFilterDeleteIconLabel: '초기화',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '프롬프트 입력…',
-  toolbarPromptControlWithRecordingPlaceholder: '프롬프트 입력 또는 녹음…',
-  toolbarPromptControlRecordingPlaceholder: '녹음 중…',
-  toolbarPromptControlLabel: '프롬프트 입력',
-  toolbarPromptControlRecordButtonDefaultLabel: '녹음',
-  toolbarPromptControlRecordButtonActiveLabel: '녹음 정지',
-  toolbarPromptControlSendActionLabel: '전송',
-  toolbarPromptControlSendActionAriaLabel: '프롬프트 전송',
-  toolbarPromptControlErrorMessage:
-    '요청을 처리하는 동안 오류가 발생했습니다. 다른 프롬프트로 다시 시도하십시오.',
-
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
   toolbarExportCSV: 'CSV로 내보내기',
   toolbarExportPrint: '프린트',
   toolbarExportExcel: 'Excel로 내보내기',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: '검색',
@@ -219,6 +210,25 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '최소값',
   aggregationFunctionLabelMax: '최대값',
   aggregationFunctionLabelSize: '크기',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

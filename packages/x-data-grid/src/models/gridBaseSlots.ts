@@ -302,10 +302,17 @@ export type TextFieldProps = CommonProps & {
   type?: React.HTMLInputTypeAttribute;
   value?: string;
   ref?: Ref<HTMLInputElement>;
+  multiline?: boolean;
+  autoFocus?: boolean;
 };
 
 export type TooltipProps = CommonProps & {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
+};
+
+export type ChipProps = {
+  label: string;
+  size?: 'small' | 'medium';
 };

@@ -73,6 +73,7 @@ PromptFieldControl.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   autoComplete: PropTypes.string,
+  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -90,6 +91,7 @@ PromptFieldControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  multiline: PropTypes.bool,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,

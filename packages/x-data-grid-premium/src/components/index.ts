@@ -4,3 +4,4 @@ export * from './GridColumnMenuAggregationItem';
 export * from './promptField';
 export { GridColumnMenuGroupingItem } from './GridPremiumColumnMenu';
 export * from './export';
+export * from './aiAssistantPanel';

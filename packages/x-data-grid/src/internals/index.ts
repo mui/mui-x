@@ -206,3 +206,5 @@ export type { Localization } from '../utils/getGridLocalization';
 export * from './demo';
 
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
+
+export { useGridPanelContext } from '../components/panel/GridPanelContext';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import {
+  mockPromptResolver,
   randomBoolean,
   randomCompanyName,
   randomCountry,
@@ -12,7 +13,6 @@ import {
   randomTraderName,
   useDemoData,
 } from '@mui/x-data-grid-generator';
-import { Toolbar } from './Toolbar';
 
 function createExamples(column: string) {
   switch (column) {
@@ -72,9 +72,19 @@ export default function AssistantWithExamples() {
       <DataGridPremium
         {...data}
         columns={columns}
-        slots={{
-          toolbar: Toolbar,
+        initialState={{
+          aiAssistant: {
+            suggestions: [
+              'Sort by name',
+              'Show people from the EU',
+              // 'Sort by company name and employee name',
+              // 'Order companies by amount of people',
+            ],
+            history: [],
+          },
         }}
+        enableAiAssistant
+        onPrompt={mockPromptResolver}
         showToolbar
       />
     </div>

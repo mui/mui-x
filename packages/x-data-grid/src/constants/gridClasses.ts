@@ -5,6 +5,54 @@ import {
 
 export interface GridClasses {
   /**
+   * Styles applied to the root element of the AI assistant panel.
+   */
+  aiAssistantPanel: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel header.
+   */
+  aiAssistantPanelHeader: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel title.
+   */
+  aiAssistantPanelTitle: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel body.
+   */
+  aiAssistantPanelBody: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel empty text.
+   */
+  aiAssistantPanelEmptyText: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel footer.
+   */
+  aiAssistantPanelFooter: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel history.
+   */
+  aiAssistantPanelHistory: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel history list.
+   */
+  aiAssistantPanelHistoryList: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel suggestions.
+   */
+  aiAssistantPanelSuggestions: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel suggestions list.
+   */
+  aiAssistantPanelSuggestionsList: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel suggestions item.
+   */
+  aiAssistantPanelSuggestionsItem: string;
+  /**
+   * Styles applied to the root element of the AI assistant panel suggestions label.
+   */
+  aiAssistantPanelSuggestionsLabel: string;
+  /**
    * Styles applied to the root element of the cell with type="actions".
    */
   actionsCell: string;
@@ -696,6 +744,34 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
+  /**
+   * Styles applied to the prompt root element.
+   */
+  prompt: string;
+  /**
+   * Styles applied to the prompt content element.
+   */
+  promptContent: string;
+  /**
+   * Styles applied to the prompt text element.
+   */
+  promptText: string;
+  /**
+   * Styles applied to the prompt time element.
+   */
+  promptTime: string;
+  /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIconContainer: string;
+  /**
+   * Styles applied to the prompt error element.
+   */
+  promptError: string;
+  /**
+   * Styles applied to the prompt action element.
+   */
+  promptAction: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -705,6 +781,18 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+  'aiAssistantPanel',
+  'aiAssistantPanelHeader',
+  'aiAssistantPanelTitle',
+  'aiAssistantPanelBody',
+  'aiAssistantPanelEmptyText',
+  'aiAssistantPanelFooter',
+  'aiAssistantPanelHistory',
+  'aiAssistantPanelHistoryList',
+  'aiAssistantPanelSuggestions',
+  'aiAssistantPanelSuggestionsList',
+  'aiAssistantPanelSuggestionsItem',
+  'aiAssistantPanelSuggestionsLabel',
   'actionsCell',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',
@@ -875,4 +963,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
+  'prompt',
+  'promptContent',
+  'promptText',
+  'promptTime',
+  'promptIconContainer',
+  'promptError',
+  'promptAction',
 ]);

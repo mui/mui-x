@@ -6,7 +6,7 @@ import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { GridRootPropsContext } from './GridRootPropsContext';
 import { GridConfiguration } from '../models/configuration/gridConfiguration';
 import { GridConfigurationContext } from '../components/GridConfigurationContext';
-import { GridPreferencePanelContextProvider } from '../components/panel/GridPreferencePanelContext';
+import { GridPanelContextProvider } from '../components/panel/GridPanelContext';
 import { GridCSSVariablesContext } from '../utils/css/context';
 
 type GridContextProviderProps = {
@@ -29,9 +29,9 @@ export function GridContextProvider({
       <GridRootPropsContext.Provider value={props}>
         <GridPrivateApiContext.Provider value={privateApiRef}>
           <GridApiContext.Provider value={apiRef}>
-            <GridPreferencePanelContextProvider>
+            <GridPanelContextProvider>
               <GridCSSVariablesContext>{children}</GridCSSVariablesContext>
-            </GridPreferencePanelContextProvider>
+            </GridPanelContextProvider>
           </GridApiContext.Provider>
         </GridPrivateApiContext.Provider>
       </GridRootPropsContext.Provider>

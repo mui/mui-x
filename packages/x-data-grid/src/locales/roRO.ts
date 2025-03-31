@@ -32,24 +32,15 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Căutare',
   toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Scrie un prompt…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Scrie sau înregistrează un prompt…',
-  toolbarPromptControlRecordingPlaceholder: 'Ascultare prompt…',
-  toolbarPromptControlLabel: 'Introducere prompt',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Înregistrează',
-  toolbarPromptControlRecordButtonActiveLabel: 'Oprește înregistrare',
-  toolbarPromptControlSendActionLabel: 'Trimite',
-  toolbarPromptControlSendActionAriaLabel: 'Trimite prompt',
-  toolbarPromptControlErrorMessage:
-    'A apărut o eroare la procesare. Încercați din nou cu un alt prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Download în format CSV',
   toolbarExportPrint: 'Printare',
   toolbarExportExcel: 'Download în format Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Caută',
@@ -224,6 +215,25 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minim',
   aggregationFunctionLabelMax: 'Maxim',
   aggregationFunctionLabelSize: 'Numărul elementelor',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const roRO: Localization = getGridLocalization(roROGrid);

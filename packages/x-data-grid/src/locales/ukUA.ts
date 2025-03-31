@@ -56,24 +56,15 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Очистити',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Введіть запит…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Введіть або запишіть запит…',
-  toolbarPromptControlRecordingPlaceholder: 'Прослуховування запиту…',
-  toolbarPromptControlLabel: 'Введення запиту',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Запис',
-  toolbarPromptControlRecordButtonActiveLabel: 'Зупинити запис',
-  toolbarPromptControlSendActionLabel: 'Надіслати',
-  toolbarPromptControlSendActionAriaLabel: 'Надіслати запит',
-  toolbarPromptControlErrorMessage:
-    'Сталася помилка під час обробки запиту. Будь ласка, спробуйте ще раз із іншим запитом.',
-
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',
   toolbarExportCSV: 'Завантажити у форматі CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Пошук',
@@ -254,6 +245,25 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid);

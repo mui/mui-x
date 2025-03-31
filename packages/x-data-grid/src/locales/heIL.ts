@@ -32,23 +32,15 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'חיפוש',
   toolbarQuickFilterDeleteIconLabel: 'ניקוי',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'הקלד ערך…',
-  toolbarPromptControlWithRecordingPlaceholder: 'הקלד או הקלט ערך…',
-  toolbarPromptControlRecordingPlaceholder: 'ממתין להנחיה…',
-  toolbarPromptControlLabel: 'הזן ערך',
-  toolbarPromptControlRecordButtonDefaultLabel: 'הקלטה',
-  toolbarPromptControlRecordButtonActiveLabel: 'הפסק הקלטה',
-  toolbarPromptControlSendActionLabel: 'שלח',
-  toolbarPromptControlSendActionAriaLabel: 'שלח ערך',
-  toolbarPromptControlErrorMessage: 'התרחשה שגיאה בזמן העיבוד של הבקשה. נסה שוב עם ערך אחר בבקשה.',
-
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
   toolbarExportLabel: 'ייצוא',
   toolbarExportCSV: 'ייצוא ל- CSV',
   toolbarExportPrint: 'הדפסה',
   toolbarExportExcel: 'ייצוא ל- Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'חיפוש',
@@ -221,6 +213,25 @@ const heILGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'מינימום',
   aggregationFunctionLabelMax: 'מקסימום',
   aggregationFunctionLabelSize: 'גודל',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid);

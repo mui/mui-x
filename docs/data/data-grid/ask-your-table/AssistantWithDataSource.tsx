@@ -6,9 +6,7 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { useMockServer } from '@mui/x-data-grid-generator';
-import { AssistantPanelProps } from './AssistantPanel';
-import { Toolbar } from './Toolbar';
+import { mockPromptResolver, useMockServer } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = [
   'name',
@@ -29,12 +27,6 @@ const aggregationFunctions = {
   max: { columnTypes: ['number', 'date', 'dateTime'] },
   size: {},
 };
-
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    assistantPanelProps: Partial<AssistantPanelProps>;
-  }
-}
 
 export default function AssistantWithDataSource() {
   const apiRef = useGridApiRef();
@@ -84,6 +76,14 @@ export default function AssistantWithDataSource() {
         paginationModel: { pageSize: 10, page: 0 },
         rowCount: 0,
       },
+      aiAssistant: {
+        suggestions: [
+          'Sort by name',
+          'Show people from the EU',
+          // 'Sort by company name and employee name',
+          // 'Order companies by amount of people',
+        ],
+      },
     },
   });
 
@@ -97,17 +97,10 @@ export default function AssistantWithDataSource() {
         pagination
         initialState={initialStateUpdated}
         pageSizeOptions={[10, 20, 50]}
-        slots={{
-          toolbar: Toolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            assistantPanelProps: {
-              allowDataSampling: true,
-            },
-          },
-        }}
         showToolbar
+        allowAiAssistantDataSampling
+        enableAiAssistant
+        onPrompt={mockPromptResolver}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}
       />

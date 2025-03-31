@@ -31,23 +31,15 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜索',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '输入提示词',
-  toolbarPromptControlWithRecordingPlaceholder: '输入或录制提示词',
-  toolbarPromptControlRecordingPlaceholder: '正在录音…',
-  toolbarPromptControlLabel: '提示词输入',
-  toolbarPromptControlRecordButtonDefaultLabel: '录音',
-  toolbarPromptControlRecordButtonActiveLabel: '停止录音',
-  toolbarPromptControlSendActionLabel: '发送',
-  toolbarPromptControlSendActionAriaLabel: '发送提示词',
-  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词重试。',
-
   // Export selector toolbar button text
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
   toolbarExportCSV: '导出至CSV',
   toolbarExportPrint: '打印',
   toolbarExportExcel: '导出至Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: '搜索',
@@ -213,6 +205,25 @@ const zhCNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小',
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '大小',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid);

@@ -31,24 +31,15 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Szukaj',
   toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Wpisz polecenie...',
-  toolbarPromptControlWithRecordingPlaceholder: 'Wpisz lub nagraj polecenie...',
-  toolbarPromptControlRecordingPlaceholder: 'Nasłuchiwanie polecenia...',
-  toolbarPromptControlLabel: 'Wprowadź polecenie',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nagrywaj',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zatrzymaj nagrywanie',
-  toolbarPromptControlSendActionLabel: 'Wyślij',
-  toolbarPromptControlSendActionAriaLabel: 'Wyślij polecenie',
-  toolbarPromptControlErrorMessage:
-    'Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie z innym poleceniem.',
-
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
   toolbarExportPrint: 'Drukuj',
   toolbarExportExcel: 'Pobierz jako plik Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Szukaj',
@@ -219,6 +210,25 @@ const plPLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'minimum',
   aggregationFunctionLabelMax: 'maximum',
   aggregationFunctionLabelSize: 'rozmiar',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid);

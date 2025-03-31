@@ -55,23 +55,15 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Ачысціць',
 
-  // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Экспарт',
   toolbarExportLabel: 'Экспарт',
   toolbarExportCSV: 'Спампаваць у фармаце CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Спампаваць у фармаце Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
@@ -252,6 +244,25 @@ const beBYGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мінімум',
   aggregationFunctionLabelMax: 'максімум',
   aggregationFunctionLabelSize: 'памер',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const beBY: Localization = getGridLocalization(beBYGrid);

@@ -32,24 +32,15 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Claro',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Digite um prompt…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
-  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
-  toolbarPromptControlLabel: 'Entrada de prompt',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
-  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
-  toolbarPromptControlSendActionLabel: 'Enviar',
-  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
-  toolbarPromptControlErrorMessage:
-    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descarregar como CSV',
   toolbarExportPrint: 'Imprimir',
   toolbarExportExcel: 'Descarregar como Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Procurar',
@@ -224,6 +215,25 @@ const ptPTGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'máx.',
   aggregationFunctionLabelSize: 'tamanho',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const ptPT = getGridLocalization(ptPTGrid);

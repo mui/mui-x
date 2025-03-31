@@ -32,24 +32,15 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
-  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
-  toolbarPromptControlLabel: 'Prompteingabe',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
-  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
-  toolbarPromptControlSendActionLabel: 'Senden',
-  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
-  toolbarPromptControlErrorMessage:
-    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
   toolbarExportExcel: 'Download als Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Suche',
@@ -219,6 +210,25 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minimum',
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Anzahl',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);

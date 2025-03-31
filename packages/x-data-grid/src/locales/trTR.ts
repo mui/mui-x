@@ -31,24 +31,15 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Bir istem yazın…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Bir istem yazın veya kaydedin…',
-  toolbarPromptControlRecordingPlaceholder: 'İstem dinleniyor…',
-  toolbarPromptControlLabel: 'İstem girişi',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Kaydet',
-  toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
-  toolbarPromptControlSendActionLabel: 'Gönder',
-  toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
-  toolbarPromptControlErrorMessage:
-    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
-
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
   toolbarExportPrint: 'Yazdır',
   toolbarExportExcel: 'Excel olarak aktar',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Arama',
@@ -219,6 +210,25 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'boyut',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);
