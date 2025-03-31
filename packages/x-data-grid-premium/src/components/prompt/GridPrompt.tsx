@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled } from '@mui/system';
+import { keyframes, styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -10,7 +10,9 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = PromptHistory[number] & { onRerun: () => void };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { error: boolean };
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
+  error: boolean;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -18,6 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['prompt'],
     iconContainer: ['promptIconContainer'],
+    icon: ['promptIcon'],
     text: ['promptText'],
     time: ['promptTime'],
     content: ['promptContent'],
@@ -28,22 +31,47 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const fadeInUp = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(10px)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0)',
+  },
+});
+
+const growAndFadeIn = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'scale(0.8)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'scale(1)',
+  },
+});
+
+// This `styled()` function invokes keyframes. `styled-components` only supports keyframes
+// in string templates. Do not convert these styles in JS object as it will break.
 const Prompt = styled('li', {
   name: 'MuiDataGrid',
   slot: 'Prompt',
-})<{ ownerState: OwnerState }>({
-  display: 'flex',
-  padding: vars.spacing(1, 1.5),
-  alignItems: 'flex-start',
-  gap: vars.spacing(1.5),
-  [`.${gridClasses.promptAction}`]: {
-    opacity: 0,
-    transition: vars.transition(['opacity'], { duration: vars.transitions.duration.short }),
-  },
-  [`&:hover .${gridClasses.promptAction}`]: {
-    opacity: 1,
-  },
-});
+})<{ ownerState: OwnerState }>`
+  display: flex;
+  padding: ${vars.spacing(1, 1.5)};
+  align-items: flex-start;
+  gap: ${vars.spacing(1.5)};
+  animation: ${fadeInUp} ${vars.transitions.duration.long} ${vars.transitions.easing.easeInOut};
+  .${gridClasses.promptAction} {
+    opacity: 0;
+    transition: ${vars.transition(['opacity'], { duration: vars.transitions.duration.short })};
+  }
+  &:hover .${gridClasses.promptAction} {
+    opacity: 1;
+  }
+`;
 
 const PromptContent = styled('div', {
   name: 'MuiDataGrid',
@@ -78,21 +106,24 @@ const PromptIconContainer = styled('div', {
   justifyContent: 'center',
   width: 36,
   height: 36,
-  borderRadius: '100%',
-  backgroundColor: `color-mix(in srgb, currentColor 15%, ${vars.colors.background.base})`,
-  color: vars.colors.foreground.muted,
-  variants: [
-    {
-      props: {
-        error: true,
-      },
-      style: {
-        color: vars.colors.foreground.error,
-      },
-    },
-  ],
 });
 
+// This `styled()` function invokes keyframes. `styled-components` only supports keyframes
+// in string templates. Do not convert these styles in JS object as it will break.
+const PromptIcon = styled('svg', {
+  name: 'MuiDataGrid',
+  slot: 'PromptIcon',
+})<{ ownerState: OwnerState }>`
+  width: 100%;
+  height: 100%;
+  padding: ${vars.spacing(1)};
+  border-radius: 100%;
+  color: ${({ ownerState }) =>
+    ownerState.error ? vars.colors.foreground.error : vars.colors.foreground.muted};
+  background-color: color-mix(in srgb, currentColor 15%, ${vars.colors.background.base});
+  animation: ${growAndFadeIn} ${vars.transitions.duration.short}
+    ${vars.transitions.easing.easeInOut};
+`;
 const PromptError = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptError',
@@ -123,9 +154,14 @@ function GridPrompt(props: GridPromptProps) {
     <Prompt key={createdAt.toISOString()} ownerState={ownerState} className={classes.root}>
       <PromptIconContainer ownerState={ownerState} className={classes.iconContainer}>
         {response === null ? (
-          <rootProps.slots.baseCircularProgress size={20} thickness={5} color="inherit" />
+          <rootProps.slots.baseCircularProgress size={20} thickness={5} />
         ) : (
-          <rootProps.slots.promptIcon fontSize="small" />
+          <PromptIcon
+            as={rootProps.slots.promptIcon}
+            ownerState={ownerState}
+            className={classes.icon}
+            fontSize="small"
+          />
         )}
       </PromptIconContainer>
       <PromptContent ownerState={ownerState} className={classes.content}>
