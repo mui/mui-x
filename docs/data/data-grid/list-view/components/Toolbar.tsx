@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   GridClearIcon,
   GridDeleteIcon,
@@ -67,7 +67,6 @@ const StyledTextField = styled(TextField)<{
 }));
 
 export function Toolbar(props: ToolbarProps) {
-  const theme = useTheme();
   const { listView = false, container, handleUpload, handleDelete } = props;
   const apiRef = useGridApiContext();
   const selectionCount = useGridSelector(apiRef, gridRowSelectionCountSelector);
@@ -93,7 +92,7 @@ export function Toolbar(props: ToolbarProps) {
       {showSelectionOptions ? (
         <React.Fragment>
           <ToolbarButton
-            style={{ marginRight: theme.spacing(0.5) }}
+            material={{ sx: { mr: 0.5 } }}
             onClick={handleClearSelection}
           >
             <GridClearIcon fontSize="small" />
@@ -102,7 +101,7 @@ export function Toolbar(props: ToolbarProps) {
           <Typography variant="body2">{selectionCount} selected</Typography>
 
           <ToolbarButton
-            style={{ marginLeft: 'auto' }}
+            material={{ sx: { mr: 'auto' } }}
             onClick={handleDeleteSelectedRows}
           >
             <GridDeleteIcon fontSize="small" />
@@ -150,6 +149,7 @@ export function Toolbar(props: ToolbarProps) {
                             edge="end"
                             size="small"
                             aria-label="Clear search"
+                            material={{ sx: { marginRight: -0.75 } }}
                           >
                             <CancelIcon fontSize="small" />
                           </QuickFilterClear>

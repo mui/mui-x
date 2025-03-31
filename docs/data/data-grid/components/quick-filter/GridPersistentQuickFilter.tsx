@@ -43,6 +43,7 @@ function CustomToolbar() {
                         edge="end"
                         size="small"
                         aria-label="Clear search"
+                        material={{ sx: { marginRight: -0.75 } }}
                       >
                         <CancelIcon fontSize="small" />
                       </QuickFilterClear>
