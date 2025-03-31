@@ -10,7 +10,7 @@ import {
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -857,33 +857,25 @@ export const useGridRowSelection = (
     apiRef.current.setRowSelectionModel(propRowSelectionModel);
   });
 
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'sortedRowsSet',
     runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'filteredRowsSet',
     runIfRowSelectionIsEnabled(() => removeOutdatedSelection()),
   );
-  useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
-  useGridApiEventHandler(
+  useGridEvent(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
+  useGridEvent(
     apiRef,
     'rowSelectionCheckboxChange',
     runIfRowSelectionIsEnabled(handleRowSelectionCheckboxChange),
   );
-  useGridApiEventHandler(
-    apiRef,
-    'headerSelectionCheckboxChange',
-    handleHeaderSelectionCheckboxChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'cellMouseDown',
-    runIfRowSelectionIsEnabled(preventSelectionOnShift),
-  );
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
+  useGridEvent(apiRef, 'headerSelectionCheckboxChange', handleHeaderSelectionCheckboxChange);
+  useGridEvent(apiRef, 'cellMouseDown', runIfRowSelectionIsEnabled(preventSelectionOnShift));
+  useGridEvent(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
   /*
    * EFFECTS

@@ -23,7 +23,7 @@ const registryContainer = {
 
 let cleanupTokensCounter = 0;
 
-export function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
+export function useGridEvent<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: RefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
@@ -93,12 +93,12 @@ export function useGridApiEventHandler<Api extends GridApiCommon, E extends Grid
 
 const OPTIONS_IS_FIRST: EventListenerOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
+export function useGridEventPriority<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: RefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {
-  useGridApiEventHandler(apiRef, eventName, handler, OPTIONS_IS_FIRST);
+  useGridEvent(apiRef, eventName, handler, OPTIONS_IS_FIRST);
 }
 
 // TODO: move to @mui/x-data-grid/internals

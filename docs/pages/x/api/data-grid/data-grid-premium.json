@@ -218,6 +218,7 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "string" } },
     "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
     "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -1981,9 +1982,21 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGridPremium-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGridPremium-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarLabel",
+      "className": "MuiDataGridPremium-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
       "isGlobal": false
     },
     {

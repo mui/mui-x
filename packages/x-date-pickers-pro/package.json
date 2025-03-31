@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "8.0.0-beta.1",
+  "version": "8.0.0-beta.2",
   "description": "The Pro plan edition of the Date and Time Picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -106,8 +106,8 @@
     "dayjs": "^1.11.13",
     "luxon": "^3.5.0",
     "moment": "^2.30.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

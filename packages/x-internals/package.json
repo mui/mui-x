@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "8.0.0-beta.0",
+  "version": "8.0.0-beta.2",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
   "license": "MIT",
@@ -49,8 +49,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {
