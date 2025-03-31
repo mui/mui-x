@@ -22,6 +22,7 @@ export default function SimpleBarChart() {
         { data: uData, label: 'uv', id: 'uvId' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }

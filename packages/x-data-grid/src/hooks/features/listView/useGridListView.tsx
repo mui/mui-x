@@ -8,7 +8,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridEventListener } from '../../../models/events';
 import { gridDimensionsSelector } from '../dimensions';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 
 export type GridListViewState = (GridListColDef & { computedWidth: number }) | undefined;
 
@@ -53,8 +53,8 @@ export function useGridListView(
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
-  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', updateListColumnWidth);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridEvent(apiRef, 'columnVisibilityModelChange', updateListColumnWidth);
 
   /*
    * EFFECTS

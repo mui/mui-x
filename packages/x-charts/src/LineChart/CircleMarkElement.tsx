@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { animated, useSpringValue } from '@react-spring/web';
+import { styled, useTheme } from '@mui/material/styles';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
 import {
   UseChartCartesianAxisSignature,
@@ -25,6 +25,14 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      */
     dataIndex: number;
   };
+
+const Circle = styled('circle')({
+  [`&.${markElementClasses.animate}`]: {
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'cx, cy',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
+  },
+});
 
 /**
  * The line mark element that only render circle for performance improvement.
@@ -60,29 +68,21 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
-  const cx = useSpringValue(x, { immediate: skipAnimation });
-  const cy = useSpringValue(y, { immediate: skipAnimation });
-
-  React.useEffect(() => {
-    cy.start(y, { immediate: skipAnimation });
-    cx.start(x, { immediate: skipAnimation });
-  }, [cy, y, cx, x, skipAnimation]);
-
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <animated.circle
+    <Circle
       {...other}
-      // @ts-expect-error
-      cx={cx}
-      cy={cy}
+      cx={x}
+      cy={y}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
