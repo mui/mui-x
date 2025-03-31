@@ -1,4 +1,4 @@
-import { PromptResponse } from './gridPromptInterfaces';
+import { PromptResponse } from './gridAiAssistantInterfaces';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 

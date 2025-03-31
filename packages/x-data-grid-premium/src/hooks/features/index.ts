@@ -3,4 +3,4 @@ export * from './aggregation';
 export * from './rowGrouping';
 export * from './export';
 export * from './cellSelection';
-export * from './prompt';
+export * from './aiAssistant';

@@ -12,23 +12,23 @@ export type PromptHistory = {
   response: PromptResponse | null;
 }[];
 
-export type Sort = {
+type Sort = {
   column: string;
   direction: 'asc' | 'desc';
 };
 
-export type Grouping = {
+type Grouping = {
   column: string;
 };
 
-export type Filter = {
+type Filter = {
   operator: string;
   value: string | number | boolean | string[] | number[];
   column: string;
 };
 
-export type AggregationFunction = 'avg' | 'sum' | 'min' | 'max' | 'size';
-export type Aggregation = {
+type AggregationFunction = 'avg' | 'sum' | 'min' | 'max' | 'size';
+type Aggregation = {
   [column: string]: AggregationFunction;
 };
 
@@ -45,7 +45,7 @@ export type PromptResponse = {
 /**
  * The prompt API interface that is available in the grid [[apiRef]].
  */
-export interface GridPromptApi {
+export interface GridAiAssistantApi {
   /**
    * The AI assistant API.
    */

@@ -102,7 +102,10 @@ import {
   useGridPivoting,
 } from '../hooks/features/pivoting/useGridPivoting';
 import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
-import { useGridPrompt, aiAssistantStateInitializer } from '../hooks/features/prompt/useGridPrompt';
+import {
+  useGridAiAssistant,
+  aiAssistantStateInitializer,
+} from '../hooks/features/aiAssistant/useGridAiAssistant';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -218,7 +221,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
-  useGridPrompt(apiRef, props);
+  useGridAiAssistant(apiRef, props);
 
   return props;
 };

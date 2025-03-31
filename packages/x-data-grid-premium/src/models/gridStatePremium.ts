@@ -16,7 +16,7 @@ import type {
 import {
   GridAiAssistantInitialState,
   GridAiAssistantState,
-} from '../hooks/features/prompt/gridPromptInterfaces';
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 /**
  * The state of Data Grid Premium.

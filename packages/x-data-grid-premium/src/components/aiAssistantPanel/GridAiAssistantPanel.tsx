@@ -8,7 +8,7 @@ import {
   gridAiAssistantHistorySelector,
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
-} from '../../hooks/features/prompt/gridAiAssistantSelectors';
+} from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridAiAssistantPanelHistory } from './GridAiAssistantPanelHistory';
