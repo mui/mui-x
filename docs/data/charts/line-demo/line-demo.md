@@ -34,7 +34,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 ## Line chart with live data
 
-{{"demo": "LiveLineChart.js"}}
+{{"demo": "LiveLineChartNoSnap.js"}}
 
 ## Line with forecast
 

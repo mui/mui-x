@@ -11,11 +11,11 @@ const xLabels = [
   'Page G',
 ];
 
-const randBetween = (min, max) => {
+const randBetween = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export default function LiveLineChart() {
+export default function LiveLineChartNoSnap() {
   const [uData, setUData] = React.useState([
     4000, 3000, 2000, 2780, 1890, 2390, 3490,
   ]);
