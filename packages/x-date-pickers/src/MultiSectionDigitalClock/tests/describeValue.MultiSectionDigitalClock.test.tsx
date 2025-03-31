@@ -12,7 +12,7 @@ import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
 describe('<MultiSectionDigitalClock /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerValue, 'multi-section-digital-clock'>(MultiSectionDigitalClock, () => ({
+  describeValue<PickerValue, 'multi-section-digital-clock'>(MultiSectionDigitalClock, () => ({
     render,
     clock,
     componentFamily: 'multi-section-digital-clock',

@@ -14,7 +14,7 @@ import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTime
 describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileTimeRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time-range',

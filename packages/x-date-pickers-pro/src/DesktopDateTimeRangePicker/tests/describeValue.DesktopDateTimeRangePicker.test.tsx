@@ -13,7 +13,7 @@ import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInput
 describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerRangeValue, 'picker'>(DesktopDateTimeRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopDateTimeRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

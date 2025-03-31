@@ -16,7 +16,7 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
-  describeValue.skip<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

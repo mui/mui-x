@@ -12,7 +12,7 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 describe('<TimeClock /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerValue, 'clock'>(TimeClock, () => ({
+  describeValue<PickerValue, 'clock'>(TimeClock, () => ({
     render,
     clock,
     componentFamily: 'clock',

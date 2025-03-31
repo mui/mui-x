@@ -13,7 +13,7 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 describe('<MobileDateTimePicker /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerValue, 'picker'>(MobileDateTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(MobileDateTimePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

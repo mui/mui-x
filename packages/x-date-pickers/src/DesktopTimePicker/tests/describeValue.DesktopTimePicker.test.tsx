@@ -13,7 +13,7 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 describe('<DesktopTimePicker /> - Describe Value', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValue.skip<PickerValue, 'picker'>(DesktopTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(DesktopTimePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',

@@ -221,6 +221,7 @@ export function useViews<
           // but when it's not the final view given all `views` -> overall selection state should be `partial`.
           views.indexOf(selectedView) < views.length - 1
         : Boolean(nextView);
+
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
@@ -229,7 +230,8 @@ export function useViews<
       // The selected view can be different from the active view,
       // This can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
       const currentView = selectedView ?? view;
-      const viewToNavigateTo = views[views.indexOf(currentView) + 1];
+      const viewToNavigateTo =
+        globalSelectionState === 'shallow' ? null : views[views.indexOf(currentView) + 1];
       if (
         viewToNavigateTo != null &&
         stepNavigation.areViewsInSameStep(currentView, viewToNavigateTo)

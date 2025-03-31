@@ -197,6 +197,7 @@ export function useValueAndOpenStates<
           clockShallowValue: newValue,
           hasBeenModifiedSinceMount: true,
         }));
+        return;
       }
 
       setValue(newValue, {

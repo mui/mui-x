@@ -18,7 +18,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
-  describeValue.skip<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',
@@ -81,7 +81,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
   }));
 
   // With single input field
-  describeValue.skip<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',
