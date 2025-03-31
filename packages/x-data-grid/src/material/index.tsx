@@ -149,7 +149,6 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         onChange={onChange as any}
         {...rest}
         variant="outlined"
-        // @ts-ignore Issue with material
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
