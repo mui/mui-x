@@ -11,7 +11,7 @@ To use this feature, you need to have a prompt processing backend. MUI offers th
 Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
 :::
 
-AI assistant feature allows users to interact with the Data Grid component using natural language.
+The AI assistant feature allows users to interact with the Data Grid component using natural language.
 Type the prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
 To enable client-side of this feature, pass `unstable_enableAiAssistant` prop.
@@ -24,7 +24,7 @@ To increase the accuracy of the language processing, provide example values for 
 This can be done in the following ways.
 
 :::info
-AI assistant demos use an utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
+AI assistant demos use a utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
 In a real-world scenario, replace this with [MUI's](/x/react-data-grid/ask-your-table/#with-muis-service) or [your own](/x/react-data-grid/ask-your-table/#with-custom-service) processing service.
 
 `mockPromptResolver()` can handle a predefined set of prompts:
@@ -47,7 +47,7 @@ The `unstable_examples` prop should contain an array of possible values for that
 
 ## Use row data for examples
 
-Pass `allowDataSampling` slot prop, to allow use of the row data to generate column examples.
+Pass `allowDataSampling` slot prop to allow use of the row data to generate column examples.
 This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
 
 Data is collected randomly on the cell level, which means that the examples per column might not come from the same rows.
@@ -81,7 +81,7 @@ An example of combining prompt control with the [Server-side data](/x/react-data
 
 ## Processing service integration
 
-Natural language prompts have to be processed with some service to understand what kind of state changes must be applied to the Data Grid to match the user's request.
+Natural language prompts must be processed by a service to understand what kind of state changes must be applied to the Data Grid to match the user's request.
 You can use MUI's processing service or build it by yourself.
 
 ### With MUI's service
