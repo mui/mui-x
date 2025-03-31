@@ -238,7 +238,7 @@ sx={{
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-When `skipAnimation` is enabled, the chart will render without any animations.
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 :::warning
 If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
