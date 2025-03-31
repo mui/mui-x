@@ -532,6 +532,54 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
     },
+    "aiAssistantPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel"
+    },
+    "aiAssistantPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel body"
+    },
+    "aiAssistantPanelEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel empty text"
+    },
+    "aiAssistantPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel footer"
+    },
+    "aiAssistantPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel header"
+    },
+    "aiAssistantPanelHistory": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel history"
+    },
+    "aiAssistantPanelHistoryList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel history list"
+    },
+    "aiAssistantPanelSuggestions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions"
+    },
+    "aiAssistantPanelSuggestionsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions item"
+    },
+    "aiAssistantPanelSuggestionsLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions label"
+    },
+    "aiAssistantPanelSuggestionsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions list"
+    },
+    "aiAssistantPanelTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel title"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -1030,6 +1078,34 @@
     "resizablePanelHandle--vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "vertical resizable panel handles"
+    },
+    "prompt": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt root element"
+    },
+    "promptAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt action element"
+    },
+    "promptContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt content element"
+    },
+    "promptError": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt error element"
+    },
+    "promptIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt text element"
+    },
+    "promptTime": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt time element"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {

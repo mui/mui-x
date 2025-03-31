@@ -646,6 +646,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "baseCircularProgress",
       "description": "The custom CircularProgress component used in the grid.",
       "default": "CircularProgress",
@@ -1005,6 +1011,78 @@
       "key": "aggregationRowOverlayWrapper",
       "className": "MuiDataGrid-aggregationRowOverlayWrapper",
       "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanel",
+      "className": "MuiDataGrid-aiAssistantPanel",
+      "description": "Styles applied to the root element of the AI assistant panel.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGrid-aiAssistantPanelBody",
+      "description": "Styles applied to the root element of the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGrid-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the root element of the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGrid-aiAssistantPanelFooter",
+      "description": "Styles applied to the root element of the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGrid-aiAssistantPanelHeader",
+      "description": "Styles applied to the root element of the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHistory",
+      "className": "MuiDataGrid-aiAssistantPanelHistory",
+      "description": "Styles applied to the root element of the AI assistant panel history.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHistoryList",
+      "className": "MuiDataGrid-aiAssistantPanelHistoryList",
+      "description": "Styles applied to the root element of the AI assistant panel history list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGrid-aiAssistantPanelTitle",
+      "description": "Styles applied to the root element of the AI assistant panel title.",
       "isGlobal": false
     },
     {
@@ -1743,6 +1821,48 @@
       "key": "resizablePanelHandle--vertical",
       "className": "MuiDataGrid-resizablePanelHandle--vertical",
       "description": "Styles applied to vertical resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "prompt",
+      "className": "MuiDataGrid-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGrid-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGrid-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGrid-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGrid-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGrid-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptTime",
+      "className": "MuiDataGrid-promptTime",
+      "description": "Styles applied to the prompt time element.",
       "isGlobal": false
     },
     {

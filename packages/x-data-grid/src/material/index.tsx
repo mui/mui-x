@@ -299,7 +299,7 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
 
 const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
   const { material, ...rest } = props;
-  return <MUIChip {...rest} {...material} ref={ref} />;
+  return <MUIChip variant="outlined" {...rest} {...material} ref={ref} />;
 });
 
 const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
@@ -662,6 +662,7 @@ const baseSlots: GridBaseSlots = {
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseButton: BaseButton,
+  baseChip: BaseChip,
   baseIconButton: BaseIconButton,
   baseTooltip: BaseTooltip,
   basePagination: BasePagination,

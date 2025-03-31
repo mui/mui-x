@@ -11,6 +11,9 @@
       "description": "If <code>true</code>, the AI Assistant panel is open."
     },
     "aiAssistantSuggestions": { "description": "The suggestions of the AI Assistant." },
+    "allowAiAssistantDataSampling": {
+      "description": "If <code>true</code>, the AI Assistant is allowed to sample data."
+    },
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
@@ -64,7 +67,6 @@
     "density": { "description": "Set the density of the Data Grid." },
     "detailPanelExpandedRowIds": { "description": "The row ids to show the detail panel." },
     "disableAggregation": { "description": "If <code>true</code>, aggregation is disabled." },
-    "disableAiAssistant": { "description": "If <code>true</code>, the AI Assistant is disabled." },
     "disableAutosize": {
       "description": "If <code>true</code>, column autosizing on header separator double-click is disabled."
     },
@@ -116,6 +118,7 @@
       "description": "If <code>true</code>, the virtualization is disabled."
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
+    "enableAiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
     "estimatedRowCount": {
       "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
     },
@@ -535,6 +538,14 @@
       "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
       "typeDescriptions": { "error": "The error thrown." }
     },
+    "onPrompt": {
+      "description": "The function to be used to process the prompt.",
+      "typeDescriptions": {
+        "prompt": "The prompt to be processed.",
+        "promptContext": "The prompt context.",
+        "Promise<PromptResponse>": "The prompt response."
+      }
+    },
     "onResize": {
       "description": "Callback fired when the Data Grid is resized.",
       "typeDescriptions": {
@@ -752,6 +763,54 @@
     "aggregationRowOverlayWrapper": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
+    },
+    "aiAssistantPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel"
+    },
+    "aiAssistantPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel body"
+    },
+    "aiAssistantPanelEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel empty text"
+    },
+    "aiAssistantPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel footer"
+    },
+    "aiAssistantPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel header"
+    },
+    "aiAssistantPanelHistory": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel history"
+    },
+    "aiAssistantPanelHistoryList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel history list"
+    },
+    "aiAssistantPanelSuggestions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions"
+    },
+    "aiAssistantPanelSuggestionsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions item"
+    },
+    "aiAssistantPanelSuggestionsLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions label"
+    },
+    "aiAssistantPanelSuggestionsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel suggestions list"
+    },
+    "aiAssistantPanelTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel title"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -1248,6 +1307,34 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "vertical resizable panel handles"
     },
+    "prompt": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt root element"
+    },
+    "promptAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt action element"
+    },
+    "promptContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt content element"
+    },
+    "promptError": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt error element"
+    },
+    "promptIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt text element"
+    },
+    "promptTime": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt time element"
+    },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -1429,7 +1516,8 @@
     }
   },
   "slotDescriptions": {
-    "assistantIcon": "Icon used for the AI Assistant icon",
+    "aiAssistantCloseIcon": "Icon used for the AI Assistant close button",
+    "aiAssistantIcon": "Icon used for the AI Assistant button",
     "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
@@ -1518,7 +1606,11 @@
     "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
     "pivotSearchClearIcon": "Icon used for the clear button in the sidebar search field",
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
-    "promptIcon": "Icon used for the prompt icon",
+    "promptIcon": "Icon used for the prompt",
+    "promptRerunIcon": "Icon used for the button that reruns a prompt",
+    "promptSendIcon": "Icon used for the button that sends a prompt",
+    "promptSpeechRecognitionIcon": "Icon used for the button that starts and stops recording the prompt",
+    "promptSpeechRecognitionOffIcon": "Icon used for when speech recognition is not supported",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
@@ -1526,8 +1618,6 @@
     "sidebarCloseIcon": "Icon displayed in the sidebar close button.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
-    "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
-    "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }

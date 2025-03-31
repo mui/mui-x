@@ -32,17 +32,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '輸入提示詞',
-  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
-  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
-  toolbarPromptControlLabel: '提示詞輸入',
-  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
-  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
-  toolbarPromptControlSendActionLabel: '發送',
-  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
-  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重新嘗試。',
-
   // Export selector toolbar button text
   toolbarExport: '匯出',
   toolbarExportLabel: '匯出',
@@ -52,6 +41,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: '搜尋',
@@ -246,6 +238,25 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid);

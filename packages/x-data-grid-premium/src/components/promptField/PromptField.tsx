@@ -92,7 +92,6 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
         }
       })
       .catch((promptError) => {
-        setError(apiRef.current.getLocaleText('toolbarPromptControlErrorMessage'));
         onError?.(promptError);
       })
       .finally(() => {

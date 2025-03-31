@@ -28,7 +28,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     | 'aiAssistantPanelOpen'
     | 'aiAssistantHistory'
     | 'aiAssistantSuggestions'
-    | 'disableAiAssistant'
+    | 'enableAiAssistant'
   >
 > = (state, props) => {
   if (!isAiAssistantAvailableFn(props)) {
@@ -55,7 +55,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
 
 export const useGridPrompt = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'disableAiAssistant'>,
+  props: Pick<DataGridPremiumProcessedProps, 'enableAiAssistant'>,
 ) => {
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
@@ -176,6 +176,27 @@ export const useGridPrompt = (
     [apiRef, isAiAssistantAvailable],
   );
 
+  const setAiAssistantHistory = React.useCallback<
+    GridPromptApi['unstable_aiAssistant']['setAiAssistantHistory']
+  >(
+    (callback) => {
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          history: typeof callback === 'function' ? callback(state.aiAssistant?.history) : callback,
+        },
+      }));
+    },
+    [apiRef],
+  );
+
+  // TODO: implement suggestions setter
+
+  // TODO: sync controlled history with grid state
+
+  // TODO: sync controlled suggestions with grid state
+
   useGridApiMethod(
     apiRef,
     {
@@ -183,6 +204,7 @@ export const useGridPrompt = (
         getPromptContext,
         applyPromptResult,
         setAiAssistantPanelOpen,
+        setAiAssistantHistory,
       },
     },
     'public',

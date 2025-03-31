@@ -18,8 +18,12 @@ import {
   GridMoveToBottomIcon,
   GridExpandLessIcon,
   GridPivotIcon,
+  GridSendIcon,
+  GridMicIcon,
+  GridMicOffIcon,
   GridAssistantIcon,
   GridPromptIcon,
+  GridRerunIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -40,8 +44,13 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   pivotMenuCheckIcon: GridCheckIcon,
   pivotMenuRemoveIcon: GridDeleteIcon,
   sidebarCloseIcon: GridCloseIcon,
-  assistantIcon: GridAssistantIcon,
+  aiAssistantIcon: GridAssistantIcon,
+  aiAssistantCloseIcon: GridCloseIcon,
   promptIcon: GridPromptIcon,
+  promptSendIcon: GridSendIcon,
+  promptSpeechRecognitionIcon: GridMicIcon,
+  promptSpeechRecognitionOffIcon: GridMicOffIcon,
+  promptRerunIcon: GridRerunIcon,
 };
 
 const materialSlots = {

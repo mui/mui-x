@@ -1,0 +1,15 @@
+<DataGridPremium
+  apiRef={apiRef}
+  columns={columns}
+  dataSource={dataSource}
+  dataSourceCache={null}
+  pagination
+  initialState={initialStateUpdated}
+  pageSizeOptions={[10, 20, 50]}
+  showToolbar
+  allowAiAssistantDataSampling
+  enableAiAssistant
+  onPrompt={mockPromptResolver}
+  aggregationFunctions={aggregationFunctions}
+  onDataSourceError={console.error}
+/>

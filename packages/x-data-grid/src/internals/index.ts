@@ -219,3 +219,5 @@ export type { GridConfiguration } from '../models/configuration/gridConfiguratio
 export * from '../hooks/features/pivoting';
 
 export { createSvgIcon } from '../material/icons/createSvgIcon';
+
+export { useGridPanelContext } from '../components/panel/GridPanelContext';

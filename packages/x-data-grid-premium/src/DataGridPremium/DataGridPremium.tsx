@@ -24,6 +24,7 @@ import {
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
+import { GridAiAssistantPanel } from '../components/aiAssistantPanel/GridAiAssistantPanel';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { Sidebar } from '../components/sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
@@ -94,6 +95,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sidePanel={sidePanel}
       >
         {watermark}
+        {props.enableAiAssistant && <GridAiAssistantPanel />}
       </GridRoot>
     </GridContextProvider>
   );
@@ -126,7 +128,6 @@ DataGridPremiumRaw.propTypes = {
   aiAssistantHistory: PropTypes.arrayOf(
     PropTypes.shape({
       createdAt: PropTypes.instanceOf(Date).isRequired,
-      prompt: PropTypes.string.isRequired,
       response: PropTypes.shape({
         aggregation: PropTypes.object.isRequired,
         error: PropTypes.string,
@@ -156,18 +157,22 @@ DataGridPremiumRaw.propTypes = {
             direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
           }),
         ).isRequired,
-      }).isRequired,
+      }),
+      value: PropTypes.string.isRequired,
     }),
   ),
   /**
    * If `true`, the AI Assistant panel is open.
-   * @default false
    */
   aiAssistantPanelOpen: PropTypes.bool,
   /**
    * The suggestions of the AI Assistant.
    */
   aiAssistantSuggestions: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * If `true`, the AI Assistant is allowed to sample data.
+   */
+  allowAiAssistantDataSampling: PropTypes.bool,
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -311,11 +316,6 @@ DataGridPremiumRaw.propTypes = {
    */
   disableAggregation: PropTypes.bool,
   /**
-   * If `true`, the AI Assistant is disabled.
-   * @default false
-   */
-  disableAiAssistant: PropTypes.bool,
-  /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
    */
@@ -421,6 +421,11 @@ DataGridPremiumRaw.propTypes = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  enableAiAssistant: PropTypes.bool,
   /**
    * Use if the actual rowCount is not known upfront, but an estimation is available.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -937,6 +942,13 @@ DataGridPremiumRaw.propTypes = {
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt: PropTypes.func,
   /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].

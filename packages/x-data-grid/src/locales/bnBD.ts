@@ -33,18 +33,6 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'অনুসন্ধান',
   toolbarQuickFilterDeleteIconLabel: 'পরিষ্কার করুন',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'একটি প্রম্পট লিখুন…',
-  toolbarPromptControlWithRecordingPlaceholder: 'লিখুন বা রেকর্ড করুন…',
-  toolbarPromptControlRecordingPlaceholder: 'শুনছে…',
-  toolbarPromptControlLabel: 'প্রম্পট ইনপুট',
-  toolbarPromptControlRecordButtonDefaultLabel: 'রেকর্ড',
-  toolbarPromptControlRecordButtonActiveLabel: 'রেকর্ড বন্ধ করুন',
-  toolbarPromptControlSendActionLabel: 'পাঠান',
-  toolbarPromptControlSendActionAriaLabel: 'প্রম্পট পাঠান',
-  toolbarPromptControlErrorMessage:
-    'অনুরোধ প্রক্রিয়াকরণে সমস্যা হয়েছে। অনুগ্রহ করে অন্য প্রম্পট দিয়ে আবার চেষ্টা করুন।',
-
   // Export selector toolbar button text
   toolbarExport: 'এক্সপোর্ট',
   toolbarExportLabel: 'এক্সপোর্ট',
@@ -54,6 +42,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'অনুসন্ধান',
@@ -258,6 +249,25 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptProcessingError: 'Could not process prompt',
+  // promptRerun: 'Run again',
 };
 
 export const bnBD: Localization = getGridLocalization(bnBDGrid);

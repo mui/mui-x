@@ -6,3 +6,4 @@ export { GridColumnMenuGroupingItem } from './GridPremiumColumnMenu';
 export * from './export';
 export * from './GridEmptyPivotOverlay';
 export * from './pivotPanel';
+export * from './aiAssistantPanel';

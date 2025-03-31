@@ -2,10 +2,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useGridComponentRenderer, RenderProp } from '@mui/x-data-grid-pro/internals';
-import { GridSlotProps } from '@mui/x-data-grid-pro';
+import {
+  useGridComponentRenderer,
+  RenderProp,
+  useGridPanelContext,
+} from '@mui/x-data-grid-pro/internals';
+import { GridSlotProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridAiAssistantPanelOpenSelector } from '../../hooks/features/prompt/gridAiAssistantSelectors';
 
 export interface AiAssistantPanelState {
   /**
@@ -44,13 +50,22 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
     const buttonId = useId();
     const panelId = useId();
     const apiRef = useGridApiContext();
-    const open = false; // TODO: Make work
+    const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
+    const { aiAssistantPanelTriggerRef } = useGridPanelContext();
+    const handleRef = useForkRef(ref, aiAssistantPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(!open);
+      apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen((currentOpen) => !currentOpen);
       onClick?.(event);
+    };
+
+    const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (open) {
+        event.stopPropagation();
+      }
+      onPointerUp?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -63,10 +78,11 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
-        onClick: handleClick,
         className: resolvedClassName,
         ...other,
-        ref,
+        onClick: handleClick,
+        onPointerUp: handlePointerUp,
+        ref: handleRef,
       },
       state,
     );
