@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -46,7 +47,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
 
   // Manage controlled state
-  React.useEffect(() => {
+
+  useEnhancedEffect(() => {
     if (paramsZoomData === undefined) {
       return undefined;
     }
