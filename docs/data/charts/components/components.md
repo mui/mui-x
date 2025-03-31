@@ -118,6 +118,8 @@ Alternatively, you can use your own animation library to create custom animation
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
+Note that sometimes JavaScript animation libraries cause performance issues, especially when rendering many data points or when interactions are enabled (e.g., zoom, highlight).
+
 ## HTML components
 
 With the introduction of the `ChartDataProvider` in v8, the chart data can be accessed from any component.
