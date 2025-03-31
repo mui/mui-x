@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, waitForElementToBeRemoved } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { expect } from 'chai';
@@ -54,7 +54,7 @@ describe('<BarChart />', () => {
       );
 
       const bar = document.querySelector(`.${barElementClasses.root}`)!;
-      await user.hover(bar);
+      await user.pointer({ target: bar, coords: { x: 520, y: 40 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
 
@@ -63,13 +63,13 @@ describe('<BarChart />', () => {
           height={100}
           width={100}
           series={[{ data: [] }]}
-          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          xAxis={[{ scaleType: 'band', data: [] }]}
           hideLegend
           skipAnimation
         />,
       );
 
-      await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+      expect(screen.queryByRole('tooltip')).to.equal(null);
     },
   );
 
@@ -89,22 +89,15 @@ describe('<BarChart />', () => {
       );
 
       const bar = document.querySelector(`.${barElementClasses.root}`)!;
-      await user.hover(bar);
+      await user.pointer({ target: bar, coords: { x: 520, y: 40 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
 
       rerender(
-        <BarChart
-          height={100}
-          width={100}
-          series={[]}
-          xAxis={[{ scaleType: 'band', data: ['A'] }]}
-          hideLegend
-          skipAnimation
-        />,
+        <BarChart height={100} width={100} series={[]} xAxis={[]} hideLegend skipAnimation />,
       );
 
-      await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+      expect(screen.queryByRole('tooltip')).to.equal(null);
     },
   );
 });
