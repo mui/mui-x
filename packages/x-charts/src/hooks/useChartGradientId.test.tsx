@@ -24,7 +24,7 @@ describe('useChartGradientId', () => {
       </ChartDataProvider>,
     );
 
-    expect(screen.getByText(/«\w+»-gradient-test-id/)).toBeVisible();
+    expect(screen.getByText(/[«|:]\w+[»|:]-gradient-test-id/)).toBeVisible();
   });
 
   describe('useChartGradientIdObjectBound', () => {
@@ -35,7 +35,7 @@ describe('useChartGradientId', () => {
         </ChartDataProvider>,
       );
 
-      expect(screen.getByText(/«\w+»-gradient-test-id-object-bound/)).toBeVisible();
+      expect(screen.getByText(/[«|:]\w+[»|:]-gradient-test-id-object-bound/)).toBeVisible();
     });
   });
 });

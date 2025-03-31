@@ -55,9 +55,9 @@ describe('<DataGridPro /> - Columns', () => {
       await act(() => apiRef.current?.showColumnMenu('brand'));
       const menu = screen.getByRole('menu');
       await waitFor(() => {
-        expect(menu.id).to.match(/«r[0-9a-z]+»/);
+        expect(menu.id).to.match(/[«|:]r[0-9a-z]+[»|:]/);
       });
-      expect(menu.getAttribute('aria-labelledby')).to.match(/«r[0-9a-z]+»/);
+      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:]r[0-9a-z]+[»|:]/);
     });
   });
 
