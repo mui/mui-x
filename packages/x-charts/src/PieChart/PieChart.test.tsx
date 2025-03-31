@@ -57,10 +57,11 @@ describe('<PieChart />', () => {
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
+    const tooltip = screen.getByRole('tooltip');
 
     rerender(<PieChart height={100} width={100} series={[{ data: [] }]} hideLegend />);
 
-    await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+    await waitForElementToBeRemoved(tooltip);
   });
 
   it('should hide tooltip if the series of the item the tooltip was showing is removed', async () => {
@@ -72,9 +73,10 @@ describe('<PieChart />', () => {
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
+    const tooltip = screen.getByRole('tooltip');
 
     rerender(<PieChart height={100} width={100} series={[]} hideLegend />);
 
-    await waitForElementToBeRemoved(screen.queryByRole('tooltip'));
+    await waitForElementToBeRemoved(tooltip);
   });
 });
