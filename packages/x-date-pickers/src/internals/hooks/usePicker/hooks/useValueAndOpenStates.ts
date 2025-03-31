@@ -239,5 +239,5 @@ interface UsePickerDateStateParameters<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
-  onClose: () => void | undefined;
+  onClose: (() => void) | undefined;
 }
