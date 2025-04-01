@@ -21,6 +21,7 @@ import {
   PromptResponse,
 } from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { useGridRootProps } from '../../utils/useGridRootProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 
 const DEFAULT_SAMPLE_COUNT = 5;
@@ -61,6 +62,7 @@ export const useGridAiAssistant = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'enableAiAssistant'>,
 ) => {
+  const rootProps = useGridRootProps();
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
@@ -105,38 +107,54 @@ export const useGridAiAssistant = (
     (result: PromptResponse) => {
       const interestColumns = [] as string[];
 
-      apiRef.current.setFilterModel({
-        items: result.filters.map((filter, index) => {
-          const item = {
-            id: index,
-            field: filter.column,
-            operator: filter.operator,
-            value: filter.value,
-          };
+      if (!rootProps.disableColumnFilter) {
+        apiRef.current.setFilterModel({
+          items: result.filters.map((filter, index) => {
+            const item = {
+              id: index,
+              field: filter.column,
+              operator: filter.operator,
+              value: filter.value,
+            };
 
-          const column = columnsLookup[filter.column];
-          if (column.type === 'singleSelect') {
-            const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
-            const found = options.find(
-              (option) => typeof option === 'object' && option.label === filter.value,
-            );
-            if (found) {
-              item.value = (found as any).value;
+            const column = columnsLookup[filter.column];
+            if (column.type === 'singleSelect') {
+              const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
+              const found = options.find(
+                (option) => typeof option === 'object' && option.label === filter.value,
+              );
+              if (found) {
+                item.value = (found as any).value;
+              }
             }
-          }
 
-          return item;
-        }),
-        logicOperator: (result.filterOperator as GridLogicOperator) ?? GridLogicOperator.And,
-        quickFilterValues: [],
-      });
+            return item;
+          }),
+          logicOperator: (result.filterOperator as GridLogicOperator) ?? GridLogicOperator.And,
+          quickFilterValues: [],
+        });
+        interestColumns.push(...result.filters.map((f) => f.column));
+      }
 
-      apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
-      apiRef.current.setAggregationModel(result.aggregation);
+      // TODO: add pivoting
+      // apiRef.current.setPivotingModel(result.pivoting); <- some transformation is needed
 
-      apiRef.current.setSortModel(
-        result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
-      );
+      // TODO: if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
+
+      if (!rootProps.disableRowGrouping) {
+        apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
+      }
+
+      if (!rootProps.disableAggregation) {
+        apiRef.current.setAggregationModel(result.aggregation);
+        interestColumns.push(...Object.keys(result.aggregation));
+      }
+
+      if (!rootProps.disableColumnSorting) {
+        apiRef.current.setSortModel(
+          result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
+        );
+      }
 
       const visibleRowsData = getVisibleRows(apiRef);
       const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
@@ -154,11 +172,16 @@ export const useGridAiAssistant = (
         Number(columnsLookup[GRID_CHECKBOX_SELECTION_FIELD] !== undefined) +
         Number(result.grouping.length);
 
-      interestColumns.push(...Object.keys(result.aggregation));
-      interestColumns.push(...result.filters.map((f) => f.column));
       interestColumns.reverse().forEach((c) => apiRef.current.setColumnIndex(c, targetIndex));
     },
-    [apiRef, columnsLookup],
+    [
+      apiRef,
+      rootProps.disableColumnFilter,
+      rootProps.disableRowGrouping,
+      rootProps.disableAggregation,
+      rootProps.disableColumnSorting,
+      columnsLookup,
+    ],
   );
 
   const setAiAssistantPanelOpen = React.useCallback<

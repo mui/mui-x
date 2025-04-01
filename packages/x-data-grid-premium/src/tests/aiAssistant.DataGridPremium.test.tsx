@@ -168,6 +168,7 @@ describe('<DataGridPremium /> - Prompt', () => {
               column: 'category1',
             },
           ],
+          pivoting: {},
           error: null,
         }),
       );

@@ -12,18 +12,18 @@ export type PromptHistory = {
   response: PromptResponse | null;
 }[];
 
-type Sort = {
+type ColumnSort = {
   column: string;
   direction: 'asc' | 'desc';
 };
 
-type Grouping = {
+type ColumnFilter = {
+  operator: string;
+  value: string | number | boolean | string[] | number[];
   column: string;
 };
 
-type Filter = {
-  operator: string;
-  value: string | number | boolean | string[] | number[];
+type Grouping = {
   column: string;
 };
 
@@ -32,13 +32,22 @@ type Aggregation = {
   [column: string]: AggregationFunction;
 };
 
+type Pivoting =
+  | {
+      columns: ColumnSort[];
+      rows: string[];
+      values: Aggregation[];
+    }
+  | {};
+
 export type PromptResponse = {
   select: number;
-  filters: Filter[];
+  filters: ColumnFilter[];
   filterOperator?: 'and' | 'or';
   aggregation: Aggregation;
-  sorting: Sort[];
+  sorting: ColumnSort[];
   grouping: Grouping[];
+  pivoting: Pivoting;
   error: string | null;
 };
 
