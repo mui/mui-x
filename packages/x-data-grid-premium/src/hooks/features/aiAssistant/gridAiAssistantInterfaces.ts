@@ -1,11 +1,3 @@
-export type GridAiAssistantState = {
-  panelOpen: boolean;
-  history: PromptHistory;
-  suggestions: string[];
-};
-
-export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
-
 export type PromptHistory = {
   value: string;
   createdAt: Date;
@@ -13,6 +5,18 @@ export type PromptHistory = {
   variant?: 'success' | 'error' | 'processing';
   helperText?: string;
 }[];
+
+export type PromptSuggestion = {
+  value: string;
+};
+
+export type GridAiAssistantState = {
+  panelOpen: boolean;
+  history: PromptHistory;
+  suggestions: PromptSuggestion[];
+};
+
+export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
 
 type ColumnSort = {
   column: string;
@@ -85,13 +89,6 @@ export interface GridAiAssistantApi {
      */
     setAiAssistantHistory: (
       history: PromptHistory | ((prevHistory: PromptHistory) => PromptHistory),
-    ) => void;
-    /**
-     * Sets the suggestions of the AI Assistant.
-     * @param {string[] | ((prevSuggestions: string[]) => string[])} suggestions - The new suggestions of the AI Assistant.
-     */
-    setAiAssistantSuggestions: (
-      suggestions: string[] | ((prevSuggestions: string[]) => string[]),
     ) => void;
   };
 }

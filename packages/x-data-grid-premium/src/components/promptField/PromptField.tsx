@@ -83,7 +83,6 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
     setLoading(true);
     setError(null);
     setValue('');
-    apiRef.current.setLoading(true);
 
     onPrompt(value, context)
       .then((result) => {
@@ -96,7 +95,6 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
       })
       .finally(() => {
         setLoading(false);
-        apiRef.current.setLoading(false);
       });
   }, [apiRef, value, context, onPrompt, onError]);
 
