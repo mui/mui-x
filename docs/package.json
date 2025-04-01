@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
-    "@babel/runtime": "^7.26.10",
-    "@babel/runtime-corejs2": "^7.26.10",
+    "@babel/runtime": "^7.27.0",
+    "@babel/runtime-corejs2": "^7.27.0",
     "@docsearch/react": "^3.9.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.25.9",
-    "@babel/preset-typescript": "^7.26.0",
+    "@babel/preset-typescript": "^7.27.0",
     "@mui/internal-docs-utils": "^2.0.0",
     "@mui/internal-scripts": "^2.0.5",
     "@types/chance": "^1.1.6",
