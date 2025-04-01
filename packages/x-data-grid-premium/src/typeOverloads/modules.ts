@@ -11,6 +11,7 @@ import type {
   GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridCellSelectionModel,
+  PromptHistory,
 } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
@@ -40,6 +41,18 @@ export interface GridControlledStateEventLookupPremium {
   pivotModelChange: { params: GridPivotModel };
   pivotModeChange: { params: boolean };
   pivotPanelOpenChange: { params: boolean };
+  /**
+   * Fired when the AI Assistant panel open state changes.
+   */
+  aiAssistantPanelOpenChange: { params: boolean };
+  /**
+   * Fired when the AI Assistant history changes.
+   */
+  aiAssistantHistoryChange: { params: PromptHistory };
+  /**
+   * Fired when the AI Assistant suggestions change.
+   */
+  aiAssistantSuggestionsChange: { params: string[] };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {

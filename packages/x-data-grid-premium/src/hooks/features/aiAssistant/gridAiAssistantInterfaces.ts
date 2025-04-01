@@ -86,5 +86,12 @@ export interface GridAiAssistantApi {
     setAiAssistantHistory: (
       history: PromptHistory | ((prevHistory: PromptHistory) => PromptHistory),
     ) => void;
+    /**
+     * Sets the suggestions of the AI Assistant.
+     * @param {string[] | ((prevSuggestions: string[]) => string[])} suggestions - The new suggestions of the AI Assistant.
+     */
+    setAiAssistantSuggestions: (
+      suggestions: string[] | ((prevSuggestions: string[]) => string[]),
+    ) => void;
   };
 }

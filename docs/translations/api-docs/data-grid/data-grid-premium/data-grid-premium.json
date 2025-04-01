@@ -12,7 +12,7 @@
     },
     "aiAssistantSuggestions": { "description": "The suggestions of the AI Assistant." },
     "allowAiAssistantDataSampling": {
-      "description": "If <code>true</code>, the AI Assistant is allowed to sample data."
+      "description": "If <code>true</code>, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context."
     },
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
@@ -285,6 +285,18 @@
         "model": "The aggregated columns.",
         "details": "Additional details for this callback."
       }
+    },
+    "onAiAssistantHistoryChange": {
+      "description": "Callback fired when the AI Assistant history changes.",
+      "typeDescriptions": { "aiAssistantHistory": "The new AI Assistant history." }
+    },
+    "onAiAssistantPanelOpenChange": {
+      "description": "Callback fired when the AI Assistant panel open state changes.",
+      "typeDescriptions": { "aiAssistantPanelOpen": "Whether the AI Assistant panel is visible." }
+    },
+    "onAiAssistantSuggestionsChange": {
+      "description": "Callback fired when the AI Assistant suggestions change.",
+      "typeDescriptions": { "aiAssistantSuggestions": "The new AI Assistant suggestions." }
     },
     "onBeforeClipboardPasteStart": {
       "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",

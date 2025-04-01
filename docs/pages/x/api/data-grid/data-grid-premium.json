@@ -269,6 +269,27 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onAiAssistantHistoryChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantHistory: PromptHistory) => void",
+        "describedArgs": ["aiAssistantHistory"]
+      }
+    },
+    "onAiAssistantPanelOpenChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantPanelOpen: boolean) => void",
+        "describedArgs": ["aiAssistantPanelOpen"]
+      }
+    },
+    "onAiAssistantSuggestionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantSuggestions: Array<string>) => void",
+        "describedArgs": ["aiAssistantSuggestions"]
+      }
+    },
     "onBeforeClipboardPasteStart": {
       "type": { "name": "func" },
       "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
