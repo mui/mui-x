@@ -59,7 +59,7 @@ const GridPanelContent = styled('div', {
   overflow: 'auto',
 });
 
-const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
