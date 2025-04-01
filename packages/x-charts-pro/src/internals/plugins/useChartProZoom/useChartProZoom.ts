@@ -95,16 +95,18 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
     () =>
-      debounce(() =>
-        store.update((prevState) => {
-          return {
-            ...prevState,
-            zoom: {
-              ...prevState.zoom,
-              isInteracting: false,
-            },
-          };
-        }),
+      debounce(
+        () =>
+          store.update((prevState) => {
+            return {
+              ...prevState,
+              zoom: {
+                ...prevState.zoom,
+                isInteracting: false,
+              },
+            };
+          }),
+        166,
       ),
     [store],
   );
