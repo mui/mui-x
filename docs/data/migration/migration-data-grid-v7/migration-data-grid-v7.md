@@ -212,11 +212,11 @@ You have to import it from `@mui/x-license` instead:
   ```diff
   -const listViewColDef: GridListColDef = {
   +const listViewColDef: GridListViewColDef = {
-    field: 'listColumn',
-    renderCell: ListViewCell,
-  };
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
 
-  <DataGridPro
+   <DataGridPro
   -  unstable_listView
   -  unstable_listColumns
   +  listView
