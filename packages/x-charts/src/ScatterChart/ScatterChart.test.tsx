@@ -5,6 +5,8 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
+const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';
+
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
 
@@ -80,11 +82,11 @@ describe('<ScatterChart />', () => {
       { target: svg, coords: { clientX: 10, clientY: 10 } },
     ]);
 
-    let spans: NodeListOf<HTMLElement> = [] as any;
+    let cells: NodeListOf<HTMLElement> = [] as any;
 
     await screen.findByRole('tooltip');
-    spans = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root span');
-    expect([...spans].map((span) => span.textContent)).to.deep.equal(['series', '(0, 10)']);
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'series', '(0, 10)']);
 
     await user.pointer([
       // Set tooltip position voronoi value
@@ -92,8 +94,8 @@ describe('<ScatterChart />', () => {
     ]);
 
     await screen.findByRole('tooltip');
-    spans = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root span');
-    expect([...spans].map((span) => span.textContent)).to.deep.equal(['series', '(5, 5)']);
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'series', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
@@ -115,11 +117,11 @@ describe('<ScatterChart />', () => {
       { target: marks[0] },
     ]);
 
-    let spans: NodeListOf<HTMLElement> = [] as any;
+    let cells: NodeListOf<HTMLElement> = [] as any;
 
     await screen.findByRole('tooltip');
-    spans = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root span');
-    expect([...spans].map((span) => span.textContent)).to.deep.equal(['', '(0, 10)']);
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
 
     await user.pointer([
       // Only to set the tooltip position
@@ -127,8 +129,8 @@ describe('<ScatterChart />', () => {
     ]);
 
     await screen.findByRole('tooltip');
-    spans = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root span');
-    expect([...spans].map((span) => span.textContent)).to.deep.equal(['', '(5, 5)']);
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
