@@ -353,7 +353,17 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         resolve(getRowsResponse as T);
       });
     },
-    [dataRef, isDataReady, serverOptions?.verbose, serverOptions?.minDelay, serverOptions?.maxDelay, serverOptions?.useCursorPagination, isTreeData, columnsWithDefaultColDef, isRowGrouping],
+    [
+      dataRef,
+      isDataReady,
+      serverOptions?.verbose,
+      serverOptions?.minDelay,
+      serverOptions?.maxDelay,
+      serverOptions?.useCursorPagination,
+      isTreeData,
+      columnsWithDefaultColDef,
+      isRowGrouping,
+    ],
   );
 
   const editRow = React.useCallback(
