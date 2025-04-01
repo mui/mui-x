@@ -52,7 +52,7 @@ export function computeFlexColumnsWidth({
 }) {
   const uniqueFlexColumns = new Set<GridColDef['field']>(flexColumns.map((col) => col.field));
   const flexColumnsLookup: {
-    all: Record<
+    all: Map<
       GridColDef['field'],
       {
         flex: number;
@@ -63,12 +63,12 @@ export function computeFlexColumnsWidth({
     frozenFields: GridColDef['field'][];
     freeze: (field: GridColDef['field']) => void;
   } = {
-    all: {},
+    all: new Map(),
     frozenFields: [],
     freeze: (field: GridColDef['field']) => {
-      const value = flexColumnsLookup.all[field];
+      const value = flexColumnsLookup.all.get(field);
       if (value && value.frozen !== true) {
-        flexColumnsLookup.all[field].frozen = true;
+        value.frozen = true;
         flexColumnsLookup.frozenFields.push(field);
       }
     },
@@ -92,16 +92,15 @@ export function computeFlexColumnsWidth({
 
     // 5b: Calculate the remaining free space
     flexColumnsLookup.frozenFields.forEach((field) => {
-      remainingFreeSpace -= flexColumnsLookup.all[field].computedWidth;
-      flexUnits -= flexColumnsLookup.all[field].flex!;
+      const value = flexColumnsLookup.all.get(field)!;
+      remainingFreeSpace -= value.computedWidth;
+      flexUnits -= value.flex;
     });
     for (let i = 0; i < flexColumns.length; i += 1) {
       const column = flexColumns[i];
 
-      if (
-        flexColumnsLookup.all[column.field] &&
-        flexColumnsLookup.all[column.field].frozen === true
-      ) {
+      const value = flexColumnsLookup.all.get(column.field);
+      if (value && value.frozen === true) {
         continue;
       }
 
@@ -121,11 +120,11 @@ export function computeFlexColumnsWidth({
         violations.max.add(column.field);
       }
 
-      flexColumnsLookup.all[column.field] = {
+      flexColumnsLookup.all.set(column.field, {
         frozen: false,
         computedWidth,
         flex: column.flex!,
-      };
+      });
     }
 
     // 5e: Freeze over-flexed items
@@ -218,8 +217,8 @@ export const hydrateColumnsWidth = (
       flexColumns,
     });
 
-    Object.keys(computedColumnWidths).forEach((field) => {
-      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
+    computedColumnWidths.forEach((value, field) => {
+      columnsLookup[field].computedWidth = value.computedWidth;
     });
   }
 
