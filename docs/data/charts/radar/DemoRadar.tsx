@@ -1,22 +1,39 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 
-const getStripeColorFunction = {
-  default: undefined,
-  'two-tons': (index: number) => (index % 2 === 0 ? 'gray' : 'darkblue'),
-  null: null,
-};
-const getStripeColorLines = {
-  default: [],
-  'two-tons': [
-    `  getStripeColor={(index:number) => index % 2 === 0 ? 'gray' : 'darkblue'}`,
-  ],
-  null: [`  getStripeColor={null}`],
-};
-
 export default function DemoRadar() {
+  const theme = useTheme();
+
+  const getStripeColorFunction = {
+    default: undefined,
+    'two-tones':
+      theme.palette.mode === 'dark'
+        ? (index: number) =>
+            index % 2 === 0
+              ? (theme.vars || theme).palette.primary.dark
+              : (theme.vars || theme).palette.grey[300]
+        : (index: number) =>
+            index % 2 === 0
+              ? (theme.vars || theme).palette.primary.light
+              : (theme.vars || theme).palette.grey[800],
+    null: null,
+  };
+  const getStripeColorLines = {
+    default: [],
+    'two-tones':
+      theme.palette.mode === 'dark'
+        ? [
+            `  getStripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.dark : theme.palette.grey[300]}`,
+          ]
+        : [
+            `  getStripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.light : theme.palette.grey[800]}`,
+          ],
+    null: [`  getStripeColor={null}`],
+  };
+
   return (
     <ChartsUsageDemo
       componentName="RadarChart"
@@ -40,7 +57,7 @@ export default function DemoRadar() {
         },
         stripe: {
           knob: 'select',
-          options: ['default', 'two-tons', 'null'] as const,
+          options: ['default', 'two-tones', 'null'] as const,
           defaultValue: 'default',
         },
       }}
