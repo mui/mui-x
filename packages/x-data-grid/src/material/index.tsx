@@ -522,13 +522,13 @@ function BasePopper(props: P['basePopper']) {
       }
     };
 
-    content = ({ TransitionProps, placement }: any) =>
+    content = (p: any) =>
       wrappers(
         props,
         <MUIGrow
-          {...TransitionProps}
-          style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
-          onExited={handleExited(TransitionProps?.onExited)}
+          {...p.TransitionProps}
+          style={{ transformOrigin: transformOrigin[p.placement as keyof typeof transformOrigin] }}
+          // onExited={handleExited(p.TransitionProps?.onExited)}
         >
           <MUIPaper>{children}</MUIPaper>
         </MUIGrow>,
