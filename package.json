@@ -91,13 +91,13 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.0.0",
+    "@mui/icons-material": "^7.0.1",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.20",
     "@mui/internal-markdown": "^2.0.2",
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0",
-    "@mui/monorepo": "github:mui/material-ui#22aa7db2ed23df3b43530e9fdb57bc1051221457",
-    "@mui/utils": "^7.0.0",
+    "@mui/material": "^7.0.1",
+    "@mui/monorepo": "github:mui/material-ui#a7e08b43255f84826e14f28bf4abd3984315bd39",
+    "@mui/utils": "^7.0.1",
     "@next/eslint-plugin-next": "15.2.4",
     "@octokit/plugin-retry": "^7.2.0",
     "@octokit/rest": "^21.1.1",
@@ -110,7 +110,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.16",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.25",
+    "@types/node": "^20.17.28",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@types/requestidlecallback": "^0.3.7",
@@ -200,7 +200,7 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.25"
+    "@types/node": "^20.17.28"
   },
   "packageManager": "pnpm@10.6.5",
   "engines": {
