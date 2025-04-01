@@ -24,7 +24,7 @@ export interface GridPanelClasses {
 
 export interface GridPanelProps
   extends Pick<GridSlotProps['basePopper'], 'id' | 'className' | 'target' | 'flip'> {
-  ref?: React.Ref<HTMLElement>;
+  ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
