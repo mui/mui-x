@@ -103,6 +103,7 @@ export const useFieldV7TextField = <
 
   function focusField(newSelectedSections: number | FieldSectionType = 0) {
     if (
+      disabled ||
       !sectionListRef.current ||
       // if the field is already focused, we don't need to focus it again
       getActiveSectionIndex(sectionListRef) != null
@@ -129,7 +130,10 @@ export const useFieldV7TextField = <
     domGetters,
   });
   const hiddenInputProps = useFieldHiddenInputProps({ manager, stateResponse });
-  const createSectionContainerProps = useFieldSectionContainerProps({ stateResponse });
+  const createSectionContainerProps = useFieldSectionContainerProps({
+    stateResponse,
+    internalPropsWithDefaults,
+  });
   const createSectionContentProps = useFieldSectionContentProps({
     manager,
     stateResponse,
@@ -239,7 +243,7 @@ export const useFieldV7TextField = <
     getSections: () => state.sections,
     getActiveSectionIndex: () => getActiveSectionIndex(sectionListRef),
     setSelectedSections: (newSelectedSections) => {
-      if (!sectionListRef.current) {
+      if (disabled || !sectionListRef.current) {
         return;
       }
 

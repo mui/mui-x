@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldStateReturnValue } from './useFieldState';
+import { UseFieldInternalProps } from './useField.types';
 
 /**
  * Generate the props to pass to the container element of each section of the field.
@@ -17,13 +18,14 @@ export function useFieldSectionContainerProps(
       // Methods to update the states
       setSelectedSections,
     },
+    internalPropsWithDefaults: { disabled = false },
   } = parameters;
 
   const createHandleClick = useEventCallback(
     (sectionIndex: number) => (event: React.MouseEvent<HTMLDivElement>) => {
       // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
       // We avoid this by checking if the call to this function is actually intended, or a side effect.
-      if (event.isDefaultPrevented()) {
+      if (disabled || event.isDefaultPrevented()) {
         return;
       }
 
@@ -41,6 +43,7 @@ export function useFieldSectionContainerProps(
 
 interface UseFieldSectionContainerPropsParameters {
   stateResponse: UseFieldStateReturnValue<any>;
+  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
 }
 
 type UseFieldSectionContainerPropsReturnValue = (
