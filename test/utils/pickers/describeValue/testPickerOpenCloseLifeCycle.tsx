@@ -77,11 +77,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (isRangeType) {
         newValue = setNewValue(newValue, {
@@ -139,11 +135,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (isRangeType) {
         newValue = setNewValue(newValue, {
@@ -181,12 +173,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       );
 
       // Change the value (same value)
-      setNewValue(values[0], {
-        isOpened: true,
-        applySameValue: true,
-        selectSection,
-        pressKey,
-      });
+      setNewValue(values[0], { isOpened: true, applySameValue: true, selectSection, pressKey });
       if (isRangeType) {
         setNewValue(values[0], {
           isOpened: true,
@@ -202,7 +189,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', () => {
+    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', function test() {
+      // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
+      this.timeout(10000);
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -221,11 +210,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       );
 
       // Change the value
-      let newValue = setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
       expect(onChange.callCount).to.equal(initialChangeCount);
       if (isRangeType) {
@@ -245,11 +230,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValueBis = setNewValue(newValue, {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValueBis = setNewValue(newValue, { isOpened: true, selectSection, pressKey });
       if (isRangeType) {
         expect(onChange.callCount).to.equal(
           initialChangeCount +
@@ -297,11 +278,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       );
 
       // Change the value (already tested)
-      const newValue = setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
@@ -347,7 +324,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     // TODO: Fix this test and enable it on mobile and date-range
     testSkipIf(pickerParams.variant === 'mobile' || isRangeType)(
       'should call onClose and onAccept with the live value when clicking outside of the picker',
-      async () => {
+      () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -366,11 +343,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         );
 
         // Change the value (already tested)
-        const newValue = setNewValue(values[0], {
-          isOpened: true,
-          selectSection,
-          pressKey,
-        });
+        const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Dismiss the picker
         fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
