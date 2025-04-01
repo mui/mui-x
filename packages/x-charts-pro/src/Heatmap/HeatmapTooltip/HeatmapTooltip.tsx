@@ -1,16 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   ChartsTooltipPaper,
+  ChartsTooltipTable,
+  ChartsTooltipRow,
+  ChartsTooltipCell,
   useItemTooltip,
   ChartsTooltipContainerProps,
   getChartsTooltipUtilityClass,
   ChartsTooltipContainer,
-  ChartsItemTooltipContainer,
-  ChartsItemTooltipText,
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
@@ -82,18 +84,29 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
 
   return (
     <ChartsTooltipPaper className={classes?.paper}>
-      <HeatmapTooltipAxesValue>
-        <span>{formattedX}</span>
-        <span>{formattedY}</span>
-      </HeatmapTooltipAxesValue>
-
-      <ChartsItemTooltipContainer>
-        <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
-        <ChartsItemTooltipText>
-          <span className={classes?.labelCell}>{seriesLabel}</span>
-          <span className={classes?.valueCell}>{formattedValue}</span>
-        </ChartsItemTooltipText>
-      </ChartsItemTooltipContainer>
+      <ChartsTooltipTable className={classes?.table}>
+        <HeatmapTooltipAxesValue>
+          <span>{formattedX}</span>
+          <span>{formattedY}</span>
+        </HeatmapTooltipAxesValue>
+        <tbody>
+          <ChartsTooltipRow className={classes?.row}>
+            <ChartsTooltipCell
+              className={clsx(classes?.markCell, classes?.cell)}
+              component="td"
+              aria-hidden="true"
+            >
+              <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
+            </ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)} component="th">
+              {seriesLabel}
+            </ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)} component="td">
+              {formattedValue}
+            </ChartsTooltipCell>
+          </ChartsTooltipRow>
+        </tbody>
+      </ChartsTooltipTable>
     </ChartsTooltipPaper>
   );
 }

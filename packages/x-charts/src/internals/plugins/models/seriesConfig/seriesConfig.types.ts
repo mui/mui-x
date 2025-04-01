@@ -28,10 +28,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
     ? {
         rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
         radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
-        axisTooltipGetter?: AxisTooltipGetter<
-          TSeriesType,
-          'rotation' | 'radius'
-        >;
+        axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'rotation' | 'radius'>;
       }
     : {});
 

@@ -192,38 +192,32 @@ The series label cell is now a header cell `th` instead of `td`.
 -     </tr>
 -   <header>
 +   <caption>The formatted x-axis value</caption>
-    <body>
+    <tbody>
       <tr>
         <td><Mark color='red'/></td>
 -       <td>Series A</td>
 +       <th>Series A</th>
         <td>55</td>
       </tr>
-    <body>
+    <tbody>
   </table>
 ```
 
 ### Item tooltip
 
-The table of the item tooltip content was replaced by a paragraph.
+DOM modification is similar to the axis tooltip in the previous section.
 
 ```diff
-- <table>
--   <body>
--     <tr>
--       <td><Mark color='red'/></td>
+  <table>
+    <tbody>
+      <tr>
+        <td><Mark color='red'/></td>
 -       <td>Series A</td>
--       <td>55</td>
--     </tr>
--   <body>
-- </table>
-+ <div>
-+   <Mark color='red'/>
-+   <p>
-+     <span>Series A</span>
-+     <span>55</span>
-+   </p>
-+ </div>
++       <th>Series A</th>
+        <td>55</td>
+      </tr>
+    <tbody>
+  </table>
 ```
 
 ## Removing ResponsiveChartContainer ✅

@@ -27,9 +27,7 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
   };
 };
 
-export const axisTooltipGetter: AxisTooltipGetter<'bar', 'x' | 'y'> = (
-  series,
-) => {
+export const axisTooltipGetter: AxisTooltipGetter<'bar', 'x' | 'y'> = (series) => {
   return Object.values(series).map((s) =>
     s.layout === 'horizontal'
       ? { direction: 'y', axisId: s.yAxisId }
