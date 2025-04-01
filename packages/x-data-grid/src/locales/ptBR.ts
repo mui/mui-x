@@ -268,6 +268,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid);

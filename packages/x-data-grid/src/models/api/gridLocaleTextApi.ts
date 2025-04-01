@@ -236,6 +236,8 @@ export interface GridLocaleText {
   aiAssistantSuggestionsMore: (count: number) => string;
   // Prompt
   promptRerun: string;
+  promptProcessing: string;
+  promptAppliedChanges: string;
 
   // Prompt field
   promptFieldLabel: string;

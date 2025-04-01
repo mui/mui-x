@@ -263,6 +263,8 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

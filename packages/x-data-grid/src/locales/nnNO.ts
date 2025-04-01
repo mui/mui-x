@@ -266,6 +266,8 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

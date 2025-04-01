@@ -290,6 +290,8 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid);

@@ -290,6 +290,8 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid);
