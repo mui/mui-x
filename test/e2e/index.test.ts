@@ -904,7 +904,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="dialog"]', { state: 'visible' });
 
         // Change the hours
-        await page.keyboard.press('Next');
+        await page.getByRole('option', { name: 'Next' }).click();
 
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('Enter');
