@@ -279,17 +279,16 @@ const csCZGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Vstup požadavku',
+  promptFieldPlaceholder: 'Napište požadavek…',
+  promptFieldPlaceholderWithRecording: 'Napište nebo nahrajte požadavek…',
+  promptFieldPlaceholderListening: 'Naslouchám požadavku…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Odeslat',
+  promptFieldRecord: 'Nahrát',
+  promptFieldStopRecording: 'Zastavit nahrávání',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

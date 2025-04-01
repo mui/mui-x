@@ -252,17 +252,16 @@ const koKRGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: '프롬프트 입력',
+  promptFieldPlaceholder: '프롬프트 입력…',
+  promptFieldPlaceholderWithRecording: '프롬프트 입력 또는 녹음…',
+  promptFieldPlaceholderListening: '녹음 중…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: '전송',
+  promptFieldRecord: '녹음',
+  promptFieldStopRecording: '녹음 정지',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

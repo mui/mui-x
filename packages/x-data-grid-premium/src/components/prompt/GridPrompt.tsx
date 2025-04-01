@@ -11,7 +11,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 type GridPromptProps = PromptHistory[number] & { onRerun: () => void };
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
-  error: boolean;
+  variant?: 'error';
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -25,7 +25,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     time: ['promptTime'],
     content: ['promptContent'],
     action: ['promptAction'],
-    error: ['promptError'],
+    helperText: ['promptHelperText'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -120,25 +120,25 @@ const PromptIcon = styled('svg', {
   padding: ${vars.spacing(1)};
   border-radius: 100%;
   color: ${({ ownerState }) =>
-    ownerState.error ? vars.colors.foreground.error : vars.colors.foreground.muted};
+    ownerState.variant === 'error' ? vars.colors.foreground.error : vars.colors.foreground.muted};
   background-color: color-mix(in srgb, currentColor 15%, ${vars.colors.background.base});
   animation: ${growAndFadeIn} ${vars.transitions.duration.short}
     ${vars.transitions.easing.easeInOut};
 `;
-const PromptError = styled('div', {
+const PromptHelperText = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'PromptError',
+  slot: 'PromptHelperText',
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.small,
   color: vars.colors.foreground.error,
 });
 
 function GridPrompt(props: GridPromptProps) {
-  const { value, createdAt, response, onRerun } = props;
+  const { value, createdAt, response, helperText, variant, onRerun } = props;
   const rootProps = useGridRootProps();
   const ownerState = {
     classes: rootProps.classes,
-    error: !!response?.error,
+    variant,
   };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridApiContext();
@@ -172,9 +172,9 @@ function GridPrompt(props: GridPromptProps) {
         <PromptTime ownerState={ownerState} className={classes.time} title={fullSentAt}>
           {sentAt}
         </PromptTime>
-        <PromptError ownerState={ownerState} className={classes.error}>
-          {response?.error}
-        </PromptError>
+        <PromptHelperText ownerState={ownerState} className={classes.helperText}>
+          {helperText}
+        </PromptHelperText>
       </PromptContent>
       <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')}>
         <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>

@@ -128,9 +128,9 @@ DataGridPremiumRaw.propTypes = {
   aiAssistantHistory: PropTypes.arrayOf(
     PropTypes.shape({
       createdAt: PropTypes.instanceOf(Date).isRequired,
+      helperText: PropTypes.string,
       response: PropTypes.shape({
         aggregation: PropTypes.object.isRequired,
-        error: PropTypes.string,
         filterOperator: PropTypes.oneOf(['and', 'or']),
         filters: PropTypes.arrayOf(
           PropTypes.shape({
@@ -150,6 +150,14 @@ DataGridPremiumRaw.propTypes = {
             column: PropTypes.string.isRequired,
           }),
         ).isRequired,
+        pivoting: PropTypes.oneOfType([
+          PropTypes.object,
+          PropTypes.shape({
+            columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+            rows: PropTypes.arrayOf(PropTypes.string).isRequired,
+            values: PropTypes.arrayOf(PropTypes.object).isRequired,
+          }),
+        ]).isRequired,
         select: PropTypes.number.isRequired,
         sorting: PropTypes.arrayOf(
           PropTypes.shape({
@@ -159,6 +167,7 @@ DataGridPremiumRaw.propTypes = {
         ).isRequired,
       }),
       value: PropTypes.string.isRequired,
+      variant: PropTypes.oneOf(['error']),
     }),
   ),
   /**

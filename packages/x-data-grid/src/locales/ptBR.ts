@@ -257,17 +257,16 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Digite um prompt…',
+  promptFieldPlaceholderWithRecording: 'Digite ou grave um prompt…',
+  promptFieldPlaceholderListening: 'Ouvindo o prompt…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Enviar',
+  promptFieldRecord: 'Gravar',
+  promptFieldStopRecording: 'Parar gravação',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

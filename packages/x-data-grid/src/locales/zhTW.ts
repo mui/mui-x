@@ -246,17 +246,16 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: '提示詞輸入',
+  promptFieldPlaceholder: '輸入提示詞',
+  promptFieldPlaceholderWithRecording: '輸入或錄製提示詞',
+  promptFieldPlaceholderListening: '正在錄音…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: '發送',
+  promptFieldRecord: '錄音',
+  promptFieldStopRecording: '停止錄音',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

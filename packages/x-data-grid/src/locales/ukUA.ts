@@ -287,17 +287,16 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Введення запиту',
+  promptFieldPlaceholder: 'Введіть запит…',
+  promptFieldPlaceholderWithRecording: 'Введіть або запишіть запит…',
+  promptFieldPlaceholderListening: 'Прослуховування запиту…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Надіслати',
+  promptFieldRecord: 'Запис',
+  promptFieldStopRecording: 'Зупинити запис',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

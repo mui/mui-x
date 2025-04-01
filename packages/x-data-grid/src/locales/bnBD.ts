@@ -257,17 +257,16 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'প্রম্পট ইনপুট',
+  promptFieldPlaceholder: 'একটি প্রম্পট লিখুন…',
+  promptFieldPlaceholderWithRecording: 'লিখুন বা রেকর্ড করুন…',
+  promptFieldPlaceholderListening: 'শুনছে…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'পাঠান',
+  promptFieldRecord: 'রেকর্ড',
+  promptFieldStopRecording: 'রেকর্ড বন্ধ করুন',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

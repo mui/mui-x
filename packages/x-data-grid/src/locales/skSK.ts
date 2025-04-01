@@ -279,17 +279,16 @@ const skSKGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Vstup požiadavky',
+  promptFieldPlaceholder: 'Zadajte požiadavku…',
+  promptFieldPlaceholderWithRecording: 'Zadajte alebo nahrajte požiadavku…',
+  promptFieldPlaceholderListening: 'Počúvam požiadavku…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Odoslať',
+  promptFieldRecord: 'Nahrávať',
+  promptFieldStopRecording: 'Zastaviť nahrávanie',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 
