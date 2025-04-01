@@ -95,17 +95,15 @@ async function run(argv) {
     ...getVersionEnvVariables(packageJson),
   };
 
+  // prettier-ignore
   const babelArgs = [
-    '--config-file',
-    babelConfigPath,
-    '--extensions',
-    `"${extensions.join(',')}"`,
+    '--config-file', babelConfigPath,
+    '--extensions', `"${extensions.join(',')}"`,
     srcDir,
-    '--out-dir',
-    outDir,
-    '--ignore',
+    '--out-dir', outDir,
     // Need to put these patterns in quotes otherwise they might be evaluated by the used terminal.
-    `"${ignore.join('","')}"`,
+    '--ignore', `"${ignore.join('","')}"`,
+    '--copy-files',
   ];
 
   if (outFileExtension !== '.js') {
