@@ -150,6 +150,9 @@ async function main() {
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
 
+        // Skip animations
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
           this.timeout(0);

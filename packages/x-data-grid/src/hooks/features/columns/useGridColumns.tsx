@@ -16,7 +16,7 @@ import {
   gridColumnPositionsSelector,
 } from './gridColumnsSelector';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridPipeProcessor,
@@ -411,7 +411,7 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
   /**
    * APPLIERS

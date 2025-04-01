@@ -35,6 +35,7 @@ const heILPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'ניקוי',
   okButtonLabel: 'אישור',
   todayButtonLabel: 'היום',
+  nextStepButtonLabel: 'הבא',
 
   // Toolbar titles
   datePickerToolbarTitle: 'בחירת תאריך',

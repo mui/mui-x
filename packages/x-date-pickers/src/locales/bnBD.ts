@@ -35,6 +35,7 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'পরিষ্কার',
   okButtonLabel: 'ঠিক আছে',
   todayButtonLabel: 'আজ',
+  nextStepButtonLabel: 'পরের',
 
   // Toolbar titles
   datePickerToolbarTitle: 'তারিখ নির্বাচন করুন',
