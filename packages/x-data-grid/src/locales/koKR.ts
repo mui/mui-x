@@ -249,7 +249,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // aiAssistantPanelTitle: 'AI Assistant',
   // aiAssistantPanelNoHistory: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
-  // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
   promptFieldLabel: '프롬프트 입력',
