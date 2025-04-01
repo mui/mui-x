@@ -24,6 +24,7 @@ const ShadowScrollArea = styled('div', {
   animation-fill-mode: none;
   box-sizing: border-box;
   overflow: auto;
+  scrollbar-width: thin;
   scroll-timeline: --scroll-timeline block;
 
   &::before,
