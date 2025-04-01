@@ -95,7 +95,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onClose,
           open: true,
           defaultValue: values[0],
-          slotProps: { actionBar: { actions: ['cancel'] } },
+          slotProps: { actionBar: { actions: ['cancel', 'nextOrAccept'] } },
           closeOnSelect: false,
         });
 
