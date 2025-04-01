@@ -192,6 +192,7 @@ export type PaginationProps = CommonProps & {
 };
 
 export type PopperProps = CommonProps & {
+  ref?: Ref<HTMLDivElement>;
   open: boolean;
   children?: React.ReactNode;
   clickAwayTouchEvent?: false | ClickAwayTouchEventHandler;
@@ -203,7 +204,6 @@ export type PopperProps = CommonProps & {
   onDidShow?: () => void;
   onDidHide?: () => void;
   id?: string;
-  ref?: Ref;
   target?: Element | null;
   transition?: boolean;
   /** @default 'bottom' */

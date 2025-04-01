@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
@@ -243,7 +244,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
       <Checkbox
         {...other}
         {...material}
-        className={className}
+        className={clsx(className, material?.className)}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
         touchRippleRef={rippleRef}
@@ -333,11 +334,12 @@ function BaseMenuItem(props: P['baseMenuItem']) {
 function BaseTextField(props: P['baseTextField']) {
   // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
   // translate the pattern.
-  const { slotProps, ...rest } = props;
+  const { slotProps, material, ...rest } = props;
   return (
     <MUITextField
       variant="outlined"
       {...rest}
+      {...material}
       inputProps={slotProps?.htmlInput}
       InputProps={transformInputProps(slotProps?.input as any)}
       InputLabelProps={{
@@ -362,6 +364,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
     label,
     placeholder,
     slotProps,
+    material,
     ...rest
   } = props;
 
@@ -407,6 +410,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         );
       }}
       {...rest}
+      {...material}
     />
   );
 }
@@ -420,7 +424,7 @@ function transformInputProps(props: P['baseInput'] | undefined) {
     return undefined;
   }
 
-  const { slotProps, ...rest } = props;
+  const { slotProps, material, ...rest } = props;
   const result = rest as Partial<MUIInputBaseProps>;
 
   if (result.startAdornment) {
@@ -431,6 +435,12 @@ function transformInputProps(props: P['baseInput'] | undefined) {
 
   if (result.endAdornment) {
     result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+  }
+
+  for (const k in material) {
+    if (Object.hasOwn(material, k)) {
+      result[k as keyof typeof result] = material[k as keyof typeof material];
+    }
   }
 
   if (slotProps?.htmlInput) {
@@ -450,7 +460,18 @@ const transformOrigin = {
 };
 
 function BasePopper(props: P['basePopper']) {
-  const { flip, onDidShow, onDidHide } = props;
+  const {
+    id,
+    open,
+    flip,
+    onDidShow,
+    onDidHide,
+    transition,
+    onExited,
+    children,
+    material,
+    ...rest
+  } = props;
   const modifiers = React.useMemo(() => {
     const result = [] as NonNullable<MUIPopperProps['modifiers']>;
     if (flip) {
@@ -479,16 +500,16 @@ function BasePopper(props: P['basePopper']) {
   }, [flip, onDidShow, onDidHide]);
 
   let content: any;
-  if (!props.transition) {
-    content = wrappers(props, props.children);
+  if (!transition) {
+    content = wrappers(props, children);
   } else {
     const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
       if (popperOnExited) {
         popperOnExited();
       }
 
-      if (props.onExited) {
-        props.onExited(node);
+      if (onExited) {
+        onExited(node);
       }
     };
 
@@ -507,13 +528,15 @@ function BasePopper(props: P['basePopper']) {
 
   return (
     <MUIPopper
-      id={props.id}
+      id={id}
       className={props.className}
-      open={props.open}
+      open={open}
       anchorEl={props.target as any}
       transition={props.transition}
       placement={props.placement}
       modifiers={modifiers}
+      {...material}
+      {...rest}
     >
       {content}
     </MUIPopper>

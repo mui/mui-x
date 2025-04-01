@@ -17,61 +17,59 @@ import type { InputProps } from '@mui/material/Input';
 import type { SelectProps } from '@mui/material/Select';
 import type { SkeletonProps } from '@mui/material/Skeleton';
 
-type P<T> = Partial<Omit<T, 'className' | 'style' | 'slotProps'>>;
-
 declare module '@mui/x-data-grid' {
   interface BaseAutocompletePropsOverrides {
-    material?: P<AutocompleteProps<string, true, false, true>>;
+    material?: Partial<AutocompleteProps<string, true, false, true>>;
   }
   interface BaseBadgePropsOverrides {
-    material?: P<BadgeProps>;
+    material?: Partial<BadgeProps>;
   }
   interface BaseCheckboxPropsOverrides {
-    material?: P<CheckboxProps>;
+    material?: Partial<CheckboxProps>;
   }
   interface BaseCircularProgressPropsOverrides {
-    material?: P<CircularProgressProps>;
+    material?: Partial<CircularProgressProps>;
   }
   interface BaseDividerPropsOverrides {
-    material?: P<DividerProps>;
+    material?: Partial<DividerProps>;
   }
   interface BaseLinearProgressPropsOverrides {
-    material?: P<LinearProgressProps>;
+    material?: Partial<LinearProgressProps>;
   }
   interface BaseMenuListPropsOverrides {
-    material?: P<MenuListProps>;
+    material?: Partial<MenuListProps>;
   }
   interface BaseMenuItemPropsOverrides {
-    material?: P<MenuItemProps>;
+    material?: Partial<MenuItemProps>;
   }
   interface BaseTextFieldPropsOverrides {
-    material?: P<TextFieldProps>;
+    material?: Partial<TextFieldProps>;
   }
   interface BaseSwitchPropsOverrides {
-    material?: P<SwitchProps>;
+    material?: Partial<SwitchProps>;
   }
   interface BaseButtonPropsOverrides {
-    material?: P<ButtonProps>;
+    material?: Partial<ButtonProps>;
   }
   interface BaseIconButtonPropsOverrides {
-    material?: P<IconButtonProps>;
+    material?: Partial<IconButtonProps>;
   }
   interface BasePaginationPropsOverrides {
-    material?: P<TablePaginationProps>;
+    material?: Partial<TablePaginationProps>;
   }
   interface BasePopperPropsOverrides {
-    material?: P<PopperProps>;
+    material?: Partial<PopperProps>;
   }
   interface BaseTooltipPropsOverrides {
-    material?: P<TooltipProps>;
+    material?: Partial<TooltipProps>;
   }
   interface BaseInputPropsOverrides {
-    material?: P<InputProps>;
+    material?: Partial<InputProps>;
   }
   interface BaseSelectPropsOverrides {
-    material?: P<SelectProps>;
+    material?: Partial<SelectProps>;
   }
   interface BaseSkeletonPropsOverrides {
-    material?: P<SkeletonProps>;
+    material?: Partial<SkeletonProps>;
   }
 }
