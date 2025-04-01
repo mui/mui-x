@@ -65,6 +65,7 @@ export interface GridPivotingPrivateApi {
     targetField?: string;
     targetFieldPosition?: DropPosition;
   }) => void;
+  handleOriginalColumnsChange: (columns: readonly GridColDef[]) => void;
 }
 
 export type GridPivotingColDefOverrides = Pick<

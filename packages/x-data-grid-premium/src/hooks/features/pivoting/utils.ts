@@ -3,20 +3,19 @@ import {
   GridColumnGroup,
   GridColumnGroupingModel,
   GridColumnNode,
-  GridColumnsState,
   GridRowModel,
   isLeaf,
   GridSingleSelectColDef,
   gridStringOrNumberComparator,
   GridLocaleTextApi,
 } from '@mui/x-data-grid-pro';
+import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
-import { unwrapColumnFromAggregation } from '../aggregation/wrapColumnWithAggregation';
 
 const columnGroupIdSeparator = '>->';
 
@@ -50,15 +49,15 @@ export const defaultGetPivotDerivedColumns: DataGridPremiumProcessedProps['getPi
   };
 
 export const getInitialColumns = (
-  orderedFields: GridColumnsState['orderedFields'],
-  lookup: GridColumnsState['lookup'],
+  originalColumns: DataGridPremiumProcessedProps['columns'],
   getPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'],
   getLocaleText: GridLocaleTextApi['getLocaleText'],
 ) => {
   const initialColumns: Map<string, GridColDef> = new Map();
-  for (let i = 0; i < orderedFields.length; i += 1) {
-    const field = orderedFields[i];
-    const column = unwrapColumnFromAggregation(lookup[field]);
+  for (let i = 0; i < originalColumns.length; i += 1) {
+    const originalColumn = originalColumns[i];
+    const column = { ...getDefaultColTypeDef(originalColumn.type), ...originalColumn };
+    const field = column.field;
     if (!isGroupingColumn(field)) {
       initialColumns.set(field, column);
 

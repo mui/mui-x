@@ -499,4 +499,84 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(1)).to.deep.equal(['GOOGL (1)', '402,144', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (1)', '1,415,402', '']);
   });
+
+  it('should update available fields when new column is added', async () => {
+    const { setProps } = render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'date-year' }],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+            panelOpen: true,
+          },
+        }}
+      />,
+    );
+
+    const getAvailableFields = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '.MuiDataGrid-pivotPanelAvailableFields .MuiDataGrid-pivotPanelField',
+        ),
+      ).map((field) => field.textContent);
+
+    setProps({
+      columns: COLUMNS.concat({
+        field: 'total',
+        type: 'number',
+        headerName: 'Total',
+        valueGetter: (value, row) => {
+          return row.price * row.volume;
+        },
+      }),
+    });
+
+    await waitFor(() => {
+      expect(getAvailableFields()).to.deep.equal([
+        'ID',
+        'Date',
+        'Date (Quarter)',
+        'Price',
+        'Type',
+        'Total',
+      ]);
+    });
+  });
+
+  it('should update available fields when a column is removed', async () => {
+    const { setProps } = render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'date-year' }],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+            panelOpen: true,
+          },
+        }}
+      />,
+    );
+
+    const getAvailableFields = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '.MuiDataGrid-pivotPanelAvailableFields .MuiDataGrid-pivotPanelField',
+        ),
+      ).map((field) => field.textContent);
+
+    setProps({
+      columns: COLUMNS.filter((col) => col.field !== 'date'),
+    });
+
+    await waitFor(() => {
+      expect(getAvailableFields()).to.deep.equal(['ID', 'Price', 'Type']);
+    });
+  });
 });

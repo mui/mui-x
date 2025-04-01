@@ -294,7 +294,7 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(type: GridColDef['type']) {
+export function getDefaultColTypeDef(type: GridColDef['type']) {
   let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
   if (type && COLUMN_TYPES[type]) {
     colDef = COLUMN_TYPES[type];
