@@ -169,7 +169,6 @@ describe('<DataGridPremium /> - Prompt', () => {
             },
           ],
           pivoting: {},
-          error: null,
         }),
       );
 

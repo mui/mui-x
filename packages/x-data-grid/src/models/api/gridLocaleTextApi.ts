@@ -201,7 +201,6 @@ export interface GridLocaleText {
   aiAssistantSuggestions: string;
   aiAssistantSuggestionsMore: (count: number) => string;
   // Prompt
-  promptProcessingError: string;
   promptRerun: string;
 
   // Prompt field

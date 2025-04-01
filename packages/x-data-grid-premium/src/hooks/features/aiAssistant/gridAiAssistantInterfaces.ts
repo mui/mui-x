@@ -9,7 +9,9 @@ export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
 export type PromptHistory = {
   value: string;
   createdAt: Date;
-  response: PromptResponse | null;
+  response?: PromptResponse;
+  variant?: 'error';
+  helperText?: string;
 }[];
 
 type ColumnSort = {
@@ -48,7 +50,6 @@ export type PromptResponse = {
   sorting: ColumnSort[];
   grouping: Grouping[];
   pivoting: Pivoting;
-  error: string | null;
 };
 
 /**

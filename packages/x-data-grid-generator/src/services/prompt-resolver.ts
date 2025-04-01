@@ -9,7 +9,8 @@ export const mockPromptResolver = (query: string, _: string) => {
       if (resolved) {
         resolve(resolved);
       } else {
-        reject(new Error(`Unsupported query "${query}"`));
+        console.error(`Unsupported query: ${query}`);
+        reject(new Error('Could not process prompt'));
       }
     }, 1000);
   });
