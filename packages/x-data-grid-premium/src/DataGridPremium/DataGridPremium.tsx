@@ -167,7 +167,7 @@ DataGridPremiumRaw.propTypes = {
         ).isRequired,
       }),
       value: PropTypes.string.isRequired,
-      variant: PropTypes.oneOf(['error']),
+      variant: PropTypes.oneOf(['error', 'processing', 'success']),
     }),
   ),
   /**
@@ -177,7 +177,11 @@ DataGridPremiumRaw.propTypes = {
   /**
    * The suggestions of the AI Assistant.
    */
-  aiAssistantSuggestions: PropTypes.arrayOf(PropTypes.string),
+  aiAssistantSuggestions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+    }),
+  ),
   /**
    * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
    */

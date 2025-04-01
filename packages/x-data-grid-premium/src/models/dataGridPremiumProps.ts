@@ -39,6 +39,7 @@ import {
 import {
   PromptHistory,
   PromptResponse,
+  PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
@@ -309,12 +310,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * The suggestions of the AI Assistant.
    */
-  aiAssistantSuggestions?: string[];
+  aiAssistantSuggestions?: PromptSuggestion[];
   /**
    * Callback fired when the AI Assistant suggestions change.
    * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
    */
-  onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: string[]) => void;
+  onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: PromptSuggestion[]) => void;
   /**
    * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
    */
