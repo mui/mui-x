@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
+import TestViewer from './TestViewer';
 import { setupTestLicenseKey } from '../utils/testLicense';
 
 setupTestLicenseKey();
@@ -80,7 +80,7 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs = require.context('docsx/data', true, /\.js$/);
+const requireDocs = import.meta.glob(['docsx/data/**/[A-Z]*.js'], { eager: true });
 requireDocs.keys().forEach((path: string) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
@@ -108,7 +108,10 @@ requireDocs.keys().forEach((path: string) => {
 });
 
 // @ts-ignore
-const requireRegressions = require.context('./data-grid', true, /\.js$/);
+const requireRegressions = import.meta.glob(['./data-grid/*.js'], {
+  import: 'default',
+  eager: true,
+});
 requireRegressions.keys().forEach((path: string) => {
   // "./DataGridRTLVirtualization.js"
   // "test/regressions/data-grid/DataGridRTLVirtualization.js"
