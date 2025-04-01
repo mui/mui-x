@@ -355,22 +355,28 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
     const lastGroupToRender = columnGroupsModel[lastColumnFieldToRender]?.[depth] ?? null;
 
-    const lastGroupIndex = rowStructure.findIndex(
-      ({ groupId, columnFields }) =>
-        groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
-    );
+    const visibleColumnGroupHeader: GridGroupingStructure[] = [];
+    for (let i = firstGroupIndex; i < rowStructure.length; i += 1) {
+      const groupStructure = rowStructure[i];
 
-    const visibleColumnGroupHeader = rowStructure
-      .slice(firstGroupIndex, lastGroupIndex + 1)
-      .map((groupStructure) => {
-        return {
+      const visibleColumnFields = groupStructure.columnFields.filter(
+        (field) => columnVisibility[field] !== false,
+      );
+      if (visibleColumnFields.length !== 0) {
+        visibleColumnGroupHeader.push({
           ...groupStructure,
-          columnFields: groupStructure.columnFields.filter(
-            (field) => columnVisibility[field] !== false,
-          ),
-        };
-      })
-      .filter((groupStructure) => groupStructure.columnFields.length > 0);
+          columnFields: visibleColumnFields,
+        });
+      }
+
+      const isLastGroup =
+        groupStructure.groupId === lastGroupToRender &&
+        groupStructure.columnFields.includes(lastColumnFieldToRender);
+
+      if (isLastGroup) {
+        break;
+      }
+    }
 
     const firstVisibleColumnIndex =
       visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
