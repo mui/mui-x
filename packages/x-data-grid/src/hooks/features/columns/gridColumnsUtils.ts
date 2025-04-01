@@ -81,10 +81,10 @@ export function computeFlexColumnsWidth({
       return;
     }
 
-    const violationsLookup: {
-      min: Record<GridColDef['field'], boolean>;
-      max: Record<GridColDef['field'], boolean>;
-    } = { min: {}, max: {} };
+    const violations = {
+      min: new Set<GridColDef['field']>(),
+      max: new Set<GridColDef['field']>(),
+    };
 
     let remainingFreeSpace = initialFreeSpace;
     let flexUnits = totalFlexUnits;
@@ -114,11 +114,11 @@ export function computeFlexColumnsWidth({
       if (computedWidth < column.minWidth!) {
         totalViolation += column.minWidth! - computedWidth;
         computedWidth = column.minWidth!;
-        violationsLookup.min[column.field] = true;
+        violations.min.add(column.field);
       } else if (computedWidth > column.maxWidth!) {
         totalViolation += column.maxWidth! - computedWidth;
         computedWidth = column.maxWidth!;
-        violationsLookup.max[column.field] = true;
+        violations.max.add(column.field);
       }
 
       flexColumnsLookup.all[column.field] = {
@@ -131,12 +131,12 @@ export function computeFlexColumnsWidth({
     // 5e: Freeze over-flexed items
     if (totalViolation < 0) {
       // Freeze all the items with max violations
-      Object.keys(violationsLookup.max).forEach((field) => {
+      violations.max.forEach((field) => {
         flexColumnsLookup.freeze(field);
       });
     } else if (totalViolation > 0) {
       // Freeze all the items with min violations
-      Object.keys(violationsLookup.min).forEach((field) => {
+      violations.min.forEach((field) => {
         flexColumnsLookup.freeze(field);
       });
     } else {
