@@ -1,10 +1,15 @@
 <LineChart
   height={300}
-  series={[
-    { data: pData, label: 'pv' },
-    { data: uData, label: 'uv' },
+  series={[{ data: secondData }, { data: firstData }]}
+  xAxis={[
+    {
+      scaleType: 'point',
+      data: Array.from({ length }).map(
+        (_, i) => new Date(date.getTime() + i * oneDay),
+      ),
+      valueFormatter: (value: Date) => dateFormatter.format(value),
+    },
   ]}
-  xAxis={[{ scaleType: 'point', data: xLabels }]}
   yAxis={[{ width: 50 }]}
   margin={{ right: 24 }}
 />

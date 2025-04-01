@@ -10,7 +10,7 @@ const tooltipGetter: TooltipGetter<'pie'> = (params) => {
 
   const point = series.data[identifier.dataIndex];
 
-  if (!point) {
+  if (point == null) {
     return null;
   }
 

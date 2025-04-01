@@ -11,7 +11,7 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex];
 
-  if (!value) {
+  if (value == null) {
     return null;
   }
 
