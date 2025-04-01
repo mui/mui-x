@@ -1,6 +1,6 @@
 'use client';
-import { Globals, useIsomorphicLayoutEffect } from '@react-spring/web';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { AnimationProviderProps } from './Animation.types';
 import { AnimationContext } from './AnimationContext';
 
@@ -18,7 +18,7 @@ function AnimationProvider(props: AnimationProviderProps) {
     process.env.NODE_ENV === 'test' ? isAnimationDisabledEnvironment || undefined : undefined,
   );
 
-  useIsomorphicLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (isAnimationDisabledEnvironment) {
       return undefined;
     }
@@ -27,9 +27,6 @@ function AnimationProvider(props: AnimationProviderProps) {
       // This hook can remove animation but never activate it.
       const inputValue = event.matches || undefined;
       setSkipAnimation(inputValue);
-      Globals.assign({
-        skipAnimation: inputValue,
-      });
     };
 
     const mql = window.matchMedia('(prefers-reduced-motion)');
@@ -42,7 +39,7 @@ function AnimationProvider(props: AnimationProviderProps) {
     return () => {
       mql?.removeEventListener?.('change', handleMediaChange);
     };
-  }, []);
+  }, [isAnimationDisabledEnvironment]);
 
   const value = React.useMemo(
     () => ({
