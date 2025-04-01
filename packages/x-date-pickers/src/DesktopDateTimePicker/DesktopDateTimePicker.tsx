@@ -177,6 +177,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     valueType: 'date-time',
     validator: validateDateTime,
     rendererInterceptor,
+    steps: null,
   });
 
   return renderPicker();
