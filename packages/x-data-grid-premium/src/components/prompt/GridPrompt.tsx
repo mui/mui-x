@@ -154,7 +154,7 @@ function GridPrompt(props: GridPromptProps) {
   return (
     <Prompt key={createdAt.toISOString()} ownerState={ownerState} className={classes.root}>
       <PromptIconContainer ownerState={ownerState} className={classes.iconContainer}>
-        {response === null ? (
+        {!response && variant !== 'error' ? (
           <rootProps.slots.baseCircularProgress size={20} thickness={5} />
         ) : (
           <PromptIcon
