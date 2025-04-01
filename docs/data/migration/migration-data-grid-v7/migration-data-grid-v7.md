@@ -205,7 +205,9 @@ You have to import it from `@mui/x-license` instead:
 
 - The list view feature and its related props are now stable.
 
-  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+  ✅ The `unstable_listView` prop has been renamed to `listView`.
+
+  ✅ The `unstable_listColumn` prop has been renamed to `listViewColumn`.
 
   The `GridListColDef` type has been renamed to `GridListViewColDef`.
 
