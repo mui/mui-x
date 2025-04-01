@@ -2,6 +2,7 @@
   "name": "@mui-x-internal/test-e2e",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
     "build": "cross-env E2E_BUILD=true vite build",

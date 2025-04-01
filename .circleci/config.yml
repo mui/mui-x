@@ -159,7 +159,6 @@ jobs:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
-          node-version: '20'
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
