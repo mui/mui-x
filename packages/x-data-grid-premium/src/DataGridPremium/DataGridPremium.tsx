@@ -146,7 +146,7 @@ DataGridPremiumRaw.propTypes = {
    */
   aiAssistantSuggestions: PropTypes.arrayOf(PropTypes.string),
   /**
-   * If `true`, the AI Assistant is allowed to sample data.
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
    */
   allowAiAssistantDataSampling: PropTypes.bool,
   /**
@@ -663,6 +663,21 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant history changes.
+   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   */
+  onAiAssistantHistoryChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant panel open state changes.
+   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
+   */
+  onAiAssistantPanelOpenChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant suggestions change.
+   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
+   */
+  onAiAssistantSuggestionsChange: PropTypes.func,
   /**
    * Callback fired before the clipboard paste operation starts.
    * Use it to confirm or cancel the paste operation.
