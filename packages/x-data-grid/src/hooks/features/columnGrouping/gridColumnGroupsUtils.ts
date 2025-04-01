@@ -94,18 +94,21 @@ export const getColumnGroupsHeaderStructure = (
   };
 
   for (let depth = 0; depth < maxDepth; depth += 1) {
-    const depthStructure = orderedColumns.reduce((structure, newField) => {
+    const depthStructure: GridGroupingStructure[] = [];
+
+    for (let i = 0; i < orderedColumns.length; i += 1) {
+      const newField = orderedColumns[i];
       const groupId = getParents(newField)[depth] ?? null;
-      if (structure.length === 0) {
-        return [
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
+
+      if (depthStructure.length === 0) {
+        depthStructure.push({
+          columnFields: [newField],
+          groupId,
+        });
+        continue;
       }
 
-      const lastGroup = structure[structure.length - 1];
+      const lastGroup = depthStructure[depthStructure.length - 1];
       const prevField = lastGroup.columnFields[lastGroup.columnFields.length - 1];
       const prevGroupId = lastGroup.groupId;
 
@@ -116,24 +119,15 @@ export const getColumnGroupsHeaderStructure = (
         haveDifferentContainers(prevField, newField)
       ) {
         // It's a new group
-        return [
-          ...structure,
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
-      }
-
-      // It extends the previous group
-      return [
-        ...structure.slice(0, structure.length - 1),
-        {
-          columnFields: [...lastGroup.columnFields, newField],
+        depthStructure.push({
+          columnFields: [newField],
           groupId,
-        },
-      ];
-    }, [] as GridGroupingStructure[]);
+        });
+      } else {
+        // Extend the previous group
+        lastGroup.columnFields.push(newField);
+      }
+    }
     groupingHeaderStructure.push(depthStructure);
   }
 
