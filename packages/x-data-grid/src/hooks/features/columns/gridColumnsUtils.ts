@@ -340,17 +340,18 @@ export const createColumnsState = ({
     };
   }
 
-  let columnsToKeep: Record<string, boolean> = {};
+  const columnsToDelete = new Set<string>();
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    columnsToKeep = Object.keys(columnsState.lookup).reduce(
-      (acc, key) => ({ ...acc, [key]: false }),
-      {},
-    );
+    for (const key in columnsState.lookup) {
+      if (columnsState.lookup.hasOwnProperty(key)) {
+        columnsToDelete.add(key);
+      }
+    }
   }
 
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
-    columnsToKeep[field] = true;
+    columnsToDelete.delete(field);
     let existingState = columnsState.lookup[field];
 
     if (existingState == null) {
@@ -391,10 +392,8 @@ export const createColumnsState = ({
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep[field]) {
-        delete columnsState.lookup[field];
-      }
+    columnsToDelete.forEach((field) => {
+      delete columnsState.lookup[field];
     });
   }
 
