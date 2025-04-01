@@ -3,7 +3,7 @@ import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
-import tooltipGetter, { axisTriggeringTooltipGetter } from './tooltip';
+import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 
 export const seriesConfig: ChartSeriesTypeConfig<'line'> = {
@@ -11,7 +11,7 @@ export const seriesConfig: ChartSeriesTypeConfig<'line'> = {
   seriesProcessor,
   legendGetter,
   tooltipGetter,
-  axisTriggeringTooltipGetter,
+  axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,

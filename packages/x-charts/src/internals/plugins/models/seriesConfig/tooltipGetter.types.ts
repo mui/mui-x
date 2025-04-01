@@ -13,7 +13,7 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   identifier: ChartItemIdentifier<TSeriesType> | null;
 }) => ItemTooltip<TSeriesType> | null;
 
-export type AxisTriggeringTooltipGetter<
+export type AxisTooltipGetter<
   TSeriesType extends ChartSeriesType,
   Directions extends 'x' | 'y' | 'rotation' | 'radius' = 'x' | 'y',
 > = (

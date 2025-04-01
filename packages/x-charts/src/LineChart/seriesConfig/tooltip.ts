@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { AxisTriggeringTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
+import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'line'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -22,7 +22,7 @@ const tooltipGetter: TooltipGetter<'line'> = (params) => {
   };
 };
 
-export const axisTriggeringTooltipGetter: AxisTriggeringTooltipGetter<'line', 'x' | 'y'> = (
+export const axisTooltipGetter: AxisTooltipGetter<'line', 'x' | 'y'> = (
   series,
 ) => {
   return Object.values(series).map((s) => ({ direction: 'x', axisId: s.xAxisId }));
