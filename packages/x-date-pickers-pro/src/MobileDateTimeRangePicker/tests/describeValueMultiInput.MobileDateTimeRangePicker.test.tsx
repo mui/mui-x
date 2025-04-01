@@ -77,12 +77,12 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         ];
       }
 
-      // if we want to set the end date, we firstly need to switch to end date "range position"
-      if (setEndDate) {
-        fireEvent.click(
-          screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
-        );
-      }
+      // Go to the start date or the end date
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: adapterToUse.format(value[setEndDate ? 1 : 0], 'shortDate'),
+        }),
+      );
 
       fireEvent.click(
         screen.getByRole('gridcell', {

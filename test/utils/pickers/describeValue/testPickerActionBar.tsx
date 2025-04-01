@@ -100,7 +100,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[1], { isOpened: true, selectSection, pressKey });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
