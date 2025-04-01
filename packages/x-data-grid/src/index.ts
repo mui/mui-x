@@ -1,3 +1,5 @@
+import './index.css';
+
 import { GridApiCommunity } from './models/api/gridApiCommunity';
 import { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
 

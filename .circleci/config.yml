@@ -9,6 +9,10 @@ parameters:
     description: The version of react to be used
     type: string
     default: stable
+  node-version:
+    description: The version of node to be used
+    type: string
+    default: '23'
   workflow:
     description: The name of the workflow to run
     type: string
@@ -43,7 +47,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.19
+    - image: mcr.microsoft.com/playwright:v1.51.0-noble
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -60,30 +64,41 @@ default-context: &default-context
 commands:
   install_js:
     parameters:
-      browsers:
-        type: boolean
-        default: false
-        description: 'Set to true if you intend to any browser (for example with playwright).'
       react-version:
+        description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
-        description: The version of React to use.
+      node-version:
+        description: The version of node to be used
+        type: string
+        default: << pipeline.parameters.node-version >>
 
     steps:
-      - when:
-          condition: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                command: corepack enable
-      - when:
-          condition:
-            not: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                # See https://stackoverflow.com/a/73411601
-                command: corepack enable --install-directory ~/bin
+      - run:
+          name: Install Node.js
+          command: |
+            apt update
+            apt install curl
+            apt install unzip
+            curl -fsSL https://fnm.vercel.app/install >> install-fnm
+            chmod +x ./install-fnm
+            ./install-fnm --skip-shell
+            FNM_SETUP='
+            export FNM_PATH="/root/.local/share/fnm"
+            export PATH="$FNM_PATH:$PATH"
+            eval "`fnm env`"
+            '
+            echo "$FNM_SETUP" >> $BASH_ENV
+            rm ./install-fnm
+
+            eval "$FNM_SETUP"
+
+            fnm install << parameters.node-version >>
+            fnm use << parameters.node-version >>
+
+      - run:
+          name: Install pnpm package manager
+          command: corepack enable
 
       - run:
           name: View install environment
@@ -144,6 +159,7 @@ jobs:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
+          node-version: '20'
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
@@ -240,12 +256,9 @@ jobs:
 
   test_browser:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.1-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
@@ -272,24 +285,18 @@ jobs:
             NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.1-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.1-noble
     steps:
       - checkout
-      - install_js:
-          browsers: true
+      - install_js
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -297,12 +304,9 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.1-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
