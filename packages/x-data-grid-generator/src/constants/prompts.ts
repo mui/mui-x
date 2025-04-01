@@ -15,7 +15,6 @@ export const mockPrompts = new Map<string, PromptResponse>([
       ],
       grouping: [],
       pivoting: {},
-      error: null,
     },
   ],
   [
@@ -36,7 +35,6 @@ export const mockPrompts = new Map<string, PromptResponse>([
       ],
       grouping: [],
       pivoting: {},
-      error: null,
     },
   ],
   [
@@ -82,7 +80,6 @@ export const mockPrompts = new Map<string, PromptResponse>([
       sorting: [],
       grouping: [],
       pivoting: {},
-      error: null,
     },
   ],
   [
@@ -105,7 +102,6 @@ export const mockPrompts = new Map<string, PromptResponse>([
         },
       ],
       pivoting: {},
-      error: null,
     },
   ],
 ]);

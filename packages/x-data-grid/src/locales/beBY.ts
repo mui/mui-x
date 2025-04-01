@@ -296,7 +296,6 @@ const beBYGrid: Partial<GridLocaleText> = {
   // promptFieldStopRecording: 'Stop recording',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

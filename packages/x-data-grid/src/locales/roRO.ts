@@ -257,17 +257,16 @@ const roROGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Scrie un prompt…',
+  promptFieldPlaceholderWithRecording: 'Scrie sau înregistrează un prompt…',
+  promptFieldPlaceholderListening: 'Ascultare prompt…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Trimite',
+  promptFieldRecord: 'Înregistrează',
+  promptFieldStopRecording: 'Oprește înregistrare',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

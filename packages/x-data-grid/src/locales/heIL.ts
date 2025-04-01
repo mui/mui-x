@@ -255,17 +255,16 @@ const heILGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'הזן ערך',
+  promptFieldPlaceholder: 'הקלד ערך…',
+  promptFieldPlaceholderWithRecording: 'הקלד או הקלט ערך…',
+  promptFieldPlaceholderListening: 'ממתין להנחיה…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'שלח',
+  promptFieldRecord: 'הקלטה',
+  promptFieldStopRecording: 'הפסק הקלטה',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

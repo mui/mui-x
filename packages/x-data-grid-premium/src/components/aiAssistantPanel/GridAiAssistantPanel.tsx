@@ -134,7 +134,6 @@ function GridAiAssistantPanel() {
         {
           value,
           createdAt: new Date(date),
-          response: null,
         },
       ]);
       try {
@@ -146,23 +145,15 @@ function GridAiAssistantPanel() {
           ),
         );
         return response;
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) =>
           prevHistory.map((item) =>
             item.createdAt.getTime() === date
               ? {
                   ...item,
-                  response: {
-                    error: apiRef.current.getLocaleText('promptProcessingError'),
-                    // TODO - should we be setting values at all here?
-                    select: 0,
-                    filters: [],
-                    aggregation: {},
-                    sorting: [],
-                    grouping: [],
-                    pivoting: {},
-                  },
+                  variant: 'error',
+                  helperText: error.message,
                 }
               : item,
           ),

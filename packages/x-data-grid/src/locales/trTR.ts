@@ -252,17 +252,16 @@ const trTRGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'İstem girişi',
+  promptFieldPlaceholder: 'Bir istem yazın…',
+  promptFieldPlaceholderWithRecording: 'Bir istem yazın veya kaydedin…',
+  promptFieldPlaceholderListening: 'İstem dinleniyor…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Gönder',
+  promptFieldRecord: 'Kaydet',
+  promptFieldStopRecording: 'Kaydı durdur',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

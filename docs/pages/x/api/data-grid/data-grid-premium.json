@@ -16,7 +16,7 @@
     "aiAssistantHistory": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ createdAt: Date, response?: { aggregation: object, error?: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;{ column: string, operator: string, value: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;number&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;bool }&gt;, grouping: Array&lt;{ column: string }&gt;, select: number, sorting: Array&lt;{ column: string, direction: 'asc'<br>&#124;&nbsp;'desc' }&gt; }, value: string }&gt;"
+        "description": "Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;{ column: string, operator: string, value: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;number&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;bool }&gt;, grouping: Array&lt;{ column: string }&gt;, pivoting: object<br>&#124;&nbsp;{ columns: Array&lt;object&gt;, rows: Array&lt;string&gt;, values: Array&lt;object&gt; }, select: number, sorting: Array&lt;{ column: string, direction: 'asc'<br>&#124;&nbsp;'desc' }&gt; }, value: string, variant?: 'error' }&gt;"
       }
     },
     "aiAssistantPanelOpen": { "type": { "name": "bool" } },

@@ -252,17 +252,16 @@ const deDEGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Prompteingabe',
+  promptFieldPlaceholder: 'Prompt eingeben…',
+  promptFieldPlaceholderWithRecording: 'Prompt eingeben oder aufnehmen…',
+  promptFieldPlaceholderListening: 'Hört Prompteingabe zu…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Senden',
+  promptFieldRecord: 'Aufnahme starten',
+  promptFieldStopRecording: 'Aufnahme stoppen',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

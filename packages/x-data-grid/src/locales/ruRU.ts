@@ -287,17 +287,16 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // aiAssistantSuggestionsMore: (count: number) => `${count} more`,
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  promptFieldLabel: 'Ввод запроса',
+  promptFieldPlaceholder: 'Введите запрос…',
+  promptFieldPlaceholderWithRecording: 'Введите или запишите запрос…',
+  promptFieldPlaceholderListening: 'Прослушивание запроса…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: 'Отправить',
+  promptFieldRecord: 'Запись',
+  promptFieldStopRecording: 'Остановить запись',
 
   // Prompt
-  // promptProcessingError: 'Could not process prompt',
   // promptRerun: 'Run again',
 };
 

@@ -261,6 +261,5 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   promptFieldStopRecording: 'Stop recording',
 
   // Prompt
-  promptProcessingError: 'Could not process prompt',
   promptRerun: 'Run again',
 };
