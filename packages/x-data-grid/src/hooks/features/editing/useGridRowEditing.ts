@@ -3,6 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
@@ -538,6 +539,11 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
+      if (isDeepEqual(row, rowUpdate)) {
+        finishRowEditMode();
+        return;
+      }
+
       if (props.dataSource?.updateRow) {
         const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
           prevRowModesModel.current[id].mode = GridRowModes.Edit;
@@ -555,8 +561,8 @@ export const useGridRowEditing = (
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
-                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
               ],
               'error',
@@ -570,8 +576,8 @@ export const useGridRowEditing = (
           )
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
-              if (finalRowUpdate !== row) {
-                // Reset the outdated cache
+              if (finalRowUpdate && !isDeepEqual(finalRowUpdate, row)) {
+                // Reset the outdated cache, only if the row is _actually_ updated
                 apiRef.current.dataSource.cache.clear();
               }
               finishRowEditMode();
