@@ -234,7 +234,6 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aiAssistantPanelTitle: 'AI Asistent',
   aiAssistantPanelNoHistory: 'Nema prethodnih upita',
   aiAssistantSuggestions: 'Prijedlozi',
-  aiAssistantSuggestionsMore: (count: number) => `još ${count}`,
 
   // Prompt field
   promptFieldLabel: 'Upit',
