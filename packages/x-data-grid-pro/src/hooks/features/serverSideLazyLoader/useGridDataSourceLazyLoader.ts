@@ -13,6 +13,7 @@ import {
   gridPaginationModelSelector,
   gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
+  gridRowIdSelector,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -267,6 +268,8 @@ export const useGridDataSourceLazyLoader = (
 
       const { response, fetchParams } = params;
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+      const tree = privateApiRef.current.state.rows.tree;
+      const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
       if (response.rowCount !== undefined || pageRowCount === undefined) {
         privateApiRef.current.setRowCount(response.rowCount === undefined ? -1 : response.rowCount);
       }
@@ -283,6 +286,28 @@ export const useGridDataSourceLazyLoader = (
           typeof fetchParams.start === 'string'
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
+
+        // Check for duplicate rows
+        let duplicateRowCount = 0;
+        response.rows.forEach((row) => {
+          const rowId = gridRowIdSelector(privateApiRef, row);
+          if (tree[rowId] || dataRowIdToModelLookup[rowId]) {
+            delete tree[rowId];
+            delete dataRowIdToModelLookup[rowId];
+            duplicateRowCount += 1;
+          }
+        });
+
+        if (duplicateRowCount > 0) {
+          privateApiRef.current.setState(state => ({
+            ...state,
+            rows: {
+              ...state.rows,
+              tree,
+              dataRowIdToModelLookup,
+            },
+          }));
+        }
 
         privateApiRef.current.unstable_replaceRows(startingIndex, response.rows);
       }
