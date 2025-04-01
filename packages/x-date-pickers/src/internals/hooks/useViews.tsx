@@ -229,15 +229,26 @@ export function useViews<
 
       // The selected view can be different from the active view,
       // This can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
-      const currentView = selectedView ?? view;
-      const viewToNavigateTo =
-        globalSelectionState === 'shallow' ? null : views[views.indexOf(currentView) + 1];
-      if (
-        viewToNavigateTo != null &&
-        stepNavigation.areViewsInSameStep(currentView, viewToNavigateTo)
-      ) {
-        handleChangeView(viewToNavigateTo);
+      let currentView: TView | null = null;
+      if (selectedView && selectedView !== view) {
+        currentView = views[views.indexOf(selectedView) + 1];
+      } else if (isSelectionFinishedOnCurrentView) {
+        currentView = view;
       }
+
+      if (currentView == null) {
+        return;
+      }
+
+      const viewToNavigateTo = views[views.indexOf(currentView) + 1];
+      if (
+        viewToNavigateTo == null ||
+        !stepNavigation.areViewsInSameStep(currentView, viewToNavigateTo)
+      ) {
+        return;
+      }
+
+      handleChangeView(viewToNavigateTo);
     },
   );
 
