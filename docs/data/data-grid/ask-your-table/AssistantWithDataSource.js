@@ -76,10 +76,10 @@ export default function AssistantWithDataSource() {
       },
       aiAssistant: {
         suggestions: [
-          'Sort by name',
-          'Show people from the EU',
-          'Sort by company name and employee name',
-          'Order companies by amount of people',
+          { value: 'Sort by name' },
+          { value: 'Show people from the EU' },
+          { value: 'Sort by company name and employee name' },
+          { value: 'Order companies by amount of people' },
         ],
       },
     },

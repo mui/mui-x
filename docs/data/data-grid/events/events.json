@@ -24,7 +24,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "aiAssistantSuggestionsChange",
     "description": "Fired when the AI Assistant suggestions change.",
-    "params": "string[]",
+    "params": "PromptSuggestion[]",
     "event": "MuiEvent<{}>"
   },
   {

@@ -6,9 +6,10 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { PromptSuggestion } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 type GridAiAssistantPanelSuggestionsProps = {
-  suggestions: string[];
+  suggestions: PromptSuggestion[];
   onSuggestionClick: (suggestion: string) => void;
 };
 
@@ -75,10 +76,10 @@ function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsP
       <AiAssistantPanelSuggestionsList className={classes.list} ownerState={ownerState}>
         {suggestions.map((suggestion) => (
           <rootProps.slots.baseChip
-            key={suggestion}
-            label={suggestion}
+            key={suggestion.value}
+            label={suggestion.value}
             className={classes.item}
-            onClick={() => onSuggestionClick(suggestion)}
+            onClick={() => onSuggestionClick(suggestion.value)}
             icon={<rootProps.slots.promptIcon style={{ fontSize: '1rem' }} />}
           />
         ))}

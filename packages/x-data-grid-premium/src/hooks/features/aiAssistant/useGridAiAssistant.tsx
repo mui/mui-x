@@ -258,33 +258,11 @@ export const useGridAiAssistant = (
     [apiRef],
   );
 
-  const setAiAssistantSuggestions = React.useCallback<
-    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantSuggestions']
-  >(
-    (callback) => {
-      apiRef.current.setState((state) => ({
-        ...state,
-        aiAssistant: {
-          ...state.aiAssistant,
-          suggestions:
-            typeof callback === 'function' ? callback(state.aiAssistant?.suggestions) : callback,
-        },
-      }));
-    },
-    [apiRef],
-  );
-
   React.useEffect(() => {
     if (props.aiAssistantHistory) {
       apiRef.current.unstable_aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
     }
   }, [apiRef, props.aiAssistantHistory]);
-
-  React.useEffect(() => {
-    if (props.aiAssistantSuggestions) {
-      apiRef.current.unstable_aiAssistant.setAiAssistantSuggestions(props.aiAssistantSuggestions);
-    }
-  }, [apiRef, props.aiAssistantSuggestions]);
 
   React.useEffect(() => {
     if (props.aiAssistantPanelOpen) {
@@ -300,7 +278,6 @@ export const useGridAiAssistant = (
         applyPromptResult,
         setAiAssistantPanelOpen,
         setAiAssistantHistory,
-        setAiAssistantSuggestions,
       },
     },
     'public',

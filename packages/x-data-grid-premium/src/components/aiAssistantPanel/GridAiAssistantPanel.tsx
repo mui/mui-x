@@ -155,7 +155,6 @@ function GridAiAssistantPanel() {
         );
         return response;
       } catch (error: any) {
-        console.error(error);
         apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) =>
           prevHistory.map((item) =>
             item.createdAt.getTime() === date
