@@ -48,7 +48,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
   });
 
-  return { ...groupLookup };
+  return groupLookup;
 };
 
 export const columnGroupsStateInitializer: GridStateInitializer<
