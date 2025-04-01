@@ -17,13 +17,19 @@ export default function CompositionExample() {
       <Stack direction="column" alignItems="center" gap={1} sx={{ width: '100%' }}>
         <ChartsLegend />
         <ChartsSurface>
-          <RadarGrid divisions={3} />
+          <RadarGrid divisions={5} />
           <RadarSeriesArea
-            fillOpacity={0.7}
-            strokeWidth={3}
+            fillOpacity={0.4}
+            strokeWidth={1}
             seriesId="australia-id"
           />
-          <RadarSeriesArea fill="transparent" strokeWidth={3} seriesId="usa-id" />
+          <RadarSeriesArea
+            fill="transparent"
+            strokeWidth={1}
+            seriesId="usa-id"
+            strokeDasharray="4, 4"
+            strokeLinecap="round"
+          />
           <RadarSeriesMarks />
           <RadarMetricLabels />
           <RadarAxisHighlight />
