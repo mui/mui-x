@@ -10,7 +10,7 @@ export type PromptHistory = {
   value: string;
   createdAt: Date;
   response?: PromptResponse;
-  variant?: 'error';
+  variant?: 'success' | 'error' | 'processing';
   helperText?: string;
 }[];
 

@@ -257,6 +257,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid);

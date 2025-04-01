@@ -263,6 +263,8 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);

@@ -266,6 +266,8 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid);

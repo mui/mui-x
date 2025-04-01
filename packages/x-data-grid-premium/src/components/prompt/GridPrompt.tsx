@@ -11,7 +11,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 type GridPromptProps = PromptHistory[number] & { onRerun: () => void };
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
-  variant?: 'error';
+  variant?: 'success' | 'error' | 'processing';
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -62,7 +62,6 @@ const Prompt = styled('li', {
   display: flex;
   padding: ${vars.spacing(1, 1.5)};
   align-items: flex-start;
-  gap: ${vars.spacing(1.5)};
   animation: ${fadeInUp} ${vars.transitions.duration.long} ${vars.transitions.easing.easeInOut};
   .${gridClasses.promptAction} {
     opacity: 0;
@@ -80,6 +79,7 @@ const PromptContent = styled('div', {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'flex-start',
 });
 
 const PromptText = styled('div', {
@@ -106,6 +106,7 @@ const PromptIconContainer = styled('div', {
   justifyContent: 'center',
   width: 36,
   height: 36,
+  marginRight: vars.spacing(1.5),
 });
 
 // This `styled()` function invokes keyframes. `styled-components` only supports keyframes
@@ -130,7 +131,17 @@ const PromptHelperText = styled('div', {
   slot: 'PromptHelperText',
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.small,
-  color: vars.colors.foreground.error,
+  color: vars.colors.foreground.muted,
+  variants: [
+    {
+      props: {
+        variant: 'error',
+      },
+      style: {
+        color: vars.colors.foreground.error,
+      },
+    },
+  ],
 });
 
 function GridPrompt(props: GridPromptProps) {
@@ -169,12 +180,12 @@ function GridPrompt(props: GridPromptProps) {
         <PromptText ownerState={ownerState} className={classes.text}>
           {value}
         </PromptText>
-        <PromptTime ownerState={ownerState} className={classes.time} title={fullSentAt}>
-          {sentAt}
-        </PromptTime>
         <PromptHelperText ownerState={ownerState} className={classes.helperText}>
           {helperText}
         </PromptHelperText>
+        <PromptTime ownerState={ownerState} className={classes.time} title={fullSentAt}>
+          {sentAt}
+        </PromptTime>
       </PromptContent>
       <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')}>
         <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>

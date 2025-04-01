@@ -268,6 +268,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid);

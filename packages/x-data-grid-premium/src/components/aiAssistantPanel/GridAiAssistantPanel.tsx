@@ -134,6 +134,8 @@ function GridAiAssistantPanel() {
         {
           value,
           createdAt: new Date(date),
+          variant: 'processing',
+          helperText: apiRef.current.getLocaleText('promptProcessing'),
         },
       ]);
       try {
@@ -141,7 +143,14 @@ function GridAiAssistantPanel() {
         apiRef.current.unstable_aiAssistant.applyPromptResult(response);
         apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) =>
           prevHistory.map((item) =>
-            item.createdAt.getTime() === date ? { ...item, response } : item,
+            item.createdAt.getTime() === date
+              ? {
+                  ...item,
+                  response,
+                  variant: 'success',
+                  helperText: apiRef.current.getLocaleText('promptAppliedChanges'),
+                }
+              : item,
           ),
         );
         return response;

@@ -268,6 +268,8 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid);
