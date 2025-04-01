@@ -161,6 +161,7 @@ function GridAiAssistantPanel() {
                     aggregation: {},
                     sorting: [],
                     grouping: [],
+                    pivoting: {},
                   },
                 }
               : item,
