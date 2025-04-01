@@ -38,6 +38,7 @@ const AiAssistantPanelHistoryList = styled('ol', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelHistoryList',
 })<{ ownerState: OwnerState }>({
+  flex: 1,
   padding: 0,
   margin: 0,
 });

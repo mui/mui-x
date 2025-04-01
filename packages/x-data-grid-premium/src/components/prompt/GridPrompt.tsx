@@ -186,15 +186,12 @@ function GridPrompt(props: GridPromptProps) {
 }
 
 function formatDateTime(date: Date) {
-  // if today, show time e.g. 08:32
   if (isToday(date)) {
     return date.toLocaleTimeString(undefined, {
       hour: '2-digit',
       minute: '2-digit',
     });
   }
-
-  // Otherwise, show 10/10/2025
   return date.toLocaleDateString(undefined, {
     day: 'numeric',
     month: 'numeric',
