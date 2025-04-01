@@ -461,17 +461,26 @@ const transformOrigin = {
 
 function BasePopper(props: P['basePopper']) {
   const {
-    id,
+    ref,
     open,
+    children,
+    className,
+    clickAwayTouchEvent,
+    clickAwayMouseEvent,
     flip,
+    focusTrap,
+    onExited,
+    onClickAway,
     onDidShow,
     onDidHide,
+    id,
+    target,
     transition,
-    onExited,
-    children,
+    placement,
     material,
     ...rest
   } = props;
+
   const modifiers = React.useMemo(() => {
     const result = [] as NonNullable<MUIPopperProps['modifiers']>;
     if (flip) {
@@ -521,7 +530,7 @@ function BasePopper(props: P['basePopper']) {
           style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
           onExited={handleExited(TransitionProps?.onExited)}
         >
-          <MUIPaper>{props.children}</MUIPaper>
+          <MUIPaper>{children}</MUIPaper>
         </MUIGrow>,
       );
   }
@@ -529,14 +538,14 @@ function BasePopper(props: P['basePopper']) {
   return (
     <MUIPopper
       id={id}
-      className={props.className}
+      className={className}
       open={open}
-      anchorEl={props.target as any}
-      transition={props.transition}
-      placement={props.placement}
+      anchorEl={target as any}
+      transition={transition}
+      placement={placement}
       modifiers={modifiers}
-      {...material}
       {...rest}
+      {...material}
     >
       {content}
     </MUIPopper>
