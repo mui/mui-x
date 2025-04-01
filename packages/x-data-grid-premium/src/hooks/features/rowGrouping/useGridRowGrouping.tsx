@@ -13,6 +13,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
 } from '@mui/x-data-grid-pro/internals';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
@@ -189,7 +190,7 @@ export const useGridRowGrouping = (
         // Always export if the model has been initialized
         props.initialState?.rowGrouping?.model != null ||
         // Export if the model is not empty
-        Object.keys(rowGroupingModelToExport).length > 0;
+        !isObjectEmpty(rowGroupingModelToExport);
 
       if (!shouldExportRowGroupingModel) {
         return prevState;

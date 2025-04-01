@@ -6,6 +6,7 @@ import {
   GridRestoreStatePreProcessingContext,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   getAvailableAggregationFunctions,
@@ -85,12 +86,12 @@ export const useGridAggregationPreProcessors = (
             !!props.dataSource,
           );
 
-      const hasAggregationRule = Object.keys(aggregationRules).length > 0;
+      const hasAggregationRule = !isObjectEmpty(aggregationRules);
 
       // If we did not have any aggregation footer before, and we still don't have any,
       // Then we can skip this step
       if (
-        Object.keys(apiRef.current.caches.aggregation.rulesOnLastRowHydration).length === 0 &&
+        isObjectEmpty(apiRef.current.caches.aggregation.rulesOnLastRowHydration) &&
         !hasAggregationRule
       ) {
         return value;
