@@ -81,7 +81,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 5));
     }
 
     expect(onZoomChange.callCount).to.equal(200);
@@ -94,7 +94,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 5));
     }
 
     expect(onZoomChange.callCount).to.equal(400);
@@ -142,7 +142,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 5));
 
       expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('A')).to.equal(null);
@@ -169,7 +169,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 5));
 
       expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('A')).not.to.equal(null);
