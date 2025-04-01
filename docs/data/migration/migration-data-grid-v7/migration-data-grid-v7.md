@@ -203,6 +203,27 @@ You have to import it from `@mui/x-license` instead:
   + apiRef.current.dataSource.getRows()
   ```
 
+- The list view feature and its related props are now stable.
+
+  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+
+  The `GridListColDef` type has been renamed to `GridListViewColDef`.
+
+  ```diff
+  -const listViewColDef: GridListColDef = {
+  +const listViewColDef: GridListViewColDef = {
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
+
+   <DataGridPro
+  -  unstable_listView
+  -  unstable_listColumn={listViewColDef}
+  +  listView
+  +  listViewColumn={listViewColDef}
+   />
+  ```
+
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
 
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.

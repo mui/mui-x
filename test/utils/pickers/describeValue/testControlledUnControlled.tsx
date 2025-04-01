@@ -127,6 +127,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const newValue = setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          closeMobilePicker: true,
         });
 
         assertRenderedValue(newValue);
@@ -163,6 +164,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const newValue = setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          closeMobilePicker: true,
         });
 
         expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));

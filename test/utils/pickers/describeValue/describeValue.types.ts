@@ -36,6 +36,7 @@ export type DescribeValueOptions<
             isOpened?: boolean;
             applySameValue?: boolean;
             setEndDate?: boolean;
+            closeMobilePicker?: boolean;
           },
         ) => InferNonNullablePickerValue<TValue>;
       }

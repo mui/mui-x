@@ -13,9 +13,7 @@ import {
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
-  const { render } = createPickerRenderer({
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,

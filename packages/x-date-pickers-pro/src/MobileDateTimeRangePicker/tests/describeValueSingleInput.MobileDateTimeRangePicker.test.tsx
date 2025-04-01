@@ -50,7 +50,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false, closeMobilePicker }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
@@ -95,6 +95,10 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
         // meridiem is an extra view on `DesktopDateTimeRangePicker`
         // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+      }
+
+      if (closeMobilePicker) {
+        fireEvent.click(screen.getByRole('button', { name: /ok/i }));
       }
 
       return newValue;

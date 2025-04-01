@@ -44,11 +44,8 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      await waitFor(() => {
-        screen.findByRole('button', { name: 'Test shortcut' });
-      });
+      const shortcut = await screen.findByRole('button', { name: 'Test shortcut' });
 
-      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
