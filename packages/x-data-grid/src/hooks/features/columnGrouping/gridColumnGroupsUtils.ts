@@ -75,19 +75,14 @@ export const getColumnGroupsHeaderStructure = (
   const haveSameParents = (field1: string, field2: string, depth: number) =>
     isDeepEqual(getParents(field1).slice(0, depth + 1), getParents(field2).slice(0, depth + 1));
 
+  const pinnedFieldsLeft = new Set(pinnedFields?.left);
+  const pinnedFieldsRight = new Set(pinnedFields?.right);
+
   const haveDifferentContainers = (field1: string, field2: string) => {
-    if (
-      pinnedFields?.left &&
-      pinnedFields.left.includes(field1) &&
-      !pinnedFields.left.includes(field2)
-    ) {
+    if (pinnedFieldsLeft.has(field1) && !pinnedFieldsLeft.has(field2)) {
       return true;
     }
-    if (
-      pinnedFields?.right &&
-      !pinnedFields.right.includes(field1) &&
-      pinnedFields.right.includes(field2)
-    ) {
+    if (!pinnedFieldsRight.has(field1) && pinnedFieldsRight.has(field2)) {
       return true;
     }
     return false;
