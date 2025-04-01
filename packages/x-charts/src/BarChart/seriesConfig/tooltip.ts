@@ -10,6 +10,11 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
 
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex];
+
+  if (value == null) {
+    return null;
+  }
+
   const formattedValue = series.valueFormatter(value as any, { dataIndex: identifier.dataIndex });
 
   return {
