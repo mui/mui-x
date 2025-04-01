@@ -10,11 +10,12 @@ import Button from '@mui/material/Button';
 export default function ServerSideRowGroupingFullDataGrid() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, columns, loadNewData } = useMockServer({
+  const { fetchRows, editRow, columns, loadNewData } = useMockServer({
     rowGrouping: true,
     rowLength: 1000,
     dataSet: 'Commodity',
     maxColumns: 20,
+    editable: true,
   });
 
   const dataSource = React.useMemo(() => {
@@ -35,10 +36,14 @@ export default function ServerSideRowGroupingFullDataGrid() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
     };
-  }, [fetchRows]);
+  }, [fetchRows, editRow]);
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
