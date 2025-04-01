@@ -230,8 +230,8 @@ export function useViews<
       // The selected view can be different from the active view,
       // This can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
       let currentView: TView | null = null;
-      if (selectedView && selectedView !== view) {
-        currentView = views[views.indexOf(selectedView) + 1];
+      if (selectedView != null && selectedView !== view) {
+        currentView = selectedView;
       } else if (isSelectionFinishedOnCurrentView) {
         currentView = view;
       }
