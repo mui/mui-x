@@ -19,7 +19,8 @@ const dataSetOptions = {
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, editRow, columns, initialState } = useMockServer(dataSetOptions);
+  const { fetchRows, editRow, columns, initialState } =
+    useMockServer(dataSetOptions);
 
   const initialStateWithPagination: GridInitialState = React.useMemo(
     () => ({

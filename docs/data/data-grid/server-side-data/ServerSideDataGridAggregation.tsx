@@ -15,10 +15,11 @@ const aggregationFunctions = {
 };
 
 export default function ServerSideDataGridAggregation() {
-  const { columns, initialState, fetchRows, editRow } = useMockServer<GridGetRowsResponse>(
-    { editable: true },
-    { useCursorPagination: false },
-  );
+  const { columns, initialState, fetchRows, editRow } =
+    useMockServer<GridGetRowsResponse>(
+      { editable: true },
+      { useCursorPagination: false },
+    );
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({

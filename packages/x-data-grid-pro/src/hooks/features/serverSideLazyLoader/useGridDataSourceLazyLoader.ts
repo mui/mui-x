@@ -299,7 +299,7 @@ export const useGridDataSourceLazyLoader = (
         });
 
         if (duplicateRowCount > 0) {
-          privateApiRef.current.setState(state => ({
+          privateApiRef.current.setState((state) => ({
             ...state,
             rows: {
               ...state.rows,
