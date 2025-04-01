@@ -62,12 +62,12 @@ export const useGridKeyboardNavigation = (
     | 'getRowId'
     | 'signature'
     | 'headerFilters'
-    | 'unstable_listView'
+    | 'listView'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const isRtl = useRtl();
-  const listView = props.unstable_listView;
+  const listView = props.listView;
 
   const getCurrentPageRows = React.useCallback(() => {
     return gridVisibleRowsWithPinnedRowsSelector(apiRef);
