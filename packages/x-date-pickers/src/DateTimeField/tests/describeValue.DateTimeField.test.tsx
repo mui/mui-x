@@ -9,11 +9,10 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'field'>(DateTimeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,

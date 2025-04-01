@@ -12,11 +12,10 @@ import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTim
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-time-range',
     variant: 'mobile',
@@ -110,7 +109,6 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       } else {
         // return to the start date view in case we'd like to repeat the selection process
         fireEvent.click(
