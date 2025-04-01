@@ -394,7 +394,7 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
-  disableTooltipInteraction?: boolean;
+  ignoreTooltip?: boolean;
 };
 
 export type PolarAxisConfig<

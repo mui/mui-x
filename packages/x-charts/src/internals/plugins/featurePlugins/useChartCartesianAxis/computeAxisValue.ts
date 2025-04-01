@@ -119,7 +119,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
 
-    const triggerTooltip = !axis.disableTooltipInteraction && axisIdsTriggeringTooltip.has(axis.id);
+    const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
 
     const data = axis.data ?? [];
 
