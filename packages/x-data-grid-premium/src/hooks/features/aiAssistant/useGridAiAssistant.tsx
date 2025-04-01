@@ -22,6 +22,11 @@ import {
 } from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
+import {
+  gridAiAssistantHistorySelector,
+  gridAiAssistantPanelOpenSelector,
+  gridAiAssistantSuggestionsSelector,
+} from './gridAiAssistantSelectors';
 
 const DEFAULT_SAMPLE_COUNT = 5;
 
@@ -62,6 +67,12 @@ export const useGridAiAssistant = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'enableAiAssistant'
+    | 'aiAssistantPanelOpen'
+    | 'aiAssistantHistory'
+    | 'aiAssistantSuggestions'
+    | 'onAiAssistantPanelOpenChange'
+    | 'onAiAssistantHistoryChange'
+    | 'onAiAssistantSuggestionsChange'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
     | 'disableAggregation'
@@ -72,6 +83,30 @@ export const useGridAiAssistant = (
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
   const isAiAssistantAvailable = isAiAssistantAvailableFn(props);
+
+  apiRef.current.registerControlState({
+    stateId: 'aiAssistantPanelOpen',
+    propModel: props.aiAssistantPanelOpen,
+    propOnChange: props.onAiAssistantPanelOpenChange,
+    stateSelector: gridAiAssistantPanelOpenSelector,
+    changeEvent: 'aiAssistantPanelOpenChange',
+  });
+
+  apiRef.current.registerControlState({
+    stateId: 'aiAssistantHistory',
+    propModel: props.aiAssistantHistory,
+    propOnChange: props.onAiAssistantHistoryChange,
+    stateSelector: gridAiAssistantHistorySelector,
+    changeEvent: 'aiAssistantHistoryChange',
+  });
+
+  apiRef.current.registerControlState({
+    stateId: 'aiAssistantSuggestions',
+    propModel: props.aiAssistantSuggestions,
+    propOnChange: props.onAiAssistantSuggestionsChange,
+    stateSelector: gridAiAssistantSuggestionsSelector,
+    changeEvent: 'aiAssistantSuggestionsChange',
+  });
 
   const collectSampleData = React.useCallback(() => {
     const columnExamples: Record<string, any[]> = {};
@@ -223,11 +258,39 @@ export const useGridAiAssistant = (
     [apiRef],
   );
 
-  // TODO: implement suggestions setter
+  const setAiAssistantSuggestions = React.useCallback<
+    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantSuggestions']
+  >(
+    (callback) => {
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          suggestions:
+            typeof callback === 'function' ? callback(state.aiAssistant?.suggestions) : callback,
+        },
+      }));
+    },
+    [apiRef],
+  );
 
-  // TODO: sync controlled history with grid state
+  React.useEffect(() => {
+    if (props.aiAssistantHistory) {
+      apiRef.current.unstable_aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
+    }
+  }, [apiRef, props.aiAssistantHistory]);
 
-  // TODO: sync controlled suggestions with grid state
+  React.useEffect(() => {
+    if (props.aiAssistantSuggestions) {
+      apiRef.current.unstable_aiAssistant.setAiAssistantSuggestions(props.aiAssistantSuggestions);
+    }
+  }, [apiRef, props.aiAssistantSuggestions]);
+
+  React.useEffect(() => {
+    if (props.aiAssistantPanelOpen) {
+      apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
+    }
+  }, [apiRef, props.aiAssistantPanelOpen]);
 
   useGridApiMethod(
     apiRef,
@@ -237,6 +300,7 @@ export const useGridAiAssistant = (
         applyPromptResult,
         setAiAssistantPanelOpen,
         setAiAssistantHistory,
+        setAiAssistantSuggestions,
       },
     },
     'public',

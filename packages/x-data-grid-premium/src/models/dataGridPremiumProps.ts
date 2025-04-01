@@ -293,15 +293,30 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   aiAssistantPanelOpen?: boolean;
   /**
+   * Callback fired when the AI Assistant panel open state changes.
+   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
+   */
+  onAiAssistantPanelOpenChange?: (aiAssistantPanelOpen: boolean) => void;
+  /**
    * The history of the AI Assistant.
    */
   aiAssistantHistory?: PromptHistory;
+  /**
+   * Callback fired when the AI Assistant history changes.
+   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   */
+  onAiAssistantHistoryChange?: (aiAssistantHistory: PromptHistory) => void;
   /**
    * The suggestions of the AI Assistant.
    */
   aiAssistantSuggestions?: string[];
   /**
-   * If `true`, the AI Assistant is allowed to sample data.
+   * Callback fired when the AI Assistant suggestions change.
+   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
+   */
+  onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: string[]) => void;
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
    */
   allowAiAssistantDataSampling?: boolean;
   /**
