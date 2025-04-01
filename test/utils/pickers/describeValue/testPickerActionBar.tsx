@@ -156,7 +156,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onClose,
           open: true,
           defaultValue: values[0],
-          slotProps: { actionBar: { actions: ['nextOrAccept'] } },
+          slotProps: { actionBar: { actions: ['accept', 'nextOrAccept'] } },
           closeOnSelect: false,
         });
 
@@ -164,7 +164,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
-        fireEvent.click(screen.getByText(/ok/i));
+        fireEvent.click(screen.getAllByRole('button', { name: 'OK' })[0]);
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
