@@ -228,4 +228,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Prompt
   promptRerun: 'Run again',
+  promptProcessing: 'Processing…',
+  promptAppliedChanges: 'Applied changes',
 };

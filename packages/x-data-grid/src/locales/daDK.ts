@@ -232,6 +232,8 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid);

@@ -232,6 +232,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid);

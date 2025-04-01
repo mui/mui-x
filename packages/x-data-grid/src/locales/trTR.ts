@@ -229,6 +229,8 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);

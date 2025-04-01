@@ -232,6 +232,8 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid);

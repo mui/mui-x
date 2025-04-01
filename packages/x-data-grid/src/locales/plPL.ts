@@ -229,6 +229,8 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid);

@@ -234,6 +234,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid);

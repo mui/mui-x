@@ -234,6 +234,8 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid);

@@ -248,6 +248,8 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Prompt
   promptRerun: 'Probaj ponovno',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
 };
 
 export const hrHR = getGridLocalization(hrHRGrid);
