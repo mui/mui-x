@@ -928,9 +928,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="dialog"]', { state: 'visible' });
 
         // Click 'OK' button to close dialog
-        await page.keyboard.press('Tab'); // move focus to 'cancel' action
-        await page.keyboard.press('Tab'); // move focus to 'accept' action
-        await page.keyboard.press('Enter');
+        await page.getByRole('button', { name: 'OK' }).click();
 
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
