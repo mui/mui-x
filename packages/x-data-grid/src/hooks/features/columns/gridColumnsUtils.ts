@@ -264,10 +264,9 @@ export const applyInitialState = (
   const newOrderedFields =
     cleanOrderedFields.length === 0
       ? columnsState.orderedFields
-      : [
-          ...cleanOrderedFields,
-          ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
-        ];
+      : cleanOrderedFields.concat(
+          columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
+        );
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
