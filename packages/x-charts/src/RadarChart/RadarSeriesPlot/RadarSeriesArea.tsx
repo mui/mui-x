@@ -34,8 +34,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               undefined
             }
             strokeOpacity={isItemFaded ? 0.5 : 1}
-            fillOpacity={isItemFaded ? 0.1 : 0.4}
-            strokeWidth={isItemHighlighted ? 2 : 1}
+            fillOpacity={(isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2}
+            strokeWidth={!fillArea && isItemHighlighted ? 2 : 1}
             {...other}
           />
         );
