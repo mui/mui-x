@@ -41,6 +41,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },

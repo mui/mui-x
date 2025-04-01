@@ -8,6 +8,12 @@
   ],
   "classes": [
     {
+      "key": "animate",
+      "className": "MuiPieArcLabel-animate",
+      "description": "Styles applied to the root element when animation is not skipped.",
+      "isGlobal": false
+    },
+    {
       "key": "faded",
       "className": "MuiPieArcLabel-faded",
       "description": "Styles applied to the root element when faded.",
