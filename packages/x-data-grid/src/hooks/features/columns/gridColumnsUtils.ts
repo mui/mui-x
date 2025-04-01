@@ -349,10 +349,8 @@ export const createColumnsState = ({
     );
   }
 
-  const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
-    columnsToUpsertLookup[field] = true;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
 
