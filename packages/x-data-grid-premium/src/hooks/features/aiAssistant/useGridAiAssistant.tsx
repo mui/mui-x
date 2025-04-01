@@ -21,7 +21,6 @@ import {
   PromptResponse,
 } from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { useGridRootProps } from '../../utils/useGridRootProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 
 const DEFAULT_SAMPLE_COUNT = 5;
@@ -60,9 +59,15 @@ export const aiAssistantStateInitializer: GridStateInitializer<
 
 export const useGridAiAssistant = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'enableAiAssistant'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    | 'enableAiAssistant'
+    | 'disableColumnFilter'
+    | 'disableRowGrouping'
+    | 'disableAggregation'
+    | 'disableColumnSorting'
+  >,
 ) => {
-  const rootProps = useGridRootProps();
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
@@ -107,7 +112,7 @@ export const useGridAiAssistant = (
     (result: PromptResponse) => {
       const interestColumns = [] as string[];
 
-      if (!rootProps.disableColumnFilter) {
+      if (!props.disableColumnFilter) {
         apiRef.current.setFilterModel({
           items: result.filters.map((filter, index) => {
             const item = {
@@ -141,16 +146,16 @@ export const useGridAiAssistant = (
 
       // TODO: if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
 
-      if (!rootProps.disableRowGrouping) {
+      if (!props.disableRowGrouping) {
         apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
       }
 
-      if (!rootProps.disableAggregation) {
+      if (!props.disableAggregation) {
         apiRef.current.setAggregationModel(result.aggregation);
         interestColumns.push(...Object.keys(result.aggregation));
       }
 
-      if (!rootProps.disableColumnSorting) {
+      if (!props.disableColumnSorting) {
         apiRef.current.setSortModel(
           result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
         );
@@ -176,10 +181,10 @@ export const useGridAiAssistant = (
     },
     [
       apiRef,
-      rootProps.disableColumnFilter,
-      rootProps.disableRowGrouping,
-      rootProps.disableAggregation,
-      rootProps.disableColumnSorting,
+      props.disableColumnFilter,
+      props.disableRowGrouping,
+      props.disableAggregation,
+      props.disableColumnSorting,
       columnsLookup,
     ],
   );
