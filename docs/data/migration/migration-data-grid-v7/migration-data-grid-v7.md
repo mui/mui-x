@@ -218,7 +218,7 @@ You have to import it from `@mui/x-license` instead:
 
    <DataGridPro
   -  unstable_listView
-  -  unstable_listColumns
+  -  unstable_listColumn={listViewColDef}
   +  listView
   +  listViewColumn={listViewColDef}
    />
