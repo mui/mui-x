@@ -42,5 +42,3 @@ export type {
   GridDataSourceApiBasePremium as GridDataSourceApiBase,
   GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
 } from './hooks/features/dataSource/models';
-
-export { IS_SPEECH_RECOGNITION_SUPPORTED } from './utils/speechRecognition';
