@@ -1403,7 +1403,7 @@ importers:
         specifier: ^7.26.10
         version: 7.26.10
       '@mui/system':
-        specifier: ^5.15.14 || ^6.0.0 || ^7.0.0-alpha
+        specifier: ^5.15.14 || ^6.0.0 || ^7.0.0
         version: 7.0.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@mui/utils':
         specifier: ^7.0.0 || ^7.0.0-beta
