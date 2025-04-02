@@ -273,7 +273,7 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
   getRows: async (params: GridGetRowsParams) => {
     // fetch rows from the server
   },
-+ updateRow: async (rowId: GridRowId, updatedRow: GridRowModel, previousRow: GridRowModel) => {
++ updateRow: async (params: GridUpdateRowParams) => {
 +   // update row on the server
 + },
  }
