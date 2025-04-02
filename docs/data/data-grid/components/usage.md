@@ -9,9 +9,11 @@ By default, the `<DataGrid />` component includes all of the interfaces necessar
 - [Toolbar](/x/react-data-grid/components/toolbar/)
 - [Export](/x/react-data-grid/components/export/)
 - [Quick Filter](/x/react-data-grid/components/quick-filter/)
+- [Prompt Field](/x/react-data-grid/components/prompt-field/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 - [Columns Panel](/x/react-data-grid/components/columns-panel/) 🚧
 - [Filter Panel](/x/react-data-grid/components/filter-panel/) 🚧
 - [Pivot Panel](/x/react-data-grid/components/pivot-panel/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
+- [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
 
 ## Composition
 
