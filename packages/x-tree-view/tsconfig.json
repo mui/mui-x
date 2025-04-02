@@ -6,7 +6,8 @@
       "@mui/material/themeCssVarsAugmentation",
       "chai-dom",
       "mocha",
-      "node"
+      "node",
+      "vite/client"
     ],
     "noImplicitAny": false
   },
