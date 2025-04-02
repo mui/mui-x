@@ -178,7 +178,12 @@ const pages: MuiPage[] = [
               },
             ],
           },
-          { pathname: '/x/react-data-grid/ask-your-table', plan: 'premium', newFeature: true },
+          {
+            pathname: '/x/react-data-grid/ai-assistant',
+            plan: 'premium',
+            newFeature: true,
+            title: 'AI Assistant',
+          },
         ],
       },
       {

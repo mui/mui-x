@@ -7,7 +7,7 @@ title: Ask Your Table - AI Assistant
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
-To use this feature, you need to have a prompt processing backend. MUI offers this [service](/x/react-data-grid/ask-your-table/#with-muis-service) as a part of a premium package add-on.
+To use this feature, you need to have a prompt processing backend. MUI offers this [service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
 Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
 :::
 
@@ -25,7 +25,7 @@ This can be done in the following ways.
 
 :::info
 AI assistant demos use a utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
-In a real-world scenario, replace this with [MUI's](/x/react-data-grid/ask-your-table/#with-muis-service) or [your own](/x/react-data-grid/ask-your-table/#with-custom-service) processing service.
+In a real-world scenario, replace this with [MUI's](/x/react-data-grid/ai-assistant/#with-muis-service) or [your own](/x/react-data-grid/ai-assistant/#with-custom-service) processing service.
 
 `mockPromptResolver()` can handle a predefined set of prompts:
 
