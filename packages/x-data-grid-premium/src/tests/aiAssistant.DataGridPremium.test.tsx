@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { act, createRenderer, screen, within } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { spy, stub } from 'sinon';
 import { expect } from 'chai';
 import {
