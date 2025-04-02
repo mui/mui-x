@@ -23,6 +23,7 @@ export default function SimpleLineChart() {
         { data: uData, label: 'uv' },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
+      yAxis={[{ width: 50 }]}
       margin={margin}
     />
   );

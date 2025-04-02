@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "8.0.0-beta.0",
+  "version": "8.0.0-beta.2",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -34,7 +34,7 @@
     "directory": "packages/x-license"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "^7.27.0",
     "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "@mui/x-internals": "workspace:*",
     "@mui/x-telemetry": "workspace:*"

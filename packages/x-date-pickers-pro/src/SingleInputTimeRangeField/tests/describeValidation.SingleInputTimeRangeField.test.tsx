@@ -2,11 +2,10 @@ import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTi
 import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
 
 describe('<SingleInputTimeRangeField /> - Describe Validation', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeRangeValidation(SingleInputTimeRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['hours', 'minutes', 'seconds'],
     fieldType: 'single-input',
