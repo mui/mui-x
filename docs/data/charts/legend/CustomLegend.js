@@ -5,17 +5,17 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useLegend } from '@mui/x-charts/hooks';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 
-function LineWithMark({ color, size }) {
+function LineWithMark({ color, ...props }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      width={size}
-      height={size}
       stroke={color}
       strokeWidth={3}
       strokeLinecap="round"
       fill="none"
+      {...props}
     >
       <path d="M 1 12.5 L 7 12.5 M 17 12.5 L 23 12.5" />
       <circle cx={12} cy={12.5} r={5} />
@@ -23,16 +23,9 @@ function LineWithMark({ color, size }) {
   );
 }
 
-function DashedLine({ color, size }) {
+function DashedLine({ color, ...props }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      stroke={color}
-      strokeWidth={3}
-      fill="none"
-    >
+    <svg viewBox="0 0 24 24" stroke={color} strokeWidth={3} fill="none" {...props}>
       <path d="M 1 12.5 L 23 12.5" strokeDasharray="5 3" />
     </svg>
   );
@@ -41,16 +34,22 @@ function DashedLine({ color, size }) {
 function MyCustomLegend() {
   const { items } = useLegend();
   return (
-    <Stack direction="row" gap={3}>
+    <Stack direction="column" alignSelf={'flex-start'} marginLeft={9}>
       {items.map((item) => {
-        const { label, id, color, seriesId } = item;
+        const { label, id, color, seriesId, markType } = item;
         return (
-          <Box key={id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {seriesId === 'avg' ? (
-              <DashedLine color={color} size={20} />
-            ) : (
-              <LineWithMark color={color} size={20} />
-            )}
+          <Box
+            key={id}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              backgroundColor:
+                seriesId === 'avg' ? 'rgba(156,40,40,0.5)' : 'transparent',
+              padding: 1,
+            }}
+          >
+            <ChartsLabelMark type={markType} color={color} />
             <Typography sx={{ display: 'inline-block' }}>{`${label}`}</Typography>
           </Box>
         );
@@ -90,12 +89,14 @@ export default function CustomLegend() {
             dataKey: '1991_2020_avg',
             showMark: false,
             color: theme.palette.text.primary,
+            labelMarkType: DashedLine,
           },
           {
             id: '2023-temp',
             label: 'temp. 2023 (°C)',
             dataKey: '2023',
             color: theme.palette.primary.main,
+            labelMarkType: LineWithMark,
           },
         ]}
         xAxis={[{ dataKey: 'month', scaleType: 'band', id: 'x-axis' }]}

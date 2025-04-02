@@ -90,6 +90,7 @@
   { "name": "ChartsLabelClasses", "kind": "Interface" },
   { "name": "ChartsLabelCustomMarkProps", "kind": "Interface" },
   { "name": "ChartsLabelGradientClasses", "kind": "Interface" },
+  { "name": "ChartsLabelMark", "kind": "Variable" },
   { "name": "ChartsLabelMarkClasses", "kind": "Interface" },
   { "name": "ChartsLabelMarkProps", "kind": "Interface" },
   { "name": "ChartsLegend", "kind": "Variable" },
