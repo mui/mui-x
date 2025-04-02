@@ -433,14 +433,15 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
       renderInput={(params) => {
         const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
         return (
-          <rootProps.slots.baseTextField
+          <MUITextField
             {...inputRest}
             label={label}
             placeholder={placeholder}
-            slotProps={{
-              input: InputProps,
-              inputLabel: InputLabelProps,
-              htmlInput: inputProps,
+            inputProps={inputProps}
+            InputProps={transformInputProps(InputProps as any, false)}
+            InputLabelProps={{
+              shrink: true,
+              ...InputLabelProps,
             }}
             {...slotProps?.textField}
             {...rootProps.slotProps?.baseTextField}
@@ -456,7 +457,7 @@ function BaseInput(props: GridSlotProps['baseInput']) {
   return <MUIInputBase {...transformInputProps(props)} />;
 }
 
-function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
+function transformInputProps(props: GridSlotProps['baseInput'] | undefined, wrapAdornments = true) {
   if (!props) {
     return undefined;
   }
@@ -464,14 +465,15 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
   const { slotProps, ...rest } = props;
   const result = rest as Partial<MUIInputBaseProps>;
 
-  if (result.startAdornment) {
-    result.startAdornment = (
-      <InputAdornment position="start">{result.startAdornment}</InputAdornment>
-    );
-  }
-
-  if (result.endAdornment) {
-    result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+  if (wrapAdornments) {
+    if (result.startAdornment) {
+      result.startAdornment = (
+        <InputAdornment position="start">{result.startAdornment}</InputAdornment>
+      );
+    }
+    if (result.endAdornment) {
+      result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+    }
   }
 
   if (slotProps?.htmlInput) {
