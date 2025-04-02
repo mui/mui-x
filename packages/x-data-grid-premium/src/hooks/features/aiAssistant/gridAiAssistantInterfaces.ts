@@ -63,7 +63,7 @@ export interface GridAiAssistantApi {
   /**
    * The AI assistant API.
    */
-  unstable_aiAssistant: {
+  aiAssistant: {
     /**
      * Get the context for the prompt.
      * @param {boolean} allowDataSampling Whether to use grid data as examples in the context.

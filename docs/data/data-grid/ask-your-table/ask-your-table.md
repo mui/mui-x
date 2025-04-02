@@ -52,11 +52,11 @@ This is useful if you are dealing with non-sensitive data and want to skip creat
 
 Data is collected randomly on the cell level, which means that the examples per column might not come from the same rows.
 
-For `unstable_aiAssistant.getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
+For `aiAssistant.getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
 
 ```ts
 const context = React.useMemo(
-  () => apiRef.current.unstable_aiAssistant.getPromptContext(allowDataSampling),
+  () => apiRef.current.aiAssistant.getPromptContext(allowDataSampling),
   [apiRef, allowDataSampling],
 );
 ```
@@ -138,12 +138,23 @@ Data Grid provides all necessary pieces to make the service integration easy.
 Use pieces of the AI Assistant feature to build your own prompt processing service.
 
 - `<GridAiAssistantPanel />` and `<GridPromptField />` components can be used to build custom UI.
-- [`unstable_aiAssistant`](/x/api/data-grid/grid-api/#grid-api-prop-unstable_aiAssistant) API can be used to build the context using `getPromptContext()` and to apply the processing with `applyPromptResult(response: PromptResponse)` methods.
+- [`aiAssistant`](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) API can be used to build the context using `getPromptContext()` and to apply the processing with `applyPromptResult(response: PromptResponse)` methods.
 - `unstable_gridDefaultPromptResolver()` can be used to pass the prompt and the context(s) with the necessary headers to the processing service.
 
 Mix and match these with your custom components/methods to implement the processing the way you need it in your project.
 
 You can use completely custom solution and apply the processing result using other Grid's APIs like [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without a need to structure it as `PromptResponse`.
+
+To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API with a library of your choice.
+Body of the request requires `query` and `context` parameters.
+`additionalContext` is optional.
+API response type is `Result<PromptResponse>`.
+
+```ts
+type Result<T> = { ok: false; message: string } | { ok: true; data: T };
+```
+
+Your resolver should return `Promise<PromptResponse>`.
 
 ## API
 
