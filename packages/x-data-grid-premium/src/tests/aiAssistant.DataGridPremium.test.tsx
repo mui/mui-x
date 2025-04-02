@@ -32,15 +32,15 @@ const baselineProps: BaselineProps = {
     {
       field: 'id',
       type: 'number',
-      unstable_examples: [10, 20, 30, 40, 50],
+      examples: [10, 20, 30, 40, 50],
     },
     {
       field: 'category1',
-      unstable_examples: ['ExampleA', 'ExampleB', 'ExampleC'],
+      examples: ['ExampleA', 'ExampleB', 'ExampleC'],
     },
     {
       field: 'category2',
-      unstable_examples: ['Example1', 'Example2', 'Example3'],
+      examples: ['Example1', 'Example2', 'Example3'],
     },
   ],
 };
@@ -89,7 +89,7 @@ describe('<DataGridPremium /> - Prompt', () => {
   });
 
   describeSkipIf(isJSDOM)('data sampling', () => {
-    it('should use unstable_examples to generate the prompt context', async () => {
+    it('should use `examples` to generate the prompt context', async () => {
       const { user } = render(<Test />);
 
       const input = screen.getByRole('textbox');
@@ -118,11 +118,11 @@ describe('<DataGridPremium /> - Prompt', () => {
     it('should allow building the context', () => {
       render(<Test />);
 
-      const contextWithColumnExamples = apiRef.current?.unstable_aiAssistant.getPromptContext();
+      const contextWithColumnExamples = apiRef.current?.aiAssistant.getPromptContext();
       expect(contextWithColumnExamples).contains('Example');
       expect(contextWithColumnExamples).not.contains('Cat');
 
-      const contextWithDataSamples = apiRef.current?.unstable_aiAssistant.getPromptContext(true);
+      const contextWithDataSamples = apiRef.current?.aiAssistant.getPromptContext(true);
       expect(contextWithDataSamples).not.contains('Example');
       expect(contextWithDataSamples).contains('Cat');
     });
@@ -145,7 +145,7 @@ describe('<DataGridPremium /> - Prompt', () => {
       );
 
       act(() =>
-        apiRef.current?.unstable_aiAssistant.applyPromptResult({
+        apiRef.current?.aiAssistant.applyPromptResult({
           select: 1,
           filters: [
             {
