@@ -31,7 +31,6 @@
     "type": "opencollective",
     "url": "https://opencollective.com/mui-org"
   },
-  "type": "module",
   "dependencies": {
     "@babel/core": "^7.26.10",
     "@babel/runtime": "^7.27.0",
