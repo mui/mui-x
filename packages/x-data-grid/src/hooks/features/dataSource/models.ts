@@ -1,5 +1,9 @@
-import { GridDataSourceCache, GridGetRowsParams } from '../../../models/gridDataSource';
-import { GridRowId } from '../../../models/gridRows';
+import {
+  GridDataSourceCache,
+  GridGetRowsParams,
+  GridUpdateRowParams,
+} from '../../../models/gridDataSource';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 export interface GridDataSourceApiBase {
   /**
@@ -14,6 +18,12 @@ export interface GridDataSourceApiBase {
    * The data source cache object.
    */
   cache: GridDataSourceCache;
+  /**
+   * Syncs the row with the server and updates in the grid.
+   * @param {GridUpdateRowParams} params The parameters for the edit operation.
+   * @returns {Promise<GridRowModel>} The updated row.
+   */
+  editRow: (params: GridUpdateRowParams) => Promise<GridRowModel> | undefined;
 }
 
 export interface GridDataSourceApi {

@@ -34,7 +34,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -43,7 +43,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-import { getDefaultCellValue, getGroupKeys } from './utils';
+import { getDefaultCellValue } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 import { GridUpdateRowError } from '../dataSource';
 
@@ -569,24 +569,17 @@ export const useGridRowEditing = (
           }
         };
 
+        const updateRowParams: GridUpdateRowParams = {
+          rowId: id,
+          updatedRow: rowUpdate,
+          previousRow: row,
+        };
         try {
-          Promise.resolve(
-            props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
-          )
-            .then((finalRowUpdate) => {
-              const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), id) as string[];
-              apiRef.current.updateServerRows([finalRowUpdate], groupKeys);
-              if (finalRowUpdate && !isDeepEqual(finalRowUpdate, row)) {
-                // Reset the outdated cache, only if the row is _actually_ updated
-                apiRef.current.dataSource.cache.clear();
-              }
-              finishRowEditMode();
-            })
-            .catch((errorThrown) =>
-              handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate }),
-            );
+          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
+            .then(() => finishRowEditMode())
+            .catch((errorThrown) => handleError(errorThrown, updateRowParams));
         } catch (errorThrown) {
-          handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate });
+          handleError(errorThrown, updateRowParams);
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {

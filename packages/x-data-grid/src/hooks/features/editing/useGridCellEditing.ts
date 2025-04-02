@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -28,7 +27,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridCellEditStartParams,
@@ -36,7 +35,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
-import { getDefaultCellValue, getGroupKeys } from './utils';
+import { getDefaultCellValue } from './utils';
 import { GridUpdateRowParams } from '../../../models/gridDataSource';
 import { GridUpdateRowError } from '../dataSource';
 
@@ -456,24 +455,17 @@ export const useGridCellEditing = (
           }
         };
 
+        const updateRowParams: GridUpdateRowParams = {
+          rowId: id,
+          updatedRow: rowUpdate,
+          previousRow: row,
+        };
         try {
-          Promise.resolve(
-            props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
-          )
-            .then((finalRowUpdate) => {
-              const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), id) as string[];
-              apiRef.current.updateServerRows([finalRowUpdate], groupKeys);
-              if (finalRowUpdate && !isDeepEqual(finalRowUpdate, row)) {
-                // Reset the outdated cache, only if the row is _actually_ updated
-                apiRef.current.dataSource.cache.clear();
-              }
-              finishCellEditMode();
-            })
-            .catch((errorThrown) =>
-              handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate }),
-            );
+          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
+            .then(() => finishCellEditMode())
+            .catch((errorThrown) => handleError(errorThrown, updateRowParams));
         } catch (errorThrown) {
-          handleError(errorThrown, { rowId: id, previousRow: row, updatedRow: rowUpdate });
+          handleError(errorThrown, updateRowParams);
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {

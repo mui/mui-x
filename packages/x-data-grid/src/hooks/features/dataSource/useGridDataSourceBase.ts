@@ -3,6 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
@@ -19,7 +20,7 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import type { GridEventListener } from '../../../models/events';
-import type { GridRowId } from '../../../models';
+import type { GridRowId, GridRowModel } from '../../../models';
 
 const noopCache: GridDataSourceCache = {
   clear: () => {},
@@ -201,10 +202,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     [apiRef],
   );
 
+  const dataSourceUpdateRow = props.dataSource?.updateRow;
+  const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
+    (params) => {
+      return dataSourceUpdateRow?.(params).then((finalRowUpdate: GridRowModel) => {
+        apiRef.current.updateServerRows([finalRowUpdate], []);
+        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+          // Reset the outdated cache, only if the row is _actually_ updated
+          apiRef.current.dataSource.cache.clear();
+        }
+        return finalRowUpdate;
+      });
+    },
+    [apiRef, dataSourceUpdateRow],
+  );
+
   const dataSourceApi: GridDataSourceApi = {
     dataSource: {
       fetchRows,
       cache,
+      editRow,
     },
   };
 

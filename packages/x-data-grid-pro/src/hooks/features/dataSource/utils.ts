@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridRowId } from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
@@ -107,3 +107,15 @@ export class NestedDataManager {
 
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
 }
+
+export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
+  const rowNode = tree[rowId];
+  let currentNodeId = rowNode.parent;
+  const groupKeys = [];
+  while (currentNodeId && currentNodeId !== GRID_ROOT_GROUP_ID) {
+    const currentNode = tree[currentNodeId] as GridGroupNode;
+    groupKeys.push(currentNode.groupingKey ?? '');
+    currentNodeId = currentNode.parent;
+  }
+  return groupKeys.reverse();
+};

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
   GridDataSourceGroupNode,
@@ -10,6 +11,9 @@ import {
   gridRowIdSelector,
   gridRowNodeSelector,
   GridRowModelUpdate,
+  GridDataSourceApiBase,
+  GridRowModel,
+  gridRowTreeSelector,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -22,7 +26,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { NestedDataManager, RequestStatus } from './utils';
+import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
 import {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
@@ -199,6 +203,22 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     ],
   );
 
+  const dataSourceUpdateRow = props.dataSource?.updateRow;
+  const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
+    (params) => {
+      return dataSourceUpdateRow?.(params).then((finalRowUpdate: GridRowModel) => {
+        const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
+        apiRef.current.updateServerRows([finalRowUpdate], groupKeys);
+        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+          // Reset the outdated cache, only if the row is _actually_ updated
+          apiRef.current.dataSource.cache.clear();
+        }
+        return finalRowUpdate;
+      });
+    },
+    [apiRef, dataSourceUpdateRow],
+  );
+
   const setChildrenLoading = React.useCallback<GridDataSourceApiBasePro['setChildrenLoading']>(
     (parentId, isLoading) => {
       apiRef.current.setState((state) => {
@@ -260,6 +280,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
+      editRow,
       setChildrenLoading,
       setChildrenFetchError,
     },
