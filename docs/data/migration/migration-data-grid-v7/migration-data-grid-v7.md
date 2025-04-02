@@ -28,6 +28,16 @@ In `package.json`, change the version of the Data Grid package to `next`.
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/data-grid/preset-safe` targeting only Data Grid or `v8.0.0/preset-safe` to target the other packages as well.
@@ -375,9 +385,11 @@ You have to import it from `@mui/x-license` instead:
 
 ### Slots
 
+- The `base*` slots have a new set of typings.
 - The `baseFormControl` slot was removed.
 - The `baseInputLabel` slot was removed.
 - The `baseInputAdornment` slot was removed.
+- The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
