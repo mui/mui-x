@@ -113,65 +113,6 @@ function GridAiAssistantPanel() {
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
 
-  const context = React.useMemo(
-    () => apiRef.current.aiAssistant.getPromptContext(rootProps.allowAiAssistantDataSampling),
-    [apiRef, rootProps.allowAiAssistantDataSampling],
-  );
-
-  const handlePrompt = React.useCallback(
-    async (value: string, promptContext = context) => {
-      if (!rootProps.onPrompt) {
-        return undefined;
-      }
-
-      const date = Date.now();
-
-      apiRef.current.setLoading(true);
-      apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) => [
-        ...prevHistory,
-        {
-          value,
-          createdAt: new Date(date),
-          variant: 'processing',
-          helperText: apiRef.current.getLocaleText('promptProcessing'),
-        },
-      ]);
-      try {
-        const response = await rootProps.onPrompt(value, promptContext);
-        apiRef.current.aiAssistant.applyPromptResult(response);
-        apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) =>
-          prevHistory.map((item) =>
-            item.createdAt.getTime() === date
-              ? {
-                  ...item,
-                  response,
-                  variant: 'success',
-                  helperText: apiRef.current.getLocaleText('promptAppliedChanges'),
-                }
-              : item,
-          ),
-        );
-        return response;
-      } catch (error: any) {
-        apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) =>
-          prevHistory.map((item) =>
-            item.createdAt.getTime() === date
-              ? {
-                  ...item,
-                  variant: 'error',
-                  helperText: error.message,
-                }
-              : item,
-          ),
-        );
-        return undefined;
-      } finally {
-        apiRef.current.setLoading(false);
-      }
-    },
-    [apiRef, context, rootProps],
-  );
-
   return (
     <AiAssistantPanelRoot
       as={rootProps.slots.panel}
@@ -194,7 +135,7 @@ function GridAiAssistantPanel() {
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
         {history.length > 0 ? (
-          <GridAiAssistantPanelHistory open={open} history={history} onRerunPrompt={handlePrompt} />
+          <GridAiAssistantPanelHistory open={open} history={history} />
         ) : (
           <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
             {apiRef.current.getLocaleText('aiAssistantPanelNoHistory')}
@@ -202,16 +143,8 @@ function GridAiAssistantPanel() {
         )}
       </AiAssistantPanelBody>
       <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
-        <GridPromptField
-          onPrompt={handlePrompt}
-          allowDataSampling={rootProps.allowAiAssistantDataSampling}
-        />
-        {suggestions.length > 0 && (
-          <GridAiAssistantPanelSuggestions
-            suggestions={suggestions}
-            onSuggestionClick={handlePrompt}
-          />
-        )}
+        <GridPromptField />
+        {suggestions.length > 0 && <GridAiAssistantPanelSuggestions suggestions={suggestions} />}
       </AiAssistantPanelFooter>
     </AiAssistantPanelRoot>
   );

@@ -5,12 +5,12 @@ import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { PromptHistory } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridPrompt } from '../prompt';
 
 type GridAiAssistantPanelHistoryProps = {
   open: boolean;
   history: PromptHistory;
-  onRerunPrompt: (value: string) => void;
 };
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -44,10 +44,11 @@ const AiAssistantPanelHistoryList = styled('ol', {
 });
 
 function GridAiAssistantPanelHistory(props: GridAiAssistantPanelHistoryProps) {
-  const { open, history, onRerunPrompt } = props;
+  const { open, history } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const ref = React.useRef<HTMLDivElement>(null);
+  const apiRef = useGridApiContext();
 
   // Scroll to the bottom of the prompt history when the panel opens
   React.useEffect(() => {
@@ -76,7 +77,7 @@ function GridAiAssistantPanelHistory(props: GridAiAssistantPanelHistoryProps) {
           <GridPrompt
             key={item.createdAt.toISOString()}
             {...item}
-            onRerun={() => onRerunPrompt(item.value)}
+            onRerun={() => apiRef.current.aiAssistant.processPrompt(item.value)}
           />
         ))}
       </AiAssistantPanelHistoryList>
