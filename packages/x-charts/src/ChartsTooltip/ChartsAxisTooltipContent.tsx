@@ -53,18 +53,12 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                 return (
                   <ChartsTooltipRow key={seriesId} className={classes.row}>
                     <ChartsTooltipCell
-                      className={clsx(classes.markCell, classes.cell)}
-                      component="td"
-                      aria-hidden
-                    >
-                      {color && (
-                        <ChartsLabelMark type={markType} color={color} className={classes.mark} />
-                      )}
-                    </ChartsTooltipCell>
-                    <ChartsTooltipCell
                       className={clsx(classes.labelCell, classes.cell)}
                       component="th"
                     >
+                      <div className={classes.markContainer}>
+                        <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+                      </div>
                       {formattedLabel || null}
                     </ChartsTooltipCell>
                     <ChartsTooltipCell

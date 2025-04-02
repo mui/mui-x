@@ -194,9 +194,9 @@ The series label cell is now a header cell `th` instead of `td`.
 +   <caption>The formatted x-axis value</caption>
     <tbody>
       <tr>
-        <td><Mark color='red'/></td>
+-       <td><Mark color='red'/></td>
 -       <td>Series A</td>
-+       <th>Series A</th>
++       <th><Mark color='red'/>Series A</th>
         <td>55</td>
       </tr>
     <tbody>
@@ -211,9 +211,9 @@ DOM modification is similar to the axis tooltip in the previous section.
   <table>
     <tbody>
       <tr>
-        <td><Mark color='red'/></td>
+-       <td><Mark color='red'/></td>
 -       <td>Series A</td>
-+       <th>Series A</th>
++       <th><Mark color='red'/>Series A</th>
         <td>55</td>
       </tr>
     <tbody>

@@ -62,12 +62,19 @@ export const ChartsTooltipCell = styled(Typography, {
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
   textAlign: 'start',
-  [`&.${chartsTooltipClasses.labelCell}`]: {
+  [`&.${chartsTooltipClasses.cell}`]: {
     paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1.5),
+    paddingRight: theme.spacing(1),
+  },
+  [`&.${chartsTooltipClasses.labelCell}`]: {
     fontWeight: theme.typography.fontWeightRegular,
   },
 
+  [`& .${chartsTooltipClasses.markContainer}`]: {
+    display: 'inline-block',
+    width: `calc(20px + ${theme.spacing(1.5)})`,
+    verticalAlign: 'middle',
+  },
   [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {
     color: (theme.vars || theme).palette.text.primary,
     fontWeight: theme.typography.fontWeightMedium,
@@ -76,10 +83,10 @@ export const ChartsTooltipCell = styled(Typography, {
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
   },
-  'td:first-of-type&': {
+  'td:first-of-type&, th:first-of-type&': {
     paddingLeft: theme.spacing(1.5),
   },
-  'td:last-of-type&': {
+  'td:last-of-type&, th:last-of-type&': {
     paddingRight: theme.spacing(1.5),
   },
 }));
