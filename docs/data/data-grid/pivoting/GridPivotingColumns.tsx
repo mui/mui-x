@@ -6,6 +6,7 @@ import {
   GridPivotModel,
   GridInitialState,
 } from '@mui/x-data-grid-premium';
+import { pivotHeightlightStyles } from './pivotHighlightStyles';
 
 const rows: GridRowModel[] = [
   {
@@ -123,12 +124,13 @@ const pivotModel: GridPivotModel = {
 const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
-    enabled: true,
     panelOpen: true,
   },
 };
 
 export default function GridPivotingColumns() {
+  const [pivotActive, setPivotActive] = React.useState(true);
+
   return (
     <div style={{ height: 560, width: '100%' }}>
       <DataGridPremium
@@ -137,6 +139,9 @@ export default function GridPivotingColumns() {
         initialState={initialState}
         columnGroupHeaderHeight={36}
         showToolbar
+        pivotActive={pivotActive}
+        onPivotActiveChange={setPivotActive}
+        sx={pivotActive ? pivotHeightlightStyles : undefined}
         slotProps={{
           toolbar: {
             showQuickFilter: false,

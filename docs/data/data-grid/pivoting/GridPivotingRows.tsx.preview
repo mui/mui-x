@@ -4,6 +4,9 @@
   initialState={initialState}
   columnGroupHeaderHeight={36}
   showToolbar
+  pivotActive={pivotActive}
+  onPivotActiveChange={setPivotActive}
+  sx={pivotActive ? pivotHeightlightStyles : undefined}
   slotProps={{
     toolbar: {
       showQuickFilter: false,
