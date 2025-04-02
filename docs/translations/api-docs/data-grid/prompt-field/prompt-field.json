@@ -1,0 +1,8 @@
+{
+  "componentDescription": "The top level Prompt Field component that provides context to child components.\nIt renders a `<div />` element.",
+  "propDescriptions": {
+    "className": { "description": "Override or extend the styles applied to the component." },
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}
