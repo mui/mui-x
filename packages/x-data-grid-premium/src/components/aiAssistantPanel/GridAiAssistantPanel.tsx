@@ -43,7 +43,7 @@ const AiAssistantPanelRoot = styled(NotRendered<GridSlotProps['panel']>, {
 })<{ ownerState: OwnerState }>({
   [`& .${gridClasses.paper}`]: {
     flexDirection: 'column',
-    width: 400,
+    width: 380,
     maxHeight: 'none',
     overflow: 'hidden',
   },

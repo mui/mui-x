@@ -1,0 +1,165 @@
+{
+  "props": {
+    "action": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
+      }
+    },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'default'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'"
+      }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFocusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "edge": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;false" }
+    },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusVisibleClassName": { "type": { "name": "string" } },
+    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
+    "loading": { "type": { "name": "bool" }, "default": "null" },
+    "loadingIndicator": {
+      "type": { "name": "node" },
+      "default": "<CircularProgress color=\"inherit\" size={16} />"
+    },
+    "onFocusVisible": { "type": { "name": "func" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "TouchRippleProps": { "type": { "name": "object" } },
+    "touchRippleRef": { "type": { "name": "any" } }
+  },
+  "name": "PromptFieldSend",
+  "imports": [
+    "import { PromptFieldSend } from '@mui/x-data-grid-premium/components';",
+    "import { PromptFieldSend } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiPromptFieldSend-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiPromptFieldSend-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiPromptFieldSend-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiPromptFieldSend-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiPromptFieldSend-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiPromptFieldSend-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiPromptFieldSend-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "edgeEnd",
+      "className": "MuiPromptFieldSend-edgeEnd",
+      "description": "Styles applied to the root element if `edge=\"end\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "edgeStart",
+      "className": "MuiPromptFieldSend-edgeStart",
+      "description": "Styles applied to the root element if `edge=\"start\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "loading",
+      "className": "MuiPromptFieldSend-loading",
+      "description": "Styles applied to the root element if `loading={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "loadingIndicator",
+      "className": "MuiPromptFieldSend-loadingIndicator",
+      "description": "Styles applied to the loadingIndicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "loadingWrapper",
+      "className": "MuiPromptFieldSend-loadingWrapper",
+      "description": "Styles applied to the loadingWrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPromptFieldSend-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiPromptFieldSend-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiPromptFieldSend-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiPromptFieldSend-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPromptFieldSend",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/promptField/PromptFieldSend.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/prompt-field\">Data Grid - Prompt Field <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}
