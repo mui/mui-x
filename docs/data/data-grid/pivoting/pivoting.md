@@ -23,10 +23,8 @@ You can drag and drop existing columns in the **Rows**, **Columns**, and **Value
 Pivoting gets its name from the idea of rotating the data: you take a flat list of sales with columns for product, region, and sales—and reorganize it to compare the values more easily.
 By pivoting, you can turn unique product names into rows, regions into columns, and aggregate the sales values to see the total sales per product per region
 
-### Non-pivoted data
-
-"Non-pivoted data" refers to the data as it's presented in the Data Grid before pivoting.
-The demo below shows the non-pivoted dataset used throughout this doc to illustrate key pivoting features.
+You can try the given example in the following demo.
+The demo's flat dataset is used throughout this page to showcase key pivoting features.
 
 {{"demo": "GridNonPivoted.js", "bg": "inline", "defaultCodeOpen": false}}
 
