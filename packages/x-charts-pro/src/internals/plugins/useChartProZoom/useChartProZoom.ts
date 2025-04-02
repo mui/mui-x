@@ -109,7 +109,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [store],
   );
 
-  // This is throttled. We want to run it as soon as possible, but not too often to avoid performance issues.
+  // This is throttled. We want to run it at most once per frame.
   // By joining the two, we ensure that interacting and zooming are in sync.
   const setZoomDataCallback = React.useMemo(
     () =>
