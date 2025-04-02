@@ -285,9 +285,17 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 When using the `updateRow()` method, be aware that the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
 This means any previously cached data will be refetched on the next request.
 
-For applications requiring caching with editing operations, consider implementing server-side caching instead.
+For applications requiring caching with editing operations, consider implementing server-side cache instead.
 
 If you have a specific use case that requires preserving the client-side cache during edit operations, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
+:::
+
+:::warning
+The position of the edited row on the current page is kept the same for UX purposes, even if some features like sorting or filtering are enabled which might affect the row's new position.
+
+This automatically gets fixed when the page is fetched again, since the cache is cleared after the update.
+
+However, if you have a use-case that requires refetching the current page after editing, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) with details about your use-case.
 :::
 
 ## Error handling
