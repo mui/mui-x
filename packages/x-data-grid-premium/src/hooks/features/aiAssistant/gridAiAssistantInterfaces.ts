@@ -68,7 +68,7 @@ export interface GridAiAssistantApi {
      * Get the context for the prompt.
      * @param {boolean} allowDataSampling Whether to use grid data as examples in the context.
      * If true, random cell values from each column are used to make the context more detailed and the response more accurate.
-     * If false, the samples are only generated from the unstable_examples property of the column(s).
+     * If false, the samples are only generated from the `examples` property of the column(s).
      * Default is false.
      * @returns {string} The context for the prompt.
      */

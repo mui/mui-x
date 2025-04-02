@@ -36,6 +36,7 @@
     "disableReorder": { "type": { "description": "boolean" }, "default": "false" },
     "display": { "type": { "description": "'text' | 'flex'" } },
     "editable": { "type": { "description": "boolean" }, "default": "false" },
+    "examples": { "type": { "description": "V[]" } },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
     "filterOperators": {
       "type": { "description": "readonly GridFilterOperator&lt;R, V, F, any&gt;[]" }
@@ -94,7 +95,6 @@
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "unstable_examples": { "type": { "description": "V[]" } },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },
