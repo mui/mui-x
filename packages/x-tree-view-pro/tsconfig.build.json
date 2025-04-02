@@ -9,7 +9,6 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [
     { "path": "../x-internals/tsconfig.build.json" },
