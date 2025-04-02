@@ -4,14 +4,14 @@ import {
   chromium,
   webkit,
   firefox,
-  Page,
-  Browser,
-  BrowserContext,
   devices,
-  BrowserContextOptions,
-  BrowserType,
-  WebError,
-  Locator,
+  type Page,
+  type Browser,
+  type BrowserContext,
+  type BrowserContextOptions,
+  type BrowserType,
+  type WebError,
+  type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
