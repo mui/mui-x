@@ -32,6 +32,10 @@ const avgAgg: GridAggregationFunction<unknown, number> = {
       }
     }
 
+    if (sum === 0) {
+      return null;
+    }
+
     return sum / valuesCount;
   },
   columnTypes: ['number'],

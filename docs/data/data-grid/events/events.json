@@ -277,6 +277,27 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModeChange",
+    "description": "",
+    "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModelChange",
+    "description": "Fired when the pivot model changes.",
+    "params": "GridPivotModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotPanelOpenChange",
+    "description": "",
+    "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "preferencePanelClose",
     "description": "Fired when the preference panel is closed.",

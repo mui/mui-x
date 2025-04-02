@@ -57,13 +57,7 @@ export const useGridKeyboardNavigation = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'pagination'
-    | 'paginationMode'
-    | 'getRowId'
-    | 'experimentalFeatures'
-    | 'signature'
-    | 'headerFilters'
-    | 'listView'
+    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters' | 'listView'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
