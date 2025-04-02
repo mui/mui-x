@@ -35,8 +35,7 @@ interface Test {
 const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
-// @ts-ignore
-const requireDocs = import.meta.glob(
+const requireDocs = import.meta.glob<React.ComponentType>(
   [
     'docsx/data/**/[A-Z]*.js',
     // ================== Exclusions ==================
@@ -71,8 +70,7 @@ Object.keys(requireDocs).forEach((path) => {
   });
 });
 
-// @ts-ignore
-const requireRegressions = import.meta.glob(['./data-grid/*.js'], {
+const requireRegressions = import.meta.glob<React.ComponentType>(['./data-grid/*.js'], {
   import: 'default',
   eager: true,
 });
