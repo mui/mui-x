@@ -20,7 +20,8 @@ You can drag and drop existing columns in the **Rows**, **Columns**, and **Value
 
 ## Understanding pivoting
 
-Pivoting transforms your data by reorganizing it along three key dimensions: rows, columns, and values.
+Pivoting gets its name from the idea of rotating the data: you take a flat list of sales with columns for product, region, and sales—and reorganize it to compare the values more easily.
+By pivoting, you can turn unique product names into rows, regions into columns, and aggregate the sales values to see the total sales per product per region
 
 ### Non-pivoted data
 
