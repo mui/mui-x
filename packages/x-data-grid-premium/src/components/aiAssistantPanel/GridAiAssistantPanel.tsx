@@ -3,10 +3,9 @@ import {
   useGridSelector,
   getDataGridUtilityClass,
   gridClasses,
-  NotRendered,
   GridSlotProps,
 } from '@mui/x-data-grid-pro';
-import { vars, useGridPanelContext } from '@mui/x-data-grid-pro/internals';
+import { vars, useGridPanelContext, NotRendered } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

@@ -628,7 +628,6 @@
   { "name": "NoColumnsOverlayPropsOverrides", "kind": "Interface" },
   { "name": "NoResultsOverlayPropsOverrides", "kind": "Interface" },
   { "name": "NoRowsOverlayPropsOverrides", "kind": "Interface" },
-  { "name": "NotRendered", "kind": "Function" },
   { "name": "OutputSelector", "kind": "Interface" },
   { "name": "PaginationPropsOverrides", "kind": "Interface" },
   { "name": "PanelPropsOverrides", "kind": "Interface" },
