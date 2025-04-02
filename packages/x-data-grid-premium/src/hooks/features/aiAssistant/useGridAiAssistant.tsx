@@ -128,6 +128,10 @@ export const useGridAiAssistant = (
 
   const getPromptContext = React.useCallback(
     (allowDataSampling = false) => {
+      if (!isAiAssistantAvailable) {
+        return '';
+      }
+
       const examples = allowDataSampling ? collectSampleData() : {};
 
       const columnsContext = columns.map((column) => ({
@@ -140,11 +144,15 @@ export const useGridAiAssistant = (
 
       return JSON.stringify(columnsContext);
     },
-    [columns, collectSampleData],
+    [columns, collectSampleData, isAiAssistantAvailable],
   );
 
   const applyPromptResult = React.useCallback(
     (result: PromptResponse) => {
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+
       const interestColumns = [] as string[];
 
       if (!props.disableColumnFilter) {
@@ -221,6 +229,7 @@ export const useGridAiAssistant = (
       props.disableAggregation,
       props.disableColumnSorting,
       columnsLookup,
+      isAiAssistantAvailable,
     ],
   );
 
@@ -247,6 +256,10 @@ export const useGridAiAssistant = (
     GridAiAssistantApi['aiAssistant']['setAiAssistantHistory']
   >(
     (callback) => {
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+
       apiRef.current.setState((state) => ({
         ...state,
         aiAssistant: {
@@ -255,7 +268,7 @@ export const useGridAiAssistant = (
         },
       }));
     },
-    [apiRef],
+    [apiRef, isAiAssistantAvailable],
   );
 
   React.useEffect(() => {
