@@ -539,12 +539,11 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
-      if (isDeepEqual(row, rowUpdate)) {
-        finishRowEditMode();
-        return;
-      }
-
       if (props.dataSource?.updateRow) {
+        if (isDeepEqual(row, rowUpdate)) {
+          finishRowEditMode();
+          return;
+        }
         const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
           prevRowModesModel.current[id].mode = GridRowModes.Edit;
           // Revert the mode in the rowModesModel prop back to "edit"

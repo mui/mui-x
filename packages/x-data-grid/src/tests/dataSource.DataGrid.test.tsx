@@ -348,10 +348,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
-        // One extra call is a side effect of the data update in `useMockServer`
-        // which regenerates the `fetchRows` method which updates the `dataSource` instance resetting the cache
-        // TODO: Change it to `1` once https://github.com/mui/mui-x/issues/15098 is done
-        expect(clearSpy.callCount).to.equal(2);
+        expect(clearSpy.callCount).to.equal(1);
       });
     });
   });

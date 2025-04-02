@@ -426,12 +426,11 @@ export const useGridCellEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
-      if (row[field] === rowUpdate[field]) {
-        finishCellEditMode();
-        return;
-      }
-
       if (props.dataSource?.updateRow) {
+        if (row[field] === rowUpdate[field]) {
+          finishCellEditMode();
+          return;
+        }
         const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
           prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
           // Revert the mode in the cellModesModel prop back to "edit"
