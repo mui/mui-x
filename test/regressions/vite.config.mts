@@ -38,10 +38,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@mui/docs': path.resolve(
-        WORKSPACE_ROOT,
-        './node_modules/@mui/monorepo/packages/mui-docs/src',
-      ),
       '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
       '@mui/x-data-grid-generator': path.resolve(
         WORKSPACE_ROOT,

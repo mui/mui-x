@@ -80,22 +80,22 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs = import.meta.glob(['docsx/data/**/[A-Z]*.js'], { eager: true });
-requireDocs.keys().forEach((path: string) => {
-  const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
+const requireDocs: Record<string, { default?: React.ComponentType }> = import.meta.glob(
+  ['docsx/data/**/[A-Z]*.js', '!docsx/data/charts/lines/GDPperCapita.js'],
+  {
+    eager: true,
+  },
+);
+Object.entries(requireDocs).forEach(([path, mod]) => {
+  const [name, ...suiteArray] = path.replace('../../', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
     return;
   }
 
-  // TODO: Why does webpack include a key for the absolute and relative path?
-  // We just want the relative path
-  if (!path.startsWith('./')) {
-    return;
-  }
-
-  if (requireDocs(path).default === undefined) {
+  if (!mod.default) {
+    console.warn(`No default export for ${path}`);
     return;
   }
 
@@ -103,7 +103,7 @@ requireDocs.keys().forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireDocs(path).default,
+    case: mod.default,
   });
 });
 
