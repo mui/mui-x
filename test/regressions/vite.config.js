@@ -29,7 +29,7 @@ export default defineConfig({
       async transform(code) {
         return code
           .replaceAll('__RELEASE_INFO__', 'MTU5NjMxOTIwMDAwMA==') // 2020-08-02
-          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
+          .replaceAll('DISABLE_CHANCE_RANDOM', 'true');
       },
     },
     {
