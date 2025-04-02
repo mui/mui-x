@@ -2,7 +2,7 @@
 title: Ask Your Table - AI Assistant
 ---
 
-# Ask Your Table - AI Assistant [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
+# Ask Your Table - AI Assistant [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
@@ -14,7 +14,7 @@ Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
 The AI assistant feature allows users to interact with the Data Grid component using natural language.
 Type the prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
-To enable client-side of this feature, pass `unstable_enableAiAssistant` prop.
+To enable client-side of this feature, pass `enableAiAssistant` prop.
 
 :::success
 In supported browsers, the prompt can be entered using voice.
@@ -40,29 +40,19 @@ You can use suggestions to quickly enter prompts that are supported by the mock 
 
 ## Custom examples
 
-You can provide custom examples as a context for the prompt processing through the `unstable_examples` prop in the `columns` array.
-The `unstable_examples` prop should contain an array of possible values for that column.
+You can provide custom examples as a context for the prompt processing through the `examples` prop in the `columns` array.
+The `examples` prop should contain an array of possible values for that column.
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 ## Use row data for examples
 
-Pass `allowDataSampling` slot prop to allow use of the row data to generate column examples.
+Pass `allowAiAssistantDataSampling` prop to allow use of the row data to generate column examples.
 This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
 
 Data is collected randomly on the cell level, which means that the examples per column might not come from the same rows.
 
-```ts
-slotProps={{
-  toolbar: {
-    assistantPanelProps: {
-      allowDataSampling: true,
-    },
-  },
-}}
-```
-
-For `getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
+For `unstable_aiAssistant.getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
 
 ```ts
 const context = React.useMemo(
@@ -88,10 +78,10 @@ You can use MUI's processing service or build it by yourself.
 
 Data Grid provides all necessary pieces to make the service integration easy.
 
-1. Enable the AI Assistant feature by adding `unstable_enableAiAssistant` prop.
+1. Enable the AI Assistant feature by adding `enableAiAssistant` prop.
    A new toolbar button will appear in the default [`<Toolbar />`](/x/react-data-grid/components/toolbar/).
    This button opens `<AssistantPanel />` that can take user's prompts.
-2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API for our processing service.
+2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::error
    Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's service.
@@ -114,11 +104,11 @@ Data Grid provides all necessary pieces to make the service integration easy.
 
    :::
 
-3. Add `unstable_onPrompt()` to pass the user's prompts to the service.
+3. Provide `onPrompt()` callback to pass the user's prompts to the service.
    Service's response will be used internally to make the necessary state updates.
 
    :::success
-   You can implement `unstable_onPrompt()` with `unstable_gridDefaultPromptResolver()`.
+   You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
    It will add necessary headers and stringify the body in the right format for you.
 
    In addition to this, it allows you to add an additional prompt context to achieve better processing results.

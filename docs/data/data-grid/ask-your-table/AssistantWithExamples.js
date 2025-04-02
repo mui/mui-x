@@ -62,7 +62,7 @@ export default function AssistantWithExamples() {
     () =>
       data.columns.map((column) => ({
         ...column,
-        unstable_examples: createExamples(column.field),
+        examples: createExamples(column.field),
       })),
     [data.columns],
   );

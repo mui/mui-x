@@ -2566,6 +2566,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

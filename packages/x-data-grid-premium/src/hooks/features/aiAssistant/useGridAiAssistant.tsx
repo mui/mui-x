@@ -133,7 +133,7 @@ export const useGridAiAssistant = (
       const columnsContext = columns.map((column) => ({
         field: column.field,
         description: column.description ?? null,
-        examples: examples[column.field] ?? column.unstable_examples ?? [],
+        examples: examples[column.field] ?? column.examples ?? [],
         type: column.type ?? 'string',
         allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
       }));
