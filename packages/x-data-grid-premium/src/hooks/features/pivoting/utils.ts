@@ -319,5 +319,6 @@ export const getPivotedData = ({
       aggregable: false,
       hideable: false,
     },
+    headerFilters: false,
   };
 };
