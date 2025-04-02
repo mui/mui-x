@@ -128,7 +128,7 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', unstable: true },
+          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', newFeature: true },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
