@@ -63,8 +63,10 @@ function getIsTelemetryCollecting(): boolean | undefined {
 
   try {
     // e.g. Vite.js
-    if (import.meta.env) {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', import.meta.env);
+    // eslint-disable-next-line global-require
+    const { importMetaEnv } = require('./config.import-meta');
+    if (importMetaEnv) {
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
       if (typeof result === 'boolean') {
         // If disabled=true, telemetry is disabled
         // If disabled=false, telemetry is enabled
