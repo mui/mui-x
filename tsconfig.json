@@ -50,7 +50,7 @@
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },
-    "types": ["node", "react", "mocha", "vite/client"]
+    "types": ["node", "react", "mocha"]
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

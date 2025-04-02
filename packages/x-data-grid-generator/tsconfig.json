@@ -7,8 +7,7 @@
       "chai-dom",
       "mocha",
       "node",
-      "react",
-      "vite/client"
+      "react"
     ]
   },
   "include": ["src/**/*"]

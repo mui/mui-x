@@ -6,8 +6,7 @@
       "@mui/material/themeCssVarsAugmentation",
       "chai-dom",
       "mocha",
-      "node",
-      "vite/client"
+      "node"
     ]
   },
   "include": ["src/**/*"]

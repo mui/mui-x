@@ -8,8 +8,7 @@
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
       "mocha",
-      "node",
-      "vite/client"
+      "node"
     ],
     "noImplicitAny": false
   },

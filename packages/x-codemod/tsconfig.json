@@ -9,8 +9,7 @@
       "dayjs/plugin/utc.d.ts",
       "mocha",
       "moment-timezone",
-      "node",
-      "vite/client"
+      "node"
     ],
     "noImplicitAny": false,
     "skipLibCheck": true

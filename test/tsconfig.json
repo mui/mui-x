@@ -8,8 +8,7 @@
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
       "mocha",
-      "moment-timezone",
-      "vite/client"
+      "moment-timezone"
     ],
     "skipLibCheck": true
   },

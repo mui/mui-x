@@ -1,5 +1,6 @@
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
+import { replaceCodePlugin } from 'vite-plugin-replace';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -31,6 +32,14 @@ export default defineConfig({
       },
     },
     react(),
+    replaceCodePlugin({
+      replacements: [
+        {
+          from: '__RELEASE_INFO__',
+          to: 'MTU5NjMxOTIwMDAwMA==',
+        },
+      ],
+    }),
   ],
   define: {
     'process.env': '{}',
