@@ -395,14 +395,15 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
       renderInput={(params) => {
         const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
         return (
-          <rootProps.slots.baseTextField
+          <MUITextField
             {...inputRest}
             label={label}
             placeholder={placeholder}
-            slotProps={{
-              input: InputProps,
-              inputLabel: InputLabelProps,
-              htmlInput: inputProps,
+            inputProps={inputProps}
+            InputProps={transformInputProps(InputProps as any, false)}
+            InputLabelProps={{
+              shrink: true,
+              ...InputLabelProps,
             }}
             {...slotProps?.textField}
             {...rootProps.slotProps?.baseTextField}
@@ -419,7 +420,7 @@ function BaseInput(props: P['baseInput']) {
   return <MUIInputBase {...transformInputProps(props)} />;
 }
 
-function transformInputProps(props: P['baseInput'] | undefined) {
+function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments = true) {
   if (!props) {
     return undefined;
   }
@@ -427,14 +428,15 @@ function transformInputProps(props: P['baseInput'] | undefined) {
   const { slotProps, material, ...rest } = props;
   const result = rest as Partial<MUIInputBaseProps>;
 
-  if (result.startAdornment) {
-    result.startAdornment = (
-      <InputAdornment position="start">{result.startAdornment}</InputAdornment>
-    );
-  }
-
-  if (result.endAdornment) {
-    result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+  if (wrapAdornments) {
+    if (result.startAdornment) {
+      result.startAdornment = (
+        <InputAdornment position="start">{result.startAdornment}</InputAdornment>
+      );
+    }
+    if (result.endAdornment) {
+      result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+    }
   }
 
   for (const k in material) {
