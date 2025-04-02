@@ -12,6 +12,7 @@ import {
   createZoomLookup,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -44,6 +45,40 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const onZoomChangeRef = React.useRef(0);
+
+  // Updating the `onZoomChange` prop is a common mistake that can lead to performance issues.
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!onZoomChange) {
+        return undefined;
+      }
+
+      onZoomChangeRef.current += 1;
+
+      // Arbitrary number, but should be high enough to catch most cases
+      // Would require 1 render each 10ms to reach this number
+      // And it ideally should be 0 or 1 most of the time
+      const maxCount = 10;
+      if (onZoomChangeRef.current > maxCount) {
+        warnOnce(
+          [
+            `MUI X: The \`onZoomChange\` prop is being updated on every render.`,
+            `Ensure \`onZoomChange\` is consistent between renders by using a \`useCallback\` or \`useMemo\`.`,
+          ].join('\n'),
+        );
+      }
+
+      const timeout = setTimeout(() => {
+        onZoomChangeRef.current = 0;
+      }, 100);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+    return undefined;
+  }, [onZoomChange]);
 
   // Manage controlled state
 
