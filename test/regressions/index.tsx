@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
 import TestViewer from './TestViewer';
 import { setupTestLicenseKey } from '../utils/testLicense';
@@ -26,49 +25,6 @@ window.muiFixture = {
   },
 };
 
-const blacklist = [
-  /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  /^docs-data-grid-custom-columns-cell-renderers\/(.*)\.png$/, // Custom components used to build docs pages
-  'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
-  'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
-  /^docs-charts-tooltip\/(.*).png/, // Needs interaction
-  'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
-  // 'docs-system-typography',
-];
-
-const unusedBlacklistPatterns = new Set(blacklist);
-
-// Use a "real timestamp" so that we see a useful date instead of "00:00"
-// eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
-
-function excludeTest(suite: string, name: string) {
-  return blacklist.some((pattern) => {
-    if (typeof pattern === 'string') {
-      if (pattern === suite) {
-        unusedBlacklistPatterns.delete(pattern);
-
-        return true;
-      }
-      if (pattern === `${suite}/${name}.png`) {
-        unusedBlacklistPatterns.delete(pattern);
-
-        return true;
-      }
-
-      return false;
-    }
-
-    // assume regex
-    if (pattern.test(`${suite}/${name}.png`)) {
-      unusedBlacklistPatterns.delete(pattern);
-      return true;
-    }
-    return false;
-  });
-}
-
 interface Test {
   path: string;
   suite: string;
@@ -80,30 +36,38 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs: Record<string, { default?: React.ComponentType }> = import.meta.glob(
-  ['docsx/data/**/[A-Z]*.js', '!docsx/data/charts/lines/GDPperCapita.js'],
+const requireDocs = import.meta.glob(
+  [
+    'docsx/data/**/[A-Z]*.js',
+    // ================== Exclusions ==================
+    '!docsx/data/charts/lines/GDPperCapita.js',
+    '!docsx/data/data-grid/**/components/*.js',
+    // Excludes demos that we don't want
+    '!docsx/data/**/*NoSnap.*',
+    '!docsx/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
+    '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
+    '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
+    '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
+    '!docsx/data/charts/tooltip/*', // Needs interaction
+  ],
   {
+    import: 'default',
     eager: true,
   },
 );
-Object.entries(requireDocs).forEach(([path, mod]) => {
-  const [name, ...suiteArray] = path.replace('../../', '').replace('.js', '').split('/').reverse();
+Object.keys(requireDocs).forEach((path) => {
+  const [name, ...suiteArray] = path
+    .replace('../../docs/data/', '')
+    .replace('.js', '')
+    .split('/')
+    .reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
-
-  if (excludeTest(suite, name)) {
-    return;
-  }
-
-  if (!mod.default) {
-    console.warn(`No default export for ${path}`);
-    return;
-  }
 
   tests.push({
     path,
     suite,
     name,
-    case: mod.default,
+    case: requireDocs[path],
   });
 });
 
@@ -112,34 +76,21 @@ const requireRegressions = import.meta.glob(['./data-grid/*.js'], {
   import: 'default',
   eager: true,
 });
-requireRegressions.keys().forEach((path: string) => {
-  // "./DataGridRTLVirtualization.js"
-  // "test/regressions/data-grid/DataGridRTLVirtualization.js"
-  if (!path.startsWith('./')) {
+Object.keys(requireRegressions).forEach((path) => {
+  if (!path.startsWith('./data-grid/')) {
     return;
   }
 
-  const name = path.replace('./', '').replace('.js', '');
+  const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
 
   tests.push({
     path,
     suite,
     name,
-    case: requireRegressions(path).default,
+    case: requireRegressions[path],
   });
 });
-
-clock.restore();
-
-if (unusedBlacklistPatterns.size > 0) {
-  console.warn(
-    [
-      'The following patterns are unused:',
-      ...Array.from(unusedBlacklistPatterns).map((pattern) => `- ${pattern}`),
-    ].join('\n'),
-  );
-}
 
 const suiteTestsMap = tests.reduce(
   (acc, test) => {
