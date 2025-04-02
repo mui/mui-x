@@ -10,11 +10,10 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'field'>(TimeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,

@@ -101,7 +101,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
-  const { unstable_listView: listView } = rootProps;
+  const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
     listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
@@ -781,7 +781,7 @@ function inputsSelector(
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef);
   const currentPage = getVisibleRows(apiRef, rootProps);
-  const visibleColumns = rootProps.unstable_listView
+  const visibleColumns = rootProps.listView
     ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
@@ -807,7 +807,7 @@ function inputsSelector(
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     visibleColumns,
     hiddenCellsOriginMap,
-    listView: rootProps.unstable_listView ?? false,
+    listView: rootProps.listView ?? false,
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }

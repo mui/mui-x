@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
-    "@babel/runtime": "^7.26.10",
-    "@babel/traverse": "^7.26.10",
+    "@babel/runtime": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
     "@mui/x-internals": "workspace:*",
     "jscodeshift": "17.1.2",
     "yargs": "^17.7.2"

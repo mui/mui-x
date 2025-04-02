@@ -1,9 +1,9 @@
 {
-  "name": "GridListColDef",
+  "name": "GridListViewColDef",
   "imports": [
-    "import { GridListColDef } from '@mui/x-data-grid-premium'",
-    "import { GridListColDef } from '@mui/x-data-grid-pro'",
-    "import { GridListColDef } from '@mui/x-data-grid'"
+    "import { GridListViewColDef } from '@mui/x-data-grid-premium'",
+    "import { GridListViewColDef } from '@mui/x-data-grid-pro'",
+    "import { GridListViewColDef } from '@mui/x-data-grid'"
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/list-view/\">List view</a></li></ul>",
   "properties": {
