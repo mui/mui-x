@@ -104,6 +104,7 @@ async function run(argv) {
     // Need to put these patterns in quotes otherwise they might be evaluated by the used terminal.
     '--ignore', `"${ignore.join('","')}"`,
     '--copy-files',
+    '--no-copy-ignored',
   ];
 
   if (outFileExtension !== '.js') {
