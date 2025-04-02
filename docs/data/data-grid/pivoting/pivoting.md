@@ -92,7 +92,10 @@ To disable pivoting, set the `disablePivoting` prop to `true`:
 In pivot mode, it's often useful to group data by a year or quarter.
 The Data Grid automatically generates year and quarter columns for each **Date** column for this purpose.
 
-In the demo below, the **Transaction Date** column is represented by additional columns in pivot mode: **Transaction Date (Year)** and **Transaction Date (Quarter)**:
+For example, the sales dataset we've been using throughout the examples has a **Quarter** column.
+But often in real-world datasets, each sale record would have a precise **Transaction Date** field, like in the following demo.
+
+The **Transaction Date** column is represented by additional columns in pivot mode: **Transaction Date (Year)** and **Transaction Date (Quarter)**:
 
 {{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
 
