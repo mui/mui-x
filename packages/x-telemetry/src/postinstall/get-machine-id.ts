@@ -1,9 +1,9 @@
-import { machineId } from 'node-machine-id';
+import nodeMachineId from 'node-machine-id';
 import { createHash } from 'crypto';
 
 async function getRawMachineId(): Promise<string | null> {
   try {
-    return await machineId(true);
+    return await nodeMachineId.machineId(true);
   } catch (_) {
     return null;
   }

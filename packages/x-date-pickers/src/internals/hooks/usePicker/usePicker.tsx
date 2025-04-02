@@ -44,6 +44,7 @@ export const usePicker = <
   rendererInterceptor: RendererInterceptor,
   localeText,
   viewContainerRole,
+  getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
 
@@ -87,17 +88,14 @@ export const usePicker = <
   /**
    * Refs
    */
-  const triggerRef = React.useRef<HTMLElement>(null);
+  const [triggerElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
-  const { timezone, state, setOpen, setValue, setValueFromView } = useValueAndOpenStates<
-    TValue,
-    TView,
-    TExternalProps
-  >({ props, valueManager, validator });
+  const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
+    useValueAndOpenStates<TValue, TView, TExternalProps>({ props, valueManager, validator });
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
     useViews({
@@ -115,22 +113,17 @@ export const usePicker = <
     setValue(valueManager.getTodayValue(utils, timezone, valueType)),
   );
 
-  const acceptValueChanges = useEventCallback(() => setValue(state.lastPublishedValue));
+  const acceptValueChanges = useEventCallback(() => setValue(value));
 
   const cancelValueChanges = useEventCallback(() =>
     setValue(state.lastCommittedValue, { skipPublicationIfPristine: true }),
   );
 
   const dismissViews = useEventCallback(() => {
-    setValue(state.lastPublishedValue, {
+    setValue(value, {
       skipPublicationIfPristine: true,
     });
   });
-
-  const valueWithoutError = React.useMemo(
-    () => valueManager.cleanValue(utils, state.draft),
-    [utils, valueManager, state.draft],
-  );
 
   const { hasUIView, viewModeLookup, timeViewsCount } = React.useMemo(
     () =>
@@ -208,23 +201,14 @@ export const usePicker = <
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
-      isPickerValueEmpty: valueManager.areValuesEqual(utils, state.draft, valueManager.emptyValue),
+      isPickerValueEmpty: valueManager.areValuesEqual(utils, value, valueManager.emptyValue),
       isPickerOpen: state.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
     }),
-    [
-      utils,
-      valueManager,
-      state.draft,
-      state.open,
-      orientation,
-      variant,
-      props.disabled,
-      props.readOnly,
-    ],
+    [utils, valueManager, value, state.open, orientation, variant, props.disabled, props.readOnly],
   );
 
   const triggerStatus = React.useMemo(() => {
@@ -239,6 +223,14 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
+  const stepNavigation = getStepNavigation({
+    setView,
+    view,
+    initialView: initialView ?? views[0],
+    views,
+  });
+  const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
+
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
       setValue,
@@ -248,6 +240,7 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      goToNextStep: wrappedGoToNextStep,
     }),
     [
       setValue,
@@ -257,13 +250,14 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      wrappedGoToNextStep,
     ],
   );
 
   const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
       ...actionsContextValue,
-      value: state.draft,
+      value,
       timezone,
       open: state.open,
       views,
@@ -278,6 +272,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      hasNextStep: stepNavigation.hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -287,7 +282,7 @@ export const usePicker = <
     }),
     [
       actionsContextValue,
-      state.draft,
+      value,
       rootRef,
       variant,
       orientation,
@@ -299,8 +294,8 @@ export const usePicker = <
       name,
       label,
       sx,
-      triggerRef,
       triggerStatus,
+      stepNavigation.hasNextStep,
       timezone,
       state.open,
       popperView,
@@ -313,20 +308,21 @@ export const usePicker = <
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
     () => ({
       dismissViews,
+      ownerState,
       hasUIView,
       getCurrentViewMode,
-      ownerState,
       rootRefObject,
       labelId,
+      triggerElement,
       viewContainerRole,
     }),
     [
       dismissViews,
+      ownerState,
       hasUIView,
       getCurrentViewMode,
-      ownerState,
-      rootRefObject,
       labelId,
+      triggerElement,
       viewContainerRole,
     ],
   );
@@ -373,7 +369,7 @@ export const usePicker = <
       ...propsToForwardToView,
       views,
       timezone,
-      value: valueWithoutError,
+      value: viewValue,
       onChange: setValueAndGoToNextView,
       view: popperView,
       onViewChange: setView,

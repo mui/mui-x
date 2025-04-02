@@ -177,6 +177,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     valueType: 'date-time',
     validator: validateDateTime,
     rendererInterceptor,
+    steps: null,
   });
 
   return renderPicker();
@@ -245,6 +246,7 @@ DesktopDateTimePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridRenderCellParams,
-  GridListColDef,
+  GridListViewColDef,
   GridColDef,
   GridRowParams,
   GridToolbarContainer,
@@ -61,7 +61,7 @@ function ListViewCell(params: GridRenderCellParams) {
   );
 }
 
-const listColDef: GridListColDef = {
+const listViewColDef: GridListViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -143,8 +143,8 @@ export default function ListView() {
         loading={loading}
         columns={columns}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
         slots={{
           toolbar: Toolbar,
         }}

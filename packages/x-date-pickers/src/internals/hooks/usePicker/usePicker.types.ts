@@ -22,6 +22,7 @@ import { UseViewsOptions } from '../useViews';
 import { PickerProviderProps } from '../../components/PickerProvider';
 import { PickersInputLocaleText } from '../../../locales';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import { CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
 
 /**
  * Props common to all Picker headless implementations.
@@ -115,6 +116,7 @@ export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextV
   format?: string;
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker?: boolean;
@@ -170,6 +172,7 @@ export interface UsePickerParameters<
     PickerRendererInterceptorProps<TValue, TView, TExternalProps>
   >;
   props: TExternalProps;
+  getStepNavigation: CreateStepNavigationReturnValue;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {
@@ -186,25 +189,18 @@ export interface UsePickerState<TValue extends PickerValidValue> {
    */
   open: boolean;
   /**
-   * Date displayed on the views and the field.
-   * It is updated whenever the user modifies something.
+   * Last value returned by `useControlledValue`.
    */
-  draft: TValue;
+  lastExternalValue: TValue;
   /**
-   * Last value published (the last value for which `shouldPublishValue` returned `true`).
-   * If `onChange` is defined, it's the value that was passed on the last call to this callback.
+   * Date currently displayed on the views if we are dragging the cursor in the Clock component.
    */
-  lastPublishedValue: TValue;
+  clockShallowValue: TValue | undefined;
   /**
    * Last value committed (the last value for which `shouldCommitValue` returned `true`).
    * If `onAccept` is defined, it's the value that was passed on the last call to this callback.
    */
   lastCommittedValue: TValue;
-  /**
-   * Last value passed to `props.value`.
-   * Used to update the `draft` value whenever the `value` prop changes.
-   */
-  lastControlledValue: TValue | undefined;
   /**
    * If we never modified the value since the mount of the component,
    * Then we might want to apply some custom logic.

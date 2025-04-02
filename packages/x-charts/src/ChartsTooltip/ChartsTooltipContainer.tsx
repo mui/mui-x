@@ -13,11 +13,12 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useXAxis } from '../hooks';
+import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsInteractionItemIsDefined,
   selectorChartsInteractionXAxisIsDefined,
   selectorChartsInteractionYAxisIsDefined,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -69,7 +70,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const isOpen = useSelector(
     store,
     // eslint-disable-next-line no-nested-ternary
@@ -195,6 +196,8 @@ ChartsTooltipContainer.propTypes = {
   /**
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -202,6 +205,8 @@ ChartsTooltipContainer.propTypes = {
   }),
   /**
    * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({

@@ -8,6 +8,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "highlight": {
+      "description": "Indicates if the chart should highlight items per axis or per series."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },

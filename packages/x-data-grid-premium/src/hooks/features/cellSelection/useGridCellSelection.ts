@@ -12,7 +12,7 @@ import {
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
   GridEventListener,
   GridEventLookup,
@@ -457,11 +457,11 @@ export const useGridCellSelection = (
     apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
-  useGridApiEventHandler(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
-  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
-  useGridApiEventHandler(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
-  useGridApiEventHandler(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
+  useGridEvent(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
+  useGridEvent(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
+  useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
+  useGridEvent(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
   React.useEffect(() => {
     if (props.cellSelectionModel) {

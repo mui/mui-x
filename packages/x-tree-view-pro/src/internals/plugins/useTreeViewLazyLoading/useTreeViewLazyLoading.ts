@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   selectorItemMeta,
@@ -38,7 +37,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  const isLazyLoadingEnabled = params.dataSource?.getChildrenCount !== undefined;
+  const isLazyLoadingEnabled = !!params.dataSource;
   const firstRenderRef = React.useRef(true);
 
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -281,28 +280,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       setDataSourceError,
     },
     publicAPI: {},
-  };
-};
-
-useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures }) => {
-  const canUseFeature = experimentalFeatures?.lazyLoading;
-  if (process.env.NODE_ENV !== 'production') {
-    if (params.dataSource && !canUseFeature) {
-      warnOnce([
-        'MUI X: The label editing feature requires the `lazyLoading` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ lazyLoading: true}}` to the Rich Tree View Pro component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/lazy-loading/',
-      ]);
-    }
-  }
-  const defaultDataSource = params?.dataSource ?? {
-    getChildrenCount: () => 0,
-    getTreeItems: () => Promise.resolve([]),
-  };
-
-  return {
-    ...params,
-    dataSource: canUseFeature ? defaultDataSource : {},
   };
 };
 

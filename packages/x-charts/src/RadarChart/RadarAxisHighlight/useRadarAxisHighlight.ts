@@ -8,10 +8,13 @@ import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { selectorChartsInteractionXAxis } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
 import { ChartInstance } from '../../internals/plugins/models';
+import {
+  selectorChartsInteractionRotationAxisIndex,
+  selectorChartsInteractionRotationAxisValue,
+} from '../../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 
 interface UseRadarAxisHighlightParams {
   /**
@@ -59,6 +62,8 @@ interface UseRadarAxisHighlightReturnValue {
 interface Point {
   x: number;
   y: number;
+  r: number;
+  angle: number;
   value: number;
 }
 
@@ -80,13 +85,19 @@ export function useRadarAxisHighlight(
 
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const rotationAxisIndex = useSelector(store, selectorChartsInteractionRotationAxisIndex);
+  const rotationAxisValue = useSelector(store, selectorChartsInteractionRotationAxisValue);
+
   const center = useSelector(store, selectorChartPolarCenter);
 
-  const highlightedIndex = xAxisIdentifier?.index;
+  const highlightedIndex = rotationAxisIndex;
 
-  if (highlightedIndex === undefined) {
+  if (!rotationScale) {
+    return null;
+  }
+
+  if (highlightedIndex === null || highlightedIndex === -1) {
     return null;
   }
 
@@ -96,7 +107,7 @@ export function useRadarAxisHighlight(
 
   const metric = radiusAxisIds[highlightedIndex];
   const radiusScale = radiusAxis[metric].scale;
-  const angle = rotationScale(xAxisIdentifier?.value as string)!;
+  const angle = rotationScale(rotationAxisValue)!;
   const radius = radiusScale.range()[1];
 
   return {
@@ -110,12 +121,15 @@ export function useRadarAxisHighlight(
     points: radarSeries.map((series) => {
       const value = series.data[highlightedIndex];
 
-      const [x, y] = instance.polar2svg(radiusScale(value)!, angle);
+      const r = radiusScale(value)!;
+      const [x, y] = instance.polar2svg(r, angle);
 
       const retrunedValue: Points = {
         highlighted: {
           x,
           y,
+          r,
+          angle,
           value,
         },
       };
@@ -139,6 +153,8 @@ export function useRadarAxisHighlight(
         retrunedValue.previous = {
           x: px,
           y: py,
+          r: prevR,
+          angle: prevAngle,
           value: prevValue,
         };
       }
@@ -151,6 +167,8 @@ export function useRadarAxisHighlight(
         retrunedValue.next = {
           x: nx,
           y: ny,
+          r: nextR,
+          angle: nextAngle,
           value: nextValue,
         };
       }

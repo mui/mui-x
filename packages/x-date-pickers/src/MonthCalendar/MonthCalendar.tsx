@@ -12,16 +12,17 @@ import {
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { MonthCalendarButton } from './MonthCalendarButton';
-import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
-import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
+import { getMonthsInYear } from '../internals/utils/date-utils';
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 
 const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) => {
   const slots = {
@@ -38,20 +39,13 @@ export function useMonthCalendarDefaultizedProps(
   MonthCalendarProps,
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'monthsPerRow'
 > {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
+  const themeProps = useThemeProps({ props, name });
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
-    disableFuture: false,
-    disablePast: false,
     ...themeProps,
+    ...validationProps,
     monthsPerRow: themeProps.monthsPerRow ?? 3,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -126,7 +120,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'MonthCalendar',
     timezone: timezoneProp,
     value: valueProp,

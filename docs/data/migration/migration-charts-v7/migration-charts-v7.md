@@ -31,6 +31,16 @@ In `package.json`, change the version of the charts package to `next`.
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Breaking changes
 
 Since v8 is a major release, it contains some changes that affect the public API.
@@ -75,6 +85,19 @@ For example, if a codemod tries to rename a prop, but this prop is hidden with t
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
+## `@mui/material` peer dependency change
+
+The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
+This change should resolve ESM and CJS interoperability issues in various environments.
+
+:::info
+The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
+
+- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
+- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
+
 :::
 
 ## Series properties renaming

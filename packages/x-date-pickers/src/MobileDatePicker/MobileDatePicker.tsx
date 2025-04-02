@@ -81,6 +81,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     validator: validateDate,
+    steps: null,
   });
 
   return renderPicker();
@@ -134,6 +135,7 @@ MobileDatePicker.propTypes = {
   disableHighlightToday: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

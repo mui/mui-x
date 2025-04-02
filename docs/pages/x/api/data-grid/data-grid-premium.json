@@ -218,8 +218,16 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "string" } },
     "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
     "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
+    "listView": { "type": { "name": "bool" } },
+    "listViewColumn": {
+      "type": {
+        "name": "shape",
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -662,13 +670,6 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
-    "unstable_listColumn": {
-      "type": {
-        "name": "shape",
-        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
-      }
-    },
-    "unstable_listView": { "type": { "name": "bool" } },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",
@@ -1106,6 +1107,12 @@
       "name": "columnMenuSortDescendingIcon",
       "description": "Icon displayed in column menu for descending sort",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
       "class": null
     },
     {
@@ -1975,9 +1982,21 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGridPremium-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGridPremium-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarLabel",
+      "className": "MuiDataGridPremium-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
       "isGlobal": false
     },
     {
@@ -2008,6 +2027,24 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGridPremium-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGridPremium-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGridPremium-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
       "isGlobal": false
     },
     {

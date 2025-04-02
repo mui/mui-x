@@ -26,6 +26,11 @@ import {
 } from '../MultiSectionDigitalClock';
 import { mergeSx } from '../internals/utils/utils';
 import { digitalClockClasses } from '../DigitalClock';
+import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
+import { DATE_VIEWS } from '../internals/utils/date-utils';
+
+const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
 type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -145,6 +150,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     validator: validateDateTime,
+    steps: STEPS,
   });
 
   return renderPicker();
@@ -213,6 +219,7 @@ MobileDateTimePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
