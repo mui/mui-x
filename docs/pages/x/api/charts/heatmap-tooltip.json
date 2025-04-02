@@ -105,9 +105,9 @@
       "isGlobal": false
     },
     {
-      "key": "markCell",
-      "className": "MuiHeatmapTooltip-markCell",
-      "description": "Styles applied to the markCell element.",
+      "key": "markContainer",
+      "className": "MuiHeatmapTooltip-markContainer",
+      "description": "Styles applied to the markContainer element.",
       "isGlobal": false
     },
     {
