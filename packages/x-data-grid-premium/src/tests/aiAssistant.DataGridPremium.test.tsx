@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { act, createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, within } from '@mui/internal-test-utils';
 import { spy, stub } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -8,11 +8,9 @@ import {
   DataGridPremiumProps,
   GridApi,
   GridRowsProp,
-  Toolbar,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { PromptField, PromptFieldControl, PromptFieldProps } from '../components/promptField';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -51,17 +49,7 @@ describe('<DataGridPremium /> - Prompt', () => {
   let apiRef: RefObject<GridApi | null>;
   const promptSpy = stub().resolves({});
 
-  function ToolbarWithPromptInput(props: PromptFieldProps) {
-    return (
-      <Toolbar>
-        <PromptField {...props} onPrompt={promptSpy}>
-          <PromptFieldControl />
-        </PromptField>
-      </Toolbar>
-    );
-  }
-
-  function Test(props: Partial<DataGridPremiumProps & { allowDataSampling: boolean }>) {
+  function Test(props: Partial<DataGridPremiumProps & { allowAiAssistantDataSampling: boolean }>) {
     apiRef = useGridApiRef();
 
     return (
@@ -69,15 +57,9 @@ describe('<DataGridPremium /> - Prompt', () => {
         <DataGridPremium
           {...baselineProps}
           apiRef={apiRef}
-          slots={{
-            toolbar: ToolbarWithPromptInput as any,
-          }}
-          slotProps={{
-            toolbar: {
-              allowDataSampling: props.allowDataSampling,
-            } as any,
-          }}
+          enableAiAssistant
           showToolbar
+          onPrompt={promptSpy}
           {...props}
         />
       </div>
@@ -89,10 +71,18 @@ describe('<DataGridPremium /> - Prompt', () => {
   });
 
   describeSkipIf(isJSDOM)('data sampling', () => {
+    it('should not show AI Assistant button in the Toolbarif the feature is disabled', () => {
+      render(<Test enableAiAssistant={false} />);
+      expect(screen.queryByTestId('AssistantIcon')).to.equal(null);
+    });
+
     it('should use `examples` to generate the prompt context', async () => {
       const { user } = render(<Test />);
 
-      const input = screen.getByRole('textbox');
+      const aiAssistantToolbarButton = screen.getByTestId('AssistantIcon');
+      await user.click(aiAssistantToolbarButton);
+
+      const input = screen.queryAllByPlaceholderText('Type or record a prompt…')[0];
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
@@ -102,9 +92,12 @@ describe('<DataGridPremium /> - Prompt', () => {
     });
 
     it('should sample rows to generate the prompt context', async () => {
-      const { user } = render(<Test allowDataSampling />);
+      const { user } = render(<Test allowAiAssistantDataSampling />);
 
-      const input = screen.getByRole('textbox');
+      const aiAssistantToolbarButton = screen.getByTestId('AssistantIcon');
+      await user.click(aiAssistantToolbarButton);
+
+      const input = screen.queryAllByPlaceholderText('Type or record a prompt…')[0];
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
@@ -115,6 +108,32 @@ describe('<DataGridPremium /> - Prompt', () => {
   });
 
   describe('API', () => {
+    it('should not do anything if the feature is disabled', () => {
+      const sortChangeSpy = spy();
+      render(<Test enableAiAssistant={false} onSortModelChange={sortChangeSpy} />);
+
+      const context = apiRef.current?.aiAssistant.getPromptContext();
+      expect(context).to.equal('');
+
+      act(() =>
+        apiRef.current?.aiAssistant.applyPromptResult({
+          select: -1,
+          filters: [],
+          aggregation: {},
+          sorting: [
+            {
+              column: 'id',
+              direction: 'desc',
+            },
+          ],
+          grouping: [],
+          pivoting: {},
+        }),
+      );
+
+      expect(sortChangeSpy.callCount).to.equal(0);
+    });
+
     it('should allow building the context', () => {
       render(<Test />);
 
