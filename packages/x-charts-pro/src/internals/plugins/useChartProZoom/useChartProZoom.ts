@@ -11,7 +11,7 @@ import {
   createZoomLookup,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { throttle } from '@mui/x-internals/throttle';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
@@ -113,7 +113,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   // By joining the two, we ensure that interacting and zooming are in sync.
   const setZoomDataCallback = React.useMemo(
     () =>
-      throttle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
         store.update((prevState) => {
           const newZoomData =
             typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
@@ -132,7 +132,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
             },
           };
         });
-      }, 0),
+      }),
 
     [onZoomChange, store, removeIsInteracting],
   );
