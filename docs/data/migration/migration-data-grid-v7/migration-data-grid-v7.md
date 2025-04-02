@@ -375,9 +375,11 @@ You have to import it from `@mui/x-license` instead:
 
 ### Slots
 
+- The `base*` slots have a new set of typings.
 - The `baseFormControl` slot was removed.
 - The `baseInputLabel` slot was removed.
 - The `baseInputAdornment` slot was removed.
+- The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
