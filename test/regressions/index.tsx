@@ -35,7 +35,7 @@ interface Test {
 const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
-const requireDocs = import.meta.glob<React.ComponentType>(
+const docsDemos = import.meta.glob<React.ComponentType>(
   [
     'docsx/data/**/[A-Z]*.js',
     // ================== Exclusions ==================
@@ -54,7 +54,7 @@ const requireDocs = import.meta.glob<React.ComponentType>(
     eager: true,
   },
 );
-Object.keys(requireDocs).forEach((path) => {
+Object.keys(docsDemos).forEach((path) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
     .replace('.js', '')
@@ -66,15 +66,15 @@ Object.keys(requireDocs).forEach((path) => {
     path,
     suite,
     name,
-    case: requireDocs[path],
+    case: docsDemos[path],
   });
 });
 
-const requireRegressions = import.meta.glob<React.ComponentType>(['./data-grid/*.js'], {
+const additionalRegressionDemos = import.meta.glob<React.ComponentType>(['./data-grid/*.js'], {
   import: 'default',
   eager: true,
 });
-Object.keys(requireRegressions).forEach((path) => {
+Object.keys(additionalRegressionDemos).forEach((path) => {
   if (!path.startsWith('./data-grid/')) {
     return;
   }
@@ -86,7 +86,7 @@ Object.keys(requireRegressions).forEach((path) => {
     path,
     suite,
     name,
-    case: requireRegressions[path],
+    case: additionalRegressionDemos[path],
   });
 });
 
