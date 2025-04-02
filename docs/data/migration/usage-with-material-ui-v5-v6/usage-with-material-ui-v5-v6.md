@@ -17,6 +17,9 @@ Material UI v6 and v5 can still be used but require some additional steps if yo
 
 ### General recommendations
 
+We recommend trying to run the app without any changes suggested in this guide first to avoid unnecessary complexity.
+If you run into the error, e.g. `ERR_UNSUPPORTED_DIR_IMPORT`, then it means you're trying to load the library in native Node.js ESM and need to follow this guide.
+
 Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
 
 ```bash
@@ -25,7 +28,12 @@ node --conditions=require index.mjs
 
 ### Vite
 
-Update Vite configuration to pass the `require` condition:
+Update Vite configuration to pass the `require` condition to [`externalConditions`](https://vite.dev/config/ssr-options#ssr-resolve-externalconditions).
+
+:::warning
+When using this option, make sure to run Node with [`--conditions` flag](https://nodejs.org/docs/latest/api/cli.html#-c-condition---conditionscondition) with the same values in both dev and build to get a consistent behavior.
+See [Vite docs](https://vite.dev/config/ssr-options#ssr-resolve-externalconditions) for more details.
+:::
 
 ```ts
 // vite.config.js
