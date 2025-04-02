@@ -225,7 +225,7 @@ export const useGridAiAssistant = (
   );
 
   const setAiAssistantPanelOpen = React.useCallback<
-    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantPanelOpen']
+    GridAiAssistantApi['aiAssistant']['setAiAssistantPanelOpen']
   >(
     (callback) => {
       if (!isAiAssistantAvailable) {
@@ -244,7 +244,7 @@ export const useGridAiAssistant = (
   );
 
   const setAiAssistantHistory = React.useCallback<
-    GridAiAssistantApi['unstable_aiAssistant']['setAiAssistantHistory']
+    GridAiAssistantApi['aiAssistant']['setAiAssistantHistory']
   >(
     (callback) => {
       apiRef.current.setState((state) => ({
@@ -260,20 +260,20 @@ export const useGridAiAssistant = (
 
   React.useEffect(() => {
     if (props.aiAssistantHistory) {
-      apiRef.current.unstable_aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
+      apiRef.current.aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
     }
   }, [apiRef, props.aiAssistantHistory]);
 
   React.useEffect(() => {
     if (props.aiAssistantPanelOpen) {
-      apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
+      apiRef.current.aiAssistant.setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
     }
   }, [apiRef, props.aiAssistantPanelOpen]);
 
   useGridApiMethod(
     apiRef,
     {
-      unstable_aiAssistant: {
+      aiAssistant: {
         getPromptContext,
         applyPromptResult,
         setAiAssistantPanelOpen,

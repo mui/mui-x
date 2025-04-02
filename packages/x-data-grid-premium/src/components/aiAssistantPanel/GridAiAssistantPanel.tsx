@@ -115,8 +115,7 @@ function GridAiAssistantPanel() {
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
 
   const context = React.useMemo(
-    () =>
-      apiRef.current.unstable_aiAssistant.getPromptContext(rootProps.allowAiAssistantDataSampling),
+    () => apiRef.current.aiAssistant.getPromptContext(rootProps.allowAiAssistantDataSampling),
     [apiRef, rootProps.allowAiAssistantDataSampling],
   );
 
@@ -129,7 +128,7 @@ function GridAiAssistantPanel() {
       const date = Date.now();
 
       apiRef.current.setLoading(true);
-      apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) => [
+      apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) => [
         ...prevHistory,
         {
           value,
@@ -140,8 +139,8 @@ function GridAiAssistantPanel() {
       ]);
       try {
         const response = await rootProps.onPrompt(value, promptContext);
-        apiRef.current.unstable_aiAssistant.applyPromptResult(response);
-        apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) =>
+        apiRef.current.aiAssistant.applyPromptResult(response);
+        apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) =>
           prevHistory.map((item) =>
             item.createdAt.getTime() === date
               ? {
@@ -155,7 +154,7 @@ function GridAiAssistantPanel() {
         );
         return response;
       } catch (error: any) {
-        apiRef.current.unstable_aiAssistant.setAiAssistantHistory((prevHistory) =>
+        apiRef.current.aiAssistant.setAiAssistantHistory((prevHistory) =>
           prevHistory.map((item) =>
             item.createdAt.getTime() === date
               ? {
@@ -181,7 +180,7 @@ function GridAiAssistantPanel() {
       target={aiAssistantPanelTriggerRef.current}
       className={classes.root}
       ownerState={rootProps}
-      onClose={() => apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(false)}
+      onClose={() => apiRef.current.aiAssistant.setAiAssistantPanelOpen(false)}
       {...rootProps.slotProps?.panel}
     >
       <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
@@ -189,7 +188,7 @@ function GridAiAssistantPanel() {
           {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
         </AiAssistantPanelTitle>
         <rootProps.slots.baseIconButton
-          onClick={() => apiRef.current.unstable_aiAssistant.setAiAssistantPanelOpen(false)}
+          onClick={() => apiRef.current.aiAssistant.setAiAssistantPanelOpen(false)}
         >
           <rootProps.slots.aiAssistantCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
