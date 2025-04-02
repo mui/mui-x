@@ -7,6 +7,9 @@ import {
   useGridSelector,
   GridDataSourceCacheDefaultConfig,
   GridGetRowsError,
+  gridRowIdSelector,
+  gridRowNodeSelector,
+  GridRowModelUpdate,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -144,6 +147,19 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.setRowCount(
           getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
         );
+        // Remove existing outdated rows before setting the new ones
+        const rowsToDelete: GridRowModelUpdate[] = [];
+        getRowsResponse.rows.forEach((row) => {
+          const rowId = gridRowIdSelector(apiRef, row);
+          const treeNode = gridRowNodeSelector(apiRef, rowId);
+          if (treeNode) {
+            rowsToDelete.push({ id: rowId, _action: 'delete' });
+          }
+        });
+        if (rowsToDelete.length > 0) {
+          // TODO: Make this happen in a single pass by modifying the pre-processing of the rows
+          apiRef.current.updateServerRows(rowsToDelete, rowNode.path);
+        }
         apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {

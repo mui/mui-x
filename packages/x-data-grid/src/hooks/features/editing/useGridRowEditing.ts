@@ -34,7 +34,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -43,7 +43,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-import { getDefaultCellValue } from './utils';
+import { getDefaultCellValue, getGroupKeys } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 import { GridUpdateRowError } from '../dataSource';
 
@@ -575,7 +575,8 @@ export const useGridRowEditing = (
             props.dataSource.updateRow({ rowId: id, updatedRow: rowUpdate, previousRow: row }),
           )
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), id) as string[];
+              apiRef.current.updateServerRows([finalRowUpdate], groupKeys);
               if (finalRowUpdate && !isDeepEqual(finalRowUpdate, row)) {
                 // Reset the outdated cache, only if the row is _actually_ updated
                 apiRef.current.dataSource.cache.clear();
