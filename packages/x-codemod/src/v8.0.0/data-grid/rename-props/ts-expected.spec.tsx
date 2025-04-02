@@ -23,6 +23,8 @@ function App() {
         rowSpanning
         dataSource={dataSource}
         dataSourceCache={dataSourceCache}
+        listView
+        listViewColumn={{}}
       />
     </React.Fragment>)
   );

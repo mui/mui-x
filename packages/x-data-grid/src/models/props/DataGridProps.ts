@@ -12,7 +12,7 @@ import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListViewColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -78,7 +78,7 @@ export type DataGridForcedPropsKey =
   | 'hideFooterRowCount'
   | 'pagination'
   | 'signature'
-  | 'unstable_listView';
+  | 'listView';
 
 /**
  * The Data Grid options with a default value that must be merged with the value given through props.
@@ -882,10 +882,10 @@ export interface DataGridProSharedPropsWithDefaultValue {
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `listViewColumn`.
    * @default false
    */
-  unstable_listView: boolean;
+  listView: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
@@ -894,9 +894,9 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    */
   headerFilterHeight?: number;
   /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   * Definition of the column rendered when the `listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  listViewColumn?: GridListViewColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

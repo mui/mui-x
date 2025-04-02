@@ -385,6 +385,8 @@ The list includes these props:
 - `unstable_lazyLoading` to `lazyLoading`
 - `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
 - `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
 
 ```diff
  <DataGrid
@@ -394,12 +396,16 @@ The list includes these props:
 -  unstable_lazyLoading
 -  unstable_lazyLoadingRequestThrottleMs={100}
 -  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
 +  rowSpanning
 +  dataSource={dataSource}
 +  dataSourceCache={dataSourceCache}
 +  lazyLoading
 +  lazyLoadingRequestThrottleMs={100}
 +  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
  />
 ```
 
