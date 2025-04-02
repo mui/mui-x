@@ -111,7 +111,23 @@ This prop is called for each original column and returns an array of derived col
 Depending on the pivot mode, some column groups might exceed the width of the Data Grid viewport.
 To improve the user experience, you can make these column groups "sticky" so that the column group labels remain visible while scrolling horizontally.
 
-The demo below illustrates how to do this using the `sx` prop to apply the necessary styles:
+You can use the `sx` prop to apply the necessary styles:
+
+```tsx
+<DataGridPremium
+  sx={{
+    '& .MuiDataGrid-columnHeader--filledGroup': {
+      '& .MuiDataGrid-columnHeaderTitleContainer': {
+        overflow: 'visible',
+      },
+      '& .MuiDataGrid-columnHeaderTitleContainerContent': {
+        position: 'sticky',
+        left: 8,
+      },
+    },
+  }}
+/>
+```
 
 {{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
