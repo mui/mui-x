@@ -1062,6 +1062,9 @@ importers:
       '@mui/x-data-grid-pro':
         specifier: workspace:*
         version: link:../x-data-grid-pro/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       chance:
         specifier: ^1.1.12
         version: 1.1.12
