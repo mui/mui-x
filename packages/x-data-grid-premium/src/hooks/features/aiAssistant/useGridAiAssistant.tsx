@@ -70,15 +70,25 @@ export const useGridAiAssistant = (
     | 'aiAssistantPanelOpen'
     | 'aiAssistantHistory'
     | 'aiAssistantSuggestions'
+    | 'allowAiAssistantDataSampling'
     | 'onAiAssistantPanelOpenChange'
     | 'onAiAssistantHistoryChange'
     | 'onAiAssistantSuggestionsChange'
+    | 'onPrompt'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
     | 'disableAggregation'
     | 'disableColumnSorting'
   >,
 ) => {
+  const {
+    onPrompt,
+    allowAiAssistantDataSampling,
+    disableColumnFilter,
+    disableRowGrouping,
+    disableAggregation,
+    disableColumnSorting,
+  } = props;
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
@@ -155,7 +165,7 @@ export const useGridAiAssistant = (
 
       const interestColumns = [] as string[];
 
-      if (!props.disableColumnFilter) {
+      if (!disableColumnFilter) {
         apiRef.current.setFilterModel({
           items: result.filters.map((filter, index) => {
             const item = {
@@ -189,16 +199,16 @@ export const useGridAiAssistant = (
 
       // TODO: if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
 
-      if (!props.disableRowGrouping) {
+      if (!disableRowGrouping) {
         apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
       }
 
-      if (!props.disableAggregation) {
+      if (!disableAggregation) {
         apiRef.current.setAggregationModel(result.aggregation);
         interestColumns.push(...Object.keys(result.aggregation));
       }
 
-      if (!props.disableColumnSorting) {
+      if (!disableColumnSorting) {
         apiRef.current.setSortModel(
           result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
         );
@@ -224,10 +234,10 @@ export const useGridAiAssistant = (
     },
     [
       apiRef,
-      props.disableColumnFilter,
-      props.disableRowGrouping,
-      props.disableAggregation,
-      props.disableColumnSorting,
+      disableColumnFilter,
+      disableRowGrouping,
+      disableAggregation,
+      disableColumnSorting,
       columnsLookup,
       isAiAssistantAvailable,
     ],
@@ -271,6 +281,67 @@ export const useGridAiAssistant = (
     [apiRef, isAiAssistantAvailable],
   );
 
+  const processPrompt = React.useCallback(
+    async (value: string) => {
+      if (!onPrompt) {
+        return undefined;
+      }
+
+      const date = Date.now();
+
+      apiRef.current.setLoading(true);
+      setAiAssistantHistory((prevHistory) => [
+        ...prevHistory,
+        {
+          value,
+          createdAt: new Date(date),
+          variant: 'processing',
+          helperText: apiRef.current.getLocaleText('promptProcessing'),
+        },
+      ]);
+      try {
+        const response = await onPrompt(value, getPromptContext(allowAiAssistantDataSampling));
+        applyPromptResult(response);
+        setAiAssistantHistory((prevHistory) =>
+          prevHistory.map((item) =>
+            item.createdAt.getTime() === date
+              ? {
+                  ...item,
+                  response,
+                  variant: 'success',
+                  helperText: apiRef.current.getLocaleText('promptAppliedChanges'),
+                }
+              : item,
+          ),
+        );
+        return response;
+      } catch (error: any) {
+        setAiAssistantHistory((prevHistory) =>
+          prevHistory.map((item) =>
+            item.createdAt.getTime() === date
+              ? {
+                  ...item,
+                  variant: 'error',
+                  helperText: error.message,
+                }
+              : item,
+          ),
+        );
+        return undefined;
+      } finally {
+        apiRef.current.setLoading(false);
+      }
+    },
+    [
+      apiRef,
+      allowAiAssistantDataSampling,
+      onPrompt,
+      getPromptContext,
+      applyPromptResult,
+      setAiAssistantHistory,
+    ],
+  );
+
   React.useEffect(() => {
     if (props.aiAssistantHistory) {
       apiRef.current.aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
@@ -289,6 +360,7 @@ export const useGridAiAssistant = (
       aiAssistant: {
         getPromptContext,
         applyPromptResult,
+        processPrompt,
         setAiAssistantPanelOpen,
         setAiAssistantHistory,
       },

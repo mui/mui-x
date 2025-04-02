@@ -74,6 +74,12 @@ export interface GridAiAssistantApi {
      */
     getPromptContext: (allowDataSampling?: boolean) => string;
     /**
+     * Process the prompt and update the grid state.
+     * @param {string} value The prompt to process
+     * @returns {Promise<PromptResponse>} The grid state updates
+     */
+    processPrompt: (value: string) => Promise<PromptResponse | undefined>;
+    /**
      * Use the prompt processing result to update all relevant parts of the grid state.
      * @param {PromptResponse} result The result of the prompt.
      */

@@ -10,7 +10,6 @@ import { PromptSuggestion } from '../../hooks/features/aiAssistant/gridAiAssista
 
 type GridAiAssistantPanelSuggestionsProps = {
   suggestions: PromptSuggestion[];
-  onSuggestionClick: (suggestion: string) => void;
 };
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
@@ -62,7 +61,7 @@ const AiAssistantPanelSuggestionsLabel = styled('div', {
 });
 
 function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsProps) {
-  const { suggestions, onSuggestionClick } = props;
+  const { suggestions } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const ownerState = { classes: rootProps.classes };
@@ -79,7 +78,7 @@ function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsP
             key={suggestion.value}
             label={suggestion.value}
             className={classes.item}
-            onClick={() => onSuggestionClick(suggestion.value)}
+            onClick={() => apiRef.current.aiAssistant.processPrompt(suggestion.value)}
             icon={<rootProps.slots.promptIcon style={{ fontSize: '1rem' }} />}
           />
         ))}
