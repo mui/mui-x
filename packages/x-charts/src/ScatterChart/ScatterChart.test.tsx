@@ -86,7 +86,7 @@ describe('<ScatterChart />', () => {
 
     await screen.findByRole('tooltip');
     cells = document.querySelectorAll<HTMLElement>(cellSelector);
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'series', '(0, 10)']);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['series', '(0, 10)']);
 
     await user.pointer([
       // Set tooltip position voronoi value
@@ -95,7 +95,7 @@ describe('<ScatterChart />', () => {
 
     await screen.findByRole('tooltip');
     cells = document.querySelectorAll<HTMLElement>(cellSelector);
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'series', '(5, 5)']);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['series', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
@@ -121,7 +121,7 @@ describe('<ScatterChart />', () => {
 
     await screen.findByRole('tooltip');
     cells = document.querySelectorAll<HTMLElement>(cellSelector);
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(0, 10)']);
 
     await user.pointer([
       // Only to set the tooltip position
@@ -130,7 +130,7 @@ describe('<ScatterChart />', () => {
 
     await screen.findByRole('tooltip');
     cells = document.querySelectorAll<HTMLElement>(cellSelector);
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
