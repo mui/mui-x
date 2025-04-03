@@ -1,6 +1,5 @@
 // @ts-check
 const path = require('path');
-const fs = require('fs');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
 
 /**
@@ -40,16 +39,6 @@ const defaultAlias = {
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),
 };
-
-const packageJsonPath = path.resolve('./package.json');
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
-const babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
-
-if (!babelRuntimeVersion) {
-  throw new Error(
-    'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
-  );
-}
 
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
@@ -92,7 +81,8 @@ module.exports = function getBabelConfig(api) {
       '@babel/plugin-transform-runtime',
       {
         useESModules,
-        version: babelRuntimeVersion,
+        // any package needs to declare 7.27.0 as a runtime dependency. default is ^7.0.0
+        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.27.0',
       },
     ],
     [
