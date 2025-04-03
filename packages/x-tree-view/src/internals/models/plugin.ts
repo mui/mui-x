@@ -200,7 +200,7 @@ export type TreeRootWrapper = (params: { children: React.ReactNode }) => React.R
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   /**
-   * The main function of the plugin that will be executed by the tree-view.
+   * The main function of the plugin that will be executed by the Tree View.
    *
    * This should be a valid React `use` function, as it will be executed in the render phase and can contain hooks.
    */
