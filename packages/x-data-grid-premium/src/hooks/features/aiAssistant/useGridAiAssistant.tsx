@@ -358,8 +358,6 @@ export const useGridAiAssistant = (
     apiRef,
     {
       aiAssistant: {
-        getPromptContext,
-        applyPromptResult,
         processPrompt,
         setAiAssistantPanelOpen,
         setAiAssistantHistory,

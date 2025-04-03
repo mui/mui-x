@@ -23,7 +23,7 @@ function CustomToolbar() {
 
 export default function GridAiAssistantPanelTrigger() {
   const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
     rowLength: 10,
     maxColumns: 10,
   });

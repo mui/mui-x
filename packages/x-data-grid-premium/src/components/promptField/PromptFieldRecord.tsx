@@ -42,7 +42,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
   function PromptFieldRecord(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, lang, onRecordingChange, onStopRecording, onValueUpdate, onError } =
+    const { state, lang, onRecordingChange, onValueChange, onSubmit, onError } =
       usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
@@ -121,7 +121,11 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
 
     const handleClick = () => {
       if (!state.recording) {
-        recognition.start({ onDone: onStopRecording, onUpdate: onValueUpdate, onError });
+        recognition.start({
+          onDone: onSubmit,
+          onUpdate: onValueChange,
+          onError: onError ?? (() => {}),
+        });
         return;
       }
 
