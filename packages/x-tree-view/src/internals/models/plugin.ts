@@ -219,7 +219,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   }) => TSignature['defaultizedParams'];
   /**
    * The initial state is computed after the default values are applied.
-   * It set up the state for the first render.
+   * It sets up the state for the first render.
    * Other state modifications have to be done in effects and so could not be applied on the initial render.
    *
    * @param {TreeViewUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
