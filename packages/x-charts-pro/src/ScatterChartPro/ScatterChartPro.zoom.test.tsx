@@ -109,7 +109,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => requestAnimationFrame(r));
     }
 
     expect(onZoomChange.callCount).to.equal(200);
@@ -124,7 +124,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => requestAnimationFrame(r));
     }
 
     expect(onZoomChange.callCount).to.equal(400);
@@ -181,7 +181,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => requestAnimationFrame(r));
 
       expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('1.0')).to.equal(null);
@@ -212,7 +212,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => requestAnimationFrame(r));
 
       expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('2.0')).to.equal(null);
