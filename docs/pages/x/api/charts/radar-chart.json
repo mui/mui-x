@@ -96,7 +96,10 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiRadarChart",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",

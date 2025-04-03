@@ -1,12 +1,15 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { useAxisTooltip } from '@mui/x-charts/ChartsTooltip';
+import { useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 
 export function CustomAxisTooltip() {
-  const tooltipData = useAxisTooltip();
+  const tooltipData = useAxesTooltip();
 
-  if (tooltipData === null) {
+  // In this demo only one axis id used.
+  const firstAxisData = tooltipData?.[0];
+
+  if (!firstAxisData) {
     return null;
   }
   return (
@@ -45,12 +48,12 @@ export function CustomAxisTooltip() {
         <thead>
           <tr>
             <td colSpan={3}>
-              <Typography>{tooltipData.axisFormattedValue}</Typography>
+              <Typography>{firstAxisData.axisFormattedValue}</Typography>
             </td>
           </tr>
         </thead>
         <tbody>
-          {tooltipData.seriesItems.map((seriesItem) => (
+          {firstAxisData.seriesItems.map((seriesItem) => (
             <tr key={seriesItem.seriesId}>
               <td aria-label={`${seriesItem.formattedLabel}-series-color`}>
                 <div

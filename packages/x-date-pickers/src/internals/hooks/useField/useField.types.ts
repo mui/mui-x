@@ -14,7 +14,7 @@ import {
   PickerValueType,
 } from '../../../models';
 import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
-import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
 export interface UseFieldParameters<
@@ -404,3 +404,11 @@ export type UseFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
     enableAccessibleFieldDOMStructure?: boolean;
   };
+
+export interface UseFieldDOMGetters {
+  isReady: () => boolean;
+  getRoot: () => HTMLElement;
+  getSectionContainer: (sectionIndex: number) => HTMLElement;
+  getSectionContent: (sectionIndex: number) => HTMLElement;
+  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
+}

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  useTheme as useMaterialTheme,
+  ThemeProvider,
+  createTheme,
   useColorScheme as useMaterialColorScheme,
-  Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
@@ -121,26 +121,28 @@ function JoyDateRangePicker(props) {
  * This component is for syncing the theme mode of this demo with the MUI docs mode.
  * You might not need this component in your project.
  */
-function SyncThemeMode({ mode }) {
+function SyncThemeMode() {
   const { setMode } = useColorScheme();
-  const { setMode: setMaterialMode } = useMaterialColorScheme();
+  const { mode } = useMaterialColorScheme();
   React.useEffect(() => {
-    setMode(mode);
-    setMaterialMode(mode);
-  }, [mode, setMode, setMaterialMode]);
+    if (mode) {
+      setMode(mode);
+    }
+  }, [mode, setMode]);
   return null;
 }
 
+const theme = createTheme({ colorSchemes: { light: true, dark: true } });
+
 export default function JoyV6MultiInputRangeField() {
-  const materialTheme = useMaterialTheme();
   return (
-    <MaterialCssVarsProvider>
+    <ThemeProvider theme={theme}>
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-        <SyncThemeMode mode={materialTheme.palette.mode} />
+        <SyncThemeMode />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <JoyDateRangePicker />
         </LocalizationProvider>
       </CssVarsProvider>
-    </MaterialCssVarsProvider>
+    </ThemeProvider>
   );
 }

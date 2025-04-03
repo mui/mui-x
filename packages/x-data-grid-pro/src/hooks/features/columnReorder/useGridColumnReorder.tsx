@@ -4,11 +4,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   CursorCoordinates,
-  useGridApiEventHandler,
+  useGridEvent,
   getDataGridUtilityClass,
   GridEventListener,
   useGridLogger,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   GridColumnOrderChangeParams,
 } from '@mui/x-data-grid';
 import { GridStateInitializer } from '@mui/x-data-grid/internals';
@@ -349,11 +349,11 @@ export const useGridColumnReorder = (
     ],
   );
 
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnter', handleDragEnter);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragOver', handleDragOver);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleDragEnd);
-  useGridApiEventHandler(apiRef, 'cellDragEnter', handleDragEnter);
-  useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
-  useGridApiOptionHandler(apiRef, 'columnOrderChange', props.onColumnOrderChange);
+  useGridEvent(apiRef, 'columnHeaderDragStart', handleDragStart);
+  useGridEvent(apiRef, 'columnHeaderDragEnter', handleDragEnter);
+  useGridEvent(apiRef, 'columnHeaderDragOver', handleDragOver);
+  useGridEvent(apiRef, 'columnHeaderDragEnd', handleDragEnd);
+  useGridEvent(apiRef, 'cellDragEnter', handleDragEnter);
+  useGridEvent(apiRef, 'cellDragOver', handleDragOver);
+  useGridEventPriority(apiRef, 'columnOrderChange', props.onColumnOrderChange);
 };

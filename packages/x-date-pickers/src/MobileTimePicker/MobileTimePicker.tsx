@@ -85,6 +85,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'time',
     validator: validateTime,
+    steps: null,
   });
 
   return renderPicker();

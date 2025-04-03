@@ -136,7 +136,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
             plan: 'pro',
-            unstable: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data-group',
@@ -231,7 +230,7 @@ const pages: MuiPage[] = [
               },
 
               { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
-              { pathname: '/x/api/data-grid/grid-list-col-def', title: 'GridListColDef' },
+              { pathname: '/x/api/data-grid/grid-list-view-col-def', title: 'GridListViewColDef' },
               {
                 pathname: '/x/api/data-grid/grid-export-state-params',
                 title: 'GridExportStateParams',
@@ -618,6 +617,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/migration/migration-tree-view-v7',
             title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/usage-with-material-ui-v5-v6',
+            title: 'Usage with Material UI v5/v6',
           },
         ],
       },

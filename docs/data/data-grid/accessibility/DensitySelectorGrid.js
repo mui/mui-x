@@ -46,10 +46,14 @@ function CustomToolbar() {
       <Menu
         id="density-menu"
         anchorEl={densityMenuTriggerRef.current}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={densityMenuOpen}
         onClose={() => setDensityMenuOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'density-menu-trigger',
+        slotProps={{
+          list: {
+            'aria-labelledby': 'density-menu-trigger',
+          },
         }}
       >
         {DENISTY_OPTIONS.map((option) => (

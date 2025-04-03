@@ -38,13 +38,13 @@ export default function ZoomControlled() {
     <Stack sx={{ width: '100%', justifyContent: 'flex-start' }}>
       <LineChartPro
         {...chartProps}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         zoomData={zoomData}
         xAxis={lineAxis}
       />
       <BarChartPro
         {...chartProps}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         zoomData={zoomData}
         xAxis={barAxis}
       />

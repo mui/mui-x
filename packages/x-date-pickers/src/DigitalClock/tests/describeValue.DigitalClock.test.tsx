@@ -11,11 +11,10 @@ import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DigitalClock /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'digital-clock'>(DigitalClock, () => ({
     render,
-    clock,
     componentFamily: 'digital-clock',
     type: 'time',
     defaultProps: {
