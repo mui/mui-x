@@ -202,7 +202,7 @@ export const useFieldV7TextField = <
           'MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please add the `enableAccessibleFieldDOMStructure={false}` prop from your Picker or Field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please add the `enableAccessibleFieldDOMStructure={false}` prop to your Picker or Field component:',
           '',
           '<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />',
           '',
