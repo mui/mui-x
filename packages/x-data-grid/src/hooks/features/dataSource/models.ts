@@ -21,7 +21,7 @@ export interface GridDataSourceApiBase {
   /**
    * Syncs the row with the server and updates in the grid.
    * @param {GridUpdateRowParams} params The parameters for the edit operation.
-   * @returns {Promise<GridRowModel>} The updated row.
+   * @returns {Promise<GridRowModel> | undefined} The updated row or `undefined` if `dataSource.updateRow` is not passed.
    */
   editRow: (params: GridUpdateRowParams) => Promise<GridRowModel> | undefined;
 }
