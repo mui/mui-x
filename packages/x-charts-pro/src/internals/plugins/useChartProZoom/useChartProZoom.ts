@@ -40,13 +40,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
-  const { zoomData: paramsZoomData, onZoomChange } = params;
+  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
-
-  const onZoomChangeEvent = useEventCallback(onZoomChange ?? (() => {}));
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
 
   // Manage controlled state
   useEnhancedEffect(() => {
@@ -106,7 +105,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       store.update((prevState) => {
         const newZoomData =
           typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-        onZoomChangeEvent?.(newZoomData);
+        onZoomChange?.(newZoomData);
 
         if (prevState.zoom.isControlled) {
           return prevState;
@@ -122,7 +121,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       });
     },
 
-    [onZoomChangeEvent, store],
+    [onZoomChange, store],
   );
 
   // Add events
