@@ -10,7 +10,7 @@ import {
   ChartsLabelMark,
 } from '@mui/x-charts/ChartsLabel';
 
-function LineWithMark({ color, ...props }: ChartsLabelCustomMarkProps) {
+function LineWithMark({ color, className }: ChartsLabelCustomMarkProps) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -18,7 +18,7 @@ function LineWithMark({ color, ...props }: ChartsLabelCustomMarkProps) {
       strokeWidth={3}
       strokeLinecap="round"
       fill="none"
-      {...props}
+      className={className}
     >
       <path d="M 1 12.5 L 7 12.5 M 17 12.5 L 23 12.5" />
       <circle cx={12} cy={12.5} r={5} />
@@ -26,9 +26,15 @@ function LineWithMark({ color, ...props }: ChartsLabelCustomMarkProps) {
   );
 }
 
-function DashedLine({ color, ...props }: ChartsLabelCustomMarkProps) {
+function DashedLine({ color, className }: ChartsLabelCustomMarkProps) {
   return (
-    <svg viewBox="0 0 24 24" stroke={color} strokeWidth={3} fill="none" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      stroke={color}
+      strokeWidth={3}
+      fill="none"
+      className={className}
+    >
       <path d="M 1 12.5 L 23 12.5" strokeDasharray="5 3" />
     </svg>
   );
