@@ -1,5 +1,6 @@
 /* eslint-disable no-promise-executor-return */
-/* eslint-disable no-await-in-loop */ import * as React from 'react';
+/* eslint-disable no-await-in-loop */ 
+import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
