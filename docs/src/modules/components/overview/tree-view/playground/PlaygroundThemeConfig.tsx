@@ -86,7 +86,7 @@ export default function ThemesConfig({
       <Stack spacing={1.5}>
         {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
-          Change color
+          Color
         </Typography>
         <ConfigToggleButtons
           selectedValue={color}
@@ -100,7 +100,7 @@ export default function ThemesConfig({
       <Stack spacing={1.5}>
         {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
-          Change corner
+          Border radius
         </Typography>
         <ConfigToggleButtons
           selectedValue={corner}
