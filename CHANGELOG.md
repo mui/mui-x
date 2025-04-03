@@ -129,7 +129,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
 
 ### Docs
 
-- [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
+- [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
 - [docs] Fix 301 link @oliviertassinari
 - [docs] Fix redirection getting-started (#17200) @oliviertassinari
 - [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
@@ -137,6 +137,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
 
 ### Core
 
+- [core] Cleanup `@mui` dependency versions (#17160) @LukasTy
 - [core] Sync scorecards.yml across codebase @oliviertassinari
 - [core] Revert upgrade to React 19.1 (#17206) @bernardobelchior
 - [code-infra] Fix `test:unit` warning (#17224) @JCQuintas
