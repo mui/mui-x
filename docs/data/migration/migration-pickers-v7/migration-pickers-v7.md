@@ -348,7 +348,7 @@ const theme = createTheme({
 Before version `v8.x`, the `ownerState` contained every prop of the component that was defining it, plus some additional internal states if needed.
 This came with a few problems:
 
-- It is hard to know which parent defines the `ownerState` and therefore which props it contains (is the `actionBar` slot handled by `DatePicker`? by `DesktopDatePicker`? by `PickerLayout`?).
+- It is hard to know which ancestor defines the `ownerState` and therefore which props it contains (is the `actionBar` slot handled by `DatePicker`, by `DesktopDatePicker` or by `PickerLayout`?).
 
 - A lot of the properties of the `ownerState` were not meant for public usage, which made the evolution of the codebase complex because all the props received by an internal component becomes public API and changing them becomes a breaking change.
 
