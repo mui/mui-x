@@ -43,9 +43,11 @@ const tests: Test[] = [];
 const docsDemos = import.meta.glob<React.ComponentType>(
   [
     'docsx/data/**/[A-Z]*.js',
+    // Hooks examples
+    'docsx/data/**/use[A-Z]*.js',
     // ================== Exclusions ==================
     '!docsx/data/charts/lines/GDPperCapita.js',
-    '!docsx/data/data-grid/**/components/*.js',
+    '!docsx/data/data-grid/list-view/components/*.js',
     // Excludes demos that we don't want
     '!docsx/data/**/*NoSnap.*',
     '!docsx/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
