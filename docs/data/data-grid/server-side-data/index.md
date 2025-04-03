@@ -295,7 +295,7 @@ The position of the edited row on the current page is kept the same for UX purpo
 
 This automatically gets fixed when the page is fetched again, since the cache is cleared after the update.
 
-However, if you have a use-case that requires refetching the current page after editing, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) with details about your use-case.
+You could manually trigger the re-fetch by calling the API method `dataSource.fetchRows()`.
 :::
 
 ## Error handling
