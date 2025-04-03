@@ -4,7 +4,6 @@ import { LineChart } from '@mui/x-charts/LineChart';
 
 const emptySeries = {
   series: [],
-  margin: { top: 10, right: 10, left: 25, bottom: 25 },
   height: 150,
 };
 

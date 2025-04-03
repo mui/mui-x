@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
 import { PieArc, PieArcProps } from './PieArc';
 import {
   ComputedPieRadius,
@@ -9,12 +8,7 @@ import {
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { getDefaultTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -90,10 +84,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded,
     data,
   });
-  const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...getDefaultTransitionConfig(skipAnimation),
-    immediate: skipAnimation,
-  });
 
   if (data.length === 0) {
     return null;
@@ -103,44 +93,30 @@ function PieArcPlot(props: PieArcPlotProps) {
 
   return (
     <g {...other}>
-      {transition(
-        (
-          {
-            startAngle,
-            endAngle,
-            paddingAngle: pA,
-            innerRadius: iR,
-            outerRadius: oR,
-            cornerRadius: cR,
-          },
-          item,
-          _,
-          index,
-        ) => {
-          return (
-            <Arc
-              startAngle={startAngle}
-              endAngle={endAngle}
-              paddingAngle={pA}
-              innerRadius={iR}
-              outerRadius={oR}
-              cornerRadius={cR}
-              id={id}
-              color={item.color}
-              dataIndex={index}
-              isFaded={item.isFaded}
-              isHighlighted={item.isHighlighted}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
-                })
-              }
-              {...slotProps?.pieArc}
-            />
-          );
-        },
-      )}
+      {transformedData.map((item, index) => (
+        <Arc
+          key={item.dataIndex}
+          startAngle={item.startAngle}
+          endAngle={item.endAngle}
+          paddingAngle={item.paddingAngle}
+          innerRadius={item.innerRadius}
+          outerRadius={item.outerRadius}
+          cornerRadius={item.cornerRadius}
+          skipAnimation={skipAnimation ?? false}
+          id={id}
+          color={item.color}
+          dataIndex={index}
+          isFaded={item.isFaded}
+          isHighlighted={item.isHighlighted}
+          onClick={
+            onItemClick &&
+            ((event) => {
+              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+            })
+          }
+          {...slotProps?.pieArc}
+        />
+      ))}
     </g>
   );
 }
@@ -168,7 +144,10 @@ PieArcPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

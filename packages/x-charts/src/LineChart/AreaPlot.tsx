@@ -15,10 +15,11 @@ import { getCurveFactory } from '../internals/getCurve';
 import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -49,7 +50,7 @@ const AreaPlotRoot = styled('g', {
 });
 
 const useAggregatedData = () => {
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const getGradientId = useChartGradientIdBuilder();
@@ -196,7 +197,8 @@ const useAggregatedData = () => {
  */
 function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
 

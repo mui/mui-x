@@ -8,11 +8,13 @@ import {
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   GridRowModel,
-  useGridApiOptionHandler,
-  useGridApiEventHandler,
+  useGridEventPriority,
+  useGridEvent,
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
+  gridRowSelectionIdsSelector,
+  gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
@@ -253,11 +255,10 @@ function defaultPasteResolver({
     return true;
   });
 
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0 && !isSingleValuePasted) {
+  if (gridRowSelectionCountSelector(apiRef) > 0 && !isSingleValuePasted) {
     // Multiple values are pasted starting from the first and top-most cell
     const pastedRowsDataCount = pastedData.length;
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
 
     // There's no guarantee that the selected rows are in the same order as the pasted rows
     selectedRows.forEach((row, rowId) => {
@@ -341,7 +342,6 @@ export const useGridClipboardImport = (
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
-  const rootEl = apiRef.current.rootElementRef?.current;
   const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
@@ -366,6 +366,7 @@ export const useGridClipboardImport = (
         }
       }
 
+      const rootEl = apiRef.current.rootElementRef?.current;
       if (!rootEl) {
         return;
       }
@@ -418,7 +419,6 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
-      rootEl,
       splitClipboardPastedText,
       pagination,
       paginationMode,
@@ -438,10 +438,10 @@ export const useGridClipboardImport = (
     [enableClipboardPaste],
   );
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handlePaste);
+  useGridEvent(apiRef, 'cellKeyDown', handlePaste);
 
-  useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
-  useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
+  useGridEventPriority(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
+  useGridEventPriority(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
 
   useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 };

@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GRID_CHECKBOX_SELECTION_FIELD,
-  GridToolbar,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GRID_CHECKBOX_SELECTION_FIELD } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { styled } from '@mui/material/styles';
@@ -348,12 +344,7 @@ export default function FullFeaturedDemo() {
       />
       <DataGridComponent
         {...data}
-        slots={{
-          toolbar: GridToolbar,
-        }}
-        slotProps={{
-          toolbar: { showQuickFilter: true },
-        }}
+        showToolbar
         loading={loading}
         checkboxSelection
         disableRowSelectionOnClick

@@ -25,14 +25,30 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "FormHelperTextProps": { "type": { "name": "object" } },
+    "FormHelperTextProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.formHelperText</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
+    },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
     "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "object" } },
-    "InputProps": { "type": { "name": "object" } },
+    "InputLabelProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.inputLabel</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
+    },
+    "inputProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.htmlInput</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
+    },
+    "InputProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.input</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
+    },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "margin": {
@@ -121,7 +137,10 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "size": {
+      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "default": "'medium'"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

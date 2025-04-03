@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -13,7 +12,7 @@ import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListViewColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -25,7 +24,7 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
+import { GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -33,8 +32,17 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource, GridDataSourceCache, GridGetRowsParams } from '../gridDataSource';
+import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
+import type {
+  GridGetRowsError,
+  GridUpdateRowError,
+} from '../../hooks/features/dataSource/gridDataSourceError';
+
+type CommonProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 export interface GridExperimentalFeatures {
   /**
@@ -70,7 +78,7 @@ export type DataGridForcedPropsKey =
   | 'hideFooterRowCount'
   | 'pagination'
   | 'signature'
-  | 'unstable_listView';
+  | 'listView';
 
 /**
  * The Data Grid options with a default value that must be merged with the value given through props.
@@ -317,6 +325,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   showColumnVerticalBorder: boolean;
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: boolean;
+  /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
@@ -411,6 +424,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   classes?: Partial<GridClasses>;
   /**
+   * The data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache?: GridDataSourceCache | null;
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
@@ -493,6 +514,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -708,7 +734,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel?: GridInputRowSelectionModel;
+  rowSelectionModel?: GridRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
@@ -743,19 +769,27 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label'?: string;
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby'?: string;
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label?: string;
   /**
    * Set of columns of type [[GridColDef]][].
    */
   columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId?: GridRowIdGetter<R>;
   /**
@@ -825,20 +859,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
-  /**
-   * The data source object.
-   */
-  unstable_dataSource?: GridDataSource;
-  /**
-   * Data source cache object.
-   */
-  unstable_dataSourceCache?: GridDataSourceCache | null;
-  /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
-   */
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {
@@ -862,10 +882,10 @@ export interface DataGridProSharedPropsWithDefaultValue {
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `listViewColumn`.
    * @default false
    */
-  unstable_listView: boolean;
+  listView: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
@@ -874,9 +894,9 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    */
   headerFilterHeight?: number;
   /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   * Definition of the column rendered when the `listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  listViewColumn?: GridListViewColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

@@ -1,4 +1,5 @@
-import { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
@@ -26,14 +27,17 @@ export interface GridRowSelectionApi {
   /**
    * Returns an array of the selected rows.
    * @returns {Map<GridRowId, GridRowModel>} A `Map` with the selected rows.
+   * @deprecated Use `gridRowSelectionIdsSelector`, `gridRowSelectionCountSelector`, or `gridRowSelectionManagerSelector` instead.
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
-   * Updates the selected rows to be those passed to the `rowIds` argument.
-   * Any row already selected will be unselected.
-   * @param {readonly GridRowId[]} rowIds The row ids to select.
+   * Sets the new row selection model.
+   *
+   * ⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.
+   * Pass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.
+   * @param {gridRowSelectionModel} rowSelectionModel The new row selection model
    */
-  setRowSelectionModel: (rowIds: readonly GridRowId[]) => void;
+  setRowSelectionModel: (rowSelectionModel: GridRowSelectionModel) => void;
 }
 
 export interface GridRowMultiSelectionApi {
@@ -57,6 +61,16 @@ export interface GridRowMultiSelectionApi {
     isSelected?: boolean,
     resetSelection?: boolean,
   ) => void;
+  /**
+   * Returns the modified selection model after applying row selection propagation.
+   *
+   * Use this to achieve proper `rowSelectionPropagation` behavior when setting the selection model using `setRowSelectionModel`.
+   * @param {GridRowSelectionModel} inputSelectionModel The selection model to propagate.
+   * @returns {GridRowSelectionModel} The modified selection model.
+   */
+  getPropagatedRowSelectionModel: (
+    inputSelectionModel: GridRowSelectionModel,
+  ) => GridRowSelectionModel;
 }
 
 export interface GridMultiSelectionApi {

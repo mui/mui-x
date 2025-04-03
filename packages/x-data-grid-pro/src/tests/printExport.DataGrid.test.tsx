@@ -2,18 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  GridToolbar,
-  GridApi,
-  useGridApiRef,
-  DataGridProProps,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApi, useGridApiRef, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 
 describe('<DataGridPro /> - Print export', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   const NB_ROWS = 2;
   const defaultData = getBasicGridData(NB_ROWS, 2);
@@ -55,10 +49,8 @@ describe('<DataGridPro /> - Print export', () => {
   ];
 
   describe('Export toolbar', () => {
-    clock.withFakeTimers();
-
     it('should display print button by default', () => {
-      render(<Test slots={{ toolbar: GridToolbar }} />);
+      render(<Test showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
@@ -67,7 +59,7 @@ describe('<DataGridPro /> - Print export', () => {
     it('should disable print export when passing `printOptions.disableToolbarButton`', () => {
       render(
         <Test
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );

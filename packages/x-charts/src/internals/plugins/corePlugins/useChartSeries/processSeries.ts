@@ -1,5 +1,5 @@
+import { SeriesId } from '../../../../models/seriesType/common';
 import { AllSeriesType } from '../../../../models/seriesType';
-import { defaultizeColor } from '../../../defaultizeColor';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import {
@@ -21,32 +21,35 @@ export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
   seriesConfig,
   dataset,
 }: {
-  series: AllSeriesType<TSeriesType>[];
+  series: Readonly<AllSeriesType<TSeriesType>[]>;
   colors: string[];
   seriesConfig: ChartSeriesConfig<TSeriesType>;
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
 }) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> } = {};
   // Notice the line about uses `ChartSeriesType` instead of TSeriesType.
   // That's probably because the series.type is not propagated from the generic but hardcoded in the config.
 
-  series.forEach((seriesData, seriesIndex: number) => {
-    const { id = `auto-generated-id-${seriesIndex}`, type } =
-      seriesData as AllSeriesType<TSeriesType>;
+  series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
+    const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
+      seriesData,
+      seriesIndex,
+      colors,
+    );
 
-    if (seriesGroups[type] === undefined) {
-      seriesGroups[type] = { series: {}, seriesOrder: [] };
+    const id: SeriesId = seriesWithDefaultValues.id;
+
+    if (seriesGroups[seriesData.type] === undefined) {
+      seriesGroups[seriesData.type] = { series: {}, seriesOrder: [] };
     }
-    if (seriesGroups[type]?.series[id] !== undefined) {
+
+    if (seriesGroups[seriesData.type]?.series[id] !== undefined) {
       throw new Error(`MUI X: series' id "${id}" is not unique.`);
     }
 
-    seriesGroups[type]!.series[id] = {
-      id,
-      ...defaultizeColor(seriesData, seriesIndex, colors),
-    };
-    seriesGroups[type]!.seriesOrder.push(id);
+    seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
+    seriesGroups[seriesData.type]!.seriesOrder.push(id);
   });
 
   const processedSeries: { [type in TSeriesType]?: SeriesProcessorResult<TSeriesType> } = {};

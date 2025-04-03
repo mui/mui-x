@@ -82,7 +82,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
         <Reset />
         <DataGridPremium
           apiRef={apiRef}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           columns={columns}
           disableVirtualization
           aggregationFunctions={{
@@ -103,7 +103,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
   });
 
@@ -112,7 +112,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 
@@ -143,8 +143,10 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {

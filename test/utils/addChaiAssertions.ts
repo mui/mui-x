@@ -1,5 +1,11 @@
 import chai from 'chai';
 
+import chaiDom from 'chai-dom';
+import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';
+
+chai.use(chaiDom);
+chai.use(chaiPlugin);
+
 // https://stackoverflow.com/a/46755166/3406963
 declare global {
   namespace Chai {
@@ -13,7 +19,7 @@ declare global {
 }
 
 chai.use((chaiAPI, utils) => {
-  chai.Assertion.addMethod('toEqualDateTime', function toEqualDateTime(expectedDate, message) {
+  chaiAPI.Assertion.addMethod('toEqualDateTime', function toEqualDateTime(expectedDate, message) {
     // eslint-disable-next-line no-underscore-dangle
     const actualDate = this._obj;
 
@@ -30,7 +36,7 @@ chai.use((chaiAPI, utils) => {
       cleanExpectedDate = expectedDate;
     }
 
-    const assertion = new chai.Assertion(cleanActualDate.toISOString(), message);
+    const assertion = new chaiAPI.Assertion(cleanActualDate.toISOString(), message);
     // TODO: Investigate if `as any` can be removed after https://github.com/DefinitelyTyped/DefinitelyTyped/issues/48634 is resolved.
     utils.transferFlags(this as any, assertion, false);
     assertion.to.equal(cleanExpectedDate.toISOString());

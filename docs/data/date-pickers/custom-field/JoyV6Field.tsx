@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  useTheme as useMaterialTheme,
+  ThemeProvider,
+  createTheme,
   useColorScheme as useMaterialColorScheme,
-  Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
@@ -30,6 +30,11 @@ const CalendarIcon = createSvgIcon(
   'Calendar',
 );
 
+const ClearIcon = createSvgIcon(
+  <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />,
+  'Clear',
+);
+
 const joyTheme = extendJoyTheme();
 
 function JoyDateField(props: DatePickerFieldProps) {
@@ -49,12 +54,12 @@ function JoyDateField(props: DatePickerFieldProps) {
     // Can be used to style the component
     disabled,
     readOnly,
-    focused,
     error,
     inputRef,
 
     // The rest can be passed to the root element
     id,
+    value,
     ...other
   } = fieldResponse;
 
@@ -66,17 +71,30 @@ function JoyDateField(props: DatePickerFieldProps) {
       <Input
         disabled={disabled}
         endDecorator={
-          <IconButton
-            onClick={() => pickerContext.setOpen((prev) => !prev)}
-            aria-label={openPickerAriaLabel}
-          >
-            <CalendarIcon size="md" />
-          </IconButton>
+          <React.Fragment>
+            {clearable && value && (
+              <IconButton
+                title="Clear"
+                tabIndex={-1}
+                onClick={onClear}
+                sx={{ marginRight: 0.5 }}
+              >
+                <ClearIcon size="md" />
+              </IconButton>
+            )}
+            <IconButton
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
+              aria-label={openPickerAriaLabel}
+            >
+              <CalendarIcon size="md" />
+            </IconButton>
+          </React.Fragment>
         }
         slotProps={{
           input: { ref: inputRef },
         }}
         {...other}
+        value={value}
         ref={pickerContext.triggerRef}
       />
     </FormControl>
@@ -97,26 +115,32 @@ function JoyDatePicker(props: DatePickerProps<false>) {
  * This component is for syncing the theme mode of this demo with the MUI docs mode.
  * You might not need this component in your project.
  */
-function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
+function SyncThemeMode() {
   const { setMode } = useColorScheme();
-  const { setMode: setMaterialMode } = useMaterialColorScheme();
+  const { mode } = useMaterialColorScheme();
   React.useEffect(() => {
-    setMode(mode);
-    setMaterialMode(mode);
-  }, [mode, setMode, setMaterialMode]);
+    if (mode) {
+      setMode(mode);
+    }
+  }, [mode, setMode]);
   return null;
 }
 
+const theme = createTheme({ colorSchemes: { light: true, dark: true } });
+
 export default function JoyV6Field() {
-  const materialTheme = useMaterialTheme();
   return (
-    <MaterialCssVarsProvider>
+    <ThemeProvider theme={theme}>
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-        <SyncThemeMode mode={materialTheme.palette.mode} />
+        <SyncThemeMode />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker />
+          <JoyDatePicker
+            slotProps={{
+              field: { clearable: true },
+            }}
+          />
         </LocalizationProvider>
       </CssVarsProvider>
-    </MaterialCssVarsProvider>
+    </ThemeProvider>
   );
 }

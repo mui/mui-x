@@ -6,12 +6,12 @@ import {
   ErrorBoundary,
   waitFor,
   reactMajor,
+  act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridToolbar,
   DataGridProps,
   GridColDef,
   gridClasses,
@@ -36,7 +36,7 @@ import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
-  const { clock, render } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -189,8 +189,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('layout warnings', () => {
-      clock.withFakeTimers();
-
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -199,7 +197,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty height.',
         );
@@ -215,7 +212,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
@@ -223,8 +219,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
-      clock.withFakeTimers();
-
       beforeEach(() => {
         stub(console, 'error');
       });
@@ -242,7 +236,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const firstHeight = grid('root')?.clientHeight;
-        clock.tick(10);
+
         const secondHeight = grid('root')?.clientHeight;
         expect(firstHeight).to.equal(secondHeight);
       });
@@ -969,22 +963,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('localeText', () => {
-    it('should replace the density selector button label text to "Size"', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            localeText={{ toolbarDensity: 'Size' }}
-          />
-        </div>,
-      );
-
-      expect(screen.getByText('Size')).not.to.equal(null);
-    });
-
     it('should support translations in the theme', () => {
       render(
         <ThemeProvider theme={createTheme({}, ptBR)}>
@@ -1000,20 +978,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
       function TestCase(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar {...props} />
           </div>
         );
       }
-      const { setProps } = render(<TestCase localeText={{ toolbarDensity: 'Density' }} />);
-      expect(screen.getByText('Density')).not.to.equal(null);
-      setProps({ localeText: { toolbarDensity: 'Densidade' } });
-      expect(screen.getByText('Densidade')).not.to.equal(null);
+      const { setProps } = render(
+        <TestCase localeText={{ toolbarQuickFilterPlaceholder: 'Recherche' }} />,
+      );
+      expect(screen.getByPlaceholderText('Recherche')).not.to.equal(null);
+      setProps({ localeText: { toolbarQuickFilterPlaceholder: 'Buscar' } });
+      expect(screen.getByPlaceholderText('Buscar')).not.to.equal(null);
     });
   });
 
@@ -1203,7 +1177,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // It should not have a horizontal scrollbar
       expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
-      await sleep(200);
+      await act(async () => {
+        await sleep(200);
+      });
       // The width should not increase infinitely
       expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
     },

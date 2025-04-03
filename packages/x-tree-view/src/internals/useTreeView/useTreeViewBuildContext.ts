@@ -136,8 +136,8 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
     [plugins],
   );
 
-  return React.useMemo(() => {
-    return {
+  return React.useMemo(
+    () => ({
       runItemPlugins,
       wrapItem,
       wrapRoot,
@@ -145,6 +145,7 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
       publicAPI,
       store,
       rootRef,
-    } as TreeViewContextValue<TSignatures>;
-  }, [runItemPlugins, wrapItem, wrapRoot, instance, publicAPI, store, rootRef]);
+    }),
+    [runItemPlugins, wrapItem, wrapRoot, instance, publicAPI, store, rootRef],
+  );
 };

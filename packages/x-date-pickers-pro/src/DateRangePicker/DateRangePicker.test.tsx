@@ -1,57 +1,57 @@
-import * as React from 'react';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
+import { screen } from '@mui/internal-test-utils/createRenderer';
 import { expect } from 'chai';
 import {
   buildFieldInteractions,
   createPickerRenderer,
-  getFieldInputRoot,
+  openPicker,
   stubMatchMedia,
 } from 'test/utils/pickers';
+import { pickerPopperClasses } from '@mui/x-date-pickers/internals/components/PickerPopper';
 
 describe('<DateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   const { renderWithProps } = buildFieldInteractions({
     render,
-    clock,
     Component: DateRangePicker,
   });
 
-  it('should not open mobile picker dialog when clicked on input', () => {
-    // Test with accessible DOM structure
-    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    fireEvent.click(getFieldInputRoot());
-    clock.runToLast();
+  const originalMatchMedia = window.matchMedia;
 
-    expect(screen.queryByRole('tooltip')).not.to.equal(null);
-    expect(screen.queryByRole('dialog')).to.equal(null);
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+  });
+
+  it('should not use the mobile picker by default', () => {
+    // Test with accessible DOM structure
+    window.matchMedia = stubMatchMedia(true);
+    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
+    window.matchMedia = stubMatchMedia(true);
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    fireEvent.click(screen.getAllByRole('textbox')[0]);
-    clock.runToLast();
-
-    expect(screen.queryByRole('tooltip')).not.to.equal(null);
-    expect(screen.queryByRole('dialog')).to.equal(null);
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should open mobile picker dialog when clicked on input when `useMediaQuery` returns `false`', () => {
-    const originalMatchMedia = window.matchMedia;
+  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
+    // Test with accessible DOM structure
     window.matchMedia = stubMatchMedia(false);
+    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
 
-    render(<DateRangePicker />);
-    fireEvent.click(getFieldInputRoot());
-    clock.runToLast();
+    unmount();
 
-    expect(screen.getByRole('dialog')).not.to.equal(null);
-    expect(screen.queryByRole('tooltip')).to.equal(null);
-
-    window.matchMedia = originalMatchMedia;
+    // Test with non-accessible DOM structure
+    window.matchMedia = stubMatchMedia(false);
+    renderWithProps({ enableAccessibleFieldDOMStructure: false });
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
   });
 });

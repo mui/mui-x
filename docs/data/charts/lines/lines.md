@@ -109,7 +109,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClickNoSnap.js"}}
+{{"demo": "LineClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onAxisClick` and the others:
@@ -169,7 +169,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
 
 #### Expanding steps
 
@@ -236,10 +236,9 @@ sx={{
 
 ## Animation
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 :::warning
 If you support interactive ways to add or remove series from your chart, you have to provide the series' id.

@@ -16,7 +16,7 @@ import {
   gridColumnPositionsSelector,
 } from './gridColumnsSelector';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridPipeProcessor,
@@ -98,8 +98,6 @@ export function useGridColumns(
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
-      apiRef.current.updateRenderContext?.();
-      apiRef.current.forceUpdate();
     },
     [logger, apiRef],
   );
@@ -156,7 +154,6 @@ export function useGridColumns(
           }),
         }));
         apiRef.current.updateRenderContext?.();
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef],
@@ -169,6 +166,7 @@ export function useGridColumns(
         columnsToUpsert: columns,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
+        updateInitialVisibilityModel: true,
       });
       setGridColumnsState(columnsState);
     },
@@ -214,7 +212,7 @@ export function useGridColumns(
       const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
       updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
       setGridColumnsState({
-        ...gridColumnsStateSelector(apiRef.current.state),
+        ...gridColumnsStateSelector(apiRef),
         orderedFields: updatedColumns,
       });
 
@@ -232,7 +230,7 @@ export function useGridColumns(
     (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const columnsState = gridColumnsStateSelector(apiRef);
       const column = columnsState.lookup[field];
       const newColumn: GridStateColDef = { ...column, width, hasBeenResized: true };
 
@@ -405,15 +403,12 @@ export function useGridColumns(
       }
 
       setGridColumnsState(
-        hydrateColumnsWidth(
-          gridColumnsStateSelector(apiRef.current.state),
-          apiRef.current.getRootDimensions(),
-        ),
+        hydrateColumnsWidth(gridColumnsStateSelector(apiRef), apiRef.current.getRootDimensions()),
       );
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
   /**
    * APPLIERS
@@ -456,6 +451,7 @@ export function useGridColumns(
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       columnsToUpsert: props.columns,
       keepOnlyColumnsToUpsert: true,
+      updateInitialVisibilityModel: true,
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);

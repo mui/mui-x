@@ -29,12 +29,12 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   disableColumnReorder: true,
   keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
-  unstable_listView: false,
+  listView: false,
 };
 
 const getDataGridForcedProps: GetDataGridForcedProps = (themedProps) => ({
   ...DATA_GRID_FORCED_PROPS,
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',

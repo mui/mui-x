@@ -1,13 +1,23 @@
-import { createSelectorMemoized } from '@mui/x-data-grid/internals';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '@mui/x-data-grid/internals';
 import { GridStatePro } from '../../../models/gridStatePro';
 
-const gridDetailPanelStateSelector = (state: GridStatePro) => state.detailPanel;
+export const gridDetailPanelStateSelector = createRootSelector(
+  (state: GridStatePro) => state.detailPanel,
+);
 
-export const gridDetailPanelExpandedRowIdsSelector = (state: GridStatePro) =>
-  state.detailPanel.expandedRowIds;
+export const gridDetailPanelExpandedRowIdsSelector = createSelector(
+  gridDetailPanelStateSelector,
+  (detailPanelState) => detailPanelState.expandedRowIds,
+);
 
-export const gridDetailPanelExpandedRowsContentCacheSelector = (state: GridStatePro) =>
-  state.detailPanel.contentCache;
+export const gridDetailPanelExpandedRowsContentCacheSelector = createSelector(
+  gridDetailPanelStateSelector,
+  (detailPanelState) => detailPanelState.contentCache,
+);
 
 export const gridDetailPanelRawHeightCacheSelector = createSelectorMemoized(
   gridDetailPanelStateSelector,

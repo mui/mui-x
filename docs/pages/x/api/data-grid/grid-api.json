@@ -19,6 +19,7 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
+    "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
@@ -40,7 +41,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "forceUpdate": { "type": { "description": "() =&gt; void" }, "required": true },
     "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" }, "required": true },
     "getAllGroupDetails": {
       "type": { "description": "() =&gt; GridColumnGroupLookup" },
@@ -130,6 +130,13 @@
     },
     "getPinnedColumns": {
       "type": { "description": "() =&gt; GridPinnedColumnFields" },
+      "required": true,
+      "isProPlan": true
+    },
+    "getPropagatedRowSelectionModel": {
+      "type": {
+        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+      },
       "required": true,
       "isProPlan": true
     },
@@ -394,7 +401,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowSelectionModel: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {
@@ -466,7 +473,6 @@
       "required": true,
       "isProPlan": true
     },
-    "unstable_dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true

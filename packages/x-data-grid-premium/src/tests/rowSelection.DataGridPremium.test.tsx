@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -73,14 +73,55 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should auto select parents when controlling row selection model', () => {
       const onRowSelectionModelChange = spy();
       render(
-        <Test rowSelectionModel={[3, 4]} onRowSelectionModelChange={onRowSelectionModelChange} />,
+        <Test
+          rowSelectionModel={includeRowSelection([3, 4])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
       );
 
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([
-        3,
-        4,
-        'auto-generated-row-category1/Cat B',
-      ]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+      );
+    });
+
+    it('should auto select the parent when updating the controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <Test
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([3, 4]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+      );
+    });
+
+    it('should auto select descendants when updating the controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <Test
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({
+          rowSelectionModel: includeRowSelection(['auto-generated-row-category1/Cat B']),
+        });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+      );
     });
 
     it('should select all the children when selecting a parent', () => {
@@ -146,13 +187,15 @@ describe('<DataGridPremium /> - Row selection', () => {
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.state.rowSelection.type).to.equal('include');
+      expect(apiRef.current?.state.rowSelection.ids.size).to.equal(expectedCount);
 
       act(() => {
         apiRef.current?.updateRows([...rows]);
       });
       expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.state.rowSelection.type).to.equal('include');
+      expect(apiRef.current?.state.rowSelection.ids.size).to.equal(expectedCount);
     });
 
     it('should select all the children when selecting an indeterminate parent', () => {
@@ -167,6 +210,54 @@ describe('<DataGridPremium /> - Row selection', () => {
         2,
         'auto-generated-row-category1/Cat A',
       ]);
+    });
+
+    // Use case yet to be supported
+    // eslint-disable-next-line mocha/no-skipped-tests
+    describe.skip('prop: keepNonExistentRowsSelected', () => {
+      it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
+        const onRowSelectionModelChange = spy();
+        const { setProps } = render(
+          <Test
+            keepNonExistentRowsSelected
+            rowSelectionModel={includeRowSelection([3, 4])}
+            rows={[]}
+            onRowSelectionModelChange={onRowSelectionModelChange}
+          />,
+        );
+
+        expect(onRowSelectionModelChange.callCount).to.equal(0);
+
+        act(() => {
+          setProps({ rows });
+        });
+        expect(onRowSelectionModelChange.callCount).to.equal(1);
+        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+          includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+        );
+      });
+
+      it('should auto select the children of a previously non existent parent row when it is added back', () => {
+        const onRowSelectionModelChange = spy();
+        const { setProps } = render(
+          <Test
+            keepNonExistentRowsSelected
+            rowSelectionModel={includeRowSelection(['auto-generated-row-category1/Cat B'])}
+            rows={[]}
+            onRowSelectionModelChange={onRowSelectionModelChange}
+          />,
+        );
+
+        expect(onRowSelectionModelChange.callCount).to.equal(0);
+
+        act(() => {
+          setProps({ rows });
+        });
+        expect(onRowSelectionModelChange.callCount).to.equal(1);
+        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+          includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
+        );
+      });
     });
   });
 });

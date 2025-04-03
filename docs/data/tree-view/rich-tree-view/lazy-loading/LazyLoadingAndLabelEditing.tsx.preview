@@ -1,0 +1,11 @@
+<RichTreeViewPro
+  items={[]}
+  apiRef={apiRef}
+  onItemLabelChange={handleItemLabelChange}
+  isItemEditable
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+  dataSourceCache={customCache}
+/>

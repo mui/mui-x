@@ -6,7 +6,7 @@ import {
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
   useGridApiMethod,
-  useGridApiEventHandler,
+  useGridEvent,
   GridEventListener,
   GridPinnedColumnPosition,
   gridColumnFieldsSelector,
@@ -145,7 +145,7 @@ export const useGridColumnPinning = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
+      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef);
 
       const shouldExportPinnedColumns =
         // Always export if the `exportOnlyDirtyModels` property is not activated
@@ -228,7 +228,7 @@ export const useGridColumnPinning = (
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
-    return gridPinnedColumnsSelector(apiRef.current.state);
+    return gridPinnedColumnsSelector(apiRef);
   }, [apiRef]);
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
@@ -328,7 +328,7 @@ export const useGridColumnPinning = (
       newOrderedFieldsBeforePinningColumns;
   };
 
-  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
+  useGridEvent(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
   React.useEffect(() => {
     if (props.pinnedColumns) {

@@ -36,12 +36,14 @@ const kzKZPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Тазарту',
   okButtonLabel: 'Ок',
   todayButtonLabel: 'Бүгін',
+  nextStepButtonLabel: 'Келесі',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Күнді таңдау',
   dateTimePickerToolbarTitle: 'Күн мен уақытты таңдау',
   timePickerToolbarTitle: 'Уақытты таңдау',
   dateRangePickerToolbarTitle: 'Кезеңді таңдаңыз',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,11 +61,12 @@ const kzKZPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Апта ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Күнді таңдаңыз, таңдалған күн ${formattedDate}` : 'Күнді таңдаңыз',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Уақытты таңдаңыз, таңдалған уақыт ${formattedTime}` : 'Уақытты таңдаңыз',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels
