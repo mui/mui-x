@@ -14,7 +14,7 @@ githubLabel: 'component: data grid'
 This component is incomplete.
 
 Currently, the AI Assistant Panel Trigger is the only part of the AI Assistant Panel component available.
-Future versions of the AI Assistant Panel component will make it possible to compose each of its parts to create a custom AI assistant panel.
+Future versions of the AI Assistant Panel component will make it possible to compose each of its parts for full customization.
 
 :::
 
