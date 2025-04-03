@@ -452,10 +452,10 @@ export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
+    'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
   >,
 ) {
-  if (props.unstable_listView) {
+  if (props.listView) {
     return 0;
   }
 

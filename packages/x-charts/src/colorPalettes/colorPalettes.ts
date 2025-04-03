@@ -5,22 +5,22 @@ export type ChartsColor = string | ChartsColorCallback;
 
 export const rainbowSurgePaletteLight = [
   '#4254FB',
-  '#FFB219',
-  '#54C690',
-  '#FF5463',
-  '#F287B3',
-  '#2EAFFF',
-  '#FD8731',
+  '#FFB422',
+  '#FA4F58',
+  '#0DBEFF',
+  '#22BF75',
+  '#FA83B4',
+  '#FF7511',
 ];
 
 export const rainbowSurgePaletteDark = [
-  '#273DFF',
-  '#FAC04E',
-  '#32ae6a',
-  '#F3616E',
+  '#495AFB',
+  '#FFC758',
+  '#F35865',
+  '#30C8FF',
+  '#44CE8D',
   '#F286B3',
-  '#2EAFFF',
-  '#FD8731',
+  '#FF8C39',
 ];
 
 export const rainbowSurgePalette: ChartsColorPaletteCallback = (mode) =>

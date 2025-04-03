@@ -211,7 +211,7 @@ export default function ListViewAdvanced({ window }) {
     [handleDelete, apiRef],
   );
 
-  const listColDef = React.useMemo(
+  const listViewColDef = React.useMemo(
     () => ({
       field: 'listCell',
       renderCell: (params) => (
@@ -286,8 +286,8 @@ export default function ListViewAdvanced({ window }) {
               variant: 'linear-progress',
             },
           }}
-          unstable_listView={isListView}
-          unstable_listColumn={listColDef}
+          listView={isListView}
+          listViewColumn={listViewColDef}
           pagination
           pageSizeOptions={[10]}
           initialState={{

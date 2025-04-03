@@ -24,8 +24,10 @@ export const useInteractionItemProps = (
 } => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const interactionActive = React.useRef(false);
 
   const onPointerEnter = React.useCallback(() => {
+    interactionActive.current = true;
     instance.setItemInteraction({
       type: data.type,
       seriesId: data.seriesId,
@@ -38,6 +40,7 @@ export const useInteractionItemProps = (
   }, [instance, data.type, data.seriesId, data.dataIndex]);
 
   const onPointerLeave = React.useCallback(() => {
+    interactionActive.current = false;
     instance.removeItemInteraction({
       type: data.type,
       seriesId: data.seriesId,
@@ -46,9 +49,19 @@ export const useInteractionItemProps = (
     instance.clearHighlight();
   }, [instance, data.type, data.seriesId, data.dataIndex]);
 
+  React.useEffect(() => {
+    return () => {
+      /* Clean up state if this item is unmounted while active. */
+      if (interactionActive.current) {
+        onPointerLeave();
+      }
+    };
+  }, [onPointerLeave]);
+
   if (skip) {
     return {};
   }
+
   return {
     onPointerEnter,
     onPointerLeave,

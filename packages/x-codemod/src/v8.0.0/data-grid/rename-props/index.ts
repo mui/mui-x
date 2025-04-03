@@ -9,6 +9,8 @@ const props = {
   unstable_lazyLoading: 'lazyLoading',
   unstable_lazyLoadingRequestThrottleMs: 'lazyLoadingRequestThrottleMs',
   unstable_onDataSourceError: 'onDataSourceError',
+  unstable_listView: 'listView',
+  unstable_listColumn: 'listViewColumn',
 };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { GridListColDef } from '../../../models/colDef/gridColDef';
+import type { GridListViewColDef } from '../../../models/colDef/gridColDef';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -10,20 +10,20 @@ import { GridEventListener } from '../../../models/events';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridEvent } from '../../utils/useGridEvent';
 
-export type GridListViewState = (GridListColDef & { computedWidth: number }) | undefined;
+export type GridListViewState = (GridListViewColDef & { computedWidth: number }) | undefined;
 
 export const listViewStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'unstable_listColumn'>
+  Pick<DataGridProcessedProps, 'listViewColumn'>
 > = (state, props, apiRef) => ({
   ...state,
-  listViewColumn: props.unstable_listColumn
-    ? { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) }
+  listViewColumn: props.listViewColumn
+    ? { ...props.listViewColumn, computedWidth: getListColumnWidth(apiRef) }
     : undefined,
 });
 
 export function useGridListView(
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'unstable_listView' | 'unstable_listColumn'>,
+  props: Pick<DataGridProcessedProps, 'listView' | 'listViewColumn'>,
 ) {
   /*
    * EVENTS
@@ -60,7 +60,7 @@ export function useGridListView(
    * EFFECTS
    */
   useEnhancedEffect(() => {
-    const listColumn = props.unstable_listColumn;
+    const listColumn = props.listViewColumn;
     if (listColumn) {
       apiRef.current.setState((state) => {
         return {
@@ -72,17 +72,17 @@ export function useGridListView(
         };
       });
     }
-  }, [apiRef, props.unstable_listColumn]);
+  }, [apiRef, props.listViewColumn]);
 
   React.useEffect(() => {
-    if (props.unstable_listView && !props.unstable_listColumn) {
+    if (props.listView && !props.listViewColumn) {
       warnOnce([
-        'MUI X: The `unstable_listColumn` prop must be set if `unstable_listView` is enabled.',
-        'To fix, pass a column definition to the `unstable_listColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
+        'MUI X: The `listViewColumn` prop must be set if `listView` is enabled.',
+        'To fix, pass a column definition to the `listViewColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
         'For more details, see https://mui.com/x/react-data-grid/list-view/',
       ]);
     }
-  }, [props.unstable_listView, props.unstable_listColumn]);
+  }, [props.listView, props.listViewColumn]);
 }
 
 function getListColumnWidth(apiRef: RefObject<GridPrivateApiCommunity>) {
