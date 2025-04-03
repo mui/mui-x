@@ -7,18 +7,17 @@ title: Ask Your Table - AI Assistant
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
-To use this feature, you need to have a prompt processing backend. MUI offers this [service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
-Email us at [sales@mui.com](mailto:sales@mui.com) to get more information.
+To use this feature you must have a prompt processing backend. 
+MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
+Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
 :::
 
-The AI assistant feature allows users to interact with the Data Grid component using natural language.
-Type the prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
+The AI assistant feature lets users interact with the Data Grid component using natural language.
+Type a prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field and the Data Grid will update accordingly.
+In supported browsers, users can also prompt the assistant using their voice.
 
 To enable client-side of this feature, pass `enableAiAssistant` prop.
 
-:::success
-In supported browsers, the prompt can be entered using voice.
-:::
 
 To increase the accuracy of the language processing, provide example values for the available columns.
 This can be done in the following ways.
@@ -40,19 +39,19 @@ You can use suggestions to quickly enter prompts that are supported by the mock 
 
 ## Custom examples
 
-You can provide custom examples as a context for the prompt processing through the `examples` prop in the `columns` array.
-The `examples` prop should contain an array of possible values for that column.
+Use the `examples` prop in the `columns` array to provide custom examples as context for prompt processing.
+The `examples` prop should contain an array of possible values for its respective column.
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 ## Use row data for examples
 
-Pass `allowAiAssistantDataSampling` prop to allow use of the row data to generate column examples.
-This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
+Pass the `allowAiAssistantDataSampling` prop to use row data to generate examples.
+This is useful if you're dealing with non-sensitive data and want to skip creating custom examples for each column.
 
-Data is collected randomly on the cell level, which means that the examples per column might not come from the same rows.
+Data is collected randomly at the cell level, which means that the examples for a given column might not come from the same rows.
 
-For `aiAssistant.getPromptContext()` API method, pass `allowDataSampling` flag as a parameter.
+For the `aiAssistant.getPromptContext()` API method, pass the `allowDataSampling` flag as a parameter.
 
 ```ts
 const context = React.useMemo(
@@ -65,26 +64,26 @@ const context = React.useMemo(
 
 ## Using Server-side data
 
-An example of combining prompt control with the [Server-side data](/x/react-data-grid/server-side-data/)
+The example below shows how to combine prompt control with [server-side data](/x/react-data-grid/server-side-data/).
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
 ## Processing service integration
 
-Natural language prompts must be processed by a service to understand what kind of state changes must be applied to the Data Grid to match the user's request.
-You can use MUI's processing service or build it by yourself.
+Natural language prompts must be processed by a service to understand what kinds of state changes must be applied to the Data Grid to match the user's request.
+You can use MUI's processing service or build your own.
 
 ### With MUI's service
 
-Data Grid provides all necessary pieces to make the service integration easy.
+The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Enable the AI Assistant feature by adding `enableAiAssistant` prop.
+1. Enable the AI Assistant feature by adding the `enableAiAssistant` prop.
    A new toolbar button will appear in the default [`<Toolbar />`](/x/react-data-grid/components/toolbar/).
    This button opens `<AssistantPanel />` that can take user's prompts.
 2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::error
-   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request further to the MUI's service.
+   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
@@ -104,14 +103,14 @@ Data Grid provides all necessary pieces to make the service integration easy.
 
    :::
 
-3. Provide `onPrompt()` callback to pass the user's prompts to the service.
-   Service's response will be used internally to make the necessary state updates.
+3. Provide the `onPrompt()` callback to pass the user's prompts to the service.
+   The service's response is used internally by the Data Grid to make the necessary state updates.
 
    :::success
    You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
-   It will add necessary headers and stringify the body in the right format for you.
+   This adds the necessary headers and stringifies the body in the correct format for you.
 
-   In addition to this, it allows you to add an additional prompt context to achieve better processing results.
+  It also makes it possible to provide additional context for better processing results, as shown below:
 
    ```ts
    const PROMPT_RESOLVER_PROXY_BASE_URL =
@@ -135,20 +134,20 @@ Data Grid provides all necessary pieces to make the service integration easy.
 
 ### With custom service
 
-Use pieces of the AI Assistant feature to build your own prompt processing service.
+The Data Grid exposes several key elements of the AI Assistant feature so you can build your own prompt processing service:
 
-- `<GridAiAssistantPanel />` and `<GridPromptField />` components can be used to build custom UI.
-- [`aiAssistant`](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) API can be used to build the context using `getPromptContext()` and to apply the processing with `applyPromptResult(response: PromptResponse)` methods.
-- `unstable_gridDefaultPromptResolver()` can be used to pass the prompt and the context(s) with the necessary headers to the processing service.
+- The [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel/) and [Prompt Field](/x/react-data-grid/components/prompt-field/) components can be used to build custom UI.
+- The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for building context using `getPromptContext()`, and for applying processing with the `applyPromptResult(response: PromptResponse)` method
+- The `unstable_gridDefaultPromptResolver()` method for passing the prompt and context with the necessary headers to the processing service
 
-Mix and match these with your custom components/methods to implement the processing the way you need it in your project.
+Integrate these elements with your custom components and methods to suit your specific use case.
 
-You can use completely custom solution and apply the processing result using other Grid's APIs like [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without a need to structure it as `PromptResponse`.
+You can use a fully custom solution and apply the processing result using other Grid APIs such as [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without the need to structure it as a `PromptResponse`.
 
-To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API with a library of your choice.
-Body of the request requires `query` and `context` parameters.
+To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
+The body of the request requires `query` and `context` parameters.
 `additionalContext` is optional.
-API response type is `Result<PromptResponse>`.
+The API response type is `Result<PromptResponse>`.
 
 ```ts
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
