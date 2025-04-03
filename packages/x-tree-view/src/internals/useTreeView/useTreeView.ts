@@ -39,7 +39,7 @@ export function useTreeViewApiInitialization<T>(
 let globalId: number = 0;
 
 /**
- * This is the main hook that setups the plugin system for the tree-view.
+ * This is the main hook that sets the plugin system up for the tree-view.
  *
  * It manages the data used to create the tree-view.
  *
