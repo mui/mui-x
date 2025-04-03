@@ -85,13 +85,12 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 ### Breaking changes
 
 - Removed `react-spring` as a dependency of `@mui/x-charts`.
- A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
+  A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
 
   - the type of the `x`, `y`, `width` and `height` props of the `bar` slot are now `number`;
   - the type of `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `arcLabelRadius`, `cornerRadius` and `paddingAngle` props of `pieArc` and `pieArcLabel` slot are now `number`.
-  
-  Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
 
+  Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
 
 - Tick labels in the y-axis of cartesian charts will now have an ellipsis applied to prevent overflow.
   If your tick labels are being clipped sooner than you would like, you can increase the y-axis size by increasing its width property.
@@ -104,7 +103,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 
 - [charts] Adjust color palettes (#17209) @noraleonte
 - [charts] Allow multiple axes in the tooltip (#17058) @alexfauquette
-- [charts] Improve custom legend docs (#17231) @JCQuintas 
+- [charts] Improve custom legend docs (#17231) @JCQuintas
 - [charts] Fix crash when item shown in tooltip is unmounted (#17169) @bernardobelchior
 - [charts] Migrate some animations from `react-spring` (#16961) @bernardobelchior
 - [charts] Remove `react-spring` (#17123) @bernardobelchior
