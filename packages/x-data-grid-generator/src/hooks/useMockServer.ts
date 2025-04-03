@@ -391,8 +391,13 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           return;
         }
 
-        const newData = { ...dataRef.current } as GridDemoData;
-        newData.rows = newData.rows?.map((row) => (row.id === rowId ? updatedRow : row));
+        const newRows = [...(dataRef.current?.rows || [])];
+        const rowIndex = newRows.findIndex((row) => row.id === rowId) ?? -1;
+        if (rowIndex === -1) {
+          return;
+        }
+        newRows[rowIndex] = updatedRow;
+        const newData = { ...dataRef.current, rows: newRows } as GridDemoData;
         const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
         dataCache.set(cacheKey, newData!);
         setTimeout(() => {
