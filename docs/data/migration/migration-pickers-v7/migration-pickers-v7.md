@@ -350,7 +350,7 @@ This came with a few problems:
 
 - It is hard to know which ancestor defines the `ownerState` and therefore which props it contains (is the `actionBar` slot handled by `DatePicker`, by `DesktopDatePicker` or by `PickerLayout`?).
 
-- A lot of the properties of the `ownerState` were not meant for public usage, which made the evolution of the codebase complex because all the props received by an internal component becomes public API and changing them becomes a breaking change.
+- Many properties of the `ownerState` were not meant for public usage, which made the evolution of the codebase complex because all the props received by an internal component became public API and any change introduced a breaking change.
 
 - Some properties actually useful to customize a component were not present, if the component was not using them by default (if the built-in styles for the `actionBar` don't need to know if the picker is disabled, then the `ownerState` won't contain this information).
 
