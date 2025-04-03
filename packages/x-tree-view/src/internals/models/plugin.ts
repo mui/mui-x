@@ -10,7 +10,7 @@ import { TreeViewStore } from '../utils/TreeViewStore';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   /**
-   * An imperative api available for internal use.
+   * An imperative API available for internal use. Used to access methods from other plugins.
    */
   instance: TreeViewUsedInstance<TSignature>;
   /**
