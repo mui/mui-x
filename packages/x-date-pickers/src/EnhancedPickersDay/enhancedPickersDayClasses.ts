@@ -6,8 +6,6 @@ import {
 export interface EnhancedPickersDayClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element if `disableMargin=false`. */
-  dayWithMargin: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
   dayOutsideMonth: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`. */
@@ -18,18 +16,6 @@ export interface EnhancedPickersDayClasses {
   selected: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
-  previewStart: string;
-  previewEnd: string;
-  insidePreviewing: string;
-  selectionStart: string;
-  selectionEnd: string;
-  insideSelection: string;
-  startOfWeek: string;
-  endOfWeek: string;
-  startOfMonth: string;
-  endOfMonth: string;
-  disableMargin: string;
-  previewed: string;
 }
 
 export type EnhancedPickersDayClassKey = keyof EnhancedPickersDayClasses;
@@ -40,25 +26,5 @@ export function getEnhancedPickersDayUtilityClass(slot: string) {
 
 export const enhancedPickersDayClasses = generateUtilityClasses<EnhancedPickersDayClassKey>(
   'MuiEnhancedPickersDay',
-  [
-    'root',
-    'dayWithMargin',
-    'dayOutsideMonth',
-    'today',
-    'selected',
-    'disabled',
-    'fillerCell',
-    'previewStart',
-    'previewEnd',
-    'insidePreviewing',
-    'selectionStart',
-    'selectionEnd',
-    'insideSelection',
-    'startOfWeek',
-    'endOfWeek',
-    'disableMargin',
-    'startOfMonth',
-    'endOfMonth',
-    'previewed',
-  ],
+  ['root', 'dayOutsideMonth', 'today', 'selected', 'disabled', 'fillerCell'],
 );

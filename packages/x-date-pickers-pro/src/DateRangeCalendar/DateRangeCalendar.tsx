@@ -59,6 +59,7 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { EnhancedDateRangePickerDay } from '../EnhancedDateRangePickerDay/EnhancedDateRangePickerDay';
 
 const releaseInfo = getReleaseInfo();
 
@@ -490,7 +491,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   );
 
   const slotsForDayCalendar = {
-    day: DateRangePickerDay,
+    day: enableEnhancedDaySlot ? EnhancedDateRangePickerDay : DateRangePickerDay,
     ...slots,
   } as DayCalendarSlots;
 
@@ -625,7 +626,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
               gridLabelId={labelId}
-              enableEnhancedDaySlot={enableEnhancedDaySlot}
             />
           </DateRangeCalendarMonthContainer>
         );
