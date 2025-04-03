@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.0.0-beta.1",
+  "version": "8.0.0-beta.3",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.js",
@@ -39,13 +39,12 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.10",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@babel/runtime": "^7.27.0",
+    "@mui/utils": "^7.0.0",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
-    "@react-spring/rafz": "^9.7.5",
-    "@react-spring/web": "^9.7.5",
     "@use-gesture/react": "^10.3.1",
+    "bezier-easing": "^2.1.0",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-is": "^18.3.1 || ^19.0.0",
@@ -55,8 +54,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -70,10 +69,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.0-rc.0",
-    "@mui/system": "^7.0.0-rc.0",
-    "@react-spring/core": "^9.7.5",
-    "@react-spring/shared": "^9.7.5",
+    "@mui/material": "^7.0.1",
+    "@mui/system": "^7.0.1",
     "@types/prop-types": "^15.7.14",
     "@types/react-is": "^19.0.0",
     "@types/use-sync-external-store": "^0.0.6",

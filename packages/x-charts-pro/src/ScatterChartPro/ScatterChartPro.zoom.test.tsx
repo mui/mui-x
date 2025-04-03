@@ -1,7 +1,10 @@
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
 
 describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
@@ -76,8 +79,14 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     }
   });
 
-  it('should zoom on wheel', async () => {
-    const { user } = render(<ScatterChartPro {...scatterChartProps} />, options);
+  it('should zoom on wheel', async function test() {
+    this.timeout(10000);
+
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
 
     expect(screen.queryByText('1')).not.to.equal(null);
     expect(screen.queryByText('2')).not.to.equal(null);
@@ -99,8 +108,11 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     // This will leave only x2 and y20 visible
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
+      // Wait the animation frame
+      await new Promise((r) => requestAnimationFrame(r));
     }
 
+    expect(onZoomChange.callCount).to.equal(200);
     expect(screen.queryByText('1')).to.equal(null);
     expect(screen.queryByText('2')).not.to.equal(null);
     expect(screen.queryByText('3')).to.equal(null);
@@ -111,8 +123,11 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     // scroll back
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
+      // Wait the animation frame
+      await new Promise((r) => requestAnimationFrame(r));
     }
 
+    expect(onZoomChange.callCount).to.equal(400);
     expect(screen.queryByText('1')).not.to.equal(null);
     expect(screen.queryByText('2')).not.to.equal(null);
     expect(screen.queryByText('3')).not.to.equal(null);
@@ -123,6 +138,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
+      const onZoomChange = sinon.spy();
       const { user } = render(
         <ScatterChartPro
           {...scatterChartProps}
@@ -130,6 +146,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
             { axisId: 'x', start: 75, end: 100 },
             { axisId: 'y', start: 75, end: 100 },
           ]}
+          onZoomChange={onZoomChange}
         />,
         options,
       );
@@ -150,7 +167,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 5, y: 100 },
+          coords: { x: 15, y: 85 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
@@ -163,7 +180,10 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
           coords: { x: 100, y: 5 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => requestAnimationFrame(r));
 
+      expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('1.0')).to.equal(null);
       expect(screen.queryByText('2.0')).not.to.equal(null);
       expect(screen.queryByText('2.2')).not.to.equal(null);
@@ -178,7 +198,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 5, y: 100 },
+          coords: { x: 15, y: 85 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
@@ -191,7 +211,10 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
           coords: { x: 300, y: -200 },
         },
       ]);
+      // Wait the animation frame
+      await new Promise((r) => requestAnimationFrame(r));
 
+      expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('2.0')).to.equal(null);
       expect(screen.queryByText('1.0')).not.to.equal(null);
       expect(screen.queryByText('1.2')).not.to.equal(null);

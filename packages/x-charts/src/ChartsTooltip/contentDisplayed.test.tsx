@@ -32,6 +32,9 @@ const config: Partial<BarChartProps> = {
 // B| X
 //   --------
 
+const cellSelector =
+  '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th, .MuiChartsTooltip-root caption';
+
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
@@ -78,9 +81,9 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        const firstRow = ['', 'S1', '4'];
-        const secondRow = ['', 'S2', '2'];
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           // Header
           'A',
@@ -99,9 +102,9 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        const firstRow = ['', 'S1', '1'];
-        const secondRow = ['', 'S2', '1'];
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        const secondRow = ['S2', '1'];
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           // Header
           'B',
@@ -137,9 +140,9 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        const firstRow = ['', 'S1', '4'];
-        const secondRow = ['', 'S2', '2'];
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           // Header
           'A',
@@ -158,9 +161,9 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        const firstRow = ['', 'S1', '1'];
-        const secondRow = ['', 'S2', '1'];
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        const secondRow = ['S2', '1'];
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           // Header
           'B',
@@ -194,8 +197,8 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['S1', '4']);
       });
 
       // Trigger the tooltip
@@ -204,8 +207,8 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['S2', '1']);
       });
     });
 
@@ -231,8 +234,8 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S1', '4']);
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['S1', '4']);
       });
 
       await user.pointer({
@@ -240,8 +243,8 @@ describe('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['S2', '1']);
       });
     });
   });

@@ -15,22 +15,19 @@ export interface Cancelable {
  * @return The `requestAnimationFrame` throttled function
  */
 export function rafThrottle<T extends (...args: any[]) => any>(fn: T): T & Cancelable {
-  let isRunning: boolean = false;
   let lastArgs: Parameters<T>;
   let rafRef: ReturnType<typeof requestAnimationFrame> | null;
 
   const later = () => {
-    isRunning = false;
+    rafRef = null;
     fn(...lastArgs);
   };
 
   function throttled(...args: Parameters<T>) {
     lastArgs = args;
-    if (isRunning) {
-      return;
+    if (!rafRef) {
+      rafRef = requestAnimationFrame(later);
     }
-    isRunning = true;
-    rafRef = requestAnimationFrame(later);
   }
 
   throttled.clear = () => {
@@ -38,7 +35,6 @@ export function rafThrottle<T extends (...args: any[]) => any>(fn: T): T & Cance
       cancelAnimationFrame(rafRef);
       rafRef = null;
     }
-    isRunning = false;
   };
 
   return throttled as T & Cancelable;

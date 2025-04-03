@@ -4,7 +4,7 @@ import type { ExtremumFilter } from './useChartCartesianAxis.types';
 
 export type ZoomData = {
   /**
-   * The axis id of the zoomed axis.
+   * The id of the zoomed axis.
    */
   axisId: AxisId;
   /**

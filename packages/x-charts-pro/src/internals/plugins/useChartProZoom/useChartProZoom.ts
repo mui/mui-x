@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -10,6 +9,7 @@ import {
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
+import { useEventCallback } from '@mui/material/utils';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
@@ -30,10 +30,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
-  const { zoomData: paramsZoomData, onZoomChange } = params;
+  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
+
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
 
   // Manage controlled state
-  useEnhancedEffect(() => {
+  React.useEffect(() => {
     if (paramsZoomData === undefined) {
       return undefined;
     }
@@ -80,16 +82,18 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
     () =>
-      debounce(() =>
-        store.update((prevState) => {
-          return {
-            ...prevState,
-            zoom: {
-              ...prevState.zoom,
-              isInteracting: false,
-            },
-          };
-        }),
+      debounce(
+        () =>
+          store.update((prevState) => {
+            return {
+              ...prevState,
+              zoom: {
+                ...prevState.zoom,
+                isInteracting: false,
+              },
+            };
+          }),
+        166,
       ),
     [store],
   );

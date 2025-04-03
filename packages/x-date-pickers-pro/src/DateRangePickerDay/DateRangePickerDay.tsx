@@ -132,7 +132,7 @@ const DateRangePickerDayRoot = styled('div', {
       },
     },
     {
-      props: { isDayFillerCell: false, isHighlighting: true },
+      props: { isDayFillerCell: false, isDaySelected: true },
       style: {
         borderRadius: 0,
         color: (theme.vars || theme).palette.primary.contrastText,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
   gridDimensionsSelector,
@@ -140,5 +140,5 @@ export const useGridInfiniteLoader = (
   };
 
   useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
-  useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
+  useGridEventPriority(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };
