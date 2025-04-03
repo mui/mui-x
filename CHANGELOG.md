@@ -24,7 +24,7 @@ Team members who have contributed to this release:
 
 ### Data Grid
 
-### Breaking changes
+#### Breaking changes
 
 - The list view feature and its related props are now stable.
 
@@ -82,7 +82,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 
 ### Charts
 
-### Breaking changes
+#### Breaking changes
 
 - Removed `react-spring` as a dependency of `@mui/x-charts`.
   A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
