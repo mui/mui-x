@@ -50,15 +50,12 @@ const isConsoleWarningIgnored = (msg?: string) => {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  const isRandomError = msg?.includes('*************************************');
-
   if (
     isMuiV6Error ||
     isReactRouterFlagsError ||
     isNoDevRoute ||
     isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning ||
-    isRandomError
+    isMuiLoadingButtonWarning
   ) {
     return true;
   }

@@ -3,9 +3,9 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
 import TestViewer from './TestViewer';
-import { setupTestLicenseKey } from '../utils/testLicense';
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
 
-setupTestLicenseKey();
+setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
 Globals.assign({
   skipAnimation: true,
