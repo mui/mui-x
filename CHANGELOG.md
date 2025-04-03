@@ -5,6 +5,145 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.3
+
+_Apr 3, 2025_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚫 Removed `react-spring` as a dependency of `@mui/x-charts`
+- 📦 Data Grid list view feature is now stable
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+### Breaking changes
+
+- The list view feature and its related props are now stable.
+
+  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+
+  The `GridListColDef` type has been renamed to `GridListViewColDef`.
+
+  ```diff
+  -const listViewColDef: GridListColDef = {
+  +const listViewColDef: GridListViewColDef = {
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
+
+   <DataGridPro
+  -  unstable_listView
+  -  unstable_listColumn={listViewColDef}
+  +  listView
+  +  listViewColumn={listViewColDef}
+   />
+  ```
+
+- The `useGridApiEventHandler()` hook has been renamed to `useGridEvent()`.
+- The `useGridApiOptionHandler()` hook has been renamed to `useGridEventPriority()`.
+
+#### `@mui/x-data-grid@8.0.0-beta.3`
+
+- [DataGrid] Always refetch lazy-loading rows (#16827) @MBilalShafi
+- [DataGrid] Fix "is any of" autocomplete rendering (#17226) @KenanYusuf
+- [DataGrid] Rename `useGridApiEventHandler()` to `useGridEvent()` (#17159) @romgrk
+- [DataGrid] Support adding a label to the grid (#17147) @KenanYusuf
+- [DataGrid] Refactor: remove material typings (#17119) @romgrk
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.3`, plus:
+
+- [DataGridPro] Make list view feature stable (#17217) @KenanYusuf
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.3`
+
+- [pickers] Add new `nextOrAccept` action bar action (#17037) @flaviendelangle
+- [pickers] Fix time picker scrollbar width (#16774) @oliviertassinari
+- [TimePicker] Align `DigitalClock` scrollbar thickness (#17203) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
+
+### Charts
+
+### Breaking changes
+
+- Removed `react-spring` from the following slots:
+
+  - `pieArc`: used directly in `PieArcPlot` and transitively in `PieChart`;
+  - `mark` used directly in `MarkPlot` and transitively in `LineChart`;
+  - `line` used directly in `LineElement`, and transitively in `LinePlot`, `LineChart` and `SparkLineChart` (if `plotType` is 'line').
+
+  As a result, the `SpringValue` wrapper in some of `pieArc`'s slot props were removed. This means that the props `cornerRadius`, `endAngle`, `innerRadius`, `outerRadius`, `paddingAngle` and `startAngle` are now `number` instead of `SpringValue<number>`.
+
+  Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
+
+- Removed `react-spring` as a dependency of `@mui/x-charts`. A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
+
+  - the type of the `x`, `y`, `width` and `height` props of the `bar` slot are now `number`;
+  - the type of `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `arcLabelRadius`, `cornerRadius` and `paddingAngle` props of `pieArcLabel` slot are now `number`.
+
+- Tick labels in the y-axis of cartesian charts will now have an ellipsis applied to prevent overflow.
+  If your tick labels are being clipped sooner than you would like, you can increase the y-axis size by increasing its width property.
+
+#### `@mui/x-charts@8.0.0-beta.3`
+
+- [charts] Adjust color palettes (#17209) @noraleonte
+- [charts] Fix crash when item shown in tooltip is unmounted (#17169) @bernardobelchior
+- [charts] Migrate some animations from react-spring (#16961) @bernardobelchior
+- [charts] Remove react spring (#17123) @bernardobelchior
+- [charts] Fix y-axis tick label overflow (#16846) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
+
+### `@mui/x-codemod@8.0.0-beta.3`
+
+- [codemod] Add `listView` prop rename codemod (#17220) @MBilalShafi
+
+### Docs
+
+- [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
+- [docs] Fix 301 link @oliviertassinari
+- [docs] Fix redirection getting-started (#17200) @oliviertassinari
+- [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
+- [docs] Update Localization Provider JSDoc link (#17207) @LukasTy
+
+### Core
+
+- [core] Sync scorecards.yml across codebase @oliviertassinari
+- [core] Revert upgrade to React 19.1 (#17206) @bernardobelchior
+- [code-infra] Fix `test:unit` warning (#17224) @JCQuintas
+- [code-infra] Fix pickers failing test after clock=fake removal (#17202) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValidation` (#17150) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValue` (#17199) @JCQuintas
+- [infra] Add write permission for actions in issue status label handler (#17161) @michelengelen
+
 ## 8.0.0-beta.2
 
 _Mar 27, 2025_
