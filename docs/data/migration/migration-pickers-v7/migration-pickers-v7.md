@@ -352,7 +352,7 @@ This came with a few problems:
 
 - Many properties of the `ownerState` were not meant for public usage, which made the evolution of the codebase complex because all the props received by an internal component became public API and any change introduced a breaking change.
 
-- Some properties actually useful to customize a component were not present, if the component was not using them by default (if the built-in styles for the `actionBar` don't need to know if the picker is disabled, then the `ownerState` won't contain this information).
+- Some properties that would have been useful for customizing a component were not present, if the component was not using them by default. For example, if the built-in styles for the `actionBar` don't need to know if the picker is disabled, then the `ownerState`  of the `actionBar` won't contain this information.
 
 - It is hard to understand which element some properties apply to. If the `ownerState` of the `monthButton` slot contains `disabled`, is it because the button is disabled or because the picker is disabled?
 
