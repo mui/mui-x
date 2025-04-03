@@ -403,10 +403,6 @@ export default function PlaygroundTreeView({
   const currentTheme = useTheme();
   const customTheme = createTheme(getTheme(currentTheme.palette.mode, color));
 
-  // React.useEffect(() => {
-  //   console.log(selectionPropagation);
-  // }, [selectionPropagation]);
-
   return (
     <Stack
       justifyContent="center"
