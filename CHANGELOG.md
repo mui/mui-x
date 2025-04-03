@@ -84,11 +84,11 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 
 - Removed `react-spring` from the following slots:
 
-  - `pieArc`: used directly in `PieArcPlot` and transitively in `PieChart`;
+  - `pieArc` used directly in `PieArcPlot` and transitively in `PieChart`;
   - `mark` used directly in `MarkPlot` and transitively in `LineChart`;
-  - `line` used directly in `LineElement`, and transitively in `LinePlot`, `LineChart` and `SparkLineChart` (if `plotType` is 'line').
+  - `line` used directly in `LineElement` and transitively in `LinePlot`, `LineChart` and `SparkLineChart` (if `plotType` is `'line'`).
 
-  As a result, the `SpringValue` wrapper in some of `pieArc`'s slot props were removed. This means that the props `cornerRadius`, `endAngle`, `innerRadius`, `outerRadius`, `paddingAngle` and `startAngle` are now `number` instead of `SpringValue<number>`.
+  As a result, the `SpringValue` wrapper in some of `pieArc`'s slot props were removed. This means that the props `cornerRadius`, `endAngle`, `innerRadius`, `outerRadius`, `paddingAngle` and `startAngle` are now of type `number` instead of `SpringValue<number>`.
 
   Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
 
