@@ -118,7 +118,7 @@ export type TreeViewPluginSignature<
    */
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
   /**
-   * Same as dependencies but the plugin might not have been initialized.
+   * Same as dependencies but the plugin might not have been initialized. Used for dependencies on plugins of features that can be enabled conditionally.
    */
   optionalDependencies: T extends { optionalDependencies: Array<any> }
     ? T['optionalDependencies']
