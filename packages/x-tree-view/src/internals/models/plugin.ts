@@ -14,7 +14,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
    */
   instance: TreeViewUsedInstance<TSignature>;
   /**
-   * The parameters after being processed with the default values.
+   * The Tree View parameters after being processed with the default values.
    */
   params: TreeViewUsedDefaultizedParams<TSignature>;
   slots: TSignature['slots'];
