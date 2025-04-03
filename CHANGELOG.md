@@ -9,14 +9,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 3, 2025_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚫 Removed `react-spring` as a dependency of `@mui/x-charts`
 - 📦 Data Grid list view feature is now stable
+- 💫 Support title in Data Grid
+- 📚 Documentation improvements
 - 🐞 Bugfixes
 
 Team members who have contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk.
+@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -50,7 +52,6 @@ Team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.0.0-beta.3`
 
-- [DataGrid] Always refetch lazy-loading rows (#16827) @MBilalShafi
 - [DataGrid] Fix "is any of" autocomplete rendering (#17226) @KenanYusuf
 - [DataGrid] Rename `useGridApiEventHandler()` to `useGridEvent()` (#17159) @romgrk
 - [DataGrid] Support adding a label to the grid (#17147) @KenanYusuf
@@ -61,6 +62,7 @@ Team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@8.0.0-beta.3`, plus:
 
 - [DataGridPro] Make list view feature stable (#17217) @KenanYusuf
+- [DataGridPro] Always refetch lazy-loading rows (#16827) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.0.0-beta.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -94,9 +96,14 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 - Tick labels in the y-axis of cartesian charts will now have an ellipsis applied to prevent overflow.
   If your tick labels are being clipped sooner than you would like, you can increase the y-axis size by increasing its width property.
 
+- The tooltip DOM structure is modified to improve accessibility. If you relied on it to apply some style or run tests, you might be impacted by this modification.
+  - The axis tooltip displays a table per axis with the axis value in a caption.
+  - Cells containing the series label and the color mark got merged in a th cell.
+
 #### `@mui/x-charts@8.0.0-beta.3`
 
 - [charts] Adjust color palettes (#17209) @noraleonte
+- [charts] Allow multiple axes in the tooltip (#17058) @alexfauquette
 - [charts] Improve custom legend docs (#17231) @JCQuintas 
 - [charts] Fix crash when item shown in tooltip is unmounted (#17169) @bernardobelchior
 - [charts] Migrate some animations from `react-spring` (#16961) @bernardobelchior
