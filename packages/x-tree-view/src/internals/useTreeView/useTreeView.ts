@@ -40,6 +40,16 @@ export function useTreeViewApiInitialization<T>(
 }
 
 let globalId: number = 0;
+
+/**
+ * This is the main hook that sets the plugin system up for the tree-view.
+ *
+ * It manages the data used to create the tree-view.
+ *
+ * @param plugins All the plugins that will be used in the tree-view.
+ * @param props The props passed to the tree-view.
+ * @param rootRef The ref of the root element.
+ */
 export const useTreeView = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
