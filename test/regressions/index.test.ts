@@ -50,7 +50,7 @@ const isConsoleWarningIgnored = (msg?: string) => {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  const isExpiredLicenseKeyError = msg?.includes('MUI X: Expired license key.');
+  const isRandomError = msg?.includes('*************************************');
 
   if (
     isMuiV6Error ||
@@ -58,7 +58,7 @@ const isConsoleWarningIgnored = (msg?: string) => {
     isNoDevRoute ||
     isTailwindCdnWarning ||
     isMuiLoadingButtonWarning ||
-    isExpiredLicenseKeyError
+    isRandomError
   ) {
     return true;
   }
