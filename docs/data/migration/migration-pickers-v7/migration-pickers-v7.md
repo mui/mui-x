@@ -357,7 +357,7 @@ This came with a few problems:
 - The naming of the props made it difficult to understand which element they apply to. If the `ownerState` of the `monthButton` slot contains `disabled`, it is hard to establish whether the disabled state applies to the `monthButton` or the picker itself.
 
 To solve these issues, the `ownerState` has been reworked.
-All the component's `ownerState` contain a shared set of properties describing the state of the picker they are in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
+Every component's `ownerState` contains a shared set of properties describing the state of the picker it is in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
 Some component's `ownerState` contain additional properties describing their own state (`isMonthDisabled` for the month button, `toolbarOrientation` for the toolbar, `isDaySelected` for the day button, ...).
 
 :::success
