@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { SinonFakeTimers, spy, useFakeTimers } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -222,6 +222,15 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
+      });
+
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();
