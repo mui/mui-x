@@ -206,16 +206,16 @@ export const useFieldV7TextField = <
           'MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please remove the `enableAccessibleFieldDOMStructure` prop from your Picker or Field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please add the `enableAccessibleFieldDOMStructure={false}` prop from your Picker or Field component:',
           '',
-          '<DatePicker slots={{ textField: MyCustomTextField }} />',
+          '<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />',
           '',
           'Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
         ].join('\n'),
       );
     }
 
-    if (autoFocus && sectionListRef.current) {
+    if (autoFocus && !disabled && sectionListRef.current) {
       sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
