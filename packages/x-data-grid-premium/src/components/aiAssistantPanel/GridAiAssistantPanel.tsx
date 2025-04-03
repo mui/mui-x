@@ -143,7 +143,7 @@ function GridAiAssistantPanel() {
         )}
       </AiAssistantPanelBody>
       <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
-        <GridPromptField />
+        <GridPromptField onSubmit={apiRef.current.aiAssistant.processPrompt} />
         {suggestions.length > 0 && <GridAiAssistantPanelSuggestions suggestions={suggestions} />}
       </AiAssistantPanelFooter>
     </AiAssistantPanelRoot>

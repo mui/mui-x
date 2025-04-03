@@ -2,12 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { RenderProp } from '@mui/x-data-grid';
 import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { PromptFieldContext, PromptFieldState } from './PromptFieldContext';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export type PromptFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> & {
+export type PromptFieldProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'className' | 'onSubmit'
+> & {
   /**
    * A function to customize rendering of the component.
    */
@@ -22,10 +23,18 @@ export type PromptFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'class
    */
   lang?: string;
   /**
-   * Called when an error occurs.
+   * Whether the prompt field is disabled.
+   */
+  disabled?: boolean;
+  /**
+   * Called when an speech recognition error occurs.
    * @param {string} error The error message
    */
-  onError?: (error: string) => void;
+  onRecordError?: (error: string) => void;
+  /**
+   * Called when the user submits the prompt.
+   */
+  onSubmit: (prompt: string) => void;
 };
 
 /**
@@ -41,67 +50,34 @@ export type PromptFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'class
  * - [PromptField API](https://mui.com/x/api/data-grid/prompt-field/)
  */
 const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function PromptField(props, ref) {
-  const { render, className, lang, onError, ...other } = props;
+  const { render, className, lang, onRecordError, onSubmit, disabled = false, ...other } = props;
   const [value, setValue] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
   const [recording, setRecording] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const apiRef = useGridApiContext();
   const state = React.useMemo(
     () => ({
       value,
-      loading,
       recording,
-      error,
+      disabled,
     }),
-    [value, loading, recording, error],
+    [value, recording, disabled],
   );
   const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-  const processPrompt = React.useCallback(() => {
-    setLoading(true);
-    setError(null);
+  const processPrompt = (prompt: string) => {
+    onSubmit(prompt);
     setValue('');
-
-    apiRef.current.aiAssistant
-      .processPrompt(value)
-      .then((result) => {
-        if (result) {
-          apiRef.current.aiAssistant.applyPromptResult(result);
-        }
-      })
-      .catch((promptError) => {
-        onError?.(promptError);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [apiRef, value, onError]);
-
-  const handleValueChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setValue(newValue);
-  }, []);
-
-  const handleStopRecording = useEventCallback((newValue: string) => {
-    setValue(newValue);
-    if (newValue) {
-      processPrompt();
-    }
-  });
+  };
 
   const contextValue = React.useMemo(
     () => ({
       state,
       lang,
-      onValueUpdate: setValue,
-      onValueChange: handleValueChange,
+      onValueChange: setValue,
       onRecordingChange: setRecording,
-      onStopRecording: handleStopRecording,
-      onSend: processPrompt,
-      onError: setError,
+      onSubmit: processPrompt,
+      onError: onRecordError,
     }),
-    [state, lang, handleValueChange, handleStopRecording, setError, processPrompt],
+    [state, lang, onRecordError, processPrompt],
   );
 
   const element = useGridComponentRenderer(
