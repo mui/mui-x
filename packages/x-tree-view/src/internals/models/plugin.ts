@@ -206,7 +206,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    */
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
   /**
-   * A function that receives the parameters and returns the parameters after being processed with the default values.
+   * A function that receives the parameters and returns them after being processed with the default values.
    *
    * @param {TreeViewUsedParams<TSignature>} options The options object.
    * @param {TreeViewUsedParams<TSignature>['params']} options.params The parameters before being processed with the default values.
