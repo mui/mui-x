@@ -2,20 +2,17 @@ import * as React from 'react';
 
 export interface PromptFieldState {
   value: string;
-  loading: boolean;
+  disabled: boolean;
   recording: boolean;
-  error: string | null;
 }
 
 export interface PromptFieldContextValue {
   state: PromptFieldState;
   lang: string | undefined;
-  onValueUpdate: (value: string) => void;
-  onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onValueChange: (value: string) => void;
   onRecordingChange: (recording: boolean) => void;
-  onStopRecording: (value: string) => void;
-  onSend: () => void;
-  onError: (error: string) => void;
+  onSubmit: (prompt: string) => void;
+  onError: ((error: string) => void) | undefined;
 }
 
 export const PromptFieldContext = React.createContext<PromptFieldContextValue | undefined>(

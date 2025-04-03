@@ -33,17 +33,17 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
   function PromptFieldControl(props, ref) {
     const { render, className, onChange, onKeyDown, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, onValueChange, onSend } = usePromptFieldContext();
+    const { state, onValueChange, onSubmit } = usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      onValueChange(event);
+      onValueChange(event.target.value);
       onChange?.(event);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
-        onSend();
+        onSubmit(state.value);
       }
       onKeyDown?.(event);
     };

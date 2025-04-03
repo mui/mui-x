@@ -33,11 +33,11 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
   function PromptFieldSend(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, onSend } = usePromptFieldContext();
+    const { state, onSubmit } = usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      onSend();
+      onSubmit(state.value);
       onClick?.(event);
     };
 
@@ -47,7 +47,7 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
       {
         ...rootProps.slotProps?.baseIconButton,
         className: resolvedClassName,
-        disabled: state.loading || state.recording || !state.value,
+        disabled: state.disabled || state.recording || !state.value,
         ...other,
         onClick: handleClick,
         ref,

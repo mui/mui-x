@@ -7,6 +7,7 @@ import {
   PromptFieldControl,
   PromptFieldSend,
   IS_SPEECH_RECOGNITION_SUPPORTED,
+  useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,9 +19,16 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import SendIcon from '@mui/icons-material/Send';
 
 function CustomToolbar() {
+  const apiRef = useGridApiContext();
+
+  const handlePromptSubmit = async (prompt) => {
+    // TODO: handle error
+    await apiRef.current.aiAssistant.processPrompt(prompt);
+  };
+
   return (
     <Toolbar>
-      <PromptField>
+      <PromptField onSubmit={handlePromptSubmit}>
         <PromptFieldControl
           render={({ ref, ...controlProps }, state) => (
             <TextField
@@ -84,7 +92,7 @@ function CustomToolbar() {
 
 export default function GridPromptField() {
   const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
     rowLength: 10,
     maxColumns: 10,
   });
