@@ -84,7 +84,7 @@ async function main(argv) {
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
-      `Creating changelog for ${latestTaggedVersion}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
+      `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
@@ -228,6 +228,7 @@ async function main(argv) {
         break;
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts-pro':
@@ -327,7 +328,7 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to the community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
   };
 
   const logTeamSection = () => {

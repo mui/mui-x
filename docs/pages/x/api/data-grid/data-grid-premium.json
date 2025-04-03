@@ -6,7 +6,7 @@
     },
     "aggregationFunctions": {
       "type": { "name": "object" },
-      "default": "GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided"
+      "default": "GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
     "aggregationModel": { "type": { "name": "object" } },
     "aggregationRowsScope": {
@@ -41,6 +41,15 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "dataSource": {
+      "type": {
+        "name": "shape",
+        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+      }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
@@ -209,6 +218,16 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "string" } },
+    "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
+    "listView": { "type": { "name": "bool" } },
+    "listViewColumn": {
+      "type": {
+        "name": "shape",
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -369,6 +388,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
+      }
+    },
     "onDensityChange": {
       "type": { "name": "func" },
       "signature": {
@@ -392,6 +418,8 @@
     },
     "onFetchRows": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -526,6 +554,8 @@
     },
     "onRowsScrollEnd": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -587,8 +617,8 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+        "name": "shape",
+        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSelectionPropagation": {
@@ -597,7 +627,9 @@
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\""
+      "default": "\"client\"",
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
@@ -608,6 +640,7 @@
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sortingMode": {
@@ -637,15 +670,6 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
-    "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
-    "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
-    "unstable_listColumn": {
-      "type": {
-        "name": "shape",
-        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
-      }
-    },
-    "unstable_listView": { "type": { "name": "bool" } },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",
@@ -667,9 +691,9 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
+      "name": "bottomContainer",
+      "description": "Component rendered for the bottom container.",
+      "default": "GridBottomContainer",
       "class": null
     },
     {
@@ -728,9 +752,8 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "null",
-      "class": null
+      "description": "Toolbar component rendered in the grid header.",
+      "class": "MuiDataGridPremium-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -748,6 +771,12 @@
       "name": "noRowsOverlay",
       "description": "No rows overlay component rendered when the grid has no rows.",
       "default": "GridNoRowsOverlay",
+      "class": null
+    },
+    {
+      "name": "noColumnsOverlay",
+      "description": "No columns overlay component rendered when the grid has no columns.",
+      "default": "GridNoColumnsOverlay",
       "class": null
     },
     {
@@ -785,6 +814,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGridPremium-row"
+    },
+    {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
     },
     {
       "name": "baseBadge",
@@ -829,21 +864,9 @@
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
-      "class": null
-    },
-    {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
       "class": null
     },
     {
@@ -865,21 +888,27 @@
       "class": null
     },
     {
+      "name": "baseInput",
+      "description": "The custom Input component used in the grid.",
+      "default": "Input",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
       "class": null
     },
     {
-      "name": "basePopper",
-      "description": "The custom Popper component used in the grid.",
-      "default": "Popper",
+      "name": "basePagination",
+      "description": "The custom Pagination component used in the grid.",
+      "default": "Pagination",
       "class": null
     },
     {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
+      "name": "basePopper",
+      "description": "The custom Popper component used in the grid.",
+      "default": "Popper",
       "class": null
     },
     {
@@ -892,6 +921,12 @@
       "name": "baseSkeleton",
       "description": "The custom Skeleton component used in the grid.",
       "default": "Skeleton",
+      "class": null
+    },
+    {
+      "name": "baseSwitch",
+      "description": "The custom Switch component used in the grid.",
+      "default": "Switch",
       "class": null
     },
     {
@@ -975,7 +1010,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {
@@ -1072,6 +1107,12 @@
       "name": "columnMenuSortDescendingIcon",
       "description": "Icon displayed in column menu for descending sort",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
       "class": null
     },
     {
@@ -1188,6 +1229,12 @@
       "key": "aggregationColumnHeaderLabel",
       "className": "MuiDataGridPremium-aggregationColumnHeaderLabel",
       "description": "Styles applied to the aggregation label in the column header when aggregated.",
+      "isGlobal": false
+    },
+    {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGridPremium-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
       "isGlobal": false
     },
     {
@@ -1503,6 +1550,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGridPremium-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGridPremium-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1518,6 +1571,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPremium-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGridPremium-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {
@@ -1923,9 +1982,21 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGridPremium-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGridPremium-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarLabel",
+      "className": "MuiDataGridPremium-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
       "isGlobal": false
     },
     {
@@ -1956,6 +2027,24 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGridPremium-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGridPremium-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGridPremium-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
       "isGlobal": false
     },
     {

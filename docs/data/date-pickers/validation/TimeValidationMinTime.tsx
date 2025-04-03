@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
@@ -14,13 +15,21 @@ export default function TimeValidationMinTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={['TimePicker', 'DateTimePicker', 'DateTimeRangePicker']}
+        components={[
+          'TimePicker',
+          'DateTimePicker',
+          'TimeRangePicker',
+          'DateTimeRangePicker',
+        ]}
       >
         <DemoItem label="TimePicker">
           <TimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+        </DemoItem>
+        <DemoItem label="TimeRangePicker" component="TimeRangePicker">
+          <TimeRangePicker defaultValue={[fiveAM, nineAM]} minTime={nineAM} />
         </DemoItem>
         <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} minTime={nineAM} />

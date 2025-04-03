@@ -22,11 +22,22 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
+      itemErrorIcon: ['itemErrorIcon'],
+    };
 
-  return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewProRoot = styled('ul', {
@@ -62,6 +73,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
+  const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -79,11 +91,10 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     {
       plugins: RICH_TREE_VIEW_PRO_PLUGINS,
       rootRef: ref,
-      props,
+      props: other,
     },
   );
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
@@ -96,7 +107,12 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
@@ -120,8 +136,10 @@ RichTreeViewPro.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
-      selectItem: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
+      setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      setItemSelection: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
@@ -144,6 +162,15 @@ RichTreeViewPro.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func.isRequired,
+    getTreeItems: PropTypes.func.isRequired,
+  }),
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
@@ -181,7 +208,9 @@ RichTreeViewPro.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    lazyLoading: PropTypes.bool,
+  }),
   /**
    * Used to determine the id of a given item.
    *
@@ -246,7 +275,7 @@ RichTreeViewPro.propTypes = {
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
@@ -258,7 +287,7 @@ RichTreeViewPro.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
@@ -285,14 +314,14 @@ RichTreeViewPro.propTypes = {
   onItemPositionChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */

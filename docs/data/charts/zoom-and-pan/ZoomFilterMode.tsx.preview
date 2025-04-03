@@ -1,4 +1,5 @@
 <BarChartPro
+  height={300}
   dataset={dataset}
   xAxis={[
     {
@@ -9,5 +10,4 @@
   ]}
   yAxis={[{ valueFormatter }]}
   series={[{ label: 'Letter Frequency', dataKey: 'frequency', valueFormatter }]}
-  {...chartProps}
 />

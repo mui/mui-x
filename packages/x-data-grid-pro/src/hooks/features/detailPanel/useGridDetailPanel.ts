@@ -4,7 +4,7 @@ import {
   GridEventListener,
   GridRowId,
   useGridSelector,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
   GridCellParams,
   gridDataRowIdsSelector,
@@ -126,8 +126,8 @@ export const useGridDetailPanel = (
     [apiRef, props.getDetailPanelContent],
   );
 
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'cellClick', handleCellClick);
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
 
   apiRef.current.registerControlState({
     stateId: 'detailPanels',
@@ -161,7 +161,7 @@ export const useGridDetailPanel = (
   );
 
   const getExpandedDetailPanels = React.useCallback<GridDetailPanelApi['getExpandedDetailPanels']>(
-    () => gridDetailPanelExpandedRowIdsSelector(apiRef.current.state),
+    () => gridDetailPanelExpandedRowIdsSelector(apiRef),
     [apiRef],
   );
 
@@ -220,14 +220,14 @@ export const useGridDetailPanel = (
 
   React.useEffect(() => {
     if (props.detailPanelExpandedRowIds) {
-      const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
+      const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef);
       if (currentModel !== props.detailPanelExpandedRowIds) {
         apiRef.current.setExpandedDetailPanels(props.detailPanelExpandedRowIds);
       }
     }
   }, [apiRef, props.detailPanelExpandedRowIds]);
 
-  const updateCachesAndForceUpdate = React.useCallback(() => {
+  const updateCaches = React.useCallback(() => {
     if (!props.getDetailPanelContent) {
       return;
     }
@@ -245,10 +245,9 @@ export const useGridDetailPanel = (
         },
       };
     });
-    apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
+  useGridEvent(apiRef, 'sortedRowsSet', updateCaches);
 
   const previousGetDetailPanelContentProp =
     React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(undefined);

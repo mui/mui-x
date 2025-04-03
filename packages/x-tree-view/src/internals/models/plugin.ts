@@ -17,8 +17,6 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
    * The Tree View parameters after being processed with the default values.
    */
   params: TreeViewUsedDefaultizedParams<TSignature>;
-  slots: TSignature['slots'];
-  slotProps: TSignature['slotProps'];
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   /**
    * The store of controlled properties.
@@ -52,8 +50,7 @@ type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>;
 } & OptionalIfEmpty<'publicAPI', TSignature['publicAPI']> &
-  OptionalIfEmpty<'instance', TSignature['instance']> &
-  OptionalIfEmpty<'contextValue', TSignature['contextValue']>;
+  OptionalIfEmpty<'instance', TSignature['instance']>;
 
 export type TreeViewPluginSignature<
   T extends {
@@ -64,9 +61,6 @@ export type TreeViewPluginSignature<
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
     cache?: {};
-    contextValue?: {};
-    slots?: { [key in keyof T['slots']]: React.ElementType };
-    slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
     modelNames?: keyof T['defaultizedParams'];
     experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
@@ -96,9 +90,6 @@ export type TreeViewPluginSignature<
    */
   state: T extends { state: {} } ? T['state'] : {};
   cache: T extends { cache: {} } ? T['cache'] : {};
-  contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
-  slots: T extends { slots: {} } ? T['slots'] : {};
-  slotProps: T extends { slotProps: {} } ? T['slotProps'] : {};
   /**
    * A helper for controlled properties.
    * Properties defined here can be controlled by the user. If they are not controlled, they will be initialized by the plugin.
@@ -134,9 +125,6 @@ export type TreeViewAnyPluginSignature = {
   dependencies: any;
   optionalDependencies: any;
   events: any;
-  contextValue: any;
-  slots: any;
-  slotProps: any;
   models: any;
   experimentalFeatures: any;
   publicAPI: any;

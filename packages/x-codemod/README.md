@@ -29,7 +29,7 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@next v7.0.0/preset-safe src
+  npx @mui/x-codemod@next v8.0.0/preset-safe src
   npx @mui/x-codemod@next v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
@@ -279,6 +279,36 @@ Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have 
   } from '@mui/x-charts-pro/hooks';
 ```
 
+#### `rename-sparkline-colors-to-color`
+
+Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its first element.
+
+```diff
+ <SparkLineChart
+-  colors={['red']}
++  color={'red'}
+ />
+```
+
+If `colors` is a function, it will be wrapped in another function that returns its first element.
+
+```diff
+ <SparkLineChart
+-  colors={fn}
++  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
+ />
+```
+
+If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
+
+```diff
+ <SparkLineChart
+-  colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++  /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++  color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+ />
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
@@ -294,6 +324,12 @@ npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+- [`remove-props`](#remove-props)
+- [`rename-props`](#rename-props)
+- [`rename-imports`](#rename-imports)
+- [`reform-row-selection-model`](#reform-row-selection-model)
+- [`rename-package`](#rename-package)
+- [`add-showToolbar-prop`](#add-showToolbar-prop)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -313,6 +349,147 @@ Remove feature flags for stabilized `experimentalFeatures`.
 npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
+#### `remove-props`
+
+Remove props that are no longer supported.
+
+The list includes these props:
+
+- `indeterminateCheckboxAction`
+- `rowPositionsDebounceMs`
+- `resetPageOnSortFilter`
+
+```diff
+ <DataGrid
+-  indeterminateCheckboxAction="deselect"
+-  rowPositionsDebounceMs={100}
+-  resetPageOnSortFilter
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+```
+
+#### `rename-props`
+
+Rename props to the new ones.
+
+The list includes these props:
+
+- `unstable_rowSpanning` to `rowSpanning`
+- `unstable_dataSource` to `dataSource`
+- `unstable_dataSourceCache` to `dataSourceCache`
+- `unstable_lazyLoading` to `lazyLoading`
+- `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
+- `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
+
+```diff
+ <DataGrid
+-  unstable_rowSpanning
+-  unstable_dataSource={dataSource}
+-  unstable_dataSourceCache={dataSourceCache}
+-  unstable_lazyLoading
+-  unstable_lazyLoadingRequestThrottleMs={100}
+-  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
++  rowSpanning
++  dataSource={dataSource}
++  dataSourceCache={dataSourceCache}
++  lazyLoading
++  lazyLoadingRequestThrottleMs={100}
++  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
+```
+
+#### `rename-imports`
+
+This codemod renames the imports of the Data Grid components. The list includes these imports:
+
+- `selectedGridRowsSelector` to `gridRowSelectionIdsSelector`
+- `selectedGridRowsCountSelector` to `gridRowSelectionCountSelector`
+
+```diff
+-import { selectedGridRowsSelector, selectedGridRowsCountSelector } from '@mui/x-data-grid';
++import { gridRowSelectionIdsSelector, gridRowSelectionCountSelector } from '@mui/x-data-grid';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-imports <path>
+```
+
+#### `reform-row-selection-model`
+
+Reforms the controlled `rowSelectionModel` prop value to the new one.
+
+```diff
+-const [rowSelectionModel, setRowSelectionModel] = React.useState([1, 2]);
++const [rowSelectionModel, setRowSelectionModel] = React.useState({
++  type: 'include',
++  ids: new Set([1, 2]),
++});
+
+ <DataGrid
+  rowSelectionModel={rowSelectionModel}
+  onRowSelectionModelChange={setRowSelectionModel}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/reform-row-selection-model <path>
+```
+
+#### `rename-package`
+
+Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`.
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-package <path>
+```
+
+#### `add-showToolbar-prop`
+
+Adds the `showToolbar` prop to the Data Grid components that are using `slots.toolbar` prop.
+
+```diff
+ <DataGridPremium
+  slots={{
+    toolbar: GridToolbar,
+  }}
++ showToolbar
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/add-showToolbar-prop <path>
+```
+
 ### Pickers codemods
 
 #### `preset-safe` for Pickers v8.0.0
@@ -328,7 +505,7 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
-- [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+- [`rename-type-imports`](#rename-type-imports)
 
 #### `rename-adapter-date-fns-imports`
 
@@ -360,13 +537,25 @@ The list includes these transformers
 npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
 ```
 
-#### `rename-and-move-field-value-type`
+#### `rename-type-imports`
 
-Renames `FieldValueType` to `PickerValueType`.
+Renames:
+
+- `usePickersTranslations` to `usePickerTranslations`
+- `usePickersContext` to `usePickerContext`
+- `FieldValueType` to `PickerValueType`
+- `RangeFieldSection` to `FieldRangeSection`
+- `PickerShortcutChangeImportance` to `PickerChangeImportance`
 
 ```diff
+-import { usePickersTranslations, usePickersContext } from '@mui/x-date-pickers/hooks';
++import { usePickerTranslations, usePickerContext } from '@mui/x-date-pickers/hooks';
 -import { FieldValueType } from '@mui/x-date-pickers';
 +import { PickerValueType } from '@mui/x-date-pickers';
+-import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
++import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+-import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
++import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 
  interface MyComponentProps {
 -  valueType: FieldValueType;
@@ -379,7 +568,7 @@ Renames `FieldValueType` to `PickerValueType`.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
+npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

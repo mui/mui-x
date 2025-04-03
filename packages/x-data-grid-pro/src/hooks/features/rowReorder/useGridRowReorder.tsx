@@ -3,13 +3,14 @@ import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
-  useGridApiEventHandler,
+  useGridEvent,
   GridEventListener,
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
-  useGridApiOptionHandler,
+  useGridEventPriority,
+  gridRowNodeSelector,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
@@ -84,7 +85,7 @@ export const useGridRowReorder = (
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -114,7 +115,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
 
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return;
@@ -159,7 +160,7 @@ export const useGridRowReorder = (
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -195,9 +196,9 @@ export const useGridRowReorder = (
     [apiRef, dragRowId, isRowReorderDisabled, logger, sortedRowIndexLookup],
   );
 
-  useGridApiEventHandler(apiRef, 'rowDragStart', handleDragStart);
-  useGridApiEventHandler(apiRef, 'rowDragOver', handleDragOver);
-  useGridApiEventHandler(apiRef, 'rowDragEnd', handleDragEnd);
-  useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
-  useGridApiOptionHandler(apiRef, 'rowOrderChange', props.onRowOrderChange);
+  useGridEvent(apiRef, 'rowDragStart', handleDragStart);
+  useGridEvent(apiRef, 'rowDragOver', handleDragOver);
+  useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);
+  useGridEvent(apiRef, 'cellDragOver', handleDragOver);
+  useGridEventPriority(apiRef, 'rowOrderChange', props.onRowOrderChange);
 };

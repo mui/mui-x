@@ -142,7 +142,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         pinnedPosition,
         indexInSection,
         sectionLength,
-        rootProps.showCellVerticalBorder,
+        rootProps.showColumnVerticalBorder,
         gridHasFiller,
       );
 

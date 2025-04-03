@@ -7,6 +7,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+
 function CustomInputAdornment(props) {
   const { hasError, children, sx, ...other } = props;
   return (
@@ -39,13 +41,14 @@ export default function AddWarningIconWhenInvalidRange() {
           maxDate={dayjs('2022-04-19')}
           defaultValue={[dayjs('2022-04-18'), dayjs('2022-04-21')]}
           onError={setError}
+          slots={{ field: MultiInputDateRangeField }}
           slotProps={{
-            textField: (ownerState) => ({
+            textField: ({ position }) => ({
               InputProps: {
                 endAdornment: (
                   <CustomInputAdornment
                     position="end"
-                    hasError={!!error[ownerState.position === 'start' ? 0 : 1]}
+                    hasError={!!error[position === 'start' ? 0 : 1]}
                   />
                 ),
               },

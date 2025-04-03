@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createRootSelector,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -11,7 +15,9 @@ import { gridIsRtlSelector } from '../../core/gridCoreSelector';
  * Get the columns state
  * @category Columns
  */
-export const gridColumnsStateSelector = (state: GridStateCommunity) => state.columns;
+export const gridColumnsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columns,
+);
 
 /**
  * Get an array of column fields in the order rendered on screen.
@@ -52,6 +58,17 @@ export const gridColumnVisibilityModelSelector = createSelector(
 );
 
 /**
+ * Get the "initial" column visibility model, containing the visibility status of each column.
+ * It is updated when the `columns` prop is updated or when `updateColumns` API method is called.
+ * If a column is not registered in the model, it is visible.
+ * @category Visible Columns
+ */
+export const gridInitialColumnVisibilityModelSelector = createSelector(
+  gridColumnsStateSelector,
+  (columnsState) => columnsState.initialColumnVisibilityModel,
+);
+
+/**
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Visible Columns
  */
@@ -75,7 +92,9 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pinnedColumns;
+export const gridPinnedColumnsSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pinnedColumns,
+);
 
 /**
  * Get the visible pinned columns.

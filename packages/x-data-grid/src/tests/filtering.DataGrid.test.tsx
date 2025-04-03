@@ -8,13 +8,11 @@ import {
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
-  GridToolbar,
   GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Filter', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -1440,6 +1438,7 @@ describe('<DataGrid /> - Filter', () => {
             },
           ]}
           slots={{ toolbar: GridToolbarFilterButton }}
+          showToolbar
         />,
       );
 
@@ -1504,6 +1503,7 @@ describe('<DataGrid /> - Filter', () => {
               },
             ]}
             slots={{ toolbar: GridToolbarFilterButton }}
+            showToolbar
           />
         </div>,
       );
@@ -1543,9 +1543,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
           />
         </div>
       );

@@ -8,9 +8,12 @@ import {
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
-  creatZoomLookup,
+  createZoomLookup,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { useEventCallback } from '@mui/material/utils';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import debounce from '@mui/utils/debounce';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -22,7 +25,6 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
-
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
   return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
@@ -38,42 +40,116 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
+  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
+
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
+
+  // Manage controlled state
+  React.useEffect(() => {
+    if (paramsZoomData === undefined) {
+      return undefined;
+    }
+    store.update((prevState) => {
+      if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
+        console.error(
+          [
+            `MUI X: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        );
+      }
+
+      return {
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          isInteracting: true,
+          zoomData: paramsZoomData,
+        },
+      };
+    });
+
+    const timeout = setTimeout(() => {
+      store.update((prevState) => {
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            isInteracting: false,
+          },
+        };
+      });
+    }, 166);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [store, paramsZoomData]);
+
+  // This is debounced. We want to run it only once after the interaction ends.
+  const removeIsInteracting = React.useMemo(
+    () =>
+      debounce(
+        () =>
+          store.update((prevState) => {
+            return {
+              ...prevState,
+              zoom: {
+                ...prevState.zoom,
+                isInteracting: false,
+              },
+            };
+          }),
+        166,
+      ),
+    [store],
+  );
+
+  // This is throttled. We want to run it at most once per frame.
+  // By joining the two, we ensure that interacting and zooming are in sync.
+  const setZoomDataCallback = React.useMemo(
+    () =>
+      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+        store.update((prevState) => {
+          const newZoomData =
+            typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+          onZoomChange?.(newZoomData);
+          if (prevState.zoom.isControlled) {
+            return prevState;
+          }
+
+          removeIsInteracting();
+          return {
+            ...prevState,
+            zoom: {
+              ...prevState.zoom,
+              isInteracting: true,
+              zoomData: newZoomData,
+            },
+          };
+        });
+      }),
+
+    [onZoomChange, store, removeIsInteracting],
+  );
+
+  React.useEffect(() => {
+    return () => {
+      setZoomDataCallback.clear();
+      removeIsInteracting.clear();
+    };
+  }, [setZoomDataCallback, removeIsInteracting]);
 
   // Add events
   const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
   const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
   const eventPrevDiff = React.useRef<number>(0);
-  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
-
-  const setIsInteracting = React.useCallback(
-    (isInteracting: boolean) => {
-      store.update((prev) => ({ ...prev, zoom: { ...prev.zoom, isInteracting } }));
-    },
-    [store],
-  );
-
-  const setZoomDataCallback = React.useCallback(
-    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-      store.update((prevState) => {
-        const newZoomData =
-          typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
-        params.onZoomChange?.(newZoomData);
-
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            zoomData: newZoomData,
-          },
-        };
-      });
-    },
-
-    [params, store],
-  );
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -82,7 +158,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   );
 
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
+  const touchStartRef = React.useRef<{
+    x: number;
+    y: number;
+    zoomData: readonly ZoomData[];
+  } | null>(null);
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isPanEnabled) {
@@ -147,7 +227,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         event.preventDefault();
       }
       isDraggingRef.current = true;
-      setIsInteracting(true);
       touchStartRef.current = {
         x: point.x,
         y: point.y,
@@ -161,7 +240,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         ),
         1,
       );
-      setIsInteracting(false);
       isDraggingRef.current = false;
       touchStartRef.current = null;
     };
@@ -181,7 +259,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     instance,
     svgRef,
     isDraggingRef,
-    setIsInteracting,
     isPanEnabled,
     optionsLookup,
     drawingArea.width,
@@ -209,15 +286,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       }
 
       event.preventDefault();
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      setIsInteracting(true);
-      // Debounce transition to `isInteractive=false`.
-      // Useful because wheel events don't have an "end" event.
-      interactionTimeoutRef.current = window.setTimeout(() => {
-        setIsInteracting(false);
-      }, 166);
 
       setZoomDataCallback((prevZoomData) => {
         return prevZoomData.map((zoom) => {
@@ -245,7 +313,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
     function pointerDownHandler(event: PointerEvent) {
       zoomEventCacheRef.current.push(event);
-      setIsInteracting(true);
     }
 
     function pointerMoveHandler(event: PointerEvent) {
@@ -314,10 +381,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       if (zoomEventCacheRef.current.length < 2) {
         eventPrevDiff.current = 0;
       }
-
-      if (event.type === 'pointerup' || event.type === 'pointercancel') {
-        setIsInteracting(false);
-      }
     }
 
     element.addEventListener('wheel', wheelHandler);
@@ -342,19 +405,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       element.removeEventListener('pointerleave', pointerUpHandler);
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
     };
-  }, [
-    svgRef,
-    drawingArea,
-    isZoomEnabled,
-    optionsLookup,
-    setIsInteracting,
-    instance,
-    setZoomDataCallback,
-  ]);
+  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
   return {
     publicAPI: {
@@ -369,6 +421,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
+  zoomData: true,
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
@@ -378,15 +431,23 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
 };
 
 useChartProZoom.getInitialState = (params) => {
+  const { initialZoom, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
+
   const optionsLookup = {
-    ...creatZoomLookup('x')(params.defaultizedXAxis),
-    ...creatZoomLookup('y')(params.defaultizedYAxis),
+    ...createZoomLookup('x')(defaultizedXAxis),
+    ...createZoomLookup('y')(defaultizedYAxis),
   };
   return {
     zoom: {
       zoomData:
-        params.initialZoom === undefined ? initializeZoomData(optionsLookup) : params.initialZoom,
+        // eslint-disable-next-line no-nested-ternary
+        zoomData !== undefined
+          ? zoomData
+          : initialZoom !== undefined
+            ? initialZoom
+            : initializeZoomData(optionsLookup),
       isInteracting: false,
+      isControlled: zoomData !== undefined,
     },
   };
 };

@@ -32,7 +32,6 @@ describe('<AdapterDateFnsJalali />', () => {
 
       expectDate('fullDate', '12-ام بهمن 1398');
       expectDate('keyboardDate', '1398/11/12');
-      expectDate('keyboardDateTime', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime12h', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime24h', '1398/11/12 23:44');
     });
@@ -58,15 +57,13 @@ describe('<AdapterDateFnsJalali />', () => {
       }[localeKey];
 
       describe(`test with the "${localeKey}" locale`, () => {
-        const { render, adapter, clock } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'date-fns-jalali',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

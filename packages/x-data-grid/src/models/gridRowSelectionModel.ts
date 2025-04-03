@@ -5,6 +5,4 @@ export type GridRowSelectionPropagation = {
   parents?: boolean;
 };
 
-export type GridInputRowSelectionModel = readonly GridRowId[] | GridRowId;
-
-export type GridRowSelectionModel = readonly GridRowId[];
+export type GridRowSelectionModel = { type: 'include' | 'exclude'; ids: Set<GridRowId> };

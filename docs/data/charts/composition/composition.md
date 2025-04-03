@@ -152,7 +152,7 @@ By modifying the series `type` property, you can switch between rendering a line
 >
   <BarPlot />
   <LinePlot />
-  <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
+  <ChartsXAxis label="X axis" axisId="x-axis-id" />
 </ChartContainer>
 ```
 

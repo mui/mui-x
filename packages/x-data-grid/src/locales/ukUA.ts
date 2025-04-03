@@ -1,4 +1,3 @@
-import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -26,6 +25,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
+  noColumnsOverlayLabel: 'Немає стовпців',
+  noColumnsOverlayManageColumns: 'Керування стовпцями',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -56,15 +57,16 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Очистити',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Введіть запит…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Введіть або запишіть запит…',
+  toolbarPromptControlRecordingPlaceholder: 'Прослуховування запиту…',
+  toolbarPromptControlLabel: 'Введення запиту',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Запис',
+  toolbarPromptControlRecordButtonActiveLabel: 'Зупинити запис',
+  toolbarPromptControlSendActionLabel: 'Надіслати',
+  toolbarPromptControlSendActionAriaLabel: 'Надіслати запит',
+  toolbarPromptControlErrorMessage:
+    'Сталася помилка під час обробки запиту. Будь ласка, спробуйте ще раз із іншим запитом.',
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
@@ -74,11 +76,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Завантажити у форматі Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'Пошук',
+  columnsManagementNoColumns: 'Немає стовпців',
+  columnsManagementShowHideAllText: 'Показати/Приховати всі',
+  columnsManagementReset: 'Скинути',
+  columnsManagementDeleteIconLabel: 'Очистити',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
@@ -94,9 +96,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'містить',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не містить',
   filterOperatorEquals: 'дорівнює',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не дорівнює',
   filterOperatorStartsWith: 'починається з',
   filterOperatorEndsWith: 'закінчується на',
   filterOperatorIs: 'дорівнює',
@@ -117,9 +119,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Містить',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Не містить',
   headerFilterOperatorEquals: 'Дорівнює',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Не дорівнює',
   headerFilterOperatorStartsWith: 'Починається з',
   headerFilterOperatorEndsWith: 'Закінчується на',
   headerFilterOperatorIs: 'Дорівнює',
@@ -137,7 +139,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Більше або дорівнює',
   'headerFilterOperator<': 'Менше ніж',
   'headerFilterOperator<=': 'Менше або дорівнює',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Очистити фільтр',
 
   // Filter values text
   filterValueAny: 'будь-який',
@@ -146,6 +148,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показати стовпці',
   columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
@@ -213,6 +216,34 @@ const ukUAGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Показати',
   collapseDetailPanel: 'Приховати',
 
+  // Pagination
+  paginationRowsPerPage: 'Рядків на сторінці:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на першу сторінку';
+    }
+    if (type === 'last') {
+      return 'Перейти на останню сторінку';
+    }
+    if (type === 'next') {
+      return 'Перейти на наступну сторінку';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на попередню сторінку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Порядок рядків',
 
@@ -225,4 +256,4 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'кількість',
 };
 
-export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
+export const ukUA: Localization = getGridLocalization(ukUAGrid);

@@ -53,10 +53,6 @@ export default function ColorScale() {
         height={300}
         grid={{ horizontal: true }}
         series={series}
-        margin={{
-          top: 10,
-          bottom: 20,
-        }}
         yAxis={[
           {
             colorMap:

@@ -1,19 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieSeriesType,
 } from '../models/seriesType/pie';
-import { getDefaultLabelTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
 import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
 import { getLabel } from '../internals/getLabel';
 
@@ -120,10 +114,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     faded,
     data,
   });
-  const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...getDefaultLabelTransitionConfig(skipAnimation),
-    immediate: skipAnimation,
-  });
 
   if (data.length === 0) {
     return null;
@@ -133,40 +123,25 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
 
   return (
     <g {...other}>
-      {transition(
-        (
-          {
-            startAngle,
-            endAngle,
-            paddingAngle: pA,
-            innerRadius: iR,
-            outerRadius: oR,
-            arcLabelRadius: aLR,
-            cornerRadius: cR,
-            ...style
-          },
-          item,
-        ) => {
-          return (
-            <ArcLabel
-              startAngle={startAngle}
-              endAngle={endAngle}
-              paddingAngle={pA}
-              innerRadius={iR}
-              outerRadius={oR}
-              arcLabelRadius={aLR}
-              cornerRadius={cR}
-              style={style}
-              id={id}
-              color={item.color}
-              isFaded={item.isFaded}
-              isHighlighted={item.isHighlighted}
-              formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
-              {...slotProps?.pieArcLabel}
-            />
-          );
-        },
-      )}
+      {transformedData.map((item) => (
+        <ArcLabel
+          key={item.id ?? item.dataIndex}
+          startAngle={item.startAngle}
+          endAngle={item.endAngle}
+          paddingAngle={item.paddingAngle}
+          innerRadius={item.innerRadius}
+          outerRadius={item.outerRadius}
+          arcLabelRadius={item.arcLabelRadius}
+          cornerRadius={item.cornerRadius}
+          id={id}
+          color={item.color}
+          isFaded={item.isFaded}
+          isHighlighted={item.isHighlighted}
+          formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
+          skipAnimation={skipAnimation ?? false}
+          {...slotProps?.pieArcLabel}
+        />
+      ))}
     </g>
   );
 }
@@ -206,7 +181,10 @@ PieArcLabelPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

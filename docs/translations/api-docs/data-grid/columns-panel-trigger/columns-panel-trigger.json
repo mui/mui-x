@@ -1,0 +1,8 @@
+{
+  "componentDescription": "A button that opens and closes the columns panel.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {
+    "className": { "description": "Override or extend the styles applied to the component." },
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}

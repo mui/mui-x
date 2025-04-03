@@ -8,22 +8,20 @@ import {
   DataGridPremiumProps,
   GridApi,
   GridDataSource,
-  GridGetRowsParams,
+  GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPremium /> - Data source aggregation', () => {
+describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
-  let mockServer: ReturnType<typeof useMockServer>;
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -40,16 +38,14 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
   ) {
     apiRef = useGridApiRef();
     const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
-    mockServer = useMockServer(
+    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 10, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
-    const { fetchRows } = mockServer;
-
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
-        getRows: async (params: GridGetRowsParams) => {
+        getRows: async (params) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
@@ -77,43 +73,37 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       };
     }, [fetchRows, getAggregatedValueProp]);
 
-    const baselineProps = {
-      unstable_dataSource: dataSource,
-      columns: mockServer.columns,
-      disableVirtualization: true,
-      aggregationFunctions: {
-        sum: { columnTypes: ['number'] },
-        avg: { columnTypes: ['number'] },
-        min: { columnTypes: ['number', 'date', 'dateTime'] },
-        max: { columnTypes: ['number', 'date', 'dateTime'] },
-        size: {},
-      },
-    };
-
-    if (!mockServer.isReady) {
+    if (!isReady) {
       return null;
     }
 
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGridPremium apiRef={apiRef} {...baselineProps} {...rest} />
+        <DataGridPremium
+          apiRef={apiRef}
+          dataSource={dataSource}
+          columns={columns}
+          disableVirtualization
+          aggregationFunctions={{
+            sum: { columnTypes: ['number'] },
+            avg: { columnTypes: ['number'] },
+            min: { columnTypes: ['number', 'date', 'dateTime'] },
+            max: { columnTypes: ['number', 'date', 'dateTime'] },
+            size: {},
+          }}
+          {...rest}
+        />
       </div>
     );
   }
-
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
   });
 
@@ -122,7 +112,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 
@@ -153,8 +143,10 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {

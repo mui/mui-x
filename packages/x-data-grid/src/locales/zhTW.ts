@@ -1,4 +1,3 @@
-import { zhTW as zhTWCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
+  noColumnsOverlayLabel: '沒有欄位',
+  noColumnsOverlayManageColumns: '管理欄位',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -31,15 +32,15 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: '清除',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: '輸入提示詞',
+  toolbarPromptControlWithRecordingPlaceholder: '輸入或錄製提示詞',
+  toolbarPromptControlRecordingPlaceholder: '正在錄音…',
+  toolbarPromptControlLabel: '提示詞輸入',
+  toolbarPromptControlRecordButtonDefaultLabel: '錄音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止錄音',
+  toolbarPromptControlSendActionLabel: '發送',
+  toolbarPromptControlSendActionAriaLabel: '發送提示詞',
+  toolbarPromptControlErrorMessage: '處理請求時出現錯誤。請使用其他提示詞重新嘗試。',
 
   // Export selector toolbar button text
   toolbarExport: '匯出',
@@ -49,11 +50,11 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: '匯出 Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: '搜尋',
+  columnsManagementNoColumns: '沒有欄位',
+  columnsManagementShowHideAllText: '顯示/隱藏所有',
+  columnsManagementReset: '重置',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
@@ -69,9 +70,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等於',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '不等於',
   filterOperatorStartsWith: '以...開頭',
   filterOperatorEndsWith: '以...結束',
   filterOperatorIs: '為',
@@ -92,9 +93,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等於',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等於',
   headerFilterOperatorStartsWith: '以...開頭',
   headerFilterOperatorEndsWith: '以...結束',
   headerFilterOperatorIs: '為',
@@ -112,7 +113,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大於或等於',
   'headerFilterOperator<': '小於',
   'headerFilterOperator<=': '小於或等於',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: '清除篩選',
 
   // Filter values text
   filterValueAny: '任何值',
@@ -121,6 +122,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄位選單`,
   columnMenuShowColumns: '顯示欄位',
   columnMenuManageColumns: '管理欄位',
   columnMenuFilter: '篩選器',
@@ -178,6 +180,28 @@ const zhTWGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '展開',
   collapseDetailPanel: '摺疊',
 
+  // Pagination
+  paginationRowsPerPage: '每頁數量:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
+    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一頁';
+    }
+    if (type === 'last') {
+      return '最後一頁';
+    }
+    if (type === 'next') {
+      return '下一頁';
+    }
+    return '上一頁';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '排序',
 
@@ -190,4 +214,4 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: '尺寸',
 };
 
-export const zhTW: Localization = getGridLocalization(zhTWGrid, zhTWCore);
+export const zhTW: Localization = getGridLocalization(zhTWGrid);

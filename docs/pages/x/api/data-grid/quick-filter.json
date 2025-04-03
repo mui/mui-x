@@ -1,0 +1,45 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "defaultExpanded": { "type": { "name": "bool" }, "default": "false" },
+    "expanded": { "type": { "name": "bool" } },
+    "formatter": {
+      "type": { "name": "func" },
+      "default": "(values: string[]) => values.join(' ')",
+      "signature": {
+        "type": "function(values: Array<any>) => string",
+        "describedArgs": ["values"],
+        "returned": "string"
+      }
+    },
+    "onExpandedChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(expanded: boolean) => void", "describedArgs": ["expanded"] }
+    },
+    "parser": {
+      "type": { "name": "func" },
+      "default": "(searchText: string) => searchText.split(' ').filter((word) => word !== '')",
+      "signature": {
+        "type": "function(input: string) => Array<any>",
+        "describedArgs": ["input"],
+        "returned": "Array<any>"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "QuickFilter",
+  "imports": [
+    "import { QuickFilter } from '@mui/x-data-grid/components';",
+    "import { QuickFilter } from '@mui/x-data-grid';",
+    "import { QuickFilter } from '@mui/x-data-grid-pro';",
+    "import { QuickFilter } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiQuickFilter",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilter.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter</a></li></ul>",
+  "cssComponent": false
+}

@@ -47,7 +47,7 @@ function ListViewCell(params) {
   );
 }
 
-const listColDef = {
+const listViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -124,11 +124,12 @@ export default function ListView() {
         loading={loading}
         columns={columns}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
         slots={{
           toolbar: Toolbar,
         }}
+        showToolbar
         slotProps={{
           toolbar: {
             view,

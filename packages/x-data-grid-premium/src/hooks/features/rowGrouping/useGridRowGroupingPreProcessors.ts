@@ -49,7 +49,7 @@ export const useGridRowGroupingPreProcessors = (
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
@@ -58,7 +58,7 @@ export const useGridRowGroupingPreProcessors = (
         return [];
       }
 
-      const strategy = props.unstable_dataSource
+      const strategy = props.dataSource
         ? RowGroupingStrategy.DataSource
         : RowGroupingStrategy.Default;
 
@@ -108,7 +108,7 @@ export const useGridRowGroupingPreProcessors = (
       props.groupingColDef,
       props.rowGroupingColumnMode,
       props.disableRowGrouping,
-      props.unstable_dataSource,
+      props.dataSource,
     ],
   );
 
@@ -117,13 +117,10 @@ export const useGridRowGroupingPreProcessors = (
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
       const newColumnsLookup: GridColumnRawLookup = {};
-      const prevGroupingfields: string[] = [];
 
       // We only keep the non-grouping columns
       columnsState.orderedFields.forEach((field) => {
-        if (isGroupingColumn(field)) {
-          prevGroupingfields.push(field);
-        } else {
+        if (!isGroupingColumn(field)) {
           newColumnFields.push(field);
           newColumnsLookup[field] = columnsState.lookup[field];
         }
@@ -140,16 +137,19 @@ export const useGridRowGroupingPreProcessors = (
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
 
-      if (prevGroupingfields.length !== groupingColDefs.length) {
-        const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-        newColumnFields = [
-          ...newColumnFields.slice(0, startIndex),
-          ...groupingColDefs.map((colDef) => colDef.field),
-          ...newColumnFields.slice(startIndex),
-        ];
-        columnsState.orderedFields = newColumnFields;
-      }
+      const checkBoxFieldIndex = newColumnFields.findIndex(
+        (field) => field === GRID_CHECKBOX_SELECTION_FIELD,
+      );
+      const checkBoxColumn =
+        checkBoxFieldIndex !== -1 ? newColumnFields.splice(checkBoxFieldIndex, 1) : [];
 
+      newColumnFields = [
+        ...checkBoxColumn,
+        ...groupingColDefs.map((colDef) => colDef.field),
+        ...newColumnFields,
+      ];
+
+      columnsState.orderedFields = newColumnFields;
       columnsState.lookup = newColumnsLookup;
 
       return columnsState;
@@ -262,15 +262,15 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   useFirstRender(() => {
-    setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
+    setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
   });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (!isFirstRender.current) {
-      setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
+      setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, props.disableRowGrouping, props.unstable_dataSource]);
+  }, [apiRef, props.disableRowGrouping, props.dataSource]);
 };

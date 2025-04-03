@@ -16,13 +16,13 @@ const xLabels = [
 export default function SimpleBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId' },
         { data: uData, label: 'uv', id: 'uvId' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }

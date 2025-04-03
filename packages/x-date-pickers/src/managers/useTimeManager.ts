@@ -8,19 +8,16 @@ import {
 import { PickerManager, TimeValidationError } from '../models';
 import { validateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { AmPmProps } from '../internals/models/props/time';
-import {
-  ExportedValidateTimeProps,
-  ValidateTimeProps,
-  ValidateTimePropsToDefault,
-} from '../validation/validateTime';
-import { PickerValue } from '../internals/models';
+import { ExportedValidateTimeProps, ValidateTimeProps } from '../validation/validateTime';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
 ): UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
-  const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
+  const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure, ampm } =
     parameters;
 
   return React.useMemo(
@@ -30,38 +27,70 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
       internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
-        ...internalProps,
-        ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
-      }),
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullTime') : null;
-        return localeText.openTimePickerDialogue(formattedValue);
-      },
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToTimeFieldInternalProps,
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
-    [enableAccessibleFieldDOMStructure],
+    [ampm, enableAccessibleFieldDOMStructure],
   );
 }
 
-/**
- * Private utility function to get the default internal props for the fields with time editing.
- * Is used by the `useTimeManager` and `useTimeRangeManager` hooks.
- */
-export function getTimeFieldInternalPropsDefaults(
-  parameters: GetTimeFieldInternalPropsDefaultsParameters,
-): GetTimeFieldInternalPropsDefaultsReturnValue {
-  const { utils, internalProps } = parameters;
-  const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
+function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
+  return function useOpenPickerButtonAriaLabel(value: PickerValue) {
+    const utils = useUtils();
+    const translations = usePickerTranslations();
 
-  return {
-    disablePast: internalProps.disablePast ?? false,
-    disableFuture: internalProps.disableFuture ?? false,
-    format: internalProps.format ?? defaultFormat,
+    return React.useMemo(() => {
+      const formatKey =
+        (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+      const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
+      return translations.openTimePickerDialogue(formattedValue);
+    }, [value, translations, utils]);
   };
 }
 
-export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
+function useApplyDefaultValuesToTimeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(internalProps);
+
+  const ampm = React.useMemo(
+    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, utils],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format:
+        internalProps.format ?? (ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h),
+    }),
+    [internalProps, validationProps, ampm, utils],
+  );
+}
+
+type SharedTimeAndTimeRangeValidationProps = 'disablePast' | 'disableFuture';
+
+export function useApplyDefaultValuesToTimeValidationProps(
+  props: Pick<ExportedValidateTimeProps, SharedTimeAndTimeRangeValidationProps>,
+): Pick<ValidateTimeProps, SharedTimeAndTimeRangeValidationProps> {
+  return React.useMemo(
+    () => ({
+      disablePast: props.disablePast ?? false,
+      disableFuture: props.disableFuture ?? false,
+    }),
+    [props.disablePast, props.disableFuture],
+  );
+}
+
+export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends AmPmProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -70,8 +99,8 @@ export type UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     TimeValidationError,
-    TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateTimeProps,
+    TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
@@ -81,22 +110,3 @@ export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructur
     >,
     ExportedValidateTimeProps,
     AmPmProps {}
-
-interface TimeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      TimeValidationError
-    >,
-    ValidateTimeProps {}
-
-type TimeManagerFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
-
-interface GetTimeFieldInternalPropsDefaultsParameters
-  extends Pick<MuiPickersAdapterContextValue, 'utils'> {
-  internalProps: Pick<TimeManagerFieldInternalProps<true>, TimeManagerFieldPropsToDefault | 'ampm'>;
-}
-
-interface GetTimeFieldInternalPropsDefaultsReturnValue
-  extends Pick<TimeManagerFieldInternalPropsWithDefaults<true>, TimeManagerFieldPropsToDefault> {}
