@@ -11,6 +11,7 @@ import {
   createZoomLookup,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { useEventCallback } from '@mui/material/utils';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -39,11 +40,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
-  const { zoomData: paramsZoomData, onZoomChange } = params;
+  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
 
   // Manage controlled state
   React.useEffect(() => {
