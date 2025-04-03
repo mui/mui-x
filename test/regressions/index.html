@@ -13,6 +13,23 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+    <script>
+      var fakeNow = new Date('Mon Aug 18 14:11:54 2014 -0500');
+      // Extend Date constructor to default to fakeNow
+      Date = class extends Date {
+        constructor(...args) {
+          if (args.length === 0) {
+            super(fakeNow);
+          } else {
+            super(...args);
+          }
+        }
+      };
+      // Override Date.now() to start from fakeNow
+      const __DateNowOffset = fakeNow - Date.now();
+      const __DateNow = Date.now;
+      Date.now = () => __DateNow() + __DateNowOffset;
+    </script>
   </head>
   <body>
     <div id="react-root"></div>

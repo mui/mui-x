@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-import { useFakeTimers } from 'sinon';
 import TestViewer from './TestViewer';
 import { setupTestLicenseKey } from '../utils/testLicense';
 
@@ -25,10 +24,6 @@ window.muiFixture = {
     throw new Error(`muiFixture.navigate is not ready`);
   },
 };
-
-// Use a "real timestamp" so that we see a useful date instead of "00:00"
-// eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
 
 interface Test {
   path: string;
@@ -96,8 +91,6 @@ Object.keys(additionalRegressionDemos).forEach((path) => {
     case: additionalRegressionDemos[path],
   });
 });
-
-clock.restore();
 
 const suiteTestsMap = tests.reduce(
   (acc, test) => {
