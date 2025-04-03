@@ -33,10 +33,25 @@ import {
 </PromptField>;
 ```
 
-<!-- ### AI Assistant Panel Trigger
+### Prompt Field
 
-`<AiAssistantPanelTrigger />` is a button that opens and closes the AI assistant panel.
-It renders the `baseButton` slot.
+`<PromptField />` is the top level component that provides context to child components.
+It renders a `<div />` element.
+
+### Prompt Field Record
+
+`<PromptFieldRecord />` is a button that records the user's voice when clicked.
+It renders the `baseIconButton` slot.
+
+### Prompt Field Control
+
+`<PromptFieldControl />` is a component that takes user input.
+It renders the `baseTextField` slot.
+
+### Prompt Field Send
+
+`<PromptFieldSend />` is a button that processes the prompt when clicked.
+It renders the `baseIconButton` slot.
 
 ## Custom elements
 
@@ -47,4 +62,11 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 ### ARIA
 
-You must apply a text label or an `aria-label` attribute to the `<AiAssistantPanelTrigger />`. -->
+- You must render a `<label />` with a `for` attribute set to the `id` of `<PromptFieldControl />`, or apply an `aria-label` attribute to the `<PromptFieldControl />`.
+- You must apply a text label or an `aria-label` attribute to the `<PromptFieldRecord />` and `<PromptFieldSend />`.
+
+### Keyboard
+
+|                         Keys | Description                                  |
+| ---------------------------: | :------------------------------------------- |
+| <kbd class="key">Enter</kbd> | Sends the prompt when the control has focus. |
