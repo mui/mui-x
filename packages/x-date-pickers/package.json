@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "The community edition of the Date and Time Picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/utils": "^7.0.0",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",
@@ -56,8 +56,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "date-fns": "^2.25.0 || ^3.2.0 || ^4.0.0",
     "date-fns-jalali": "^2.13.0-0 || ^3.2.0-0 || ^4.0.0-0",
     "dayjs": "^1.10.7",

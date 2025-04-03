@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -13,6 +12,8 @@ import {
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { useEventCallback } from '@mui/material/utils';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import debounce from '@mui/utils/debounce';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -24,7 +25,6 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
-
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
   return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
@@ -48,7 +48,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
 
   // Manage controlled state
-  useEnhancedEffect(() => {
+  React.useEffect(() => {
     if (paramsZoomData === undefined) {
       return undefined;
     }
@@ -92,43 +92,64 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [store, paramsZoomData]);
 
-  // Add instance methods
-  const setIsInteracting = React.useCallback(
-    (isInteracting: boolean) => {
-      store.update((prev) => ({ ...prev, zoom: { ...prev.zoom, isInteracting } }));
-    },
+  // This is debounced. We want to run it only once after the interaction ends.
+  const removeIsInteracting = React.useMemo(
+    () =>
+      debounce(
+        () =>
+          store.update((prevState) => {
+            return {
+              ...prevState,
+              zoom: {
+                ...prevState.zoom,
+                isInteracting: false,
+              },
+            };
+          }),
+        166,
+      ),
     [store],
   );
 
-  const setZoomDataCallback = React.useCallback(
-    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-      store.update((prevState) => {
-        const newZoomData =
-          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-        onZoomChange?.(newZoomData);
+  // This is throttled. We want to run it at most once per frame.
+  // By joining the two, we ensure that interacting and zooming are in sync.
+  const setZoomDataCallback = React.useMemo(
+    () =>
+      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+        store.update((prevState) => {
+          const newZoomData =
+            typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+          onZoomChange?.(newZoomData);
+          if (prevState.zoom.isControlled) {
+            return prevState;
+          }
 
-        if (prevState.zoom.isControlled) {
-          return prevState;
-        }
+          removeIsInteracting();
+          return {
+            ...prevState,
+            zoom: {
+              ...prevState.zoom,
+              isInteracting: true,
+              zoomData: newZoomData,
+            },
+          };
+        });
+      }),
 
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            zoomData: newZoomData,
-          },
-        };
-      });
-    },
-
-    [onZoomChange, store],
+    [onZoomChange, store, removeIsInteracting],
   );
+
+  React.useEffect(() => {
+    return () => {
+      setZoomDataCallback.clear();
+      removeIsInteracting.clear();
+    };
+  }, [setZoomDataCallback, removeIsInteracting]);
 
   // Add events
   const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
   const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
   const eventPrevDiff = React.useRef<number>(0);
-  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -206,7 +227,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         event.preventDefault();
       }
       isDraggingRef.current = true;
-      setIsInteracting(true);
       touchStartRef.current = {
         x: point.x,
         y: point.y,
@@ -220,7 +240,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         ),
         1,
       );
-      setIsInteracting(false);
       isDraggingRef.current = false;
       touchStartRef.current = null;
     };
@@ -240,7 +259,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     instance,
     svgRef,
     isDraggingRef,
-    setIsInteracting,
     isPanEnabled,
     optionsLookup,
     drawingArea.width,
@@ -268,15 +286,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       }
 
       event.preventDefault();
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-      setIsInteracting(true);
-      // Debounce transition to `isInteractive=false`.
-      // Useful because wheel events don't have an "end" event.
-      interactionTimeoutRef.current = window.setTimeout(() => {
-        setIsInteracting(false);
-      }, 166);
 
       setZoomDataCallback((prevZoomData) => {
         return prevZoomData.map((zoom) => {
@@ -304,7 +313,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
     function pointerDownHandler(event: PointerEvent) {
       zoomEventCacheRef.current.push(event);
-      setIsInteracting(true);
     }
 
     function pointerMoveHandler(event: PointerEvent) {
@@ -373,10 +381,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       if (zoomEventCacheRef.current.length < 2) {
         eventPrevDiff.current = 0;
       }
-
-      if (event.type === 'pointerup' || event.type === 'pointercancel') {
-        setIsInteracting(false);
-      }
     }
 
     element.addEventListener('wheel', wheelHandler);
@@ -401,19 +405,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       element.removeEventListener('pointerleave', pointerUpHandler);
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
     };
-  }, [
-    svgRef,
-    drawingArea,
-    isZoomEnabled,
-    optionsLookup,
-    setIsInteracting,
-    instance,
-    setZoomDataCallback,
-  ]);
+  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
   return {
     publicAPI: {
