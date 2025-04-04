@@ -309,7 +309,7 @@ export const useGridAiAssistant = (
                   ...item,
                   response,
                   variant: 'success',
-                  helperText: apiRef.current.getLocaleText('promptAppliedChanges'),
+                  helperText: '',
                 }
               : item,
           ),

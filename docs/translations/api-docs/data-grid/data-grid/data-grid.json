@@ -1087,10 +1087,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt action element"
     },
-    "promptChangeItem": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the prompt change item element"
-    },
     "promptChangeList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt change list element"

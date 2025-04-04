@@ -4,8 +4,8 @@ import {
   gridClasses,
   gridColumnLookupSelector,
   useGridSelector,
-  GridSlotProps,
   GridSingleSelectColDef,
+  GridExpandMoreIcon,
 } from '@mui/x-data-grid-pro';
 import {
   unstable_composeClasses as composeClasses,
@@ -13,12 +13,8 @@ import {
 } from '@mui/utils';
 
 import { keyframes, styled } from '@mui/system';
-import {
-  getValueOptions,
-  isSingleSelectColDef,
-  NotRendered,
-  vars,
-} from '@mui/x-data-grid-pro/internals';
+import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
+import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import {
@@ -45,7 +41,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     action: ['promptAction'],
     feedback: ['promptFeedback'],
     changeList: ['promptChangeList'],
-    changeItem: ['promptChangeItem'],
+    changesToggle: ['promptChangesToggle'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -85,7 +81,7 @@ const Prompt = styled('li', {
     opacity: 0;
     transition: ${vars.transition(['opacity'], { duration: vars.transitions.duration.short })};
   }
-  &:hover .${gridClasses.promptAction} {
+  &:hover .${gridClasses.promptAction}, & .${gridClasses.promptAction}:focus-visible {
     opacity: 1;
   }
   @media (prefers-reduced-motion: no-preference) {
@@ -167,15 +163,26 @@ const PromptChangeList = styled('div', {
   overflow: 'hidden',
 });
 
-const PromptChangeItem = styled(NotRendered<GridSlotProps['baseChip']>, {
+const PromptChangesToggle = styled('button', {
   name: 'MuiDataGrid',
-  slot: 'PromptChangeItem',
-})<{ ownerState: OwnerState }>`
-  @media (prefers-reduced-motion: no-preference) {
-    animation: ${fadeIn} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
-    animation-fill-mode: backwards;
-  }
-`;
+  slot: 'PromptChangesToggle',
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing(0.25),
+  marginLeft: 0,
+  padding: vars.spacing(0, 0, 0, 0.25),
+  borderRadius: vars.radius.base,
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+  cursor: 'pointer',
+  border: 'none',
+  background: 'none',
+  outline: 'none',
+  '&:hover, &:focus-visible': {
+    textDecoration: 'underline',
+  },
+});
 
 function GridPrompt(props: GridPromptProps) {
   const { value, response, helperText, variant, onRerun } = props;
@@ -187,6 +194,8 @@ function GridPrompt(props: GridPromptProps) {
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
+  const [showChanges, setShowChanges] = React.useState(false);
+  const changesListId = useId();
 
   const getColumnName = React.useCallback(
     (column: string) => columns[column]?.headerName ?? column,
@@ -404,22 +413,46 @@ function GridPrompt(props: GridPromptProps) {
         <PromptFeedback ownerState={ownerState} className={classes.feedback}>
           {helperText}
         </PromptFeedback>
-        {changeList.length > 0 && (
-          <PromptChangeList ownerState={ownerState} className={classes.changeList}>
-            {changeList.map((change) => (
-              <rootProps.slots.baseTooltip key={change.label} title={change.description}>
-                <PromptChangeItem
-                  as={rootProps.slots.baseChip}
-                  className={classes.changeItem}
-                  ownerState={ownerState}
-                  label={change.label}
-                  icon={<change.icon />}
-                  size="small"
-                />
-              </rootProps.slots.baseTooltip>
-            ))}
-          </PromptChangeList>
-        )}
+        {changeList.length > 0 ? (
+          <React.Fragment>
+            <PromptChangesToggle
+              ownerState={ownerState}
+              className={classes.changesToggle}
+              aria-expanded={showChanges}
+              aria-controls={changesListId}
+              onClick={() => setShowChanges(!showChanges)}
+            >
+              {apiRef.current.getLocaleText('promptAppliedChanges')}
+              <GridExpandMoreIcon
+                fontSize="small"
+                sx={
+                  showChanges
+                    ? {
+                        transform: 'rotate(180deg)',
+                      }
+                    : {}
+                }
+              />
+            </PromptChangesToggle>
+            {showChanges && (
+              <PromptChangeList
+                id={changesListId}
+                ownerState={ownerState}
+                className={classes.changeList}
+              >
+                {changeList.map((change) => (
+                  <rootProps.slots.baseTooltip key={change.label} title={change.description}>
+                    <rootProps.slots.baseChip
+                      label={change.label}
+                      icon={<change.icon />}
+                      size="small"
+                    />
+                  </rootProps.slots.baseTooltip>
+                ))}
+              </PromptChangeList>
+            )}
+          </React.Fragment>
+        ) : null}
       </PromptContent>
       <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')}>
         <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>
