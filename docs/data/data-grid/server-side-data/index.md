@@ -261,15 +261,50 @@ To disable the data source cache, pass `null` to the `dataSourceCache` prop.
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
+## Updating data
+
+The data source supports an optional method (`updateRow()`) for updating data on the server.
+
+This method returns a promise that resolves when the row is updated.
+If the promise resolves, the grid updates the row and mutates the cache. In case of an error, `onDataSourceError` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
+
+```diff
+ const dataSource: GridDataSource = {
+  getRows: async (params: GridGetRowsParams) => {
+    // fetch rows from the server
+  },
++ updateRow: async (params: GridUpdateRowParams) => {
++   // update row on the server
++ },
+ }
+```
+
+{{"demo": "ServerSideEditing.js", "bg": "inline"}}
+
+:::warning
+When using the `updateRow()` method, the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
+This means any previously cached data will be refetched on the next request.
+
+For applications requiring caching with editing operations, consider implementing server-side cache instead.
+
+If you have a specific use case that requires preserving the client-side cache during edit operations, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
+:::
+
+:::warning
+The position and/or visibility of the edited row on the current page is kept, even if features like sorting or filtering are enabled and should affect the row after the value update.
+Change in the position and/or visibility is applied when the page is fetched again.
+
+You could manually trigger the re-fetch by calling the API method `dataSource.fetchRows()`.
+:::
+
 ## Error handling
 
 You could handle the errors with the data source by providing an error handler function using the `onDataSourceError()`.
 It will be called whenever there's an error in fetching or updating the data.
 
-Currently, the function recieves an error object of type `GridGetRowsError`.
+This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
 
-The typing of the parameter also supports `GridUpdateRowError` which will be available with the [Server-side data—Updating data](#updating-data) feature.
-Here's the error types and their corresponding `error.params` type:
+For different error types, different `error.params` type is passed as an argument to the callback:
 
 | Error type           | Type of `error.params` |
 | :------------------- | :--------------------- |
@@ -294,13 +329,6 @@ Here's the error types and their corresponding `error.params` type:
 ```
 
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
-
-## Updating data 🚧
-
-This feature is yet to be implemented, when completed, the method `dataSource.updateRow()` will be called with the `GridRowModel` whenever the user edits a row.
-It will work in a similar way as the `processRowUpdate()` prop.
-
-Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
 
 ## API
 
