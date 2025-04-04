@@ -20,11 +20,11 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(
-        computedColumns[flexColumns[2].field].computedWidth,
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(
+        computedColumns.get(flexColumns[2].field)!.computedWidth,
       );
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(
-        2 * computedColumns[flexColumns[1].field].computedWidth,
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(
+        2 * computedColumns.get(flexColumns[1].field)!.computedWidth,
       );
     });
 
@@ -41,9 +41,9 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(50);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(50);
-      expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[2].field)!.computedWidth).to.equal(50);
     });
 
     it('should distribute remaining space between flex items', () => {
@@ -59,9 +59,9 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(75);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(75);
-      expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(75);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(75);
+      expect(computedColumns.get(flexColumns[2].field)!.computedWidth).to.equal(50);
     });
 
     // https://github.com/mui/mui-x/issues/3091
@@ -78,9 +78,9 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(75);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(75);
-      expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(75);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(75);
+      expect(computedColumns.get(flexColumns[2].field)!.computedWidth).to.equal(50);
     });
 
     it('should use `minWidth` on flex columns if there is no more space to distribute', () => {
@@ -95,8 +95,8 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(50);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(50);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(50);
     });
 
     it('should use `maxWidth` if calculated width exceeds it', () => {
@@ -111,8 +111,8 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(100);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(900);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(100);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(900);
     });
 
     it('should not use `maxWidth` if calculated width is smaller', () => {
@@ -127,8 +127,8 @@ describe('gridColumnsUtils', () => {
         totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(600);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(400);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.equal(600);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.equal(400);
     });
 
     it('should split the columns equally if they are all flex', () => {
@@ -147,9 +147,9 @@ describe('gridColumnsUtils', () => {
       });
 
       const expectedWidth = containerWidth / 3;
-      expect(computedColumns[flexColumns[0].field].computedWidth).to.be.equal(expectedWidth);
-      expect(computedColumns[flexColumns[1].field].computedWidth).to.be.equal(expectedWidth);
-      expect(computedColumns[flexColumns[2].field].computedWidth).to.be.equal(expectedWidth);
+      expect(computedColumns.get(flexColumns[0].field)!.computedWidth).to.be.equal(expectedWidth);
+      expect(computedColumns.get(flexColumns[1].field)!.computedWidth).to.be.equal(expectedWidth);
+      expect(computedColumns.get(flexColumns[2].field)!.computedWidth).to.be.equal(expectedWidth);
     });
   });
 });
