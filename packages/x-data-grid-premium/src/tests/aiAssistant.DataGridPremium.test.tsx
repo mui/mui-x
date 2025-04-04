@@ -43,7 +43,7 @@ const baselineProps: BaselineProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Prompt', () => {
+describe.only('<DataGridPremium /> - Prompt', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -127,14 +127,12 @@ describe('<DataGridPremium /> - Prompt', () => {
 
       render(<Test aiAssistant={false} onSortModelChange={sortChangeSpy} />);
 
-      act(async () => {
-        await apiRef.current?.aiAssistant.processPrompt('Do something with the data');
-      });
+      await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
       expect(sortChangeSpy.callCount).to.equal(0);
     });
 
-    it('should apply the prompt result', () => {
+    it('should apply the prompt result', async () => {
       const sortChangeSpy = spy();
       const filterChangeSpy = spy();
       const aggregationChangeSpy = spy();
@@ -177,15 +175,26 @@ describe('<DataGridPremium /> - Prompt', () => {
         />,
       );
 
-      act(async () => {
-        await apiRef.current?.aiAssistant.processPrompt('Do something with the data');
-      });
+      await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
       expect(sortChangeSpy.callCount).to.equal(1);
       expect(filterChangeSpy.callCount).to.equal(1);
       expect(aggregationChangeSpy.callCount).to.equal(1);
       expect(rowSelectionChangeSpy.callCount).to.equal(1);
       expect(rowGroupingChangeSpy.callCount).to.equal(1);
+    });
+
+    it('should return the prompt processing error', async () => {
+      let response: Error;
+      const errorMsg = 'Prompt processing error';
+      promptSpy.rejects(new Error(errorMsg));
+
+      render(<Test />);
+      response = (await act(() =>
+        apiRef.current?.aiAssistant.processPrompt('Do something with the data'),
+      )) as Error;
+
+      expect(response.message).to.equal(errorMsg);
     });
   });
 });
