@@ -25,7 +25,7 @@ export default function ExternalZoomManagement() {
         {...chartProps}
         initialZoom={initialZoomData}
         apiRef={apiRef}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         xAxis={[
           {
             zoom: true,

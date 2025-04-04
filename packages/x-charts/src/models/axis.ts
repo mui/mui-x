@@ -391,6 +391,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
   domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  /**
+   * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
+   */
+  ignoreTooltip?: boolean;
 };
 
 export type PolarAxisConfig<
@@ -450,6 +454,10 @@ export type AxisDefaultized<
      * An indication of the expected number of ticks.
      */
     tickNumber: number;
+    /**
+     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
   } & (AxisProps extends ChartsXAxisProps
     ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
     : AxisProps extends ChartsYAxisProps

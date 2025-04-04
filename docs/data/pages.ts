@@ -488,6 +488,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
             children: [
+              { pathname: '/x/react-charts/animation' },
               { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
@@ -617,6 +618,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/migration/migration-tree-view-v7',
             title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/usage-with-material-ui-v5-v6',
+            title: 'Usage with Material UI v5/v6',
           },
         ],
       },

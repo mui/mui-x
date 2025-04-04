@@ -56,9 +56,9 @@
       "nodeName": "the labelCell element"
     },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
-    "markCell": {
+    "markContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the markCell element"
+      "nodeName": "the markContainer element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
     "root": { "description": "Styles applied to the root element." },
