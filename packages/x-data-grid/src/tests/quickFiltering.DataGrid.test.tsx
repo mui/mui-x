@@ -213,7 +213,10 @@ describe('<DataGrid /> - Quick filter', () => {
 
       expect(button.getAttribute('aria-expanded')).to.equal('true');
 
-      fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+      // eslint-disable-next-line testing-library/no-unnecessary-act
+      await act(async () => {
+        fireEvent.blur(screen.getByRole<HTMLInputElement>('searchbox'));
+      });
 
       expect(button.getAttribute('aria-expanded')).to.equal('false');
     });
