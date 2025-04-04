@@ -24,6 +24,9 @@ const initialState: GridInitialState = {
     model: pivotModel,
     panelOpen: true,
   },
+  pinnedColumns: {
+    left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
+  },
 };
 
 export default function GridPivotingCommodities() {
@@ -34,15 +37,6 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotActive, setPivotActive] = React.useState(false);
-
-  const pinnedColumns = React.useMemo<GridPinnedColumnFields | undefined>(() => {
-    if (pivotActive) {
-      return {
-        left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
-      };
-    }
-    return undefined;
-  }, [pivotActive]);
 
   const pivotingColDef = React.useMemo<
     DataGridPremiumProps['pivotingColDef']
@@ -67,7 +61,6 @@ export default function GridPivotingCommodities() {
           initialState={initialState}
           loading={loading}
           columnGroupHeaderHeight={36}
-          pinnedColumns={pinnedColumns}
           pivotingColDef={pivotingColDef}
           slotProps={{
             toolbar: {
