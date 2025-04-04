@@ -43,7 +43,7 @@ const baselineProps: BaselineProps = {
   ],
 };
 
-describe.only('<DataGridPremium /> - Prompt', () => {
+describe('<DataGridPremium /> - Prompt', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -185,12 +185,11 @@ describe.only('<DataGridPremium /> - Prompt', () => {
     });
 
     it('should return the prompt processing error', async () => {
-      let response: Error;
       const errorMsg = 'Prompt processing error';
       promptSpy.rejects(new Error(errorMsg));
 
       render(<Test />);
-      response = (await act(() =>
+      const response = (await act(() =>
         apiRef.current?.aiAssistant.processPrompt('Do something with the data'),
       )) as Error;
 
