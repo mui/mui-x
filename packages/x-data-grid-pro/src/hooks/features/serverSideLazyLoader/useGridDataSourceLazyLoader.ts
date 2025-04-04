@@ -280,6 +280,8 @@ export const useGridDataSourceLazyLoader = (
         // the rows can safely be replaced. skeleton rows will be added later
         privateApiRef.current.setRows(response.rows);
       } else {
+        const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+        const rootGroupChildren = [...rootGroup.children];
         const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(privateApiRef);
 
         const startingIndex =
@@ -292,6 +294,17 @@ export const useGridDataSourceLazyLoader = (
         response.rows.forEach((row) => {
           const rowId = gridRowIdSelector(privateApiRef, row);
           if (tree[rowId] || dataRowIdToModelLookup[rowId]) {
+            const index = rootGroupChildren.indexOf(rowId);
+            if (index !== -1) {
+              const skeletonId = getSkeletonRowId(index);
+              rootGroupChildren[index] = skeletonId;
+              tree[skeletonId] = {
+                type: 'skeletonRow',
+                id: skeletonId,
+                parent: GRID_ROOT_GROUP_ID,
+                depth: 0,
+              };
+            }
             delete tree[rowId];
             delete dataRowIdToModelLookup[rowId];
             duplicateRowCount += 1;
@@ -299,6 +312,7 @@ export const useGridDataSourceLazyLoader = (
         });
 
         if (duplicateRowCount > 0) {
+          tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
           privateApiRef.current.setState((state) => ({
             ...state,
             rows: {
