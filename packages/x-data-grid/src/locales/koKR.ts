@@ -31,24 +31,15 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '검색',
   toolbarQuickFilterDeleteIconLabel: '초기화',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: '프롬프트 입력…',
-  toolbarPromptControlWithRecordingPlaceholder: '프롬프트 입력 또는 녹음…',
-  toolbarPromptControlRecordingPlaceholder: '녹음 중…',
-  toolbarPromptControlLabel: '프롬프트 입력',
-  toolbarPromptControlRecordButtonDefaultLabel: '녹음',
-  toolbarPromptControlRecordButtonActiveLabel: '녹음 정지',
-  toolbarPromptControlSendActionLabel: '전송',
-  toolbarPromptControlSendActionAriaLabel: '프롬프트 전송',
-  toolbarPromptControlErrorMessage:
-    '요청을 처리하는 동안 오류가 발생했습니다. 다른 프롬프트로 다시 시도하십시오.',
-
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
   toolbarExportCSV: 'CSV로 내보내기',
   toolbarExportPrint: '프린트',
   toolbarExportExcel: 'Excel로 내보내기',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: '검색',
@@ -219,6 +210,51 @@ const koKRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '최소값',
   aggregationFunctionLabelMax: '최대값',
   aggregationFunctionLabelSize: '크기',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: '프롬프트 입력',
+  promptFieldPlaceholder: '프롬프트 입력…',
+  promptFieldPlaceholderWithRecording: '프롬프트 입력 또는 녹음…',
+  promptFieldPlaceholderListening: '녹음 중…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: '전송',
+  promptFieldRecord: '녹음',
+  promptFieldStopRecording: '녹음 정지',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

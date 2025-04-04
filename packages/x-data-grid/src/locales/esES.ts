@@ -32,24 +32,15 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Escriba un prompt…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Escriba o grabe un prompt…',
-  toolbarPromptControlRecordingPlaceholder: 'Esperando por un prompt…',
-  toolbarPromptControlLabel: 'Introduzca un prompt',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Grabar',
-  toolbarPromptControlRecordButtonActiveLabel: 'Parar de grabar',
-  toolbarPromptControlSendActionLabel: 'Enviar',
-  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
-  toolbarPromptControlErrorMessage:
-    'Ocurrió un error mientras se procesaba la petición. Por favor, intente de nuevo con otro prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descargar como CSV',
   toolbarExportPrint: 'Imprimir',
   toolbarExportExcel: 'Descargar como Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Buscar',
@@ -224,6 +215,51 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'mínimo',
   aggregationFunctionLabelMax: 'máximo',
   aggregationFunctionLabelSize: 'tamaño',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Escribe un prompt…',
+  promptFieldPlaceholderWithRecording: 'Escriba o grabe un prompt…',
+  promptFieldPlaceholderListening: 'Esperando por un prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Enviar',
+  promptFieldRecord: 'Grabar',
+  promptFieldStopRecording: 'Parar de grabar',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const esES: Localization = getGridLocalization(esESGrid);

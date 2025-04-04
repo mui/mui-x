@@ -39,17 +39,6 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'traži',
   toolbarQuickFilterDeleteIconLabel: 'Obriši',
 
-  // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Izvoz',
   toolbarExportLabel: 'Izvoz',
@@ -57,12 +46,15 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Štampaj',
   toolbarExportExcel: 'Preuzmi kao Excel',
 
+  // Toolbar AI Assistant button
+  toolbarAssistant: 'AI Asistent',
+
   // Columns management text
   columnsManagementSearchTitle: 'Traži',
   columnsManagementNoColumns: 'Nema stupaca',
   columnsManagementShowHideAllText: 'Prikaži/Sakrij sve',
   columnsManagementReset: 'Ponovno namjesti',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Obriši',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filter',
@@ -121,7 +113,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Veće ili jednako',
   'headerFilterOperator<': 'Manje od',
   'headerFilterOperator<=': 'Manje od ili jednako',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Obriši filter',
 
   // Filter values text
   filterValueAny: 'bilo koji',
@@ -130,7 +122,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Izbornik',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Izbornik stupca ${columnName}`,
   columnMenuShowColumns: 'Prikaži stupce',
   columnMenuManageColumns: 'Upravljanje stupcima',
   columnMenuFilter: 'Filter',
@@ -206,18 +198,13 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Redova po stranici:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
+    return `${from}–${to} od ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Idi na prvu stranicu';
@@ -242,6 +229,51 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'veličina',
+
+  // AI Assistant panel
+  aiAssistantPanelTitle: 'AI Asistent',
+  aiAssistantPanelNoHistory: 'Nema prethodnih upita',
+  aiAssistantSuggestions: 'Prijedlozi',
+
+  // Prompt field
+  promptFieldLabel: 'Upit',
+  promptFieldPlaceholder: 'Unesi upit…',
+  promptFieldPlaceholderWithRecording: 'Unesi ili snimi upit…',
+  promptFieldPlaceholderListening: 'Slušam upit…',
+  promptFieldSpeechRecognitionNotSupported: 'Prepoznavanje govora nije podržana u ovom pregledniku',
+  promptFieldSend: 'Pošalji',
+  promptFieldRecord: 'Snimi',
+  promptFieldStopRecording: 'Zaustavi snimanje',
+
+  // Prompt
+  promptRerun: 'Probaj ponovno',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const hrHR = getGridLocalization(hrHRGrid);

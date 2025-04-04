@@ -31,24 +31,15 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Bir istem yazın…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Bir istem yazın veya kaydedin…',
-  toolbarPromptControlRecordingPlaceholder: 'İstem dinleniyor…',
-  toolbarPromptControlLabel: 'İstem girişi',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Kaydet',
-  toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
-  toolbarPromptControlSendActionLabel: 'Gönder',
-  toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
-  toolbarPromptControlErrorMessage:
-    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
-
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
   toolbarExportPrint: 'Yazdır',
   toolbarExportExcel: 'Excel olarak aktar',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Arama',
@@ -219,6 +210,51 @@ const trTRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'boyut',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'İstem girişi',
+  promptFieldPlaceholder: 'Bir istem yazın…',
+  promptFieldPlaceholderWithRecording: 'Bir istem yazın veya kaydedin…',
+  promptFieldPlaceholderListening: 'İstem dinleniyor…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Gönder',
+  promptFieldRecord: 'Kaydet',
+  promptFieldStopRecording: 'Kaydı durdur',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);

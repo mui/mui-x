@@ -1,4 +1,4 @@
-import { unstable_PromptResponse as PromptResponse } from '@mui/x-data-grid-premium';
+import { PromptResponse } from '@mui/x-data-grid-premium';
 
 export const mockPrompts = new Map<string, PromptResponse>([
   [
@@ -14,7 +14,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
         },
       ],
       grouping: [],
-      error: null,
+      pivoting: {},
     },
   ],
   [
@@ -34,7 +34,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
         },
       ],
       grouping: [],
-      error: null,
+      pivoting: {},
     },
   ],
   [
@@ -79,7 +79,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
       aggregation: {},
       sorting: [],
       grouping: [],
-      error: null,
+      pivoting: {},
     },
   ],
   [
@@ -101,7 +101,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
           column: 'company',
         },
       ],
-      error: null,
+      pivoting: {},
     },
   ],
 ]);

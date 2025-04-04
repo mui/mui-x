@@ -20,6 +20,7 @@ import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { GridAiAssistantPanel } from '../components/aiAssistantPanel/GridAiAssistantPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -61,6 +62,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         ref={ref}
       >
         {watermark}
+        {props.aiAssistant && <GridAiAssistantPanel />}
       </GridRoot>
     </GridContextProvider>
   );
@@ -87,6 +89,75 @@ DataGridPremiumRaw.propTypes = {
    * @default "filtered"
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: PropTypes.bool,
+  /**
+   * The history of the AI Assistant.
+   */
+  aiAssistantHistory: PropTypes.arrayOf(
+    PropTypes.shape({
+      createdAt: PropTypes.instanceOf(Date).isRequired,
+      helperText: PropTypes.string,
+      response: PropTypes.shape({
+        aggregation: PropTypes.object.isRequired,
+        filterOperator: PropTypes.oneOf(['and', 'or']),
+        filters: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+            operator: PropTypes.string.isRequired,
+            value: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string),
+              PropTypes.arrayOf(PropTypes.number),
+              PropTypes.number,
+              PropTypes.string,
+              PropTypes.bool,
+            ]).isRequired,
+          }),
+        ).isRequired,
+        grouping: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+          }),
+        ).isRequired,
+        pivoting: PropTypes.oneOfType([
+          PropTypes.object,
+          PropTypes.shape({
+            columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+            rows: PropTypes.arrayOf(PropTypes.string).isRequired,
+            values: PropTypes.arrayOf(PropTypes.object).isRequired,
+          }),
+        ]).isRequired,
+        select: PropTypes.number.isRequired,
+        sorting: PropTypes.arrayOf(
+          PropTypes.shape({
+            column: PropTypes.string.isRequired,
+            direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
+          }),
+        ).isRequired,
+      }),
+      value: PropTypes.string.isRequired,
+      variant: PropTypes.oneOf(['error', 'processing', 'success']),
+    }),
+  ),
+  /**
+   * If `true`, the AI Assistant panel is open.
+   */
+  aiAssistantPanelOpen: PropTypes.bool,
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+    }),
+  ),
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling: PropTypes.bool,
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -597,6 +668,21 @@ DataGridPremiumRaw.propTypes = {
    */
   onAggregationModelChange: PropTypes.func,
   /**
+   * Callback fired when the AI Assistant history changes.
+   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   */
+  onAiAssistantHistoryChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant panel open state changes.
+   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
+   */
+  onAiAssistantPanelOpenChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant suggestions change.
+   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
+   */
+  onAiAssistantSuggestionsChange: PropTypes.func,
+  /**
    * Callback fired before the clipboard paste operation starts.
    * Use it to confirm or cancel the paste operation.
    * @param {object} params Params passed to the callback.
@@ -822,6 +908,13 @@ DataGridPremiumRaw.propTypes = {
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt: PropTypes.func,
   /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].

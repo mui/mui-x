@@ -23,6 +23,7 @@ import type {
   BadgeProps,
   ButtonProps,
   CheckboxProps,
+  ChipProps,
   CircularProgressProps,
   DividerProps,
   IconButtonProps,
@@ -92,6 +93,7 @@ interface BaseSlotProps {
   baseAutocomplete: AutocompleteProps<string, true, false, true> & BaseAutocompletePropsOverrides;
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseChip: ChipProps & BaseChipPropsOverrides;
   baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
   baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;

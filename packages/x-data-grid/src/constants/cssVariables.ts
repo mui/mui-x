@@ -30,6 +30,7 @@ const keys = {
       muted: '--DataGrid-t-color-foreground-muted',
       accent: '--DataGrid-t-color-foreground-accent',
       disabled: '--DataGrid-t-color-foreground-disabled',
+      error: '--DataGrid-t-color-foreground-error',
     },
     background: {
       base: '--DataGrid-t-color-background-base',

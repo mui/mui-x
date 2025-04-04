@@ -13,6 +13,18 @@
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
     },
+    "aiAssistant": { "type": { "name": "bool" }, "default": "false" },
+    "aiAssistantHistory": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;{ column: string, operator: string, value: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;number&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;bool }&gt;, grouping: Array&lt;{ column: string }&gt;, pivoting: object<br>&#124;&nbsp;{ columns: Array&lt;object&gt;, rows: Array&lt;string&gt;, values: Array&lt;object&gt; }, select: number, sorting: Array&lt;{ column: string, direction: 'asc'<br>&#124;&nbsp;'desc' }&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;"
+      }
+    },
+    "aiAssistantPanelOpen": { "type": { "name": "bool" } },
+    "aiAssistantSuggestions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;{ value: string }&gt;" }
+    },
+    "allowAiAssistantDataSampling": { "type": { "name": "bool" } },
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -252,6 +264,27 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onAiAssistantHistoryChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantHistory: PromptHistory) => void",
+        "describedArgs": ["aiAssistantHistory"]
+      }
+    },
+    "onAiAssistantPanelOpenChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantPanelOpen: boolean) => void",
+        "describedArgs": ["aiAssistantPanelOpen"]
+      }
+    },
+    "onAiAssistantSuggestionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantSuggestions: Array<string>) => void",
+        "describedArgs": ["aiAssistantSuggestions"]
+      }
+    },
     "onBeforeClipboardPasteStart": {
       "type": { "name": "func" },
       "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
@@ -484,6 +517,14 @@
     "onProcessRowUpdateError": {
       "type": { "name": "func" },
       "signature": { "type": "function(error: any) => void", "describedArgs": ["error"] }
+    },
+    "onPrompt": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(prompt: string, promptContext: string) => Promise<PromptResponse>",
+        "describedArgs": ["prompt", "promptContext"],
+        "returned": "Promise<PromptResponse>"
+      }
     },
     "onResize": {
       "type": { "name": "func" },
@@ -831,6 +872,12 @@
       "name": "baseCheckbox",
       "description": "The custom Checkbox component used in the grid for both header and cells.",
       "default": "Checkbox",
+      "class": null
+    },
+    {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
       "class": null
     },
     {
@@ -1182,15 +1229,87 @@
       "class": null
     },
     {
-      "name": "toolbarPromptSendIcon",
+      "name": "aiAssistantIcon",
+      "description": "Icon used for the AI Assistant button",
+      "default": "GridAssistantIcon",
+      "class": null
+    },
+    {
+      "name": "aiAssistantCloseIcon",
+      "description": "Icon used for the AI Assistant close button",
+      "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "promptIcon",
+      "description": "Icon used for the prompt",
+      "default": "GridPromptIcon",
+      "class": "MuiDataGridPremium-promptIcon"
+    },
+    {
+      "name": "promptSendIcon",
       "description": "Icon used for the button that sends a prompt",
+      "default": "GridSendIcon",
+      "class": null
+    },
+    {
+      "name": "promptSpeechRecognitionIcon",
+      "description": "Icon used for the button that starts and stops recording the prompt",
+      "default": "GridMicIcon",
+      "class": null
+    },
+    {
+      "name": "promptSpeechRecognitionOffIcon",
+      "description": "Icon used for when speech recognition is not supported",
+      "default": "GridMicOffIcon",
+      "class": null
+    },
+    {
+      "name": "promptRerunIcon",
+      "description": "Icon used for the button that reruns a prompt",
+      "default": "GridRerunIcon",
+      "class": null
+    },
+    {
+      "name": "promptSortAscIcon",
+      "description": "Icon used to display sort ascending changes",
+      "default": "GridArrowUpwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptSortDescIcon",
+      "description": "Icon used to display sort descending changes",
+      "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptGroupIcon",
+      "description": "Icon used to display group changes",
+      "default": "GridGroupWorkIcon",
+      "class": null
+    },
+    {
+      "name": "promptFilterIcon",
+      "description": "Icon used to display filter changes",
+      "default": "GridFilterAltIcon",
+      "class": null
+    },
+    {
+      "name": "promptPivotIcon",
+      "description": "Icon used to display pivot changes",
+      "default": "GridPivotIcon",
+      "class": null
+    },
+    {
+      "name": "promptAggregationIcon",
+      "description": "Icon used to display aggregation changes",
       "default": "GridFunctionsIcon",
       "class": null
     },
     {
-      "name": "toolbarPromptRecordIcon",
-      "description": "Icon used for the button that starts/stops recording the prompt",
-      "default": "GridFunctionsIcon",
+      "name": "promptChangesToggleIcon",
+      "description": "Icon used on the toggle button of the changes list",
+      "default": "GridExpandMoreIcon",
       "class": null
     }
   ],
@@ -1235,6 +1354,78 @@
       "key": "aggregationRowOverlayWrapper",
       "className": "MuiDataGridPremium-aggregationRowOverlayWrapper",
       "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanel",
+      "className": "MuiDataGridPremium-aiAssistantPanel",
+      "description": "Styles applied to the root element of the AI assistant panel.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGridPremium-aiAssistantPanelBody",
+      "description": "Styles applied to the root element of the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGridPremium-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the root element of the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGridPremium-aiAssistantPanelFooter",
+      "description": "Styles applied to the root element of the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGridPremium-aiAssistantPanelHeader",
+      "description": "Styles applied to the root element of the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHistory",
+      "className": "MuiDataGridPremium-aiAssistantPanelHistory",
+      "description": "Styles applied to the root element of the AI assistant panel history.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHistoryList",
+      "className": "MuiDataGridPremium-aiAssistantPanelHistoryList",
+      "description": "Styles applied to the root element of the AI assistant panel history list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the root element of the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGridPremium-aiAssistantPanelTitle",
+      "description": "Styles applied to the root element of the AI assistant panel title.",
       "isGlobal": false
     },
     {
@@ -1820,6 +2011,54 @@
       "isGlobal": false
     },
     {
+      "key": "prompt",
+      "className": "MuiDataGridPremium-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGridPremium-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPremium-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGridPremium-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGridPremium-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPremium-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGridPremium-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGridPremium-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiDataGridPremium-root",
       "description": "Styles applied to the root element.",
@@ -2000,36 +2239,6 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarPromptControl",
-      "className": "MuiDataGridPremium-toolbarPromptControl",
-      "description": "Styles applied to the toolbar prompt control element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControl--recording",
-      "className": "MuiDataGridPremium-toolbarPromptControl--recording",
-      "description": "Styles applied to the toolbar prompt control element when recording.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordButton",
-      "className": "MuiDataGridPremium-toolbarPromptControlRecordButton",
-      "description": "Styles applied to the toolbar prompt control record button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordingIndicator",
-      "className": "MuiDataGridPremium-toolbarPromptControlRecordingIndicator",
-      "description": "Styles applied to the toolbar prompt control recording indicator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlSendButton",
-      "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
-      "description": "Styles applied to the toolbar prompt control send button element.",
-      "isGlobal": false
-    },
-    {
       "key": "toolbarQuickFilter",
       "className": "MuiDataGridPremium-toolbarQuickFilter",
       "description": "Styles applied to the toolbar quick filter root element.",
@@ -2100,6 +2309,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

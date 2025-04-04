@@ -56,24 +56,15 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Очистити',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Введіть запит…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Введіть або запишіть запит…',
-  toolbarPromptControlRecordingPlaceholder: 'Прослуховування запиту…',
-  toolbarPromptControlLabel: 'Введення запиту',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Запис',
-  toolbarPromptControlRecordButtonActiveLabel: 'Зупинити запис',
-  toolbarPromptControlSendActionLabel: 'Надіслати',
-  toolbarPromptControlSendActionAriaLabel: 'Надіслати запит',
-  toolbarPromptControlErrorMessage:
-    'Сталася помилка під час обробки запиту. Будь ласка, спробуйте ще раз із іншим запитом.',
-
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',
   toolbarExportCSV: 'Завантажити у форматі CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Пошук',
@@ -254,6 +245,51 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Введення запиту',
+  promptFieldPlaceholder: 'Введіть запит…',
+  promptFieldPlaceholderWithRecording: 'Введіть або запишіть запит…',
+  promptFieldPlaceholderListening: 'Прослуховування запиту…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Надіслати',
+  promptFieldRecord: 'Запис',
+  promptFieldStopRecording: 'Зупинити запис',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid);

@@ -2,6 +2,7 @@
   "interfaceDescription": "The full grid API.",
   "propertiesDescriptions": {
     "addRowGroupingCriteria": { "description": "Adds the field to the row grouping model." },
+    "aiAssistant": { "description": "The AI assistant API." },
     "applySorting": { "description": "Applies the current sort model to the rows." },
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."

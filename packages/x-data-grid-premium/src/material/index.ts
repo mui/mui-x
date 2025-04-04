@@ -1,18 +1,42 @@
+import {
+  GridArrowDownwardIcon,
+  GridArrowUpwardIcon,
+  GridCloseIcon,
+  GridFilterAltIcon,
+  GridExpandMoreIcon,
+} from '@mui/x-data-grid-pro';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
   GridWorkspacesIcon,
   GridGroupWorkIcon,
   GridFunctionsIcon,
-  GridSendPromptIcon,
-  GridRecordPromptIcon,
+  GridSendIcon,
+  GridMicIcon,
+  GridMicOffIcon,
+  GridAssistantIcon,
+  GridPromptIcon,
+  GridRerunIcon,
+  GridPivotIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
   columnMenuUngroupIcon: GridWorkspacesIcon,
   columnMenuGroupIcon: GridGroupWorkIcon,
   columnMenuAggregationIcon: GridFunctionsIcon,
-  toolbarPromptSendIcon: GridSendPromptIcon,
-  toolbarPromptRecordIcon: GridRecordPromptIcon,
+  aiAssistantIcon: GridAssistantIcon,
+  aiAssistantCloseIcon: GridCloseIcon,
+  promptIcon: GridPromptIcon,
+  promptSendIcon: GridSendIcon,
+  promptSpeechRecognitionIcon: GridMicIcon,
+  promptSpeechRecognitionOffIcon: GridMicOffIcon,
+  promptRerunIcon: GridRerunIcon,
+  promptSortAscIcon: GridArrowUpwardIcon,
+  promptSortDescIcon: GridArrowDownwardIcon,
+  promptFilterIcon: GridFilterAltIcon,
+  promptPivotIcon: GridPivotIcon,
+  promptAggregationIcon: GridFunctionsIcon,
+  promptGroupIcon: GridGroupWorkIcon,
+  promptChangesToggleIcon: GridExpandMoreIcon,
 };
 
 const materialSlots = {

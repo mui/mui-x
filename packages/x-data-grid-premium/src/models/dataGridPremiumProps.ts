@@ -30,6 +30,11 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import {
+  PromptHistory,
+  PromptResponse,
+  PromptSuggestion,
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -124,6 +129,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -209,4 +219,42 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * If `true`, the AI Assistant panel is open.
+   */
+  aiAssistantPanelOpen?: boolean;
+  /**
+   * Callback fired when the AI Assistant panel open state changes.
+   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
+   */
+  onAiAssistantPanelOpenChange?: (aiAssistantPanelOpen: boolean) => void;
+  /**
+   * The history of the AI Assistant.
+   */
+  aiAssistantHistory?: PromptHistory;
+  /**
+   * Callback fired when the AI Assistant history changes.
+   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   */
+  onAiAssistantHistoryChange?: (aiAssistantHistory: PromptHistory) => void;
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions?: PromptSuggestion[];
+  /**
+   * Callback fired when the AI Assistant suggestions change.
+   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
+   */
+  onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: PromptSuggestion[]) => void;
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling?: boolean;
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt?: (prompt: string, promptContext: string) => Promise<PromptResponse>;
 }

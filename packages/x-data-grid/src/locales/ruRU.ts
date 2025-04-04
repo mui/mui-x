@@ -56,24 +56,15 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Введите запрос…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Введите или запишите запрос…',
-  toolbarPromptControlRecordingPlaceholder: 'Прослушивание запроса…',
-  toolbarPromptControlLabel: 'Ввод запроса',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Запись',
-  toolbarPromptControlRecordButtonActiveLabel: 'Остановить запись',
-  toolbarPromptControlSendActionLabel: 'Отправить',
-  toolbarPromptControlSendActionAriaLabel: 'Отправить запрос',
-  toolbarPromptControlErrorMessage:
-    'При обработке запроса произошла ошибка. Пожалуйста, повторите попытку с другим запросом.',
-
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
   toolbarExportPrint: 'Печать',
   toolbarExportExcel: 'Скачать в формате Excel',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Поиск',
@@ -254,6 +245,51 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'счет',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Ввод запроса',
+  promptFieldPlaceholder: 'Введите запрос…',
+  promptFieldPlaceholderWithRecording: 'Введите или запишите запрос…',
+  promptFieldPlaceholderListening: 'Прослушивание запроса…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Отправить',
+  promptFieldRecord: 'Запись',
+  promptFieldStopRecording: 'Остановить запись',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid);
