@@ -5,6 +5,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 import { HighlightItemData } from '@mui/x-charts/context';
 import Box from '@mui/material/Box';
+import { RadarSeriesType } from '@mui/x-charts/models';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 function valueFormatter(v: number | null) {
   if (v === null) {
@@ -16,6 +19,10 @@ function valueFormatter(v: number | null) {
 export default function DemoRadarSeriesHighlight() {
   const [highlightedItem, setHighlightedItem] =
     React.useState<HighlightItemData | null>(null);
+  const [fillArea, setFillArea] = React.useState(false);
+
+  const withOptions = (series: RadarSeriesType[]) =>
+    series.map((item) => ({ ...item, fillArea }));
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
@@ -51,10 +58,18 @@ export default function DemoRadarSeriesHighlight() {
           highlight="series"
           highlightedItem={highlightedItem}
           onHighlightChange={setHighlightedItem}
-          series={series}
+          series={withOptions(series)}
           radar={radar}
         />
       </Box>
+      <FormControlLabel
+        checked={fillArea}
+        control={
+          <Checkbox onChange={(event) => setFillArea(event.target.checked)} />
+        }
+        label="fill area"
+        labelPlacement="end"
+      />
     </Stack>
   );
 }
@@ -63,18 +78,21 @@ export default function DemoRadarSeriesHighlight() {
 const series = [
   {
     id: 'usa',
+    type: 'radar' as const,
     label: 'USA',
     data: [6.65, 2.76, 5.15, 0.19, 0.07, 0.12],
     valueFormatter,
   },
   {
     id: 'australia',
+    type: 'radar' as const,
     label: 'Australia',
     data: [5.52, 5.5, 3.19, 0.51, 0.15, 0.11],
     valueFormatter,
   },
   {
     id: 'united-kingdom',
+    type: 'radar' as const,
     label: 'United Kingdom',
     data: [2.26, 0.29, 2.03, 0.05, 0.04, 0.06],
     valueFormatter,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
@@ -17,7 +18,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <g className={classes.root}>
-      {seriesCoordinates?.map(({ seriesId, points, color, showMark }, seriesIndex) => {
+      {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
         const isItemHighlighted = isHighlighted({ seriesId });
         const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
 
@@ -28,21 +29,32 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                 key={seriesId}
                 d={getAreaPath(points)}
                 {...interactionProps[seriesIndex]}
-                className={
-                  (isItemHighlighted && classes.highlighted) ||
-                  (isItemFaded && classes.faded) ||
-                  undefined
-                }
-                fill={color}
+                className={clsx(
+                  classes.area,
+                  (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
+                )}
+                fill={fillArea ? color : 'transparent'}
+                fillOpacity={(isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2}
                 stroke={color}
-                filter={isItemHighlighted ? 'brightness(120%)' : undefined}
                 strokeOpacity={isItemFaded ? 0.5 : 1}
-                fillOpacity={isItemFaded ? 0.1 : 0.4}
+                strokeWidth={!fillArea && isItemHighlighted ? 2 : 1}
               />
             }
-            {showMark &&
+            {!hideMark &&
               points.map((point, index) => (
-                <circle key={index} cx={point.x} cy={point.y} r={5} fill={color} stroke={color} />
+                <circle
+                  key={index}
+                  cx={point.x}
+                  cy={point.y}
+                  r={3}
+                  fill={color}
+                  stroke={color}
+                  opacity={fillArea && isItemFaded ? 0.5 : 1}
+                  className={clsx(
+                    classes.mark,
+                    (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
+                  )}
+                />
               ))}
           </g>
         );

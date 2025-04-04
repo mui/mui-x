@@ -6,6 +6,9 @@ import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 
 import Box from '@mui/material/Box';
 
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 function valueFormatter(v) {
   if (v === null) {
     return 'NaN';
@@ -15,6 +18,9 @@ function valueFormatter(v) {
 
 export default function DemoRadarSeriesHighlight() {
   const [highlightedItem, setHighlightedItem] = React.useState(null);
+  const [fillArea, setFillArea] = React.useState(false);
+
+  const withOptions = (series) => series.map((item) => ({ ...item, fillArea }));
 
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
@@ -50,10 +56,18 @@ export default function DemoRadarSeriesHighlight() {
           highlight="series"
           highlightedItem={highlightedItem}
           onHighlightChange={setHighlightedItem}
-          series={series}
+          series={withOptions(series)}
           radar={radar}
         />
       </Box>
+      <FormControlLabel
+        checked={fillArea}
+        control={
+          <Checkbox onChange={(event) => setFillArea(event.target.checked)} />
+        }
+        label="fill area"
+        labelPlacement="end"
+      />
     </Stack>
   );
 }
@@ -62,18 +76,21 @@ export default function DemoRadarSeriesHighlight() {
 const series = [
   {
     id: 'usa',
+    type: 'radar',
     label: 'USA',
     data: [6.65, 2.76, 5.15, 0.19, 0.07, 0.12],
     valueFormatter,
   },
   {
     id: 'australia',
+    type: 'radar',
     label: 'Australia',
     data: [5.52, 5.5, 3.19, 0.51, 0.15, 0.11],
     valueFormatter,
   },
   {
     id: 'united-kingdom',
+    type: 'radar',
     label: 'United Kingdom',
     data: [2.26, 0.29, 2.03, 0.05, 0.04, 0.06],
     valueFormatter,
