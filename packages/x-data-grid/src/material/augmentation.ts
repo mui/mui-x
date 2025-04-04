@@ -17,6 +17,7 @@ import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputProps } from '@mui/material/Input';
 import type { SelectProps } from '@mui/material/Select';
 import type { SkeletonProps } from '@mui/material/Skeleton';
+import type { ChipProps } from '@mui/material/Chip';
 
 declare module '@mui/x-data-grid' {
   interface BaseAutocompletePropsOverrides {
@@ -75,5 +76,8 @@ declare module '@mui/x-data-grid' {
   }
   interface BaseSkeletonPropsOverrides {
     material?: Partial<SkeletonProps>;
+  }
+  interface BaseChipPropsOverrides {
+    material?: Partial<ChipProps>;
   }
 }
