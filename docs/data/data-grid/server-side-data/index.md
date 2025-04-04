@@ -282,7 +282,7 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 {{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
 :::warning
-When using the `updateRow()` method, be aware that the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
+When using the `updateRow()` method, the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
 This means any previously cached data will be refetched on the next request.
 
 For applications requiring caching with editing operations, consider implementing server-side cache instead.
@@ -291,9 +291,8 @@ If you have a specific use case that requires preserving the client-side cache d
 :::
 
 :::warning
-The position of the edited row on the current page is kept the same for UX purposes, even if some features like sorting or filtering are enabled which might affect the row's new position.
-
-This automatically gets fixed when the page is fetched again, since the cache is cleared after the update.
+The position and/or visibility of the edited row on the current page is kept, even if features like sorting or filtering are enabled and should affect the row after the value update.
+Change in the position and/or visibility is applied when the page is fetched again.
 
 You could manually trigger the re-fetch by calling the API method `dataSource.fetchRows()`.
 :::
@@ -303,9 +302,9 @@ You could manually trigger the re-fetch by calling the API method `dataSource.fe
 You could handle the errors with the data source by providing an error handler function using the `onDataSourceError()`.
 It will be called whenever there's an error in fetching or updating the data.
 
-This function recieves an error object of type `GridGetRowsError` or `GridUpdateRowError`.
+This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
 
-Here's the error types and their corresponding `error.params` type:
+For different error types, different `error.params` type is passed as an argument to the callback:
 
 | Error type           | Type of `error.params` |
 | :------------------- | :--------------------- |
