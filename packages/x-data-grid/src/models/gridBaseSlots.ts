@@ -317,4 +317,5 @@ export type ChipProps = CommonProps & {
   size?: 'small' | 'medium';
   icon?: React.ReactElement;
   children?: null;
+  variant?: 'filled' | 'outlined';
 };

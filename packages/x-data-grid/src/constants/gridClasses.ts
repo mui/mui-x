@@ -757,9 +757,17 @@ export interface GridClasses {
    */
   promptText: string;
   /**
-   * Styles applied to the prompt time element.
+   * Styles applied to the prompt feedback element.
    */
-  promptTime: string;
+  promptFeedback: string;
+  /**
+   * Styles applied to the prompt change list element.
+   */
+  promptChangeList: string;
+  /**
+   * Styles applied to the prompt change item element.
+   */
+  promptChangeItem: string;
   /**
    * Styles applied to the prompt icon element.
    */
@@ -970,7 +978,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'prompt',
   'promptContent',
   'promptText',
-  'promptTime',
+  'promptFeedback',
+  'promptChangeList',
+  'promptChangeItem',
   'promptIcon',
   'promptIconContainer',
   'promptError',
