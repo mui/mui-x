@@ -122,7 +122,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(() => {
         view.setProps({ expandedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedItems state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled expandedItems state of Tree View to be uncontrolled.',
       );
     });
 
@@ -137,7 +137,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.isItemExpanded('2')).to.equal(false);
       }).toErrorDev(
-        'MUI X: A component is changing the default expandedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+        'MUI X: A component is changing the default expandedItems state of an uncontrolled Tree View after being initialized. To suppress this warning opt to use a controlled Tree View.',
       );
     });
   });
