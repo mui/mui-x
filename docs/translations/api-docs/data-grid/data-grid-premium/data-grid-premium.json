@@ -6,6 +6,7 @@
     "aggregationRowsScope": {
       "description": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows."
     },
+    "aiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
     "aiAssistantHistory": { "description": "The history of the AI Assistant." },
     "aiAssistantPanelOpen": {
       "description": "If <code>true</code>, the AI Assistant panel is open."
@@ -118,7 +119,6 @@
       "description": "If <code>true</code>, the virtualization is disabled."
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
-    "enableAiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
     "estimatedRowCount": {
       "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
     },

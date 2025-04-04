@@ -158,7 +158,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * If `true`, the AI Assistant is enabled.
    * @default false
    */
-  enableAiAssistant: boolean;
+  aiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
