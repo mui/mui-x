@@ -1257,6 +1257,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         await user.clear(screen.getByRole('spinbutton', { name: 'Value' }));
         await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
         await act(() => sleep(0));
+
         await waitFor(() => {
           expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
         });
@@ -1275,6 +1276,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
               mainGroupingCriteria: 'category2',
             }}
             defaultGroupingExpansionDepth={-1}
+            filterDebounceMs={0}
           />,
         );
 
@@ -1283,6 +1285,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         });
         await user.clear(screen.getByRole('spinbutton', { name: 'Value' }));
         await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
+        await act(() => sleep(0));
 
         await waitFor(() => {
           expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
