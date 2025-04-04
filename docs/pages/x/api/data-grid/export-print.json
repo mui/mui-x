@@ -1,0 +1,25 @@
+{
+  "props": {
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ allColumns?: bool, bodyClassName?: string, copyStyles?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, hideFooter?: bool, hideToolbar?: bool, includeCheckboxes?: bool, pageStyle?: func<br>&#124;&nbsp;string }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ExportPrint",
+  "imports": [
+    "import { ExportPrint } from '@mui/x-data-grid/components';",
+    "import { ExportPrint } from '@mui/x-data-grid';",
+    "import { ExportPrint } from '@mui/x-data-grid-pro';",
+    "import { ExportPrint } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiExportPrint",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/export/ExportPrint.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export</a></li></ul>",
+  "cssComponent": false
+}

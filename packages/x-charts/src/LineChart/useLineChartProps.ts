@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
@@ -14,7 +15,6 @@ import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
 import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
 
 /**
@@ -42,10 +42,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     disableLineItemHighlight,
     hideLegend,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -60,16 +56,21 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
+  const seriesWithDefault = React.useMemo(
+    () =>
+      series.map((s) => ({
+        disableHighlight: !!disableLineItemHighlight,
+        type: 'line' as const,
+        ...s,
+      })),
+    [disableLineItemHighlight, series],
+  );
   const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
-    series: series.map((s) => ({
-      disableHighlight: !!disableLineItemHighlight,
-      type: 'line' as const,
-      ...s,
-    })),
+    series: seriesWithDefault,
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis: xAxis ?? [
@@ -133,10 +134,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

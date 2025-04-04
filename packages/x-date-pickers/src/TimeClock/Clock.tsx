@@ -158,7 +158,10 @@ const ClockPin = styled('div', {
   transform: 'translate(-50%, -50%)',
 }));
 
-const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
+const meridiemButtonCommonStyles = (
+  theme: Theme,
+  clockMeridiemMode: ClockOwnerState['clockMeridiemMode'],
+) => ({
   zIndex: 1,
   bottom: 8,
   paddingLeft: 4,
@@ -166,7 +169,7 @@ const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
   width: CLOCK_HOUR_WIDTH,
   variants: [
     {
-      props: { meridiemMode },
+      props: { clockMeridiemMode },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
         color: (theme.vars || theme).palette.primary.contrastText,
@@ -397,7 +400,7 @@ export function Clock(inProps: ClockProps) {
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value == null ? null : utils.format(value, 'fullTime'),
+            value == null ? null : utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
           )}
           ref={listboxRef}
           role="listbox"

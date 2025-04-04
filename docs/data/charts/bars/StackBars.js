@@ -16,14 +16,14 @@ export default function StackBars() {
         { dataKey: 'treas', stack: 'equity' },
       ])}
       xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
+      yAxis={[{ width: 80 }]}
       {...config}
     />
   );
 }
 
 const config = {
-  width: 600,
   height: 350,
-  margin: { left: 70 },
+  margin: { left: 40 },
   hideLegend: true,
 };

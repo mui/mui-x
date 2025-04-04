@@ -97,7 +97,6 @@ export default function ScaleDemo() {
   return (
     <ChartContainer
       ref={svgRef}
-      margin={{ top: 20, left: 50, right: 50, bottom: 30 }}
       height={300}
       series={[
         {
@@ -113,19 +112,21 @@ export default function ScaleDemo() {
           yAxisId: 'right_axis_id',
         },
       ]}
-      xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], scaleType: 'point' }]}
+      xAxis={[
+        {
+          data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          scaleType: 'point',
+          position: 'none',
+        },
+      ]}
       yAxis={[
-        {
-          id: 'left_axis_id',
-        },
-        {
-          id: 'right_axis_id',
-        },
+        { id: 'left_axis_id', position: 'left' },
+        { id: 'right_axis_id', position: 'right', width: 50 },
       ]}
     >
       <LinePlot />
-      <ChartsYAxis position="left" axisId="left_axis_id" />
-      <ChartsYAxis position="right" axisId="right_axis_id" />
+      <ChartsYAxis axisId="left_axis_id" />
+      <ChartsYAxis axisId="right_axis_id" />
       <ValueHighlight svgRef={svgRef} />
     </ChartContainer>
   );

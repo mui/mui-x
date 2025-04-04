@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium, GridToolbar } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -288,7 +288,7 @@ export default function ExcelCustomExport() {
         columns={columns}
         groupingColDef={groupingColDef}
         defaultGroupingExpansionDepth={-1}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{ toolbar: { excelOptions } }}
       />
     </div>

@@ -11,11 +11,12 @@ import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
+import { GridToolbarLabel } from '../toolbarV8/GridToolbar';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
    * Show the quick filter component.
-   * @default false
+   * @default true
    */
   showQuickFilter?: boolean;
   /**
@@ -32,7 +33,7 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     csvOptions,
     printOptions,
     excelOptions,
-    showQuickFilter = false,
+    showQuickFilter = true,
     quickFilterProps = {},
     ...other
   } = props as typeof props & { excelOptions: any };
@@ -49,6 +50,7 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
 
   return (
     <GridToolbarContainer {...other} ref={ref}>
+      {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
@@ -83,7 +85,7 @@ GridToolbar.propTypes = {
   }),
   /**
    * Show the quick filter component.
-   * @default false
+   * @default true
    */
   showQuickFilter: PropTypes.bool,
   /**

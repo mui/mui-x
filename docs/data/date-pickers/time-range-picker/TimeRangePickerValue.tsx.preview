@@ -1,0 +1,11 @@
+<DemoItem label="Uncontrolled picker" component="TimeRangePicker">
+  <TimeRangePicker
+    defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
+  />
+</DemoItem>
+<DemoItem label="Controlled picker" component="TimeRangePicker">
+  <TimeRangePicker
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoItem>

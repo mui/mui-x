@@ -1,17 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Scatter, ScatterProps } from './Scatter';
-import getColor from './getColor';
-import { useScatterSeries } from '../hooks/useSeries';
+import { Scatter, ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
+import { useScatterSeriesContext } from '../hooks/useScatterSeries';
+import getColor from './seriesConfig/getColor';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 
-export interface ScatterPlotSlots {
+export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
 
-export interface ScatterPlotSlotProps {
+export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
@@ -40,7 +40,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = useScatterSeries();
+  const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
@@ -59,7 +59,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisId, yAxisId, zAxisId, markerSize, color } = series[seriesId];
+        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
         const colorGetter = getColor(
           series[seriesId],
@@ -76,9 +76,10 @@ function ScatterPlot(props: ScatterPlotProps) {
             yScale={yScale}
             color={color}
             colorGetter={colorGetter}
-            markerSize={markerSize ?? 4}
             series={series[seriesId]}
             onItemClick={onItemClick}
+            slots={slots}
+            slotProps={slotProps}
             {...slotProps?.scatter}
           />
         );

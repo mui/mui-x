@@ -6,14 +6,13 @@ import {
   DataGridPremium as DataGrid,
   DataGridPremiumProps as DataGridProps,
   GridApi,
-  GridToolbar,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Quick filter', () => {
+describe('<DataGridPremium />', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -46,7 +45,7 @@ describe('<DataGrid /> - Quick filter', () => {
         <DataGrid
           {...baselineProps}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter

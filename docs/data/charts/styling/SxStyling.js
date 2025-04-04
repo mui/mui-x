@@ -12,7 +12,7 @@ export default function SxStyling() {
     <BarChart
       sx={(theme) => ({
         [`.${barElementClasses.root}`]: {
-          fill: theme.palette.background.paper,
+          fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
         [`.MuiBarElement-series-l_id`]: {
@@ -47,7 +47,6 @@ export default function SxStyling() {
         { data: rData, label: 'r', id: 'r_id' },
       ]}
       colors={colors}
-      width={500}
       height={300}
     />
   );

@@ -16,14 +16,19 @@ import {
   DataGridPro,
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
-  GridToolbar,
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
   GridColDef,
   getGridStringOperators,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnValues,
+  getSelectInput,
+  grid,
+  includeRowSelection,
+} from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
@@ -164,7 +169,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -193,7 +198,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             getColumnForNewFilter,
@@ -219,7 +224,7 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {
@@ -617,7 +622,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
-    expect(apiRef.current?.state.rowSelection).to.deep.equal([1]);
+    expect(apiRef.current?.state.rowSelection).to.deep.equal(includeRowSelection([1]));
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
@@ -912,14 +917,14 @@ describe('<DataGridPro /> - Filter', () => {
 
   // It's not re-rendering the filter panel correctly
   testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
-    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const { rerender } = render(<TestCase showToolbar />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
 
     let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const oldId = filterForm!.dataset.id;
 
-    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    rerender(<TestCase showToolbar rows={[{ id: 0, brand: 'ADIDAS' }]} />);
     filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const newId = filterForm!.dataset.id;
     expect(oldId).to.equal(newId);

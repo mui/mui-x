@@ -17,7 +17,6 @@ const xLabels = [
 export default function PositiveAndNegativeBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         {
@@ -35,7 +34,7 @@ export default function PositiveAndNegativeBarChart() {
           scaleType: 'band',
         },
       ]}
-      yAxis={[{ max: 10000 }]}
+      yAxis={[{ width: 60, max: 10000 }]}
     />
   );
 }

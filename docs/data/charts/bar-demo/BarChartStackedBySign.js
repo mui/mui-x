@@ -17,13 +17,13 @@ const xLabels = [
 export default function BarChartStackedBySign() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId', stack: 'stack1' },
         { data: uData, label: 'uv', id: 'uvId', stack: 'stack1' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 60 }]}
     />
   );
 }

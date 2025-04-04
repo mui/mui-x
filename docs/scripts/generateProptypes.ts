@@ -42,6 +42,12 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     filePath: sourceFile,
     project,
     checkDeclarations: true,
+    shouldInclude: (type: any) => {
+      if (type.name === 'material') {
+        return false;
+      }
+      return true;
+    },
     shouldResolveObject: ({ name }) => {
       const propsToNotResolve = [
         'classes',
@@ -70,10 +76,6 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'unstableEndFieldRef',
         'series',
         'axis',
-        'bottomAxis',
-        'topAxis',
-        'leftAxis',
-        'rightAxis',
         'plugins',
         'seriesConfig',
         'manager',

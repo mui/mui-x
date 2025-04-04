@@ -11,7 +11,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -78,9 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
           ...textFieldProps?.slotProps,
           input: {
             endAdornment: applying ? (
-              <rootProps.slots.baseInputAdornment position="end">
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              </rootProps.slots.baseInputAdornment>
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...textFieldProps?.slotProps?.input,
           },

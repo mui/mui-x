@@ -7,7 +7,10 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
-export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
+export {
+  unstable_resetCleanupTracking,
+  useInstanceEventHandler,
+} from './hooks/useInstanceEventHandler';
 export { useSelector } from './hooks/useSelector';
 
 export type {
@@ -45,11 +48,6 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewIcons } from './plugins/useTreeViewIcons';
-export type {
-  UseTreeViewIconsSignature,
-  UseTreeViewIconsParameters,
-} from './plugins/useTreeViewIcons';
 export {
   useTreeViewItems,
   buildSiblingIndexes,
@@ -71,6 +69,14 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
+export { selectorIsItemExpanded } from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+export {
+  selectorDataSourceState,
+  selectorGetTreeItemError,
+} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
+export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
@@ -80,3 +86,9 @@ export type {
 export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
 export { TreeViewStore } from './utils/TreeViewStore';
+
+export type {
+  TreeViewClasses,
+  TreeViewSlots,
+  TreeViewSlotProps,
+} from './TreeViewProvider/TreeViewStyleContext';

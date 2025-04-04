@@ -16,7 +16,6 @@ export default function BasicLegend() {
         { type: 'scatter', label: 'Var A', data: data.slice(0, 25) },
         { type: 'scatter', label: 'Var B', data: data.slice(25) },
       ]}
-      width={400}
       height={300}
     />
   );

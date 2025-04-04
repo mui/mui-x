@@ -55,18 +55,19 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change an item expansion
 
-Use the `setItemExpansion` API method to change the expansion of an item.
+Use the `setItemExpansion()` API method to change the expansion of an item.
 
 ```ts
-apiRef.current.setItemExpansion(
+apiRef.current.setItemExpansion({
   // The DOM event that triggered the change
   event,
   // The id of the item to expand or collapse
   itemId,
   // If `true` the item will be expanded
   // If `false` the item will be collapsed
-  isExpanded,
-);
+  // If not defined, the item's expansion status will be toggled.
+  shouldBeExpanded,
+});
 ```
 
 {{"demo": "ApiMethodSetItemExpansion.js"}}

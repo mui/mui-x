@@ -29,7 +29,6 @@ export default function HighlightClasses() {
             },
           },
         ]}
-        margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />
     </Box>

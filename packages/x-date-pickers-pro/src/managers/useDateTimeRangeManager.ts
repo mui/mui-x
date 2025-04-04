@@ -2,11 +2,14 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
+  PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
-  getDateTimeFieldInternalPropsDefaults,
+  useApplyDefaultValuesToDateTimeValidationProps,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -15,6 +18,7 @@ import {
   ExportedValidateDateTimeRangeProps,
   ValidateDateTimeRangeProps,
 } from '../validation/validateDateTimeRange';
+import { formatRange } from '../internals/utils/date-utils';
 
 export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -31,14 +35,47 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
-        ...internalProps,
-        ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
-      }),
-      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
-      internal_getOpenPickerButtonAriaLabel: () => '',
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToDateTimeRangeFieldInternalProps,
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
+  );
+}
+
+function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
+
+  return React.useMemo(() => {
+    return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
+  }, [value, translations, utils]);
+}
+
+function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToDateTimeValidationProps(internalProps);
+
+  const ampm = React.useMemo(
+    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, utils],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format:
+        internalProps.format ??
+        (ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h),
+    }),
+    [internalProps, validationProps, ampm, utils],
   );
 }
 
@@ -53,8 +90,8 @@ export type UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructur
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError,
-    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeRangeProps,
+    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeRangeManagerFieldInternalProps<
@@ -69,14 +106,4 @@ export interface DateTimeRangeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeRangeProps,
     AmPmProps,
-    RangeFieldSeparatorProps {}
-
-interface DateTimeRangeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeRangeValidationError
-    >,
-    ValidateDateTimeRangeProps,
     RangeFieldSeparatorProps {}

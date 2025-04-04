@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
@@ -65,7 +65,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
     | 'slotProps'
     | 'slots'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -85,7 +85,6 @@ export const useGridRowGrouping = (
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithRowGroupingModel(model));
         setStrategyAvailability(apiRef, props.disableRowGrouping);
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, props.disableRowGrouping],
@@ -247,15 +246,15 @@ export const useGridRowGrouping = (
           return;
         }
 
-        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
-          apiRef.current.unstable_dataSource.fetchRows(params.id);
+        if (props.dataSource && !params.rowNode.childrenExpanded) {
+          apiRef.current.dataSource.fetchRows(params.id);
           return;
         }
 
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.rowGroupingColumnMode, props.unstable_dataSource],
+    [apiRef, props.rowGroupingColumnMode, props.dataSource],
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<
@@ -285,12 +284,10 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
-  useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () =>
-    apiRef.current.unstable_dataSource.fetchRows(),
-  );
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
+  useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
+  useGridEvent(apiRef, 'rowGroupingModelChange', () => apiRef.current.dataSource.fetchRows());
 
   /*
    * EFFECTS

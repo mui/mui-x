@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -40,12 +40,6 @@ Or set the `disableVoronoi` prop to `true` to trigger interactions only when hov
 
 {{"demo": "VoronoiInteraction.js"}}
 
-To use this feature with composition, add the `ChartsVoronoiHandler`.
-
-```jsx
-<ChartsVoronoiHandler voronoiMaxRadius={50} />
-```
-
 ## Click event
 
 Scatter Chart provides an `onItemClick` handler for handling clicks on specific scatter items.
@@ -58,7 +52,7 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClickNoSnap.js"}}
+{{"demo": "ScatterClick.js"}}
 
 If `disableVoronoi=true`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
@@ -113,9 +107,20 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### CSS 🚧
 
-### Shape 🚧
+### Shape
 
-### Size 🚧
+The shape of points in a scatter chart can be customized by passing a component to the `marker` slot.
+
+If you want the legend and tooltip to match, then you also need to customize the `labelMarkType` of each series, as shown in the example below.
+
+{{"demo": "ScatterCustomShape.js"}}
+
+### Size
+
+You can customize the size of points in a scatter chart using the `markerSize` prop of every series.
+For circles, the `markerSize` is the radius of the point in pixels.
+
+{{"demo": "ScatterCustomSize.js"}}
 
 ## Plot Customization
 

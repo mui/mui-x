@@ -19,21 +19,27 @@ export default function DateRangeFieldExamples() {
       <DemoContainer
         components={[
           'SingleInputDateRangeField',
-          'MultiInputDateRangeField',
           'SingleInputTimeRangeField',
+          'SingleInputDateTimeRangeField',
+          'MultiInputDateRangeField',
           'MultiInputTimeRangeField',
           'MultiInputDateTimeRangeField',
-          'SingleInputDateTimeRangeField',
         ]}
       >
+        <DemoItem label="SingleInputDateRangeField">
+          <SingleInputDateRangeField defaultValue={[date1, date2]} />
+        </DemoItem>
+        <DemoItem label="SingleInputTimeRangeField">
+          <SingleInputTimeRangeField defaultValue={[date1, date2]} />
+        </DemoItem>
+        <DemoItem label="SingleInputDateTimeRangeField">
+          <SingleInputDateTimeRangeField defaultValue={[date1, date2]} />
+        </DemoItem>
         <DemoItem
           label="MultiInputDateRangeField"
           component="MultiInputDateRangeField"
         >
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
-        </DemoItem>
-        <DemoItem label="SingleInputDateRangeField">
-          <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputTimeRangeField"
@@ -41,17 +47,11 @@ export default function DateRangeFieldExamples() {
         >
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
-        <DemoItem label="SingleInputTimeRangeField">
-          <SingleInputTimeRangeField defaultValue={[date1, date2]} />
-        </DemoItem>
         <DemoItem
           label="MultiInputDateTimeRangeField"
           component="MultiInputDateTimeRangeField"
         >
           <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
-        </DemoItem>
-        <DemoItem label="SingleInputDateTimeRangeField">
-          <SingleInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

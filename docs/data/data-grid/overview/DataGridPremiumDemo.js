@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import {
   DataGridPremium,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridToolbar,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -55,11 +54,12 @@ export default function DataGridPremiumDemo() {
     <Box sx={{ height: 520, width: '100%' }}>
       <DataGridPremium
         {...data}
+        label="Data Grid Premium"
         apiRef={apiRef}
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
       />
     </Box>
   );
