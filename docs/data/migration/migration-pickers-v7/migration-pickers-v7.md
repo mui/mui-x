@@ -175,7 +175,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 #### Migrate `slotProps.textField`
 
 If you are passing props to `slotProps.textField`,
-these props are now received by `PickersTextField` and should keep working the same way as before.
+the `PickersTextField` component now receives these props and should keep working the same as before.
 
 Both components below render a small size UI:
 
