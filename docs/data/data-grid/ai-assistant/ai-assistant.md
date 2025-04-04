@@ -14,16 +14,17 @@ Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
 
 The AI assistant feature lets users interact with the Data Grid component using natural language.
 Type a prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field and the Data Grid will update accordingly.
-In supported browsers, users can also prompt the assistant using their voice.
+In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
 To enable client-side of this feature, pass `aiAssistant` prop.
 
-To increase the accuracy of the language processing, provide example values for the available columns.
-This can be done in the following ways.
+## Improving accuracy with example values
+
+To increase the accuracy of the language processing, provide example values for the available columns via one of the methods below.
 
 :::info
 AI assistant demos use a utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
-In a real-world scenario, replace this with [MUI's](/x/react-data-grid/ai-assistant/#with-muis-service) or [your own](/x/react-data-grid/ai-assistant/#with-custom-service) processing service.
+In a real-world scenario, you'd need to replace this with [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service) or [your own custom service](/x/react-data-grid/ai-assistant/#with-a-custom-service).
 
 `mockPromptResolver()` can handle a predefined set of prompts:
 
@@ -36,34 +37,25 @@ You can use suggestions to quickly enter prompts that are supported by the mock 
 
 :::
 
-## Custom examples
+### Provide custom examples
 
 Use the `examples` prop in the `columns` array to provide custom examples as context for prompt processing.
 The `examples` prop should contain an array of possible values for its respective column.
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
-## Use row data for examples
+### Use row data for examples
 
 Pass the `allowAiAssistantDataSampling` prop to use row data to generate examples.
 This is useful if you're dealing with non-sensitive data and want to skip creating custom examples for each column.
 
 Data is collected randomly at the cell level, which means that the examples for a given column might not come from the same rows.
 
-For the `aiAssistant.getPromptContext()` API method, pass the `allowDataSampling` flag as a parameter.
-
-```ts
-const context = React.useMemo(
-  () => apiRef.current.aiAssistant.getPromptContext(allowDataSampling),
-  [apiRef, allowDataSampling],
-);
-```
-
 {{"demo": "AssistantWithDataSampling.js", "bg": "inline"}}
 
-## Using Server-side data
+### Using server-side data
 
-The example below shows how to combine prompt control with [server-side data](/x/react-data-grid/server-side-data/).
+The example below shows how to combine AI assistant with [server-side data](/x/react-data-grid/server-side-data/).
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
@@ -76,12 +68,9 @@ You can use MUI's processing service or build your own.
 
 The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   A new toolbar button will appear in the default [`<Toolbar />`](/x/react-data-grid/components/toolbar/).
-   This button opens `<AssistantPanel />` that can take user's prompts.
-2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
+1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
-   :::error
+   :::warning
    Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
@@ -102,6 +91,8 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 
    :::
 
+2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
+   This adds a new button to the Toolbar that opens the Assistant Panel to receive the user's prompts.
 3. Provide the `onPrompt()` callback to pass the user's prompts to the service.
    The service's response is used internally by the Data Grid to make the necessary state updates.
 
@@ -109,34 +100,36 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
    This adds the necessary headers and stringifies the body in the correct format for you.
 
-It also makes it possible to provide additional context for better processing results, as shown below:
+   It also makes it possible to provide additional context for better processing results, as shown below:
 
-```ts
-const PROMPT_RESOLVER_PROXY_BASE_URL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://api.my-proxy.com';
+   ```ts
+   const PROMPT_RESOLVER_PROXY_BASE_URL =
+     process.env.NODE_ENV === 'development'
+       ? 'http://localhost:3000'
+       : 'https://api.my-proxy.com';
 
-function processPrompt(query: string, context: string) {
-  const additionalContext = `The rows represent: List of employees with their company, position and start date`;
+   function processPrompt(query: string, context: string) {
+     const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
-  return unstable_gridDefaultPromptResolver(
-    `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-    query,
-    context,
-    additionalContext,
-  );
-}
-```
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       additionalContext,
+     );
+   }
+   ```
 
-:::
+   :::
 
-### With custom service
+4. Provide data examples by either allowing data sampling with `allowAiAssistantDataSampling` prop or by filling the `examples` prop in the `columns` array.
+
+### With a custom service
 
 The Data Grid exposes several key elements of the AI Assistant feature so you can build your own prompt processing service:
 
 - The [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel/) and [Prompt Field](/x/react-data-grid/components/prompt-field/) components can be used to build custom UI.
-- The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for building context using `getPromptContext()`, and for applying processing with the `applyPromptResult(response: PromptResponse)` method
+- The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for processing the prompt results and updating state
 - The `unstable_gridDefaultPromptResolver()` method for passing the prompt and context with the necessary headers to the processing service
 
 Integrate these elements with your custom components and methods to suit your specific use case.

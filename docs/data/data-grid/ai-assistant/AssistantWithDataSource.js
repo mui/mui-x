@@ -97,7 +97,7 @@ export default function AssistantWithDataSource() {
         pageSizeOptions={[10, 20, 50]}
         showToolbar
         allowAiAssistantDataSampling
-        enableAiAssistant
+        aiAssistant
         onPrompt={mockPromptResolver}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}

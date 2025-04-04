@@ -36,7 +36,7 @@ export default function AssistantWithDataSampling() {
           },
         }}
         allowAiAssistantDataSampling
-        enableAiAssistant
+        aiAssistant
         onPrompt={mockPromptResolver}
         showToolbar
       />
