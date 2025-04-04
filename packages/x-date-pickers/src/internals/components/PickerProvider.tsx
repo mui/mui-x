@@ -43,6 +43,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   triggerElement: null,
   viewContainerRole: null,
   defaultActionBarActions: [],
+  onPopperExited: undefined,
 });
 
 /**
@@ -364,4 +365,8 @@ export interface PickerPrivateContextValue {
    * The actions to render in the action bar if the user doesn't provide any.
    */
   defaultActionBarActions: PickersActionBarAction[];
+  /**
+   * The function to call when the Popper is closing animation is finished.
+   */
+  onPopperExited: (() => void) | undefined;
 }

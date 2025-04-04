@@ -41,7 +41,7 @@ export const usePicker = <
   valueType,
   variant,
   validator,
-  onClose,
+  onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
   localeText,
@@ -102,7 +102,6 @@ export const usePicker = <
       props,
       valueManager,
       validator,
-      onClose,
     });
 
   const {
@@ -336,6 +335,7 @@ export const usePicker = <
       triggerElement,
       viewContainerRole,
       defaultActionBarActions,
+      onPopperExited,
     }),
     [
       dismissViews,
@@ -346,6 +346,7 @@ export const usePicker = <
       triggerElement,
       viewContainerRole,
       defaultActionBarActions,
+      onPopperExited,
     ],
   );
 

@@ -176,7 +176,7 @@ export interface UsePickerParameters<
   >;
   props: TExternalProps;
   getStepNavigation: CreateStepNavigationReturnValue;
-  onClose?: () => void;
+  onPopperExited?: () => void;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {
