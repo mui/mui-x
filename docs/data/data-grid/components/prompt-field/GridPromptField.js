@@ -18,16 +18,31 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import SendIcon from '@mui/icons-material/Send';
 
+const PROMPT_STATUS = {
+  idle: 'Waiting for prompt...',
+  success: 'Prompt applied',
+  processing: 'Processing prompt...',
+};
+
 function CustomToolbar() {
   const apiRef = useGridApiContext();
+  const [statusText, setStatusText] = React.useState(PROMPT_STATUS.idle);
+  const [error, setError] = React.useState(false);
 
   const handlePromptSubmit = async (prompt) => {
-    // TODO: handle error
-    await apiRef.current.aiAssistant.processPrompt(prompt);
+    setError(false);
+    setStatusText(PROMPT_STATUS.processing);
+    const response = await apiRef.current.aiAssistant.processPrompt(prompt);
+    if (response instanceof Error) {
+      setError(true);
+      setStatusText(response.message);
+    } else {
+      setStatusText(PROMPT_STATUS.success);
+    }
   };
 
   return (
-    <Toolbar>
+    <Toolbar style={{ minHeight: 'auto' }}>
       <PromptField onSubmit={handlePromptSubmit}>
         <PromptFieldControl
           render={({ ref, ...controlProps }, state) => (
@@ -35,11 +50,9 @@ function CustomToolbar() {
               {...controlProps}
               inputRef={ref}
               aria-label="Prompt"
-              placeholder={
-                state.recording
-                  ? 'Listening for prompt…'
-                  : 'Type or record a prompt…'
-              }
+              placeholder={state.recording ? 'Listening for prompt…' : ''}
+              error={!!error}
+              helperText={statusText}
               size="small"
               sx={{ width: 320 }}
               slotProps={{

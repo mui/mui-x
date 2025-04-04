@@ -67,7 +67,7 @@ describe('<DataGridPremium /> - Prompt', () => {
   }
 
   beforeEach(() => {
-    promptSpy.resetHistory();
+    promptSpy.reset();
   });
 
   describeSkipIf(isJSDOM)('data sampling', () => {
@@ -108,42 +108,30 @@ describe('<DataGridPremium /> - Prompt', () => {
   });
 
   describe('API', () => {
-    it('should not do anything if the feature is disabled', () => {
+    it('should not do anything if the feature is disabled', async () => {
       const sortChangeSpy = spy();
+
+      promptSpy.resolves({
+        select: -1,
+        filters: [],
+        aggregation: {},
+        sorting: [
+          {
+            column: 'id',
+            direction: 'desc',
+          },
+        ],
+        grouping: [],
+        pivoting: {},
+      });
+
       render(<Test enableAiAssistant={false} onSortModelChange={sortChangeSpy} />);
 
-      const context = apiRef.current?.aiAssistant.getPromptContext();
-      expect(context).to.equal('');
-
-      act(() =>
-        apiRef.current?.aiAssistant.applyPromptResult({
-          select: -1,
-          filters: [],
-          aggregation: {},
-          sorting: [
-            {
-              column: 'id',
-              direction: 'desc',
-            },
-          ],
-          grouping: [],
-          pivoting: {},
-        }),
-      );
+      act(async () => {
+        await apiRef.current?.aiAssistant.processPrompt('Do something with the data');
+      });
 
       expect(sortChangeSpy.callCount).to.equal(0);
-    });
-
-    it('should allow building the context', () => {
-      render(<Test />);
-
-      const contextWithColumnExamples = apiRef.current?.aiAssistant.getPromptContext();
-      expect(contextWithColumnExamples).contains('Example');
-      expect(contextWithColumnExamples).not.contains('Cat');
-
-      const contextWithDataSamples = apiRef.current?.aiAssistant.getPromptContext(true);
-      expect(contextWithDataSamples).not.contains('Example');
-      expect(contextWithDataSamples).contains('Cat');
     });
 
     it('should apply the prompt result', () => {
@@ -152,6 +140,32 @@ describe('<DataGridPremium /> - Prompt', () => {
       const aggregationChangeSpy = spy();
       const rowSelectionChangeSpy = spy();
       const rowGroupingChangeSpy = spy();
+
+      promptSpy.resolves({
+        select: 1,
+        filters: [
+          {
+            column: 'id',
+            operator: '>=',
+            value: 0,
+          },
+        ],
+        aggregation: {
+          id: 'size',
+        },
+        sorting: [
+          {
+            column: 'id',
+            direction: 'desc',
+          },
+        ],
+        grouping: [
+          {
+            column: 'category1',
+          },
+        ],
+        pivoting: {},
+      });
 
       render(
         <Test
@@ -163,33 +177,9 @@ describe('<DataGridPremium /> - Prompt', () => {
         />,
       );
 
-      act(() =>
-        apiRef.current?.aiAssistant.applyPromptResult({
-          select: 1,
-          filters: [
-            {
-              column: 'id',
-              operator: '>=',
-              value: 0,
-            },
-          ],
-          aggregation: {
-            id: 'size',
-          },
-          sorting: [
-            {
-              column: 'id',
-              direction: 'desc',
-            },
-          ],
-          grouping: [
-            {
-              column: 'category1',
-            },
-          ],
-          pivoting: {},
-        }),
-      );
+      act(async () => {
+        await apiRef.current?.aiAssistant.processPrompt('Do something with the data');
+      });
 
       expect(sortChangeSpy.callCount).to.equal(1);
       expect(filterChangeSpy.callCount).to.equal(1);

@@ -23,16 +23,13 @@ export type PromptFieldProps = Omit<
    */
   lang?: string;
   /**
-   * Whether the prompt field is disabled.
-   */
-  disabled?: boolean;
-  /**
    * Called when an speech recognition error occurs.
    * @param {string} error The error message
    */
   onRecordError?: (error: string) => void;
   /**
    * Called when the user submits the prompt.
+   * @param {string} prompt The prompt
    */
   onSubmit: (prompt: string) => void;
 };
@@ -50,9 +47,10 @@ export type PromptFieldProps = Omit<
  * - [PromptField API](https://mui.com/x/api/data-grid/prompt-field/)
  */
 const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function PromptField(props, ref) {
-  const { render, className, lang, onRecordError, onSubmit, disabled = false, ...other } = props;
+  const { render, className, lang, onRecordError, onSubmit, ...other } = props;
   const [value, setValue] = React.useState('');
   const [recording, setRecording] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
   const state = React.useMemo(
     () => ({
       value,
@@ -63,10 +61,15 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
   );
   const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-  const processPrompt = (prompt: string) => {
-    onSubmit(prompt);
-    setValue('');
-  };
+  const handleOnSubmit = React.useCallback(
+    async (prompt: string) => {
+      setDisabled(true);
+      setValue('');
+      await onSubmit(prompt);
+      setDisabled(false);
+    },
+    [onSubmit],
+  );
 
   const contextValue = React.useMemo(
     () => ({
@@ -74,10 +77,10 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
       lang,
       onValueChange: setValue,
       onRecordingChange: setRecording,
-      onSubmit: processPrompt,
+      onSubmit: handleOnSubmit,
       onError: onRecordError,
     }),
-    [state, lang, onRecordError, processPrompt],
+    [state, lang, onRecordError, handleOnSubmit],
   );
 
   const element = useGridComponentRenderer(
@@ -103,6 +106,16 @@ PromptField.propTypes = {
    * Override or extend the styles applied to the component.
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * Called when an speech recognition error occurs.
+   * @param {string} error The error message
+   */
+  onRecordError: PropTypes.func,
+  /**
+   * Called when the user submits the prompt.
+   * @param {string} prompt The prompt
+   */
+  onSubmit: PropTypes.func.isRequired,
   /**
    * A function to customize rendering of the component.
    */
