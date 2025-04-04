@@ -70,7 +70,7 @@ If you cannot find your answer, [ask a new question](https://stackoverflow.com/q
 ## Technical support
 
 :::info
-The technical support doesn't come with any SLA. If you need SLA governed response, you'll have to purchase the [priority support](/x/introduction/priority-support/).
+The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
 :::
 
 When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.

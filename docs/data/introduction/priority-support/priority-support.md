@@ -10,7 +10,7 @@ title: MUI X - Priority Support
 
 Priority Support is a premium service ensuring fast, expert assistance for your critical applications, with expedited troubleshooting and priority handling of inquiries.
 
-Priority support takes precedence over standard support, which is included by default in paid plans. It is backed by an SLA, whereas standard support is not. Support requests are prioritized in the following order:
+Priority support takes precedence over standard support, which is included by default in paid plans. Support requests are prioritized in the following order:
 
 :::info
 Community < Pro < Premium Standard (No SLA) < Priority Support (SLA governed)
@@ -25,11 +25,13 @@ The SLAs included in priority support are:
 - **Issue Escalation**
   Critical issues are escalated to senior engineers for focused attention and faster resolutions.
 
-You can also check more on this in our [Service Level Agreement for Technical Support](https://mui.com/legal/technical-support-sla/).
+For all the details, please check the [Service Level Agreement for Technical Support](https://mui.com/legal/technical-support-sla/).
 
 ## Who benefits from priority support?
 
-Priority support is ideal for teams working on mission-critical applications or handling complex projects that demand rapid resolutions and proactive technical assistance. Priority support covers the following MUI products:
+Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
+
+Priority support covers the following products:
 
 - MUI X
   - Data Grid
@@ -58,7 +60,7 @@ Upon purchase you'll receive a support key that you need to validate when raisin
 - A GitHub action will prompt you to follow an external link leading to a validation app where you need to validate your support key.
 - Once your support key is successfully validated the labels in the issue will update to the following: [status: needs triage](https://github.com/mui/mui-x/labels/status%3A%20needs%20triage), [support: commercial](https://github.com/mui/mui-x/labels/support%3A%20commercial), [support: priority](https://github.com/mui/mui-x/labels/support%3A%20priority)
 - The GitHub action will update the previous comment with the following: `Thank you for verifying your support key 🔑, your SLA starts now.` Thus marking the start of the SLA.
-- Then the support team will check the issue and respond within the SLA.
+- You get a response from the team within the SLA.
 
 ### Through email
 
