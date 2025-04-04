@@ -34,7 +34,7 @@ export const selectorChartsInteractionXAxisIndex = createSelector(
 
 export const selectorChartsInteractionXAxisIndexes = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisIds],
-  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
+  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids ?? axes.axisIds)),
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
@@ -44,7 +44,7 @@ export const selectorChartsInteractionYAxisIndex = createSelector(
 
 export const selectorChartsInteractionYAxisIndexes = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisIds],
-  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
+  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids ?? axes.axisIds)),
 );
 
 /**

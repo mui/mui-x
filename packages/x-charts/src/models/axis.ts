@@ -441,7 +441,12 @@ export type PolarAxisDefaultized<
   AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
 > = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S];
+  AxisScaleComputedConfig[S] & {
+    /**
+     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
+  };
 
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,

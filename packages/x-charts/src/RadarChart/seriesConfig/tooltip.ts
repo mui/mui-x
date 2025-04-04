@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { TooltipGetter } from '../../internals/plugins/models';
+import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'radar'> = (params) => {
   const { series, axesConfig, getColor, identifier } = params;
@@ -27,6 +27,10 @@ const tooltipGetter: TooltipGetter<'radar'> = (params) => {
     markType: series.labelMarkType,
     axisFormattedValue: formatter(rotationAxis?.data?.[dataIndex]),
   }));
+};
+
+export const axisTooltipGetter: AxisTooltipGetter<'radar', 'rotation'> = (series) => {
+  return Object.values(series).map(() => ({ direction: 'rotation', axisId: undefined }));
 };
 
 export default tooltipGetter;
