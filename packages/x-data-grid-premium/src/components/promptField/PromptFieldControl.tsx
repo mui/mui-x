@@ -92,8 +92,6 @@ PromptFieldControl.propTypes = {
   ]),
   label: PropTypes.node,
   multiline: PropTypes.bool,
-  onChange: PropTypes.func,
-  onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.

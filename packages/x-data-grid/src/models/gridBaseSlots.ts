@@ -312,7 +312,7 @@ export type TooltipProps = CommonProps & {
   title: React.ReactNode;
 };
 
-export type ChipProps = {
+export type ChipProps = CommonProps & {
   label: string;
   size?: 'small' | 'medium';
   icon?: React.ReactElement;
