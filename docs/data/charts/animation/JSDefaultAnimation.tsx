@@ -3,8 +3,9 @@ import * as React from 'react';
 import { useAnimateBarLabel } from '@mui/x-charts/hooks';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 
-export default function JSAnimationCustomization() {
+export default function JSDefaultAnimation() {
   const [key, animate] = React.useReducer((v) => v + 1, 0);
 
   return (
@@ -36,6 +37,12 @@ export default function JSAnimationCustomization() {
   );
 }
 
+const Text = styled('text')(({ theme }) => ({
+  ...theme?.typography?.body2,
+  stroke: 'none',
+  fill: (theme.vars || theme)?.palette?.text?.primary,
+}));
+
 function AnimatedBarLabel(props: BarLabelProps) {
   const {
     seriesId,
@@ -59,14 +66,19 @@ function AnimatedBarLabel(props: BarLabelProps) {
     xOrigin,
     x,
     yOrigin,
-    y: y - 4,
+    y,
     width,
-    height: 0,
+    height,
     layout,
     skipAnimation,
   });
 
   return (
-    <text {...otherProps} fill={color} textAnchor="middle" {...animatedProps} />
+    <Text
+      {...otherProps}
+      textAnchor="middle"
+      dominantBaseline="central"
+      {...animatedProps}
+    />
   );
 }
