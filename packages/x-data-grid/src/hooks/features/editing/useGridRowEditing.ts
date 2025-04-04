@@ -45,7 +45,6 @@ import {
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
-import { GridUpdateRowError } from '../dataSource';
 
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -499,7 +498,7 @@ export const useGridRowEditing = (
   );
 
   const updateStateToStopRowEditMode = useEventCallback<[GridStopRowEditModeParams], void>(
-    (params) => {
+    async (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
       apiRef.current.runPendingEditCellValueMutation(id);
@@ -544,29 +543,10 @@ export const useGridRowEditing = (
           finishRowEditMode();
           return;
         }
-        const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
+        const handleError = () => {
           prevRowModesModel.current[id].mode = GridRowModes.Edit;
           // Revert the mode in the rowModesModel prop back to "edit"
           updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
-
-          if (typeof props.onDataSourceError === 'function') {
-            props.onDataSourceError(
-              new GridUpdateRowError({
-                message: errorThrown?.message,
-                params: updateParams,
-                cause: errorThrown,
-              }),
-            );
-          } else if (process.env.NODE_ENV !== 'production') {
-            warnOnce(
-              [
-                'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
-                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-              ],
-              'error',
-            );
-          }
         };
 
         const updateRowParams: GridUpdateRowParams = {
@@ -575,11 +555,10 @@ export const useGridRowEditing = (
           previousRow: row,
         };
         try {
-          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
-            .then(() => finishRowEditMode())
-            .catch((errorThrown) => handleError(errorThrown, updateRowParams));
-        } catch (errorThrown) {
-          handleError(errorThrown, updateRowParams);
+          await apiRef.current.dataSource.editRow(updateRowParams, handleError);
+          finishRowEditMode();
+        } catch {
+          handleError();
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {

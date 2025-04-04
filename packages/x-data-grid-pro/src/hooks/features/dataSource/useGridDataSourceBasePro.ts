@@ -4,16 +4,14 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
   GridDataSourceGroupNode,
-  GridRowId,
   useGridSelector,
-  GridDataSourceCacheDefaultConfig,
   GridGetRowsError,
   gridRowIdSelector,
   gridRowNodeSelector,
   GridRowModelUpdate,
-  GridDataSourceApiBase,
   GridRowModel,
   gridRowTreeSelector,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -22,6 +20,7 @@ import {
   gridGetRowsParamsSelector,
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
+  GridDataSourceBaseOptions,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -44,10 +43,7 @@ export const INITIAL_STATE = {
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   apiRef: RefObject<Api>,
   props: DataGridProProcessedProps,
-  options: {
-    cacheOptions?: GridDataSourceCacheDefaultConfig;
-    fetchRowChildren?: (parentId: GridRowId) => void;
-  } = {},
+  options: GridDataSourceBaseOptions = {},
 ) => {
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -65,10 +61,22 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     return null;
   }, [apiRef, nestedDataManager]);
 
+  const handleEditRow = React.useCallback(
+    (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
+      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
+      apiRef.current.updateServerRows([updatedRow], groupKeys);
+      if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
+        // Reset the outdated cache, only if the row is _actually_ updated
+        apiRef.current.dataSource.cache.clear();
+      }
+    },
+    [apiRef],
+  );
+
   const { api, strategyProcessor, events, cacheChunkManager, cache } = useGridDataSourceBase(
     apiRef,
     props,
-    { ...options, fetchRowChildren: nestedDataManager.queue, clearDataSourceState },
+    { fetchRowChildren: nestedDataManager.queue, clearDataSourceState, handleEditRow, ...options },
   );
 
   const setStrategyAvailability = React.useCallback(() => {
@@ -203,22 +211,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     ],
   );
 
-  const dataSourceUpdateRow = props.dataSource?.updateRow;
-  const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
-    (params) => {
-      return dataSourceUpdateRow?.(params).then((finalRowUpdate: GridRowModel) => {
-        const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
-        apiRef.current.updateServerRows([finalRowUpdate], groupKeys);
-        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
-          // Reset the outdated cache, only if the row is _actually_ updated
-          apiRef.current.dataSource.cache.clear();
-        }
-        return finalRowUpdate;
-      });
-    },
-    [apiRef, dataSourceUpdateRow],
-  );
-
   const setChildrenLoading = React.useCallback<GridDataSourceApiBasePro['setChildrenLoading']>(
     (parentId, isLoading) => {
       apiRef.current.setState((state) => {
@@ -280,7 +272,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
-      editRow,
       setChildrenLoading,
       setChildrenFetchError,
     },

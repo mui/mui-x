@@ -430,29 +430,10 @@ export const useGridCellEditing = (
           finishCellEditMode();
           return;
         }
-        const handleError = (errorThrown: any, updateParams: GridUpdateRowParams) => {
+        const handleError = () => {
           prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
           // Revert the mode in the cellModesModel prop back to "edit"
           updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
-
-          if (typeof props.onDataSourceError === 'function') {
-            props.onDataSourceError(
-              new GridUpdateRowError({
-                message: errorThrown?.message,
-                params: updateParams,
-                cause: errorThrown,
-              }),
-            );
-          } else if (process.env.NODE_ENV !== 'production') {
-            warnOnce(
-              [
-                'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
-                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-              ],
-              'error',
-            );
-          }
         };
 
         const updateRowParams: GridUpdateRowParams = {
@@ -461,11 +442,10 @@ export const useGridCellEditing = (
           previousRow: row,
         };
         try {
-          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
-            .then(() => finishCellEditMode())
-            .catch((errorThrown) => handleError(errorThrown, updateRowParams));
-        } catch (errorThrown) {
-          handleError(errorThrown, updateRowParams);
+          await apiRef.current.dataSource.editRow(updateRowParams, handleError);
+          finishCellEditMode();
+        } catch {
+          handleError();
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
