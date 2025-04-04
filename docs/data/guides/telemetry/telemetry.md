@@ -40,11 +40,13 @@ Telemetry collection is specifically associated with the usage of paid MUI X co
 
 MUI X Telemetry is designed to operate exclusively during development. In production builds of your application, telemetry is entirely inactive, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
 
-**Note**: Telemetry is disabled by default. You have full control to opt-in or opt-out as per your preference.
+:::info
+Currently, Telemetry is disabled by default and you have full control to opt-in or opt-out as per your preference.
+:::
 
 ## Opting In
 
-Currently, **Telemetry is disabled by default**. To opt-in, you can use one of the following methods:
+To opt-in, you can use one of the following methods:
 
 ### Setting the Environment Variable
 
