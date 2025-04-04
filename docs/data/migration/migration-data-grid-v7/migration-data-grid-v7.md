@@ -28,6 +28,16 @@ In `package.json`, change the version of the Data Grid package to `next`.
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/data-grid/preset-safe` targeting only Data Grid or `v8.0.0/preset-safe` to target the other packages as well.
@@ -73,19 +83,6 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 Since v8 is a major release, it contains some changes that affect the public API.
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
-
-## `@mui/material` peer dependency change
-
-The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
-This change should resolve ESM and CJS interoperability issues in various environments.
-
-:::info
-The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
-
-- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
-- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
-
-:::
 
 ### ✅ Setting license key
 
@@ -205,7 +202,9 @@ You have to import it from `@mui/x-license` instead:
 
 - The list view feature and its related props are now stable.
 
-  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+  ✅ The `unstable_listView` prop has been renamed to `listView`.
+
+  ✅ The `unstable_listColumn` prop has been renamed to `listViewColumn`.
 
   The `GridListColDef` type has been renamed to `GridListViewColDef`.
 
@@ -373,9 +372,11 @@ You have to import it from `@mui/x-license` instead:
 
 ### Slots
 
+- The `base*` slots have a new set of typings.
 - The `baseFormControl` slot was removed.
 - The `baseInputLabel` slot was removed.
 - The `baseInputAdornment` slot was removed.
+- The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing

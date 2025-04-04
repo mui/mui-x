@@ -32,7 +32,7 @@ describe('<DateCalendar /> - localization', () => {
       describe('without wrapper', () => {
         const { render: renderWithoutWrapper } = createRenderer();
 
-        it('should correctly switch between locale with week starting in Monday and week starting in Sunday', async () => {
+        it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
           if (adapterName === 'moment') {
             moment.locale('en');
           }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -34,13 +34,13 @@ describe('<MobileTimePicker />', () => {
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
-    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
       const defaultValue = adapterToUse.date('2018-01-01');
 
-      render(
+      const { user } = render(
         <MobileTimePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -53,15 +53,27 @@ describe('<MobileTimePicker />', () => {
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+
+      await user.pointer([
+        {
+          keys: '[TouchA]',
+          target: screen.getByTestId('clock'),
+          coords: hourClockEvent.changedTouches[0],
+        },
+      ]);
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minuteClockEvent);
+
+      await user.pointer([
+        {
+          keys: '[TouchA]',
+          target: screen.getByTestId('clock'),
+          coords: minuteClockEvent.changedTouches[0],
+        },
+      ]);
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
       expect(onAccept.callCount).to.equal(0);

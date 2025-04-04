@@ -107,7 +107,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
       // Change the date
-      await user.click(screen.getByRole('gridcell', { name: '15', hidden: false }));
+      await user.click(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 

@@ -17,7 +17,7 @@ describe('<DateField /> - Selection', () => {
   const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('Focus', () => {
-    it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {
+    it('should select 1st section (v7) / all sections (v6) on mount (`autoFocus = true`)', () => {
       // Test with accessible DOM structure
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -54,6 +54,18 @@ describe('<DateField /> - Selection', () => {
       const input = getTextbox();
       expectFieldValueV6(input, '- YYYY');
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
+    });
+
+    it('should not select 1st section (v7) on mount (`autoFocus = false` and `disabled = true`)', () => {
+      // Test with accessible DOM structure
+      const view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        autoFocus: true,
+        disabled: true,
+      });
+      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent()).to.equal('');
+      view.unmount();
     });
 
     it('should select all on <Tab> focus (v6 only)', async () => {
@@ -169,6 +181,30 @@ describe('<DateField /> - Selection', () => {
 
       view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
+    });
+
+    it('should not select section on click (`disabled = true`)', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        disabled: true,
+      });
+
+      view.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        disabled: true,
+      });
+
+      view.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('');
+
+      view.unmount();
     });
   });
 
