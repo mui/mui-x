@@ -46,6 +46,7 @@ import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
 import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
+
 type Row = {
   id: number;
   name: string;
