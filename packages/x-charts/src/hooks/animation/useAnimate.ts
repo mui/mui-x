@@ -7,7 +7,7 @@ export interface UseAnimateParams<Props extends {}, Elem extends Element, T exte
    * Function that returns the interpolation function for animating props.
    *
    * @param {object} lastProps Props to animate from, i.e., props when the animation was last stopped. If this is the first
-   * animation, this value be {@link initialProps}.
+   * animation, this value be `initialProps`.
    * @param {object} newProps Props to animate to.
    *
    * @returns {function} Interpolation function that takes a time value between 0 and 1 and returns the interpolated
@@ -15,7 +15,7 @@ export interface UseAnimateParams<Props extends {}, Elem extends Element, T exte
    */
   createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
   /**
-   * Transforms the interpolated props that will be passed to {@link applyProps}.
+   * Transforms the interpolated props that will be passed to `applyProps`.
    * It is useful for transforming props in case the interpolated props are not the same as the props
    * applied to the element.
    *
@@ -39,8 +39,7 @@ export interface UseAnimateParams<Props extends {}, Elem extends Element, T exte
    */
   skip?: boolean;
   /**
-   * Initial props to animate from. If not provided, defaults to the props passed as the first argument of
-   * {@link useAnimate}.
+   * Initial props to animate from. If not provided, defaults to the props passed as the first argument of `useAnimate`.
    */
   initialProps?: Props;
   /**
@@ -58,27 +57,27 @@ export type UseAnimateReturn<Elem extends Element, T extends {}> = Omit<T, 'ref'
 
 /**
  * Hook to customize the animation of an element.
- * Animates a ref from {@link initialProps} to {@link props}.
+ * Animates a ref from `initialProps` to `props`.
  *
  * @param {object} props The props to animate to.
  *
  * @returns an object containing a ref that should be passed to the element to animate and the transformed props.
- * If {@link skip} is true, the transformed props are the {@link props} to animate to; if it is false, the transformed
- * props are the {@link initialProps}.
+ * If `skip` is true, the transformed props are the `props` to animate to; if it is false, the transformed props are the
+ * `initialProps`.
  *
- * The animated props are only accessible in {@link applyProps}. The props returned from this hook are not animated.
+ * The animated props are only accessible in `applyProps`. The props returned from this hook are not animated.
  *
- * When an animation starts, an interpolator is created using {@link createInterpolator}.
+ * When an animation starts, an interpolator is created using `createInterpolator`.
  * On every animation frame:
  * 1. The interpolator is called to get the interpolated props;
  * 2. `transformProps` is called to transform the interpolated props;
  * 3. `applyProps` is called to apply the transformed props to the element.
  *
- * If {@link props} change while an animation is progress, the animation will continue towards the new {@link props}.
+ * If `props` change while an animation is progress, the animation will continue towards the new `props`.
  *
- * The animation can be skipped by setting {@link skip} to true. If a transition is in progress, it will immediately end
- * and {@link applyProps} be called with the final value. If there isn't a transition in progress, a new one won't be
- * started and {@link applyProps} will not be called.
+ * The animation can be skipped by setting `skip` to true. If a transition is in progress, it will immediately end
+ * and `applyProps` be called with the final value. If there isn't a transition in progress, a new one won't be
+ * started and `applyProps` will not be called.
  * */
 export function useAnimate<Props extends {}, Elem extends Element, T extends {} = Props>(
   props: Props,
