@@ -26,9 +26,7 @@ const GridIconButtonContainerRoot = styled('div', {
   slot: 'IconButtonContainer',
   overridesResolver: (props, styles) => styles.iconButtonContainer,
 })<{ ownerState: OwnerState }>(() => ({
-  display: 'flex',
-  visibility: 'hidden',
-  width: 0,
+  display: 'none',
 }));
 
 export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
