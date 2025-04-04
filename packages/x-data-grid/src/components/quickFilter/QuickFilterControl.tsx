@@ -120,6 +120,7 @@ QuickFilterControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  multiline: PropTypes.bool,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.
