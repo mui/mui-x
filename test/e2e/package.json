@@ -11,7 +11,7 @@
     "server": "serve . -p 5001"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "^7.27.0",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",

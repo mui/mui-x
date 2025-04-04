@@ -344,9 +344,6 @@ importers:
       nyc:
         specifier: ^17.1.0
         version: 17.1.0
-      pirates:
-        specifier: ^4.0.7
-        version: 4.0.7
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1725,7 +1722,7 @@ importers:
   test/e2e:
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.26.10
+        specifier: ^7.27.0
         version: 7.27.0
       '@mui/x-charts':
         specifier: workspace:*
@@ -1863,7 +1860,7 @@ importers:
   test/regressions:
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.26.10
+        specifier: ^7.27.0
         version: 7.27.0
       '@mui/x-charts':
         specifier: workspace:*

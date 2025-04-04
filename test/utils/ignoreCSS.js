@@ -1,5 +1,6 @@
-const { addHook } = require('pirates');
+function ignore() {
+  return null;
+}
 
-const IGNORE_EXTENSIONS = ['.css'];
-
-addHook((_code, _filename) => '', { exts: IGNORE_EXTENSIONS });
+require.extensions['.css'] = ignore;
+require.extensions['.scss'] = ignore;
