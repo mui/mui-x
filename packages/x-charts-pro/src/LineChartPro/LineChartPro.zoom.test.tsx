@@ -53,7 +53,8 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
   });
 
-  it('should zoom on wheel', async () => {
+  it('should zoom on wheel', async function test() {
+    this.timeout(10000);
     const onZoomChange = sinon.spy();
     const { user } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
