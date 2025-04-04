@@ -10,7 +10,7 @@ title: MUI X - Priority Support
 
 Priority Support is a premium service ensuring fast, expert assistance for your critical applications, with expedited troubleshooting and priority handling of inquiries.
 
-Priority support takes precedence over standard support, which is included by default in paid plans. Support requests are prioritized in the following order:
+Priority support takes precedence over standard support, which is included by default in paid plans and only covers MUI X components. Support requests are prioritized in the following order:
 
 :::info
 Community < Pro < Premium Standard (No SLA) < Priority Support (SLA governed)
