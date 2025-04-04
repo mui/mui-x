@@ -11,8 +11,8 @@ const mockSeries: HeatmapSeriesType[] = [
     id: '1',
     data: [
       [0, 0, 10],
-      [1, 1, 20],
-      [2, 2, 40],
+      [0, 1, 20],
+      [0, 2, 40],
     ],
   },
   {
