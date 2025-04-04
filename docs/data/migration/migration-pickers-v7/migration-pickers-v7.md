@@ -358,7 +358,7 @@ This presented a few problems:
 
 To solve these issues, the `ownerState` has been reworked.
 Every component's `ownerState` contains a shared set of properties describing the state of the picker it is in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
-Some component's `ownerState` contain additional properties describing their own state (`isMonthDisabled` for the month button, `toolbarOrientation` for the toolbar, `isDaySelected` for the day button, ...).
+Some component's `ownerState` contain additional properties describing their own state (`isMonthDisabled` for the month button, `toolbarOrientation` for the toolbar, `isDaySelected` for the day button, etc.).
 
 :::success
 Most of the properties needed to properly customize your component should be present in the `ownerState`.
