@@ -83,7 +83,7 @@ export default function AssistantWithExamples() {
             history: [],
           },
         }}
-        enableAiAssistant
+        aiAssistant
         onPrompt={mockPromptResolver}
         showToolbar
       />
