@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
@@ -79,7 +79,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(200);
@@ -92,7 +92,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(400);
@@ -140,7 +140,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('A')).to.equal(null);
@@ -167,7 +167,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('A')).not.to.equal(null);
