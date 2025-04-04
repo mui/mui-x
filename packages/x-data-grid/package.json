@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "The Community plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/utils": "^7.0.0",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -60,8 +60,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
