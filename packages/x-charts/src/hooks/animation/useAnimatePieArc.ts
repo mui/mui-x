@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import useForkRef from '@mui/utils/useForkRef';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimate } from '../../internals/animation/useAnimate';
+import { useAnimate } from './useAnimate';
 import type { PieArcProps } from '../../PieChart';
 
 type UseAnimatePieArcParams = Pick<
@@ -45,7 +44,7 @@ function pieArcPropsInterpolator(from: PieArcInterpolatedProps, to: PieArcInterp
   };
 }
 
-/** Animates a slice of a pie chart using a `path` element.
+/** Animates a slice of a pie chart by increasing the start and end angles from the middle angle to their final values.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called. */
 export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieArcReturnValue {
@@ -58,7 +57,7 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
     cornerRadius: props.cornerRadius,
   };
 
-  const ref = useAnimate(
+  return useAnimate(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
@@ -69,41 +68,23 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
     },
     {
       createInterpolator: pieArcPropsInterpolator,
-      applyProps(element, animatedProps) {
-        element.setAttribute(
-          'd',
-          d3Arc()
-            .cornerRadius(animatedProps.cornerRadius)({
-              padAngle: animatedProps.paddingAngle,
-              innerRadius: animatedProps.innerRadius,
-              outerRadius: animatedProps.outerRadius,
-              startAngle: animatedProps.startAngle,
-              endAngle: animatedProps.endAngle,
-            })!
-            .toString(),
-        );
-
-        element.setAttribute(
-          'visibility',
-          animatedProps.startAngle === animatedProps.endAngle ? 'hidden' : 'visible',
-        );
+      transformProps: (p) => ({
+        d: d3Arc().cornerRadius(p.cornerRadius)({
+          padAngle: p.paddingAngle,
+          innerRadius: p.innerRadius,
+          outerRadius: p.outerRadius,
+          startAngle: p.startAngle,
+          endAngle: p.endAngle,
+        })!,
+        visibility: p.startAngle === p.endAngle ? ('hidden' as const) : ('visible' as const),
+      }),
+      applyProps(element, p) {
+        element.setAttribute('d', p.d);
+        element.setAttribute('visibility', p.visibility);
       },
       initialProps,
       skip: props.skipAnimation,
+      ref: props.ref,
     },
   );
-
-  const usedProps = props.skipAnimation ? props : initialProps;
-
-  return {
-    ref: useForkRef(ref, props.ref),
-    d: d3Arc().cornerRadius(usedProps.cornerRadius)({
-      padAngle: usedProps.paddingAngle,
-      innerRadius: usedProps.innerRadius,
-      outerRadius: usedProps.outerRadius,
-      startAngle: usedProps.startAngle,
-      endAngle: usedProps.endAngle,
-    })!,
-    visibility: usedProps.startAngle === usedProps.endAngle ? 'hidden' : 'visible',
-  };
 }

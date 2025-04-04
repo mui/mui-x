@@ -75,6 +75,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -89,12 +90,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props,
+    props: other,
   });
   const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
   const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
@@ -115,7 +115,12 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider contextValue={contextValue} classes={classes}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>

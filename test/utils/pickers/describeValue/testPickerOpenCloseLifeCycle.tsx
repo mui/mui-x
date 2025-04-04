@@ -18,7 +18,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderWithProps, values, setNewValue, clock, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
     options;
 
   const isRangeType = isPickerRangeType(pickerParams.type);
@@ -106,7 +106,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         );
 
         // Change the value
-        setNewValue(values[0], { selectSection, pressKey });
+        setNewValue(values[0], { selectSection, pressKey, closeMobilePicker: true });
         const fieldRoot = getFieldInputRoot();
         expect(fieldRoot.scrollLeft).to.be.equal(0);
       },
