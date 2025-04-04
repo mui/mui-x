@@ -19,7 +19,7 @@ export default function DemoRadarAxisHighlight() {
 
   const axisHighlightShape = shape === 'default' ? undefined : shape;
   return (
-    <div>
+    <Box sx={{ width: '100%' }}>
       <Stack sx={{ width: '100%', mb: 2 }} direction="row" flexWrap="wrap" gap={2}>
         <FormControlLabel
           checked={showMark}
@@ -44,21 +44,20 @@ export default function DemoRadarAxisHighlight() {
           ))}
         </ToggleButtonGroup>
       </Stack>
-
       <Stack
         sx={{ width: '100%' }}
         direction="row"
         flexWrap="wrap"
         justifyContent="space-around"
       >
-        <Box sx={{ maxWidth: 300 }}>
+        <Box sx={{ width: '100%', maxWidth: 350 }}>
           <RadarChart
             {...commonSettings}
             axisHighlightShape={axisHighlightShape}
             series={withShowMark([lisaGrades])}
           />
         </Box>
-        <Box sx={{ maxWidth: 300 }}>
+        <Box sx={{ width: '100%', maxWidth: 350 }}>
           <RadarChart
             {...commonSettings}
             axisHighlightShape={axisHighlightShape}
@@ -66,7 +65,7 @@ export default function DemoRadarAxisHighlight() {
           />
         </Box>
       </Stack>
-    </div>
+    </Box>
   );
 }
 

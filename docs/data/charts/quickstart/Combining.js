@@ -60,7 +60,7 @@ export default function Combining() {
               scaleType: 'linear',
               position: 'right',
               valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
-              width: 50,
+              width: 55,
             },
           ]}
         >

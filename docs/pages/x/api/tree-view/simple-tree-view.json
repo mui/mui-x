@@ -114,7 +114,44 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "item",
+      "className": "MuiSimpleTreeView-item",
+      "description": "Styles applied to the item's root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemCheckbox",
+      "className": "MuiSimpleTreeView-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiSimpleTreeView-itemContent",
+      "description": "Styles applied to the item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemGroupTransition",
+      "className": "MuiSimpleTreeView-itemGroupTransition",
+      "description": "Styles applied to the item's transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemIconContainer",
+      "className": "MuiSimpleTreeView-itemIconContainer",
+      "description": "Styles applied to the item's icon container element icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabel",
+      "className": "MuiSimpleTreeView-itemLabel",
+      "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiSimpleTreeView",

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { BarPlotProps, BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
+import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -13,56 +13,9 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartContainerProProps } from '../ChartContainerPro';
-import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
-
-function BarChartPlotZoom(props: BarPlotProps) {
-  const isInteracting = useIsZoomInteracting();
-
-  return <BarPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
-}
-
-BarChartPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
-   * Defines the border radius of the bar element.
-   */
-  borderRadius: PropTypes.number,
-  /**
-   * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default undefined
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
 
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef'>,
@@ -126,7 +79,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
-            <BarChartPlotZoom {...barPlotProps} />
+            <BarPlot {...barPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
@@ -355,6 +308,7 @@ BarChartPro.propTypes = {
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -444,6 +398,7 @@ BarChartPro.propTypes = {
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),

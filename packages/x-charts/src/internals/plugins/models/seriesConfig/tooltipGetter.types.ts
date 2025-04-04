@@ -4,19 +4,43 @@ import type {
   ChartSeriesDefaultized,
   ChartSeriesType,
 } from '../../../../models/seriesType/config';
-import { AxisDefaultized, PolarAxisDefaultized } from '../../../../models/axis';
+import { SeriesId } from '../../../../models/seriesType/common';
+import {
+  AxisDefaultized,
+  AxisId,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  PolarAxisDefaultized,
+} from '../../../../models/axis';
 
 export interface TooltipGetterAxesConfig {
-  x?: AxisDefaultized;
-  y?: AxisDefaultized;
-  rotation?: PolarAxisDefaultized;
-  radius?: PolarAxisDefaultized;
+  x?: AxisDefaultized<any, any, ChartsXAxisProps>;
+  y?: AxisDefaultized<any, any, ChartsYAxisProps>;
+  rotation?: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+  radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
-export type TooltipGetter<T extends ChartSeriesType> = (params: {
-  series: ChartSeriesDefaultized<T>;
+
+export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
+  series: ChartSeriesDefaultized<TSeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: (dataIndex: number) => string;
-  identifier: ChartItemIdentifier<T> | null;
+  identifier: ChartItemIdentifier<TSeriesType> | null;
 }) =>
-  | (T extends 'radar' ? (ItemTooltip<T> & { axisFormattedValue?: string })[] : ItemTooltip<T>)
+  | (TSeriesType extends 'radar'
+      ? (ItemTooltip<TSeriesType> & { axisFormattedValue?: string })[]
+      : ItemTooltip<TSeriesType>)
   | null;
+
+/**
+ * Return an array of the axes that should trigger the tooltip.
+ *
+ * If `axisId` is set to undefined, the default axis will be used.
+ */
+export type AxisTooltipGetter<
+  TSeriesType extends ChartSeriesType,
+  Directions extends 'x' | 'y' | 'rotation' | 'radius' = 'x' | 'y',
+> = (
+  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>,
+) => { direction: Directions; axisId: AxisId | undefined }[];

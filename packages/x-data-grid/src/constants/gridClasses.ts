@@ -604,6 +604,14 @@ export interface GridClasses {
    */
   toolbar: string;
   /**
+   * Styles applied to the toolbar label element.
+   */
+  toolbarLabel: string;
+  /**
+   * Styles applied to the toolbar divider element.
+   */
+  toolbarDivider: string;
+  /**
    * Styles applied to the shadow scroll area element.
    * @ignore - do not document.
    */
@@ -636,6 +644,18 @@ export interface GridClasses {
    * Styles applied to the toolbar prompt control send button element.
    */
   toolbarPromptControlSendButton: string;
+  /**
+   * Styles applied to the toolbar quick filter root element.
+   */
+  toolbarQuickFilter: string;
+  /**
+   * Styles applied to the toolbar quick filter trigger element.
+   */
+  toolbarQuickFilterTrigger: string;
+  /**
+   * Styles applied to the toolbar quick filter control element.
+   */
+  toolbarQuickFilterControl: string;
   /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
@@ -848,12 +868,18 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'sortIcon',
   'shadowScrollArea',
   'toolbarContainer',
+  'toolbar',
+  'toolbarLabel',
+  'toolbarDivider',
   'toolbarFilterList',
   'toolbarPromptControl',
   'toolbarPromptControl--recording',
   'toolbarPromptControlRecordingIndicator',
   'toolbarPromptControlRecordButton',
   'toolbarPromptControlSendButton',
+  'toolbarQuickFilter',
+  'toolbarQuickFilterTrigger',
+  'toolbarQuickFilterControl',
   'virtualScroller',
   'virtualScroller--hasScrollX',
   'virtualScrollerContent',

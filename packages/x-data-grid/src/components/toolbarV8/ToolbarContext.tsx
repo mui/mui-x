@@ -2,9 +2,11 @@ import * as React from 'react';
 
 export interface ToolbarContextValue {
   focusableItemId: string | null;
-  registerItem: (itemId: string) => void;
-  unregisterItem: (itemId: string) => void;
+  registerItem: (id: string, ref: React.RefObject<HTMLButtonElement | null>) => void;
+  unregisterItem: (id: string) => void;
   onItemKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onItemFocus: (id: string) => void;
+  onItemDisabled: (id: string, disabled: boolean) => void;
 }
 
 export const ToolbarContext = React.createContext<ToolbarContextValue | undefined>(undefined);

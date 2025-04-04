@@ -1,5 +1,4 @@
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
-import type { UseLocalizationContextReturnValue } from '../internals/hooks/useUtils';
 import type { PickerValidValue, PickerValueManager } from '../internals/models';
 import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
@@ -73,20 +72,16 @@ export interface PickerManager<
    * - a default format to display the value in the field
    * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
    * This property is not part of the public API and should not be used directly.
-   * @param {ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>} parameters The parameters to apply the defaults.
+   * @param {TFieldInternalProps<TFieldInternalProps>} internalProps The field internal props to apply the defaults to.
    * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
    */
-  internal_applyDefaultsToFieldInternalProps: (
-    parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
+  internal_useApplyDefaultValuesToFieldInternalProps: (
+    internalProps: TFieldInternalProps,
   ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
    * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
-   * @returns {(value: TValue) => string} The method to create the aria-label to apply on the button that opens the Picker.
+   * @param {TValue} value The value of the Picker.
+   * @returns {string} The aria-label to apply on the button that opens the Picker.
    */
-  internal_useOpenPickerButtonAriaLabel: () => (value: TValue) => string;
-}
-
-interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
-  extends UseLocalizationContextReturnValue {
-  internalProps: TFieldInternalProps;
+  internal_useOpenPickerButtonAriaLabel: (value: TValue) => string;
 }

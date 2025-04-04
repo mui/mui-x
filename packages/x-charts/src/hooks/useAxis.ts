@@ -1,15 +1,24 @@
 'use client';
+import { selectorChartRawXAxis } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import {
   selectorChartRadiusAxis,
+  selectorChartRawRotationAxis,
   selectorChartRotationAxis,
+  UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { AxisId } from '../models/axis';
+import {
+  AxisId,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  PolarAxisDefaultized,
+  ScaleName,
+} from '../models/axis';
 
 /**
  * Get all the x-axes.
@@ -90,8 +99,10 @@ export function useRadiusAxes() {
   return { radiusAxis, radiusAxisIds };
 }
 
-export function useRotationAxis(identifier?: number | string) {
-  const store = useStore();
+export function useRotationAxis(
+  identifier?: number | string,
+): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
+  const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
     store,
     selectorChartRotationAxis,
@@ -102,11 +113,34 @@ export function useRotationAxis(identifier?: number | string) {
   return rotationAxis[id];
 }
 
-export function useRadiusAxis(identifier?: number | string) {
-  const store = useStore();
+export function useRadiusAxis(
+  identifier?: number | string,
+): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
+  const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
 
   const id = typeof identifier === 'string' ? identifier : radiusAxisIds[identifier ?? 0];
 
   return radiusAxis[id];
+}
+
+/**
+ * @internals
+ *
+ * Get the coordinate system implemented.
+ * The hook assumes polar and cartesian are never implemented at the same time.
+ * @returns The coordinate system
+ */
+export function useAxisSystem(): 'none' | 'polar' | 'cartesian' {
+  const store = useStore<[UseChartPolarAxisSignature]>();
+  const rawRotationAxis = useSelector(store, selectorChartRawRotationAxis);
+  const rawXAxis = useSelector(store, selectorChartRawXAxis);
+
+  if (rawRotationAxis !== undefined) {
+    return 'polar';
+  }
+  if (rawXAxis !== undefined) {
+    return 'cartesian';
+  }
+  return 'none';
 }
