@@ -2,8 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsLegend } from '../ChartsLegend';
-import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
@@ -14,8 +19,15 @@ import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighligh
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
 
-export interface RadarChartSlots extends ChartsTooltipSlots {}
-export interface RadarChartSlotProps extends ChartsTooltipSlotProps {}
+export interface RadarChartSlots
+  extends ChartsTooltipSlots,
+    ChartsOverlaySlots,
+    ChartsLegendSlots {}
+
+export interface RadarChartSlotProps
+  extends ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps,
+    ChartsLegendSlotProps {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
