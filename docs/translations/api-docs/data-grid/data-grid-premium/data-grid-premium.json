@@ -1327,6 +1327,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt action element"
     },
+    "promptChangeItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change item element"
+    },
+    "promptChangeList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change list element"
+    },
     "promptContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt content element"
@@ -1335,6 +1343,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt error element"
     },
+    "promptFeedback": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt feedback element"
+    },
     "promptIconContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt icon element"
@@ -1342,10 +1354,6 @@
     "promptText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt text element"
-    },
-    "promptTime": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the prompt time element"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1618,9 +1626,15 @@
     "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
     "pivotSearchClearIcon": "Icon used for the clear button in the sidebar search field",
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
+    "promptAggregationIcon": "Icon used to display aggregation changes",
+    "promptFilterIcon": "Icon used to display filter changes",
+    "promptGroupIcon": "Icon used to display group changes",
     "promptIcon": "Icon used for the prompt",
+    "promptPivotIcon": "Icon used to display pivot changes",
     "promptRerunIcon": "Icon used for the button that reruns a prompt",
     "promptSendIcon": "Icon used for the button that sends a prompt",
+    "promptSortAscIcon": "Icon used to display sort ascending changes",
+    "promptSortDescIcon": "Icon used to display sort descending changes",
     "promptSpeechRecognitionIcon": "Icon used for the button that starts and stops recording the prompt",
     "promptSpeechRecognitionOffIcon": "Icon used for when speech recognition is not supported",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",

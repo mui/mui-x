@@ -1971,6 +1971,18 @@
       "isGlobal": false
     },
     {
+      "key": "promptChangeItem",
+      "className": "MuiDataGridPro-promptChangeItem",
+      "description": "Styles applied to the prompt change item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPro-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptContent",
       "className": "MuiDataGridPro-promptContent",
       "description": "Styles applied to the prompt content element.",
@@ -1980,6 +1992,12 @@
       "key": "promptError",
       "className": "MuiDataGridPro-promptError",
       "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPro-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
       "isGlobal": false
     },
     {
@@ -1998,12 +2016,6 @@
       "key": "promptText",
       "className": "MuiDataGridPro-promptText",
       "description": "Styles applied to the prompt text element.",
-      "isGlobal": false
-    },
-    {
-      "key": "promptTime",
-      "className": "MuiDataGridPro-promptTime",
-      "description": "Styles applied to the prompt time element.",
       "isGlobal": false
     },
     {

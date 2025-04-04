@@ -124,4 +124,34 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridRerunIcon
    */
   promptRerunIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display sort ascending changes
+   * @default GridArrowUpwardIcon
+   */
+  promptSortAscIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display sort descending changes
+   * @default GridArrowDownwardIcon
+   */
+  promptSortDescIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display group changes
+   * @default GridGroupWorkIcon
+   */
+  promptGroupIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display filter changes
+   * @default GridFilterAltIcon
+   */
+  promptFilterIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display pivot changes
+   * @default GridPivotIcon
+   */
+  promptPivotIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display aggregation changes
+   * @default GridFunctionsIcon
+   */
+  promptAggregationIcon: React.JSXElementConstructor<IconProps>;
 }

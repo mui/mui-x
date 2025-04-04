@@ -42,7 +42,7 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && state.value.trim()) {
         onSubmit(state.value);
       }
       onKeyDown?.(event);

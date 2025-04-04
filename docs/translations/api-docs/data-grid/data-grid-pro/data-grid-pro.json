@@ -1213,6 +1213,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt action element"
     },
+    "promptChangeItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change item element"
+    },
+    "promptChangeList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change list element"
+    },
     "promptContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt content element"
@@ -1220,6 +1228,10 @@
     "promptError": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt error element"
+    },
+    "promptFeedback": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt feedback element"
     },
     "promptIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1232,10 +1244,6 @@
     "promptText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt text element"
-    },
-    "promptTime": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the prompt time element"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {

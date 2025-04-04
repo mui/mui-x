@@ -1400,6 +1400,42 @@
       "description": "Icon used for the button that reruns a prompt",
       "default": "GridRerunIcon",
       "class": null
+    },
+    {
+      "name": "promptSortAscIcon",
+      "description": "Icon used to display sort ascending changes",
+      "default": "GridArrowUpwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptSortDescIcon",
+      "description": "Icon used to display sort descending changes",
+      "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptGroupIcon",
+      "description": "Icon used to display group changes",
+      "default": "GridGroupWorkIcon",
+      "class": null
+    },
+    {
+      "name": "promptFilterIcon",
+      "description": "Icon used to display filter changes",
+      "default": "GridFilterAltIcon",
+      "class": null
+    },
+    {
+      "name": "promptPivotIcon",
+      "description": "Icon used to display pivot changes",
+      "default": "GridPivotIcon",
+      "class": null
+    },
+    {
+      "name": "promptAggregationIcon",
+      "description": "Icon used to display aggregation changes",
+      "default": "GridFunctionsIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -2262,6 +2298,18 @@
       "isGlobal": false
     },
     {
+      "key": "promptChangeItem",
+      "className": "MuiDataGridPremium-promptChangeItem",
+      "description": "Styles applied to the prompt change item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPremium-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptContent",
       "className": "MuiDataGridPremium-promptContent",
       "description": "Styles applied to the prompt content element.",
@@ -2274,6 +2322,12 @@
       "isGlobal": false
     },
     {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPremium-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptIconContainer",
       "className": "MuiDataGridPremium-promptIconContainer",
       "description": "Styles applied to the prompt icon element.",
@@ -2283,12 +2337,6 @@
       "key": "promptText",
       "className": "MuiDataGridPremium-promptText",
       "description": "Styles applied to the prompt text element.",
-      "isGlobal": false
-    },
-    {
-      "key": "promptTime",
-      "className": "MuiDataGridPremium-promptTime",
-      "description": "Styles applied to the prompt time element.",
       "isGlobal": false
     },
     {

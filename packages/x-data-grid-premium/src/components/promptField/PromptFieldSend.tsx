@@ -47,7 +47,7 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
       {
         ...rootProps.slotProps?.baseIconButton,
         className: resolvedClassName,
-        disabled: state.disabled || state.recording || !state.value,
+        disabled: state.disabled || state.recording || !state.value.trim(),
         ...other,
         onClick: handleClick,
         ref,
