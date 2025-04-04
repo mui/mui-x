@@ -51,7 +51,7 @@ describe('<DateCalendar /> - Validation', () => {
         screen.getAllByTestId('day').forEach((day) => {
           expect(day).not.to.have.attribute('disabled');
         });
-      })
+      });
     });
   });
 
