@@ -239,6 +239,21 @@ export interface GridLocaleText {
   promptProcessing: string;
   promptAppliedChanges: string;
 
+  // Prompt changes
+  promptChangeGroupDescription: (column: string) => string;
+  promptChangeAggregationLabel: (column: string, aggregation: string) => string;
+  promptChangeAggregationDescription: (column: string, aggregation: string) => string;
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => string;
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => string;
+  promptChangeSortDescription: (column: string, direction: string) => string;
+  promptChangePivotEnableLabel: string;
+  promptChangePivotEnableDescription: string;
+  promptChangePivotColumnsLabel: (count: number) => string;
+  promptChangePivotColumnsDescription: (column: string, direction: string) => string;
+  promptChangePivotRowsLabel: (count: number) => string;
+  promptChangePivotValuesLabel: (count: number) => string;
+  promptChangePivotValuesDescription: (column: string, aggregation: string) => string;
+
   // Prompt field
   promptFieldLabel: string;
   promptFieldPlaceholder: string;

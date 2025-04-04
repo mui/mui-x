@@ -78,7 +78,7 @@ const AiAssistantPanelBody = styled('div', {
 })<{ ownerState: OwnerState }>({
   flexGrow: 0,
   flexShrink: 0,
-  height: 220,
+  height: 260,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

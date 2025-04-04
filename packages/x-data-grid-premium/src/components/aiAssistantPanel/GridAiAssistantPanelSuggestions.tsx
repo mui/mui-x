@@ -79,7 +79,7 @@ function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsP
             label={suggestion.value}
             className={classes.item}
             onClick={() => apiRef.current.aiAssistant.processPrompt(suggestion.value)}
-            icon={<rootProps.slots.promptIcon style={{ fontSize: '1rem' }} />}
+            variant="outlined"
           />
         ))}
       </AiAssistantPanelSuggestionsList>

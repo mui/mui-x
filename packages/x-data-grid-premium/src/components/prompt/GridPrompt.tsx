@@ -1,11 +1,30 @@
 import * as React from 'react';
-import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  getDataGridUtilityClass,
+  gridClasses,
+  gridColumnLookupSelector,
+  useGridSelector,
+  GridSlotProps,
+  GridSingleSelectColDef,
+} from '@mui/x-data-grid-pro';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
+
 import { keyframes, styled } from '@mui/system';
-import { vars } from '@mui/x-data-grid-pro/internals';
+import {
+  getValueOptions,
+  isSingleSelectColDef,
+  NotRendered,
+  vars,
+} from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { PromptHistory } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import {
+  PromptHistory,
+  PromptResponse,
+} from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = PromptHistory[number] & { onRerun: () => void };
@@ -22,10 +41,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     iconContainer: ['promptIconContainer'],
     icon: ['promptIcon'],
     text: ['promptText'],
-    time: ['promptTime'],
     content: ['promptContent'],
     action: ['promptAction'],
-    helperText: ['promptHelperText'],
+    feedback: ['promptFeedback'],
+    changeList: ['promptChangeList'],
+    changeItem: ['promptChangeItem'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -42,7 +62,7 @@ const fadeInUp = keyframes({
   },
 });
 
-const growAndFadeIn = keyframes({
+const fadeInGrow = keyframes({
   from: {
     opacity: 0,
     transform: 'scale(0.8)',
@@ -60,9 +80,10 @@ const Prompt = styled('li', {
   slot: 'Prompt',
 })<{ ownerState: OwnerState }>`
   display: flex;
-  padding: ${vars.spacing(1, 1.5)};
+  padding: ${vars.spacing(1, 1.25)};
   align-items: flex-start;
   animation: ${fadeInUp} ${vars.transitions.duration.long} ${vars.transitions.easing.easeInOut};
+  overflow: hidden;
   .${gridClasses.promptAction} {
     opacity: 0;
     transition: ${vars.transition(['opacity'], { duration: vars.transitions.duration.short })};
@@ -80,6 +101,7 @@ const PromptContent = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+  overflow: 'hidden',
 });
 
 const PromptText = styled('div', {
@@ -89,18 +111,11 @@ const PromptText = styled('div', {
   font: vars.typography.font.body,
 });
 
-const PromptTime = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PromptTime',
-})<{ ownerState: OwnerState }>({
-  font: vars.typography.font.small,
-  color: vars.colors.foreground.muted,
-});
-
 const PromptIconContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptIconContainer',
 })<{ ownerState: OwnerState }>({
+  flexShrink: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -115,20 +130,14 @@ const PromptIcon = styled('svg', {
   name: 'MuiDataGrid',
   slot: 'PromptIcon',
 })<{ ownerState: OwnerState }>`
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: ${vars.spacing(1)};
-  border-radius: 100%;
   color: ${({ ownerState }) =>
     ownerState.variant === 'error' ? vars.colors.foreground.error : vars.colors.foreground.muted};
-  background-color: color-mix(in srgb, currentColor 15%, ${vars.colors.background.base});
-  animation: ${growAndFadeIn} ${vars.transitions.duration.short}
-    ${vars.transitions.easing.easeInOut};
+  animation: ${fadeInGrow} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
 `;
-const PromptHelperText = styled('div', {
+
+const PromptFeedback = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'PromptHelperText',
+  slot: 'PromptFeedback',
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.small,
   color: vars.colors.foreground.muted,
@@ -144,8 +153,28 @@ const PromptHelperText = styled('div', {
   ],
 });
 
+const PromptChangeList = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'PromptChangeList',
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: vars.spacing(0.5),
+  width: '100%',
+  marginTop: vars.spacing(1),
+  overflow: 'hidden',
+});
+
+const PromptChangeItem = styled(NotRendered<GridSlotProps['baseChip']>, {
+  name: 'MuiDataGrid',
+  slot: 'PromptChangeItem',
+})<{ ownerState: OwnerState }>`
+  animation: ${fadeInGrow} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
+  animation-fill-mode: backwards;
+`;
+
 function GridPrompt(props: GridPromptProps) {
-  const { value, createdAt, response, helperText, variant, onRerun } = props;
+  const { value, response, helperText, variant, onRerun } = props;
   const rootProps = useGridRootProps();
   const ownerState = {
     classes: rootProps.classes,
@@ -153,17 +182,205 @@ function GridPrompt(props: GridPromptProps) {
   };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridApiContext();
-  const sentAt = formatDateTime(createdAt);
-  const fullSentAt = createdAt.toLocaleDateString(undefined, {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const columns = useGridSelector(apiRef, gridColumnLookupSelector);
+
+  const getColumnName = React.useCallback(
+    (column: string) => columns[column]?.headerName ?? column,
+    [columns],
+  );
+
+  const getGroupingChanges = React.useCallback(
+    (grouping: PromptResponse['grouping']) => {
+      return grouping.map((group) => ({
+        label: getColumnName(group.column),
+        description: apiRef.current.getLocaleText('promptChangeGroupDescription')(
+          getColumnName(group.column),
+        ),
+        icon: rootProps.slots.promptGroupIcon,
+      }));
+    },
+    [apiRef, getColumnName, rootProps.slots.promptGroupIcon],
+  );
+
+  const getAggregationChanges = React.useCallback(
+    (aggregation: PromptResponse['aggregation']) => {
+      return Object.keys(aggregation).map((column) => ({
+        label: apiRef.current.getLocaleText('promptChangeAggregationLabel')(
+          getColumnName(column),
+          aggregation[column],
+        ),
+        description: apiRef.current.getLocaleText('promptChangeAggregationDescription')(
+          getColumnName(column),
+          aggregation[column],
+        ),
+        icon: rootProps.slots.promptAggregationIcon,
+      }));
+    },
+    [apiRef, getColumnName, rootProps.slots.promptAggregationIcon],
+  );
+
+  const getFilterChanges = React.useCallback(
+    (filters: PromptResponse['filters']) => {
+      return filters.map((filter) => {
+        const filterOperator = apiRef.current.getLocaleText(
+          `filterOperator${capitalize(filter.operator)}` as 'filterOperatorContains',
+        );
+        let filterValue = filter.value;
+
+        if (isSingleSelectColDef(columns[filter.column])) {
+          const allOptions =
+            getValueOptions(columns[filter.column] as GridSingleSelectColDef) ?? [];
+          const colDef = columns[filter.column] as GridSingleSelectColDef;
+          const getOptionLabel =
+            colDef.getOptionLabel ??
+            ((option) => (typeof option === 'object' ? option.label : String(option)));
+          const getOptionValue =
+            colDef.getOptionValue ??
+            ((option) => (typeof option === 'object' ? option.value : option));
+
+          if (Array.isArray(filterValue)) {
+            filterValue = filterValue
+              .map((filterVal) => {
+                const option = allOptions.find(
+                  (opt) => String(getOptionValue(opt)) === String(filterVal),
+                );
+                return option ? getOptionLabel(option) : String(filterVal);
+              })
+              .join(', ');
+          } else {
+            const option = allOptions.find(
+              (opt) => String(getOptionValue(opt)) === String(filterValue),
+            );
+            filterValue = option ? getOptionLabel(option) : String(filterValue);
+          }
+        }
+
+        return {
+          label: apiRef.current.getLocaleText('promptChangeFilterLabel')(
+            getColumnName(filter.column),
+            filterOperator,
+            filterValue as string,
+          ),
+          description: apiRef.current.getLocaleText('promptChangeFilterDescription')(
+            getColumnName(filter.column),
+            filterOperator,
+            filterValue as string,
+          ),
+          icon: rootProps.slots.promptFilterIcon,
+        };
+      });
+    },
+    [apiRef, columns, getColumnName, rootProps.slots.promptFilterIcon],
+  );
+
+  const getSortingChanges = React.useCallback(
+    (sorting: PromptResponse['sorting']) => {
+      return sorting.map((sort) => ({
+        label: getColumnName(sort.column),
+        description: apiRef.current.getLocaleText('promptChangeSortDescription')(
+          getColumnName(sort.column),
+          sort.direction,
+        ),
+        icon:
+          sort.direction === 'asc'
+            ? rootProps.slots.promptSortAscIcon
+            : rootProps.slots.promptSortDescIcon,
+      }));
+    },
+    [apiRef, getColumnName, rootProps.slots.promptSortAscIcon, rootProps.slots.promptSortDescIcon],
+  );
+
+  const getPivotingChanges = React.useCallback(
+    (pivoting: PromptResponse['pivoting']) => {
+      // Type guard, neccessary because pivoting can be an empty object
+      if (!('columns' in pivoting)) {
+        return [];
+      }
+      return [
+        {
+          label: apiRef.current.getLocaleText('promptChangePivotEnableLabel'),
+          icon: rootProps.slots.promptPivotIcon,
+          description: apiRef.current.getLocaleText('promptChangePivotEnableDescription'),
+        },
+        {
+          label: apiRef.current.getLocaleText('promptChangePivotColumnsLabel')(
+            pivoting.columns.length,
+          ),
+          icon: rootProps.slots.columnMenuManageColumnsIcon,
+          description: pivoting.columns
+            .map((column) =>
+              apiRef.current.getLocaleText('promptChangePivotColumnsDescription')(
+                getColumnName(column.column),
+                column.direction,
+              ),
+            )
+            .join(`, `),
+        },
+        {
+          label: apiRef.current.getLocaleText('promptChangePivotRowsLabel')(pivoting.rows.length),
+          icon: rootProps.slots.densityStandardIcon,
+          description: pivoting.rows.map((column) => getColumnName(column)).join(`, `),
+        },
+        {
+          label: apiRef.current.getLocaleText('promptChangePivotValuesLabel')(
+            pivoting.values.length,
+          ),
+          icon: rootProps.slots.promptAggregationIcon,
+          description: pivoting.values
+            .map((aggregation) =>
+              Object.keys(aggregation).map((column) =>
+                apiRef.current.getLocaleText('promptChangePivotValuesDescription')(
+                  getColumnName(column),
+                  aggregation[column],
+                ),
+              ),
+            )
+            .join(`, `),
+        },
+      ];
+    },
+    [apiRef, getColumnName, rootProps.slots],
+  );
+
+  const changeList = React.useMemo(() => {
+    if (!response) {
+      return [];
+    }
+
+    const changes: {
+      label: string;
+      description?: string;
+      icon: React.ElementType;
+    }[] = [];
+
+    if (response.grouping.length) {
+      changes.push(...getGroupingChanges(response.grouping));
+    }
+    if (response.aggregation && Object.keys(response.aggregation).length) {
+      changes.push(...getAggregationChanges(response.aggregation));
+    }
+    if (response.filters.length) {
+      changes.push(...getFilterChanges(response.filters));
+    }
+    if (response.sorting.length) {
+      changes.push(...getSortingChanges(response.sorting));
+    }
+    if (response.pivoting && 'columns' in response.pivoting) {
+      changes.push(...getPivotingChanges(response.pivoting));
+    }
+
+    return changes;
+  }, [
+    response,
+    getGroupingChanges,
+    getAggregationChanges,
+    getFilterChanges,
+    getSortingChanges,
+    getPivotingChanges,
+  ]);
 
   return (
-    <Prompt key={createdAt.toISOString()} ownerState={ownerState} className={classes.root}>
+    <Prompt ownerState={ownerState} className={classes.root}>
       <PromptIconContainer ownerState={ownerState} className={classes.iconContainer}>
         {!response && variant !== 'error' ? (
           <rootProps.slots.baseCircularProgress size={20} />
@@ -180,12 +397,25 @@ function GridPrompt(props: GridPromptProps) {
         <PromptText ownerState={ownerState} className={classes.text}>
           {value}
         </PromptText>
-        <PromptHelperText ownerState={ownerState} className={classes.helperText}>
+        <PromptFeedback ownerState={ownerState} className={classes.feedback}>
           {helperText}
-        </PromptHelperText>
-        <PromptTime ownerState={ownerState} className={classes.time} title={fullSentAt}>
-          {sentAt}
-        </PromptTime>
+        </PromptFeedback>
+        {changeList.length > 0 && (
+          <PromptChangeList ownerState={ownerState} className={classes.changeList}>
+            {changeList.map((change) => (
+              <rootProps.slots.baseTooltip key={change.label} title={change.description}>
+                <PromptChangeItem
+                  as={rootProps.slots.baseChip}
+                  className={classes.changeItem}
+                  ownerState={ownerState}
+                  label={change.label}
+                  icon={<change.icon />}
+                  size="small"
+                />
+              </rootProps.slots.baseTooltip>
+            ))}
+          </PromptChangeList>
+        )}
       </PromptContent>
       <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')}>
         <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>
@@ -194,25 +424,6 @@ function GridPrompt(props: GridPromptProps) {
       </rootProps.slots.baseTooltip>
     </Prompt>
   );
-}
-
-function formatDateTime(date: Date) {
-  if (isToday(date)) {
-    return date.toLocaleTimeString(undefined, {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
-  return date.toLocaleDateString(undefined, {
-    day: 'numeric',
-    month: 'numeric',
-    year: 'numeric',
-  });
-}
-
-function isToday(date: Date) {
-  const today = new Date();
-  return date.toDateString() === today.toDateString();
 }
 
 export { GridPrompt };

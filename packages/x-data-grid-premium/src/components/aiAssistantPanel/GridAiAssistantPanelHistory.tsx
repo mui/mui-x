@@ -62,12 +62,10 @@ function GridAiAssistantPanelHistory(props: GridAiAssistantPanelHistoryProps) {
 
   // Scroll to the bottom of the prompt history when the prompt history changes
   React.useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollTo({
-        top: ref.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
+    ref.current?.scrollTo({
+      top: ref.current?.scrollHeight,
+      behavior: 'smooth',
+    });
   }, [history]);
 
   return (
