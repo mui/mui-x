@@ -115,20 +115,6 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const Chip = styled(MUIChip)(({ theme }) => ({
-  background: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800],
-  variants: [
-    {
-      props: { variant: 'outlined' },
-      style: {
-        borderColor:
-          theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.grey[800],
-        backgroundColor: 'transparent',
-      },
-    },
-  ],
-}));
-
 const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
@@ -313,7 +299,7 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
 
 const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
   const { material, ...rest } = props;
-  return <Chip {...rest} {...material} ref={ref} />;
+  return <MUIChip {...rest} {...material} ref={ref} />;
 });
 
 const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
@@ -415,7 +401,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         currentValue.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
           return (
-            <Chip
+            <MUIChip
               key={key}
               variant="outlined"
               size="small"
