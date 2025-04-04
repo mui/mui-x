@@ -329,6 +329,7 @@ The list includes these transformers
 - [`rename-imports`](#rename-imports)
 - [`reform-row-selection-model`](#reform-row-selection-model)
 - [`rename-package`](#rename-package)
+- [`add-showToolbar-prop`](#add-showToolbar-prop)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -384,6 +385,8 @@ The list includes these props:
 - `unstable_lazyLoading` to `lazyLoading`
 - `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
 - `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
 
 ```diff
  <DataGrid
@@ -393,12 +396,16 @@ The list includes these props:
 -  unstable_lazyLoading
 -  unstable_lazyLoadingRequestThrottleMs={100}
 -  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
 +  rowSpanning
 +  dataSource={dataSource}
 +  dataSourceCache={dataSourceCache}
 +  lazyLoading
 +  lazyLoadingRequestThrottleMs={100}
 +  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
  />
 ```
 
@@ -462,6 +469,25 @@ Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-
 
 ```bash
 npx @mui/x-codemod@next v8.0.0/data-grid/rename-package <path>
+```
+
+#### `add-showToolbar-prop`
+
+Adds the `showToolbar` prop to the Data Grid components that are using `slots.toolbar` prop.
+
+```diff
+ <DataGridPremium
+  slots={{
+    toolbar: GridToolbar,
+  }}
++ showToolbar
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/add-showToolbar-prop <path>
 ```
 
 ### Pickers codemods

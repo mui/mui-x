@@ -822,9 +822,10 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-          // Scroll to measure all cells
           await act(async () => virtualScroller.scrollTo({ top: 1000, behavior: 'instant' }));
-          expect(gridOffsetTop()).not.to.equal(0);
+          await waitFor(() => {
+            expect(gridOffsetTop()).not.to.equal(0);
+          });
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
 

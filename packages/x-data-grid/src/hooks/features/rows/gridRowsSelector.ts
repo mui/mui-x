@@ -1,4 +1,4 @@
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import {
   createRootSelector,
   createSelector,
@@ -77,6 +77,19 @@ export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
 export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIds,
+);
+
+export const gridDataRowsSelector = createSelectorMemoized(
+  gridDataRowIdsSelector,
+  gridRowsLookupSelector,
+  (dataRowIds, rowsLookup) =>
+    dataRowIds.reduce((acc, id) => {
+      if (!rowsLookup[id]) {
+        return acc;
+      }
+      acc.push(rowsLookup[id]);
+      return acc;
+    }, [] as GridRowModel[]),
 );
 
 /**

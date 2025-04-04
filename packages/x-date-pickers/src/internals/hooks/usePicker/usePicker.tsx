@@ -44,6 +44,7 @@ export const usePicker = <
   rendererInterceptor: RendererInterceptor,
   localeText,
   viewContainerRole,
+  getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
 
@@ -222,6 +223,14 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
+  const stepNavigation = getStepNavigation({
+    setView,
+    view,
+    initialView: initialView ?? views[0],
+    views,
+  });
+  const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
+
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
       setValue,
@@ -231,6 +240,7 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      goToNextStep: wrappedGoToNextStep,
     }),
     [
       setValue,
@@ -240,6 +250,7 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      wrappedGoToNextStep,
     ],
   );
 
@@ -261,6 +272,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      hasNextStep: stepNavigation.hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -283,6 +295,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
+      stepNavigation.hasNextStep,
       timezone,
       state.open,
       popperView,

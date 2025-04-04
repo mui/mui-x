@@ -229,6 +229,24 @@ function getChipProperties(plan) {
   }
 }
 
+const chipColor = {
+  light: {
+    Premium: { background: yellow[50], border: alpha(yellow[900], 0.4) },
+    Pro: { background: blue[50], border: alpha(blue[900], 0.2) },
+    Community: { background: green[50], border: alpha(green[900], 0.2) },
+  },
+  dark: {
+    Premium: {
+      background: alpha(yellow[900], 0.4),
+      border: alpha(yellow[300], 0.4),
+    },
+    Pro: { background: alpha(blue[600], 0.4), border: alpha(blue[300], 0.4) },
+    Community: {
+      background: alpha(green[600], 0.4),
+      border: alpha(green[300], 0.4),
+    },
+  },
+};
 function PlanTag(props) {
   const theme = useTheme();
   const chipProperties = getChipProperties(props.plan);
@@ -244,29 +262,11 @@ function PlanTag(props) {
       label={props.plan}
       sx={{
         pl: 0.5,
-        ...(props.plan === 'Premium' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(yellow[900], 0.4) : yellow[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(yellow[300], 0.4)
-              : alpha(yellow[900], 0.4),
-        }),
-        ...(props.plan === 'Pro' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(blue[600], 0.4) : blue[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(blue[300], 0.4)
-              : alpha(blue[900], 0.2),
-        }),
-        ...(props.plan === 'Community' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(green[600], 0.4) : green[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(green[300], 0.4)
-              : alpha(green[900], 0.2),
+        backgroundColor: chipColor.light[props.plan].background,
+        borderColor: chipColor.light[props.plan].border,
+        ...theme.applyStyles('dark', {
+          backgroundColor: chipColor.dark[props.plan].background,
+          borderColor: chipColor.dark[props.plan].border,
         }),
         '& .MuiChip-label': {
           fontWeight: 'medium',
@@ -317,7 +317,7 @@ function CustomToolbar() {
                         edge="end"
                         size="small"
                         aria-label="Clear search"
-                        sx={{ marginRight: -0.75 }}
+                        material={{ sx: { marginRight: -0.75 } }}
                       >
                         <CancelIcon fontSize="small" />
                       </QuickFilterClear>
@@ -341,19 +341,16 @@ function RowDemo(props) {
     <Box
       sx={{
         py: 6,
-        bgcolor: theme.palette.mode === 'dark' ? '#141A1F' : 'grey.50', // dark color is the branding theme's primaryDark.800
+        bgcolor: 'grey.50', // dark color is the branding theme's primaryDark.800
+        ...theme.applyStyles('dark', {
+          bgcolor: '#141A1F',
+        }),
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}
     >
       <div style={{ width: '90%', margin: 'auto' }}>
-        <Box
-          sx={{
-            backgroundColor: theme.palette.mode === 'dark' ? '#0B0D0E' : '#fff', // dark color is the branding theme's common black
-          }}
-        >
-          {row.demo}
-        </Box>
+        <div>{row.demo}</div>
         {row.linkToCode ? (
           <Link
             href={`/x/react-data-grid${row.linkToCode}`}
@@ -561,7 +558,7 @@ export default function PopularFeaturesDemo() {
             borderColor: 'divider',
           },
           [`& .${gridClasses.detailPanel}`]: {
-            background: 'transparent',
+            backgroundColor: 'transparent',
           },
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',

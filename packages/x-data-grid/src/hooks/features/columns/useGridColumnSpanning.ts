@@ -7,7 +7,7 @@ import {
   GridColumnSpanningApi,
   GridColumnSpanningPrivateApi,
 } from '../../../models/api/gridColumnSpanning';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
@@ -64,7 +64,7 @@ export const useGridColumnSpanning = (apiRef: RefObject<GridPrivateApiCommunity>
   useGridApiMethod(apiRef, columnSpanningPublicApi, 'public');
   useGridApiMethod(apiRef, columnSpanningPrivateApi, 'private');
 
-  useGridApiEventHandler(apiRef, 'columnOrderChange', resetColSpan);
+  useGridEvent(apiRef, 'columnOrderChange', resetColSpan);
 };
 
 function calculateCellColSpan(params: {

@@ -8,7 +8,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
-  GridListColDef,
+  GridListViewColDef,
   GridGetRowsError,
   GridUpdateRowError,
 } from '@mui/x-data-grid';
@@ -159,9 +159,9 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   lazyLoadingRequestThrottleMs: number;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `listViewColumn`.
    */
-  unstable_listView: boolean;
+  listView: boolean;
 }
 interface DataGridProRegularProps<R extends GridValidRowModel> {
   /**
@@ -266,9 +266,9 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   slotProps?: GridProSlotProps;
   /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   * Definition of the column rendered when the `listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  listViewColumn?: GridListViewColDef<R>;
   /**
    * The data source of the Data Grid Pro.
    */

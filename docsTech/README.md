@@ -54,7 +54,7 @@ For example, `"cellKeyDown"` is listened by the focus, edit, selection, and navi
 Each of them defines an event handler responsible for modifying their sub-state.
 
 ```js
-useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
 ```
 
 The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/x/react-data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.

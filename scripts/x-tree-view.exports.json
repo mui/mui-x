@@ -9,8 +9,6 @@
   { "name": "RichTreeViewClasses", "kind": "Interface" },
   { "name": "RichTreeViewClassKey", "kind": "TypeAlias" },
   { "name": "RichTreeViewPluginParameters", "kind": "Interface" },
-  { "name": "RichTreeViewPluginSlotProps", "kind": "TypeAlias" },
-  { "name": "RichTreeViewPluginSlots", "kind": "TypeAlias" },
   { "name": "RichTreeViewProps", "kind": "Interface" },
   { "name": "RichTreeViewPropsBase", "kind": "Interface" },
   { "name": "RichTreeViewRoot", "kind": "Variable" },

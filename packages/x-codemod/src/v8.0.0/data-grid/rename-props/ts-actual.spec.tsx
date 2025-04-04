@@ -23,6 +23,8 @@ function App() {
         unstable_rowSpanning
         unstable_dataSource={dataSource}
         unstable_dataSourceCache={dataSourceCache}
+        unstable_listView
+        unstable_listColumn={{}}
       />
     </React.Fragment>
   );

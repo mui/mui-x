@@ -14,9 +14,8 @@ type DataSource<R extends {}> = {
    * @template R
    * @param {R} item The item to check.
    * @returns {number} The number of children.
-   * @default (item) => number
    */
-  getChildrenCount?: (item: R) => number;
+  getChildrenCount: (item: R) => number;
   /**
    * Method used for fetching the items.
    * Only relevant for lazy-loaded tree views.
@@ -25,7 +24,7 @@ type DataSource<R extends {}> = {
    * @param {TreeViewItemId} parentId The id of the item the children belong to.
    * @returns { Promise<R[]>} The children of the item.
    */
-  getTreeItems?: (parentId?: TreeViewItemId) => Promise<R[]>;
+  getTreeItems: (parentId?: TreeViewItemId) => Promise<R[]>;
 };
 
 export interface UseTreeViewLazyLoadingPublicAPI {}

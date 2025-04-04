@@ -94,11 +94,11 @@ DataGridPremiumRaw.propTypes = {
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -529,6 +529,12 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
+  /**
    * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
@@ -540,6 +546,21 @@ DataGridPremiumRaw.propTypes = {
    * @default 500
    */
   lazyLoadingRequestThrottleMs: PropTypes.number,
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listViewColumn`.
+   */
+  listView: PropTypes.bool,
+  /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
+  listViewColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -1118,21 +1139,6 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
-   */
-  unstable_listColumn: PropTypes.shape({
-    align: PropTypes.oneOf(['center', 'left', 'right']),
-    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    display: PropTypes.oneOf(['flex', 'text']),
-    field: PropTypes.string.isRequired,
-    renderCell: PropTypes.func,
-  }),
-  /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
-   */
-  unstable_listView: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

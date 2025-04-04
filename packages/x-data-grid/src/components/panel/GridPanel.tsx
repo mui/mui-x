@@ -24,7 +24,7 @@ export interface GridPanelClasses {
 
 export interface GridPanelProps
   extends Pick<GridSlotProps['basePopper'], 'id' | 'className' | 'target' | 'flip'> {
-  ref?: React.Ref<HTMLElement>;
+  ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -59,7 +59,7 @@ const GridPanelContent = styled('div', {
   overflow: 'auto',
 });
 
-const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -100,7 +100,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     <GridPanelRoot
       as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      placement="bottom-start"
+      placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
       flip
       onDidShow={onDidShow}

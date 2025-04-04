@@ -13,6 +13,11 @@ import {
   selectorChartRotationAxis,
 } from './useChartPolarAxis.selectors';
 import { getSVGPoint } from '../../../getSVGPoint';
+import {
+  generatePolar2svg,
+  generateSvg2polar,
+  generateSvg2rotation,
+} from './coordinateTransformation';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -70,25 +75,21 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }));
   }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
-  const svg2rotation = React.useCallback(
-    (x: number, y: number) => Math.atan2(x - center.cx, center.cy - y),
+  const svg2rotation = React.useMemo(
+    () => generateSvg2rotation({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
 
-  const svg2polar = React.useCallback(
-    (x: number, y: number): [number, number] => {
-      const angle = Math.atan2(x - center.cx, center.cy - y);
-      return [Math.sqrt((x - center.cx) ** 2 + (center.cy - y) ** 2), angle];
-    },
+  const svg2polar = React.useMemo(
+    () => generateSvg2polar({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
 
-  const polar2svg = React.useCallback(
-    (radius: number, rotation: number): [number, number] => {
-      return [center.cx + radius * Math.sin(rotation), center.cy - radius * Math.cos(rotation)];
-    },
+  const polar2svg = React.useMemo(
+    () => generatePolar2svg({ cx: center.cx, cy: center.cy }),
     [center.cx, center.cy],
   );
+
   const usedRotationAxisId = rotationAxisIds[0];
   const usedRadiusAxisId = radiusAxisIds[0];
 

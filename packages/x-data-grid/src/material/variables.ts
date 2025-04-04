@@ -36,7 +36,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const fontBody = (t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2);
   const fontSmall = (t.vars as any)?.font?.caption ?? formatFont(t.typography.caption);
-
+  const fontLarge = (t.vars as any)?.font?.body1 ?? formatFont(t.typography.body1);
   const k = vars.keys;
 
   return {
@@ -72,6 +72,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.fontWeight.bold]: t.typography.fontWeightBold as string,
     [k.typography.font.body]: fontBody,
     [k.typography.font.small]: fontSmall,
+    [k.typography.font.large]: fontLarge,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,

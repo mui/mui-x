@@ -20,8 +20,8 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
 
-  const metrics = rotationScale.domain() as (string | number)[];
-  const angles = metrics.map((key) => rotationScale(key)!);
+  const metrics = (rotationScale?.domain() as (string | number)[]) ?? [];
+  const angles = metrics.map((key) => rotationScale?.(key)!);
 
   return radarSeries.map((series) => {
     const seriesId = series.id;

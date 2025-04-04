@@ -37,7 +37,6 @@ export default function ErrorManagement() {
       </Button>
       <RichTreeViewPro
         items={initialItems}
-        experimentalFeatures={{ lazyLoading: true }}
         dataSource={{
           getChildrenCount: (item) => item?.childrenCount as number,
           getTreeItems: fetchData,

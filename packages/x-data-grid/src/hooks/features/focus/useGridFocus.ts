@@ -9,7 +9,7 @@ import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocus
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import {
@@ -500,13 +500,13 @@ export const useGridFocus = (
     };
   }, [apiRef, hasRootReference, handleDocumentClick]);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
-  useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, 'cellMouseDown', handleCellMouseDown);
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
-  useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
-  useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
-  useGridApiEventHandler(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
-  useGridApiEventHandler(apiRef, 'rowsSet', handleRowSet);
-  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridEvent(apiRef, 'columnHeaderBlur', handleBlur);
+  useGridEvent(apiRef, 'cellDoubleClick', handleCellDoubleClick);
+  useGridEvent(apiRef, 'cellMouseDown', handleCellMouseDown);
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'cellModeChange', handleCellModeChange);
+  useGridEvent(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
+  useGridEvent(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
+  useGridEvent(apiRef, 'rowsSet', handleRowSet);
+  useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
 };

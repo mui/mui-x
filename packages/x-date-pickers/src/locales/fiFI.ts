@@ -35,6 +35,7 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Tyhjennä',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Tänään',
+  nextStepButtonLabel: 'Seuraava',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Valitse päivä',

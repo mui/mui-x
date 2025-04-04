@@ -9,14 +9,7 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": [
-      "node",
-      "@mui/material/themeCssVarsAugmentation",
-      "@emotion/styled",
-      "@react-spring/shared",
-      "@react-spring/core",
-      "csstype"
-    ]
+    "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "csstype"]
   },
   "references": [{ "path": "../x-internals/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],

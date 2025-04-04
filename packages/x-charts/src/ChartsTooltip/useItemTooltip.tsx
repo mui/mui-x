@@ -45,9 +45,14 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
     return null;
   }
 
-  const itemSeries = series[identifier.type]!.series[
-    identifier.seriesId
-  ] as ChartSeriesDefaultized<T>;
+  const itemSeries = series[identifier.type]?.series[identifier.seriesId] as
+    | ChartSeriesDefaultized<T>
+    | undefined;
+
+  if (!itemSeries) {
+    return null;
+  }
+
   const getColor =
     seriesConfig[itemSeries.type].colorProcessor?.(
       itemSeries as any,

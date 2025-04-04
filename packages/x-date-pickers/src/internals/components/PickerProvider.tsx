@@ -177,6 +177,10 @@ export interface PickerContextValue<
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
+   * Whether the Picker has any value picking steps left.
+   */
+  hasNextStep: boolean;
+  /**
    * The ref to attach to the popup's outermost element that contains the view, if any.
    * When using a built-in popup component, this property is automatically attached to the appropriate element.
    */
@@ -275,6 +279,11 @@ export interface PickerActionsContextValue<
    * The value will be reset to the last accepted value.
    */
   cancelValueChanges: () => void;
+  /**
+   * Go to the next step in the value picking process.
+   * For example, on the Mobile Date Time Picker, if the user is editing the date, it will switch to editing the time.
+   */
+  goToNextStep: () => void;
 }
 
 export interface SetValueActionOptions<TError = string | null> {

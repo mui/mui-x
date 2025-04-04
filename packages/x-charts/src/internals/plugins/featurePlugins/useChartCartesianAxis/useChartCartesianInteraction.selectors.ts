@@ -1,59 +1,170 @@
 import { createSelector } from '../../utils/selectors';
+import { AxisId, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { getAxisIndex, getAxisValue } from './getAxisValue';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
+import { ComputeResult } from './computeAxisValue';
+
+const optionalGetAxisId = (_: unknown, id?: AxisId) => id;
+const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
+
+/**
+ * Get interaction indexes
+ */
+
+function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids?: AxisId): number;
+function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids: AxisId[]): number[];
+function indexGetter(
+  value: number,
+  axes: ComputeResult<ChartsAxisProps>,
+  ids: AxisId | AxisId[] = axes.axisIds[0],
+): number | number[] {
+  return Array.isArray(ids)
+    ? ids.map((id) => getAxisIndex(axes.axis[id], value))
+    : getAxisIndex(axes.axis[ids], value);
+}
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis],
-  (x, xAxes) => (x === null ? null : getAxisIndex(xAxes.axis[xAxes.axisIds[0]], x)),
+  [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
+  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
 );
 
-export const selectorChartsInteractionXAxisValue = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis, selectorChartsInteractionXAxisIndex],
-  (x, xAxes, xIndex) =>
-    x === null ? null : getAxisValue(xAxes.axis[xAxes.axisIds[0]], x, xIndex!),
+export const selectorChartsInteractionXAxisIndexes = createSelector(
+  [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisIds],
+  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis],
-  (y, yAxes) => (y === null ? null : getAxisIndex(yAxes.axis[yAxes.axisIds[0]], y)),
+  [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
+  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+);
+
+export const selectorChartsInteractionYAxisIndexes = createSelector(
+  [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisIds],
+  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
+);
+
+/**
+ * Get interaction values
+ */
+
+type Value = number | Date | null;
+
+function valueGetter(
+  value: number,
+  axes: ComputeResult<ChartsAxisProps>,
+  indexes: number,
+  ids?: AxisId,
+): Value;
+function valueGetter(
+  value: number,
+  axes: ComputeResult<ChartsAxisProps>,
+  indexes: number[],
+  ids: AxisId[],
+): Value[];
+function valueGetter(
+  value: number,
+  axes: ComputeResult<ChartsAxisProps>,
+  indexes: number | number[],
+  ids: AxisId | AxisId[] = axes.axisIds[0],
+): Value | Value[] {
+  return Array.isArray(ids)
+    ? ids.map((id, axisIndex) =>
+        getAxisValue(axes.axis[id], value, (indexes as number[])[axisIndex]),
+      )
+    : getAxisValue(axes.axis[ids], value, indexes as number);
+}
+export const selectorChartsInteractionXAxisValues = createSelector(
+  [
+    selectorChartsInteractionPointerX,
+    selectorChartXAxis,
+    selectorChartsInteractionXAxisIndexes,
+    optionalGetAxisIds,
+  ],
+  (value, axes, indexes, ids) => (value === null ? null : valueGetter(value, axes, indexes!, ids)),
+);
+
+export const selectorChartsInteractionXAxisValue = createSelector(
+  [
+    selectorChartsInteractionPointerX,
+    selectorChartXAxis,
+    selectorChartsInteractionXAxisIndex,
+    optionalGetAxisId,
+  ],
+  (x, xAxes, xIndex, id) => {
+    if (x === null || xIndex === null || xAxes.axisIds.length === 0) {
+      return null;
+    }
+    return valueGetter(x, xAxes, xIndex, id);
+  },
+);
+
+export const selectorChartsInteractionYAxisValues = createSelector(
+  [
+    selectorChartsInteractionPointerY,
+    selectorChartYAxis,
+    selectorChartsInteractionYAxisIndexes,
+    optionalGetAxisIds,
+  ],
+  (value, axes, indexes, ids) => (value === null ? null : valueGetter(value, axes, indexes!, ids)),
 );
 
 export const selectorChartsInteractionYAxisValue = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis, selectorChartsInteractionYAxisIndex],
-  (y, yAxes, yIndex) =>
-    y === null ? null : getAxisValue(yAxes.axis[yAxes.axisIds[0]], y, yIndex!),
+  [
+    selectorChartsInteractionPointerY,
+    selectorChartYAxis,
+    selectorChartsInteractionYAxisIndex,
+    optionalGetAxisId,
+  ],
+  (y, yAxes, yIndex, id) => {
+    if (y === null || yIndex === null || yAxes.axisIds.length === 0) {
+      return null;
+    }
+    return valueGetter(y, yAxes, yIndex, id);
+  },
 );
 
-export type AxisValueIdentifier = {
-  value: number | Date | string;
-  // Set to -1 if no index.
-  index: number;
-};
+/**
+ * Get x-axis ids and corresponding data index that should be display in the tooltip.
+ */
+export const selectorChartsInteractionTooltipXAxes = createSelector(
+  [selectorChartsInteractionPointerX, selectorChartXAxis],
+  (value, axes) => {
+    if (value === null) {
+      return [];
+    }
 
-// TODO: probably remove in favor of the two more specific.
-export const selectorChartsInteractionXAxis = createSelector(
-  [selectorChartsInteractionXAxisIndex, selectorChartsInteractionXAxisValue],
-  (index, value): AxisValueIdentifier | null =>
-    index === null || value === null ? null : { index, value },
+    return axes.axisIds
+      .filter((id) => axes.axis[id].triggerTooltip)
+      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .filter(({ dataIndex }) => dataIndex >= 0);
+  },
 );
 
-export const selectorChartsInteractionYAxis = createSelector(
-  [selectorChartsInteractionYAxisIndex, selectorChartsInteractionYAxisValue],
-  (index, value): AxisValueIdentifier | null =>
-    index === null || value === null ? null : { index, value },
+/**
+ * Get y-axis ids and corresponding data index that should be display in the tooltip.
+ */
+export const selectorChartsInteractionTooltipYAxes = createSelector(
+  [selectorChartsInteractionPointerY, selectorChartYAxis],
+  (value, axes) => {
+    if (value === null) {
+      return [];
+    }
+
+    return axes.axisIds
+      .filter((id) => axes.axis[id].triggerTooltip)
+      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .filter(({ dataIndex }) => dataIndex >= 0);
+  },
 );
 
-// TODO: probably remove in favor of the two more specific.
-export const selectorChartsInteractionXAxisIsDefined = createSelector(
-  [selectorChartsInteractionXAxisIndex],
-  (index) => index !== null && index >= 0,
-);
-
-export const selectorChartsInteractionYAxisIsDefined = createSelector(
-  [selectorChartsInteractionYAxisIndex],
-  (index) => index !== null && index >= 0,
+/**
+ * Return `true` if the axis tooltip has something to display.
+ */
+export const selectorChartsInteractionAxisTooltip = createSelector(
+  [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
+  (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );

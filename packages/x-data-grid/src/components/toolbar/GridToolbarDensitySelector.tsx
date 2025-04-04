@@ -133,7 +133,7 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
           open={open}
           target={buttonRef.current}
           onClose={handleDensitySelectorClose}
-          position="bottom-start"
+          position="bottom-end"
         >
           <rootProps.slots.baseMenuList
             id={densityMenuId}

@@ -36,6 +36,7 @@ const roROPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Ștergere',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Astăzi',
+  nextStepButtonLabel: 'Următoare',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selectați data',

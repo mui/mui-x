@@ -10,7 +10,7 @@ import {
   pickersSectionListClasses,
   PickersSectionListClasses,
 } from './pickersSectionListClasses';
-import { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
+import type { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export const PickersSectionListRoot = styled('div', {

@@ -10,7 +10,7 @@ import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
+import { useGridEvent } from '../hooks/utils/useGridEvent';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import {
   gridDimensionsSelector,
@@ -82,8 +82,8 @@ function GridScrollAreaWrapper(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
   const [dragging, setDragging] = React.useState<boolean>(false);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', () => setDragging(true));
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', () => setDragging(false));
+  useGridEvent(apiRef, 'columnHeaderDragStart', () => setDragging(true));
+  useGridEvent(apiRef, 'columnHeaderDragEnd', () => setDragging(false));
 
   if (!dragging) {
     return null;
@@ -165,7 +165,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
     });
   });
 
-  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrolling);
+  useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
 
   if (!canScrollMore) {
     return null;

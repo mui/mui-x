@@ -11,14 +11,10 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateRangePicker /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-range',
     variant: 'desktop',

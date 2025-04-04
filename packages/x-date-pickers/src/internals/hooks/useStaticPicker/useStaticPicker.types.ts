@@ -5,6 +5,7 @@ import {
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParameters, UsePickerProps } from '../usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 
@@ -55,4 +56,10 @@ export interface UseStaticPickerParams<
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
+  /**
+   * Steps available for the picker.
+   * This will be used to define the behavior of navigation actions.
+   * If null, the picker will not have any step navigation.
+   */
+  steps: PickerStep[] | null;
 }

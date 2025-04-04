@@ -27,6 +27,8 @@ function App() {
         unstable_dataSourceCache={dataSourceCache}
         unstable_lazyLoading
         unstable_lazyLoadingRequestThrottleMs={100}
+        unstable_listView
+        unstable_listColumn={{}}
       />
     </React.Fragment>
   );

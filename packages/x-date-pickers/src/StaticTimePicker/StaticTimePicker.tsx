@@ -64,6 +64,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
     valueManager: singleItemValueManager,
     valueType: 'time',
     validator: validateTime,
+    steps: null,
   });
 
   return renderPicker();

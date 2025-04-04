@@ -10,5 +10,7 @@ export * from './ChartsTooltipTable';
 
 export * from './useItemTooltip';
 export * from './useAxisTooltip';
+export * from './useAxesTooltip';
+
 export { useMouseTracker } from './utils';
 export * from './ChartTooltip.types';

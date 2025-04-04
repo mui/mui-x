@@ -154,7 +154,7 @@ const createSection = ({
     } else {
       if (sectionConfig.maxLength == null) {
         throw new Error(
-          `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+          `MUI X: The token ${token} should have a 'maxLength' property on it's adapter`,
         );
       }
 

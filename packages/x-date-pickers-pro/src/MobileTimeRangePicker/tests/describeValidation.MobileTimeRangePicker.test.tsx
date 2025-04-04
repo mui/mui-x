@@ -2,11 +2,10 @@ import { createPickerRenderer, describeRangeValidation } from 'test/utils/picker
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
 
 describe('<MobileTimeRangePicker /> - Describe Validation', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeRangeValidation(MobileTimeRangePicker, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'mobile',

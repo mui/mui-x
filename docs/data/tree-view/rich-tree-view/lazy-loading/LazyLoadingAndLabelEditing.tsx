@@ -53,7 +53,6 @@ export default function LazyLoadingAndLabelEditing() {
       <RichTreeViewPro
         items={[]}
         apiRef={apiRef}
-        experimentalFeatures={{ lazyLoading: true }}
         onItemLabelChange={handleItemLabelChange}
         isItemEditable
         dataSource={{

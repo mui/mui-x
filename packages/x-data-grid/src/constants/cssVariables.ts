@@ -64,6 +64,7 @@ const keys = {
     font: {
       body: '--DataGrid-t-typography-font-body',
       small: '--DataGrid-t-typography-font-small',
+      large: '--DataGrid-t-typography-font-large',
     },
     fontFamily: {
       base: '--DataGrid-t-typography-font-family-base',

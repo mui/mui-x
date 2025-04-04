@@ -17,6 +17,7 @@ import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Stack from '@mui/material/Stack';
 
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
@@ -40,27 +41,28 @@ function CustomToolbar({ onRemoveFilter }: ToolbarProps) {
           <GridFilterListIcon fontSize="small" />
         </FilterPanelTrigger>
       </Tooltip>
+      <Stack direction="row" sx={{ gap: 0.5, flex: 1 }}>
+        {activeFilters.map((filter) => {
+          const column = columns[filter.field];
+          const field = column?.headerName ?? filter.field;
+          const operator = apiRef.current.getLocaleText(
+            `filterOperator${capitalize(filter.operator)}` as 'filterOperatorContains',
+          );
+          const isDate = column?.type === 'date';
+          const value = isDate
+            ? new Date(filter.value).toLocaleDateString()
+            : (filter.value ?? '');
 
-      {activeFilters.map((filter) => {
-        const column = columns[filter.field];
-        const field = column?.headerName ?? filter.field;
-        const operator = apiRef.current.getLocaleText(
-          `filterOperator${capitalize(filter.operator)}` as 'filterOperatorContains',
-        );
-        const isDate = column?.type === 'date';
-        const value = isDate
-          ? new Date(filter.value).toLocaleDateString()
-          : (filter.value ?? '');
-
-        return (
-          <Chip
-            key={filter.id}
-            label={`${field} ${operator} ${value}`}
-            onDelete={() => onRemoveFilter(filter.id)}
-            sx={{ mx: 0.25 }}
-          />
-        );
-      })}
+          return (
+            <Chip
+              key={filter.id}
+              label={`${field} ${operator} ${value}`}
+              onDelete={() => onRemoveFilter(filter.id)}
+              sx={{ mx: 0.25 }}
+            />
+          );
+        })}
+      </Stack>
     </Toolbar>
   );
 }
@@ -105,7 +107,12 @@ export default function GridToolbarFilterBar() {
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
         slots={{ toolbar: CustomToolbar }}
-        slotProps={{ toolbar: { onRemoveFilter } }}
+        slotProps={{
+          toolbar: { onRemoveFilter },
+          basePopper: {
+            placement: 'bottom-start',
+          },
+        }}
         showToolbar
       />
     </div>
