@@ -14,10 +14,6 @@ export const getFakeContextValue = (
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  icons: {
-    slots: {},
-    slotProps: {},
-  },
   rootRef: {
     current: null,
   },

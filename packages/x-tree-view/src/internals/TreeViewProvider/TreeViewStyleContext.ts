@@ -1,3 +1,4 @@
+import { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
 
 export interface TreeViewClasses {
@@ -25,14 +26,42 @@ export interface TreeViewClasses {
   itemLoadingIcon: string;
 }
 
+export interface TreeViewSlots {
+  /**
+   * The default icon used to collapse the item.
+   */
+  collapseIcon?: React.ElementType;
+  /**
+   * The default icon used to expand the item.
+   */
+  expandIcon?: React.ElementType;
+  /**
+   * The default icon displayed next to an end item.
+   * This is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.
+   */
+  endIcon?: React.ElementType;
+}
+
+export interface TreeViewSlotProps {
+  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
+  expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
+}
+
 export interface TreeViewStyleContextValue {
   classes: Partial<TreeViewClasses>;
+  slots: TreeViewSlots;
+  slotProps: TreeViewSlotProps;
 }
 
 /**
  * @ignore - internal component.
  */
-export const TreeViewStyleContext = React.createContext<TreeViewStyleContextValue>({ classes: {} });
+export const TreeViewStyleContext = React.createContext<TreeViewStyleContextValue>({
+  classes: {},
+  slots: {},
+  slotProps: {},
+});
 
 if (process.env.NODE_ENV !== 'production') {
   TreeViewStyleContext.displayName = 'TreeViewStyleContext';
