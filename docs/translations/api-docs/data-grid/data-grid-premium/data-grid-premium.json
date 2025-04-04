@@ -1327,10 +1327,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt action element"
     },
-    "promptChangeItem": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the prompt change item element"
-    },
     "promptChangeList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt change list element"
@@ -1627,6 +1623,7 @@
     "pivotSearchClearIcon": "Icon used for the clear button in the sidebar search field",
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
     "promptAggregationIcon": "Icon used to display aggregation changes",
+    "promptChangesToggleIcon": "Icon used on the toggle button of the changes list",
     "promptFilterIcon": "Icon used to display filter changes",
     "promptGroupIcon": "Icon used to display group changes",
     "promptIcon": "Icon used for the prompt",

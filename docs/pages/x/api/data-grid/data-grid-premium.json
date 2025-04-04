@@ -1436,6 +1436,12 @@
       "description": "Icon used to display aggregation changes",
       "default": "GridFunctionsIcon",
       "class": null
+    },
+    {
+      "name": "promptChangesToggleIcon",
+      "description": "Icon used on the toggle button of the changes list",
+      "default": "GridExpandMoreIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -2295,12 +2301,6 @@
       "key": "promptAction",
       "className": "MuiDataGridPremium-promptAction",
       "description": "Styles applied to the prompt action element.",
-      "isGlobal": false
-    },
-    {
-      "key": "promptChangeItem",
-      "className": "MuiDataGridPremium-promptChangeItem",
-      "description": "Styles applied to the prompt change item element.",
       "isGlobal": false
     },
     {

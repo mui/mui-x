@@ -1836,12 +1836,6 @@
       "isGlobal": false
     },
     {
-      "key": "promptChangeItem",
-      "className": "MuiDataGrid-promptChangeItem",
-      "description": "Styles applied to the prompt change item element.",
-      "isGlobal": false
-    },
-    {
       "key": "promptChangeList",
       "className": "MuiDataGrid-promptChangeList",
       "description": "Styles applied to the prompt change list element.",

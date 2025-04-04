@@ -1971,12 +1971,6 @@
       "isGlobal": false
     },
     {
-      "key": "promptChangeItem",
-      "className": "MuiDataGridPro-promptChangeItem",
-      "description": "Styles applied to the prompt change item element.",
-      "isGlobal": false
-    },
-    {
       "key": "promptChangeList",
       "className": "MuiDataGridPro-promptChangeList",
       "description": "Styles applied to the prompt change list element.",

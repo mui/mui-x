@@ -11,6 +11,7 @@ import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
   GridFilterAltIcon,
+  GridExpandMoreIcon,
 } from '@mui/x-data-grid-pro';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
@@ -63,6 +64,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   promptPivotIcon: GridPivotIcon,
   promptAggregationIcon: GridFunctionsIcon,
   promptGroupIcon: GridGroupWorkIcon,
+  promptChangesToggleIcon: GridExpandMoreIcon,
 };
 
 const materialSlots = {

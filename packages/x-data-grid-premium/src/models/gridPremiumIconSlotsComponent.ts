@@ -154,4 +154,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridFunctionsIcon
    */
   promptAggregationIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used on the toggle button of the changes list
+   * @default GridExpandMoreIcon
+   */
+  promptChangesToggleIcon: React.JSXElementConstructor<IconProps>;
 }
