@@ -30,7 +30,7 @@ function GridPromptField(props: PromptFieldProps) {
             {...controlProps}
             fullWidth
             inputRef={ref}
-            aria-label="Prompt"
+            aria-label={apiRef.current.getLocaleText('promptFieldLabel')}
             placeholder={
               state.recording
                 ? apiRef.current.getLocaleText('promptFieldPlaceholderListening')
@@ -65,7 +65,9 @@ function GridPromptField(props: PromptFieldProps) {
                   </rootProps.slots.baseTooltip>
                 ),
                 endAdornment: (
-                  <rootProps.slots.baseTooltip title="Send">
+                  <rootProps.slots.baseTooltip
+                    title={apiRef.current.getLocaleText('promptFieldSend')}
+                  >
                     <span>
                       <PromptFieldSend size="small" edge="end" color="primary">
                         <rootProps.slots.promptSendIcon fontSize="small" />
