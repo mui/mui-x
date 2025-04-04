@@ -354,7 +354,7 @@ This presented a few problems:
 
 - Some properties that would have been useful for customizing a component were not present if the component was not using them by default. For example, if the built-in styles for the `actionBar` didn't need to know if the picker is disabled, then the `ownerState` of the `actionBar` didn't contain this information.
 
-- The naming of the props made it difficult to understand which element they apply to. If the `ownerState` of the `monthButton` slot contains `disabled`, it is hard to establish whether the disabled state applies to the `monthButton` or the picker itself.
+- The naming of the props made it difficult to understand which element they applied to. If the `ownerState` of the `monthButton` slot contained `disabled`, it was hard to establish whether the disabled state applied to the `monthButton` or the Picker itself.
 
 To solve these issues, the `ownerState` has been reworked.
 Every component's `ownerState` contains a shared set of properties describing the state of the picker it is in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
