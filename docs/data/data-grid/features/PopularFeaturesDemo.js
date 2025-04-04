@@ -40,6 +40,7 @@ import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
+import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
 
 export const featuresSet = [
   {
@@ -215,6 +216,15 @@ export const featuresSet = [
     detailPage: '/filtering/#header-filters',
     demo: <HeaderFilteringDataGridPro />,
     linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
+  },
+  {
+    id: 20,
+    name: 'AI Assistant',
+    description: 'Translate natural language into a set of grid state updates.',
+    plan: 'Premium',
+    detailPage: '/ai-assistant/',
+    demo: <AssistantWithExamples />,
+    linkToCode: '/ai-assistant/#system-AssistantWithExamples.tsx',
   },
 ];
 
