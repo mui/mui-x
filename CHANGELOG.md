@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.28.3
+
+_Apr 3, 2025_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@cherniavskii, @LukasTy, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.28.3`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@7.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.28.3`, plus:
+
+- [DataGridPro] Data source: Allow expanding groups with unknown children count (#17149) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.28.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.28.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.28.3`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.28.3`.
+
+### Docs
+
+- [docs] Update Localization Provider JSDoc link (#17208) @LukasTy
+- [docs] Use v6 core packages in MUI X v7 docs (#17171) @cherniavskii
+
 ## 7.28.2
 
 _Mar 28, 2025_

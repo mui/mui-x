@@ -73,7 +73,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     );
   }
 
-  return descendantCount > 0 ? (
+  return descendantCount === -1 || descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
@@ -105,7 +105,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   let cellContent: React.ReactNode;
