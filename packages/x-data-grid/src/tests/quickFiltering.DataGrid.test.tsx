@@ -197,10 +197,11 @@ describe('<DataGrid /> - Quick filter', () => {
       const { user } = render(<TestCase />);
 
       await user.type(screen.getByRole<HTMLInputElement>('searchbox'), 'adidas');
+      const button = screen.getByRole('button', { name: 'Search' });
 
-      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
-        'true',
-      );
+      await waitFor(() => {
+        expect(button.getAttribute('aria-expanded')).to.equal('true');
+      });
     });
 
     it('should collapse when the input is blurred with no value', async () => {
@@ -379,7 +380,9 @@ describe('<DataGrid /> - Quick filter', () => {
       });
 
       await user.type(screen.getByRole('searchbox'), '[Backspace]2');
-      expect(getColumnValues(0)).to.deep.equal([]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([]);
+      });
     });
 
     it('should apply filters on quickFilterExcludeHiddenColumns value change', () => {
