@@ -15,9 +15,8 @@ export interface UseAnimateParams<Props extends {}, Elem extends Element, T exte
    */
   createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
   /**
-   * Transforms the interpolated props that will be passed to `applyProps`.
-   * It is useful for transforming props in case the interpolated props are not the same as the props
-   * applied to the element.
+   * Transforms the interpolated props to be passed to `applyProps`, which usually means transforming them to element
+   * attributes, e.g., transforming an array of points into a `d` attribute for a path.
    *
    * @param {object} props The interpolated props.
    *
