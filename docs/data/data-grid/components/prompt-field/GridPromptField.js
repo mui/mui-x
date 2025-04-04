@@ -116,7 +116,7 @@ export default function GridPromptField() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        enableAiAssistant
+        aiAssistant
         onPrompt={mockPromptResolver}
         showToolbar
       />
