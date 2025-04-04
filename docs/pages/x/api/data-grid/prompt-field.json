@@ -1,6 +1,15 @@
 {
   "props": {
+    "onSubmit": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(prompt: string) => void", "describedArgs": ["prompt"] }
+    },
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "onRecordError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: string) => void", "describedArgs": ["error"] }
+    },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "PromptField",

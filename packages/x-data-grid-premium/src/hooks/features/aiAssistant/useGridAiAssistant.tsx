@@ -327,7 +327,7 @@ export const useGridAiAssistant = (
               : item,
           ),
         );
-        return undefined;
+        return error;
       } finally {
         apiRef.current.setLoading(false);
       }

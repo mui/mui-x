@@ -119,7 +119,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
       return { start, abort };
     }).current;
 
-    const handleClick = () => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (!state.recording) {
         recognition.start({
           onDone: onSubmit,
@@ -130,6 +130,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
       }
 
       recognition.abort();
+      onClick?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -138,6 +139,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
       {
         ...rootProps.slotProps?.baseIconButton,
         className: resolvedClassName,
+        disabled: state.disabled,
         ...other,
         ref,
         onClick: handleClick,

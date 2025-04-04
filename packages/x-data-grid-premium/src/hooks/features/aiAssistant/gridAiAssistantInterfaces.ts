@@ -65,11 +65,13 @@ export interface GridAiAssistantApi {
    */
   aiAssistant: {
     /**
-     * Process the prompt and update the grid state.
+     * Calls the `onPrompt()` callback to evaluate the prompt and get the necessary updates to the grid state.
+     * Adds the prompt to the history.
+     * Updates the grid state based on the prompt response.
      * @param {string} value The prompt to process
-     * @returns {Promise<PromptResponse>} The grid state updates
+     * @returns {Promise<PromptResponse | Error>} The grid state updates or a processing error
      */
-    processPrompt: (value: string) => Promise<PromptResponse | undefined>;
+    processPrompt: (value: string) => Promise<PromptResponse | Error>;
     /**
      * Sets whether the AI Assistant panel is open.
      * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the AI Assistant panel open state.
