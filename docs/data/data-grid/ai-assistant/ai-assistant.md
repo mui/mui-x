@@ -7,7 +7,7 @@ title: Ask Your Table - AI Assistant
 <p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
-To use this feature you must have a prompt processing backend. 
+To use this feature you must have a prompt processing backend.
 MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
 Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
 :::
@@ -17,7 +17,6 @@ Type a prompt like "sort by name" or "show amounts larger than 1000" in the prom
 In supported browsers, users can also prompt the assistant using their voice.
 
 To enable client-side of this feature, pass `enableAiAssistant` prop.
-
 
 To increase the accuracy of the language processing, provide example values for the available columns.
 This can be done in the following ways.
@@ -110,27 +109,27 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
    This adds the necessary headers and stringifies the body in the correct format for you.
 
-  It also makes it possible to provide additional context for better processing results, as shown below:
+It also makes it possible to provide additional context for better processing results, as shown below:
 
-   ```ts
-   const PROMPT_RESOLVER_PROXY_BASE_URL =
-     process.env.NODE_ENV === 'development'
-       ? 'http://localhost:3000'
-       : 'https://api.my-proxy.com';
+```ts
+const PROMPT_RESOLVER_PROXY_BASE_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://api.my-proxy.com';
 
-   function processPrompt(query: string, context: string) {
-     const additionalContext = `The rows represent: List of employees with their company, position and start date`;
+function processPrompt(query: string, context: string) {
+  const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       additionalContext,
-     );
-   }
-   ```
+  return unstable_gridDefaultPromptResolver(
+    `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+    query,
+    context,
+    additionalContext,
+  );
+}
+```
 
-   :::
+:::
 
 ### With custom service
 
