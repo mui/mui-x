@@ -883,7 +883,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         await user.type(screen.getByRole('textbox', { name: 'Value' }), 'Cat A');
         await act(() => sleep(0));
 
-        await waitFor(() =>
+        await waitFor(() => {
           expect(getColumnValues(0)).to.deep.equal([
             'Cat A (3)',
             'Cat 1 (1)',
@@ -891,8 +891,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
             'Cat 2 (2)',
             '',
             '',
-          ]),
-        );
+          ]);
+        });
       });
 
       it('should use the column grouping criteria for filtering if mainGroupingCriteria is one of the grouping criteria and leaf field is defined', async () => {
