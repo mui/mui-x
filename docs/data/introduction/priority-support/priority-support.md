@@ -25,6 +25,8 @@ The SLAs included in priority support are:
 - **Issue Escalation**
   Critical issues are escalated to senior engineers for focused attention and faster resolutions.
 
+You can also check more on this in our [Service Level Agreement for Technical Support](https://mui.com/legal/technical-support-sla/).
+
 ## Who benefits from priority support?
 
 Priority support is ideal for teams working on mission-critical applications or handling complex projects that demand rapid resolutions and proactive technical assistance. Priority support covers the following MUI products:
@@ -40,8 +42,6 @@ Priority support is ideal for teams working on mission-critical applications or 
   - MUI System
   - Pigment CSS
   - Joy UI
-
-These are also mentioned in the legal terms: https://mui.com/legal/technical-support-sla/
 
 ## How to buy priority support?
 
