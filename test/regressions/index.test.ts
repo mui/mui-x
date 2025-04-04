@@ -6,12 +6,6 @@ import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
 import { version } from '@mui/material';
 
-function sleep(timeoutMS: number | undefined) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeoutMS);
-  });
-}
-
 const isMaterialUIv6 = String(version).startsWith('6.');
 const isMaterialUIv7 = String(version).startsWith('7.');
 
@@ -29,39 +23,7 @@ const timeSensitiveSuites = [
   'RowSpanningCalendar',
 ];
 
-const isConsoleWarningIgnored = (msg?: string) => {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
-  const isMuiLoadingButtonWarning =
-    (isMaterialUIv6 || isMaterialUIv7) &&
-    msg?.includes(
-      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
-    );
-
-  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
-
-  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
-
-  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
-  const isTailwindCdnWarning = msg?.includes(
-    'The browser build of Tailwind CSS should not be used in production.',
-  );
-
-  if (
-    isMuiV6Error ||
-    isReactRouterFlagsError ||
-    isNoDevRoute ||
-    isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning
-  ) {
-    return true;
-  }
-  return false;
-};
+await main();
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
@@ -91,6 +53,28 @@ async function main() {
       route.continue();
     }
   });
+
+  // Pick the new/fake "now" for you test pages.
+  const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
+
+  // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
+  // Update the Date accordingly in your test pages
+  await page.addInitScript(`{
+    // Extend Date constructor to default to fakeNow
+    Date = class extends Date {
+      constructor(...args) {
+        if (args.length === 0) {
+          super(${fakeNow});
+        } else {
+          super(...args);
+        }
+      }
+    }
+    // Override Date.now() to start from fakeNow
+    const __DateNowOffset = ${fakeNow} - Date.now();
+    const __DateNow = Date.now;
+    Date.now = () => __DateNow() + __DateNowOffset;
+  }`);
 
   let errorConsole: string | undefined;
 
@@ -310,4 +294,43 @@ async function main() {
   });
 }
 
-await main();
+function isConsoleWarningIgnored(msg?: string) {
+  const isMuiV6Error =
+    isMaterialUIv6 &&
+    msg?.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    );
+
+  const isMuiLoadingButtonWarning =
+    (isMaterialUIv6 || isMaterialUIv7) &&
+    msg?.includes(
+      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
+    );
+
+  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
+
+  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
+
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
+    return true;
+  }
+  return false;
+};
+
+
+function sleep(timeoutMS: number | undefined) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeoutMS);
+  });
+}
