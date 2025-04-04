@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
@@ -28,11 +29,10 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
             {...interactionProps[seriesIndex]}
             fill={fillArea ? color : 'transparent'}
             stroke={color}
-            className={
-              (isItemHighlighted && classes.highlighted) ||
-              (isItemFaded && classes.faded) ||
-              undefined
-            }
+            className={clsx(
+              classes.area,
+              (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
+            )}
             strokeOpacity={isItemFaded ? 0.5 : 1}
             fillOpacity={(isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2}
             strokeWidth={!fillArea && isItemHighlighted ? 2 : 1}
