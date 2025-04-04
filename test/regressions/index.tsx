@@ -3,10 +3,10 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-import { setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
 
-setupTestLicenseKey();
+setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
 Globals.assign({
   skipAnimation: true,

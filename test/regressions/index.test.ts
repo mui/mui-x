@@ -60,8 +60,9 @@ async function main() {
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
   await page.addInitScript(`{
+    const OriginalDate = Date;
     // Extend Date constructor to default to fakeNow
-    Date = class extends Date {
+    Date = class Date extends OriginalDate {
       constructor(...args) {
         if (args.length === 0) {
           super(${fakeNow});
@@ -132,6 +133,11 @@ async function main() {
     });
 
     routes.forEach((route) => {
+      // let t = it as any;
+      // if (route.includes('BasicFunnel')) {
+      //   t = it.only
+      // }
+
       it(`creates screenshots of ${route}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
