@@ -45,6 +45,7 @@ import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
+import GridPivotingInitialState from '../pivoting/GridPivotingInitialState';
 
 type Row = {
   id: number;
@@ -231,6 +232,16 @@ export const featuresSet: Row[] = [
     detailPage: '/filtering/#header-filters',
     demo: <HeaderFilteringDataGridPro />,
     linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
+  },
+  {
+    id: 20,
+    name: 'Pivoting',
+    description:
+      'Rearrange rows and columns to view data from multiple perspectives.',
+    plan: 'Premium',
+    detailPage: '/pivoting/',
+    demo: <GridPivotingInitialState />,
+    linkToCode: '/pivoting/#system-GridPivotingInitialState.tsx',
   },
 ];
 
