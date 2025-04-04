@@ -1,9 +1,9 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer } from '../_shared/DemoContainer';
 
 export default function DateFieldValue() {
   const [value, setValue] = React.useState(dayjs('2022-04-17'));
