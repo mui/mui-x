@@ -64,7 +64,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const handleEditRow = React.useCallback(
     (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
       const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
-      apiRef.current.updateServerRows([updatedRow], groupKeys);
+      apiRef.current.updateNestedRows([updatedRow], groupKeys);
       if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
         // Reset the outdated cache, only if the row is _actually_ updated
         apiRef.current.dataSource.cache.clear();
@@ -126,7 +126,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
-        apiRef.current.updateServerRows(rows, rowNode.path);
+        apiRef.current.updateNestedRows(rows, rowNode.path);
         apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         apiRef.current.setRowChildrenExpansion(id, true);
         apiRef.current.dataSource.setChildrenLoading(id, false);
@@ -170,9 +170,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         });
         if (rowsToDelete.length > 0) {
           // TODO: Make this happen in a single pass by modifying the pre-processing of the rows
-          apiRef.current.updateServerRows(rowsToDelete, rowNode.path);
+          apiRef.current.updateNestedRows(rowsToDelete, rowNode.path);
         }
-        apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
+        apiRef.current.updateNestedRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
         const childrenFetchError = error as Error;

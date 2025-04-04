@@ -213,7 +213,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           handleEditRowOption(params, finalRowUpdate);
           return finalRowUpdate;
         }
-        apiRef.current.updateServerRows([finalRowUpdate], []);
+        apiRef.current.updateNestedRows([finalRowUpdate], []);
         if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
