@@ -51,6 +51,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const fadeIn = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 1,
+  },
+});
+
 const fadeInUp = keyframes({
   from: {
     opacity: 0,
@@ -59,17 +68,6 @@ const fadeInUp = keyframes({
   to: {
     opacity: 1,
     transform: 'translateY(0)',
-  },
-});
-
-const fadeInGrow = keyframes({
-  from: {
-    opacity: 0,
-    transform: 'scale(0.8)',
-  },
-  to: {
-    opacity: 1,
-    transform: 'scale(1)',
   },
 });
 
@@ -82,7 +80,6 @@ const Prompt = styled('li', {
   display: flex;
   padding: ${vars.spacing(1, 1.25)};
   align-items: flex-start;
-  animation: ${fadeInUp} ${vars.transitions.duration.long} ${vars.transitions.easing.easeInOut};
   overflow: hidden;
   .${gridClasses.promptAction} {
     opacity: 0;
@@ -90,6 +87,9 @@ const Prompt = styled('li', {
   }
   &:hover .${gridClasses.promptAction} {
     opacity: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${fadeInUp} ${vars.transitions.duration.long} ${vars.transitions.easing.easeInOut};
   }
 `;
 
@@ -132,7 +132,9 @@ const PromptIcon = styled('svg', {
 })<{ ownerState: OwnerState }>`
   color: ${({ ownerState }) =>
     ownerState.variant === 'error' ? vars.colors.foreground.error : vars.colors.foreground.muted};
-  animation: ${fadeInGrow} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${fadeIn} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
+  }
 `;
 
 const PromptFeedback = styled('div', {
@@ -169,8 +171,10 @@ const PromptChangeItem = styled(NotRendered<GridSlotProps['baseChip']>, {
   name: 'MuiDataGrid',
   slot: 'PromptChangeItem',
 })<{ ownerState: OwnerState }>`
-  animation: ${fadeInGrow} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
-  animation-fill-mode: backwards;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${fadeIn} ${vars.transitions.duration.short} ${vars.transitions.easing.easeInOut};
+    animation-fill-mode: backwards;
+  }
 `;
 
 function GridPrompt(props: GridPromptProps) {
