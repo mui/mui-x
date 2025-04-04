@@ -12,6 +12,7 @@ import {
   useGridEventPriority,
   gridRowNodeSelector,
   GridRowId,
+  gridClasses,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
@@ -161,6 +162,11 @@ export const useGridRowReorder = (
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
+
+      apiRef.current.rootElementRef?.current?.classList.remove(
+        gridClasses['root--disableUserSelection'],
+      );
+
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
