@@ -62,6 +62,9 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
       }
 
+      // Go to the start date or the end date
+      fireEvent.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],

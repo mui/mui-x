@@ -3,7 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
-import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
+import { PickersActionBar } from '../PickersActionBar';
 import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
@@ -41,7 +41,7 @@ interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubCo
 const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState, defaultActionBarActions } = usePickerPrivateContext();
   const { view } = usePickerContext();
   const isRtl = useRtl();
 
@@ -63,7 +63,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      actions: ['cancel', 'accept'] as PickersActionBarAction[],
+      actions: defaultActionBarActions,
     },
     className: classes.actionBar,
     ownerState,
