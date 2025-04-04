@@ -12,7 +12,7 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { useAxesTooltip } from './useAxesTooltip';
-import { useXAxis, useYAxis } from '../hooks';
+
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
 export interface ChartsAxisTooltipContentProps {
@@ -24,24 +24,20 @@ export interface ChartsAxisTooltipContentProps {
 }
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
-  const { classes: propClasses, sx } = props;
-  const tooltipData = useAxesTooltip();
-  const xAxis = useXAxis();
-  const yAxis = useYAxis();
+  const classes = useUtilityClasses(props.classes);
 
-  const classes = useUtilityClasses(propClasses);
+  const tooltipData = useAxesTooltip();
 
   if (tooltipData === null) {
     return null;
   }
 
   return (
-    <ChartsTooltipPaper sx={sx} className={classes.paper}>
-      {tooltipData.map(({ axisId, axisDirection, axisValue, axisFormattedValue, seriesItems }) => {
-        const axis = axisDirection === 'x' ? xAxis : yAxis;
+    <ChartsTooltipPaper sx={props.sx} className={classes.paper}>
+      {tooltipData.map(({ axisId, mainAxis, axisValue, axisFormattedValue, seriesItems }) => {
         return (
           <ChartsTooltipTable className={classes.table} key={axisId}>
-            {axisValue != null && !axis.hideTooltip && (
+            {axisValue != null && !mainAxis.hideTooltip && (
               <Typography component="caption">{axisFormattedValue}</Typography>
             )}
 

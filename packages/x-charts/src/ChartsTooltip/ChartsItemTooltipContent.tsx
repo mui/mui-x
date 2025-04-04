@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useItemTooltip } from './useItemTooltip';
@@ -30,6 +31,33 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   if (!tooltipData) {
     return null;
   }
+
+  if (Array.isArray(tooltipData)) {
+    const { label: seriesLabel } = tooltipData[0];
+    return (
+      <ChartsTooltipPaper sx={sx} className={classes.paper}>
+        <ChartsTooltipTable className={classes.table}>
+          <Typography component="caption">{seriesLabel}</Typography>
+          <tbody>
+            {tooltipData.map(({ color, formattedValue, markType, axisFormattedValue }) => (
+              <ChartsTooltipRow className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+                  <div className={classes.markContainer}>
+                    <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+                  </div>
+                  {axisFormattedValue}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+                  {formattedValue}
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            ))}
+          </tbody>
+        </ChartsTooltipTable>
+      </ChartsTooltipPaper>
+    );
+  }
+
   const { color, label, formattedValue, markType } = tooltipData;
 
   return (
