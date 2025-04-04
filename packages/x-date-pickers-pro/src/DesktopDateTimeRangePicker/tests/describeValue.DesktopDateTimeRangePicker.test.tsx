@@ -71,9 +71,10 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         ];
       }
       if (isOpened) {
+        const nextButton = screen.queryByRole('button', { name: 'Next' });
         // if we want to set the end date, we firstly need to switch to end date "range position"
-        if (setEndDate && screen.queryByRole('button', { name: 'Next' })) {
-          fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+        if (setEndDate && nextButton) {
+          fireEvent.click(nextButton);
         }
 
         fireEvent.click(
