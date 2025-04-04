@@ -57,7 +57,7 @@ describe('<DataGridPremium /> - Prompt', () => {
         <DataGridPremium
           {...baselineProps}
           apiRef={apiRef}
-          enableAiAssistant
+          aiAssistant
           showToolbar
           onPrompt={promptSpy}
           {...props}
@@ -72,7 +72,7 @@ describe('<DataGridPremium /> - Prompt', () => {
 
   describeSkipIf(isJSDOM)('data sampling', () => {
     it('should not show AI Assistant button in the Toolbarif the feature is disabled', () => {
-      render(<Test enableAiAssistant={false} />);
+      render(<Test aiAssistant={false} />);
       expect(screen.queryByTestId('AssistantIcon')).to.equal(null);
     });
 
@@ -125,7 +125,7 @@ describe('<DataGridPremium /> - Prompt', () => {
         pivoting: {},
       });
 
-      render(<Test enableAiAssistant={false} onSortModelChange={sortChangeSpy} />);
+      render(<Test aiAssistant={false} onSortModelChange={sortChangeSpy} />);
 
       act(async () => {
         await apiRef.current?.aiAssistant.processPrompt('Do something with the data');

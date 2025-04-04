@@ -16,7 +16,7 @@ The AI assistant feature lets users interact with the Data Grid component using 
 Type a prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field and the Data Grid will update accordingly.
 In supported browsers, users can also prompt the assistant using their voice.
 
-To enable client-side of this feature, pass `enableAiAssistant` prop.
+To enable client-side of this feature, pass `aiAssistant` prop.
 
 To increase the accuracy of the language processing, provide example values for the available columns.
 This can be done in the following ways.
@@ -76,7 +76,7 @@ You can use MUI's processing service or build your own.
 
 The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Enable the AI Assistant feature by adding the `enableAiAssistant` prop.
+1. Enable the AI Assistant feature by adding the `aiAssistant` prop.
    A new toolbar button will appear in the default [`<Toolbar />`](/x/react-data-grid/components/toolbar/).
    This button opens `<AssistantPanel />` that can take user's prompts.
 2. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.

@@ -37,7 +37,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     | 'aiAssistantPanelOpen'
     | 'aiAssistantHistory'
     | 'aiAssistantSuggestions'
-    | 'enableAiAssistant'
+    | 'aiAssistant'
   >
 > = (state, props) => {
   if (!isAiAssistantAvailableFn(props)) {
@@ -66,7 +66,7 @@ export const useGridAiAssistant = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'enableAiAssistant'
+    | 'aiAssistant'
     | 'aiAssistantPanelOpen'
     | 'aiAssistantHistory'
     | 'aiAssistantSuggestions'

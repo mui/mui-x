@@ -13,6 +13,7 @@
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
     },
+    "aiAssistant": { "type": { "name": "bool" }, "default": "false" },
     "aiAssistantHistory": {
       "type": {
         "name": "arrayOf",
@@ -98,7 +99,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "enableAiAssistant": { "type": { "name": "bool" }, "default": "false" },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }

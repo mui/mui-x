@@ -95,7 +95,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sidePanel={sidePanel}
       >
         {watermark}
-        {props.enableAiAssistant && <GridAiAssistantPanel />}
+        {props.aiAssistant && <GridAiAssistantPanel />}
       </GridRoot>
     </GridContextProvider>
   );
@@ -122,6 +122,11 @@ DataGridPremiumRaw.propTypes = {
    * @default "filtered"
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: PropTypes.bool,
   /**
    * The history of the AI Assistant.
    */
@@ -434,11 +439,6 @@ DataGridPremiumRaw.propTypes = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
-  /**
-   * If `true`, the AI Assistant is enabled.
-   * @default false
-   */
-  enableAiAssistant: PropTypes.bool,
   /**
    * Use if the actual rowCount is not known upfront, but an estimation is available.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.

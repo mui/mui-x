@@ -34,7 +34,7 @@ export default function GridAiAssistantPanelTrigger() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        enableAiAssistant
+        aiAssistant
         onPrompt={mockPromptResolver}
         showToolbar
       />
