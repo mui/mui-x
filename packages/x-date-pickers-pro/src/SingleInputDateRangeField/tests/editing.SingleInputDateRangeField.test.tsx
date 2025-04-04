@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { fireEvent } from '@mui/internal-test-utils';
+import { fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   expectFieldValueV6,
@@ -14,7 +14,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(
     'value props (value, defaultValue, onChange)',
     SingleInputDateRangeField,
-    ({ adapter, renderWithProps, clock }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not render any value when no value and no default value are defined', () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
@@ -263,7 +263,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
-      it('should not call the onChange callback before filling the last section of the active date when starting from a null value', () => {
+      it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
@@ -284,8 +284,9 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
-        clock.runToLast();
-        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+        });
 
         view.unmount();
 
@@ -310,8 +311,9 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        clock.runToLast();
-        expectFieldValueV6(input, 'DD MMMM – DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV6(input, 'DD MMMM – DD MMMM');
+        });
       });
     },
   );

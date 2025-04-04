@@ -1,16 +1,22 @@
 import sinon from 'sinon';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { onTestFinished } from 'vitest';
 import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 
-export const stubMatchMedia = (matches = true) =>
-  sinon.stub().returns({
+export const stubMatchMedia = (matches = true) => {
+  const original = window.matchMedia;
+  window.matchMedia = sinon.stub().returns({
     matches,
     addListener: () => {},
     addEventListener: () => {},
     removeListener: () => {},
     removeEventListener: () => {},
   });
+  onTestFinished(() => {
+    window.matchMedia = original;
+  });
+};
 
 const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
   switch (componentFamily) {

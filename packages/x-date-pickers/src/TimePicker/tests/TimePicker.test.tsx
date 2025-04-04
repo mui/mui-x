@@ -8,14 +8,11 @@ describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();
 
   it('should render in mobile mode when `useMediaQuery` returns `false`', async () => {
-    const originalMatchMedia = window.matchMedia;
-    window.matchMedia = stubMatchMedia(false);
+    stubMatchMedia(false);
 
     const { user } = render(<TimePicker />);
 
     await user.click(screen.getByLabelText(/Choose time/));
     expect(screen.queryByRole('dialog')).to.not.equal(null);
-
-    window.matchMedia = originalMatchMedia;
   });
 });
