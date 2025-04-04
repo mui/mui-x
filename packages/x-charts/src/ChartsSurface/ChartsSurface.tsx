@@ -34,7 +34,8 @@ const ChartsSurfaceStyles = styled('svg', {
   overflow: 'hidden',
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
-  touchAction: 'none',
+  touchAction: 'pan-y',
+  userSelect: 'none',
 }));
 
 /**
