@@ -326,8 +326,7 @@ function isConsoleWarningIgnored(msg?: string) {
     return true;
   }
   return false;
-};
-
+}
 
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
