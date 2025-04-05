@@ -1,12 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import TestViewer from 'test/regressions/TestViewer';
-import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-import { setupTestLicenseKey } from '../utils/testLicense';
+import { setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
+import TestViewer from './TestViewer';
 
-setupTestLicenseKey();
+/* eslint-disable guard-for-in */
+
+setupFakeClock();
+
+setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
 Globals.assign({
   skipAnimation: true,
@@ -15,16 +19,28 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
+      isReady: () => boolean;
       navigate: ReturnType<typeof useNavigate>;
     };
   }
 }
 
 window.muiFixture = {
+  isReady: () => false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
 };
+
+interface Test {
+  path: string;
+  suite: string;
+  name: string;
+  case: React.ComponentType;
+}
+
+const tests: Test[] = [];
+const suiteTestsMap: Record<string, Test[]> = {};
 
 const blacklist = [
   /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
@@ -37,142 +53,127 @@ const blacklist = [
   // 'docs-system-typography',
 ];
 
-const unusedBlacklistPatterns = new Set(blacklist);
+main();
 
-// Use a "real timestamp" so that we see a useful date instead of "00:00"
-// eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
+async function main() {
+  await prepareTests();
 
-function excludeTest(suite: string, name: string) {
-  return blacklist.some((pattern) => {
-    if (typeof pattern === 'string') {
-      if (pattern === suite) {
+  ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
+}
+
+async function prepareTests() {
+  const unusedBlacklistPatterns = new Set(blacklist);
+
+  function excludeTest(suite: string, name: string) {
+    return blacklist.some((pattern) => {
+      if (typeof pattern === 'string') {
+        if (pattern === suite) {
+          unusedBlacklistPatterns.delete(pattern);
+
+          return true;
+        }
+        if (pattern === `${suite}/${name}.png`) {
+          unusedBlacklistPatterns.delete(pattern);
+
+          return true;
+        }
+
+        return false;
+      }
+
+      // assume regex
+      if (pattern.test(`${suite}/${name}.png`)) {
         unusedBlacklistPatterns.delete(pattern);
-
         return true;
       }
-      if (pattern === `${suite}/${name}.png`) {
-        unusedBlacklistPatterns.delete(pattern);
-
-        return true;
-      }
-
       return false;
+    });
+  }
+
+  // Also use some of the demos to avoid code duplication.
+  // @ts-ignore
+  const requireDocs = await loadAll(import.meta.glob('../../docs/data/**/*.js'));
+  for (const path in requireDocs) {
+    const [name, ...suiteArray] = path
+      .replace('../../docs/data/', '')
+      .replace('.js', '')
+      .split('/')
+      .reverse();
+    const suite = `docs-${suiteArray.reverse().join('-')}`;
+
+    if (excludeTest(suite, name)) {
+      continue;
     }
 
-    // assume regex
-    if (pattern.test(`${suite}/${name}.png`)) {
-      unusedBlacklistPatterns.delete(pattern);
-      return true;
+    const exports = requireDocs[path];
+    if (exports.default === undefined) {
+      continue;
     }
-    return false;
+
+    tests.push({
+      path,
+      suite,
+      name,
+      case: exports.default,
+    });
+  }
+
+  // @ts-ignore
+  const requireRegressions = await loadAll(import.meta.glob('./data-grid/**/*.js'));
+  for (const path in requireRegressions) {
+    const name = path.replace('./data-grid/', '').replace('.js', '');
+    const suite = `test-regressions-data-grid`;
+    const exports = requireRegressions[path];
+
+    tests.push({
+      path,
+      suite,
+      name,
+      case: exports.default,
+    });
+  }
+
+  if (unusedBlacklistPatterns.size > 0) {
+    console.warn(
+      [
+        'The following patterns are unused:',
+        ...Array.from(unusedBlacklistPatterns).map((pattern) => `- ${pattern}`),
+      ].join('\n'),
+    );
+  }
+
+  tests.forEach((test) => {
+    if (!suiteTestsMap[test.suite]) {
+      suiteTestsMap[test.suite] = [];
+    }
+    suiteTestsMap[test.suite].push(test);
   });
 }
 
-interface Test {
-  path: string;
-  suite: string;
-  name: string;
-  case: React.ComponentType;
-}
+function App() {
+  const routes = createBrowserRouter([
+    {
+      path: '/',
+      element: <Root />,
+      children: Object.keys(suiteTestsMap).map((suite) => {
+        const isDataGridTest =
+          suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+        return {
+          path: suite,
+          children: suiteTestsMap[suite].map((test) => ({
+            path: test.name,
+            element: (
+              <TestViewer isDataGridTest={isDataGridTest} path={computePath(test)}>
+                <test.case />
+              </TestViewer>
+            ),
+          })),
+        };
+      }),
+    },
+  ]);
 
-const tests: Test[] = [];
-
-// Also use some of the demos to avoid code duplication.
-// @ts-ignore
-const requireDocs = require.context('docsx/data', true, /\.js$/);
-requireDocs.keys().forEach((path: string) => {
-  const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
-  const suite = `docs-${suiteArray.reverse().join('-')}`;
-
-  if (excludeTest(suite, name)) {
-    return;
-  }
-
-  // TODO: Why does webpack include a key for the absolute and relative path?
-  // We just want the relative path
-  if (!path.startsWith('./')) {
-    return;
-  }
-
-  if (requireDocs(path).default === undefined) {
-    return;
-  }
-
-  tests.push({
-    path,
-    suite,
-    name,
-    case: requireDocs(path).default,
-  });
-});
-
-// @ts-ignore
-const requireRegressions = require.context('./data-grid', true, /\.js$/);
-requireRegressions.keys().forEach((path: string) => {
-  // "./DataGridRTLVirtualization.js"
-  // "test/regressions/data-grid/DataGridRTLVirtualization.js"
-  if (!path.startsWith('./')) {
-    return;
-  }
-
-  const name = path.replace('./', '').replace('.js', '');
-  const suite = `test-regressions-data-grid`;
-
-  tests.push({
-    path,
-    suite,
-    name,
-    case: requireRegressions(path).default,
-  });
-});
-
-clock.restore();
-
-if (unusedBlacklistPatterns.size > 0) {
-  console.warn(
-    [
-      'The following patterns are unused:',
-      ...Array.from(unusedBlacklistPatterns).map((pattern) => `- ${pattern}`),
-    ].join('\n'),
-  );
-}
-
-const suiteTestsMap = tests.reduce(
-  (acc, test) => {
-    if (!acc[test.suite]) {
-      acc[test.suite] = [];
-    }
-    acc[test.suite].push(test);
-    return acc;
-  },
-  {} as Record<string, Test[]>,
-);
-
-function useHash() {
-  const subscribe = React.useCallback((callback: any) => {
-    window.addEventListener('hashchange', callback);
-    return () => {
-      window.removeEventListener('hashchange', callback);
-    };
-  }, []);
-  const getSnapshot = React.useCallback(() => window.location.hash, []);
-  const getServerSnapshot = React.useCallback(() => '', []);
-  return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-}
-
-function computeIsDev(hash: string) {
-  if (hash === '#dev') {
-    return true;
-  }
-  if (hash === '#no-dev') {
-    return false;
-  }
-  return process.env.NODE_ENV === 'development';
-}
-
-function computePath(test: Test) {
-  return `/${test.suite}/${test.name}`;
+  return <RouterProvider router={routes} />;
 }
 
 function Root() {
@@ -182,6 +183,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
+    window.muiFixture.isReady = () => true;
   }, [navigate]);
 
   return (
@@ -215,30 +217,42 @@ function Root() {
   );
 }
 
-function App() {
-  const routes = createBrowserRouter([
-    {
-      path: '/',
-      element: <Root />,
-      children: Object.keys(suiteTestsMap).map((suite) => {
-        const isDataGridTest =
-          suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
-        return {
-          path: suite,
-          children: suiteTestsMap[suite].map((test) => ({
-            path: test.name,
-            element: (
-              <TestViewer isDataGridTest={isDataGridTest} path={computePath(test)}>
-                <test.case />
-              </TestViewer>
-            ),
-          })),
-        };
-      }),
-    },
-  ]);
-
-  return <RouterProvider router={routes} />;
+function useHash() {
+  const subscribe = React.useCallback((callback: any) => {
+    window.addEventListener('hashchange', callback);
+    return () => {
+      window.removeEventListener('hashchange', callback);
+    };
+  }, []);
+  const getSnapshot = React.useCallback(() => window.location.hash, []);
+  const getServerSnapshot = React.useCallback(() => '', []);
+  return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
+function computeIsDev(hash: string) {
+  if (hash === '#dev') {
+    return true;
+  }
+  if (hash === '#no-dev') {
+    return false;
+  }
+  return process.env.NODE_ENV === 'development';
+}
+
+function computePath(test: Test) {
+  return `/${test.suite}/${test.name}`;
+}
+
+async function loadAll(imports: Record<string, () => Promise<any>>) {
+  const result = {} as any;
+  const promises = [];
+  for (const key in imports) {
+    promises.push(
+      imports[key]().then((exports) => {
+        result[key] = exports;
+      }),
+    );
+  }
+  await Promise.all(promises);
+  return result;
+}

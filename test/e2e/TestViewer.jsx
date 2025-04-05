@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 function TestViewer(props) {
   const { children } = props;
@@ -17,9 +16,5 @@ function TestViewer(props) {
     </div>
   );
 }
-
-TestViewer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default TestViewer;
