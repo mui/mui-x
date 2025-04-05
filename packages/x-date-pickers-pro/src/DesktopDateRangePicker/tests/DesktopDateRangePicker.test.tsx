@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
-import { screen, fireEvent, act, within, waitFor } from '@mui/internal-test-utils';
+import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -260,13 +260,13 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      fireEvent.click(getPickerDay('5'));
+      await user.click(getPickerDay('5'));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -342,7 +342,7 @@ describe('<DesktopDateRangePicker />', () => {
       });
 
       // Change the end date
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -373,11 +373,10 @@ describe('<DesktopDateRangePicker />', () => {
       });
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       // Dismiss the picker
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
-      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      await user.keyboard('[Escape]');
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -447,7 +446,7 @@ describe('<DesktopDateRangePicker />', () => {
       });
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
@@ -462,12 +461,12 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when clicking outside of the picker if not opened (multi input field)', () => {
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened (multi input field)', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -477,7 +476,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Dismiss the picker
-      fireEvent.click(document.body);
+      await user.click(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -552,7 +551,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
 
@@ -622,7 +621,7 @@ describe('<DesktopDateRangePicker />', () => {
       });
 
       // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
