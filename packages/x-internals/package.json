@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
   "license": "MIT",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta"
+    "@mui/utils": "^7.0.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"

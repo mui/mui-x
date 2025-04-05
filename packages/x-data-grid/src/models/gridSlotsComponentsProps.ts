@@ -1,11 +1,4 @@
 import * as React from 'react';
-import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
-import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
-import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
-import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
-import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
-import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
-import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -117,16 +110,6 @@ interface BaseSlotProps {
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
 }
 
-interface MaterialSlotProps {
-  baseBadge: MUIBadgeProps;
-  baseButton: MUIButtonProps;
-  baseIconButton: MUIIconButtonProps;
-  baseLinearProgress: MUILinearProgressProps;
-  baseCircularProgress: MUICircularProgressProps;
-  baseMenuItem: MUIMenuItemProps;
-  baseTooltip: MUITooltipProps;
-}
-
 interface ElementSlotProps {
   bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
@@ -161,20 +144,7 @@ interface ElementSlotProps {
   root: RootProps;
 }
 
-// Merge MUI types into base types to keep slotProps working.
-type Select<A, B, K> = K extends keyof A ? A[K] : K extends keyof B ? B[K] : never;
-type Merge<A, B> = {
-  [K in keyof A | keyof B]: K extends 'ref'
-    ? Select<A, B, 'ref'>
-    : K extends keyof A & keyof B
-      ? A[K] & B[K]
-      : K extends keyof B
-        ? B[K]
-        : K extends keyof A
-          ? A[K]
-          : never;
-};
-export type GridSlotProps = Merge<BaseSlotProps, MaterialSlotProps> & ElementSlotProps;
+export type GridSlotProps = BaseSlotProps & ElementSlotProps;
 
 /**
  * Overridable components props dynamically passed to the component at rendering.

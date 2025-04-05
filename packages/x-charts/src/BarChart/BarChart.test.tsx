@@ -9,6 +9,19 @@ import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 describe('<BarChart />', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describeConformance(
     <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
     () => ({
@@ -38,36 +51,35 @@ describe('<BarChart />', () => {
     expect(screen.getByText('No data to display')).toBeVisible();
   });
 
+  const wrapper = ({ children }: { children?: React.ReactNode }) => (
+    <div style={{ width: 400, height: 400 }}>{children}</div>
+  );
+
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   testSkipIf(isJSDOM)(
     'should hide tooltip if the item the tooltip was showing is removed',
     async () => {
-      const { rerender, user } = render(
+      const { setProps, user } = render(
         <BarChart
-          height={100}
-          width={100}
+          height={400}
+          width={400}
           series={[{ data: [10] }]}
           xAxis={[{ scaleType: 'band', data: ['A'] }]}
           hideLegend
           skipAnimation
         />,
+        { wrapper },
       );
 
       const bar = document.querySelector(`.${barElementClasses.root}`)!;
-      await user.pointer({ target: bar, coords: { x: 520, y: 40 } });
+      await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
 
-      rerender(
-        <BarChart
-          height={100}
-          width={100}
-          series={[{ data: [] }]}
-          xAxis={[{ scaleType: 'band', data: [] }]}
-          hideLegend
-          skipAnimation
-        />,
-      );
+      setProps({
+        series: [{ data: [] }],
+        xAxis: [{ scaleType: 'band', data: [] }],
+      });
 
       expect(screen.queryByRole('tooltip')).to.equal(null);
     },
@@ -77,25 +89,28 @@ describe('<BarChart />', () => {
   testSkipIf(isJSDOM)(
     'should hide tooltip if the series of the item the tooltip was showing is removed',
     async () => {
-      const { rerender, user } = render(
+      const { setProps, user } = render(
         <BarChart
-          height={100}
-          width={100}
+          height={400}
+          width={400}
           series={[{ data: [10] }]}
           xAxis={[{ scaleType: 'band', data: ['A'] }]}
           hideLegend
           skipAnimation
         />,
+        { wrapper },
       );
 
       const bar = document.querySelector(`.${barElementClasses.root}`)!;
-      await user.pointer({ target: bar, coords: { x: 520, y: 40 } });
+
+      await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
 
-      rerender(
-        <BarChart height={100} width={100} series={[]} xAxis={[]} hideLegend skipAnimation />,
-      );
+      setProps({
+        series: [],
+        xAxis: [],
+      });
 
       expect(screen.queryByRole('tooltip')).to.equal(null);
     },

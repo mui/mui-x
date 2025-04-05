@@ -38,7 +38,7 @@ export function useFieldRootProps(
       setSelectedSections,
       updateValueFromValueStr,
     },
-    internalPropsWithDefaults: { readOnly = false },
+    internalPropsWithDefaults: { disabled = false, readOnly = false },
   } = parameters;
 
   // TODO: Inline onContainerKeyDown once the old DOM structure is removed
@@ -50,7 +50,7 @@ export function useFieldRootProps(
 
   const containerClickTimeout = useTimeout();
   const handleClick = useEventCallback((event: React.MouseEvent) => {
-    if (!domGetters.isReady()) {
+    if (disabled || !domGetters.isReady()) {
       return;
     }
 
@@ -135,7 +135,7 @@ export function useFieldRootProps(
   });
 
   const handleFocus = useEventCallback(() => {
-    if (focused || !domGetters.isReady()) {
+    if (focused || disabled || !domGetters.isReady()) {
       return;
     }
 

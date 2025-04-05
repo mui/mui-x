@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimate } from '../internals/animation/useAnimate';
+import { useAnimate } from '../hooks/animation';
 import { getRadius, GetRadiusData } from './getRadius';
 
 function buildClipPath(
@@ -67,7 +67,7 @@ export function useAnimateBarClipRect(
     borderRadius: props.borderRadius,
   };
 
-  const ref = useAnimate<BarClipRectInterpolatedProps, SVGRectElement>(
+  return useAnimate(
     {
       x: props.x,
       y: props.y,
@@ -77,39 +77,31 @@ export function useAnimateBarClipRect(
     },
     {
       createInterpolator: barClipRectPropsInterpolator,
-      applyProps(element, animatedProps) {
+      transformProps: (p) => ({
+        x: p.x,
+        y: p.y,
+        width: p.width,
+        height: p.height,
+        style: {
+          clipPath: buildClipPath(
+            props.ownerState.layout === 'vertical' ? p.height : p.width,
+            p.borderRadius,
+            props.ownerState,
+          ),
+        },
+      }),
+      applyProps(element: SVGRectElement, animatedProps) {
         element.setAttribute('x', animatedProps.x.toString());
         element.setAttribute('y', animatedProps.y.toString());
         element.setAttribute('width', animatedProps.width.toString());
         element.setAttribute('height', animatedProps.height.toString());
-
-        element.style.clipPath = buildClipPath(
-          props.ownerState.layout === 'vertical' ? animatedProps.height : animatedProps.width,
-          animatedProps.borderRadius,
-          props.ownerState,
-        );
+        element.style.clipPath = animatedProps.style.clipPath;
       },
       initialProps,
       skip: props.skipAnimation,
+      ref: props.ref,
     },
   );
-
-  const usedProps = props.skipAnimation ? props : initialProps;
-
-  return {
-    ref,
-    x: usedProps.x,
-    y: usedProps.y,
-    width: usedProps.width,
-    height: usedProps.height,
-    style: {
-      clipPath: buildClipPath(
-        props.ownerState.layout === 'vertical' ? usedProps.height : usedProps.width,
-        usedProps.borderRadius,
-        props.ownerState,
-      ),
-    },
-  };
 }
 
 interface BarClipRectProps

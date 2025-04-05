@@ -7,16 +7,16 @@ import {
   TreeViewExperimentalFeatures,
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
+  TreeViewSlots,
+  TreeViewSlotProps,
 } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import {
   RichTreeViewProPluginParameters,
-  RichTreeViewProPluginSlotProps,
-  RichTreeViewProPluginSlots,
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 
-export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots, RichTreeViewItemsSlots {
+export interface RichTreeViewProSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewProRoot
@@ -25,7 +25,7 @@ export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots, RichTr
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewProPluginSlotProps,
+  extends TreeViewSlotProps,
     RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
 }

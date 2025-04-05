@@ -8,6 +8,7 @@ module.exports = {
     // We're leaving this to make sure.
     'docs/.next/**',
   ],
+  'node-option': ['no-experimental-detect-module'],
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
   reporter: 'dot',

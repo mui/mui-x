@@ -28,7 +28,7 @@ export const extractPluginParamsFromProps = <
   TSignatures extends readonly TreeViewPluginSignature<any>[],
   TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
 >({
-  props: { slots, slotProps, apiRef, experimentalFeatures: inExperimentalFeatures, ...props },
+  props: { apiRef, experimentalFeatures: inExperimentalFeatures, ...props },
   plugins,
 }: ExtractPluginParamsFromPropsParameters<
   TSignatures,
@@ -75,8 +75,6 @@ export const extractPluginParamsFromProps = <
     apiRef,
     forwardedProps,
     pluginParams: defaultizedPluginParams,
-    slots: slots ?? ({} as any),
-    slotProps: slotProps ?? ({} as any),
     experimentalFeatures,
   };
 };

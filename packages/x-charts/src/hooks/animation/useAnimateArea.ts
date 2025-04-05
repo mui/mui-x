@@ -1,7 +1,6 @@
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
-import useForkRef from '@mui/utils/useForkRef';
 import * as React from 'react';
-import { useAnimate } from '../../internals/animation/useAnimate';
+import { useAnimate } from './useAnimate';
 import type { AnimatedAreaProps } from '../../LineChart';
 
 type UseAnimateAreaParams = Pick<AnimatedAreaProps, 'd' | 'skipAnimation'> & {
@@ -17,7 +16,7 @@ type UseAnimatedAreaReturn = {
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called.
  */
 export function useAnimateArea(props: UseAnimateAreaParams): UseAnimatedAreaReturn {
-  const ref = useAnimate(
+  return useAnimate(
     { d: props.d },
     {
       createInterpolator: (lastProps, newProps) => {
@@ -25,9 +24,9 @@ export function useAnimateArea(props: UseAnimateAreaParams): UseAnimatedAreaRetu
         return (t) => ({ d: interpolate(t) });
       },
       applyProps: (element: SVGPathElement, { d }) => element.setAttribute('d', d),
+      transformProps: (p) => p,
       skip: props.skipAnimation,
+      ref: props.ref,
     },
   );
-
-  return { ref: useForkRef(ref, props.ref), d: props.d };
 }

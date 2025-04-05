@@ -73,13 +73,19 @@ export function Toolbar(props) {
     <ToolbarRoot>
       {showSelectionOptions ? (
         <React.Fragment>
-          <ToolbarButton sx={{ mr: 0.5 }} onClick={handleClearSelection}>
+          <ToolbarButton
+            material={{ sx: { mr: 0.5 } }}
+            onClick={handleClearSelection}
+          >
             <GridClearIcon fontSize="small" />
           </ToolbarButton>
 
           <Typography variant="body2">{selectionCount} selected</Typography>
 
-          <ToolbarButton sx={{ ml: 'auto' }} onClick={handleDeleteSelectedRows}>
+          <ToolbarButton
+            material={{ sx: { mr: 'auto' } }}
+            onClick={handleDeleteSelectedRows}
+          >
             <GridDeleteIcon fontSize="small" />
           </ToolbarButton>
         </React.Fragment>
@@ -125,7 +131,7 @@ export function Toolbar(props) {
                             edge="end"
                             size="small"
                             aria-label="Clear search"
-                            sx={{ marginRight: -0.75 }}
+                            material={{ sx: { marginRight: -0.75 } }}
                           >
                             <CancelIcon fontSize="small" />
                           </QuickFilterClear>

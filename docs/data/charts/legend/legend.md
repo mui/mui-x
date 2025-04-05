@@ -96,7 +96,9 @@ For advanced customization, you can create your own legend with `useLegend`.
 This hook returns the items that the default legend would plot.
 Allowing you to focus on the rendering.
 
-This demo show how to use it with slots.
+This demo also shows how to use `labelMarkType` together with a custom legend to create a legend with custom shapes.
+
+This approach uses slots to render the legend items.
 Another demo in [HTML components docs](/x/react-charts/components/#html-components) shows how to use it with composition.
 
 {{"demo": "CustomLegend.js"}}

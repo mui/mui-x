@@ -9,7 +9,7 @@ import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './
 import { useSelector } from '../internals/store/useSelector';
 import {
   UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxis,
+  selectorChartsInteractionXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useStore } from '../internals/store/useStore';
 
@@ -66,12 +66,12 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   });
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
     isFaded,
     color,
     skipAnimation,
