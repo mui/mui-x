@@ -15,6 +15,7 @@ export function setupFakeClock(shouldAdvanceTime = true) {
     window.fakeClock = null;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   window.fakeClock = useFakeTimers({
     now: new Date(DEFAULT_TIMESTAMP).getTime(),
     // We need to let time advance to use `useDemoData`, but on the pickers
