@@ -6,6 +6,8 @@ import { setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
 
+// eslint-disable guard-for-in
+
 setupFakeClock();
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
