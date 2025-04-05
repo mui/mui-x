@@ -70,14 +70,10 @@ describe('<DateField /> - Selection', () => {
 
     it('should select all on <Tab> focus (v6 only)', async () => {
       // Test with non-accessible DOM structure
-      renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
 
-      // Simulate a <Tab> focus interaction on desktop
-      act(() => {
-        input.focus();
-      });
-      input.select();
+      await user.tab();
 
       await waitFor(() => {
         expectFieldValueV6(input, 'MM/DD/YYYY');
