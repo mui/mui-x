@@ -1,9 +1,8 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { useLocation } from 'react-router';
-import { useFakeTimers } from 'sinon';
+import { setupFakeClock } from '../utils/setupFakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest',
@@ -29,33 +28,19 @@ const StyledBox = styled('div', {
   }),
 }));
 
-let clock;
-
 function MockTime(props) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
-    // Use a "real timestamp" so that we see a useful date instead of "00:00"
-    // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-    clock = useFakeTimers({
-      now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
-      // We need to let time advance to use `useDemoData`, but on the pickers test it makes the tests flaky
-      shouldAdvanceTime: props.isDataGridTest,
-    });
+    const dispose = setupFakeClock(props.isDataGridTest);
+
     setReady(true);
 
-    return () => {
-      clock.restore();
-    };
+    return dispose;
   }, [props.isDataGridTest]);
 
   return ready ? props.children : null;
 }
-
-MockTime.propTypes = {
-  children: PropTypes.node.isRequired,
-  isDataGridTest: PropTypes.bool,
-};
 
 function LoadFont(props) {
   const { children, ...other } = props;
@@ -84,7 +69,7 @@ function LoadFont(props) {
     document.fonts.addEventListener('loadingdone', handleFontsEvent);
 
     // and wait `load-css` timeouts to be flushed
-    clock.runToLast();
+    window.fakeClock?.runToLast();
 
     // In case the child triggered font fetching we're not ready yet.
     // The fonts event handler will mark the test as ready on `loadingdone`
@@ -104,10 +89,6 @@ function LoadFont(props) {
     </StyledBox>
   );
 }
-
-LoadFont.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 function TestViewer(props) {
   const { children, isDataGridTest, path } = props;
@@ -148,11 +129,5 @@ function TestViewer(props) {
     </React.Fragment>
   );
 }
-
-TestViewer.propTypes = {
-  children: PropTypes.node.isRequired,
-  isDataGridTest: PropTypes.bool.isRequired,
-  path: PropTypes.string.isRequired,
-};
 
 export default TestViewer;

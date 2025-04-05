@@ -1,10 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
+import { setupFakeClock } from '../utils/setupFakeClock';
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
+
+setupFakeClock();
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
@@ -40,10 +42,6 @@ const blacklist = [
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
-
-// Use a "real timestamp" so that we see a useful date instead of "00:00"
-// eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
 
 function excludeTest(suite: string, name: string) {
   return blacklist.some((pattern) => {
@@ -82,7 +80,7 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true });
+const requireDocs = import.meta.glob('../../docs/data/**/*.js');
 Object.keys(requireDocs).forEach((path: string) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
@@ -95,20 +93,16 @@ Object.keys(requireDocs).forEach((path: string) => {
     return;
   }
 
-  if (requireDocs[path].default === undefined) {
-    return;
-  }
-
   tests.push({
     path,
     suite,
     name,
-    case: requireDocs[path].default,
+    case: React.lazy(requireDocs[path]),
   });
 });
 
 // @ts-ignore
-const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
+const requireRegressions = import.meta.glob('./data-grid/**/*.js');
 Object.keys(requireRegressions).forEach((path: string) => {
   const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
@@ -117,11 +111,9 @@ Object.keys(requireRegressions).forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireRegressions[path].default,
+    case: React.lazy(requireRegressions[path]),
   });
 });
-
-clock.restore();
 
 if (unusedBlacklistPatterns.size > 0) {
   console.warn(

@@ -9,6 +9,9 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  loader: {
+    '.js': 'jsx',
+  },
   resolve: {
     alias: {
       '@mui/docs': path.resolve(
