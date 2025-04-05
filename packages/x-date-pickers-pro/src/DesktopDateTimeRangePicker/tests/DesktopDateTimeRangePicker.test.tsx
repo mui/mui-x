@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -62,7 +62,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
         fieldType: 'single-input',
       });
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
+      await user.click(screen.getByRole('gridcell', { name: '11' }));
 
       expect(screen.getByRole('option', { name: '2 hours', selected: true })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '15 minutes', selected: true })).not.to.equal(null);
