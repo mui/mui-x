@@ -1673,7 +1673,6 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
-    // Flaky test on JSDOM
     testSkipIf(adapter.lib !== 'dayjs')(
       'should reset the input query state on an unfocused field',
       async () => {
