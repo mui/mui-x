@@ -1,4 +1,4 @@
-import { fireEvent, screen, createRenderer } from '@mui/internal-test-utils';
+import { fireEvent, screen, MuiRenderResult } from '@mui/internal-test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
 
 export type PickerComponentType = 'date' | 'date-time' | 'time';
@@ -32,10 +32,7 @@ export const openPicker = (params: OpenPickerParams) => {
   return true;
 };
 
-export const openPickerAsync = async (
-  user: ReturnType<ReturnType<typeof createRenderer>['render']>['user'],
-  params: OpenPickerParams,
-) => {
+export const openPickerAsync = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
   const isRangeType =
     params.type === 'date-range' ||
     params.type === 'date-time-range' ||
