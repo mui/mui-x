@@ -109,7 +109,7 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
 
-    unmount();
+    await act(async () => unmount());
 
     // Test with non-accessible DOM structure
     render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} />);
@@ -133,7 +133,7 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', () => {
+    it('should forward onClick and onTouchStart', async () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
@@ -194,36 +194,34 @@ describe('<DesktopDateRangePicker />', () => {
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
-    ['Enter', ' '].forEach((key) =>
-      it(`should open when pressing "${key}" in the start input (multi input field)`, () => {
+    ['Enter', 'Space'].forEach((key) =>
+      it(`should open when pressing "${key}" in the start input (multi input field)`, async () => {
         const onOpen = spy();
 
-        render(
+        const { user } = render(
           <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
         );
 
         const startInput = getFieldSectionsContainer();
-        act(() => startInput.focus());
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await act(async () => startInput.focus());
+        await user.keyboard(`[${key}]`);
 
         expect(onOpen.callCount).to.equal(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
       }),
     );
 
-    ['Enter', ' '].forEach((key) =>
-      it(`should open when pressing "${key}" in the end input (multi input field)`, () => {
+    ['Enter', 'Space'].forEach((key) =>
+      it(`should open when pressing "${key}" in the end input (multi input field)`, async () => {
         const onOpen = spy();
 
-        render(
+        const { user } = render(
           <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
         );
 
         const endInput = getFieldSectionsContainer(1);
-        act(() => endInput.focus());
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await act(async () => endInput.focus());
+        await user.keyboard(`[${key}]`);
 
         expect(onOpen.callCount).to.equal(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
