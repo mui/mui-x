@@ -9,6 +9,18 @@
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
+- [Toolbar](/x/api/data-grid/toolbar/)
+- [ToolbarButton](/x/api/data-grid/toolbar-button/)
+- [ExportCsv](/x/api/data-grid/export-csv/)
+- [ExportExcel](/x/api/data-grid/export-excel/)
+- [ExportPrint](/x/api/data-grid/export-print/)
+- [QuickFilter](/x/api/data-grid/quick-filter/)
+- [QuickFilterControl](/x/api/data-grid/quick-filter-control/)
+- [QuickFilterClear](/x/api/data-grid/quick-filter-clear/)
+- [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger/)
+- [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
+- [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
 
 ## Interfaces
 
@@ -17,7 +29,7 @@
 - [GridColDef](/x/api/data-grid/grid-col-def/)
 - [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def/)
 - [GridActionsColDef](/x/api/data-grid/grid-actions-col-def/)
-- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
+- [GridListViewColDef](/x/api/data-grid/grid-list-view-col-def/)
 - [GridExportStateParams](/x/api/data-grid/grid-export-state-params/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)

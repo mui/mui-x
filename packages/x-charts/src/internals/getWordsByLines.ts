@@ -1,6 +1,11 @@
 import { getStringSize } from './domUtils';
 
-export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
+export type ChartsTextBaseline =
+  | 'hanging'
+  | 'central'
+  | 'auto'
+  | 'text-after-edge'
+  | 'text-before-edge';
 
 export interface ChartsTextStyle extends React.CSSProperties {
   angle?: number;

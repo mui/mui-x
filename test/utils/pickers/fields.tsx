@@ -12,8 +12,6 @@ import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
 interface BuildFieldInteractionsParams<P extends {}> {
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
   render: ReturnType<typeof createRenderer>['render'];
   Component: React.FunctionComponent<P>;
 }
@@ -80,8 +78,6 @@ const RTL_THEME = createTheme({
 });
 
 export const buildFieldInteractions = <P extends {}>({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  clock,
   render,
   Component,
 }: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
@@ -260,26 +256,23 @@ export const buildFieldInteractions = <P extends {}>({
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
     keyStrokes,
     selectedSection,
-    skipV7,
     ...props
   }) => {
-    if (!skipV7) {
-      // Test with accessible DOM structure
-      const v7Response = renderWithProps({
-        ...props,
-        enableAccessibleFieldDOMStructure: true,
-      } as any);
-      v7Response.selectSection(selectedSection);
-      keyStrokes.forEach((keyStroke) => {
-        v7Response.pressKey(undefined, keyStroke.value);
-        expectFieldValueV7(
-          v7Response.getSectionsContainer(),
-          keyStroke.expected,
-          (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
-        );
-      });
-      v7Response.unmount();
-    }
+    // Test with accessible DOM structure
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
+    v7Response.selectSection(selectedSection);
+    keyStrokes.forEach((keyStroke) => {
+      v7Response.pressKey(undefined, keyStroke.value);
+      expectFieldValueV7(
+        v7Response.getSectionsContainer(),
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+    v7Response.unmount();
 
     // Test with non-accessible DOM structure
     const v6Response = renderWithProps({

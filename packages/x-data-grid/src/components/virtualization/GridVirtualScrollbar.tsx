@@ -35,9 +35,9 @@ const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
 const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
-  zIndex: 6,
+  zIndex: 60,
   '&:hover': {
-    zIndex: 7,
+    zIndex: 70,
   },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
@@ -167,12 +167,17 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
         style={
-          props.position === 'vertical' && rootProps.unstable_listView
+          props.position === 'vertical' && rootProps.listView
             ? { height: '100%', top: 0 }
             : undefined
         }
         tabIndex={-1}
         aria-hidden="true"
+        // tabIndex does not prevent focus with a mouse click, throwing a console error
+        // https://github.com/mui/mui-x/issues/16706
+        onFocus={(event) => {
+          event.target.blur();
+        }}
       >
         <div ref={contentRef} className={classes.content} />
       </Container>

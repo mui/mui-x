@@ -46,6 +46,13 @@ type Placement =
   | 'bottom'
   | 'bottom-end';
 
+type Margin = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
 type DefaultTypes = {
   /**
    * The display name of the prop, for example 'X Axis Label'
@@ -153,7 +160,9 @@ export type FromKnob<DT extends DataType> = DT['knob'] extends 'number' | 'slide
       ? string
       : DT['knob'] extends 'placement'
         ? Placement
-        : never;
+        : DT['knob'] extends 'margin'
+          ? Margin
+          : never;
 
 interface ChartDemoPropsFormProps<
   Data extends Record<string, DataType>,
@@ -321,6 +330,7 @@ export default function ChartDemoPropsForm<
                     const checked = String(resolvedValue) === value;
                     return (
                       <FormControlLabel
+                        key={value}
                         control={<Radio size="small" />}
                         // variant={checked ? 'solid' : 'outlined'}
                         color={checked ? 'primary' : 'info'}
@@ -375,7 +385,6 @@ export default function ChartDemoPropsForm<
               <FormControl key={propName} size="small">
                 <FormLabel>{title}</FormLabel>
                 <Select
-                  placeholder="Select a variant..."
                   value={resolvedValue || 'none'}
                   onChange={(event) =>
                     onPropsChange((latestProps) => ({

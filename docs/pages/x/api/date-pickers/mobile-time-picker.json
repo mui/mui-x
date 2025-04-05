@@ -8,7 +8,12 @@
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
-    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use the <a href=\"https://next.mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+    },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -136,7 +141,7 @@
   "slots": [
     {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": null
     },
@@ -148,7 +153,7 @@
     },
     {
       "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
+      "description": "Icon to display in the button used to clean the value.",
       "default": "ClearIcon",
       "class": null
     },
@@ -165,7 +170,7 @@
     },
     {
       "name": "inputAdornment",
-      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
       "default": "InputAdornment",
       "class": null
     },
@@ -200,13 +205,13 @@
     },
     {
       "name": "openPickerButton",
-      "description": "Button to open the picker on desktop.",
+      "description": "Button to open the Picker.",
       "default": "IconButton",
       "class": null
     },
     {
       "name": "openPickerIcon",
-      "description": "Icon displayed in the open picker button on desktop.",
+      "description": "Icon to display in the button used to open the Picker.",
       "class": null
     },
     {

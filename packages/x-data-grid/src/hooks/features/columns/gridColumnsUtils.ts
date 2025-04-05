@@ -386,7 +386,11 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
+    columnsState.lookup[field] = resolveProps(existingState, {
+      ...getDefaultColTypeDef(newColumn.type),
+      ...newColumn,
+      hasBeenResized,
+    });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
@@ -448,10 +452,10 @@ export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
+    'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
   >,
 ) {
-  if (props.unstable_listView) {
+  if (props.listView) {
     return 0;
   }
 

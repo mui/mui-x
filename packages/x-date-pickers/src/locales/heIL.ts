@@ -35,12 +35,14 @@ const heILPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'ניקוי',
   okButtonLabel: 'אישור',
   todayButtonLabel: 'היום',
+  nextStepButtonLabel: 'הבא',
 
   // Toolbar titles
   datePickerToolbarTitle: 'בחירת תאריך',
   dateTimePickerToolbarTitle: 'בחירת תאריך ושעה',
   timePickerToolbarTitle: 'בחירת שעה',
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const heILPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `שבוע ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `בחירת תאריך, התאריך שנבחר הוא ${formattedDate}` : 'בחירת תאריך',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `בחירת שעה, השעה שנבחרה היא ${formattedTime}` : 'בחירת שעה',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'נקה ערך',
 
   // Table labels

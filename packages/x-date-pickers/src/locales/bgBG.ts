@@ -35,12 +35,14 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Изчисти',
   okButtonLabel: 'ОК',
   todayButtonLabel: 'Днес',
+  nextStepButtonLabel: 'Следващ',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Избери дата',
   dateTimePickerToolbarTitle: 'Избери дата и час',
   timePickerToolbarTitle: 'Избери час',
   dateRangePickerToolbarTitle: 'Избери времеви период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Седмица ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Избери дата, избраната дата е ${formattedDate}` : 'Избери дата',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Избери час, избраният час е ${formattedTime}` : 'Избери час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Изчисти стойност',
 
   // Table labels

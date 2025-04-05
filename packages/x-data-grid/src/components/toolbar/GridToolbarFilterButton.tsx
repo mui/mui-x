@@ -6,11 +6,10 @@ import {
   unstable_capitalize as capitalize,
   unstable_useId as useId,
 } from '@mui/utils';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { vars } from '../../constants/cssVariables';
-import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -22,6 +21,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -44,16 +44,15 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: vars.spacing(0, 1),
 });
 
-// FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
   /**
    * The props used for each slot inside.
    * @default {}
    */
   slotProps?: {
-    button?: Partial<ButtonProps>;
-    tooltip?: Partial<TooltipProps>;
-    badge?: Partial<BadgeProps>;
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
+    badge?: Partial<GridSlotProps['baseBadge']>;
   };
 }
 
@@ -71,6 +70,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
+    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -169,7 +170,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             }
             buttonProps.onPointerUp?.(event);
           }}
-          ref={ref}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>

@@ -2,9 +2,15 @@ import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
-import * as packageJson from '../../package.json';
+
+const sendMuiXTelemetryRetries = 3;
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
+  // Disable reporting in SSR / Node.js
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   // Priority to the config (e.g. in code, env)
   const envIsCollecting = getTelemetryEnvConfigValue('IS_COLLECTING');
   if (typeof envIsCollecting === 'boolean') {
@@ -20,8 +26,6 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Disabled by default
   return false;
 }
-
-const sendMuiXTelemetryRetries = 3;
 
 async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   try {
@@ -52,13 +56,13 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
 
     // TODO: batch events and send them in a single request when there will be more
     await fetchWithRetry(
-      'https://x-telemetry.mui.com/api/v1/telemetry/record',
+      'https://x-telemetry.mui.com/v2/telemetry/record',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Telemetry-Client-Version': packageJson.version,
-          'X-Telemetry-Node-Env': (process.env.NODE_ENV as any) ?? '<unknown>',
+          'X-Telemetry-Client-Version': process.env.MUI_VERSION ?? '<dev>',
+          'X-Telemetry-Node-Env': process.env.NODE_ENV ?? '<unknown>',
         },
         body: JSON.stringify([eventPayload]),
       },

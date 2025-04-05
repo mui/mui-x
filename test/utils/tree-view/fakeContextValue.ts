@@ -14,19 +14,6 @@ export const getFakeContextValue = (
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  items: {
-    onItemClick: () => {},
-  },
-  icons: {
-    slots: {},
-    slotProps: {},
-  },
-  selection: {
-    multiSelect: false,
-    checkboxSelection: features.checkboxSelection ?? false,
-    disableSelection: false,
-    selectionPropagation: {},
-  },
   rootRef: {
     current: null,
   },
@@ -39,9 +26,18 @@ export const getFakeContextValue = (
       itemModelLookup: {},
       itemOrderedChildrenIdsLookup: {},
       itemChildrenIndexesLookup: {},
+      loading: false,
+      error: null,
     },
     expansion: { expandedItemsMap: new Map(), expansionTrigger: 'content' },
-    selection: { selectedItemsMap: new Map() },
+    selection: {
+      selectedItemsMap: new Map(),
+      rawSelectedItems: null,
+      isEnabled: true,
+      isMultiSelectEnabled: false,
+      isCheckboxSelectionEnabled: features.checkboxSelection ?? false,
+      selectionPropagation: { parents: false, descendants: false },
+    },
     focus: { focusedItemId: null, defaultFocusableItemId: null },
   }),
 });

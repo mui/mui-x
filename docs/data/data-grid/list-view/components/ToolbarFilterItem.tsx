@@ -6,6 +6,7 @@ import {
   gridFilterActiveItemsSelector,
   GridCheckIcon,
   GridFilterItem,
+  ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
@@ -20,7 +21,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
-import { ToolbarButton } from './ToolbarButton';
 import { FileType } from '../types';
 import { FILE_TYPES } from '../constants';
 

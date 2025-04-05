@@ -11,6 +11,5 @@
     pageSizeOptions={pageSizeOptions}
     initialState={initialStateWithPagination}
     showToolbar
-    slotProps={{ toolbar: { showQuickFilter: true } }}
   />
 </div>

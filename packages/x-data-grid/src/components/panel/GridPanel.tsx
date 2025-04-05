@@ -24,7 +24,7 @@ export interface GridPanelClasses {
 
 export interface GridPanelProps
   extends Pick<GridSlotProps['basePopper'], 'id' | 'className' | 'target' | 'flip'> {
-  ref?: React.Ref<HTMLElement>;
+  ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -59,7 +59,7 @@ const GridPanelContent = styled('div', {
   overflow: 'auto',
 });
 
-const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -80,7 +80,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     }
   });
 
-  const [target, setTarget] = React.useState<Element | null>(null);
+  const [fallbackTarget, setFallbackTarget] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -88,11 +88,11 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     );
 
     if (panelAnchor) {
-      setTarget(panelAnchor);
+      setFallbackTarget(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!target) {
+  if (!fallbackTarget) {
     return null;
   }
 
@@ -100,9 +100,8 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     <GridPanelRoot
       as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      placement="bottom-start"
+      placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
-      target={target}
       flip
       onDidShow={onDidShow}
       onDidHide={onDidHide}
@@ -112,6 +111,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       focusTrap
       {...other}
       {...rootProps.slotProps?.basePopper}
+      target={props.target ?? fallbackTarget}
       ref={ref}
     >
       <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>

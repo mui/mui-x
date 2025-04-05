@@ -259,6 +259,7 @@ module.exports = {
               'useDateTimePickerDefaultizedProps',
               'useDateRangePickerDefaultizedProps',
               'useDateTimeRangePickerDefaultizedProps',
+              'useTimeRangePickerDefaultizedProps',
               'useDateCalendarDefaultizedProps',
               'useMonthCalendarDefaultizedProps',
               'useYearCalendarDefaultizedProps',
@@ -287,6 +288,7 @@ module.exports = {
                   '!@mui/internal-*/**',
 
                   // Exceptions (QUESTION: Keep or remove?)
+                  '!@mui/x-data-grid/internals/demo',
                   '!@mui/x-date-pickers/internals/demo',
                   '!@mui/x-tree-view/hooks/useTreeViewApiRef',
                   // TODO: export this from /ButtonBase in core. This will break after we move to package exports

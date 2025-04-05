@@ -1,0 +1,14 @@
+<Button
+  onClick={() => setFailRequests((prev) => !prev)}
+  variant="outlined"
+  fullWidth
+>
+  {failRequests ? 'Resolve requests' : 'Fail Requests'}
+</Button>
+<RichTreeViewPro
+  items={initialItems}
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+/>
