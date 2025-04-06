@@ -47,7 +47,7 @@ export default defineConfig({
 });
 ```
 
-### Next.js Pages router
+### Next.js Pages Router
 
 With [Next.js App Router](https://nextjs.org/docs#app-router-vs-pages-router), you don't need to do anything.
 
