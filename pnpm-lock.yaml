@@ -754,8 +754,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       use-sync-external-store:
-        specifier: ^1.4.0
-        version: 1.4.0(react@19.0.0)
+        specifier: ^1.5.0
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
@@ -773,8 +773,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0
       '@types/use-sync-external-store':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^1.5.0
+        version: 1.5.0
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
@@ -998,8 +998,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       use-sync-external-store:
-        specifier: ^1.4.0
-        version: 1.4.0(react@19.0.0)
+        specifier: ^1.5.0
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
@@ -1017,8 +1017,8 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       '@types/use-sync-external-store':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^1.5.0
+        version: 1.5.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1499,8 +1499,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       use-sync-external-store:
-        specifier: ^1.4.0
-        version: 1.4.0(react@19.0.0)
+        specifier: ^1.5.0
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
@@ -1515,8 +1515,8 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       '@types/use-sync-external-store':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^1.5.0
+        version: 1.5.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1567,8 +1567,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       use-sync-external-store:
-        specifier: ^1.4.0
-        version: 1.4.0(react@19.0.0)
+        specifier: ^1.5.0
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
@@ -1583,8 +1583,8 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       '@types/use-sync-external-store':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^1.5.0
+        version: 1.5.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -4311,8 +4311,8 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@types/use-sync-external-store@0.0.6':
-    resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
+  '@types/use-sync-external-store@1.5.0':
+    resolution: {integrity: sha512-5dyB8nLC/qogMrlCizZnYWQTA4lnb/v+It+sqNl5YnSRAPMlIqY/X0Xn+gZw8vOL+TgTTr28VEbn3uf8fUtAkw==}
 
   '@types/webpack-bundle-analyzer@4.7.0':
     resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
@@ -10071,8 +10071,8 @@ packages:
   url-template@2.0.8:
     resolution: {integrity: sha512-XdVKMF4SJ0nP/O7XIPB0JwAEuT9lDIYnNsK8yGVe43y0AWoKeJNdv3ZNWh7ksJ6KqQFjOO6ox/VEitLnaVNufw==}
 
-  use-sync-external-store@1.4.0:
-    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
+  use-sync-external-store@1.5.0:
+    resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -13468,7 +13468,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@types/use-sync-external-store@0.0.6': {}
+  '@types/use-sync-external-store@1.5.0': {}
 
   '@types/webpack-bundle-analyzer@4.7.0(@swc/core@1.11.11(@swc/helpers@0.5.15))(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.98.0))':
     dependencies:
@@ -20369,7 +20369,7 @@ snapshots:
 
   url-template@2.0.8: {}
 
-  use-sync-external-store@1.4.0(react@19.0.0):
+  use-sync-external-store@1.5.0(react@19.0.0):
     dependencies:
       react: 19.0.0
 
