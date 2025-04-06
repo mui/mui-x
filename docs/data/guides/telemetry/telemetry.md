@@ -1,8 +1,9 @@
 ---
+title: MUI X Telemetry guide
 packageName: '@mui/x-telemetry'
 ---
 
-# MUI X Telemetry guide
+# MUI X Telemetry guide [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walk you through how to opt-in, opt-out, and configure telemetry.</p>
 
@@ -32,23 +33,23 @@ We track the following details anonymously during development mode:
 **Privacy Assurance**: We are committed to maintaining your privacy. All data collected is anonymized, ensuring that no personally identifiable information is gathered. We focus solely on understanding usage patterns to better serve our customers and developer community.
 :::
 
-## Telemetry for Pro and Premium Components
+## Telemetry for Pro and Premium components
 
 Telemetry collection is specifically associated with the usage of paid MUI X components, such as the advanced versions of the data grid and date/time pickers. This targeted approach allows us to focus on enhancing the premium features that our subscribers rely on.
 
-## Telemetry in Development Mode Only
+## Telemetry in development mode only
 
-MUI X Telemetry is designed to operate exclusively during development. In production builds of your application, telemetry is entirely inactive, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
+MUI X Telemetry is designed to operate exclusively during development. In production builds of your application, telemetry is entirely removed, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
 
 :::info
-Currently, Telemetry is disabled by default and you have full control to opt-in or opt-out as per your preference.
+Currently, Telemetry is disabled by default and you have full control to opt-in as per your preference.
 :::
 
-## Opting In
+## Opting in
 
 To opt-in, you can use one of the following methods:
 
-### Setting the Environment Variable
+### Setting the environment variable
 
 You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `false` to enable telemetry:
 
@@ -56,7 +57,7 @@ You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `false` to en
 MUI_X_TELEMETRY_DISABLED=false
 ```
 
-> Note that some frameworks may require you to prefix the environment variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
+Note that some frameworks may require you to prefix the environment variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
 ### Import telemetry settings from `@mui/x-license` package
 
@@ -68,7 +69,7 @@ import { muiXTelemetrySettings } from '@mui/x-license';
 muiXTelemetrySettings.enableTelemetry();
 ```
 
-### Setting the Flag in Your Application
+### Setting the flag in your application
 
 You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `false` to enable telemetry:
 
@@ -78,11 +79,13 @@ import { ponyfillGlobal } from '@mui/utils';
 ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = false;
 ```
 
-## Opting Out
+<!--
+
+## Opting out
 
 To opt-out of telemetry, you can use one of the following methods:
 
-### Setting the Environment Variable
+### Setting the environment variable
 
 You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `true` to disable telemetry:
 
@@ -90,7 +93,7 @@ You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `true` to dis
 MUI_X_TELEMETRY_DISABLED=true
 ```
 
-> Note that some frameworks may require you to prefix the environment variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
+Note that some frameworks may require you to prefix the environment variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
 ### Import telemetry settings from `@mui/x-license` package
 
@@ -102,7 +105,7 @@ import { muiXTelemetrySettings } from '@mui/x-license';
 muiXTelemetrySettings.disableTelemetry();
 ```
 
-### Setting the Flag in Your Application
+### Setting the flag in your application
 
 You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `true` to disable telemetry:
 
@@ -111,3 +114,5 @@ import { ponyfillGlobal } from '@mui/utils';
 
 ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
 ```
+
+-->
