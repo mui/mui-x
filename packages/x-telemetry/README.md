@@ -6,7 +6,7 @@ Package used by some of MUI X to collects **anonymous** telemetry data about ge
 
 Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
 
-1. By setting it directly to package settings on the application start (e.g. in main file).
+1. By setting it directly to package settings on the application start (for example in main file).
 
 ```js
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
@@ -28,7 +28,7 @@ MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
 
 > ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
-3. By setting the flag to global object on the application start (e.g. in main file).
+3. By setting the flag to global object on the application start (for example in main file).
 
 ```js
 import { ponyfillGlobal } from '@mui/utils';

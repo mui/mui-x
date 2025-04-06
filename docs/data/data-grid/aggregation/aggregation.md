@@ -16,7 +16,7 @@ The aggregated values are rendered in a footer row at the bottom of the Grid.
 
 :::info
 This document covers client-side implementation.
-For aggregation on the server side, see [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/).
+For aggregation on the server-side, see [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/).
 :::
 
 ## Structure of the model
