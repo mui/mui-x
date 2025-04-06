@@ -8,7 +8,7 @@ title: Usage with Material UI v5 and v6
 
 ## Package layout changes
 
-MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material UI v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
 
 MUI X v8 packages are compatible with Material UI v7 out of the box.
 We encourage upgrading to Material UI v7 to take advantage of better ESM support.
