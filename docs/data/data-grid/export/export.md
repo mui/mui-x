@@ -1,6 +1,6 @@
 # Data Grid - Export
 
-<p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
+<p class="description">Easily export the rows in various file formats such as CSV, Excel, or Print.</p>
 
 ## Enabling export
 
