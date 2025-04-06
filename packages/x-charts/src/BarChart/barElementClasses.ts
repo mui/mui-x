@@ -10,6 +10,10 @@ export interface BarElementClasses {
   highlighted: string;
   /** Styles applied to the root element if it is faded. */
   faded: string;
+   /** Styles applied to the root element for a specified series.
+   *  To be used like this: `&.${barElementClasses.series}-${seriesId}`.
+   */
+   series: string;
 }
 
 export type BarElementClassKey = keyof BarElementClasses;
@@ -31,6 +35,7 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
