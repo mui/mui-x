@@ -48,7 +48,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       ...state,
       aiAssistant: {
         panelOpen: false,
-        activeConversationId: INITIAL_CONVERSATION_ID,
+        activeConversationId: '',
         conversations: [],
         suggestions: [],
       } as GridAiAssistantState,
@@ -59,6 +59,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     ...state,
     aiAssistant: {
       panelOpen: props.aiAssistantPanelOpen ?? props.initialState?.aiAssistant?.panelOpen ?? false,
+      activeConversationId: INITIAL_CONVERSATION_ID,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
       suggestions:
@@ -288,19 +289,32 @@ export const useGridAiAssistant = (
         return;
       }
 
+      const currentConversations = apiRef.current.state.aiAssistant?.conversations;
+      const targetConversationIndex = currentConversations.findIndex((c) => c.id === id);
+
+      const newPrompts =
+        typeof callback === 'function'
+          ? callback(
+              targetConversationIndex === -1
+                ? []
+                : currentConversations[targetConversationIndex].prompts,
+            )
+          : callback;
+
+      const newConversations = currentConversations.toSpliced(
+        targetConversationIndex === -1 ? currentConversations.length : targetConversationIndex,
+        1,
+        {
+          id,
+          prompts: newPrompts,
+        },
+      );
+
       apiRef.current.setState((state) => ({
         ...state,
         aiAssistant: {
           ...state.aiAssistant,
-          conversations: state.aiAssistant?.conversations.map((conversation) =>
-            conversation.id === id
-              ? {
-                  ...conversation,
-                  prompts:
-                    typeof callback === 'function' ? callback(conversation.prompts) : callback,
-                }
-              : conversation,
-          ),
+          conversations: newConversations,
         },
       }));
     },
@@ -341,6 +355,7 @@ export const useGridAiAssistant = (
                   ...item,
                   response,
                   variant: 'success',
+                  helperText: '',
                 }
               : item,
           ),
