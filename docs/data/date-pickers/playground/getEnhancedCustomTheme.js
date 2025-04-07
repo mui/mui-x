@@ -1,7 +1,7 @@
 'use client';
 import { alpha } from '@mui/material/styles';
 
-import { enhancedPickersDayClasses } from '@mui/x-date-pickers/EnhancedPickersDay/enhancedPickersDayClasses';
+import { enhancedDateRangePickerDayClasses } from '@mui/x-date-pickers-pro/EnhancedDateRangePickerDay';
 
 export const brand = {
   50: 'hsl(240, 82%, 97%)',
@@ -87,13 +87,13 @@ export const getEnhancedCustomTheme = (mode) => {
   return {
     ...tokens,
     components: {
-      MuiEnhancedPickersDay: {
+      MuiEnhancedDateRangePickerDay: {
         styleOverrides: {
           root: {
             borderRadius: '4px',
           },
           today: { borderColor: 'red' },
-          firstDayOfWeek: {
+          startOfWeek: {
             '::after': {
               borderTopLeftRadius: '4px',
               borderBottomLeftRadius: '4px',
@@ -103,7 +103,7 @@ export const getEnhancedCustomTheme = (mode) => {
               borderBottomLeftRadius: '4px',
             },
           },
-          lastDayOfWeek: {
+          endOfWeek: {
             '::after': {
               borderTopRightRadius: '4px',
               borderBottomRightRadius: '4px',
@@ -113,14 +113,14 @@ export const getEnhancedCustomTheme = (mode) => {
               borderBottomRightRadius: '4px',
             },
           },
-          endOfPreviewing: {
-            [`&:not(.${enhancedPickersDayClasses.startOfSelectedRange})::after`]: {
+          previewEnd: {
+            [`&:not(.${enhancedDateRangePickerDayClasses.previewEnd})::after`]: {
               borderTopRightRadius: '4px',
               borderBottomRightRadius: '4px',
             },
           },
-          startOfPreviewing: {
-            [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::after`]: {
+          previewStart: {
+            [`&:not(.${enhancedDateRangePickerDayClasses.previewStart})::after`]: {
               borderTopLeftRadius: '4px',
               borderBottomLeftRadius: '4px',
             },

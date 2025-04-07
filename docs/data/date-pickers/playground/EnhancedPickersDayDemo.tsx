@@ -18,7 +18,7 @@ export default function EnhancedPickersDayDemo() {
               actions: ['accept', 'cancel'],
             },
           }}
-          daySlot="enhanced"
+          enableEnhancedDaySlot
         />
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -28,7 +28,7 @@ export default function EnhancedPickersDayDemo() {
                 actions: ['accept', 'cancel'],
               },
             }}
-            daySlot="enhanced"
+            enableEnhancedDaySlot
           />
         </ThemeProvider>
       </Box>

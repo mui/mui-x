@@ -254,7 +254,6 @@ function WrappedDay({
   selectedDays: PickerValidDate[];
   isDateDisabled: (date: PickerValidDate | null) => boolean;
   currentMonthNumber: number;
-  dayOfWeek: number;
 }) {
   const {
     disabled,
@@ -610,7 +609,6 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     currentMonthNumber={currentMonthNumber}
                     // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
                     aria-colindex={dayIndex + 1}
-                    dayOfWeek={dayIndex + 1}
                   />
                 ))}
               </PickersCalendarWeek>

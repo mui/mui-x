@@ -11,14 +11,14 @@ export default function EnhancedPickersDayDemo() {
   const theme = createTheme(getEnhancedCustomTheme('light'));
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ maxWidth: '500px', display: 'flex', gap: 4 }}>
+      <Box sx={{ display: 'flex', gap: 4 }}>
         <StaticDateRangePicker
           slotProps={{
             actionBar: {
               actions: ['accept', 'cancel'],
             },
           }}
-          daySlot="enhanced"
+          enableEnhancedDaySlot
         />
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -28,7 +28,7 @@ export default function EnhancedPickersDayDemo() {
                 actions: ['accept', 'cancel'],
               },
             }}
-            daySlot="enhanced"
+            enableEnhancedDaySlot
           />
         </ThemeProvider>
       </Box>
