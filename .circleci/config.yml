@@ -158,7 +158,7 @@ jobs:
       - run:
           name: Coverage
           command: |
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            curl -Os https://uploader.codecov.io/latest/aarch64/codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
   test_lint:
