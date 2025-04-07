@@ -23,7 +23,7 @@ By opting in, you directly contribute to shaping the future of MUI X. You help 
 We track the following details anonymously during development mode:
 
 - Unique session ID: This is generated on each run with UUID.
-- General machine information (operating system, version and whether or not the command was run within CI)
+- A hash of general machine information (user agent, machine id, etc).
 - Package and version used
 - License info
 - IP address
