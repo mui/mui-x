@@ -366,8 +366,8 @@ importers:
         specifier: ^14.2.4
         version: 14.2.4
       sinon:
-        specifier: ^19.0.5
-        version: 19.0.5
+        specifier: ^20.0.0
+        version: 20.0.0
       stream-browserify:
         specifier: ^3.0.0
         version: 3.0.0
@@ -9373,6 +9373,9 @@ packages:
 
   sinon@19.0.5:
     resolution: {integrity: sha512-r15s9/s+ub/d4bxNXqIUmwp6imVSdTorIRaxoecYjqTVLZ8RuoXr/4EDGwIBo6Waxn7f2gnURX9zuhAfCwaF6Q==}
+
+  sinon@20.0.0:
+    resolution: {integrity: sha512-+FXOAbdnj94AQIxH0w1v8gzNxkawVvNqE3jUzRLptR71Oykeu2RrQXXl/VQjKay+Qnh73fDt/oDfMo6xMeDQbQ==}
 
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
@@ -19663,6 +19666,14 @@ snapshots:
       '@sinonjs/samsam': 8.0.2
       diff: 7.0.0
       nise: 6.1.1
+      supports-color: 7.2.0
+
+  sinon@20.0.0:
+    dependencies:
+      '@sinonjs/commons': 3.0.1
+      '@sinonjs/fake-timers': 13.0.5
+      '@sinonjs/samsam': 8.0.2
+      diff: 7.0.0
       supports-color: 7.2.0
 
   sirv@2.0.4:
