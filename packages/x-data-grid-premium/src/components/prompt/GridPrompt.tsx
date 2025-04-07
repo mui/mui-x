@@ -17,13 +17,10 @@ import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pr
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import {
-  PromptHistory,
-  PromptResponse,
-} from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import { Prompt, PromptResponse } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type GridPromptProps = PromptHistory[number] & { onRerun: () => void };
+type GridPromptProps = Prompt & { onRerun: () => void };
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
   variant?: 'success' | 'error' | 'processing';
@@ -69,7 +66,7 @@ const fadeInUp = keyframes({
 
 // This `styled()` function invokes keyframes. `styled-components` only supports keyframes
 // in string templates. Do not convert these styles in JS object as it will break.
-const Prompt = styled('li', {
+const PromptItem = styled('li', {
   name: 'MuiDataGrid',
   slot: 'Prompt',
 })<{ ownerState: OwnerState }>`
@@ -391,7 +388,7 @@ function GridPrompt(props: GridPromptProps) {
   ]);
 
   return (
-    <Prompt ownerState={ownerState} className={classes.root}>
+    <PromptItem ownerState={ownerState} className={classes.root}>
       <PromptIconContainer ownerState={ownerState} className={classes.iconContainer}>
         {!response && variant !== 'error' ? (
           <rootProps.slots.baseCircularProgress size={20} />
@@ -457,7 +454,7 @@ function GridPrompt(props: GridPromptProps) {
           <rootProps.slots.promptRerunIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </rootProps.slots.baseTooltip>
-    </Prompt>
+    </PromptItem>
   );
 }
 

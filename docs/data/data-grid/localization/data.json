@@ -59,7 +59,7 @@
     "languageTag": "hr-HR",
     "importName": "hrHR",
     "localeName": "Croatian",
-    "missingKeysCount": 15,
+    "missingKeysCount": 16,
     "totalKeysCount": 158,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/hrHR.ts"
   },

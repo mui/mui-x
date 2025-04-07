@@ -29,13 +29,13 @@ export interface GridClasses {
    */
   aiAssistantPanelFooter: string;
   /**
-   * Styles applied to the root element of the AI assistant panel history.
+   * Styles applied to the root element of the AI assistant panel conversation.
    */
-  aiAssistantPanelHistory: string;
+  aiAssistantPanelConversation: string;
   /**
-   * Styles applied to the root element of the AI assistant panel history list.
+   * Styles applied to the root element of the AI assistant panel conversation list.
    */
-  aiAssistantPanelHistoryList: string;
+  aiAssistantPanelConversationList: string;
   /**
    * Styles applied to the root element of the AI assistant panel suggestions.
    */
@@ -909,8 +909,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aiAssistantPanelBody',
   'aiAssistantPanelEmptyText',
   'aiAssistantPanelFooter',
-  'aiAssistantPanelHistory',
-  'aiAssistantPanelHistoryList',
+  'aiAssistantPanelConversation',
+  'aiAssistantPanelConversationList',
   'aiAssistantPanelSuggestions',
   'aiAssistantPanelSuggestionsList',
   'aiAssistantPanelSuggestionsItem',

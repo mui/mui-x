@@ -7,7 +7,7 @@
       "description": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows."
     },
     "aiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
-    "aiAssistantHistory": { "description": "The history of the AI Assistant." },
+    "aiAssistantConversations": { "description": "The conversations with the AI Assistant." },
     "aiAssistantPanelOpen": {
       "description": "If <code>true</code>, the AI Assistant panel is open."
     },
@@ -286,9 +286,9 @@
         "details": "Additional details for this callback."
       }
     },
-    "onAiAssistantHistoryChange": {
-      "description": "Callback fired when the AI Assistant history changes.",
-      "typeDescriptions": { "aiAssistantHistory": "The new AI Assistant history." }
+    "onAiAssistantConversationsChange": {
+      "description": "Callback fired when the AI Assistant conversations change.",
+      "typeDescriptions": { "conversations": "The new AI Assistant conversations." }
     },
     "onAiAssistantPanelOpenChange": {
       "description": "Callback fired when the AI Assistant panel open state changes.",
@@ -555,6 +555,7 @@
       "typeDescriptions": {
         "prompt": "The prompt to be processed.",
         "promptContext": "The prompt context.",
+        "conversationId": "The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.",
         "Promise<PromptResponse>": "The prompt response."
       }
     },
@@ -784,6 +785,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel body"
     },
+    "aiAssistantPanelConversation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel conversation"
+    },
+    "aiAssistantPanelConversationList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel conversation list"
+    },
     "aiAssistantPanelEmptyText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel empty text"
@@ -795,14 +804,6 @@
     "aiAssistantPanelHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel header"
-    },
-    "aiAssistantPanelHistory": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel history"
-    },
-    "aiAssistantPanelHistoryList": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel history list"
     },
     "aiAssistantPanelSuggestions": {
       "description": "Styles applied to {{nodeName}}.",

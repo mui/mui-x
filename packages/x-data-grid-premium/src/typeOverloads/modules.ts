@@ -11,7 +11,7 @@ import type {
   GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridCellSelectionModel,
-  PromptHistory,
+  Conversation,
   PromptSuggestion,
 } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
@@ -47,9 +47,9 @@ export interface GridControlledStateEventLookupPremium {
    */
   aiAssistantPanelOpenChange: { params: boolean };
   /**
-   * Fired when the AI Assistant history changes.
+   * Fired when the AI Assistant conversation state changes.
    */
-  aiAssistantHistoryChange: { params: PromptHistory };
+  aiAssistantConversationsChange: { params: Conversation[] };
   /**
    * Fired when the AI Assistant suggestions change.
    */

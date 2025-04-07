@@ -1161,6 +1161,18 @@
       "isGlobal": false
     },
     {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGridPro-aiAssistantPanelConversation",
+      "description": "Styles applied to the root element of the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGridPro-aiAssistantPanelConversationList",
+      "description": "Styles applied to the root element of the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
       "key": "aiAssistantPanelEmptyText",
       "className": "MuiDataGridPro-aiAssistantPanelEmptyText",
       "description": "Styles applied to the root element of the AI assistant panel empty text.",
@@ -1176,18 +1188,6 @@
       "key": "aiAssistantPanelHeader",
       "className": "MuiDataGridPro-aiAssistantPanelHeader",
       "description": "Styles applied to the root element of the AI assistant panel header.",
-      "isGlobal": false
-    },
-    {
-      "key": "aiAssistantPanelHistory",
-      "className": "MuiDataGridPro-aiAssistantPanelHistory",
-      "description": "Styles applied to the root element of the AI assistant panel history.",
-      "isGlobal": false
-    },
-    {
-      "key": "aiAssistantPanelHistoryList",
-      "className": "MuiDataGridPro-aiAssistantPanelHistoryList",
-      "description": "Styles applied to the root element of the AI assistant panel history list.",
       "isGlobal": false
     },
     {

@@ -14,10 +14,10 @@
       "default": "\"filtered\""
     },
     "aiAssistant": { "type": { "name": "bool" }, "default": "false" },
-    "aiAssistantHistory": {
+    "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;{ column: string, operator: string, value: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;number&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;bool }&gt;, grouping: Array&lt;{ column: string }&gt;, pivoting: object<br>&#124;&nbsp;{ columns: Array&lt;object&gt;, rows: Array&lt;string&gt;, values: Array&lt;object&gt; }, select: number, sorting: Array&lt;{ column: string, direction: 'asc'<br>&#124;&nbsp;'desc' }&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;"
+        "description": "Array&lt;{ id: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt; }&gt;"
       }
     },
     "aiAssistantPanelOpen": { "type": { "name": "bool" } },
@@ -269,11 +269,11 @@
         "describedArgs": ["model", "details"]
       }
     },
-    "onAiAssistantHistoryChange": {
+    "onAiAssistantConversationsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(aiAssistantHistory: PromptHistory) => void",
-        "describedArgs": ["aiAssistantHistory"]
+        "type": "function(conversations: Array<Conversation>) => void",
+        "describedArgs": ["conversations"]
       }
     },
     "onAiAssistantPanelOpenChange": {
@@ -547,8 +547,8 @@
     "onPrompt": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(prompt: string, promptContext: string) => Promise<PromptResponse>",
-        "describedArgs": ["prompt", "promptContext"],
+        "type": "function(prompt: string, promptContext: string, conversationId: string) => Promise<PromptResponse>",
+        "describedArgs": ["prompt", "promptContext", "conversationId"],
         "returned": "Promise<PromptResponse>"
       }
     },
@@ -1500,6 +1500,18 @@
       "isGlobal": false
     },
     {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGridPremium-aiAssistantPanelConversation",
+      "description": "Styles applied to the root element of the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGridPremium-aiAssistantPanelConversationList",
+      "description": "Styles applied to the root element of the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
       "key": "aiAssistantPanelEmptyText",
       "className": "MuiDataGridPremium-aiAssistantPanelEmptyText",
       "description": "Styles applied to the root element of the AI assistant panel empty text.",
@@ -1515,18 +1527,6 @@
       "key": "aiAssistantPanelHeader",
       "className": "MuiDataGridPremium-aiAssistantPanelHeader",
       "description": "Styles applied to the root element of the AI assistant panel header.",
-      "isGlobal": false
-    },
-    {
-      "key": "aiAssistantPanelHistory",
-      "className": "MuiDataGridPremium-aiAssistantPanelHistory",
-      "description": "Styles applied to the root element of the AI assistant panel history.",
-      "isGlobal": false
-    },
-    {
-      "key": "aiAssistantPanelHistoryList",
-      "className": "MuiDataGridPremium-aiAssistantPanelHistoryList",
-      "description": "Styles applied to the root element of the AI assistant panel history list.",
       "isGlobal": false
     },
     {

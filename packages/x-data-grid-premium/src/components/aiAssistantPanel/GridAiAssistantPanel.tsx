@@ -10,13 +10,14 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
-  gridAiAssistantHistorySelector,
+  gridAiAssistantConversationSelector,
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
+  gridAiAssistantActiveConversationIdSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { GridAiAssistantPanelHistory } from './GridAiAssistantPanelHistory';
+import { GridAiAssistantPanelConversation } from './GridAiAssistantPanelConversation';
 import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';
 
@@ -109,7 +110,12 @@ function GridAiAssistantPanel() {
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
   const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
-  const history = useGridSelector(apiRef, gridAiAssistantHistorySelector);
+  const activeConversationId = useGridSelector(apiRef, gridAiAssistantActiveConversationIdSelector);
+  const conversation = useGridSelector(
+    apiRef,
+    gridAiAssistantConversationSelector,
+    activeConversationId,
+  );
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
 
@@ -134,11 +140,11 @@ function GridAiAssistantPanel() {
         </rootProps.slots.baseIconButton>
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
-        {history.length > 0 ? (
-          <GridAiAssistantPanelHistory open={open} history={history} />
+        {conversation && conversation.prompts.length > 0 ? (
+          <GridAiAssistantPanelConversation open={open} conversation={conversation} />
         ) : (
           <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
-            {apiRef.current.getLocaleText('aiAssistantPanelNoHistory')}
+            {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}
           </AiAssistantPanelEmptyText>
         )}
       </AiAssistantPanelBody>

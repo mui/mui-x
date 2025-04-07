@@ -8,9 +8,9 @@
   },
   {
     "projects": ["x-data-grid-premium"],
-    "name": "aiAssistantHistoryChange",
-    "description": "Fired when the AI Assistant history changes.",
-    "params": "PromptHistory",
+    "name": "aiAssistantConversationsChange",
+    "description": "Fired when the AI Assistant conversation state changes.",
+    "params": "Conversation[]",
     "event": "MuiEvent<{}>"
   },
   {
