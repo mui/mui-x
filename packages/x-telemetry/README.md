@@ -6,7 +6,7 @@ Package used by some of MUI X to collects **anonymous** telemetry data about ge
 
 Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
 
-1. By setting it directly to package settings on the application start (for example in main file).
+1. By setting it directly to package settings on the application start (for example, in the main file).
 
 ```js
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
