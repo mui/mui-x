@@ -1,18 +1,25 @@
-export type PromptHistory = {
+export type Prompt = {
   value: string;
   createdAt: Date;
   response?: PromptResponse;
   variant?: 'success' | 'error' | 'processing';
   helperText?: string;
-}[];
+};
 
 export type PromptSuggestion = {
   value: string;
 };
 
+export type Conversation = {
+  id: string;
+  // title: string; // TODO: uncomment once we start supporting multiple conversations
+  prompts: Prompt[];
+};
+
 export type GridAiAssistantState = {
   panelOpen: boolean;
-  history: PromptHistory;
+  activeConversationId: string;
+  conversations: Conversation[];
   suggestions: PromptSuggestion[];
 };
 
@@ -47,6 +54,7 @@ type Pivoting =
   | {};
 
 export type PromptResponse = {
+  conversationId: string;
   select: number;
   filters: ColumnFilter[];
   filterOperator?: 'and' | 'or';
@@ -66,7 +74,7 @@ export interface GridAiAssistantApi {
   aiAssistant: {
     /**
      * Calls the `onPrompt()` callback to evaluate the prompt and get the necessary updates to the grid state.
-     * Adds the prompt to the history.
+     * Adds the prompt to the current conversation.
      * Updates the grid state based on the prompt response.
      * @param {string} value The prompt to process
      * @returns {Promise<PromptResponse | Error>} The grid state updates or a processing error
@@ -74,15 +82,23 @@ export interface GridAiAssistantApi {
     processPrompt: (value: string) => Promise<PromptResponse | Error>;
     /**
      * Sets whether the AI Assistant panel is open.
-     * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the AI Assistant panel open state.
+     * @param {boolean | ((prev: boolean) => boolean)} open The new value of the AI Assistant panel open state.
      */
     setAiAssistantPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     /**
-     * Sets the history of the AI Assistant.
-     * @param {PromptHistory | ((prevHistory: PromptHistory) => PromptHistory)} history - The new history of the AI Assistant.
+     * Gets the conversation with the given id.
+     * @param {string} id The id of the conversation.
+     * @returns {Conversation | undefined} The conversation or undefined if it does not exist.
      */
-    setAiAssistantHistory: (
-      history: PromptHistory | ((prevHistory: PromptHistory) => PromptHistory),
+    getAiAssistantConversation: (id: string) => Conversation | undefined;
+    /**
+     * Sets the prompts of a conversation.
+     * @param {string} id The id of the conversation.
+     * @param {Prompt[] | ((prevPrompts: Prompt[]) => Prompt[])} prompts The new prompts of the conversation.
+     */
+    setAiAssistantConversation: (
+      id: string,
+      prompts: Prompt[] | ((prevPrompts: Prompt[]) => Prompt[]),
     ) => void;
   };
 }

@@ -23,11 +23,14 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 import {
-  gridAiAssistantHistorySelector,
+  gridAiAssistantConversationsSelector,
+  gridAiAssistantConversationSelector,
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
+  gridAiAssistantActiveConversationIdSelector,
 } from './gridAiAssistantSelectors';
 
+const INITIAL_CONVERSATION_ID = 'default'; // TODO: this will be dynamic once we start supporting multiple conversations
 const DEFAULT_SAMPLE_COUNT = 5;
 
 export const aiAssistantStateInitializer: GridStateInitializer<
@@ -35,7 +38,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     DataGridPremiumProcessedProps,
     | 'initialState'
     | 'aiAssistantPanelOpen'
-    | 'aiAssistantHistory'
+    | 'aiAssistantConversations'
     | 'aiAssistantSuggestions'
     | 'aiAssistant'
   >
@@ -45,7 +48,8 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       ...state,
       aiAssistant: {
         panelOpen: false,
-        history: [],
+        activeConversationId: INITIAL_CONVERSATION_ID,
+        conversations: [],
         suggestions: [],
       } as GridAiAssistantState,
     };
@@ -55,7 +59,8 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     ...state,
     aiAssistant: {
       panelOpen: props.aiAssistantPanelOpen ?? props.initialState?.aiAssistant?.panelOpen ?? false,
-      history: props.aiAssistantHistory ?? props.initialState?.aiAssistant?.history ?? [],
+      conversations:
+        props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
       suggestions:
         props.aiAssistantSuggestions ?? props.initialState?.aiAssistant?.suggestions ?? [],
     } as GridAiAssistantState,
@@ -68,11 +73,11 @@ export const useGridAiAssistant = (
     DataGridPremiumProcessedProps,
     | 'aiAssistant'
     | 'aiAssistantPanelOpen'
-    | 'aiAssistantHistory'
+    | 'aiAssistantConversations'
     | 'aiAssistantSuggestions'
     | 'allowAiAssistantDataSampling'
     | 'onAiAssistantPanelOpenChange'
-    | 'onAiAssistantHistoryChange'
+    | 'onAiAssistantConversationsChange'
     | 'onAiAssistantSuggestionsChange'
     | 'onPrompt'
     | 'disableColumnFilter'
@@ -103,11 +108,11 @@ export const useGridAiAssistant = (
   });
 
   apiRef.current.registerControlState({
-    stateId: 'aiAssistantHistory',
-    propModel: props.aiAssistantHistory,
-    propOnChange: props.onAiAssistantHistoryChange,
-    stateSelector: gridAiAssistantHistorySelector,
-    changeEvent: 'aiAssistantHistoryChange',
+    stateId: 'aiAssistantConversations',
+    propModel: props.aiAssistantConversations,
+    propOnChange: props.onAiAssistantConversationsChange,
+    stateSelector: gridAiAssistantConversationsSelector,
+    changeEvent: 'aiAssistantConversationsChange',
   });
 
   apiRef.current.registerControlState({
@@ -262,10 +267,23 @@ export const useGridAiAssistant = (
     [apiRef, isAiAssistantAvailable],
   );
 
-  const setAiAssistantHistory = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['setAiAssistantHistory']
+  const getAiAssistantConversation = React.useCallback<
+    GridAiAssistantApi['aiAssistant']['getAiAssistantConversation']
   >(
-    (callback) => {
+    (id) => {
+      if (!isAiAssistantAvailable) {
+        return undefined;
+      }
+
+      return gridAiAssistantConversationSelector(apiRef, id);
+    },
+    [apiRef, isAiAssistantAvailable],
+  );
+
+  const setAiAssistantConversation = React.useCallback<
+    GridAiAssistantApi['aiAssistant']['setAiAssistantConversation']
+  >(
+    (id, callback) => {
       if (!isAiAssistantAvailable) {
         return;
       }
@@ -274,7 +292,15 @@ export const useGridAiAssistant = (
         ...state,
         aiAssistant: {
           ...state.aiAssistant,
-          history: typeof callback === 'function' ? callback(state.aiAssistant?.history) : callback,
+          conversations: state.aiAssistant?.conversations.map((conversation) =>
+            conversation.id === id
+              ? {
+                  ...conversation,
+                  prompts:
+                    typeof callback === 'function' ? callback(conversation.prompts) : callback,
+                }
+              : conversation,
+          ),
         },
       }));
     },
@@ -287,11 +313,13 @@ export const useGridAiAssistant = (
         return undefined;
       }
 
+      const activeConversationId = gridAiAssistantActiveConversationIdSelector(apiRef);
+      const isNewConversation = activeConversationId === INITIAL_CONVERSATION_ID;
       const date = Date.now();
 
       apiRef.current.setLoading(true);
-      setAiAssistantHistory((prevHistory) => [
-        ...prevHistory,
+      setAiAssistantConversation(activeConversationId, (prevPrompts) => [
+        ...prevPrompts,
         {
           value,
           createdAt: new Date(date),
@@ -300,24 +328,27 @@ export const useGridAiAssistant = (
         },
       ]);
       try {
-        const response = await onPrompt(value, getPromptContext(allowAiAssistantDataSampling));
+        const response = await onPrompt(
+          value,
+          getPromptContext(allowAiAssistantDataSampling),
+          isNewConversation ? undefined : activeConversationId,
+        );
         applyPromptResult(response);
-        setAiAssistantHistory((prevHistory) =>
-          prevHistory.map((item) =>
+        setAiAssistantConversation(activeConversationId, (prevPrompts) =>
+          prevPrompts.map((item) =>
             item.createdAt.getTime() === date
               ? {
                   ...item,
                   response,
                   variant: 'success',
-                  helperText: '',
                 }
               : item,
           ),
         );
         return response;
       } catch (error: any) {
-        setAiAssistantHistory((prevHistory) =>
-          prevHistory.map((item) =>
+        setAiAssistantConversation(activeConversationId, (prevPrompts) =>
+          prevPrompts.map((item) =>
             item.createdAt.getTime() === date
               ? {
                   ...item,
@@ -338,21 +369,23 @@ export const useGridAiAssistant = (
       onPrompt,
       getPromptContext,
       applyPromptResult,
-      setAiAssistantHistory,
+      setAiAssistantConversation,
     ],
   );
 
   React.useEffect(() => {
-    if (props.aiAssistantHistory) {
-      apiRef.current.aiAssistant.setAiAssistantHistory(props.aiAssistantHistory);
+    if (props.aiAssistantConversations) {
+      props.aiAssistantConversations.forEach((conversation) => {
+        setAiAssistantConversation(conversation.id, conversation.prompts);
+      });
     }
-  }, [apiRef, props.aiAssistantHistory]);
+  }, [apiRef, props.aiAssistantConversations, setAiAssistantConversation]);
 
   React.useEffect(() => {
     if (props.aiAssistantPanelOpen) {
-      apiRef.current.aiAssistant.setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
+      setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
     }
-  }, [apiRef, props.aiAssistantPanelOpen]);
+  }, [apiRef, props.aiAssistantPanelOpen, setAiAssistantPanelOpen]);
 
   useGridApiMethod(
     apiRef,
@@ -360,7 +393,8 @@ export const useGridAiAssistant = (
       aiAssistant: {
         processPrompt,
         setAiAssistantPanelOpen,
-        setAiAssistantHistory,
+        getAiAssistantConversation,
+        setAiAssistantConversation,
       },
     },
     'public',

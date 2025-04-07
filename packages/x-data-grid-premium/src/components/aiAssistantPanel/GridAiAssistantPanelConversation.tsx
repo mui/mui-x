@@ -4,13 +4,13 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { PromptHistory } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import { Conversation } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridPrompt } from '../prompt';
 
-type GridAiAssistantPanelHistoryProps = {
+type GridAiAssistantPanelConversationProps = {
   open: boolean;
-  history: PromptHistory;
+  conversation: Conversation;
 };
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -19,38 +19,38 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['aiAssistantPanelHistory'],
-    list: ['aiAssistantPanelHistoryList'],
+    root: ['aiAssistantPanelConversation'],
+    list: ['aiAssistantPanelConversationList'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const AiAssistantPanelHistoryRoot = styled(GridShadowScrollArea, {
+const AiAssistantPanelConversationRoot = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
-  slot: 'AiAssistantPanelHistory',
+  slot: 'AiAssistantPanelConversation',
 })<{ ownerState: OwnerState; ref: React.RefObject<HTMLDivElement | null> }>({
   flexShrink: 0,
   height: '100%',
 });
 
-const AiAssistantPanelHistoryList = styled('ol', {
+const AiAssistantPanelConversationList = styled('ol', {
   name: 'MuiDataGrid',
-  slot: 'AiAssistantPanelHistoryList',
+  slot: 'AiAssistantPanelConversationList',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   padding: 0,
   margin: 0,
 });
 
-function GridAiAssistantPanelHistory(props: GridAiAssistantPanelHistoryProps) {
-  const { open, history } = props;
+function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversationProps) {
+  const { open, conversation } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  // Scroll to the bottom of the prompt history when the panel opens
+  // Scroll to the bottom of the conversation when the panel opens
   React.useEffect(() => {
     if (open) {
       ref.current?.scrollTo({
@@ -60,27 +60,27 @@ function GridAiAssistantPanelHistory(props: GridAiAssistantPanelHistoryProps) {
     }
   }, [open]);
 
-  // Scroll to the bottom of the prompt history when the prompt history changes
+  // Scroll to the bottom of the conversation when the prompt list changes
   React.useEffect(() => {
     ref.current?.scrollTo({
       top: ref.current?.scrollHeight,
       behavior: 'smooth',
     });
-  }, [history]);
+  }, [conversation]);
 
   return (
-    <AiAssistantPanelHistoryRoot className={classes.root} ownerState={rootProps} ref={ref}>
-      <AiAssistantPanelHistoryList className={classes.list} ownerState={rootProps}>
-        {history.map((item) => (
+    <AiAssistantPanelConversationRoot className={classes.root} ownerState={rootProps} ref={ref}>
+      <AiAssistantPanelConversationList className={classes.list} ownerState={rootProps}>
+        {conversation.prompts.map((item) => (
           <GridPrompt
             key={item.createdAt.toISOString()}
             {...item}
             onRerun={() => apiRef.current.aiAssistant.processPrompt(item.value)}
           />
         ))}
-      </AiAssistantPanelHistoryList>
-    </AiAssistantPanelHistoryRoot>
+      </AiAssistantPanelConversationList>
+    </AiAssistantPanelConversationRoot>
   );
 }
 
-export { GridAiAssistantPanelHistory };
+export { GridAiAssistantPanelConversation };

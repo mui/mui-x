@@ -80,7 +80,6 @@ export default function AssistantWithExamples() {
               { value: 'Sort by company name and employee name' },
               { value: 'Order companies by amount of people' },
             ],
-            history: [],
           },
         }}
         aiAssistant

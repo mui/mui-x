@@ -1,4 +1,8 @@
-import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '@mui/x-data-grid-pro/internals';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
 
 const gridAiAssistantStateSelector = createRootSelector(
@@ -10,9 +14,19 @@ export const gridAiAssistantPanelOpenSelector = createSelector(
   (aiAssistant) => aiAssistant?.panelOpen,
 );
 
-export const gridAiAssistantHistorySelector = createSelector(
+export const gridAiAssistantActiveConversationIdSelector = createSelector(
   gridAiAssistantStateSelector,
-  (aiAssistant) => aiAssistant?.history,
+  (aiAssistant) => aiAssistant?.activeConversationId,
+);
+
+export const gridAiAssistantConversationsSelector = createSelector(
+  gridAiAssistantStateSelector,
+  (aiAssistant) => aiAssistant?.conversations,
+);
+
+export const gridAiAssistantConversationSelector = createSelectorMemoized(
+  gridAiAssistantConversationsSelector,
+  (conversations, id: string) => conversations.find((c) => c.id === id),
 );
 
 export const gridAiAssistantSuggestionsSelector = createSelector(

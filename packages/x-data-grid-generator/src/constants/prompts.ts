@@ -4,6 +4,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
   [
     'sort by name',
     {
+      conversationId: 'default',
       select: -1,
       filters: [],
       aggregation: {},
@@ -20,6 +21,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
   [
     'sort by company name and employee name',
     {
+      conversationId: 'default',
       select: -1,
       filters: [],
       aggregation: {},
@@ -40,6 +42,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
   [
     'show people from the eu',
     {
+      conversationId: 'default',
       select: -1,
       filters: [
         {
@@ -85,6 +88,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
   [
     'order companies by amount of people',
     {
+      conversationId: 'default',
       select: -1,
       filters: [],
       aggregation: {

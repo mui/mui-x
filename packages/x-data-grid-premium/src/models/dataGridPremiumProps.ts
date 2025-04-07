@@ -37,7 +37,7 @@ import {
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
 import {
-  PromptHistory,
+  Conversation,
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
@@ -299,14 +299,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onAiAssistantPanelOpenChange?: (aiAssistantPanelOpen: boolean) => void;
   /**
-   * The history of the AI Assistant.
+   * The conversations with the AI Assistant.
    */
-  aiAssistantHistory?: PromptHistory;
+  aiAssistantConversations?: Conversation[];
   /**
-   * Callback fired when the AI Assistant history changes.
-   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
    */
-  onAiAssistantHistoryChange?: (aiAssistantHistory: PromptHistory) => void;
+  onAiAssistantConversationsChange?: (conversations: Conversation[]) => void;
   /**
    * The suggestions of the AI Assistant.
    */
@@ -324,7 +324,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * The function to be used to process the prompt.
    * @param {string} prompt The prompt to be processed.
    * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
    * @returns {Promise<PromptResponse>} The prompt response.
    */
-  onPrompt?: (prompt: string, promptContext: string) => Promise<PromptResponse>;
+  onPrompt?: (
+    prompt: string,
+    promptContext: string,
+    conversationId?: string,
+  ) => Promise<PromptResponse>;
 }

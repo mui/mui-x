@@ -540,6 +540,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel body"
     },
+    "aiAssistantPanelConversation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel conversation"
+    },
+    "aiAssistantPanelConversationList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel conversation list"
+    },
     "aiAssistantPanelEmptyText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel empty text"
@@ -551,14 +559,6 @@
     "aiAssistantPanelHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the AI assistant panel header"
-    },
-    "aiAssistantPanelHistory": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel history"
-    },
-    "aiAssistantPanelHistoryList": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel history list"
     },
     "aiAssistantPanelSuggestions": {
       "description": "Styles applied to {{nodeName}}.",

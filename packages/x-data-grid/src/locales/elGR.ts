@@ -253,7 +253,7 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelNoHistory: 'No prompt history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
 
   // Prompt field

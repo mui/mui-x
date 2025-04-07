@@ -128,51 +128,29 @@ DataGridPremiumRaw.propTypes = {
    */
   aiAssistant: PropTypes.bool,
   /**
-   * The history of the AI Assistant.
+   * The conversations with the AI Assistant.
    */
-  aiAssistantHistory: PropTypes.arrayOf(
+  aiAssistantConversations: PropTypes.arrayOf(
     PropTypes.shape({
-      createdAt: PropTypes.instanceOf(Date).isRequired,
-      helperText: PropTypes.string,
-      response: PropTypes.shape({
-        aggregation: PropTypes.object.isRequired,
-        filterOperator: PropTypes.oneOf(['and', 'or']),
-        filters: PropTypes.arrayOf(
-          PropTypes.shape({
-            column: PropTypes.string.isRequired,
-            operator: PropTypes.string.isRequired,
-            value: PropTypes.oneOfType([
-              PropTypes.arrayOf(PropTypes.string),
-              PropTypes.arrayOf(PropTypes.number),
-              PropTypes.number,
-              PropTypes.string,
-              PropTypes.bool,
-            ]).isRequired,
+      id: PropTypes.string.isRequired,
+      prompts: PropTypes.arrayOf(
+        PropTypes.shape({
+          createdAt: PropTypes.instanceOf(Date).isRequired,
+          helperText: PropTypes.string,
+          response: PropTypes.shape({
+            aggregation: PropTypes.object.isRequired,
+            conversationId: PropTypes.string.isRequired,
+            filterOperator: PropTypes.oneOf(['and', 'or']),
+            filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+            grouping: PropTypes.arrayOf(PropTypes.object).isRequired,
+            pivoting: PropTypes.object.isRequired,
+            select: PropTypes.number.isRequired,
+            sorting: PropTypes.arrayOf(PropTypes.object).isRequired,
           }),
-        ).isRequired,
-        grouping: PropTypes.arrayOf(
-          PropTypes.shape({
-            column: PropTypes.string.isRequired,
-          }),
-        ).isRequired,
-        pivoting: PropTypes.oneOfType([
-          PropTypes.object,
-          PropTypes.shape({
-            columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-            rows: PropTypes.arrayOf(PropTypes.string).isRequired,
-            values: PropTypes.arrayOf(PropTypes.object).isRequired,
-          }),
-        ]).isRequired,
-        select: PropTypes.number.isRequired,
-        sorting: PropTypes.arrayOf(
-          PropTypes.shape({
-            column: PropTypes.string.isRequired,
-            direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
-          }),
-        ).isRequired,
-      }),
-      value: PropTypes.string.isRequired,
-      variant: PropTypes.oneOf(['error', 'processing', 'success']),
+          value: PropTypes.string.isRequired,
+          variant: PropTypes.oneOf(['error', 'processing', 'success']),
+        }),
+      ).isRequired,
     }),
   ),
   /**
@@ -715,10 +693,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onAggregationModelChange: PropTypes.func,
   /**
-   * Callback fired when the AI Assistant history changes.
-   * @param {PromptHistory} aiAssistantHistory The new AI Assistant history.
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
    */
-  onAiAssistantHistoryChange: PropTypes.func,
+  onAiAssistantConversationsChange: PropTypes.func,
   /**
    * Callback fired when the AI Assistant panel open state changes.
    * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
@@ -974,6 +952,7 @@ DataGridPremiumRaw.propTypes = {
    * The function to be used to process the prompt.
    * @param {string} prompt The prompt to be processed.
    * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
    * @returns {Promise<PromptResponse>} The prompt response.
    */
   onPrompt: PropTypes.func,
