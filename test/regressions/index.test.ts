@@ -133,11 +133,6 @@ async function main() {
     });
 
     routes.forEach((route) => {
-      // let t = it as any;
-      // if (route.includes('BasicFunnel')) {
-      //   t = it.only
-      // }
-
       it(`creates screenshots of ${route}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
