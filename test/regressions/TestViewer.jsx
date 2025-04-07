@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { useLocation } from 'react-router';
@@ -52,11 +51,6 @@ function MockTime(props) {
   return ready ? props.children : null;
 }
 
-MockTime.propTypes = {
-  children: PropTypes.node.isRequired,
-  isDataGridTest: PropTypes.bool,
-};
-
 function LoadFont(props) {
   const { children, ...other } = props;
   const location = useLocation();
@@ -105,10 +99,6 @@ function LoadFont(props) {
   );
 }
 
-LoadFont.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
 function TestViewer(props) {
   const { children, isDataGridTest, path } = props;
 
@@ -148,11 +138,5 @@ function TestViewer(props) {
     </React.Fragment>
   );
 }
-
-TestViewer.propTypes = {
-  children: PropTypes.node.isRequired,
-  isDataGridTest: PropTypes.bool.isRequired,
-  path: PropTypes.string.isRequired,
-};
 
 export default TestViewer;
