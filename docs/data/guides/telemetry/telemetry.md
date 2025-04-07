@@ -33,9 +33,9 @@ We track the following details anonymously during development mode:
 **Privacy Assurance**: We are committed to maintaining your privacy. All data collected is anonymized, ensuring that no personally identifiable information is gathered. We focus solely on understanding usage patterns to better serve our customers and developer community.
 :::
 
-## Telemetry for Pro and Premium components
+## Where does Telemetry apply?
 
-Telemetry collection is specifically associated with the usage of paid MUI X components, such as the advanced versions of the data grid and date/time pickers. This targeted approach allows us to focus on enhancing the premium features that our subscribers rely on.
+Telemetry collection is specifically associated with the usage of paid MUI X Pro and Premium components, such as the advanced versions of the data grid and date/time pickers. This targeted approach allows us to focus on enhancing the premium features that our subscribers rely on.
 
 ## Telemetry in development mode only
 
