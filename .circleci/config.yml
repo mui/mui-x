@@ -42,6 +42,7 @@ default-job: &default-job
     REACT_VERSION: << parameters.react-version >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
+  resource_class: arm.medium
   docker:
     - image: cimg/node:20.19
 # CircleCI has disabled the cache across forks for security reasons.
