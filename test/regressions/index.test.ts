@@ -269,6 +269,43 @@ async function main() {
       });
     });
 
+    describe('charts', () => {
+      it('should take a screenshot of the print preview', async function test() {
+        this.timeout(20000);
+
+        const route = '/docs-charts-export/PrintChart';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+
+        // await navigateToTest(route);
+        await page.goto(`${baseUrl}${route}#no-dev`);
+
+        const printButton = page.getByRole('button', { name: 'Print' });
+
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(async () => {
+          await printButton.click();
+        });
+
+        await sleep(4000);
+
+        return new Promise((resolve, reject) => {
+          // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+          const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
+          const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+          ffmpeg.on('close', (code) => {
+            if (code === 0) {
+              resolve();
+            } else {
+              reject(new Error(`ffmpeg exited with code ${code}`));
+            }
+          });
+        });
+      });
+    });
+
     // describe('DateTimePicker', () => {
     //   it('should handle change in pointer correctly', async () => {
     //     const index = routes.findIndex(
