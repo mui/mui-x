@@ -5,10 +5,12 @@ import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-export default function DemoRadarAxisHighlight() {
-  const [hideMark, setHideMark] = React.useState(true);
+export default function DemoRadarVisualisation() {
+  const [hideMark, setHideMark] = React.useState(false);
+  const [fillArea, setFillArea] = React.useState(false);
 
-  const withHideMark = (series) => series.map((item) => ({ ...item, hideMark }));
+  const withOptions = (series) =>
+    series.map((item) => ({ ...item, hideMark, fillArea }));
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -21,6 +23,14 @@ export default function DemoRadarAxisHighlight() {
           label="with mark"
           labelPlacement="end"
         />
+        <FormControlLabel
+          checked={fillArea}
+          control={
+            <Checkbox onChange={(event) => setFillArea(event.target.checked)} />
+          }
+          label="fill area"
+          labelPlacement="end"
+        />
       </Stack>
       <Stack
         sx={{ width: '100%' }}
@@ -31,7 +41,7 @@ export default function DemoRadarAxisHighlight() {
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <RadarChart
             {...commonSettings}
-            series={withHideMark([lisaGrades, bartGrades])}
+            series={withOptions([lisaGrades, bartGrades])}
           />
         </Box>
       </Stack>
