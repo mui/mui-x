@@ -193,7 +193,7 @@ return (
 ### For all columns
 
 To disable row grouping for all columns, set the `disableRowGrouping` prop to `true`.
-This disables all features related to row grouping, even if a model is provided.
+This disables all features related to row grouping, unless a model is provided, in which case row grouping is set to read-only mode as described in [Grouping non-groupable columns programmatically](#grouping-non-groupable-columns-programmatically).
 
 {{"demo": "RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -206,7 +206,7 @@ In the example below, the **Director** column cannot be grouped, even though the
 
 {{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Grouping non-groupable columns
+### Grouping non-groupable columns programmatically
 
 To apply row grouping programmatically on non-groupable columns (columns with `groupable: false` in the `GridColDef`), you can provide the row grouping model in one of three ways:
 

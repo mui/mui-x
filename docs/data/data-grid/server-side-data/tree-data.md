@@ -78,7 +78,7 @@ Cache has been disabled in this demo for simplicity.
 
 ## Group expansion
 
-Group expansion of server-side tree data works the same as explained in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+Group expansion of server-side tree data works similarly to how it's described in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
 The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` in a waterfall manner.
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.
