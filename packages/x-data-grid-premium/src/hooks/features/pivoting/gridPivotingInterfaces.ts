@@ -1,5 +1,8 @@
 import type { GridColDef } from '@mui/x-data-grid-pro';
-import type { GridPivotingStatePartial } from '@mui/x-data-grid/internals';
+import type {
+  GridPivotingPrivateApiCommunity,
+  GridPivotingStatePartial,
+} from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 export type GridPivotingPropsOverrides = {
@@ -58,7 +61,7 @@ export interface GridPivotingApi {
   setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
 
-export interface GridPivotingPrivateApi {
+export interface GridPivotingPrivateApi extends GridPivotingPrivateApiCommunity {
   updatePivotModel: (params: {
     field: string;
     targetSection: 'columns' | 'rows' | 'values' | null;

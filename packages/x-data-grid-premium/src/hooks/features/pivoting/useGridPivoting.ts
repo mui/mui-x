@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
   GridColDef,
+  GridRowId,
   GridRowModel,
   gridDataRowIdsSelector,
+  gridRowIdSelector,
   gridRowsLoadingSelector,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
@@ -101,7 +103,8 @@ export const useGridPivoting = (
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<
-    { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
+    | { rows: GridRowModel[]; columns: Map<string, GridColDef>; rowsUpdatedDuringPivoting: boolean }
+    | undefined
   >(undefined);
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
@@ -143,7 +146,7 @@ export const useGridPivoting = (
       apiRef.current.getLocaleText,
     );
 
-    return { rows, columns: initialColumns };
+    return { rows, columns: initialColumns, rowsUpdatedDuringPivoting: false };
   }, [apiRef, props.getPivotDerivedColumns, originalColumns]);
 
   const computePivotingState = React.useCallback(
@@ -207,9 +210,15 @@ export const useGridPivoting = (
   });
 
   useEnhancedEffect(() => {
-    if ((!isPivotingAvailable || !isPivotActive) && exportedStateRef.current) {
-      apiRef.current.restoreState(exportedStateRef.current);
-      exportedStateRef.current = null;
+    if (!isPivotingAvailable || !isPivotActive) {
+      if (exportedStateRef.current) {
+        apiRef.current.restoreState(exportedStateRef.current);
+        exportedStateRef.current = null;
+      }
+      if (nonPivotDataRef.current && nonPivotDataRef.current.rowsUpdatedDuringPivoting) {
+        apiRef.current.setRows(nonPivotDataRef.current.rows);
+        nonPivotDataRef.current = undefined;
+      }
     }
   }, [isPivotActive, apiRef, isPivotingAvailable]);
 
@@ -322,8 +331,6 @@ export const useGridPivoting = (
 
         if (newPivotMode) {
           nonPivotDataRef.current = getInitialData();
-        } else {
-          nonPivotDataRef.current = undefined;
         }
 
         const newPivotingState: GridPivotingState = {
@@ -398,8 +405,53 @@ export const useGridPivoting = (
     [apiRef, props.getPivotDerivedColumns, isPivotingAvailable],
   );
 
+  const updateNonPivotData = React.useCallback<GridPivotingPrivateApi['updateNonPivotData']>(
+    (rows, keepPreviousRows = true) => {
+      if (!nonPivotDataRef.current || !rows || rows.length === 0) {
+        return;
+      }
+
+      if (keepPreviousRows) {
+        const rowsMap = new Map<GridRowId, GridRowModel>();
+        nonPivotDataRef.current.rows.forEach((row) => {
+          rowsMap.set(gridRowIdSelector(apiRef, row), row);
+        });
+        rows.forEach((row) => {
+          const rowId = gridRowIdSelector(apiRef, row);
+          // eslint-disable-next-line no-underscore-dangle
+          if (row._action === 'delete') {
+            rowsMap.delete(rowId);
+          } else {
+            rowsMap.set(rowId, row);
+          }
+        });
+
+        nonPivotDataRef.current.rows = Array.from(rowsMap.values());
+        nonPivotDataRef.current.rowsUpdatedDuringPivoting = true;
+      } else {
+        nonPivotDataRef.current.rows = rows;
+        nonPivotDataRef.current.rowsUpdatedDuringPivoting = true;
+      }
+
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          pivoting: {
+            ...state.pivoting,
+            ...computePivotingState(state.pivoting),
+          },
+        };
+      });
+    },
+    [apiRef, computePivotingState],
+  );
+
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
-  useGridApiMethod(apiRef, { updatePivotModel, handleOriginalColumnsChange }, 'private');
+  useGridApiMethod(
+    apiRef,
+    { updatePivotModel, handleOriginalColumnsChange, updateNonPivotData },
+    'private',
+  );
 
   useEnhancedEffect(() => {
     apiRef.current.handleOriginalColumnsChange(originalColumns);
