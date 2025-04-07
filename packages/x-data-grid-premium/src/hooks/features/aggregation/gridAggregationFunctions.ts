@@ -47,12 +47,18 @@ const minAgg: GridAggregationFunction<number | Date> = {
       return null;
     }
 
+    let hasValidValue = false;
     let min: number | Date = +Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value != null && value < min) {
         min = value;
+        hasValidValue = true;
       }
+    }
+
+    if (!hasValidValue) {
+      return null;
     }
 
     return min;
@@ -66,12 +72,18 @@ const maxAgg: GridAggregationFunction<number | Date> = {
       return null;
     }
 
+    let hasValidValue = false;
     let max: number | Date = -Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value != null && value > max) {
         max = value;
+        hasValidValue = true;
       }
+    }
+
+    if (!hasValidValue) {
+      return null;
     }
 
     return max;
