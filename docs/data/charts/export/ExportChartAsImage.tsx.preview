@@ -1,0 +1,15 @@
+<LineChartPro
+  apiRef={apiRef}
+  xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+  series={[
+    { data: [4, 9, 1, 4, 9, 6], label: 'Series A' },
+    {
+      data: [2, 5.5, 2, 8.5, 1.5, 5],
+      area: true,
+      label: 'Series B',
+    },
+  ]}
+  height={300}
+  grid={{ vertical: true, horizontal: true }}
+/>
+<ExportParamsSelector apiRef={apiRef} />
