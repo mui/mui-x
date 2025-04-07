@@ -140,9 +140,9 @@ const theme = createTheme({
 });
 ```
 
-### Light and dark mode in Material UI v6
+### Light and dark mode in Material UI v6
 
-Material UI v6 users can use the `colorSchemes` property to specify different colors for light and dark mode:
+Material UI v6 users can use the `colorSchemes` property to specify different colors for light and dark mode:
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
@@ -172,9 +172,9 @@ const theme = createTheme({
 });
 ```
 
-### Light and dark mode in Material UI v5
+### Light and dark mode in Material UI v5
 
-Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
+Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
 
 {{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
