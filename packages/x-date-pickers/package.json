@@ -113,8 +113,8 @@
     "moment-hijri": "^3.0.0",
     "moment-jalaali": "^0.10.4",
     "moment-timezone": "^0.5.48",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

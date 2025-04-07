@@ -111,8 +111,8 @@
     "@types/lodash": "^4.17.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "^20.17.30",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.4",
     "@types/yargs": "^17.0.33",
@@ -180,8 +180,8 @@
     "prettier": "^3.5.3",
     "pretty-quick": "^4.1.1",
     "process": "^0.11.10",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "remark": "^15.0.1",
     "rimraf": "^6.0.1",
     "serve": "^14.2.4",
@@ -199,7 +199,7 @@
     "yargs": "^17.7.2"
   },
   "resolutions": {
-    "react-is": "^19.0.0",
+    "react-is": "^19.1.0",
     "@types/node": "^20.17.30"
   },
   "packageManager": "pnpm@10.7.1",
