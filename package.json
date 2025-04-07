@@ -29,7 +29,7 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
-    "size:snapshot": "NODE_OPTIONS=--max-old-space-size=8192 node ./scripts/sizeSnapshot/create",
+    "size:snapshot": "node NODE_OPTIONS=--max-old-space-size=8192 ./scripts/sizeSnapshot/create",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "tc": "node test/cli.js",
     "test": "node scripts/test.mjs",
