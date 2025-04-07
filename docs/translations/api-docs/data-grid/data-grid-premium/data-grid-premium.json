@@ -9,9 +9,9 @@
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
-    "aria-label": { "description": "The label of the Data Grid." },
+    "aria-label": { "description": "The <code>aria-label</code> of the Data Grid." },
     "aria-labelledby": {
-      "description": "The id of the element containing a label for the Data Grid."
+      "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
       "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
@@ -239,11 +239,20 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
+    "label": {
+      "description": "The label of the Data Grid. If the <code>showToolbar</code> prop is <code>true</code>, the label will be displayed in the toolbar and applied to the <code>aria-label</code> attribute of the grid. If the <code>showToolbar</code> prop is <code>false</code>, the label will not be visible but will be applied to the <code>aria-label</code> attribute of the grid."
+    },
     "lazyLoading": {
       "description": "Used together with <code>dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
     },
     "lazyLoadingRequestThrottleMs": {
       "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
+    },
+    "listView": {
+      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>listViewColumn</code>."
+    },
+    "listViewColumn": {
+      "description": "Definition of the column rendered when the <code>listView</code> prop is enabled."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
@@ -672,12 +681,6 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
-    },
-    "unstable_listColumn": {
-      "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
-    },
-    "unstable_listView": {
-      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
     },
     "virtualizeColumnsWithAutoRowHeight": {
       "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."
@@ -1223,9 +1226,17 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar container element"
     },
+    "toolbarDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar divider element"
+    },
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
+    },
+    "toolbarLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar label element"
     },
     "toolbarPromptControl": {
       "description": "Styles applied to {{nodeName}}.",

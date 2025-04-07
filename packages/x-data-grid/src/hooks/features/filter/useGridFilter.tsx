@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -10,7 +11,7 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId } from '../../../models/gridRows';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useLazyRef } from '../../utils/useLazyRef';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
@@ -34,7 +35,6 @@ import {
   shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { isDeepEqual } from '../../../utils/utils';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 
 export const filterStateInitializer: GridStateInitializer<
@@ -522,11 +522,11 @@ export const useGridFilter = (
     });
   }, [apiRef]);
 
-  useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
-  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
-  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
-  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+  useGridEvent(apiRef, 'rowsSet', updateFilteredRows);
+  useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
+  useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridEvent(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
+  useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
     if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed

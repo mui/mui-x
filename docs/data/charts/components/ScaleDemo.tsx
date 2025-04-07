@@ -121,7 +121,7 @@ export default function ScaleDemo() {
       ]}
       yAxis={[
         { id: 'left_axis_id', position: 'left' },
-        { id: 'right_axis_id', position: 'right' },
+        { id: 'right_axis_id', position: 'right', width: 50 },
       ]}
     >
       <LinePlot />

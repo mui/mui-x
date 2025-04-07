@@ -1,5 +1,12 @@
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
+type CommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
+  className?: string;
+  style?: React.CSSProperties;
+  [k: `aria-${string}`]: any;
+  [k: `data-${string}`]: any;
+};
+
 export interface AutocompleteFilterOptionsState<Value> {
   inputValue: string;
   getOptionLabel: (option: Value) => string;
@@ -74,7 +81,7 @@ export type AutocompleteProps<
   };
 };
 
-export type BadgeProps = {
+export type BadgeProps = CommonProps & {
   badgeContent?: React.ReactNode;
   children: React.ReactNode;
   color?: 'primary' | 'default' | 'error';
@@ -84,24 +91,20 @@ export type BadgeProps = {
   style?: React.CSSProperties;
 };
 
-export type ButtonProps = {
-  ref?: Ref;
+export type ButtonProps = CommonProps & {
+  ref?: Ref<HTMLButtonElement>;
   children?: React.ReactNode;
-  className?: string;
   disabled?: boolean;
   id?: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
-  onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
   role?: string;
   size?: 'small' | 'medium' | 'large';
   startIcon?: React.ReactNode;
-  style?: React.CSSProperties;
   tabIndex?: number;
   title?: string;
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
 };
 
-export type CheckboxProps = {
+export type CheckboxProps = CommonProps & {
   ref?: Ref<HTMLButtonElement>;
   id?: string;
   autoFocus?: boolean;
@@ -113,9 +116,7 @@ export type CheckboxProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   name?: string;
   label?: React.ReactNode;
-  onClick?: React.MouseEventHandler;
   onChange?: React.ChangeEventHandler;
-  onKeyDown?: React.KeyboardEventHandler;
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
@@ -133,26 +134,24 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
 };
 
 export type DividerProps = {
+  className?: string;
   orientation?: 'horizontal' | 'vertical';
 };
 
-export type MenuListProps = {
+export type MenuListProps = CommonProps & {
   ref?: Ref<HTMLUListElement>;
   id?: string;
-  className?: string;
   children?: React.ReactNode;
   autoFocus?: boolean;
   autoFocusItem?: boolean;
-  onKeyDown?: React.KeyboardEventHandler;
 };
 
-export type MenuItemProps = {
+export type MenuItemProps = CommonProps & {
   autoFocus?: boolean;
   children?: React.ReactNode;
   /** For items that aren't interactive themselves (but may contain an interactive widget) */
   inert?: boolean;
   disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLElement>;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
   selected?: boolean;
@@ -181,7 +180,7 @@ type ClickAwayMouseEventHandler =
   | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
-export type PaginationProps = {
+export type PaginationProps = CommonProps & {
   count: number;
   page: number;
   rowsPerPage: number;
@@ -192,10 +191,10 @@ export type PaginationProps = {
   disabled?: boolean;
 };
 
-export type PopperProps = {
+export type PopperProps = CommonProps & {
+  ref?: Ref<HTMLDivElement>;
   open: boolean;
   children?: React.ReactNode;
-  className?: string;
   clickAwayTouchEvent?: false | ClickAwayTouchEventHandler;
   clickAwayMouseEvent?: false | ClickAwayMouseEventHandler;
   flip?: boolean;
@@ -205,14 +204,13 @@ export type PopperProps = {
   onDidShow?: () => void;
   onDidHide?: () => void;
   id?: string;
-  ref?: Ref;
   target?: Element | null;
   transition?: boolean;
   /** @default 'bottom' */
   placement?: Placement;
 };
 
-export type CircularProgressProps = {
+export type CircularProgressProps = CommonProps & {
   /**
    * Pixels or CSS value.
    * @default 40
@@ -222,12 +220,11 @@ export type CircularProgressProps = {
   color?: 'inherit' | 'primary';
 };
 
-export type LinearProgressProps = {};
+export type LinearProgressProps = CommonProps & {};
 
-export type InputProps = {
+export type InputProps = CommonProps & {
   ref?: React.Ref<HTMLElement>;
   inputRef?: React.Ref<HTMLInputElement>;
-  className?: string;
   fullWidth?: boolean;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
@@ -240,7 +237,7 @@ export type InputProps = {
   };
 };
 
-export type SelectProps = {
+export type SelectProps = CommonProps & {
   ref?: Ref;
   id?: string;
   value?: any;
@@ -248,9 +245,6 @@ export type SelectProps = {
   error?: boolean;
   disabled?: boolean;
   onChange?: React.ChangeEventHandler;
-  onFocus?: React.FocusEventHandler;
-  onBlur?: React.FocusEventHandler;
-  onKeyDown?: React.KeyboardEventHandler;
   onOpen?: (event: React.SyntheticEvent) => void;
   onClose?: (
     event: React.KeyboardEvent,
@@ -264,32 +258,30 @@ export type SelectProps = {
   slotProps?: {
     htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
   };
-  style?: React.CSSProperties;
   children?: React.ReactNode;
 };
 
-export type SelectOptionProps = {
+export type SelectOptionProps = CommonProps & {
   native: boolean;
   value: any;
   children?: React.ReactNode;
 };
 
-export type SkeletonProps = {
+export type SkeletonProps = CommonProps & {
   variant?: 'circular' | 'text';
   width?: number | string;
   height?: number | string;
 };
 
-export type SwitchProps = {
+export type SwitchProps = CommonProps & {
   checked?: boolean;
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
 };
 
-export type TextFieldProps = {
+export type TextFieldProps = CommonProps & {
   role?: string;
   autoComplete?: string;
-  className?: string;
   color?: 'primary' | 'error';
   disabled?: boolean;
   error?: boolean;
@@ -299,7 +291,6 @@ export type TextFieldProps = {
   inputRef?: React.Ref<HTMLInputElement>;
   label?: React.ReactNode;
   onChange?: React.ChangeEventHandler;
-  onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
@@ -307,14 +298,13 @@ export type TextFieldProps = {
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
-  style?: React.CSSProperties;
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
   ref?: Ref<HTMLInputElement>;
 };
 
-export type TooltipProps = {
+export type TooltipProps = CommonProps & {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
