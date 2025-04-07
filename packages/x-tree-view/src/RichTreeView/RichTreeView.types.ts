@@ -3,19 +3,18 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SlotComponentProps } from '@mui/utils/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
-import {
-  RichTreeViewPluginParameters,
-  RichTreeViewPluginSlotProps,
-  RichTreeViewPluginSlots,
-  RichTreeViewPluginSignatures,
-} from './RichTreeView.plugins';
+import { RichTreeViewPluginParameters, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
 import {
   RichTreeViewItemsSlotProps,
   RichTreeViewItemsSlots,
 } from '../internals/components/RichTreeViewItems';
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+} from '../internals/TreeViewProvider/TreeViewStyleContext';
 
-export interface RichTreeViewSlots extends RichTreeViewPluginSlots, RichTreeViewItemsSlots {
+export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewRoot
@@ -24,7 +23,7 @@ export interface RichTreeViewSlots extends RichTreeViewPluginSlots, RichTreeView
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewPluginSlotProps,
+  extends TreeViewSlotProps,
     RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
 }

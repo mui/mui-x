@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
@@ -63,12 +64,16 @@ import {
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
-import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
+import type { GridSlotProps as P } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+import './augmentation';
+
 export { useMaterialCSSVariables } from './variables';
+
+/* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
@@ -100,7 +105,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 
 const Checkbox = styled(MUICheckbox, {
   shouldForwardProp: (prop) => prop !== 'density',
-})<{ density?: GridSlotProps['baseCheckbox']['density'] }>(({ theme }) => ({
+})<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
     {
       props: { density: 'compact' },
@@ -111,11 +116,12 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
+const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
     label,
     labelId,
+    material,
     disabled,
     slotProps,
     onChange,
@@ -153,6 +159,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         onOpen={onOpen}
         MenuProps={menuProps}
         size={size}
+        {...material}
       />
     </MUIFormControl>
   );
@@ -173,121 +180,53 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
   },
 })) as typeof MUIPagination;
 
-const BasePagination = forwardRef<any, GridSlotProps['basePagination']>(
-  function BasePagination(props, ref) {
-    const { onRowsPerPageChange, disabled, ...rest } = props;
-    const computedProps = React.useMemo(() => {
-      if (!disabled) {
-        return undefined;
+const BasePagination = forwardRef<any, P['basePagination']>(function BasePagination(props, ref) {
+  const { onRowsPerPageChange, material, disabled, ...rest } = props;
+  const computedProps = React.useMemo(() => {
+    if (!disabled) {
+      return undefined;
+    }
+    return {
+      backIconButtonProps: { disabled: true },
+      nextIconButtonProps: { disabled: true },
+    };
+  }, [disabled]);
+
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const { estimatedRowCount } = rootProps;
+
+  return (
+    <StyledPagination
+      component="div"
+      onRowsPerPageChange={useEventCallback(
+        (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+          onRowsPerPageChange?.(Number(event.target.value));
+        },
+      )}
+      labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
+      labelDisplayedRows={(params) =>
+        apiRef.current.getLocaleText('paginationDisplayedRows')({
+          ...params,
+          estimated: estimatedRowCount,
+        })
       }
-      return {
-        backIconButtonProps: { disabled: true },
-        nextIconButtonProps: { disabled: true },
-      };
-    }, [disabled]);
+      getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+      {...computedProps}
+      {...rest}
+      {...material}
+      ref={ref}
+    />
+  );
+});
 
-    const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const { estimatedRowCount } = rootProps;
+const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIBadge {...rest} {...material} ref={ref} />;
+});
 
-    return (
-      <StyledPagination
-        component="div"
-        onRowsPerPageChange={useEventCallback(
-          (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-            onRowsPerPageChange?.(Number(event.target.value));
-          },
-        )}
-        labelRowsPerPage={apiRef.current.getLocaleText('paginationRowsPerPage')}
-        labelDisplayedRows={(params) =>
-          apiRef.current.getLocaleText('paginationDisplayedRows')({
-            ...params,
-            estimated: estimatedRowCount,
-          })
-        }
-        getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
-        {...computedProps}
-        {...rest}
-        ref={ref}
-      />
-    );
-  },
-);
-
-/* eslint-disable material-ui/disallow-react-api-in-server-components */
-
-const iconSlots: GridIconSlotsComponent = {
-  booleanCellTrueIcon: GridCheckIcon,
-  booleanCellFalseIcon: GridCloseIcon,
-  columnMenuIcon: GridTripleDotsVerticalIcon,
-  openFilterButtonIcon: GridFilterListIcon,
-  filterPanelDeleteIcon: GridCloseIcon,
-  columnFilteredIcon: GridFilterAltIcon,
-  columnSelectorIcon: GridColumnIcon,
-  columnUnsortedIcon: GridColumnUnsortedIcon,
-  columnSortedAscendingIcon: GridArrowUpwardIcon,
-  columnSortedDescendingIcon: GridArrowDownwardIcon,
-  columnResizeIcon: GridSeparatorIcon,
-  densityCompactIcon: GridViewHeadlineIcon,
-  densityStandardIcon: GridTableRowsIcon,
-  densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridDownloadIcon,
-  moreActionsIcon: GridMoreVertIcon,
-  treeDataCollapseIcon: GridExpandMoreIcon,
-  treeDataExpandIcon: GridKeyboardArrowRight,
-  groupingCriteriaCollapseIcon: GridExpandMoreIcon,
-  groupingCriteriaExpandIcon: GridKeyboardArrowRight,
-  detailPanelExpandIcon: GridAddIcon,
-  detailPanelCollapseIcon: GridRemoveIcon,
-  rowReorderIcon: GridDragIcon,
-  quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridClearIcon,
-  columnMenuHideIcon: GridVisibilityOffIcon,
-  columnMenuSortAscendingIcon: GridArrowUpwardIcon,
-  columnMenuSortDescendingIcon: GridArrowDownwardIcon,
-  columnMenuUnsortIcon: null,
-  columnMenuFilterIcon: GridFilterAltIcon,
-  columnMenuManageColumnsIcon: GridViewColumnIcon,
-  columnMenuClearIcon: GridClearIcon,
-  loadIcon: GridLoadIcon,
-  filterPanelAddIcon: GridAddIcon,
-  filterPanelRemoveAllIcon: GridDeleteForeverIcon,
-  columnReorderIcon: GridDragIcon,
-  menuItemCheckIcon: GridCheckIcon,
-};
-
-const baseSlots: GridBaseSlots = {
-  baseAutocomplete: BaseAutocomplete,
-  baseBadge: MUIBadge,
-  baseCheckbox: forwardRef(BaseCheckbox),
-  baseChip: forwardRef(BaseChip),
-  baseCircularProgress: MUICircularProgress,
-  baseDivider: MUIDivider,
-  baseInput: BaseInput,
-  baseLinearProgress: MUILinearProgress,
-  baseMenuList: BaseMenuList,
-  baseMenuItem: BaseMenuItem,
-  baseTextField: BaseTextField,
-  baseButton: MUIButton,
-  baseIconButton: MUIIconButton,
-  baseTooltip: MUITooltip,
-  basePagination: BasePagination,
-  basePopper: BasePopper,
-  baseSelect: BaseSelect,
-  baseSelectOption: BaseSelectOption,
-  baseSkeleton: MUISkeleton,
-  baseSwitch: forwardRef(BaseSwitch),
-};
-
-const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
-  ...baseSlots,
-  ...iconSlots,
-};
-
-export default materialSlots;
-
-function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
+const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
+  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -308,11 +247,11 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
     return (
       <Checkbox
         {...other}
-        className={className}
+        {...material}
+        className={clsx(className, material?.className)}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
         touchRippleRef={rippleRef}
-        density={density}
       />
     );
   }
@@ -323,43 +262,84 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
       control={
         <Checkbox
           {...other}
+          {...material}
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
           touchRippleRef={rippleRef}
-          density={density}
         />
       }
       label={label}
       fullWidth={fullWidth}
     />
   );
-}
+});
 
-function BaseChip(props: GridSlotProps['baseChip'], ref: React.Ref<HTMLDivElement>) {
-  return <MUIChip variant="outlined" {...props} ref={ref} />;
-}
+const BaseCircularProgress = forwardRef<any, P['baseCircularProgress']>(
+  function BaseCircularProgress(props, ref) {
+    const { material, ...rest } = props;
+    return <MUICircularProgress {...rest} {...material} ref={ref} />;
+  },
+);
 
-function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButtonElement>) {
-  const { label, className, ...other } = props;
+const BaseDivider = forwardRef<any, P['baseDivider']>(function BaseDivider(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIDivider {...rest} {...material} ref={ref} />;
+});
+
+const BaseLinearProgress = forwardRef<any, P['baseLinearProgress']>(
+  function BaseLinearProgress(props, ref) {
+    const { material, ...rest } = props;
+    return <MUILinearProgress {...rest} {...material} ref={ref} />;
+  },
+);
+
+const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIButton {...rest} {...material} ref={ref} />;
+});
+
+const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIChip {...rest} {...material} ref={ref} />;
+});
+
+const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIIconButton {...rest} {...material} ref={ref} />;
+});
+
+const BaseTooltip = forwardRef<any, P['baseTooltip']>(function BaseTooltip(props, ref) {
+  const { material, ...rest } = props;
+  return <MUITooltip {...rest} {...material} ref={ref} />;
+});
+
+const BaseSkeleton = forwardRef<any, P['baseSkeleton']>(function BaseSkeleton(props, ref) {
+  const { material, ...rest } = props;
+  return <MUISkeleton {...rest} {...material} ref={ref} />;
+});
+
+const BaseSwitch = forwardRef<any, P['baseSwitch']>(function BaseSwitch(props, ref) {
+  const { material, label, className, ...rest } = props;
 
   if (!label) {
-    return <MUISwitch {...other} className={className} ref={ref} />;
+    return <MUISwitch {...rest} {...material} className={className} ref={ref} />;
   }
 
   return (
     <FormControlLabel
       className={className}
-      control={<MUISwitch {...other} ref={ref} />}
+      control={<MUISwitch {...rest} {...material} ref={ref} />}
       label={label}
     />
   );
-}
+});
 
-function BaseMenuList(props: GridSlotProps['baseMenuList']) {
-  return <MUIMenuList {...props} />;
-}
+const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIMenuList {...rest} {...material} ref={ref} />;
+});
 
-function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
+function BaseMenuItem(props: P['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;
   if (inert) {
     (other as any).disableRipple = true;
@@ -371,14 +351,15 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   ]);
 }
 
-function BaseTextField(props: GridSlotProps['baseTextField']) {
+function BaseTextField(props: P['baseTextField']) {
   // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
   // translate the pattern.
-  const { slotProps, ...rest } = props;
+  const { slotProps, material, ...rest } = props;
   return (
     <MUITextField
       variant="outlined"
       {...rest}
+      {...material}
       inputProps={slotProps?.htmlInput}
       InputProps={transformInputProps(slotProps?.input as any)}
       InputLabelProps={{
@@ -389,7 +370,7 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
   );
 }
 
-function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
+function BaseAutocomplete(props: P['baseAutocomplete']) {
   const rootProps = useGridRootProps();
   const {
     id,
@@ -403,6 +384,7 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
     label,
     placeholder,
     slotProps,
+    material,
     ...rest
   } = props;
 
@@ -449,20 +431,21 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
         );
       }}
       {...rest}
+      {...material}
     />
   );
 }
 
-function BaseInput(props: GridSlotProps['baseInput']) {
+function BaseInput(props: P['baseInput']) {
   return <MUIInputBase {...transformInputProps(props)} />;
 }
 
-function transformInputProps(props: GridSlotProps['baseInput'] | undefined, wrapAdornments = true) {
+function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments = true) {
   if (!props) {
     return undefined;
   }
 
-  const { slotProps, ...rest } = props;
+  const { slotProps, material, ...rest } = props;
   const result = rest as Partial<MUIInputBaseProps>;
 
   if (wrapAdornments) {
@@ -473,6 +456,12 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined, wrap
     }
     if (result.endAdornment) {
       result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
+    }
+  }
+
+  for (const k in material) {
+    if (Object.hasOwn(material, k)) {
+      result[k as keyof typeof result] = material[k as keyof typeof material];
     }
   }
 
@@ -492,8 +481,28 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-function BasePopper(props: GridSlotProps['basePopper']) {
-  const { flip, onDidShow, onDidHide } = props;
+function BasePopper(props: P['basePopper']) {
+  const {
+    ref,
+    open,
+    children,
+    className,
+    clickAwayTouchEvent,
+    clickAwayMouseEvent,
+    flip,
+    focusTrap,
+    onExited,
+    onClickAway,
+    onDidShow,
+    onDidHide,
+    id,
+    target,
+    transition,
+    placement,
+    material,
+    ...rest
+  } = props;
+
   const modifiers = React.useMemo(() => {
     const result = [] as NonNullable<MUIPopperProps['modifiers']>;
     if (flip) {
@@ -522,41 +531,43 @@ function BasePopper(props: GridSlotProps['basePopper']) {
   }, [flip, onDidShow, onDidHide]);
 
   let content: any;
-  if (!props.transition) {
-    content = wrappers(props, props.children);
+  if (!transition) {
+    content = wrappers(props, children);
   } else {
     const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
       if (popperOnExited) {
         popperOnExited();
       }
 
-      if (props.onExited) {
-        props.onExited(node);
+      if (onExited) {
+        onExited(node);
       }
     };
 
-    content = ({ TransitionProps, placement }: any) =>
+    content = (p: any) =>
       wrappers(
         props,
         <MUIGrow
-          {...TransitionProps}
-          style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
-          onExited={handleExited(TransitionProps?.onExited)}
+          {...p.TransitionProps}
+          style={{ transformOrigin: transformOrigin[p.placement as keyof typeof transformOrigin] }}
+          onExited={handleExited(p.TransitionProps?.onExited)}
         >
-          <MUIPaper>{props.children}</MUIPaper>
+          <MUIPaper>{children}</MUIPaper>
         </MUIGrow>,
       );
   }
 
   return (
     <MUIPopper
-      id={props.id}
-      className={props.className}
-      open={props.open}
-      anchorEl={props.target as any}
-      transition={props.transition}
-      placement={props.placement}
+      id={id}
+      className={className}
+      open={open}
+      anchorEl={target as any}
+      transition={transition}
+      placement={placement}
       modifiers={modifiers}
+      {...rest}
+      {...material}
     >
       {content}
     </MUIPopper>
@@ -593,9 +604,79 @@ function focusTrapWrapper(props: PopperProps, content: any) {
   );
 }
 
-function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseSelectOption']>) {
+function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption']>) {
   if (native) {
     return <option {...props} />;
   }
   return <MUIMenuItem {...props} />;
 }
+
+const iconSlots: GridIconSlotsComponent = {
+  booleanCellTrueIcon: GridCheckIcon,
+  booleanCellFalseIcon: GridCloseIcon,
+  columnMenuIcon: GridTripleDotsVerticalIcon,
+  openFilterButtonIcon: GridFilterListIcon,
+  filterPanelDeleteIcon: GridCloseIcon,
+  columnFilteredIcon: GridFilterAltIcon,
+  columnSelectorIcon: GridColumnIcon,
+  columnUnsortedIcon: GridColumnUnsortedIcon,
+  columnSortedAscendingIcon: GridArrowUpwardIcon,
+  columnSortedDescendingIcon: GridArrowDownwardIcon,
+  columnResizeIcon: GridSeparatorIcon,
+  densityCompactIcon: GridViewHeadlineIcon,
+  densityStandardIcon: GridTableRowsIcon,
+  densityComfortableIcon: GridViewStreamIcon,
+  exportIcon: GridDownloadIcon,
+  moreActionsIcon: GridMoreVertIcon,
+  treeDataCollapseIcon: GridExpandMoreIcon,
+  treeDataExpandIcon: GridKeyboardArrowRight,
+  groupingCriteriaCollapseIcon: GridExpandMoreIcon,
+  groupingCriteriaExpandIcon: GridKeyboardArrowRight,
+  detailPanelExpandIcon: GridAddIcon,
+  detailPanelCollapseIcon: GridRemoveIcon,
+  rowReorderIcon: GridDragIcon,
+  quickFilterIcon: GridSearchIcon,
+  quickFilterClearIcon: GridClearIcon,
+  columnMenuHideIcon: GridVisibilityOffIcon,
+  columnMenuSortAscendingIcon: GridArrowUpwardIcon,
+  columnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  columnMenuUnsortIcon: null,
+  columnMenuFilterIcon: GridFilterAltIcon,
+  columnMenuManageColumnsIcon: GridViewColumnIcon,
+  columnMenuClearIcon: GridClearIcon,
+  loadIcon: GridLoadIcon,
+  filterPanelAddIcon: GridAddIcon,
+  filterPanelRemoveAllIcon: GridDeleteForeverIcon,
+  columnReorderIcon: GridDragIcon,
+  menuItemCheckIcon: GridCheckIcon,
+};
+
+const baseSlots: GridBaseSlots = {
+  baseAutocomplete: BaseAutocomplete,
+  baseBadge: BaseBadge,
+  baseCheckbox: BaseCheckbox,
+  baseChip: BaseChip,
+  baseCircularProgress: BaseCircularProgress,
+  baseDivider: BaseDivider,
+  baseInput: BaseInput,
+  baseLinearProgress: BaseLinearProgress,
+  baseMenuList: BaseMenuList,
+  baseMenuItem: BaseMenuItem,
+  baseTextField: BaseTextField,
+  baseButton: BaseButton,
+  baseIconButton: BaseIconButton,
+  baseTooltip: BaseTooltip,
+  basePagination: BasePagination,
+  basePopper: BasePopper,
+  baseSelect: BaseSelect,
+  baseSelectOption: BaseSelectOption,
+  baseSkeleton: BaseSkeleton,
+  baseSwitch: BaseSwitch,
+};
+
+const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
+  ...baseSlots,
+  ...iconSlots,
+};
+
+export default materialSlots;

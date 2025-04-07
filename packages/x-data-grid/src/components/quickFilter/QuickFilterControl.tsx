@@ -102,7 +102,6 @@ QuickFilterControl.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   autoComplete: PropTypes.string,
-  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -120,8 +119,6 @@ QuickFilterControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
-  onChange: PropTypes.func,
-  onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.
