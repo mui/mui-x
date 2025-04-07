@@ -35,6 +35,16 @@ In `package.json`, change the version of the charts package to `next`.
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Breaking changes
 
 Since v8 is a major release, it contains some changes that affect the public API.
@@ -79,19 +89,6 @@ For example, if a codemod tries to rename a prop, but this prop is hidden with t
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
-:::
-
-## `@mui/material` peer dependency change
-
-The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
-This change should resolve ESM and CJS interoperability issues in various environments.
-
-:::info
-The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
-
-- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
-- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
-
 :::
 
 ## Series properties renaming
@@ -175,8 +172,54 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 
 Some helpers are provided to create your custom tooltip:
 
-- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxesTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
+
+## Update Tooltip DOM structure
+
+The DOM structure of the tooltip content was modified as follows.
+If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
+
+### Axis tooltip
+
+The data relative to the axis value are moved from the `header` to the `caption` of the table.
+The series label cell is now a header cell `th` instead of `td`.
+
+```diff
+  <table>
+-   <header>
+-     <tr>
+-       <td colspan='3'>The formatted x-axis value</td>
+-     </tr>
+-   <header>
++   <caption>The formatted x-axis value</caption>
+    <tbody>
+      <tr>
+-       <td><Mark color='red'/></td>
+-       <td>Series A</td>
++       <th><Mark color='red'/>Series A</th>
+        <td>55</td>
+      </tr>
+    <tbody>
+  </table>
+```
+
+### Item tooltip
+
+DOM modification is similar to the axis tooltip in the previous section.
+
+```diff
+  <table>
+    <tbody>
+      <tr>
+-       <td><Mark color='red'/></td>
+-       <td>Series A</td>
++       <th><Mark color='red'/>Series A</th>
+        <td>55</td>
+      </tr>
+    <tbody>
+  </table>
+```
 
 ## Removing ResponsiveChartContainer ✅
 

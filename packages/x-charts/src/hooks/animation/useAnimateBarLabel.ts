@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { useAnimate } from '../../internals/animation/useAnimate';
+import { useAnimate } from './useAnimate';
 import type { BarLabelProps } from '../../BarChart';
 
 type UseAnimateBarLabelParams = Pick<
@@ -53,8 +53,9 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     height: props.height,
   };
 
-  const ref = useAnimate(currentProps, {
+  return useAnimate(currentProps, {
     createInterpolator: barLabelPropsInterpolator,
+    transformProps: (p) => p,
     applyProps(element, animatedProps) {
       element.setAttribute('x', animatedProps.x.toString());
       element.setAttribute('y', animatedProps.y.toString());
@@ -63,15 +64,6 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     },
     initialProps,
     skip: props.skipAnimation,
+    ref: props.ref,
   });
-
-  const usedProps = props.skipAnimation ? currentProps : initialProps;
-
-  return {
-    ref,
-    x: usedProps.x,
-    y: usedProps.y,
-    width: usedProps.width,
-    height: usedProps.height,
-  };
 }

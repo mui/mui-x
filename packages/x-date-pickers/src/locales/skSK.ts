@@ -12,8 +12,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 
 const skSKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
-  previousMonth: 'Ďalší mesiac',
-  nextMonth: 'Predchádzajúci mesiac',
+  previousMonth: 'Predchádzajúci mesiac',
+  nextMonth: 'Ďalší mesiac',
 
   // View navigation
   openPreviousView: 'Otvoriť predchádzajúce zobrazenie',
@@ -36,7 +36,7 @@ const skSKPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Vymazať',
   okButtonLabel: 'Potvrdiť',
   todayButtonLabel: 'Dnes',
-  nextStepButtonLabel: 'Predchádzajúci',
+  nextStepButtonLabel: 'Ďalší',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vyberte dátum',

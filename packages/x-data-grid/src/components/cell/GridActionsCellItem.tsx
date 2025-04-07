@@ -11,7 +11,6 @@ interface GridActionsCellItemCommonProps {
   component?: React.ElementType;
 }
 
-// FIXME(v8:romgrk): Make parametric
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
     | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<
@@ -80,13 +79,16 @@ GridActionsCellItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.string,
   /**
    * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
    */
   component: PropTypes.elementType,
+  disabled: PropTypes.bool,
   icon: PropTypes.element,
   label: PropTypes.string.isRequired,
   showInMenu: PropTypes.bool,
+  style: PropTypes.object,
 } as any;
 
 export { GridActionsCellItem };
