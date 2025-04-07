@@ -68,6 +68,7 @@ import { muiXTelemetrySettings } from '@mui/x-license';
 
 muiXTelemetrySettings.enableTelemetry();
 ```
+
 Note: You can use `muiXTelemetrySettings.enableDebug();` to log telemetry data to your browser console and inspect what's being sent.
 
 ### Setting the flag in your application
