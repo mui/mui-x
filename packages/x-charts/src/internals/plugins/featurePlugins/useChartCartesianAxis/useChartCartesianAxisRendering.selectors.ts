@@ -1,3 +1,4 @@
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -53,6 +54,11 @@ const selectorChartYZoomOptionsLookup = createSelector(
 export const selectorChartZoomOptionsLookup = createSelector(
   [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
   (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
+  {
+    memoizeOptions: {
+      resultEqualityCheck: isDeepEqual,
+    },
+  },
 );
 
 const selectorChartXFilter = createSelector(
