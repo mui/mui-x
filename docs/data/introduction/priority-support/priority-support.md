@@ -62,6 +62,6 @@ Upon purchase you'll receive a support key that you need to validate when raisin
 - The GitHub action will update the previous comment with the following: `Thank you for verifying your support key 🔑, your SLA starts now.` Thus marking the start of the SLA.
 - You get a response from the team within the SLA.
 
-### Through email
+### Support Website
 
-If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com) with your support key.
+If private information needs to be shared, you can submit a [support request](https://support.mui.com/hc/en-us/requests/new) through our website.
