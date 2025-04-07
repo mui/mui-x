@@ -294,7 +294,7 @@ function WrappedDay({
     showDaysOutsideCurrentMonth,
   });
 
-  const Day = enableEnhancedDaySlot ? EnhancedPickersDay : (slots?.day ?? PickersDay);
+  const Day = slots?.day ?? (enableEnhancedDaySlot ? EnhancedPickersDay : PickersDay);
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,

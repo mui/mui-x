@@ -16,7 +16,7 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { EnhancedPickersDayOwnerState, EnhancedPickersDayProps } from './EnhancedPickersDay.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
-const DAY_SIZE = 40;
+const DAY_SIZE = 36;
 
 const useUtilityClasses = (ownerState: EnhancedPickersDayOwnerState) => {
   const {

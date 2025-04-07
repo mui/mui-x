@@ -80,13 +80,13 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
     ownerState.isDaySelectionStart && styles.selectionStart,
     ownerState.isDaySelectionEnd && styles.selectionEnd,
     ownerState.isDayInsideSelection && styles.insideSelection,
-    ownerState.draggable && styles.draggable,
+    ownerState.isDayDraggable && styles.draggable,
     ownerState.isDayStartOfWeek && styles.startOfWeek,
     ownerState.isDayEndOfWeek && styles.endOfWeek,
   ];
 };
 
-const SET_MARGIN = 0; // should be working with any given margin
+const SET_MARGIN = '2px'; // should be working with any given margin
 const highlightStyles = (theme) => ({
   zIndex: 0,
   content: '""' /* Creates an empty element */,
@@ -130,6 +130,7 @@ const selectedDayStyles = (theme) => ({
 const styleArg = ({ theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
+  marginRight: SET_MARGIN,
 
   variants: [
     {
@@ -353,6 +354,7 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
     isPreviewing,
     isStartOfHighlighting,
     isStartOfPreviewing,
+    isVisuallySelected,
     draggable,
     ...other
   } = props;
@@ -438,6 +440,7 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
+      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
