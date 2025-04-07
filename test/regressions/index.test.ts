@@ -24,6 +24,24 @@ const timeSensitiveSuites = [
 
 await main();
 
+function screenshotPrintDialogPreview(screenshotPath: string) {
+  return new Promise<void>((resolve, reject) => {
+    // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+    const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
+    console.log('spawning ffmpeg');
+    const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+    ffmpeg.on('close', (code) => {
+      console.log('close', code);
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`ffmpeg exited with code ${code}`));
+      }
+    });
+  });
+}
+
 async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
@@ -230,18 +248,37 @@ async function main() {
 
       await sleep(4000);
 
-      return new Promise((resolve, reject) => {
-        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
-        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+      await screenshotPrintDialogPreview(screenshotPath);
+      await page.keyboard.press('Escape');
+    });
 
-        ffmpeg.on('close', (code) => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error(`ffmpeg exited with code ${code}`));
-          }
+    describe('charts', () => {
+      it.only('should take a screenshot of the print preview', async function test() {
+        this.timeout(20000);
+
+        const route = '/docs-charts-export/PrintChart';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+        console.log('before navigating to test');
+
+        // await page.reload();
+        await navigateToTest(route);
+        console.log('navigated to test');
+
+        await sleep(1000);
+        const printButton = await page.getByRole('button', { name: 'Print' });
+
+        console.log('before wait for print dialog');
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
         });
+
+        await sleep(4000);
+
+        console.log('before screenshot');
+        await screenshotPrintDialogPreview(screenshotPath);
+        await page.keyboard.press('Escape');
       });
     });
 
