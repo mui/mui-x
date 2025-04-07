@@ -1,8 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { CalendarIcon, ClearIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
@@ -31,6 +30,18 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
     whiteSpace: 'nowrap',
   },
 );
+
+const BrowserIconButton = styled('button', {
+  name: 'BrowserField',
+  slot: 'IconButton',
+})({
+  backgroundColor: 'transparent',
+  border: 0,
+  cursor: 'pointer',
+  '&:hover, &:focus': {
+    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  },
+});
 
 function BrowserDateField(props: DatePickerFieldProps) {
   const fieldResponse = useDateField<true, typeof props>(props);
@@ -90,13 +101,24 @@ function BrowserDateField(props: DatePickerFieldProps) {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      <IconButton
+      {clearable && value && (
+        <BrowserIconButton
+          type="button"
+          title="Clear"
+          tabIndex={-1}
+          onClick={onClear}
+          sx={{ marginLeft: 1 }}
+        >
+          <ClearIcon fontSize="small" />
+        </BrowserIconButton>
+      )}
+      <BrowserIconButton
         onClick={() => pickerContext.setOpen((prev) => !prev)}
-        sx={{ marginLeft: 1.5 }}
+        sx={{ marginLeft: 1 }}
         aria-label={openPickerAriaLabel}
       >
         <CalendarIcon />
-      </IconButton>
+      </BrowserIconButton>
     </BrowserFieldRoot>
   );
 }

@@ -12,14 +12,20 @@ function sleep(timeoutMS: number | undefined) {
 }
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
+const isMaterialUIv7 = materialPackageJson.version.startsWith('7.');
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
   'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
   'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
+  'ListView',
+  'RowSpanningCalendar',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
@@ -29,11 +35,28 @@ const isConsoleWarningIgnored = (msg?: string) => {
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
     );
 
+  const isMuiLoadingButtonWarning =
+    (isMaterialUIv6 || isMaterialUIv7) &&
+    msg?.includes(
+      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
+    );
+
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute) {
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
     return true;
   }
   return false;
@@ -126,6 +149,9 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
+
+        // Skip animations
+        await page.emulateMedia({ reducedMotion: 'reduce' });
 
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {

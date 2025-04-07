@@ -4,10 +4,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { throttle } from '@mui/x-internals/throttle';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEventPriority } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { createSelector } from '../../../utils/createSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -30,7 +31,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { isDeepEqual } from '../../../utils/utils';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -372,9 +372,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
-  useGridApiOptionHandler(apiRef, 'rootMount', handleRootMount);
-  useGridApiOptionHandler(apiRef, 'resize', handleResize);
-  useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
+  useGridEventPriority(apiRef, 'rootMount', handleRootMount);
+  useGridEventPriority(apiRef, 'resize', handleResize);
+  useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {

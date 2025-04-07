@@ -136,7 +136,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
             plan: 'pro',
-            unstable: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data-group',
@@ -164,6 +163,27 @@ const pages: MuiPage[] = [
                 plan: 'premium',
               },
             ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-data-grid/components-group',
+        subheader: 'Components',
+        newFeature: true,
+        children: [
+          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
+          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
+          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
+          {
+            pathname: '/x/react-data-grid/components/columns-panel',
+            title: 'Columns Panel',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/filter-panel',
+            title: 'Filter Panel',
+            planned: true,
           },
         ],
       },
@@ -210,7 +230,7 @@ const pages: MuiPage[] = [
               },
 
               { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
-              { pathname: '/x/api/data-grid/grid-list-col-def', title: 'GridListColDef' },
+              { pathname: '/x/api/data-grid/grid-list-view-col-def', title: 'GridListViewColDef' },
               {
                 pathname: '/x/api/data-grid/grid-export-state-params',
                 title: 'GridExportStateParams',
@@ -327,7 +347,7 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-picker',
                 title: 'Time Range Picker',
-                planned: true,
+                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/time-range-field',
@@ -457,15 +477,18 @@ const pages: MuiPage[] = [
             title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
+          { pathname: '/x/react-charts/radar', unstable: true },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
             plan: 'pro',
           },
+          { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', unstable: true },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
             children: [
+              { pathname: '/x/react-charts/animation' },
               { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
@@ -510,9 +533,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
             ],
@@ -548,6 +569,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
           { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
+            plan: 'pro',
+            newFeature: true,
+          },
           { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
         ],
       },
@@ -592,6 +618,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/migration/migration-tree-view-v7',
             title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/usage-with-material-ui-v5-v6',
+            title: 'Usage with Material UI v5/v6',
           },
         ],
       },

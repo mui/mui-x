@@ -35,12 +35,14 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Очистити',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сьогодні',
+  nextStepButtonLabel: 'Наступний',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Вибрати дату',
   dateTimePickerToolbarTitle: 'Вибрати дату і час',
   timePickerToolbarTitle: 'Вибрати час',
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Оберіть дату, обрана дата  ${formattedDate}` : 'Оберіть дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Оберіть час, обраний час  ${formattedTime}` : 'Оберіть час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Очистити дані',
 
   // Table labels

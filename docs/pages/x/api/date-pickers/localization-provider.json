@@ -4,7 +4,7 @@
     "dateAdapter": {
       "type": { "name": "func" },
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter",
+        "url": "https://next.mui.com/x/react-date-pickers/quickstart/#integrate-provider-and-adapter",
         "text": "date adapter setup section"
       }
     },

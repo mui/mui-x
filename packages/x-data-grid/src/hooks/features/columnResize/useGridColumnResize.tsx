@@ -29,9 +29,9 @@ import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   useGridLogger,
   useGridNativeEventListener,
   useGridSelector,
@@ -808,13 +808,13 @@ export const useGridColumnResize = (
     'public',
   );
 
-  useGridApiEventHandler(apiRef, 'columnResizeStop', handleResizeStop);
-  useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
-  useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
+  useGridEvent(apiRef, 'columnResizeStop', handleResizeStop);
+  useGridEvent(apiRef, 'columnResizeStart', handleResizeStart);
+  useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
+  useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
 
-  useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
-  useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
+  useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
+  useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
 function updateProperty(

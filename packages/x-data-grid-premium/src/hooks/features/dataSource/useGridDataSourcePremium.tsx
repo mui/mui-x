@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
-  useGridApiEventHandler as addEventHandler,
+  useGridEvent as addEventHandler,
   useGridApiMethod,
   GridEventLookup,
   GRID_ROOT_GROUP_ID,

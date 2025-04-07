@@ -11,21 +11,21 @@ import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
 import {
-  applyDefaultDate,
   BaseDateValidationProps,
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
   useReduceAnimations,
   useCalendarState,
-  useDefaultDates,
   useUtils,
   PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useViews,
   PickerRangeValue,
   usePickerPrivateContext,
+  areDatesEqual,
+  useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -110,26 +110,22 @@ function useDateRangeCalendarDefaultizedProps(
   props: DateRangeCalendarProps,
   name: string,
 ): DateRangeCalendarDefaultizedProps {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
   const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
     ...themeProps,
+    ...validationProps,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations,
     loading: props.loading ?? false,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['day'],
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
@@ -218,7 +214,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const rangePositionContext = useNullablePickerRangePositionContext();
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+  const { value, handleValueChange, timezone } = useControlledValue<
     PickerRangeValue,
     NonNullable<typeof onChange>
   >({
@@ -469,11 +465,18 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   });
 
   const handleDayMouseEnter = useEventCallback(
-    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: PickerValidDate) => {
-      if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
-        setRangePreviewDay(newPreviewRequest);
+    (event: React.MouseEvent<HTMLDivElement>, newRangePreviewDay: PickerValidDate) => {
+      let cleanNewRangePreviewDay: PickerValidDate | null;
+      if (valueDayRange[0] == null && valueDayRange[1] == null) {
+        cleanNewRangePreviewDay = null;
+      } else if (isWithinRange(utils, newRangePreviewDay, valueDayRange)) {
+        cleanNewRangePreviewDay = null;
       } else {
-        setRangePreviewDay(null);
+        cleanNewRangePreviewDay = newRangePreviewDay;
+      }
+
+      if (!areDatesEqual(utils, cleanNewRangePreviewDay, rangePreviewDay)) {
+        setRangePreviewDay(cleanNewRangePreviewDay);
       }
     },
   );

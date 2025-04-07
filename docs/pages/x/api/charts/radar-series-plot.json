@@ -1,0 +1,37 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "seriesId": { "type": { "name": "string" } }
+  },
+  "name": "RadarSeriesPlot",
+  "imports": [
+    "import { RadarSeriesPlot } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesPlot } from '@mui/x-charts';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiRadarSeriesPlot-faded",
+      "description": "Styles applied to the series element if it is faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiRadarSeriesPlot-highlighted",
+      "description": "Styles applied to the series element if it is highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiRadarSeriesPlot-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiRadarSeriesPlot",
+  "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "cssComponent": false
+}

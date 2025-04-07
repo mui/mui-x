@@ -5,21 +5,19 @@ import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
-import { UsePickerParams } from '../usePicker';
+import { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
 import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
-import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,
@@ -47,15 +45,13 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
   extends ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
-export interface MobileOnlyPickerProps
-  extends UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps {}
+export interface MobileOnlyPickerProps extends UsePickerNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+  TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 > extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     MakeRequired<MobileOnlyPickerProps, 'format'> {
   /**
@@ -80,8 +76,14 @@ export interface UseMobilePickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps>,
+    UsePickerParameters<PickerValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
+  /**
+   * Steps available for the picker.
+   * This will be used to define the behavior of navigation actions.
+   * If null, the picker will not have any step navigation.
+   */
+  steps: PickerStep[] | null;
 }

@@ -4,6 +4,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
+const dataSource = {
+  getRows: () => Promise.resolve([]),
+};
+const dataSourceCache = {};
+
 // prettier-ignore
 function App() {
   return (
@@ -16,6 +21,10 @@ function App() {
       />
       <DataGridPremium
         rowSpanning
+        dataSource={dataSource}
+        dataSourceCache={dataSourceCache}
+        listView
+        listViewColumn={{}}
       />
     </React.Fragment>)
   );

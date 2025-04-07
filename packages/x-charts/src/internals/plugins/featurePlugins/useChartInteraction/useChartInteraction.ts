@@ -1,6 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { ChartPlugin } from '../../models';
-import { AxisInteractionData, UseChartInteractionSignature } from './useChartInteraction.types';
+import { Coordinate, UseChartInteractionSignature } from './useChartInteraction.types';
 import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
@@ -8,7 +8,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     store.update((prev) => {
       return {
         ...prev,
-        interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
+        interaction: { pointer: null, item: null },
       };
     });
   });
@@ -64,45 +64,12 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     }));
   });
 
-  const setAxisInteraction = useEventCallback(
-    ({ x: newStateX, y: newStateY }: Partial<AxisInteractionData>) => {
-      store.update((prev) => ({
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          axis: {
-            // A bit verbose, but prevent losing the x value if only y got modified.
-            ...prev.interaction.axis,
-            ...(prev.interaction.axis.x?.index !== newStateX?.index ||
-            prev.interaction.axis.x?.value !== newStateX?.value
-              ? { x: newStateX }
-              : {}),
-            ...(prev.interaction.axis.y?.index !== newStateY?.index ||
-            prev.interaction.axis.y?.value !== newStateY?.value
-              ? { y: newStateY }
-              : {}),
-          },
-        },
-      }));
-    },
-  );
-
-  const enableVoronoid = useEventCallback(() => {
+  const setPointerCoordinate = useEventCallback((coordinate: Coordinate | null) => {
     store.update((prev) => ({
       ...prev,
       interaction: {
         ...prev.interaction,
-        isVoronoiEnabled: true,
-      },
-    }));
-  });
-
-  const disableVoronoid = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      interaction: {
-        ...prev.interaction,
-        isVoronoiEnabled: false,
+        pointer: coordinate,
       },
     }));
   });
@@ -112,15 +79,13 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
       cleanInteraction,
       setItemInteraction,
       removeItemInteraction,
-      setAxisInteraction,
-      enableVoronoid,
-      disableVoronoid,
+      setPointerCoordinate,
     },
   };
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, axis: { x: null, y: null }, isVoronoiEnabled: false },
+  interaction: { item: null, pointer: null },
 });
 
 useChartInteraction.params = {};

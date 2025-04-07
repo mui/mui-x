@@ -110,7 +110,7 @@ export default function RowContextMenu() {
         }
         slotProps={{
           root: {
-            onContextMenu: (event) => {
+            onContextMenu: (event: React.MouseEvent) => {
               event.preventDefault();
               handleClose();
             },

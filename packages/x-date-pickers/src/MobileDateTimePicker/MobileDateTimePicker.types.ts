@@ -9,8 +9,6 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { DateOrTimeView } from '../models';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 export interface MobileDateTimePickerSlots
   extends BaseDateTimePickerSlots,
@@ -21,9 +19,8 @@ export interface MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructur
     ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDateTimePickerProps<
-  TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps<TView>,
+> extends BaseDateTimePickerProps,
     MobileOnlyPickerProps {
   /**
    * Overridable component slots.

@@ -1,4 +1,4 @@
-import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig/extremumGetter.types';
+import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {
@@ -28,8 +28,8 @@ const getValueExtremum =
 
     return Object.keys(series)
       .filter((seriesId) => {
-        const yAxisId = series[seriesId].yAxisId;
-        return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+        const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
+        return axisId === axis.id || (isDefaultAxis && axisId === undefined);
       })
       .reduce(
         (acc, seriesId) => {

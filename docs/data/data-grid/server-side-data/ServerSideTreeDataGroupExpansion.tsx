@@ -73,7 +73,6 @@ export default function ServerSideTreeDataGroupExpansion() {
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
           showToolbar
-          slotProps={{ toolbar: { showQuickFilter: true } }}
           defaultGroupingExpansionDepth={-1}
         />
       </div>

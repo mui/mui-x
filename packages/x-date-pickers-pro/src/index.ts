@@ -19,6 +19,9 @@ export * from './DateRangePicker';
 export * from './DesktopDateRangePicker';
 export * from './MobileDateRangePicker';
 export * from './StaticDateRangePicker';
+export * from './TimeRangePicker';
+export * from './DesktopTimeRangePicker';
+export * from './MobileTimeRangePicker';
 
 export * from './DateTimeRangePicker';
 export * from './DesktopDateTimeRangePicker';

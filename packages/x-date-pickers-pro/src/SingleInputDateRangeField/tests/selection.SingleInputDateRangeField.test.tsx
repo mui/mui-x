@@ -14,7 +14,6 @@ import {
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
   const { renderWithProps } = buildFieldInteractions({
-    clock,
     render,
     Component: SingleInputDateRangeField,
   });

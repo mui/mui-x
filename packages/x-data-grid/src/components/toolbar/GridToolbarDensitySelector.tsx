@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
@@ -19,7 +18,10 @@ interface GridToolbarDensitySelectorProps {
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: {
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
+  };
 }
 
 const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDensitySelectorProps>(
@@ -131,7 +133,7 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
           open={open}
           target={buttonRef.current}
           onClose={handleDensitySelectorClose}
-          position="bottom-start"
+          position="bottom-end"
         >
           <rootProps.slots.baseMenuList
             id={densityMenuId}

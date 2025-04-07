@@ -34,7 +34,7 @@ export default function PositiveAndNegativeBarChart() {
           scaleType: 'band',
         },
       ]}
-      yAxis={[{ max: 10000 }]}
+      yAxis={[{ width: 60, max: 10000 }]}
     />
   );
 }

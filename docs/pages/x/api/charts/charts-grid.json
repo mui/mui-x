@@ -36,6 +36,8 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsGrid",
   "filename": "/packages/x-charts/src/ChartsGrid/ChartsGrid.tsx",
   "inheritance": null,

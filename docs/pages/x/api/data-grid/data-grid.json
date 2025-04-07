@@ -153,6 +153,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -563,9 +564,8 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "GridToolbar",
-      "class": null
+      "description": "Toolbar component rendered in the grid header.",
+      "class": "MuiDataGrid-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -712,6 +712,12 @@
       "class": null
     },
     {
+      "name": "basePagination",
+      "description": "The custom Pagination component used in the grid.",
+      "default": "Pagination",
+      "class": null
+    },
+    {
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
@@ -816,7 +822,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {
@@ -913,6 +919,12 @@
       "name": "columnMenuSortDescendingIcon",
       "description": "Icon displayed in column menu for descending sort",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
       "class": null
     },
     {
@@ -1740,9 +1752,21 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGrid-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarLabel",
+      "className": "MuiDataGrid-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
       "isGlobal": false
     },
     {
@@ -1773,6 +1797,24 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGrid-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGrid-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGrid-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGrid-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
       "isGlobal": false
     },
     {

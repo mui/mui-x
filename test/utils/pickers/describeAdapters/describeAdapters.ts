@@ -35,7 +35,6 @@ function innerDescribeAdapters<P extends {}>(
       });
 
       const fieldInteractions = buildFieldInteractions<P>({
-        clock: pickerRendererResponse.clock,
         render: pickerRendererResponse.render,
         Component: FieldComponent,
       });

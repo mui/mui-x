@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
 import { styled } from '@mui/material/styles';
-import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { barElementClasses } from './barElementClasses';
+import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { AnimationData, CompletedBarData, MaskData } from './types';
+import { CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
@@ -16,6 +16,7 @@ import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 /**
  * Solution of the equations
@@ -119,7 +120,7 @@ const useAggregatedData = (): {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScaleErrors(verticalLayout, seriesId, xAxisId, xAxis, yAxisId, yAxis);
+      checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxis, yAxisId, yAxis);
 
       const baseScaleConfig = (
         verticalLayout ? xAxisConfig : yAxisConfig
@@ -138,10 +139,11 @@ const useAggregatedData = (): {
       });
       const barOffset = groupIndex * (barWidth + offset);
 
-      const { stackedData } = series[seriesId];
+      const { stackedData, data: currentSeriesData, layout } = series[seriesId];
 
-      return stackedData
-        .map((values, dataIndex: number) => {
+      return baseScaleConfig
+        .data!.map((baseValue, dataIndex: number) => {
+          const values = stackedData[dataIndex];
           const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
           const minValueCoord = Math.round(Math.min(...valueCoordinates));
@@ -152,19 +154,15 @@ const useAggregatedData = (): {
           const result = {
             seriesId,
             dataIndex,
-            layout: series[seriesId].layout,
-            x: verticalLayout
-              ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset
-              : minValueCoord,
-            y: verticalLayout
-              ? minValueCoord
-              : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
-            xOrigin: xScale(0)!,
-            yOrigin: yScale(0)!,
+            layout,
+            x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
+            y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
+            xOrigin: xScale(0) ?? 0,
+            yOrigin: yScale(0) ?? 0,
             height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
             width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
             color: colorGetter(dataIndex),
-            value: series[seriesId].data[dataIndex],
+            value: currentSeriesData[dataIndex],
             maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
           };
 
@@ -212,29 +210,6 @@ const useAggregatedData = (): {
   };
 };
 
-const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
-  ...(layout === 'vertical'
-    ? {
-        y: yOrigin,
-        x,
-        height: 0,
-        width,
-      }
-    : {
-        y,
-        x: xOrigin,
-        height,
-        width: 0,
-      }),
-});
-
-const enterStyle = ({ x, width, y, height }: AnimationData) => ({
-  y,
-  x,
-  height,
-  width,
-});
-
 const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
@@ -259,66 +234,68 @@ const BarPlotRoot = styled('g', {
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
-
-  const transition = useTransition(completedData, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: leaveStyle,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
-
-  const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
-    keys: (v) => v.id,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: leaveStyle,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
 
   return (
     <BarPlotRoot>
       {!withoutBorderRadius &&
-        maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
+        masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
           return (
             <BarClipPath
+              key={id}
               maskId={id}
               borderRadius={borderRadius}
               hasNegative={hasNegative}
               hasPositive={hasPositive}
               layout={layout}
-              style={style}
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              skipAnimation={skipAnimation ?? false}
             />
           );
         })}
-      {transition((style, { seriesId, dataIndex, color, maskId }) => {
-        const barElement = (
-          <BarElement
-            id={seriesId}
-            dataIndex={dataIndex}
-            color={color}
-            {...other}
-            onClick={
-              onItemClick &&
-              ((event) => {
-                onItemClick(event, { type: 'bar', seriesId, dataIndex });
-              })
-            }
-            style={style}
-          />
-        );
+      {completedData.map(
+        ({ seriesId, dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
+          const barElement = (
+            <BarElement
+              key={`${seriesId}-${dataIndex}`}
+              id={seriesId}
+              dataIndex={dataIndex}
+              color={color}
+              skipAnimation={skipAnimation ?? false}
+              layout={layout ?? 'vertical'}
+              x={x}
+              xOrigin={xOrigin}
+              y={y}
+              yOrigin={yOrigin}
+              width={width}
+              height={height}
+              {...other}
+              onClick={
+                onItemClick &&
+                ((event) => {
+                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                })
+              }
+            />
+          );
 
-        if (withoutBorderRadius) {
-          return barElement;
-        }
+          if (withoutBorderRadius) {
+            return barElement;
+          }
 
-        return <g clipPath={`url(#${maskId})`}>{barElement}</g>;
-      })}
+          return (
+            <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
+              {barElement}
+            </g>
+          );
+        },
+      )}
       {barLabel && (
         <BarLabelPlot
           bars={completedData}

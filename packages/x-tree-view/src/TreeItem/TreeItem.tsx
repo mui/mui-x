@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
@@ -10,18 +11,14 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
-import {
-  useTreeItem,
-  UseTreeItemContentSlotOwnProps,
-  UseTreeItemLabelSlotOwnProps,
-  UseTreeItemStatus,
-} from '../useTreeItem';
-import { getTreeItemUtilityClass } from './treeItemClasses';
+import { TreeItemProps } from './TreeItem.types';
+import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
+import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -60,52 +57,40 @@ export const TreeItemContent = styled('div', {
       backgroundColor: 'transparent',
     },
   },
-  variants: [
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
-      style: {
-        opacity: (theme.vars || theme).palette.action.disabledOpacity,
-        backgroundColor: 'transparent',
-      },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.focused,
-      style: { backgroundColor: (theme.vars || theme).palette.action.focus },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
-      style: {
+  '&[data-disabled]': {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    backgroundColor: 'transparent',
+  },
+  '&[data-focused]': {
+    backgroundColor: (theme.vars || theme).palette.action.focus,
+  },
+  '&[data-selected]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
+        : alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+          ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover': {
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-            : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-          },
-        },
       },
     },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected && status.focused,
-      style: {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-          : alpha(
-              theme.palette.primary.main,
-              theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-            ),
-      },
-    },
-  ],
+  },
+  '&[data-selected][data-focused]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
+      : alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+        ),
+  },
 }));
 
 export const TreeItemLabel = styled('div', {
@@ -140,6 +125,7 @@ export const TreeItemIconContainer = styled('div', {
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',
+  position: 'relative',
   '& svg': {
     fontSize: 18,
   },
@@ -152,6 +138,27 @@ export const TreeItemGroupTransition = styled(Collapse, {
 })({
   margin: 0,
   padding: 0,
+});
+
+export const TreeItemErrorContainer = styled('div', {
+  name: 'MuiTreeItem',
+  slot: 'ErrorIcon',
+  overridesResolver: (props, styles) => styles.errorIcon,
+})({
+  position: 'absolute',
+  right: -3,
+  width: 7,
+  height: 7,
+  borderRadius: '50%',
+  backgroundColor: 'red',
+});
+
+export const TreeItemLoadingContainer = styled(CircularProgress, {
+  name: 'MuiTreeItem',
+  slot: 'LoadingIcon',
+  overridesResolver: (props, styles) => styles.loadingIcon,
+})({
+  color: 'text.primary',
 });
 
 export const TreeItemCheckbox = styled(
@@ -174,24 +181,43 @@ export const TreeItemCheckbox = styled(
   padding: 0,
 });
 
-const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) => {
+  const { classes: classesFromTreeView } = useTreeViewStyleContext();
+
+  const classes = {
+    ...classesProp,
+    root: clsx(classesProp?.root, classesFromTreeView.root),
+    content: clsx(classesProp?.content, classesFromTreeView.itemContent),
+    iconContainer: clsx(classesProp?.iconContainer, classesFromTreeView.itemIconContainer),
+    checkbox: clsx(classesProp?.checkbox, classesFromTreeView.itemCheckbox),
+    label: clsx(classesProp?.label, classesFromTreeView.itemLabel),
+    groupTransition: clsx(classesProp?.groupTransition, classesFromTreeView.itemGroupTransition),
+    labelInput: clsx(classesProp?.labelInput, classesFromTreeView.itemLabelInput),
+    dragAndDropOverlay: clsx(
+      classesProp?.dragAndDropOverlay,
+      classesFromTreeView.itemDragAndDropOverlay,
+    ),
+    errorIcon: clsx(classesProp?.errorIcon, classesFromTreeView.itemErrorIcon),
+    loadingIcon: clsx(classesProp?.loadingIcon, classesFromTreeView.itemLoadingIcon),
+  };
 
   const slots = {
     root: ['root'],
     content: ['content'],
-    expanded: ['expanded'],
-    editing: ['editing'],
-    editable: ['editable'],
-    selected: ['selected'],
-    focused: ['focused'],
-    disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
     labelInput: ['labelInput'],
     dragAndDropOverlay: ['dragAndDropOverlay'],
+    errorIcon: ['errorIcon'],
+    loadingIcon: ['loadingIcon'],
+    expanded: ['expanded'],
+    editing: ['editing'],
+    editable: ['editable'],
+    selected: ['selected'],
+    focused: ['focused'],
+    disabled: ['disabled'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -217,7 +243,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    children,
+    slots = {},
+    slotProps = {},
+    classes: classesProp,
+    ...other
+  } = props;
 
   const {
     getContextProviderProps,
@@ -229,6 +265,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     getGroupTransitionProps,
     getLabelInputProps,
     getDragAndDropOverlayProps,
+    getErrorContainerProps,
+    getLoadingContainerProps,
     status,
   } = useTreeItem({
     id,
@@ -238,12 +276,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabled,
   });
 
-  const ownerState: TreeItemOwnerState = {
-    ...props,
-    ...status,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const Root: React.ElementType = slots.root ?? TreeItemRoot;
   const rootProps = useSlotProps({
@@ -329,12 +362,36 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.dragAndDropOverlay,
   });
 
+  const ErrorIcon: React.ElementType = slots.errorIcon ?? TreeItemErrorContainer;
+  const errorContainerProps = useSlotProps({
+    elementType: ErrorIcon,
+    getSlotProps: getErrorContainerProps,
+    externalSlotProps: slotProps.errorIcon,
+    ownerState: {},
+    className: classes.errorIcon,
+  });
+
+  const LoadingIcon: React.ElementType = slots.loadingIcon ?? TreeItemLoadingContainer;
+  const loadingContainerProps = useSlotProps({
+    elementType: LoadingIcon,
+    getSlotProps: getLoadingContainerProps,
+    externalSlotProps: slotProps.loadingIcon,
+    ownerState: {},
+    className: classes.loadingIcon,
+  });
+
   return (
     <TreeItemProvider {...getContextProviderProps()}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            {status.error && <ErrorIcon {...errorContainerProps} />}
+
+            {status.loading ? (
+              <LoadingIcon {...loadingContainerProps} />
+            ) : (
+              <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            )}
           </IconContainer>
           <Checkbox {...checkboxProps} />
           {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}

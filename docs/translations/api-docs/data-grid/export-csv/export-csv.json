@@ -1,0 +1,8 @@
+{
+  "componentDescription": "A button that triggers a CSV export.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {
+    "options": { "description": "The options to apply on the CSV export." },
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}

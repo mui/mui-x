@@ -2,9 +2,9 @@
 import {
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useFieldInternalPropsWithDefaults,
-  UseFieldResponse,
+  UseFieldReturnValue,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { UseTextFieldBaseForwardedProps, useTextFieldProps } from './useTextFieldProps';
@@ -85,7 +85,7 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   } = internalPropsWithDefaults;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'useMultiInputRangeField',
     timezone: timezoneProp,
     value: valueProp,
@@ -187,7 +187,7 @@ export type UseMultiInputRangeFieldTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseTextFieldBaseForwardedProps,
 > = Omit<
-  UseFieldResponse<
+  UseFieldReturnValue<
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps & {
       onKeyDown: React.KeyboardEventHandler;

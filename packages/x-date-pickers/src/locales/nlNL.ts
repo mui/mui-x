@@ -35,12 +35,14 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Resetten',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Vandaag',
+  nextStepButtonLabel: 'Volgende',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecteer datum',
   dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
   timePickerToolbarTitle: 'Selecteer tijd',
   dateRangePickerToolbarTitle: 'Selecteer datumbereik',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Kies datum, geselecteerde datum is ${formattedDate}` : 'Kies datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Kies tijd, geselecteerde tijd is ${formattedTime}` : 'Kies tijd',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Wissen',
 
   // Table labels

@@ -1,8 +1,12 @@
-<MaterialCssVarsProvider>
+<ThemeProvider theme={theme}>
   <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-    <SyncThemeMode mode={materialTheme.palette.mode} />
+    <SyncThemeMode />
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <JoySingleInputDateRangePicker />
+      <JoySingleInputDateRangePicker
+        slotProps={{
+          field: { clearable: true },
+        }}
+      />
     </LocalizationProvider>
   </CssVarsProvider>
-</MaterialCssVarsProvider>
+</ThemeProvider>

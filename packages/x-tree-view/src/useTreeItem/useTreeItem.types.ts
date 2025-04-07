@@ -62,7 +62,16 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   onClick: TreeViewCancellableEventHandler<React.MouseEvent>;
   onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
+  /**
+   * @deprecated Will be removed in the next major version. Please use the data-attrs instead.
+   */
   status: UseTreeItemStatus;
+  'data-expanded'?: '';
+  'data-selected'?: '';
+  'data-focused'?: '';
+  'data-disabled'?: '';
+  'data-editing'?: '';
+  'data-editable'?: '';
 }
 
 export interface UseTreeItemContentSlotOwnProps
@@ -81,10 +90,6 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 export interface UseTreeItemLabelSlotOwnProps {
   children: React.ReactNode;
   onDoubleClick: TreeViewCancellableEventHandler<React.MouseEvent>;
-  /**
-   * Only defined when the `isItemEditable` experimental feature is enabled.
-   */
-  editable?: boolean;
 }
 
 export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &
@@ -101,6 +106,13 @@ export interface UseTreeItemCheckboxSlotOwnProps {
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemCheckboxSlotOwnProps;
+
+export type UseTreeItemErrorContainerSlotProps<ExternalProps = {}> = ExternalProps & {};
+
+export type UseTreeItemLoadingContainerSlotProps<ExternalProps = {}> = ExternalProps & {
+  size: string;
+  thickness: number;
+};
 
 export interface UseTreeItemGroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
@@ -126,6 +138,8 @@ export interface UseTreeItemStatus {
   disabled: boolean;
   editing: boolean;
   editable: boolean;
+  loading: boolean;
+  error: boolean;
 }
 
 export interface UseTreeItemReturnValue<
@@ -202,6 +216,24 @@ export interface UseTreeItemReturnValue<
   getDragAndDropOverlayProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItemDragAndDropOverlaySlotProps<ExternalProps>;
+  /**
+   * Resolver for the ErrorIcon slot's props.
+   * Warning: This slot is only useful when using the `<RichTreeView />` component when lazy loading is enabled.
+   * @param {ExternalProps} externalProps Additional props for the ErrorIcon slot.
+   * @returns {UseTreeItemErrorContainerSlotProps<ExternalProps>} Props that should be spread on the ErrorIcon slot.
+   */
+  getErrorContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemErrorContainerSlotProps<ExternalProps>;
+  /**
+   * Resolver for the LoadingIcon slot's props.
+   * Warning: This slot is only useful when using the `<RichTreeView />` component when lazy loading is enabled.
+   * @param {ExternalProps} externalProps Additional props for the LoadingIcon slot.
+   * @returns {UseTreeItemLoadingContainerSlotProps<ExternalProps>} Props that should be spread on the LoadingIcon slot.
+   */
+  getLoadingContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemLoadingContainerSlotProps<ExternalProps>;
   /**
    * A ref to the component's root DOM element.
    */

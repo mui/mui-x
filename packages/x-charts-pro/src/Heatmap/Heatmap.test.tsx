@@ -8,13 +8,10 @@ import { Heatmap } from './Heatmap';
 describe('<Heatmap /> - License', () => {
   const { render } = createRenderer();
 
-  beforeEach(() => {
+  it('should render watermark when the license is missing', async () => {
     Object.keys(sharedLicenseStatuses).forEach((key) => {
       delete sharedLicenseStatuses[key];
     });
-  });
-
-  it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() =>
@@ -41,7 +38,7 @@ describe('<Heatmap /> - License', () => {
     ] as const;
 
     it('should render default axes when axes are empty arrays and series contain data', () => {
-      render(<Heatmap series={series} width={100} height={100} xAxis={[]} yAxis={[]} />);
+      render(<Heatmap series={series} width={200} height={200} xAxis={[]} yAxis={[]} />);
 
       const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
       expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);
@@ -58,7 +55,7 @@ describe('<Heatmap /> - License', () => {
     });
 
     it('should render default axes when axes are an array of an empty object and series contain data', () => {
-      render(<Heatmap series={series} width={100} height={100} xAxis={[{}]} yAxis={[{}]} />);
+      render(<Heatmap series={series} width={200} height={200} xAxis={[{}]} yAxis={[{}]} />);
 
       const xAxisTickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
       expect(xAxisTickLabels.map((t) => t.textContent)).to.deep.equal(['0', '1']);

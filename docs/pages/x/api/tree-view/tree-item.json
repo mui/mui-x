@@ -71,6 +71,18 @@
       "default": "TreeItemDragAndDropOverlay",
       "class": "MuiTreeItem-dragAndDropOverlay"
     },
+    {
+      "name": "errorIcon",
+      "description": "The component that is rendered when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "default": "TreeItemErrorContainer",
+      "class": "MuiTreeItem-errorIcon"
+    },
+    {
+      "name": "loadingIcon",
+      "description": "The component that is rendered when the item is in an loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "default": "TreeItemLoadingContainer",
+      "class": "MuiTreeItem-loadingIcon"
+    },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
@@ -84,38 +96,44 @@
     {
       "key": "disabled",
       "className": "Mui-disabled",
-      "description": "State class applied to the element when disabled.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is disabled.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "editable",
       "className": "MuiTreeItem-editable",
-      "description": "Styles applied to the content of the items that are editable.",
-      "isGlobal": false
+      "description": "State class applied to the content element when the item is editable.",
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "editing",
       "className": "MuiTreeItem-editing",
-      "description": "Styles applied to the content element when editing is enabled.",
-      "isGlobal": false
+      "description": "State class applied to the content element when the item is being edited.",
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "expanded",
       "className": "Mui-expanded",
-      "description": "State class applied to the content element when expanded.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is expanded.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "focused",
       "className": "Mui-focused",
-      "description": "State class applied to the content element when focused.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is focused.",
+      "isGlobal": true,
+      "isDeprecated": true
     },
     {
       "key": "selected",
       "className": "Mui-selected",
-      "description": "State class applied to the content element when selected.",
-      "isGlobal": true
+      "description": "State class applied to the content element when the item is selected.",
+      "isGlobal": true,
+      "isDeprecated": true
     }
   ],
   "spread": true,
@@ -124,6 +142,6 @@
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem/TreeItem.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/quickstart/\">Tree View - Quickstart</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/editing/\">Rich Tree View - Label editing</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/quickstart/\">Tree View - Quickstart</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/editing/\">Rich Tree View - Label editing</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
   "cssComponent": false
 }

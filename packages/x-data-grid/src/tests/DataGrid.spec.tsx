@@ -11,25 +11,8 @@ function PropTest() {
       <DataGrid pagination={false} />
       {/* @ts-expect-error Type 'GridApiRef' is not assignable to type 'undefined' */}
       <DataGrid apiRef={apiRef} />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            labelRowsPerPage: 'ofo',
-          },
-        }}
-      />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            /* @ts-expect-error Object literal may only specify known properties, but 'labelRowsPerPagee' does not exist in type */
-            labelRowsPerPagee: 'foo',
-          },
-        }}
-      />
+      <DataGrid rows={[]} columns={[]} localeText={{}} />
+      <DataGrid rows={[]} columns={[]} />
     </div>
   );
 }

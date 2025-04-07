@@ -13,7 +13,7 @@ const data = Array.from({ length: 200 }, () => ({
 const params = {
   series: [{ data }],
   height: 300,
-  margin: 10,
+  margin: { top: 12, right: 12, bottom: 20, left: 12 },
 };
 export default function ModifyAxisPosition() {
   return (

@@ -97,7 +97,7 @@ Some helper are provided, such as:
 
 - `<ChartsTooltipContainer />` which provide a tooltip with built-in open and position management.
 - `useItemTooltip()` which provides all basic information associated to the current item.
-- `useAxisTooltip()` which provides all basic information associated to the current axis.
+- `useAxesTooltip()` which provides all basic information associated to the current axes.
 
 Here is the basic scheme to follow.
 Examples about helpers are provided in the composition section.
@@ -183,9 +183,9 @@ To follow the mouse position, you can track pointer events on the SVG thanks to 
 
 #### Axis Tooltip
 
-Like in previous section, you can create your own tooltip by using `useAxisTooltip()`.
-This hook returns the information about the current axis user is interacting with and the relevant series.
-It contains:
+Like in previous section, you can create your own tooltip by using `useAxesTooltip()`.
+This hook returns the information about the current axes user is interacting with and the relevant series.
+For each axis, it contains:
 
 - `identifier`: An object that identify the axis. Which often contains its series type, series id, and data index.
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).

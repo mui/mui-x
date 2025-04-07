@@ -8,8 +8,8 @@ import {
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   GridRowModel,
-  useGridApiOptionHandler,
-  useGridApiEventHandler,
+  useGridEventPriority,
+  useGridEvent,
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
@@ -438,10 +438,10 @@ export const useGridClipboardImport = (
     [enableClipboardPaste],
   );
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handlePaste);
+  useGridEvent(apiRef, 'cellKeyDown', handlePaste);
 
-  useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
-  useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
+  useGridEventPriority(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
+  useGridEventPriority(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
 
   useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 };

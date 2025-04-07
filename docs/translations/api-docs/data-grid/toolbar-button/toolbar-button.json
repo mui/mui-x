@@ -1,0 +1,7 @@
+{
+  "componentDescription": "A button for performing actions from the toolbar.\nIt renders the `baseIconButton` slot.",
+  "propDescriptions": {
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}

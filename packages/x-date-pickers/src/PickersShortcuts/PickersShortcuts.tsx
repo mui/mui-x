@@ -36,8 +36,8 @@ export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
   items?: PickersShortcutsItem<TValue>[];
   /**
    * Importance of the change when picking a shortcut:
-   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
-   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * - "accept": fires `onChange`, fires `onAccept` and closes the Picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the Picker.
    * @default "accept"
    */
   changeImportance?: PickerChangeImportance;
@@ -115,8 +115,8 @@ PickersShortcuts.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Importance of the change when picking a shortcut:
-   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
-   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * - "accept": fires `onChange`, fires `onAccept` and closes the Picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the Picker.
    * @default "accept"
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),

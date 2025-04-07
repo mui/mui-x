@@ -14,3 +14,4 @@ export * from './useItemHighlighted';
 export * from './useItemHighlightedGetter';
 export * from './useLegend';
 export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
+export * from './animation';

@@ -49,7 +49,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter panel', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
@@ -467,7 +467,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
 
     deleteFilterForm();
-    clock.tick(100);
+
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
   });
 
@@ -487,7 +487,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     // open filter panel
     const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
     fireEvent.click(menuIconButton);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
@@ -512,7 +512,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     // open filter panel
     const columnCell = getColumnHeaderCell(3);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="country column menu"]')!;
     fireEvent.click(menuIconButton);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 

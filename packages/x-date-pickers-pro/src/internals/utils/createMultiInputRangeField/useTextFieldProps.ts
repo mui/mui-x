@@ -15,10 +15,12 @@ export function useTextFieldProps({
   slotProps,
   ownerState,
   position,
+  allowTriggerShifting,
 }: {
   slotProps: MultiInputRangeFieldSlotProps | undefined;
   ownerState: FieldOwnerState;
   position: 'start' | 'end';
+  allowTriggerShifting?: boolean;
 }): PickersTextFieldProps {
   const pickerContext = useNullablePickerContext();
   const translations = usePickerTranslations();
@@ -43,8 +45,14 @@ export function useTextFieldProps({
     textFieldProps.InputProps = {};
   }
 
-  if (pickerContext && position === 'start') {
-    textFieldProps.InputProps.ref = pickerContext.triggerRef;
+  if (pickerContext) {
+    if (!allowTriggerShifting) {
+      if (position === 'start') {
+        textFieldProps.InputProps.ref = pickerContext.triggerRef;
+      }
+    } else if (rangePositionContext?.rangePosition === position) {
+      textFieldProps.InputProps.ref = pickerContext.triggerRef;
+    }
   }
 
   return textFieldProps;

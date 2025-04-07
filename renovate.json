@@ -90,12 +90,10 @@
         "@mui/lab",
         "@mui/material",
         "@mui/material-nextjs",
-        "@mui/styles",
         "@mui/system",
         "@mui/types",
         "@mui/utils"
-      ],
-      "allowedVersions": "< 6.0.0"
+      ]
     },
     {
       "groupName": "MUI Internal",
@@ -122,6 +120,25 @@
       "groupName": "date-fns-v2",
       "matchPackageNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"
+    },
+    {
+      "groupName": "recast",
+      "matchPackageNames": ["recast"],
+      "allowedVersions": "< 0.23.10"
+    },
+    {
+      "groupName": "Tanstack query",
+      "matchPackageNames": ["@tanstack/*query*"]
+    },
+    {
+      "groupName": "fingerprintjs",
+      "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
+      "allowedVersions": "< 4.0.0"
+    },
+    {
+      "groupName": "conf",
+      "matchPackageNames": ["conf"],
+      "allowedVersions": "< 12.0.0"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

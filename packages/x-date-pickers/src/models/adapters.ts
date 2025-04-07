@@ -74,7 +74,7 @@ export interface AdapterFormats {
   /**
    * A keyboard input friendly date format.
    * Used in the date fields.
-   * @example "02/13/2020
+   * @example "02/13/2020"
    */
   keyboardDate: string;
   /**
@@ -181,6 +181,7 @@ export interface MuiPickersAdapter<TLocale = any> {
   ): DateBuilderReturnType<T>;
   /**
    * Creates an invalid date in the date library format.
+   * @deprecated This method will be removed in the next major release (v9.0.0).
    * @returns {PickerValidDate} The invalid date.
    */
   getInvalidDate(): PickerValidDate;

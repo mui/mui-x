@@ -85,6 +85,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'time',
     validator: validateTime,
+    steps: null,
   });
 
   return renderPicker();
@@ -140,7 +141,8 @@ MobileTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

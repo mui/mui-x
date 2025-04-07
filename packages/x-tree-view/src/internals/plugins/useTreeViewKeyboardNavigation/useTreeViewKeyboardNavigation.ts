@@ -26,7 +26,11 @@ import {
   selectorIsItemBeingEdited,
   selectorIsItemEditable,
 } from '../useTreeViewLabel/useTreeViewLabel.selectors';
-import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemSelected,
+  selectorIsMultiSelectEnabled,
+  selectorIsSelectionEnabled,
+} from '../useTreeViewSelection/useTreeViewSelection.selectors';
 import {
   selectorIsItemExpandable,
   selectorIsItemExpanded,
@@ -94,7 +98,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleItemSelection = (itemId: string) =>
-    !params.disableSelection && !selectorIsItemDisabled(store.value, itemId);
+    selectorIsSelectionEnabled(store.value) && !selectorIsItemDisabled(store.value, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
@@ -103,7 +107,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
-  const handleItemKeyDown = (
+  const handleItemKeyDown = async (
     event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: string,
   ) => {
@@ -120,20 +124,21 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const ctrlPressed = event.ctrlKey || event.metaKey;
     const key = event.key;
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
 
     // eslint-disable-next-line default-case
     switch (true) {
       // Select the item when pressing "Space"
       case key === ' ' && canToggleItemSelection(itemId): {
         event.preventDefault();
-        if (params.multiSelect && event.shiftKey) {
+        if (isMultiSelectEnabled && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem({
+          instance.setItemSelection({
             event,
             itemId,
-            keepExistingSelection: params.multiSelect,
-            shouldBeSelected: params.multiSelect ? undefined : true,
+            keepExistingSelection: isMultiSelectEnabled,
+            shouldBeSelected: undefined,
           });
         }
         break;
@@ -144,19 +149,19 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          selectorIsItemEditable(store.value, { itemId, isItemEditable: params.isItemEditable! }) &&
+          selectorIsItemEditable(store.value, itemId) &&
           !selectorIsItemBeingEdited(store.value, itemId)
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
-          if (params.multiSelect) {
+          if (isMultiSelectEnabled) {
             event.preventDefault();
-            instance.selectItem({ event, itemId, keepExistingSelection: true });
+            instance.setItemSelection({ event, itemId, keepExistingSelection: true });
           } else if (!selectorIsItemSelected(store.value, itemId)) {
-            instance.selectItem({ event, itemId });
+            instance.setItemSelection({ event, itemId });
             event.preventDefault();
           }
         }
@@ -173,7 +178,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
           // Multi select behavior when pressing Shift + ArrowDown
           // Toggles the selection state of the next item
-          if (params.multiSelect && event.shiftKey && canToggleItemSelection(nextItem)) {
+          if (isMultiSelectEnabled && event.shiftKey && canToggleItemSelection(nextItem)) {
             instance.selectItemFromArrowNavigation(event, itemId, nextItem);
           }
         }
@@ -190,7 +195,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
           // Multi select behavior when pressing Shift + ArrowUp
           // Toggles the selection state of the previous item
-          if (params.multiSelect && event.shiftKey && canToggleItemSelection(previousItem)) {
+          if (isMultiSelectEnabled && event.shiftKey && canToggleItemSelection(previousItem)) {
             instance.selectItemFromArrowNavigation(event, itemId, previousItem);
           }
         }
@@ -211,7 +216,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             event.preventDefault();
           }
         } else if (canToggleItemExpansion(itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         }
 
@@ -225,7 +230,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           return;
         }
         if (canToggleItemExpansion(itemId) && selectorIsItemExpanded(store.value, itemId)) {
-          instance.toggleItemExpansion(event, itemId);
+          instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else {
           const parent = selectorItemParentId(store.value, itemId);
@@ -242,7 +247,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Home': {
         // Multi select behavior when pressing Ctrl + Shift + Home
         // Selects the focused item and all items up to the first item.
-        if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
+        if (
+          canToggleItemSelection(itemId) &&
+          isMultiSelectEnabled &&
+          ctrlPressed &&
+          event.shiftKey
+        ) {
           instance.selectRangeFromStartToItem(event, itemId);
         } else {
           instance.focusItem(event, getFirstNavigableItem(store.value));
@@ -256,7 +266,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'End': {
         // Multi select behavior when pressing Ctrl + Shirt + End
         // Selects the focused item and all the items down to the last item.
-        if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
+        if (
+          canToggleItemSelection(itemId) &&
+          isMultiSelectEnabled &&
+          ctrlPressed &&
+          event.shiftKey
+        ) {
           instance.selectRangeFromItemToEnd(event, itemId);
         } else {
           instance.focusItem(event, getLastNavigableItem(store.value));
@@ -277,8 +292,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // Selects all the items
       case String.fromCharCode(event.keyCode) === 'A' &&
         ctrlPressed &&
-        params.multiSelect &&
-        !params.disableSelection: {
+        isMultiSelectEnabled &&
+        selectorIsSelectionEnabled(store.value): {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;

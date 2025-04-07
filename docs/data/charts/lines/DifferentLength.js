@@ -19,7 +19,7 @@ export default function DifferentLength() {
         },
       ]}
       height={200}
-      margin={{ top: 10, bottom: 10 }}
+      margin={{ bottom: 10 }}
     />
   );
 }

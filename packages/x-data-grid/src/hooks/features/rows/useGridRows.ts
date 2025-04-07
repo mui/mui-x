@@ -19,11 +19,12 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowGroupsToFetchSelector,
   gridRowNodeSelector,
+  gridDataRowsSelector,
 } from './gridRowsSelector';
 import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
@@ -554,8 +555,8 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
-  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
+  useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridEvent(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
   /**
    * APPLIERS
@@ -609,9 +610,7 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
-    const currentRows = props.dataSource
-      ? Array.from(apiRef.current.getRowModels().values())
-      : props.rows;
+    const currentRows = props.dataSource ? gridDataRowsSelector(apiRef) : props.rows;
     const areNewRowsAlreadyInState =
       apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =

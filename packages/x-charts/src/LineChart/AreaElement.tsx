@@ -101,7 +101,7 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -121,7 +121,7 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },

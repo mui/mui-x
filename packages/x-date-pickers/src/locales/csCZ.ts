@@ -36,12 +36,14 @@ const csCZPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Vymazat',
   okButtonLabel: 'Potvrdit',
   todayButtonLabel: 'Dnes',
+  nextStepButtonLabel: 'Další',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vyberte datum',
   dateTimePickerToolbarTitle: 'Vyberte datum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,11 +61,12 @@ const csCZPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týden v roce`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Vyberte datum, vybrané datum je ${formattedDate}` : 'Vyberte datum',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Vyberte čas, vybraný čas je ${formattedTime}` : 'Vyberte čas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Vymazat',
 
   // Table labels

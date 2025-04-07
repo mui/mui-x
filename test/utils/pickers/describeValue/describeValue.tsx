@@ -3,7 +3,7 @@ import createDescribe from '@mui/internal-test-utils/createDescribe';
 import {
   BasePickerInputProps,
   PickerValidValue,
-  UsePickerValueNonStaticProps,
+  UsePickerNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
@@ -25,10 +25,10 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const options = getOptions();
-  const { defaultProps, render, clock, componentFamily } = options;
+  const { defaultProps, render, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
+    props: BasePickerInputProps<TValue, any, any> & UsePickerNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);
@@ -37,7 +37,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
 
   let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
-    const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
+    const interactions = buildFieldInteractions({ render, Component: ElementToTest });
 
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });

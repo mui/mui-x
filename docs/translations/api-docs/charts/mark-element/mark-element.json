@@ -6,6 +6,11 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
   "classDescriptions": {
+    "animate": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "animation is not skipped"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",

@@ -1,0 +1,8 @@
+{
+  "componentDescription": "A button that triggers a print export.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {
+    "options": { "description": "The options to apply on the Print export." },
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {}
+}

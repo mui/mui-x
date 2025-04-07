@@ -107,7 +107,13 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### CSS 🚧
 
-### Shape 🚧
+### Shape
+
+The shape of points in a scatter chart can be customized by passing a component to the `marker` slot.
+
+If you want the legend and tooltip to match, then you also need to customize the `labelMarkType` of each series, as shown in the example below.
+
+{{"demo": "ScatterCustomShape.js"}}
 
 ### Size
 
@@ -116,7 +122,7 @@ For circles, the `markerSize` is the radius of the point in pixels.
 
 {{"demo": "ScatterCustomSize.js"}}
 
-## Plot Customization
+## Plot customization
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 

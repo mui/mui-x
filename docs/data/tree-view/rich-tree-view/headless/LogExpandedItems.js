@@ -45,7 +45,12 @@ function TreeView(props) {
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={{}}
+      slots={{}}
+      slotProps={{}}
+    >
       <RichTreeViewRoot {...getRootProps()}>
         <RichTreeViewItems slots={undefined} slotProps={undefined} />
       </RichTreeViewRoot>

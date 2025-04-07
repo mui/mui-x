@@ -35,12 +35,14 @@ const koKRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: '초기화',
   okButtonLabel: '확인',
   todayButtonLabel: '오늘',
+  nextStepButtonLabel: '다음',
 
   // Toolbar titles
   datePickerToolbarTitle: '날짜 선택하기',
   dateTimePickerToolbarTitle: '날짜 & 시간 선택하기',
   timePickerToolbarTitle: '시간 선택하기',
   dateRangePickerToolbarTitle: '날짜 범위 선택하기',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +60,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}번째 주`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `날짜를 선택하세요. 현재 선택된 날짜는 ${formattedDate}입니다.`
@@ -67,6 +69,7 @@ const koKRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime}입니다.`
       : '시간을 선택하세요',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: '지우기',
 
   // Table labels

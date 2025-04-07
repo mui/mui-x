@@ -127,6 +127,12 @@ In the example we display a `'High'` text on values higher than 10, and hide val
 
 {{"demo": "CustomLabels.js"}}
 
+You can further customize the labels by providing a component to the `barLabel` slot.
+
+In the example below, we position the labels above the bars they refer to.
+
+{{"demo": "LabelsAboveBars.js"}}
+
 ## Click event
 
 Bar charts provides two click handlers:
@@ -167,10 +173,9 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 
 ## Animation
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 ```jsx
 // For a single component chart

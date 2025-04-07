@@ -1,5 +1,8 @@
 export { DateRangePickerDay } from './DateRangePickerDay';
-export type { DateRangePickerDayProps } from './DateRangePickerDay';
+export type {
+  DateRangePickerDayProps,
+  DateRangePickerDayOwnerState,
+} from './DateRangePickerDay.types';
 
 export {
   getDateRangePickerDayUtilityClass,

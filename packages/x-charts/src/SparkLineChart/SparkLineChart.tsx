@@ -37,7 +37,15 @@ export interface SparkLineChartSlotProps
 export interface SparkLineChartProps
   extends Omit<
     ChartContainerProps,
-    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins' | 'colors'
+    | 'series'
+    | 'xAxis'
+    | 'yAxis'
+    | 'zAxis'
+    | 'radiusAxis'
+    | 'rotationAxis'
+    | 'margin'
+    | 'plugins'
+    | 'colors'
   > {
   /**
    * The xAxis configuration.
@@ -436,6 +444,7 @@ SparkLineChart.propTypes = {
     height: PropTypes.number,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    ignoreTooltip: PropTypes.bool,
     label: PropTypes.string,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -504,6 +513,7 @@ SparkLineChart.propTypes = {
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    ignoreTooltip: PropTypes.bool,
     label: PropTypes.string,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
