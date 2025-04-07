@@ -5,7 +5,7 @@ export default function BasicRadar() {
   return (
     <RadarChart
       height={300}
-      series={[{ label: 'Lisa', data: [120, 98, 86, 99, 85, 65], showMark: true }]}
+      series={[{ label: 'Lisa', data: [120, 98, 86, 99, 85, 65] }]}
       radar={{
         max: 120,
         metrics: ['Math', 'Chinese', 'English', 'Geography', 'Physics', 'History'],
