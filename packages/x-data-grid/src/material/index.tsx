@@ -339,11 +339,11 @@ const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(pr
 });
 
 function BaseMenuItem(props: P['baseMenuItem']) {
-  const { inert, iconStart, iconEnd, children, ...other } = props;
+  const { inert, iconStart, iconEnd, children, material, ...other } = props;
   if (inert) {
     (other as any).disableRipple = true;
   }
-  return React.createElement(MUIMenuItem, other, [
+  return React.createElement(MUIMenuItem, { ...other, ...material }, [
     iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
     <MUIListItemText key="2">{children}</MUIListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,

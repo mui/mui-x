@@ -12,6 +12,7 @@ import {
   GridArrowUpwardIcon,
   GridFilterAltIcon,
   GridExpandMoreIcon,
+  GridAddIcon,
 } from '@mui/x-data-grid-pro';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
@@ -31,6 +32,7 @@ import {
   GridPromptIcon,
   GridRerunIcon,
   GridPivotIcon,
+  GridHistoryIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -52,7 +54,9 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   pivotMenuRemoveIcon: GridDeleteIcon,
   sidebarCloseIcon: GridCloseIcon,
   aiAssistantIcon: GridAssistantIcon,
-  aiAssistantCloseIcon: GridCloseIcon,
+  aiAssistantPanelCloseIcon: GridCloseIcon,
+  aiAssistantPanelNewConversationIcon: GridAddIcon,
+  aiAssistantPanelHistoryIcon: GridHistoryIcon,
   promptIcon: GridPromptIcon,
   promptSendIcon: GridSendIcon,
   promptSpeechRecognitionIcon: GridMicIcon,

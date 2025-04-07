@@ -425,6 +425,7 @@
   { "name": "GridHeaderFilterMenu", "kind": "Function" },
   { "name": "GridHeaderFilterMenuContainer", "kind": "Function" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
+  { "name": "GridHistoryIcon", "kind": "Variable" },
   { "name": "GridHydrateColumnsValue", "kind": "TypeAlias" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "TypeAlias" },

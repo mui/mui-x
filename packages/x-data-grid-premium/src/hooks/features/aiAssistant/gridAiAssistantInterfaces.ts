@@ -12,7 +12,7 @@ export type PromptSuggestion = {
 
 export type Conversation = {
   id: string;
-  // title: string; // TODO: uncomment once we start supporting multiple conversations
+  title: string;
   prompts: Prompt[];
 };
 
@@ -86,6 +86,10 @@ export interface GridAiAssistantApi {
      */
     setAiAssistantPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     /**
+     * Creates a new conversation.
+     */
+    createAiAssistantConversation: () => void;
+    /**
      * Gets the conversation with the given id.
      * @param {string} id The id of the conversation.
      * @returns {Conversation | undefined} The conversation or undefined if it does not exist.
@@ -100,5 +104,10 @@ export interface GridAiAssistantApi {
       id: string,
       prompts: Prompt[] | ((prevPrompts: Prompt[]) => Prompt[]),
     ) => void;
+    /**
+     * Sets the active conversation id.
+     * @param {string} id The id of the conversation.
+     */
+    setAiAssistantActiveConversationId: (id: string) => void;
   };
 }

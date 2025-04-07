@@ -266,6 +266,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI Asistent',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   aiAssistantSuggestions: 'Prijedlozi',
 

@@ -1022,67 +1022,79 @@
     {
       "key": "aiAssistantPanelBody",
       "className": "MuiDataGrid-aiAssistantPanelBody",
-      "description": "Styles applied to the root element of the AI assistant panel body.",
+      "description": "Styles applied to the AI assistant panel body.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelConversation",
       "className": "MuiDataGrid-aiAssistantPanelConversation",
-      "description": "Styles applied to the root element of the AI assistant panel conversation.",
+      "description": "Styles applied to the AI assistant panel conversation.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelConversationList",
       "className": "MuiDataGrid-aiAssistantPanelConversationList",
-      "description": "Styles applied to the root element of the AI assistant panel conversation list.",
+      "description": "Styles applied to the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationTitle",
+      "className": "MuiDataGrid-aiAssistantPanelConversationTitle",
+      "description": "Styles applied to the AI assistant panel conversation title.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelEmptyText",
       "className": "MuiDataGrid-aiAssistantPanelEmptyText",
-      "description": "Styles applied to the root element of the AI assistant panel empty text.",
+      "description": "Styles applied to the AI assistant panel empty text.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelFooter",
       "className": "MuiDataGrid-aiAssistantPanelFooter",
-      "description": "Styles applied to the root element of the AI assistant panel footer.",
+      "description": "Styles applied to the AI assistant panel footer.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelHeader",
       "className": "MuiDataGrid-aiAssistantPanelHeader",
-      "description": "Styles applied to the root element of the AI assistant panel header.",
+      "description": "Styles applied to the AI assistant panel header.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelSuggestions",
       "className": "MuiDataGrid-aiAssistantPanelSuggestions",
-      "description": "Styles applied to the root element of the AI assistant panel suggestions.",
+      "description": "Styles applied to the AI assistant panel suggestions.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelSuggestionsItem",
       "className": "MuiDataGrid-aiAssistantPanelSuggestionsItem",
-      "description": "Styles applied to the root element of the AI assistant panel suggestions item.",
+      "description": "Styles applied to the AI assistant panel suggestions item.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelSuggestionsLabel",
       "className": "MuiDataGrid-aiAssistantPanelSuggestionsLabel",
-      "description": "Styles applied to the root element of the AI assistant panel suggestions label.",
+      "description": "Styles applied to the AI assistant panel suggestions label.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelSuggestionsList",
       "className": "MuiDataGrid-aiAssistantPanelSuggestionsList",
-      "description": "Styles applied to the root element of the AI assistant panel suggestions list.",
+      "description": "Styles applied to the AI assistant panel suggestions list.",
       "isGlobal": false
     },
     {
       "key": "aiAssistantPanelTitle",
       "className": "MuiDataGrid-aiAssistantPanelTitle",
-      "description": "Styles applied to the root element of the AI assistant panel title.",
+      "description": "Styles applied to the AI assistant panel title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitleContainer",
+      "className": "MuiDataGrid-aiAssistantPanelTitleContainer",
+      "description": "Styles applied to the AI assistant panel title container.",
       "isGlobal": false
     },
     {

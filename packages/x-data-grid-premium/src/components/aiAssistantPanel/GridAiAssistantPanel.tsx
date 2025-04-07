@@ -14,12 +14,14 @@ import {
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationIdSelector,
+  gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridAiAssistantPanelConversation } from './GridAiAssistantPanelConversation';
 import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';
+import { GridAiAssistantPanelConversationsMenu } from './GridAiAssistantPanelConversationsMenu';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -30,6 +32,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: ['aiAssistantPanel'],
     header: ['aiAssistantPanelHeader'],
     title: ['aiAssistantPanelTitle'],
+    titleContainer: ['aiAssistantPanelTitleContainer'],
+    conversationTitle: ['aiAssistantPanelConversationTitle'],
     body: ['aiAssistantPanelBody'],
     emptyText: ['aiAssistantPanelEmptyText'],
     footer: ['aiAssistantPanelFooter'],
@@ -64,13 +68,35 @@ const AiAssistantPanelHeader = styled('div', {
   padding: vars.spacing(0, 0.75, 0, 2),
 });
 
+const AiAssistantPanelTitleContainer = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'AiAssistantPanelTitleContainer',
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  overflow: 'hidden',
+});
+
 const AiAssistantPanelTitle = styled('span', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelTitle',
 })<{ ownerState: OwnerState }>({
-  flex: 1,
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
+  marginTop: vars.spacing(0.25),
+});
+
+const AiAssistantPanelConversationTitle = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'AiAssistantPanelConversationTitle',
+})<{ ownerState: OwnerState }>({
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+  marginTop: vars.spacing(-0.25),
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 });
 
 const AiAssistantPanelBody = styled('div', {
@@ -116,8 +142,11 @@ function GridAiAssistantPanel() {
     gridAiAssistantConversationSelector,
     activeConversationId,
   );
+  const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
+  const conversationTitle =
+    conversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
 
   return (
     <AiAssistantPanelRoot
@@ -130,13 +159,38 @@ function GridAiAssistantPanel() {
       {...rootProps.slotProps?.panel}
     >
       <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
-        <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
-          {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
-        </AiAssistantPanelTitle>
+        <AiAssistantPanelTitleContainer className={classes.titleContainer} ownerState={rootProps}>
+          <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
+            {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
+          </AiAssistantPanelTitle>
+          <AiAssistantPanelConversationTitle
+            className={classes.conversationTitle}
+            ownerState={rootProps}
+            title={conversationTitle}
+          >
+            {conversationTitle}
+          </AiAssistantPanelConversationTitle>
+        </AiAssistantPanelTitleContainer>
+        <rootProps.slots.baseTooltip
+          title={apiRef.current.getLocaleText('aiAssistantPanelNewConversation')}
+        >
+          <span>
+            <rootProps.slots.baseIconButton
+              {...rootProps.slotProps?.baseIconButton}
+              onClick={apiRef.current.aiAssistant.createAiAssistantConversation}
+              disabled={activeConversationId === 'default' && conversations.length === 0}
+            >
+              <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
+            </rootProps.slots.baseIconButton>
+          </span>
+        </rootProps.slots.baseTooltip>
+        <GridAiAssistantPanelConversationsMenu />
         <rootProps.slots.baseIconButton
+          {...rootProps.slotProps?.baseIconButton}
+          aria-label={apiRef.current.getLocaleText('aiAssistantPanelClose')}
           onClick={() => apiRef.current.aiAssistant.setAiAssistantPanelOpen(false)}
         >
-          <rootProps.slots.aiAssistantCloseIcon fontSize="small" />
+          <rootProps.slots.aiAssistantPanelCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
