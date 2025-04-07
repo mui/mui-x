@@ -43,7 +43,7 @@
     {
       "key": "series",
       "className": "MuiBarElement-series",
-      "description": "Styles applied to the root element for a specified series.\nTo be used like this: `&.${barElementClasses.series}-${seriesId}`.",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],
