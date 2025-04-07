@@ -1,8 +1,9 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import * as React from 'react';
-import { useAnimateBarLabel } from '@mui/x-charts/hooks';
+import { useAnimate } from '@mui/x-charts/hooks';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
 
 export default function JSAnimationCustomization() {
   const [key, animate] = React.useReducer((v) => v + 1, 0);
@@ -55,16 +56,19 @@ function AnimatedBarLabel(props) {
     ...otherProps
   } = props;
 
-  const animatedProps = useAnimateBarLabel({
-    xOrigin,
-    x,
-    yOrigin,
-    y: y - 4,
-    width,
-    height: 0,
-    layout,
-    skipAnimation,
-  });
+  const animatedProps = useAnimate(
+    { x: x + width / 2, y: y - 2 },
+    {
+      initialProps: { x: x + width / 2, y: yOrigin },
+      createInterpolator: interpolateObject,
+      transformProps: (p) => p,
+      applyProps: (element, p) => {
+        element.setAttribute('x', p.x.toString());
+        element.setAttribute('y', p.y.toString());
+      },
+      skip: skipAnimation,
+    },
+  );
 
   return (
     <text {...otherProps} fill={color} textAnchor="middle" {...animatedProps} />
