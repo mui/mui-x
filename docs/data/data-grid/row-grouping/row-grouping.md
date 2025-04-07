@@ -132,13 +132,6 @@ This means that when there's only one grouping criterion, the grouping column an
 You can use the `useKeepGroupedColumnsHidden` utility hook to hide grouped columns.
 This automatically hides grouped columns when added to the model, and displays them when removed.
 
-:::warning
-This hook is not compatible with the deprecated column property `hide`.
-
-You can manage column visibility with `columnVisibilityModel`, `initialState`, or both together.
-To do so, pass them to the hook parameters as shown below.
-:::
-
 The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden` hook.
 You can mix the two examples to support both at the same time.
 
