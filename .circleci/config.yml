@@ -193,12 +193,16 @@ jobs:
       - run:
           name: Generate PropTypes
           command: pnpm proptypes
+          environment:
+            NODE_OPTIONS: --max-old-space-size=7168
       - run:
           name: '`pnpm proptypes` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
           command: pnpm docs:api
+          environment:
+            NODE_OPTIONS: --max-old-space-size=7168
       - run:
           name: '`pnpm docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
@@ -265,6 +269,8 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
+          environment:
+            NODE_OPTIONS: --max-old-space-size=7168
   test_e2e:
     <<: *default-job
     docker:
