@@ -104,7 +104,7 @@ RadarChart.propTypes = {
    * @returns {string} The color to fill the stripe.
    * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
    */
-  getStripeColor: PropTypes.func,
+  stripeColor: PropTypes.func,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

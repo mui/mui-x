@@ -12,12 +12,12 @@ export interface RadarGridProps {
    */
   shape?: 'sharp' | 'circular';
   /**
-   * Get strip fill color. Set it to `null` to remove stripes
+   * Get stripe fill color. Set it to `null` to remove stripes
    * @param {number} index The index of the stripe band.
    * @returns {string} The color to fill the stripe.
    * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
    */
-  getStripeColor?: ((index: number) => string) | null;
+  stripeColor?: ((index: number) => string) | null;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -36,7 +36,7 @@ export interface RadarGridRenderProps extends Pick<RadarGridProps, 'classes'> {
 }
 
 export interface RadarGridStripeRenderProps
-  extends Pick<RadarGridProps, 'getStripeColor' | 'classes'> {
+  extends Pick<RadarGridProps, 'stripeColor' | 'classes'> {
   center: {
     x: number;
     y: number;

@@ -33,7 +33,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     hideLegend,
     divisions,
     shape,
-    getStripeColor,
+    stripeColor,
     highlight = 'axis',
     ...other
   } = props;
@@ -66,7 +66,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     sx,
   };
 
-  const radarGrid: RadarGridProps = { divisions, shape, getStripeColor };
+  const radarGrid: RadarGridProps = { divisions, shape, stripeColor };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 

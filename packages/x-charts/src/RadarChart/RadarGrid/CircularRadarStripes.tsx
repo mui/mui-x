@@ -19,7 +19,7 @@ const getPath = (
  * @ignore - internal component.
  */
 export function CircularRadarStripes(props: RadarGridStripeRenderProps) {
-  const { center, divisions, radius, getStripeColor, classes } = props;
+  const { center, divisions, radius, stripeColor, classes } = props;
 
   const divisionRadius = Array.from(
     { length: divisions },
@@ -34,7 +34,7 @@ export function CircularRadarStripes(props: RadarGridStripeRenderProps) {
             key={r}
             d={getPath(center, r, smallerRadius)}
             fillRule="evenodd"
-            fill={getStripeColor?.(index) ?? 'none'}
+            fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
             className={classes?.stripe}
           />

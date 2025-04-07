@@ -78,7 +78,7 @@ export default chartsApiPages;
   importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
-    propsWithoutDefaultVerification: ['getStripeColor'],
+    propsWithoutDefaultVerification: ['stripeColor'],
   },
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),

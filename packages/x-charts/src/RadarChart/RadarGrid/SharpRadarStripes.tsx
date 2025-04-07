@@ -30,7 +30,7 @@ const getPath = (
  * @ignore - internal component.
  */
 export function SharpRadarStripes(props: RadarGridStripeRenderProps) {
-  const { center, corners, divisions, getStripeColor, classes } = props;
+  const { center, corners, divisions, stripeColor, classes } = props;
 
   const divisionRatio = Array.from({ length: divisions }, (_, index) => (index + 1) / divisions);
 
@@ -43,7 +43,7 @@ export function SharpRadarStripes(props: RadarGridStripeRenderProps) {
             key={ratio}
             d={getPath(corners, center, ratio, smallerRatio)}
             stroke="none"
-            fill={getStripeColor?.(index) ?? 'none'}
+            fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
             className={classes?.stripe}
           />

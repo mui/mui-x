@@ -17,7 +17,7 @@
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "getStripeColor": {
+    "stripeColor": {
       "type": { "name": "func" },
       "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'",
       "signature": {

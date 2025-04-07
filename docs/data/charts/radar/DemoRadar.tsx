@@ -7,7 +7,7 @@ import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 export default function DemoRadar() {
   const theme = useTheme();
 
-  const getStripeColorFunction = {
+  const stripeColorFunction = {
     default: undefined,
     'two-tones':
       theme.palette.mode === 'dark'
@@ -21,17 +21,17 @@ export default function DemoRadar() {
               : (theme.vars || theme).palette.grey[800],
     null: null,
   };
-  const getStripeColorLines = {
+  const stripeColorLines = {
     default: [],
     'two-tones':
       theme.palette.mode === 'dark'
         ? [
-            `  getStripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.dark : theme.palette.grey[300]}`,
+            `  stripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.dark : theme.palette.grey[300]}`,
           ]
         : [
-            `  getStripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.light : theme.palette.grey[800]}`,
+            `  stripeColor={(index:number) => index % 2 === 0 ? theme.palette.primary.light : theme.palette.grey[800]}`,
           ],
-    null: [`  getStripeColor={null}`],
+    null: [`  stripeColor={null}`],
   };
 
   return (
@@ -68,7 +68,7 @@ export default function DemoRadar() {
             margin={{ top: 20 }}
             series={[{ data: [120, 98, 86, 99, 85, 65] }]}
             divisions={props.divisions}
-            getStripeColor={getStripeColorFunction[props.stripe]}
+            stripeColor={stripeColorFunction[props.stripe]}
             shape={props.shape}
             radar={{
               max: 120,
@@ -93,7 +93,7 @@ export default function DemoRadar() {
           '  {/** ... */}',
           `  shape="${props.shape}"`,
           `  divisions={${props.divisions}}`,
-          ...getStripeColorLines[props.stripe],
+          ...stripeColorLines[props.stripe],
           `  radar={{`,
           `    startAngle: ${props.startAngle},`,
           `    metrics: [...],`,

@@ -6,7 +6,7 @@
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
     "divisions": { "description": "The number of divisions in the radar grid." },
-    "getStripeColor": {
+    "stripeColor": {
       "description": "Get strip fill color. Set it to <code>null</code> to remove stripes",
       "typeDescriptions": {
         "index": "The index of the stripe band.",

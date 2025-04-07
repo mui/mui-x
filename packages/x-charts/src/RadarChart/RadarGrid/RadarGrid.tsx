@@ -15,7 +15,7 @@ function RadarGrid(props: RadarGridProps) {
   const {
     divisions = 5,
     shape = 'sharp',
-    getStripeColor = (index) =>
+    stripeColor = (index) =>
       index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none',
   } = props;
   const gridData = useRadarGridData();
@@ -29,13 +29,13 @@ function RadarGrid(props: RadarGridProps) {
 
   return shape === 'sharp' ? (
     <React.Fragment>
-      {getStripeColor && (
+      {stripeColor && (
         <SharpRadarStripes
           divisions={divisions}
           corners={corners}
           center={center}
           radius={radius}
-          getStripeColor={getStripeColor}
+          stripeColor={stripeColor}
           classes={classes}
         />
       )}
@@ -50,13 +50,13 @@ function RadarGrid(props: RadarGridProps) {
     </React.Fragment>
   ) : (
     <React.Fragment>
-      {getStripeColor && (
+      {stripeColor && (
         <CircularRadarStripes
           divisions={divisions}
           corners={corners}
           center={center}
           radius={radius}
-          getStripeColor={getStripeColor}
+          stripeColor={stripeColor}
           classes={classes}
         />
       )}
@@ -92,7 +92,7 @@ RadarGrid.propTypes = {
    * @returns {string} The color to fill the stripe.
    * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
    */
-  getStripeColor: PropTypes.func,
+  stripeColor: PropTypes.func,
   /**
    * The grid shape.
    * @default 'sharp'
