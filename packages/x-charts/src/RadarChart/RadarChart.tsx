@@ -99,13 +99,6 @@ RadarChart.propTypes = {
    */
   divisions: PropTypes.number,
   /**
-   * Get strip fill color. Set it to `null` to remove stripes
-   * @param {number} index The index of the stripe band.
-   * @returns {string} The color to fill the stripe.
-   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
-   */
-  stripeColor: PropTypes.func,
-  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
@@ -201,6 +194,13 @@ RadarChart.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Get stripe fill color. Set it to `null` to remove stripes
+   * @param {number} index The index of the stripe band.
+   * @returns {string} The color to fill the stripe.
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
+   */
+  stripeColor: PropTypes.func,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

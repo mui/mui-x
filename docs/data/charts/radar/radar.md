@@ -55,7 +55,7 @@ The radar chart displays a grid behind the series that can be configured with:
 - `startAngle` The rotation angle of the entire chart in degrees.
 - `divisions` The number of divisions of the grid.
 - `shape` The grid shape that can be `circular` or `sharp`.
-- `stripeColor` The call back that defines stripe colors. Set it to `null` to remove stripes.
+- `stripeColor` The callback that defines stripe colors. Set it to `null` to remove stripes.
 
 {{"demo": "DemoRadar.js" }}
 

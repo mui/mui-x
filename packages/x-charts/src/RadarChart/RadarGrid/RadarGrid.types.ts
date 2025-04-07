@@ -15,7 +15,7 @@ export interface RadarGridProps {
    * Get stripe fill color. Set it to `null` to remove stripes
    * @param {number} index The index of the stripe band.
    * @returns {string} The color to fill the stripe.
-   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
    */
   stripeColor?: ((index: number) => string) | null;
   /**

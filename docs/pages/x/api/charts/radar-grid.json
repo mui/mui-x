@@ -4,7 +4,7 @@
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "stripeColor": {
       "type": { "name": "func" },
-      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'",
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
       "signature": {
         "type": "function(index: number) => string",
         "describedArgs": ["index"],

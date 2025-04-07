@@ -16,7 +16,7 @@ function RadarGrid(props: RadarGridProps) {
     divisions = 5,
     shape = 'sharp',
     stripeColor = (index) =>
-      index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none',
+      index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none',
   } = props;
   const gridData = useRadarGridData();
 
@@ -87,17 +87,17 @@ RadarGrid.propTypes = {
    */
   divisions: PropTypes.number,
   /**
-   * Get strip fill color. Set it to `null` to remove stripes
-   * @param {number} index The index of the stripe band.
-   * @returns {string} The color to fill the stripe.
-   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.primary : 'none'
-   */
-  stripeColor: PropTypes.func,
-  /**
    * The grid shape.
    * @default 'sharp'
    */
   shape: PropTypes.oneOf(['circular', 'sharp']),
+  /**
+   * Get stripe fill color. Set it to `null` to remove stripes
+   * @param {number} index The index of the stripe band.
+   * @returns {string} The color to fill the stripe.
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
+   */
+  stripeColor: PropTypes.func,
 } as any;
 
 export { RadarGrid };
