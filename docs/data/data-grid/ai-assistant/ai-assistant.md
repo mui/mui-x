@@ -4,7 +4,7 @@ title: Ask Your Table - AI Assistant
 
 # Ask Your Table - AI Assistant [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
+<p class="description">Translate natural language into Data Grid views.</p>
 
 :::warning
 To use this feature you must have a prompt processing backend.
@@ -13,7 +13,7 @@ Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
 :::
 
 The AI assistant feature lets users interact with the Data Grid component using natural language.
-Type a prompt like "sort by name" or "show amounts larger than 1000" in the prompt input field and the Data Grid will update accordingly.
+Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
 To enable client-side of this feature, pass `aiAssistant` prop.
