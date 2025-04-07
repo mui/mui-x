@@ -26,6 +26,10 @@ export interface ScatterChartProProps
       'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
     > {}
 
+export type ScatterChartProApi = NonNullable<
+  NonNullable<ScatterChartProProps['apiRef']>['current']
+>;
+
 /**
  * Demos:
  *
@@ -98,6 +102,7 @@ ScatterChartPro.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      print: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),

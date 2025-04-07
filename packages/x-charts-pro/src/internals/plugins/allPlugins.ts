@@ -14,6 +14,7 @@ import {
   useChartPolarAxis,
   UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
+import { useChartProExport } from './useChartProExport';
 import { useChartProZoom, UseChartProZoomSignature } from './useChartProZoom';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
@@ -55,4 +56,5 @@ export const DEFAULT_PLUGINS = [
   useChartInteraction,
   useChartHighlight,
   useChartProZoom,
+  useChartProExport,
 ];

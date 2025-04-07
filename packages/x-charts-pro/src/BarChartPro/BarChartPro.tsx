@@ -24,6 +24,8 @@ export interface BarChartProProps
       'series' | 'plugins' | 'seriesConfig'
     > {}
 
+export type BarChartProApi = NonNullable<NonNullable<BarChartProProps['apiRef']>['current']>;
+
 /**
  * Demos:
  *
@@ -100,6 +102,7 @@ BarChartPro.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      print: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
