@@ -39,7 +39,7 @@ Telemetry collection is specifically associated with the usage of paid MUI X Pr
 
 ## Telemetry in development mode only
 
-MUI X Telemetry is designed to operate exclusively during development. In production builds of your application, telemetry is entirely removed, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
+[MUI X Telemetry](http://bundlephobia.com/package/@mui/x-telemetry) is designed to operate exclusively during development. In production builds of your application, telemetry is entirely removed, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
 
 :::info
 Currently, Telemetry is disabled by default and you have full control to opt-in as per your preference.
@@ -68,6 +68,7 @@ import { muiXTelemetrySettings } from '@mui/x-license';
 
 muiXTelemetrySettings.enableTelemetry();
 ```
+Note: You can use `muiXTelemetrySettings.enableDebug();` to log telemetry data to your browser console and inspect what's being sent.
 
 ### Setting the flag in your application
 
