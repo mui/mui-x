@@ -60,6 +60,7 @@
   { "name": "ChartDataProviderProProps", "kind": "TypeAlias" },
   { "name": "ChartDataProviderProps", "kind": "TypeAlias" },
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
+  { "name": "ChartProApi", "kind": "TypeAlias" },
   { "name": "ChartsAxis", "kind": "Function" },
   { "name": "ChartsAxisClasses", "kind": "Interface" },
   { "name": "ChartsAxisClassKey", "kind": "TypeAlias" },
