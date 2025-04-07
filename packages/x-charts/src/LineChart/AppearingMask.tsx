@@ -30,7 +30,9 @@ const AnimatedRect = styled('rect')({
   animationDuration: '0s',
 
   [`&.${appearingMaskClasses.animate}`]: {
-    animationDuration: `${ANIMATION_DURATION_MS}ms`,
+    '@media not print': {
+      animationDuration: `${ANIMATION_DURATION_MS}ms`,
+    },
   },
 
   '@keyframes animate-width': {
