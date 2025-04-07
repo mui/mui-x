@@ -24,10 +24,10 @@ We track the following details anonymously during development mode:
 
 - Unique session ID: This is generated on each run with UUID.
 - General machine information (operating system, version and whether or not the command was run within CI)
-- Package name and version
+- Package and version used
 - License info
-- IP
-- Timestamp of the event occurrence.
+- IP address
+- Timestamp of the event occurrence (for example, license key verification)
 
 :::info
 **Privacy Assurance**: We are committed to maintaining your privacy. All data collected is anonymized, ensuring that no personally identifiable information is gathered. We focus solely on understanding usage patterns to better serve our customers and developer community.
