@@ -109,7 +109,6 @@ export type CheckboxProps = CommonProps & {
   id?: string;
   autoFocus?: boolean;
   checked?: boolean;
-  className?: string;
   disabled?: boolean;
   fullWidth?: boolean;
   indeterminate?: boolean;
@@ -278,7 +277,6 @@ export type SwitchProps = CommonProps & {
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
   label?: React.ReactNode;
-  className?: string;
 };
 
 export type TextFieldProps = CommonProps & {
