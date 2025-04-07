@@ -9,6 +9,7 @@ import { data } from './randomData';
 
 export default function PrintChart() {
   const apiRef = React.useRef<ScatterChartProApi>(undefined);
+
   return (
     <Stack width="100%">
       <ScatterChartPro
