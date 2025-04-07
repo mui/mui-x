@@ -28,7 +28,7 @@ MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
 
 > ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
-3. By setting the flag to global object on the application start (for example in main file).
+3. By setting the flag to global object on the application start (for example, in the main file).
 
 ```js
 import { ponyfillGlobal } from '@mui/utils';
