@@ -3,7 +3,7 @@ import { ChartPrintExportOptions } from './useChartProExport.types';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { fileName }: ChartPrintExportOptions,
+  { fileName }: ChartPrintExportOptions = {},
 ) {
   const printWindow = buildPrintWindow(fileName);
   const doc = ownerDocument(element);

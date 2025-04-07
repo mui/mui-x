@@ -3,7 +3,7 @@ import { printChart } from './print';
 import { ChartPrintExportOptions, UseChartProExportSignature } from './useChartProExport.types';
 
 export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ svgRef }) => {
-  const print = (options: ChartPrintExportOptions) => {
+  const print = (options?: ChartPrintExportOptions) => {
     const svg = svgRef.current;
 
     if (svg) {
