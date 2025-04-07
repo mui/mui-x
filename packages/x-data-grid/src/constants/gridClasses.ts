@@ -9,47 +9,55 @@ export interface GridClasses {
    */
   aiAssistantPanel: string;
   /**
-   * Styles applied to the root element of the AI assistant panel header.
+   * Styles applied to the AI assistant panel header.
    */
   aiAssistantPanelHeader: string;
   /**
-   * Styles applied to the root element of the AI assistant panel title.
+   * Styles applied to the AI assistant panel title.
    */
   aiAssistantPanelTitle: string;
   /**
-   * Styles applied to the root element of the AI assistant panel body.
+   * Styles applied to the AI assistant panel title container.
+   */
+  aiAssistantPanelTitleContainer: string;
+  /**
+   * Styles applied to the AI assistant panel body.
    */
   aiAssistantPanelBody: string;
   /**
-   * Styles applied to the root element of the AI assistant panel empty text.
+   * Styles applied to the AI assistant panel conversation title.
+   */
+  aiAssistantPanelConversationTitle: string;
+  /**
+   * Styles applied to the AI assistant panel empty text.
    */
   aiAssistantPanelEmptyText: string;
   /**
-   * Styles applied to the root element of the AI assistant panel footer.
+   * Styles applied to the AI assistant panel footer.
    */
   aiAssistantPanelFooter: string;
   /**
-   * Styles applied to the root element of the AI assistant panel conversation.
+   * Styles applied to the AI assistant panel conversation.
    */
   aiAssistantPanelConversation: string;
   /**
-   * Styles applied to the root element of the AI assistant panel conversation list.
+   * Styles applied to the AI assistant panel conversation list.
    */
   aiAssistantPanelConversationList: string;
   /**
-   * Styles applied to the root element of the AI assistant panel suggestions.
+   * Styles applied to the AI assistant panel suggestions.
    */
   aiAssistantPanelSuggestions: string;
   /**
-   * Styles applied to the root element of the AI assistant panel suggestions list.
+   * Styles applied to the AI assistant panel suggestions list.
    */
   aiAssistantPanelSuggestionsList: string;
   /**
-   * Styles applied to the root element of the AI assistant panel suggestions item.
+   * Styles applied to the AI assistant panel suggestions item.
    */
   aiAssistantPanelSuggestionsItem: string;
   /**
-   * Styles applied to the root element of the AI assistant panel suggestions label.
+   * Styles applied to the AI assistant panel suggestions label.
    */
   aiAssistantPanelSuggestionsLabel: string;
   /**
@@ -905,12 +913,14 @@ export function getDataGridUtilityClass(slot: string): string {
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aiAssistantPanel',
   'aiAssistantPanelHeader',
+  'aiAssistantPanelTitleContainer',
   'aiAssistantPanelTitle',
   'aiAssistantPanelBody',
   'aiAssistantPanelEmptyText',
   'aiAssistantPanelFooter',
   'aiAssistantPanelConversation',
   'aiAssistantPanelConversationList',
+  'aiAssistantPanelConversationTitle',
   'aiAssistantPanelSuggestions',
   'aiAssistantPanelSuggestionsList',
   'aiAssistantPanelSuggestionsItem',

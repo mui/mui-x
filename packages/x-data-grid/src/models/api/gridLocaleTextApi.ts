@@ -231,6 +231,9 @@ export interface GridLocaleText {
 
   // AI Assistant panel
   aiAssistantPanelTitle: string;
+  aiAssistantPanelClose: string;
+  aiAssistantPanelConversationHistory: string;
+  aiAssistantPanelNewConversation: string;
   aiAssistantPanelEmptyConversation: string;
   aiAssistantSuggestions: string;
 

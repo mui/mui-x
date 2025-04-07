@@ -92,10 +92,20 @@ export interface GridPremiumIconSlotsComponent {
    */
   aiAssistantIcon: React.JSXElementConstructor<any>;
   /**
-   * Icon used for the AI Assistant close button
+   * Icon used for the AI Assistant panel close button
    * @default GridCloseIcon
    */
-  aiAssistantCloseIcon: React.JSXElementConstructor<any>;
+  aiAssistantPanelCloseIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the AI Assistant panel new conversation button
+   * @default GridAddIcon
+   */
+  aiAssistantPanelNewConversationIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the AI Assistant panel history icon
+   * @default GridHistoryIcon
+   */
+  aiAssistantPanelHistoryIcon: React.JSXElementConstructor<any>;
   /**
    * Icon used for the prompt
    * @default GridPromptIcon

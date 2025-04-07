@@ -783,47 +783,55 @@
     },
     "aiAssistantPanelBody": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel body"
+      "nodeName": "the AI assistant panel body"
     },
     "aiAssistantPanelConversation": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel conversation"
+      "nodeName": "the AI assistant panel conversation"
     },
     "aiAssistantPanelConversationList": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel conversation list"
+      "nodeName": "the AI assistant panel conversation list"
+    },
+    "aiAssistantPanelConversationTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation title"
     },
     "aiAssistantPanelEmptyText": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel empty text"
+      "nodeName": "the AI assistant panel empty text"
     },
     "aiAssistantPanelFooter": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel footer"
+      "nodeName": "the AI assistant panel footer"
     },
     "aiAssistantPanelHeader": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel header"
+      "nodeName": "the AI assistant panel header"
     },
     "aiAssistantPanelSuggestions": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel suggestions"
+      "nodeName": "the AI assistant panel suggestions"
     },
     "aiAssistantPanelSuggestionsItem": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel suggestions item"
+      "nodeName": "the AI assistant panel suggestions item"
     },
     "aiAssistantPanelSuggestionsLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel suggestions label"
+      "nodeName": "the AI assistant panel suggestions label"
     },
     "aiAssistantPanelSuggestionsList": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel suggestions list"
+      "nodeName": "the AI assistant panel suggestions list"
     },
     "aiAssistantPanelTitle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel title"
+      "nodeName": "the AI assistant panel title"
+    },
+    "aiAssistantPanelTitleContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title container"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -1533,8 +1541,10 @@
     }
   },
   "slotDescriptions": {
-    "aiAssistantCloseIcon": "Icon used for the AI Assistant close button",
     "aiAssistantIcon": "Icon used for the AI Assistant button",
+    "aiAssistantPanelCloseIcon": "Icon used for the AI Assistant panel close button",
+    "aiAssistantPanelHistoryIcon": "Icon used for the AI Assistant panel history icon",
+    "aiAssistantPanelNewConversationIcon": "Icon used for the AI Assistant panel new conversation button",
     "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",

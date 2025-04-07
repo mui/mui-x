@@ -250,6 +250,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
 
