@@ -1,18 +1,17 @@
 import ownerDocument from '@mui/utils/ownerDocument';
+import { ChartPrintExportOptions } from './useChartProExport.types';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { name, width, height }: { name?: string; width: number; height: number },
+  { fileName }: ChartPrintExportOptions,
 ) {
-  const printWindow = buildPrintWindow(name);
+  const printWindow = buildPrintWindow(fileName);
   const doc = ownerDocument(element);
 
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as HTMLElement | SVGElement;
     const container = document.createElement('div');
-    elementClone.style.width = `${width}px`;
-    elementClone.style.height = `${height}px`;
     container.appendChild(elementClone);
     printDoc.body.innerHTML = container.innerHTML;
 
