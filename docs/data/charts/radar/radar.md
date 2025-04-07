@@ -4,7 +4,7 @@ productId: x-charts
 components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarDataProvider
 ---
 
-# Charts - Radar 🚧
+# Charts - Radar 🧪
 
 <p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
 
@@ -29,6 +29,12 @@ You can plot multiple series on the same radar chart.
 
 {{"demo": "MultiSeriesRadar.js"}}
 
+## Series options
+
+Radar series support `hideMark` and `fillArea` parameter to modify the rendering of the series.
+
+{{"demo": "DemoRadarVisualisation.js"}}
+
 ## Axis
 
 The `metrics` property of `radar` takes an array with one item per corner of the radar.
@@ -49,6 +55,7 @@ The radar chart displays a grid behind the series that can be configured with:
 - `startAngle` The rotation angle of the entire chart in degrees.
 - `divisions` The number of divisions of the grid.
 - `shape` The grid shape that can be `circular` or `sharp`.
+- `stripeColor` The callback that defines stripe colors. Set it to `null` to remove stripes.
 
 {{"demo": "DemoRadar.js" }}
 
@@ -63,12 +70,7 @@ The radar chart displays a grid behind the series that can be configured with:
 ### Axis highlight
 
 By default the radar highlight values of a same axis.
-This axis highlight has two visualizations available with the prop `axisHighlightShape`:
-
-- `'points'` Displays points on each highlighted value (best with multiple series).
-- `'slice'` Displays a slice around the highlighted value. (best with a single series).
-
-With composition you can add this behavior with the `<RadarAxisHighlight axisHighlightShape='slice' />` component.
+With composition you can add this behavior with the `<RadarAxisHighlight />` component.
 
 {{"demo": "DemoRadarAxisHighlight.js" }}
 
