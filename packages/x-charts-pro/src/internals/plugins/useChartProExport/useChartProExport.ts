@@ -1,13 +1,13 @@
 import { ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
-import { UseChartProExportSignature } from './useChartProExport.types';
+import { ChartPrintExportOptions, UseChartProExportSignature } from './useChartProExport.types';
 
 export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ svgRef }) => {
-  const print = () => {
+  const print = (options: ChartPrintExportOptions) => {
     const svg = svgRef.current;
 
     if (svg) {
-      printChart(svg, { name: 'Bar Chart.pdf', width: 600, height: 400 });
+      printChart(svg, options);
     }
   };
 
