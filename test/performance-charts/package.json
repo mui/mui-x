@@ -14,15 +14,15 @@
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.8.1",
-    "@vitest/browser": "3.0.9",
-    "@vitest/ui": "3.0.9",
+    "@vitest/browser": "3.1.1",
+    "@vitest/ui": "3.1.1",
     "jsdom": "^26.0.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "vitest": "3.0.9"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vitest": "3.1.1"
   }
 }

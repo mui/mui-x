@@ -70,7 +70,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
     });
   };
 
-  const handleMouseDown = (event: React.MouseEvent) => {
+  const handlePointerDown = (event: React.PointerEvent) => {
     // Keep the focus in the cell
     event.preventDefault();
   };
@@ -88,7 +88,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
       </Tooltip>
       {cellMode === 'edit' && (
         <Tooltip title="Cancel">
-          <ToolbarButton onClick={handleCancel} onMouseDown={handleMouseDown}>
+          <ToolbarButton onClick={handleCancel} onPointerDown={handlePointerDown}>
             <CancelIcon fontSize="small" />
           </ToolbarButton>
         </Tooltip>

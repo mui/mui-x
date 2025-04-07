@@ -150,6 +150,9 @@ export function useFieldSectionContentProps(
   });
 
   const createFocusHandler = useEventCallback((sectionIndex: number) => () => {
+    if (disabled) {
+      return;
+    }
     setSelectedSections(sectionIndex);
   });
 
