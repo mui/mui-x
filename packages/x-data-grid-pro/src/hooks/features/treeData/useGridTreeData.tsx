@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { useGridApiEventHandler, GridEventListener } from '@mui/x-data-grid';
+import { useGridEvent, GridEventListener } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -36,5 +36,5 @@ export const useGridTreeData = (
     [apiRef, props.dataSource],
   );
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
 };

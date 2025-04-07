@@ -28,7 +28,7 @@ function MyCustomToolbar() {
     <React.Fragment>
       <Portal container={() => document.getElementById('filter-panel')}>
         <GridPortalWrapper>
-          <QuickFilter>
+          <QuickFilter expanded>
             <QuickFilterControl
               render={({ ref, ...other }) => (
                 <TextField
@@ -38,24 +38,26 @@ function MyCustomToolbar() {
                   aria-label="Search"
                   placeholder="Search..."
                   size="small"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                    endAdornment: other.value ? (
-                      <InputAdornment position="end">
-                        <QuickFilterClear
-                          edge="end"
-                          size="small"
-                          aria-label="Clear search"
-                          sx={{ marginRight: -0.75 }}
-                        >
-                          <CancelIcon fontSize="small" />
-                        </QuickFilterClear>
-                      </InputAdornment>
-                    ) : null,
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: other.value ? (
+                        <InputAdornment position="end">
+                          <QuickFilterClear
+                            edge="end"
+                            size="small"
+                            aria-label="Clear search"
+                            material={{ sx: { marginRight: -0.75 } }}
+                          >
+                            <CancelIcon fontSize="small" />
+                          </QuickFilterClear>
+                        </InputAdornment>
+                      ) : null,
+                    },
                   }}
                 />
               )}

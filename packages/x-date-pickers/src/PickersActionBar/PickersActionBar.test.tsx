@@ -4,10 +4,10 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
-import { PickerActionsContext } from '../internals/components/PickerProvider';
+import { PickerContext } from '../hooks/usePickerContext';
 
 describe('<PickersActionBar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   const renderWithContext = (element: React.ReactElement) => {
     const spys = {
@@ -18,9 +18,12 @@ describe('<PickersActionBar />', () => {
       setValueToToday: spy(),
       acceptValueChanges: spy(),
       cancelValueChanges: spy(),
-    };
+      goToNextStep: spy(),
+      goToPreviousStep: spy(),
+      hasNextStep: false,
+    } as any;
 
-    render(<PickerActionsContext.Provider value={spys}>{element}</PickerActionsContext.Provider>);
+    render(<PickerContext.Provider value={spys}>{element}</PickerContext.Provider>);
 
     return spys;
   };

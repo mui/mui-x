@@ -29,6 +29,7 @@ const enUSPickers: PickersLocaleText = {
   clearButtonLabel: 'Clear',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Today',
+  nextStepButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Select date',

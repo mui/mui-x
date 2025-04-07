@@ -1,11 +1,5 @@
 {
-  "props": {
-    "axisHighlightShape": {
-      "type": { "name": "enum", "description": "'points'<br>&#124;&nbsp;'slice'" },
-      "required": true
-    },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } }
-  },
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
   "name": "RadarAxisHighlight",
   "imports": [
     "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
@@ -30,17 +24,11 @@
       "className": "MuiRadarAxisHighlight-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
-    },
-    {
-      "key": "slice",
-      "className": "MuiRadarAxisHighlight-slice",
-      "description": "Styles applied to every highlight slice.",
-      "isGlobal": false
     }
   ],
   "muiName": "MuiRadarAxisHighlight",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
   "cssComponent": false
 }

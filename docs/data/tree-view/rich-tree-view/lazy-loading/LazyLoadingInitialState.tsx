@@ -29,7 +29,6 @@ export default function LazyLoadingInitialState() {
     <Box sx={{ width: '300px' }}>
       <RichTreeViewPro
         items={initialItems}
-        experimentalFeatures={{ lazyLoading: true }}
         dataSource={{
           getChildrenCount: (item) => item?.childrenCount as number,
           getTreeItems: fetchData,

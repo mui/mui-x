@@ -5,6 +5,241 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.3
+
+_Apr 3, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚫 Removed `react-spring` as a dependency of `@mui/x-charts`
+- 📦 Data Grid list view feature is now stable
+- 💫 Support title in Data Grid
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The list view feature and its related props are now stable.
+
+  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+
+  The `GridListColDef` type has been renamed to `GridListViewColDef`.
+
+  ```diff
+  -const listViewColDef: GridListColDef = {
+  +const listViewColDef: GridListViewColDef = {
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
+
+   <DataGridPro
+  -  unstable_listView
+  -  unstable_listColumn={listViewColDef}
+  +  listView
+  +  listViewColumn={listViewColDef}
+   />
+  ```
+
+- The `useGridApiEventHandler()` hook has been renamed to `useGridEvent()`.
+- The `useGridApiOptionHandler()` hook has been renamed to `useGridEventPriority()`.
+
+#### `@mui/x-data-grid@8.0.0-beta.3`
+
+- [DataGrid] Fix "is any of" autocomplete rendering (#17226) @KenanYusuf
+- [DataGrid] Rename `useGridApiEventHandler()` to `useGridEvent()` (#17159) @romgrk
+- [DataGrid] Support adding a label to the grid (#17147) @KenanYusuf
+- [DataGrid] Refactor: remove material typings (#17119) @romgrk
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.3`, plus:
+
+- [DataGridPro] Make list view feature stable (#17217) @KenanYusuf
+- [DataGridPro] Always refetch lazy-loading rows (#16827) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.3`
+
+- [pickers] Add new `nextOrAccept` action bar action (#17037) @flaviendelangle
+- [pickers] Improve the Multi Section Digital Clock scrollbar thickness (#16774) @oliviertassinari
+- [TimePicker] Align the Digital Clock scrollbar thickness (#17203) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
+
+### Charts
+
+#### Breaking changes
+
+- Removed `react-spring` as a dependency of `@mui/x-charts`.
+  A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
+
+  - the type of the `x`, `y`, `width` and `height` props of the `bar` slot are now `number`;
+  - the type of `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `arcLabelRadius`, `cornerRadius` and `paddingAngle` props of `pieArc` and `pieArcLabel` slot are now `number`.
+
+  Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
+
+- Tick labels in the y-axis of cartesian charts will now have an ellipsis applied to prevent overflow.
+  If your tick labels are being clipped sooner than you would like, you can increase the y-axis size by increasing its width property.
+
+- The tooltip DOM structure is modified to improve accessibility. If you relied on it to apply some style or run tests, you might be impacted by this modification.
+  - The axis tooltip displays a table per axis with the axis value in a caption.
+  - Cells containing the series label and the color mark got merged in a th cell.
+
+#### `@mui/x-charts@8.0.0-beta.3`
+
+- [charts] Adjust color palettes (#17209) @noraleonte
+- [charts] Allow multiple axes in the tooltip (#17058) @alexfauquette
+- [charts] Improve custom legend docs (#17231) @JCQuintas
+- [charts] Fix crash when item shown in tooltip is unmounted (#17169) @bernardobelchior
+- [charts] Migrate some animations from `react-spring` (#16961) @bernardobelchior
+- [charts] Remove `react-spring` (#17123) @bernardobelchior
+- [charts] Fix y-axis tick label overflow (#16846) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
+
+### `@mui/x-codemod@8.0.0-beta.3`
+
+- [codemod] Add `listView` prop rename codemod (#17220) @MBilalShafi
+
+### Docs
+
+- [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
+- [docs] Fix 301 link @oliviertassinari
+- [docs] Fix redirection getting-started (#17200) @oliviertassinari
+- [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
+- [docs] Update Localization Provider JSDoc link (#17207) @LukasTy
+
+### Core
+
+- [core] Cleanup `@mui` dependency versions (#17160) @LukasTy
+- [core] Sync scorecards.yml across codebase @oliviertassinari
+- [core] Revert upgrade to React 19.1 (#17206) @bernardobelchior
+- [code-infra] Fix `test:unit` warning (#17224) @JCQuintas
+- [code-infra] Fix pickers failing test after clock=fake removal (#17202) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValidation` (#17150) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValue` (#17199) @JCQuintas
+- [infra] Add write permission for actions in issue status label handler (#17161) @michelengelen
+
+## 8.0.0-beta.2
+
+_Mar 27, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔍 Update the Data Grid quick filter to be collapsed when not in use
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@lhilgert9.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @hasdfa, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @mnajdova, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0-beta.2`
+
+- [DataGrid] Fix error caused by trying to render rows that are not in the state anymore (#17057) @arminmeh
+- [DataGrid] Refactor: remove more material (#16922) @romgrk
+- [DataGrid] Update Quick Filter component to be expandable (#16862) @KenanYusuf
+- [DataGrid] Fix crash when used with `@mui/styled-engine-sc` (#17154) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.2`, plus:
+
+- [DataGridPro] Data source: Allow expanding groups with unknown children (#17144) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.2`
+
+- [fields] Extract the props of each field slot into a standalone hook for easier re-use (#17114) @flaviendelangle
+- [pickers] Fix visual regression in Date Range Calendar's day (#17148) @flaviendelangle
+- [pickers] Remove all code duplication to apply default values to validation props (#17038) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-beta.2`
+
+- [charts] Memoize axes and series with default (#17156) @alexfauquette
+- [charts] Add pie benchmark (#17115) @JCQuintas
+- [charts] Fix CSS vars support for dark theme (#17106) @alexfauquette
+- [charts] Fix radar hover (#17134) @alexfauquette
+- [charts] Move axis interaction to selectors (#17039) @alexfauquette
+- [charts] Fix Pie benchmark (#17125) @JCQuintas
+
+#### `@mui/x-charts-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
+
+### `@mui/x-codemod@8.0.0-beta.1`
+
+- [codemod] Add Data Grid codemods (#17121, #17124) @MBilalShafi
+
+### Docs
+
+- [docs] Fix example import for `ExportExcel` component (#17110) @KenanYusuf
+
+### Core
+
+- [code-infra] Remove `@mui/styles` dependency & patches (#17071) @mnajdova
+- [code-infra] Add more tests to slow screenshot tests (#17075) @JCQuintas
+- [code-infra] Fix pickers codecov (#17120) @JCQuintas
+- [code-infra] Move `isDeepEqual` to @mui/x-internals (#17129) @JCQuintas
+- [code-infra] Remove `test_regressions` step from React 18 pipeline (#17108) @LukasTy
+- [code-infra] Update some data-grid tests for vitest (#17078, #17104, #17146) @JCQuintas
+- [code-infra] Update some date-pickers tests for vitest (#17083) @JCQuintas
+- [infra] Update `issue-status-label-handler.yml` @michelengelen
+- [infra] Added reusable issue status label handler workflow (#17145) @michelengelen
+- [infra] Switch to reusable 'stale issues/PRs' workflow (#17107) @michelengelen
+- [telemetry] Improve request body size, update dependencies, and optimize SSR handling (#17008) @hasdfa
+
 ## 8.0.0-beta.1
 
 _Mar 21, 2025_

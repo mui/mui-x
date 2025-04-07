@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import clsx from 'clsx';
-// import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -11,34 +10,14 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../models/gridBaseSlots';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { QuickFilter, QuickFilterClear, QuickFilterControl } from '../quickFilter';
-
-type OwnerState = DataGridProcessedProps;
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['toolbarQuickFilter'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-// TODO: Use NotRendered from /utils/assert
-// Currently causes react-docgen to fail
-const GridToolbarQuickFilterRoot = styled(
-  (_props: GridSlotProps['baseTextField']) => {
-    throw new Error('Failed assertion: should not be rendered');
-  },
-  {
-    name: 'MuiDataGrid',
-    slot: 'ToolbarQuickFilter',
-  },
-)({
-  width: 260,
-  marginLeft: 'auto',
-});
+import {
+  QuickFilter,
+  QuickFilterClear,
+  QuickFilterControl,
+  QuickFilterTrigger,
+} from '../quickFilter';
+import { ToolbarButton } from '../toolbarV8';
+import { vars } from '../../constants/cssVariables';
 
 export type GridToolbarQuickFilterProps = {
   className?: string;
@@ -68,10 +47,69 @@ export type GridToolbarQuickFilterProps = {
   };
 };
 
+type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+  expanded: boolean;
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['toolbarQuickFilter'],
+    trigger: ['toolbarQuickFilterTrigger'],
+    control: ['toolbarQuickFilterControl'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridQuickFilterRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ToolbarQuickFilter',
+})({
+  display: 'grid',
+  alignItems: 'center',
+});
+
+const GridQuickFilterTrigger = styled(ToolbarButton, {
+  name: 'MuiDataGrid',
+  slot: 'ToolbarQuickFilterTrigger',
+})(({ ownerState }: { ownerState: OwnerState }) => ({
+  gridArea: '1 / 1',
+  width: 'min-content',
+  height: 'min-content',
+  zIndex: 1,
+  opacity: ownerState.expanded ? 0 : 1,
+  pointerEvents: ownerState.expanded ? 'none' : 'auto',
+  transition: vars.transition(['opacity']),
+}));
+
+// TODO: Use NotRendered from /utils/assert
+// Currently causes react-docgen to fail
+const GridQuickFilterTextField = styled(
+  (_props: GridSlotProps['baseTextField']) => {
+    throw new Error('Failed assertion: should not be rendered');
+  },
+  {
+    name: 'MuiDataGrid',
+    slot: 'ToolbarQuickFilterControl',
+  },
+)(({ ownerState }: { ownerState: OwnerState }) => ({
+  gridArea: '1 / 1',
+  overflowX: 'clip',
+  width: ownerState.expanded ? 260 : 'var(--trigger-width)',
+  opacity: ownerState.expanded ? 1 : 0,
+  transition: vars.transition(['width', 'opacity']),
+}));
+
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const ownerState = {
+    classes: rootProps.classes,
+    expanded: false,
+  };
+  const classes = useUtilityClasses(ownerState);
 
   const { quickFilterParser, quickFilterFormatter, debounceMs, className, slotProps, ...other } =
     props;
@@ -81,46 +119,74 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       parser={quickFilterParser}
       formatter={quickFilterFormatter}
       debounceMs={debounceMs}
-    >
-      <QuickFilterControl
-        render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
-          <GridToolbarQuickFilterRoot
-            as={rootProps.slots.baseTextField}
-            className={clsx(classes.root, className)}
-            inputRef={ref}
-            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
-            placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
-            size="small"
-            slotProps={{
-              input: {
-                startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
-                endAdornment: controlProps.value ? (
-                  <QuickFilterClear
-                    render={
-                      <rootProps.slots.baseIconButton
-                        size="small"
-                        edge="end"
-                        aria-label={apiRef.current.getLocaleText(
-                          'toolbarQuickFilterDeleteIconLabel',
-                        )}
-                      >
-                        <rootProps.slots.quickFilterClearIcon fontSize="small" />
-                      </rootProps.slots.baseIconButton>
-                    }
-                  />
-                ) : null,
-                ...controlSlotProps?.input,
-              },
-              ...controlSlotProps,
-            }}
-            {...rootProps.slotProps?.baseTextField}
-            {...controlProps}
-            {...slotProps?.root}
-            {...other}
-          />
-        )}
-      />
-    </QuickFilter>
+      render={(quickFilterProps, state) => {
+        const currentOwnerState = {
+          ...ownerState,
+          expanded: state.expanded,
+        };
+        return (
+          <GridQuickFilterRoot {...quickFilterProps} className={clsx(classes.root, className)}>
+            <QuickFilterTrigger
+              render={(triggerProps) => (
+                <rootProps.slots.baseTooltip
+                  title={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+                  enterDelay={0} // Prevents tooltip lagging behind transitioning trigger element
+                >
+                  <GridQuickFilterTrigger
+                    className={classes.trigger}
+                    {...triggerProps}
+                    ownerState={currentOwnerState}
+                    color="default"
+                    aria-disabled={state.expanded}
+                  >
+                    <rootProps.slots.quickFilterIcon fontSize="small" />
+                  </GridQuickFilterTrigger>
+                </rootProps.slots.baseTooltip>
+              )}
+            />
+            <QuickFilterControl
+              render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
+                <GridQuickFilterTextField
+                  as={rootProps.slots.baseTextField}
+                  className={classes.control}
+                  ownerState={currentOwnerState}
+                  inputRef={ref}
+                  aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+                  placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
+                  size="small"
+                  slotProps={{
+                    input: {
+                      startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
+                      endAdornment: controlProps.value ? (
+                        <QuickFilterClear
+                          render={
+                            <rootProps.slots.baseIconButton
+                              size="small"
+                              edge="end"
+                              aria-label={apiRef.current.getLocaleText(
+                                'toolbarQuickFilterDeleteIconLabel',
+                              )}
+                            >
+                              <rootProps.slots.quickFilterClearIcon fontSize="small" />
+                            </rootProps.slots.baseIconButton>
+                          }
+                        />
+                      ) : null,
+                      ...controlSlotProps?.input,
+                    },
+                    ...controlSlotProps,
+                  }}
+                  {...rootProps.slotProps?.baseTextField}
+                  {...controlProps}
+                  {...slotProps?.root}
+                  {...other}
+                />
+              )}
+            />
+          </GridQuickFilterRoot>
+        );
+      }}
+    />
   );
 }
 

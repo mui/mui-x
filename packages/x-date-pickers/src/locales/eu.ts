@@ -35,6 +35,7 @@ const euPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Garbitu',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Gaur',
+  nextStepButtonLabel: 'Hurrengo',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Data aukeratu',
