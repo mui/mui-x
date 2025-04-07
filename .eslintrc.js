@@ -119,6 +119,7 @@ module.exports = {
   plugins: [
     ...baseline.plugins,
     'eslint-plugin-jsdoc',
+    'eslint-plugin-material-ui-x',
     ...(isAnyReactCompilerPluginEnabled ? ['eslint-plugin-react-compiler'] : []),
   ],
   settings: {
@@ -226,7 +227,7 @@ module.exports = {
         'packages/x-data-grid-premium/src/themeAugmentation/index.js',
       ],
       rules: {
-        'material-ui/no-direct-state-access': 'error',
+        'material-ui-x/no-direct-state-access': 'error',
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },

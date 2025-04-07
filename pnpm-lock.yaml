@@ -252,8 +252,11 @@ importers:
         specifier: ^6.10.2
         version: 6.10.2(eslint@8.57.1)
       eslint-plugin-material-ui:
+        specifier: github:mui/material-ui#a7e08b43255f84826e14f28bf4abd3984315bd39&path:/packages/eslint-plugin-material-ui
+        version: https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39#path:/packages/eslint-plugin-material-ui(eslint@8.57.1)
+      eslint-plugin-material-ui-x:
         specifier: workspace:^
-        version: link:packages/eslint-plugin-material-ui
+        version: link:packages/eslint-plugin-material-ui-x
       eslint-plugin-mocha:
         specifier: ^10.5.0
         version: 10.5.0(eslint@8.57.1)
@@ -338,6 +341,9 @@ importers:
       moment-timezone:
         specifier: ^0.5.48
         version: 0.5.48
+      netlify-plugin-cache-docs:
+        specifier: github:mui/material-ui#22aa7db2ed23df3b43530e9fdb57bc1051221457&path:/packages/netlify-plugin-cache-docs
+        version: https://codeload.github.com/mui/material-ui/tar.gz/22aa7db2ed23df3b43530e9fdb57bc1051221457#path:/packages/netlify-plugin-cache-docs
       nyc:
         specifier: ^17.1.0
         version: 17.1.0
@@ -703,7 +709,7 @@ importers:
         specifier: ^14.2.4
         version: 14.2.4
 
-  packages/eslint-plugin-material-ui:
+  packages/eslint-plugin-material-ui-x:
     devDependencies:
       '@types/eslint':
         specifier: ^8.56.12
@@ -5859,6 +5865,9 @@ packages:
   electron-to-chromium@1.5.114:
     resolution: {integrity: sha512-DFptFef3iktoKlFQK/afbo274/XNWD00Am0xa7M8FZUepHlHT8PEuiNBoRfFHbH1okqN58AlhbJ4QTkcnXorjA==}
 
+  emoji-regex@10.4.0:
+    resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
+
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
@@ -6088,6 +6097,12 @@ packages:
     engines: {node: '>=4.0'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
+
+  eslint-plugin-material-ui@https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39#path:/packages/eslint-plugin-material-ui:
+    resolution: {path: /packages/eslint-plugin-material-ui, tarball: https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39}
+    version: 5.0.0
+    peerDependencies:
+      eslint: ^8.47.0
 
   eslint-plugin-mocha@10.5.0:
     resolution: {integrity: sha512-F2ALmQVPT1GoP27O1JTZGrV9Pqg8k79OeIuvw63UxMtQKREZtmkK1NFgkZQ2TW7L2JSSFKHFPTtHu5z8R9QNRw==}
@@ -8140,6 +8155,11 @@ packages:
 
   nested-error-stacks@2.1.1:
     resolution: {integrity: sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==}
+
+  netlify-plugin-cache-docs@https://codeload.github.com/mui/material-ui/tar.gz/22aa7db2ed23df3b43530e9fdb57bc1051221457#path:/packages/netlify-plugin-cache-docs:
+    resolution: {path: /packages/netlify-plugin-cache-docs, tarball: https://codeload.github.com/mui/material-ui/tar.gz/22aa7db2ed23df3b43530e9fdb57bc1051221457}
+    version: 6.0.0
+    engines: {node: '>=14.0.0'}
 
   next@15.2.4:
     resolution: {integrity: sha512-VwL+LAaPSxEkd3lU2xWbgEOtrM8oedmyhBqaVNmgKB+GvZlCy9rgaEc+y2on0wv+l0oSFqLtYD6dcC1eAedUaQ==}
@@ -15255,6 +15275,8 @@ snapshots:
 
   electron-to-chromium@1.5.114: {}
 
+  emoji-regex@10.4.0: {}
+
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
@@ -15615,6 +15637,11 @@ snapshots:
       object.fromentries: 2.0.8
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
+
+  eslint-plugin-material-ui@https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39#path:/packages/eslint-plugin-material-ui(eslint@8.57.1):
+    dependencies:
+      emoji-regex: 10.4.0
+      eslint: 8.57.1
 
   eslint-plugin-mocha@10.5.0(eslint@8.57.1):
     dependencies:
@@ -18189,6 +18216,10 @@ snapshots:
   neo-async@2.6.2: {}
 
   nested-error-stacks@2.1.1: {}
+
+  netlify-plugin-cache-docs@https://codeload.github.com/mui/material-ui/tar.gz/22aa7db2ed23df3b43530e9fdb57bc1051221457#path:/packages/netlify-plugin-cache-docs:
+    dependencies:
+      fs-extra: 11.3.0
 
   next@15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

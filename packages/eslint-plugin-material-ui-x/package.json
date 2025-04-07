@@ -1,0 +1,21 @@
+{
+  "name": "eslint-plugin-material-ui-x",
+  "version": "7.8.0",
+  "private": true,
+  "description": "Custom eslint rules for MUI X.",
+  "main": "src/index.js",
+  "devDependencies": {
+    "@types/eslint": "^8.56.12",
+    "@typescript-eslint/parser": "^8.29.0",
+    "@typescript-eslint/rule-tester": "^8.29.0",
+    "@typescript-eslint/utils": "^8.29.0"
+  },
+  "scripts": {
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/eslint-plugin-material-ui-x/**/*.test.js' --timeout 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git"
+  },
+  "license": "MIT"
+}
