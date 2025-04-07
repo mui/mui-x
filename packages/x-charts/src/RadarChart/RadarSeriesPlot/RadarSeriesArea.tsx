@@ -4,9 +4,40 @@ import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
+import { SeriesId } from '../../models/seriesType/common';
+import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+
+interface GetPathPropsParams {
+  seriesId: SeriesId;
+  classes: RadarSeriesPlotClasses;
+  isFaded: (item: HighlightItemData | null) => boolean;
+  isHighlighted: (item: HighlightItemData | null) => boolean;
+  points: { x: number; y: number }[];
+  fillArea?: boolean;
+  color: string;
+}
+
+export function getPathProps(params: GetPathPropsParams) {
+  const { isHighlighted, isFaded, seriesId, classes, points, fillArea, color } = params;
+  const isItemHighlighted = isHighlighted({ seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+
+  return {
+    d: getAreaPath(points),
+    fill: fillArea ? color : 'transparent',
+    stroke: color,
+    className: clsx(
+      classes.area,
+      (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
+    ),
+    strokeOpacity: isItemFaded ? 0.5 : 1,
+    fillOpacity: (isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2,
+    strokeWidth: !fillArea && isItemHighlighted ? 2 : 1,
+  };
+}
 
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const { seriesId, ...other } = props;
@@ -19,23 +50,19 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea }, seriesIndex) => {
-        const isItemHighlighted = isHighlighted({ seriesId: id });
-        const isItemFaded = !isItemHighlighted && isFaded({ seriesId: id });
-
         return (
           <path
             key={id}
-            d={getAreaPath(points)}
+            {...getPathProps({
+              seriesId: id,
+              points,
+              color,
+              fillArea,
+              isFaded,
+              isHighlighted,
+              classes,
+            })}
             {...interactionProps[seriesIndex]}
-            fill={fillArea ? color : 'transparent'}
-            stroke={color}
-            className={clsx(
-              classes.area,
-              (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
-            )}
-            strokeOpacity={isItemFaded ? 0.5 : 1}
-            fillOpacity={(isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2}
-            strokeWidth={!fillArea && isItemHighlighted ? 2 : 1}
             {...other}
           />
         );

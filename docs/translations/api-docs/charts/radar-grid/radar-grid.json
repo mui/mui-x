@@ -3,14 +3,14 @@
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
     "divisions": { "description": "The number of divisions in the radar grid." },
+    "shape": { "description": "The grid shape." },
     "stripeColor": {
-      "description": "Get strip fill color. Set it to <code>null</code> to remove stripes",
+      "description": "Get stripe fill color. Set it to <code>null</code> to remove stripes",
       "typeDescriptions": {
         "index": "The index of the stripe band.",
         "string": "The color to fill the stripe."
       }
-    },
-    "shape": { "description": "The grid shape." }
+    }
   },
   "classDescriptions": {
     "divider": {

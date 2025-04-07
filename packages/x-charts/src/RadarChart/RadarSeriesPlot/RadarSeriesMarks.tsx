@@ -4,7 +4,38 @@ import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import { SeriesId } from '../../models/seriesType/common';
+import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+
+interface GetCirclePropsParams {
+  seriesId: SeriesId;
+  classes: RadarSeriesPlotClasses;
+  isFaded: (item: HighlightItemData | null) => boolean;
+  isHighlighted: (item: HighlightItemData | null) => boolean;
+  point: { x: number; y: number };
+  fillArea?: boolean;
+  color: string;
+}
+
+export function getCircleProps(params: GetCirclePropsParams) {
+  const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
+  const isItemHighlighted = isHighlighted({ seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+
+  return {
+    cx: point.x,
+    cy: point.y,
+    r: 3,
+    fill: color,
+    stroke: color,
+    opacity: fillArea && isItemFaded ? 0.5 : 1,
+    className: clsx(
+      classes.mark,
+      (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
+    ),
+  };
+}
 
 function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const { seriesId, ...other } = props;
@@ -19,24 +50,21 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
         if (hideMark) {
           return null;
         }
-        const isItemHighlighted = isHighlighted({ seriesId: id });
-        const isItemFaded = !isItemHighlighted && isFaded({ seriesId: id });
 
         return (
           <g key={id}>
             {points.map((point, index) => (
               <circle
                 key={index}
-                cx={point.x}
-                cy={point.y}
-                r={3}
-                fill={color}
-                stroke={color}
-                opacity={fillArea && isItemFaded ? 0.5 : 1}
-                className={clsx(
-                  classes.mark,
-                  (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
-                )}
+                {...getCircleProps({
+                  seriesId: id,
+                  point,
+                  color,
+                  fillArea,
+                  isFaded,
+                  isHighlighted,
+                  classes,
+                })}
                 {...other}
               />
             ))}

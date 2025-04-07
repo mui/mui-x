@@ -1,12 +1,12 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
-import { getAreaPath } from './getAreaPath';
 import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { getPathProps } from './RadarSeriesArea';
+import { getCircleProps } from './RadarSeriesMarks';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
@@ -19,41 +19,36 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   return (
     <g className={classes.root}>
       {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
-        const isItemHighlighted = isHighlighted({ seriesId });
-        const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
-
         return (
           <g key={seriesId}>
             {
               <path
                 key={seriesId}
-                d={getAreaPath(points)}
+                {...getPathProps({
+                  seriesId,
+                  points,
+                  color,
+                  fillArea,
+                  isFaded,
+                  isHighlighted,
+                  classes,
+                })}
                 {...interactionProps[seriesIndex]}
-                className={clsx(
-                  classes.area,
-                  (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
-                )}
-                fill={fillArea ? color : 'transparent'}
-                fillOpacity={(isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2}
-                stroke={color}
-                strokeOpacity={isItemFaded ? 0.5 : 1}
-                strokeWidth={!fillArea && isItemHighlighted ? 2 : 1}
               />
             }
             {!hideMark &&
               points.map((point, index) => (
                 <circle
                   key={index}
-                  cx={point.x}
-                  cy={point.y}
-                  r={3}
-                  fill={color}
-                  stroke={color}
-                  opacity={fillArea && isItemFaded ? 0.5 : 1}
-                  className={clsx(
-                    classes.mark,
-                    (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
-                  )}
+                  {...getCircleProps({
+                    seriesId,
+                    point,
+                    color,
+                    fillArea,
+                    isFaded,
+                    isHighlighted,
+                    classes,
+                  })}
                 />
               ))}
           </g>

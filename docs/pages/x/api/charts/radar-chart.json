@@ -17,15 +17,6 @@
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "stripeColor": {
-      "type": { "name": "func" },
-      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
-      "signature": {
-        "type": "function(index: number) => string",
-        "describedArgs": ["index"],
-        "returned": "string"
-      }
-    },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
@@ -66,6 +57,15 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "stripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
     },
     "width": { "type": { "name": "number" } }
   },

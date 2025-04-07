@@ -2,6 +2,10 @@
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "shape": {
+      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
+      "default": "'sharp'"
+    },
     "stripeColor": {
       "type": { "name": "func" },
       "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
@@ -10,10 +14,6 @@
         "describedArgs": ["index"],
         "returned": "string"
       }
-    },
-    "shape": {
-      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
-      "default": "'sharp'"
     }
   },
   "name": "RadarGrid",
