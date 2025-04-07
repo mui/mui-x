@@ -23,7 +23,7 @@ By opting in, you directly contribute to shaping the future of MUI X. You help 
 We track the following details anonymously during development mode:
 
 - Unique session ID: This is generated on each run with UUID.
-- A hash of general machine information (user agent, machine id, etc).
+- A [hash of general machine](https://www.npmjs.com/package/node-machine-id) information (user agent, machine id, etc).
 - Package and version used
 - License info
 - IP address
