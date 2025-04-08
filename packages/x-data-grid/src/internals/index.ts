@@ -163,6 +163,8 @@ export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibl
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
+export type * as BaseSlots from '../models/gridBaseSlots';
+
 export type * from '../models/props/DataGridProps';
 export type { GridDataSourceApiBase, GridDataSourceApi } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';

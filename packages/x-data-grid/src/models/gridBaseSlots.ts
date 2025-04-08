@@ -309,3 +309,7 @@ export type TooltipProps = CommonProps & {
   enterDelay?: number;
   title: React.ReactNode;
 };
+
+export type IconProps = CommonProps & {
+  fontSize?: 'small' | 'medium' | 'large' | 'inherit';
+};
