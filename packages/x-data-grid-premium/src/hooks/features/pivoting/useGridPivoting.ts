@@ -134,7 +134,9 @@ export const useGridPivoting = (
   });
 
   const getInitialData = React.useCallback(() => {
-    exportedStateRef.current = apiRef.current.exportState();
+    if (!exportedStateRef.current) {
+      exportedStateRef.current = apiRef.current.exportState();
+    }
 
     const rowIds = gridDataRowIdsSelector(apiRef);
     const rowsLookup = gridRowsLookupSelector(apiRef);
