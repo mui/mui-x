@@ -44,7 +44,7 @@ export interface Test {
   case: React.ComponentType;
 }
 
-export const tests: Test[] = [];
+const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
@@ -96,7 +96,7 @@ if (unusedBlacklistPatterns.size > 0) {
   );
 }
 
-export const suiteTestsMap = tests.reduce(
+const testsBySuite = tests.reduce(
   (acc, test) => {
     if (!acc[test.suite]) {
       acc[test.suite] = [];
@@ -106,3 +106,5 @@ export const suiteTestsMap = tests.reduce(
   },
   {} as Record<string, Test[]>,
 );
+
+export default testsBySuite;

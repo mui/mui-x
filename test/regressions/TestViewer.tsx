@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { fakeClock, setupFakeClock } from '../utils/setupFakeClock';
+import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 
 export const RouteContext = React.createContext<string | undefined>(undefined);
 

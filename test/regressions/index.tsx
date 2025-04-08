@@ -5,7 +5,7 @@ import { Globals } from '@react-spring/web';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
-import type { Test } from './tests';
+import type { Test } from './testsBySuite';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
@@ -29,14 +29,14 @@ window.muiFixture = {
   },
 };
 
-let exports: typeof import('./tests');
+let testsBySuite: typeof import('./testsBySuite');
 
 main();
 
 async function main() {
   setupFakeClock();
 
-  exports = await import('./tests');
+  testsBySuite = await import('./testsBySuite');
 
   restoreFakeClock();
 
@@ -67,14 +67,18 @@ function Root() {
             <summary id="my-test-summary">nav for all tests</summary>
             <nav id="tests">
               <ol>
-                {exports.tests.map((test) => {
-                  const path = computePath(test);
-                  return (
-                    <li key={path}>
-                      <NavLink to={path}>{path}</NavLink>
-                    </li>
-                  );
-                })}
+                {Object.values(testsBySuite).map((suite) => (
+                  <>
+                    {suite.map((test) => {
+                      const path = computePath(test);
+                      return (
+                        <li key={path}>
+                          <NavLink to={path}>{path}</NavLink>
+                        </li>
+                      );
+                    })}
+                  </>
+                ))}
               </ol>
             </nav>
           </details>
@@ -89,12 +93,12 @@ function App() {
     {
       path: '/',
       element: <Root />,
-      children: Object.keys(exports.suiteTestsMap).map((suite) => {
+      children: Object.keys(testsBySuite).map((suite) => {
         const isDataGridTest =
           suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
         return {
           path: suite,
-          children: exports.suiteTestsMap[suite].map((test) => ({
+          children: testsBySuite[suite].map((test) => ({
             path: test.name,
             element: (
               <TestViewer isDataGridTest={isDataGridTest} path={computePath(test)}>
