@@ -78,8 +78,6 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `MobileTimeRangePicker`
-        // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
