@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
@@ -81,7 +81,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
 
   it('should zoom on wheel', async function test() {
     this.timeout(10000);
-
     const onZoomChange = sinon.spy();
     const { user } = render(
       <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
@@ -109,7 +108,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(200);
@@ -124,7 +123,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(400);
@@ -181,7 +180,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
       expect(screen.queryByText('1.0')).to.equal(null);
@@ -212,7 +211,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
       expect(screen.queryByText('2.0')).to.equal(null);

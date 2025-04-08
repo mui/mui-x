@@ -16,8 +16,8 @@ To increase the accuracy of the prompt processing, the user should provide examp
 This can be done in following ways.
 
 :::info
-Prompt demos use a utility function `mockPromptResolver` to simulate the api that resolves the user prompts.
-In a real-world scenario, you should replace this with your own api.
+Prompt demos use a utility function `mockPromptResolver` to simulate the API that resolves the user prompts.
+In a real-world scenario, you should replace this with your own API.
 
 `mockPromptResolver` can handle a predefined set of prompts:
 
