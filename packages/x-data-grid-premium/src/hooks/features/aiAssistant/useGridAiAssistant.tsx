@@ -22,7 +22,6 @@ import {
   PromptResponse,
 } from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 import {
   gridAiAssistantConversationsSelector,
   gridAiAssistantPanelOpenSelector,
@@ -43,7 +42,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     | 'aiAssistant'
   >
 > = (state, props) => {
-  if (!isAiAssistantAvailableFn(props)) {
+  if (!props.aiAssistant) {
     return {
       ...state,
       aiAssistant: {
@@ -99,7 +98,7 @@ export const useGridAiAssistant = (
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
-  const isAiAssistantAvailable = isAiAssistantAvailableFn(props);
+  const isAiAssistantAvailable = !!props.aiAssistant;
 
   apiRef.current.registerControlState({
     stateId: 'aiAssistantPanelOpen',
