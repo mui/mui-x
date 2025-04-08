@@ -1,14 +1,12 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import {
-  ScatterChartPro,
-  ScatterChartProApi,
-} from '@mui/x-charts-pro/ScatterChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { data } from './randomData';
 
 export default function PrintChart() {
-  const apiRef = React.useRef<ScatterChartProApi>(undefined);
+  const apiRef = React.useRef<ChartProApi>(undefined);
 
   return (
     <Stack width="100%">
