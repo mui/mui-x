@@ -123,7 +123,7 @@ async function main() {
           this.timeout(0);
         }
 
-        if (route === '/docs-components-data-grid-overview/DataGridProDemo') {
+        if (route.includes('DataGridProDemo')) {
           this.timeout(6000);
         }
 
