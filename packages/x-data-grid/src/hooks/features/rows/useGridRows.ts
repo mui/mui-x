@@ -167,7 +167,7 @@ export const useGridRows = (
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
       if (gridPivotActiveSelector(apiRef)) {
-        apiRef.current.updateNonPivotData(rows, false);
+        apiRef.current.updateNonPivotRows(rows, false);
         return;
       }
       const cache = createRowsInternalCache({
@@ -196,7 +196,7 @@ export const useGridRows = (
       }
 
       if (gridPivotActiveSelector(apiRef)) {
-        apiRef.current.updateNonPivotData(updates);
+        apiRef.current.updateNonPivotRows(updates);
         return;
       }
 

@@ -383,31 +383,43 @@ export const useGridPivoting = (
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
 
-  const handleOriginalColumnsChange = React.useCallback<
-    GridPivotingPrivateApi['handleOriginalColumnsChange']
-  >(
-    (columns) => {
+  const updateNonPivotColumns = React.useCallback<GridPivotingPrivateApi['updateNonPivotColumns']>(
+    (columns, keepPreviousColumns = true) => {
       if (!nonPivotDataRef.current || !isPivotingAvailable) {
         return;
       }
 
-      nonPivotDataRef.current.columns = getInitialColumns(
-        columns,
-        props.getPivotDerivedColumns,
-        apiRef.current.getLocaleText,
-      );
+      if (keepPreviousColumns) {
+        getInitialColumns(
+          columns,
+          props.getPivotDerivedColumns,
+          apiRef.current.getLocaleText,
+        ).forEach((col) => {
+          nonPivotDataRef.current!.columns.set(col.field, col);
+        });
+      } else {
+        nonPivotDataRef.current.columns = getInitialColumns(
+          columns,
+          props.getPivotDerivedColumns,
+          apiRef.current.getLocaleText,
+        );
+      }
 
       apiRef.current.setState((state) => {
         return {
           ...state,
-          pivoting: { ...state.pivoting, initialColumns: nonPivotDataRef.current?.columns },
+          pivoting: {
+            ...state.pivoting,
+            ...computePivotingState(state.pivoting),
+            initialColumns: nonPivotDataRef.current?.columns,
+          },
         };
       });
     },
-    [apiRef, props.getPivotDerivedColumns, isPivotingAvailable],
+    [isPivotingAvailable, apiRef, props.getPivotDerivedColumns, computePivotingState],
   );
 
-  const updateNonPivotData = React.useCallback<GridPivotingPrivateApi['updateNonPivotData']>(
+  const updateNonPivotRows = React.useCallback<GridPivotingPrivateApi['updateNonPivotRows']>(
     (rows, keepPreviousRows = true) => {
       if (!nonPivotDataRef.current || !rows || rows.length === 0) {
         return;
@@ -451,12 +463,12 @@ export const useGridPivoting = (
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
   useGridApiMethod(
     apiRef,
-    { updatePivotModel, handleOriginalColumnsChange, updateNonPivotData },
+    { updatePivotModel, updateNonPivotColumns, updateNonPivotRows },
     'private',
   );
 
   useEnhancedEffect(() => {
-    apiRef.current.handleOriginalColumnsChange(originalColumns);
+    apiRef.current.updateNonPivotColumns(originalColumns, false);
   }, [originalColumns, apiRef]);
 
   useEnhancedEffect(() => {

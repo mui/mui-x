@@ -162,6 +162,10 @@ export function useGridColumns(
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
     (columns) => {
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotColumns(columns);
+        return;
+      }
       const columnsState = createColumnsState({
         apiRef,
         columnsToUpsert: columns,

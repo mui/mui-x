@@ -8,5 +8,6 @@ export interface GridPivotingStatePartial {
 }
 
 export interface GridPivotingPrivateApiCommunity {
-  updateNonPivotData: (rows: GridRowModelUpdate[], keepPreviousRows?: boolean) => void;
+  updateNonPivotRows: (rows: GridRowModelUpdate[], keepPreviousRows?: boolean) => void;
+  updateNonPivotColumns: (columns: readonly GridColDef[], keepPreviousColumns?: boolean) => void;
 }
