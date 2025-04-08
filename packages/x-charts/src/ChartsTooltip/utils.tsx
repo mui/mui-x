@@ -54,12 +54,15 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const removePointerHandler = instance.addInteractionListener('pointerUp', (state) => {
-      // Only close the tooltip on mobile.
-      if (state.event.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
-    });
+    const removePointerHandler = instance.addMultipleInteractionListeners(
+      ['pointerUp', 'pointerLeave'],
+      (state) => {
+        // Only close the tooltip on mobile.
+        if (state.event.pointerType !== 'mouse') {
+          setPointerType(null);
+        }
+      },
+    );
 
     const setPointerHandler = instance.addMultipleInteractionListeners(
       ['pointerEnter', 'pointerDown'],
