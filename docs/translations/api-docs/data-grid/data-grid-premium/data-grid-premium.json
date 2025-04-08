@@ -7,6 +7,9 @@
       "description": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows."
     },
     "aiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
+    "aiAssistantActiveConversationIndex": {
+      "description": "The index of the active AI Assistant conversation."
+    },
     "aiAssistantConversations": { "description": "The conversations with the AI Assistant." },
     "aiAssistantPanelOpen": {
       "description": "If <code>true</code>, the AI Assistant panel is open."
@@ -284,6 +287,12 @@
       "typeDescriptions": {
         "model": "The aggregated columns.",
         "details": "Additional details for this callback."
+      }
+    },
+    "onAiAssistantActiveConversationIndexChange": {
+      "description": "Callback fired when the AI Assistant active conversation index changes.",
+      "typeDescriptions": {
+        "aiAssistantActiveConversationIndex": "The new active conversation index."
       }
     },
     "onAiAssistantConversationsChange": {

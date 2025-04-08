@@ -317,6 +317,15 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: PromptSuggestion[]) => void;
   /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex?: number;
+  /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange?: (aiAssistantActiveConversationIndex: number) => void;
+  /**
    * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
    */
   allowAiAssistantDataSampling?: boolean;

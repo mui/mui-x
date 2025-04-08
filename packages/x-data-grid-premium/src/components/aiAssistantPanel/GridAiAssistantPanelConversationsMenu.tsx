@@ -4,14 +4,17 @@ import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
-  gridAiAssistantActiveConversationIdSelector,
+  gridAiAssistantActiveConversationIndexSelector,
   gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 
 function GridAiAssistantPanelConversationsMenu() {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const activeConversationId = useGridSelector(apiRef, gridAiAssistantActiveConversationIdSelector);
+  const activeConversationIndex = useGridSelector(
+    apiRef,
+    gridAiAssistantActiveConversationIndexSelector,
+  );
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const [open, setOpen] = React.useState(false);
   const menuId = useId();
@@ -54,13 +57,13 @@ function GridAiAssistantPanelConversationsMenu() {
           autoFocusItem
           {...rootProps.slotProps?.baseMenuList}
         >
-          {conversations.map((conversation) => (
+          {conversations.map((conversation, index) => (
             <rootProps.slots.baseMenuItem
-              key={conversation.id}
-              selected={activeConversationId === conversation.id}
+              key={`${conversation.id}-${index}`}
+              selected={activeConversationIndex === index}
               material={{ dense: true }}
               onClick={() => {
-                apiRef.current.aiAssistant.setAiAssistantActiveConversationId(conversation.id);
+                apiRef.current.aiAssistant.setActiveConversationIndex(index);
                 handleClose();
               }}
             >

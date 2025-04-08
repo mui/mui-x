@@ -4,6 +4,7 @@ import {
   createSelectorMemoized,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
+import { Conversation } from './gridAiAssistantInterfaces';
 
 const gridAiAssistantStateSelector = createRootSelector(
   (state: GridStatePremium) => state.aiAssistant,
@@ -14,9 +15,9 @@ export const gridAiAssistantPanelOpenSelector = createSelector(
   (aiAssistant) => aiAssistant?.panelOpen,
 );
 
-export const gridAiAssistantActiveConversationIdSelector = createSelector(
+export const gridAiAssistantActiveConversationIndexSelector = createSelector(
   gridAiAssistantStateSelector,
-  (aiAssistant) => aiAssistant?.activeConversationId,
+  (aiAssistant) => aiAssistant?.activeConversationIndex,
 );
 
 export const gridAiAssistantConversationsSelector = createSelector(
@@ -24,9 +25,10 @@ export const gridAiAssistantConversationsSelector = createSelector(
   (aiAssistant) => aiAssistant?.conversations,
 );
 
-export const gridAiAssistantConversationSelector = createSelectorMemoized(
+export const gridAiAssistantActiveConversationSelector = createSelectorMemoized(
   gridAiAssistantConversationsSelector,
-  (conversations, id: string) => conversations.find((c) => c.id === id),
+  gridAiAssistantActiveConversationIndexSelector,
+  (conversations, index) => conversations[index] as Conversation | undefined,
 );
 
 export const gridAiAssistantSuggestionsSelector = createSelector(

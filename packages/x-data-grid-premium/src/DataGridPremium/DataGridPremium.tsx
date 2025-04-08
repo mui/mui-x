@@ -128,11 +128,15 @@ DataGridPremiumRaw.propTypes = {
    */
   aiAssistant: PropTypes.bool,
   /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex: PropTypes.number,
+  /**
    * The conversations with the AI Assistant.
    */
   aiAssistantConversations: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       prompts: PropTypes.arrayOf(
         PropTypes.shape({
           createdAt: PropTypes.instanceOf(Date).isRequired,
@@ -151,6 +155,7 @@ DataGridPremiumRaw.propTypes = {
           variant: PropTypes.oneOf(['error', 'processing', 'success']),
         }),
       ).isRequired,
+      title: PropTypes.string,
     }),
   ),
   /**
@@ -692,6 +697,11 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange: PropTypes.func,
   /**
    * Callback fired when the AI Assistant conversations change.
    * @param {Conversation[]} conversations The new AI Assistant conversations.
