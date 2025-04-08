@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
-    "build": "cross-env E2E_BUILD=true vite build",
+    "build": "cross-env TEST_BUILD=true vite build",
     "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
     "mocha": "mocha --config .mocharc.js --timeout 8000 '**/*.test.{js,ts,tsx}'",
     "server": "serve . -p 5001"
