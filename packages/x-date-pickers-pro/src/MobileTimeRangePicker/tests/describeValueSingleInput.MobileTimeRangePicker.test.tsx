@@ -82,7 +82,12 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
       }
 
       if (closeMobilePicker) {
-        fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        if (setEndDate) {
+          fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        } else {
+          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        }
       }
 
       return newValue;
