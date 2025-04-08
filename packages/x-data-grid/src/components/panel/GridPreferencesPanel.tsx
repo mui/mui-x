@@ -21,7 +21,7 @@ export function GridPreferencesPanel() {
     preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
   );
 
-  let target = null;
+  let target: HTMLButtonElement | null = null;
   switch (preferencePanelState.openedPanelValue) {
     case GridPreferencePanelsValue.filters:
       target = filterPanelTriggerRef.current;
