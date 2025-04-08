@@ -75,7 +75,9 @@ const PieArcLabelRoot = styled('text', {
   animationDuration: '0s',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,
   [`&.${pieArcLabelClasses.animate}`]: {
-    animationDuration: `${ANIMATION_DURATION_MS}ms`,
+    '@media not print': {
+      animationDuration: `${ANIMATION_DURATION_MS}ms`,
+    },
   },
   '@keyframes animate-opacity': {
     from: { opacity: 0 },

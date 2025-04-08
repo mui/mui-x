@@ -31,7 +31,9 @@ export default function CSSAnimationCustomization() {
           },
         },
         [`& .${pieArcLabelClasses.root}.${pieArcLabelClasses.animate}`]: {
-          animationDuration: '5s',
+          '@media not print': {
+            animationDuration: '5s',
+          },
         },
       }}
     />
