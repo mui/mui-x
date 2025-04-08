@@ -318,8 +318,15 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   });
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
-  const isSingleInputRange = elements.some(
-    (element) => element.content['data-range-position'] !== undefined,
+
+  const elementsIdList = React.useMemo(
+    () => elements.map((element) => element.content.id).join(','),
+    [elements],
+  );
+  const isSingleInputRange = React.useMemo(
+    () => elements.some((element) => element.content['data-range-position'] !== undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [elementsIdList],
   );
   React.useEffect(() => {
     if (isSingleInputRange) {
@@ -344,7 +351,9 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         }
       }
     }
-  }, [elements, isSingleInputRange]);
+    // `elementsIdList` is used to update the offset when the actual elements content changes (i.e. when format changes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elementsIdList, isSingleInputRange]);
 
   return (
     <InputRoot {...inputRootProps}>
