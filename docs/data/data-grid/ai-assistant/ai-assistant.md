@@ -122,7 +122,9 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 
    :::
 
-4. Provide data examples by either allowing data sampling with `allowAiAssistantDataSampling` prop or by filling the `examples` prop in the `columns` array.
+4. Provide data examples in either of the following ways:
+   - Fill the `examples` prop in the `columns` array; it's recommended if you want to avoid exposing the row data to the AI assistant.
+   - Provide access to the row data with `allowAiAssistantDataSampling` prop; since actual data is used, it may result in better processing results.
 
 ### With a custom service
 
