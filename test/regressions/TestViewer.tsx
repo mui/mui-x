@@ -6,7 +6,6 @@ import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-d
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest',
-  // @ts-ignore
 })<{ isDataGridTest?: boolean }>(({ theme, isDataGridTest }) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
