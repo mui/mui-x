@@ -16,7 +16,7 @@ import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSe
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
-import { FieldRangeSection, PickerValidValue } from '../../models';
+import { PickerValidValue } from '../../models';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { useFieldRootProps } from './useFieldRootProps';
 import { useFieldHiddenInputProps } from './useFieldHiddenInputProps';
@@ -195,7 +195,6 @@ export const useFieldV7TextField = <
       },
       after: {
         children: section.endSeparator,
-        'data-range-position': (section as FieldRangeSection).dateName,
       },
     }));
   }, [state.sections, createSectionContainerProps, createSectionContentProps]);
