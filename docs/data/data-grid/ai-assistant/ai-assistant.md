@@ -128,9 +128,8 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 
 ### With a custom service
 
-The Data Grid exposes several key elements of the AI Assistant feature so you can build your own prompt processing service:
+The Data Grid exposes elements of the AI Assistant feature so you can build your own prompt processing service:
 
-- The [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel/) and [Prompt Field](/x/react-data-grid/components/prompt-field/) components can be used to build custom UI.
 - The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for processing the prompt results and updating state
 - The `unstable_gridDefaultPromptResolver()` method for passing the prompt and context with the necessary headers to the processing service
 
