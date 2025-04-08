@@ -12,7 +12,7 @@ Export is available on the **Pro**[<span class="plan-pro"></span>](/x/introducti
 
 ## Print/Export as PDF
 
-The `apiRef` prop on exposes a `print` method that can be used to open the operating system's print dialog.
+The `apiRef` prop on exposes a `print` method that can be used to open the browser's print dialog.
 
 The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
 

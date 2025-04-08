@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
+import { useChartRootRef } from '../../../hooks/useChartRootRef';
 import { Direction } from '../../../ChartsLegend';
 import { Position } from '../../../models';
 
@@ -72,9 +73,10 @@ const Root = styled('div', {
  */
 function ChartsWrapper(props: ChartsWrapperProps) {
   const { children, sx } = props;
+  const chartRootRef = useChartRootRef();
 
   return (
-    <Root ownerState={props} sx={sx}>
+    <Root ref={chartRootRef} ownerState={props} sx={sx}>
       {children}
     </Root>
   );
