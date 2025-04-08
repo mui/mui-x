@@ -663,4 +663,23 @@ describe('<DataGridPremium /> - Pivoting', () => {
       ]);
     });
   });
+
+  it('should not throw if the ID column is used as a value', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'date-year' }],
+              values: [{ field: 'id', aggFunc: 'size' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+  });
 });

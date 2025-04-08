@@ -233,7 +233,6 @@ export const getPivotedData = ({
             }
             const valueKey = `${columnGroupPath.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${valueField}`;
             newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
-            delete newRow[valueField];
           });
         }
       });
