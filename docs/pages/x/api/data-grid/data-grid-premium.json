@@ -21,7 +21,6 @@
         "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
       }
     },
-    "aiAssistantPanelOpen": { "type": { "name": "bool" } },
     "aiAssistantSuggestions": {
       "type": { "name": "arrayOf", "description": "Array&lt;{ value: string }&gt;" }
     },
@@ -282,13 +281,6 @@
       "signature": {
         "type": "function(conversations: Array<Conversation>) => void",
         "describedArgs": ["conversations"]
-      }
-    },
-    "onAiAssistantPanelOpenChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(aiAssistantPanelOpen: boolean) => void",
-        "describedArgs": ["aiAssistantPanelOpen"]
       }
     },
     "onAiAssistantSuggestionsChange": {

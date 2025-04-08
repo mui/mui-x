@@ -9,7 +9,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridPrompt } from '../prompt';
 
 type GridAiAssistantPanelConversationProps = {
-  open: boolean;
   conversation: Conversation;
 };
 
@@ -44,21 +43,11 @@ const AiAssistantPanelConversationList = styled('ol', {
 });
 
 function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversationProps) {
-  const { open, conversation } = props;
+  const { conversation } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
-
-  // Scroll to the bottom of the conversation when the panel opens
-  React.useEffect(() => {
-    if (open) {
-      ref.current?.scrollTo({
-        top: ref.current?.scrollHeight,
-        behavior: 'instant',
-      });
-    }
-  }, [open]);
 
   // Scroll to the bottom of the conversation when the prompt list changes
   React.useEffect(() => {

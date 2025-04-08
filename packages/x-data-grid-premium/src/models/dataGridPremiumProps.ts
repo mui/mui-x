@@ -290,15 +290,6 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
         columnGroupPath: string[],
       ) => Partial<GridPivotingColDefOverrides> | undefined);
   /**
-   * If `true`, the AI Assistant panel is open.
-   */
-  aiAssistantPanelOpen?: boolean;
-  /**
-   * Callback fired when the AI Assistant panel open state changes.
-   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
-   */
-  onAiAssistantPanelOpenChange?: (aiAssistantPanelOpen: boolean) => void;
-  /**
    * The conversations with the AI Assistant.
    */
   aiAssistantConversations?: Conversation[];

@@ -43,10 +43,6 @@ export interface GridControlledStateEventLookupPremium {
   pivotModeChange: { params: boolean };
   pivotPanelOpenChange: { params: boolean };
   /**
-   * Fired when the AI Assistant panel open state changes.
-   */
-  aiAssistantPanelOpenChange: { params: boolean };
-  /**
    * Fired when the AI Assistant conversation state changes.
    */
   aiAssistantConversationsChange: { params: Conversation[] };

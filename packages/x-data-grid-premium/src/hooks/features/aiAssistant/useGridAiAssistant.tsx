@@ -8,11 +8,14 @@ import {
   GridSingleSelectColDef,
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
+  GridPreferencePanelsValue,
 } from '@mui/x-data-grid-pro';
 import {
   getValueOptions,
   getVisibleRows,
+  GridPipeProcessor,
   GridStateInitializer,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -24,29 +27,24 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridAiAssistantConversationsSelector,
-  gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
+import { GridAiAssistantPanel } from '../../../components/aiAssistantPanel/GridAiAssistantPanel';
 
 const DEFAULT_SAMPLE_COUNT = 5;
 
 export const aiAssistantStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    | 'initialState'
-    | 'aiAssistantPanelOpen'
-    | 'aiAssistantConversations'
-    | 'aiAssistantSuggestions'
-    | 'aiAssistant'
+    'initialState' | 'aiAssistantConversations' | 'aiAssistantSuggestions' | 'aiAssistant'
   >
 > = (state, props) => {
   if (!props.aiAssistant) {
     return {
       ...state,
       aiAssistant: {
-        panelOpen: false,
         activeConversationIndex: 0,
         conversations: [],
         suggestions: [],
@@ -57,7 +55,6 @@ export const aiAssistantStateInitializer: GridStateInitializer<
   return {
     ...state,
     aiAssistant: {
-      panelOpen: props.aiAssistantPanelOpen ?? props.initialState?.aiAssistant?.panelOpen ?? false,
       activeConversationIndex: 0,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
@@ -71,12 +68,10 @@ export const useGridAiAssistant = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'aiAssistant'
-    | 'aiAssistantPanelOpen'
     | 'aiAssistantConversations'
     | 'aiAssistantSuggestions'
     | 'aiAssistantActiveConversationIndex'
     | 'allowAiAssistantDataSampling'
-    | 'onAiAssistantPanelOpenChange'
     | 'onAiAssistantConversationsChange'
     | 'onAiAssistantSuggestionsChange'
     | 'onAiAssistantActiveConversationIndexChange'
@@ -101,14 +96,6 @@ export const useGridAiAssistant = (
   const isAiAssistantAvailable = !!props.aiAssistant;
 
   apiRef.current.registerControlState({
-    stateId: 'aiAssistantPanelOpen',
-    propModel: props.aiAssistantPanelOpen,
-    propOnChange: props.onAiAssistantPanelOpenChange,
-    stateSelector: gridAiAssistantPanelOpenSelector,
-    changeEvent: 'aiAssistantPanelOpenChange',
-  });
-
-  apiRef.current.registerControlState({
     stateId: 'aiAssistantConversations',
     propModel: props.aiAssistantConversations,
     propOnChange: props.onAiAssistantConversationsChange,
@@ -131,6 +118,17 @@ export const useGridAiAssistant = (
     stateSelector: gridAiAssistantActiveConversationIndexSelector,
     changeEvent: 'aiAssistantActiveConversationIndexChange',
   });
+
+  const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
+    (initialValue, value) => {
+      if (value === GridPreferencePanelsValue.aiAssistant) {
+        return <GridAiAssistantPanel />;
+      }
+
+      return initialValue;
+    },
+    [],
+  );
 
   const collectSampleData = React.useCallback(() => {
     const columnExamples: Record<string, any[]> = {};
@@ -255,23 +253,6 @@ export const useGridAiAssistant = (
       columnsLookup,
       isAiAssistantAvailable,
     ],
-  );
-
-  const setPanelOpen = React.useCallback<GridAiAssistantApi['aiAssistant']['setPanelOpen']>(
-    (callback) => {
-      if (!isAiAssistantAvailable) {
-        return;
-      }
-      apiRef.current.setState((state) => ({
-        ...state,
-        aiAssistant: {
-          ...state.aiAssistant,
-          panelOpen:
-            typeof callback === 'function' ? callback(state.aiAssistant?.panelOpen) : callback,
-        },
-      }));
-    },
-    [apiRef, isAiAssistantAvailable],
   );
 
   const setActiveConversationId = React.useCallback(
@@ -450,23 +431,17 @@ export const useGridAiAssistant = (
   }, [apiRef, props.aiAssistantConversations, setConversations]);
 
   React.useEffect(() => {
-    if (props.aiAssistantPanelOpen) {
-      setPanelOpen(props.aiAssistantPanelOpen);
-    }
-  }, [apiRef, props.aiAssistantPanelOpen, setPanelOpen]);
-
-  React.useEffect(() => {
     if (props.aiAssistantActiveConversationIndex) {
       setActiveConversationIndex(props.aiAssistantActiveConversationIndex);
     }
   }, [apiRef, props.aiAssistantActiveConversationIndex, setActiveConversationIndex]);
 
+  useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridApiMethod(
     apiRef,
     {
       aiAssistant: {
         processPrompt,
-        setPanelOpen,
         setConversations,
         setActiveConversationIndex,
       },

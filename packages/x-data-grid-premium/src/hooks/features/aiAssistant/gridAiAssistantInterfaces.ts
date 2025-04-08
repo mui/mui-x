@@ -17,7 +17,6 @@ export type Conversation = {
 };
 
 export type GridAiAssistantState = {
-  panelOpen: boolean;
   activeConversationIndex: number;
   conversations: Conversation[];
   suggestions: PromptSuggestion[];
@@ -80,11 +79,6 @@ export interface GridAiAssistantApi {
      * @returns {Promise<PromptResponse | Error>} The grid state updates or a processing error
      */
     processPrompt: (value: string) => Promise<PromptResponse | Error>;
-    /**
-     * Sets whether the AI Assistant panel is open.
-     * @param {boolean | ((prev: boolean) => boolean)} open The new value of the AI Assistant panel open state.
-     */
-    setPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     /**
      * Sets the conversations.
      * @param {Conversation[] | ((prevConversations: Conversation[]) => Conversation[])} conversations The new conversations.
