@@ -18,19 +18,19 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAiAssistantApi,
   GridAiAssistantState,
+  Prompt,
   PromptResponse,
 } from './gridAiAssistantInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { isAiAssistantAvailable as isAiAssistantAvailableFn } from './utils';
 import {
   gridAiAssistantConversationsSelector,
-  gridAiAssistantConversationSelector,
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
-  gridAiAssistantActiveConversationIdSelector,
+  gridAiAssistantActiveConversationSelector,
+  gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
 
-const INITIAL_CONVERSATION_ID = 'default'; // TODO: this will be dynamic once we start supporting multiple conversations
 const DEFAULT_SAMPLE_COUNT = 5;
 
 export const aiAssistantStateInitializer: GridStateInitializer<
@@ -48,7 +48,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       ...state,
       aiAssistant: {
         panelOpen: false,
-        activeConversationId: '',
+        activeConversationIndex: 0,
         conversations: [],
         suggestions: [],
       } as GridAiAssistantState,
@@ -59,7 +59,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
     ...state,
     aiAssistant: {
       panelOpen: props.aiAssistantPanelOpen ?? props.initialState?.aiAssistant?.panelOpen ?? false,
-      activeConversationId: INITIAL_CONVERSATION_ID,
+      activeConversationIndex: 0,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
       suggestions:
@@ -76,10 +76,12 @@ export const useGridAiAssistant = (
     | 'aiAssistantPanelOpen'
     | 'aiAssistantConversations'
     | 'aiAssistantSuggestions'
+    | 'aiAssistantActiveConversationIndex'
     | 'allowAiAssistantDataSampling'
     | 'onAiAssistantPanelOpenChange'
     | 'onAiAssistantConversationsChange'
     | 'onAiAssistantSuggestionsChange'
+    | 'onAiAssistantActiveConversationIndexChange'
     | 'onPrompt'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
@@ -122,6 +124,14 @@ export const useGridAiAssistant = (
     propOnChange: props.onAiAssistantSuggestionsChange,
     stateSelector: gridAiAssistantSuggestionsSelector,
     changeEvent: 'aiAssistantSuggestionsChange',
+  });
+
+  apiRef.current.registerControlState({
+    stateId: 'aiAssistantActiveConversationIndex',
+    propModel: props.aiAssistantActiveConversationIndex,
+    propOnChange: props.onAiAssistantActiveConversationIndexChange,
+    stateSelector: gridAiAssistantActiveConversationIndexSelector,
+    changeEvent: 'aiAssistantActiveConversationIndexChange',
   });
 
   const collectSampleData = React.useCallback(() => {
@@ -249,9 +259,7 @@ export const useGridAiAssistant = (
     ],
   );
 
-  const setAiAssistantPanelOpen = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['setAiAssistantPanelOpen']
-  >(
+  const setPanelOpen = React.useCallback<GridAiAssistantApi['aiAssistant']['setPanelOpen']>(
     (callback) => {
       if (!isAiAssistantAvailable) {
         return;
@@ -268,45 +276,52 @@ export const useGridAiAssistant = (
     [apiRef, isAiAssistantAvailable],
   );
 
-  const getAiAssistantConversation = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['getAiAssistantConversation']
-  >(
-    (id) => {
-      if (!isAiAssistantAvailable) {
-        return undefined;
-      }
-
-      return gridAiAssistantConversationSelector(apiRef, id);
-    },
-    [apiRef, isAiAssistantAvailable],
-  );
-
-  const setAiAssistantConversation = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['setAiAssistantConversation']
-  >(
-    (id, callback) => {
+  const setActiveConversationId = React.useCallback(
+    (id: string) => {
       if (!isAiAssistantAvailable) {
         return;
       }
 
-      const currentConversations = apiRef.current.state.aiAssistant?.conversations;
-      const targetConversationIndex = currentConversations.findIndex((c) => c.id === id);
+      const conversations = gridAiAssistantConversationsSelector(apiRef);
+      const activeConversationIndex = gridAiAssistantActiveConversationIndexSelector(apiRef);
+
+      if (!conversations[activeConversationIndex]) {
+        return;
+      }
+
+      conversations[activeConversationIndex].id = id;
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          conversations,
+        },
+      }));
+    },
+    [apiRef, isAiAssistantAvailable],
+  );
+
+  const setConversationPrompts = React.useCallback(
+    (index: number, callback: (prevPrompts: Prompt[]) => Prompt[]) => {
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+
+      const currentConversations = gridAiAssistantConversationsSelector(apiRef);
+      const targetConversation = currentConversations[index];
 
       const newPrompts =
         typeof callback === 'function'
-          ? callback(
-              targetConversationIndex === -1
-                ? []
-                : currentConversations[targetConversationIndex].prompts,
-            )
+          ? callback(targetConversation === undefined ? [] : targetConversation.prompts)
           : callback;
 
       const newConversations = currentConversations.toSpliced(
-        targetConversationIndex === -1 ? currentConversations.length : targetConversationIndex,
+        targetConversation === undefined ? currentConversations.length : index,
         1,
         {
-          id,
-          title: newPrompts[newPrompts.length - 1].value, // TODO: this should be generated by the LLM based on the conversation history
+          ...targetConversation,
+          title: newPrompts[newPrompts.length - 1].value, // TODO: make the title configurable
           prompts: newPrompts,
         },
       );
@@ -328,12 +343,12 @@ export const useGridAiAssistant = (
         return undefined;
       }
 
-      const activeConversationId = gridAiAssistantActiveConversationIdSelector(apiRef);
-      const isNewConversation = activeConversationId === INITIAL_CONVERSATION_ID;
+      const activeConversationIndex = gridAiAssistantActiveConversationIndexSelector(apiRef);
+      const activeConversation = gridAiAssistantActiveConversationSelector(apiRef);
       const date = Date.now();
 
       apiRef.current.setLoading(true);
-      setAiAssistantConversation(activeConversationId, (prevPrompts) => [
+      setConversationPrompts(activeConversationIndex, (prevPrompts) => [
         ...prevPrompts,
         {
           value,
@@ -346,10 +361,11 @@ export const useGridAiAssistant = (
         const response = await onPrompt(
           value,
           getPromptContext(allowAiAssistantDataSampling),
-          isNewConversation ? undefined : activeConversationId,
+          activeConversation?.id,
         );
         applyPromptResult(response);
-        setAiAssistantConversation(activeConversationId, (prevPrompts) =>
+        setActiveConversationId(response.conversationId);
+        setConversationPrompts(activeConversationIndex, (prevPrompts) =>
           prevPrompts.map((item) =>
             item.createdAt.getTime() === date
               ? {
@@ -363,7 +379,7 @@ export const useGridAiAssistant = (
         );
         return response;
       } catch (error: any) {
-        setAiAssistantConversation(activeConversationId, (prevPrompts) =>
+        setConversationPrompts(activeConversationIndex, (prevPrompts) =>
           prevPrompts.map((item) =>
             item.createdAt.getTime() === date
               ? {
@@ -385,55 +401,76 @@ export const useGridAiAssistant = (
       onPrompt,
       getPromptContext,
       applyPromptResult,
-      setAiAssistantConversation,
+      setConversationPrompts,
+      setActiveConversationId,
     ],
   );
 
-  const setAiAssistantActiveConversationId = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['setAiAssistantActiveConversationId']
+  const setActiveConversationIndex = React.useCallback<
+    GridAiAssistantApi['aiAssistant']['setActiveConversationIndex']
   >(
-    (id) => {
+    (index) => {
       apiRef.current.setState((state) => ({
         ...state,
         aiAssistant: {
           ...state.aiAssistant,
-          activeConversationId: id,
+          activeConversationIndex: index,
         },
       }));
+
+      const conversation = gridAiAssistantActiveConversationSelector(apiRef);
+      if (!conversation) {
+        throw new Error('Conversation not found');
+      }
+      return conversation;
     },
     [apiRef],
   );
 
-  const createAiAssistantConversation = React.useCallback<
-    GridAiAssistantApi['aiAssistant']['createAiAssistantConversation']
-  >(() => {
-    // TODO
-  }, []);
+  const setConversations = React.useCallback<GridAiAssistantApi['aiAssistant']['setConversations']>(
+    (callback) => {
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          conversations:
+            typeof callback === 'function' ? callback(state.aiAssistant?.conversations) : callback,
+        },
+      }));
+    },
+    [apiRef, isAiAssistantAvailable],
+  );
 
   React.useEffect(() => {
     if (props.aiAssistantConversations) {
-      props.aiAssistantConversations.forEach((conversation) => {
-        setAiAssistantConversation(conversation.id, conversation.prompts);
-      });
+      setConversations(props.aiAssistantConversations);
     }
-  }, [apiRef, props.aiAssistantConversations, setAiAssistantConversation]);
+  }, [apiRef, props.aiAssistantConversations, setConversations]);
 
   React.useEffect(() => {
     if (props.aiAssistantPanelOpen) {
-      setAiAssistantPanelOpen(props.aiAssistantPanelOpen);
+      setPanelOpen(props.aiAssistantPanelOpen);
     }
-  }, [apiRef, props.aiAssistantPanelOpen, setAiAssistantPanelOpen]);
+  }, [apiRef, props.aiAssistantPanelOpen, setPanelOpen]);
+
+  React.useEffect(() => {
+    if (props.aiAssistantActiveConversationIndex) {
+      setActiveConversationIndex(props.aiAssistantActiveConversationIndex);
+    }
+  }, [apiRef, props.aiAssistantActiveConversationIndex, setActiveConversationIndex]);
 
   useGridApiMethod(
     apiRef,
     {
       aiAssistant: {
         processPrompt,
-        setAiAssistantPanelOpen,
-        getAiAssistantConversation,
-        setAiAssistantConversation,
-        setAiAssistantActiveConversationId,
-        createAiAssistantConversation,
+        setPanelOpen,
+        setConversations,
+        setActiveConversationIndex,
       },
     },
     'public',

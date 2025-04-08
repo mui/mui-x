@@ -54,6 +54,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the AI Assistant suggestions change.
    */
   aiAssistantSuggestionsChange: { params: PromptSuggestion[] };
+  /**
+   * Fired when the AI Assistant active conversation index changes.
+   */
+  aiAssistantActiveConversationIndexChange: { params: number };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {

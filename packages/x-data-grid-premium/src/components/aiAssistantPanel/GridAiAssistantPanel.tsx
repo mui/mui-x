@@ -10,11 +10,9 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
-  gridAiAssistantConversationSelector,
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
-  gridAiAssistantActiveConversationIdSelector,
-  gridAiAssistantConversationsSelector,
+  gridAiAssistantActiveConversationSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -136,17 +134,21 @@ function GridAiAssistantPanel() {
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
   const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
-  const activeConversationId = useGridSelector(apiRef, gridAiAssistantActiveConversationIdSelector);
-  const conversation = useGridSelector(
-    apiRef,
-    gridAiAssistantConversationSelector,
-    activeConversationId,
-  );
-  const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
+  const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
   const conversationTitle =
-    conversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
+    activeConversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
+
+  const createConversation = React.useCallback(() => {
+    apiRef.current.aiAssistant.setConversations((conversations) => [
+      ...conversations,
+      {
+        title: apiRef.current.getLocaleText('aiAssistantPanelNewConversation'),
+        prompts: [],
+      },
+    ]);
+  }, [apiRef]);
 
   return (
     <AiAssistantPanelRoot
@@ -155,7 +157,7 @@ function GridAiAssistantPanel() {
       target={aiAssistantPanelTriggerRef.current}
       className={classes.root}
       ownerState={rootProps}
-      onClose={() => apiRef.current.aiAssistant.setAiAssistantPanelOpen(false)}
+      onClose={() => apiRef.current.aiAssistant.setPanelOpen(false)}
       {...rootProps.slotProps?.panel}
     >
       <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
@@ -177,8 +179,7 @@ function GridAiAssistantPanel() {
           <span>
             <rootProps.slots.baseIconButton
               {...rootProps.slotProps?.baseIconButton}
-              onClick={apiRef.current.aiAssistant.createAiAssistantConversation}
-              disabled={activeConversationId === 'default' && conversations.length === 0}
+              onClick={createConversation}
             >
               <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
             </rootProps.slots.baseIconButton>
@@ -188,14 +189,14 @@ function GridAiAssistantPanel() {
         <rootProps.slots.baseIconButton
           {...rootProps.slotProps?.baseIconButton}
           aria-label={apiRef.current.getLocaleText('aiAssistantPanelClose')}
-          onClick={() => apiRef.current.aiAssistant.setAiAssistantPanelOpen(false)}
+          onClick={() => apiRef.current.aiAssistant.setPanelOpen(false)}
         >
           <rootProps.slots.aiAssistantPanelCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
-        {conversation && conversation.prompts.length > 0 ? (
-          <GridAiAssistantPanelConversation open={open} conversation={conversation} />
+        {activeConversation && activeConversation.prompts.length > 0 ? (
+          <GridAiAssistantPanelConversation open={open} conversation={activeConversation} />
         ) : (
           <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
             {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}

@@ -57,7 +57,7 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
     const handleRef = useForkRef(ref, aiAssistantPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.aiAssistant.setAiAssistantPanelOpen((currentOpen) => !currentOpen);
+      apiRef.current.aiAssistant.setPanelOpen((currentOpen) => !currentOpen);
       onClick?.(event);
     };
 

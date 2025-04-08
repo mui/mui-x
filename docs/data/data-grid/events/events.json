@@ -8,6 +8,13 @@
   },
   {
     "projects": ["x-data-grid-premium"],
+    "name": "aiAssistantActiveConversationIndexChange",
+    "description": "Fired when the AI Assistant active conversation index changes.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
     "name": "aiAssistantConversationsChange",
     "description": "Fired when the AI Assistant conversation state changes.",
     "params": "Conversation[]",

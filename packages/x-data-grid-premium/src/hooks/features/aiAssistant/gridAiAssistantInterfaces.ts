@@ -11,14 +11,14 @@ export type PromptSuggestion = {
 };
 
 export type Conversation = {
-  id: string;
-  title: string;
+  id?: string;
+  title?: string;
   prompts: Prompt[];
 };
 
 export type GridAiAssistantState = {
   panelOpen: boolean;
-  activeConversationId: string;
+  activeConversationIndex: number;
   conversations: Conversation[];
   suggestions: PromptSuggestion[];
 };
@@ -84,30 +84,20 @@ export interface GridAiAssistantApi {
      * Sets whether the AI Assistant panel is open.
      * @param {boolean | ((prev: boolean) => boolean)} open The new value of the AI Assistant panel open state.
      */
-    setAiAssistantPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+    setPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     /**
-     * Creates a new conversation.
+     * Sets the conversations.
+     * @param {Conversation[] | ((prevConversations: Conversation[]) => Conversation[])} conversations The new conversations.
      */
-    createAiAssistantConversation: () => void;
-    /**
-     * Gets the conversation with the given id.
-     * @param {string} id The id of the conversation.
-     * @returns {Conversation | undefined} The conversation or undefined if it does not exist.
-     */
-    getAiAssistantConversation: (id: string) => Conversation | undefined;
-    /**
-     * Sets the prompts of a conversation.
-     * @param {string} id The id of the conversation.
-     * @param {Prompt[] | ((prevPrompts: Prompt[]) => Prompt[])} prompts The new prompts of the conversation.
-     */
-    setAiAssistantConversation: (
-      id: string,
-      prompts: Prompt[] | ((prevPrompts: Prompt[]) => Prompt[]),
+    setConversations: (
+      conversations: Conversation[] | ((prevConversations: Conversation[]) => Conversation[]),
     ) => void;
     /**
-     * Sets the active conversation id.
-     * @param {string} id The id of the conversation.
+     * Sets the active conversation index.
+     * @param {number} index The index of the conversation that should become active.
+     * @returns {Conversation} The active conversation.
+     * @throws {Error} If the conversation index does not exist.
      */
-    setAiAssistantActiveConversationId: (id: string) => void;
+    setActiveConversationIndex: (index: number) => Conversation;
   };
 }
