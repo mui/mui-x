@@ -72,16 +72,12 @@ export default function AssistantWithExamples() {
       <DataGridPremium
         {...data}
         columns={columns}
-        initialState={{
-          aiAssistant: {
-            suggestions: [
-              { value: 'Sort by name' },
-              { value: 'Show people from the EU' },
-              { value: 'Sort by company name and employee name' },
-              { value: 'Order companies by amount of people' },
-            ],
-          },
-        }}
+        aiAssistantSuggestions={[
+          { value: 'Sort by name' },
+          { value: 'Show people from the EU' },
+          { value: 'Sort by company name and employee name' },
+          { value: 'Order companies by amount of people' },
+        ]}
         aiAssistant
         onPrompt={mockPromptResolver}
         showToolbar

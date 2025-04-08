@@ -23,7 +23,7 @@ export type GridAiAssistantState = {
   suggestions: PromptSuggestion[];
 };
 
-export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
+export type GridAiAssistantInitialState = Partial<Omit<GridAiAssistantState, 'suggestions'>>;
 
 type ColumnSort = {
   column: string;

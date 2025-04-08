@@ -25,16 +25,12 @@ export default function AssistantWithDataSampling() {
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         {...data}
-        initialState={{
-          aiAssistant: {
-            suggestions: [
-              { value: 'Sort by name' },
-              { value: 'Show people from the EU' },
-              { value: 'Sort by company name and employee name' },
-              { value: 'Order companies by amount of people' },
-            ],
-          },
-        }}
+        aiAssistantSuggestions={[
+          { value: 'Sort by name' },
+          { value: 'Show people from the EU' },
+          { value: 'Sort by company name and employee name' },
+          { value: 'Order companies by amount of people' },
+        ]}
         allowAiAssistantDataSampling
         aiAssistant
         onPrompt={mockPromptResolver}

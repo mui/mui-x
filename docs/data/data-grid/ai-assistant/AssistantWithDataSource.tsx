@@ -70,19 +70,12 @@ export default function AssistantWithDataSource() {
 
   const initialStateUpdated = useKeepGroupedColumnsHidden({
     apiRef,
+
     initialState: {
       ...initialState,
       pagination: {
         paginationModel: { pageSize: 10, page: 0 },
         rowCount: 0,
-      },
-      aiAssistant: {
-        suggestions: [
-          { value: 'Sort by name' },
-          { value: 'Show people from the EU' },
-          { value: 'Sort by company name and employee name' },
-          { value: 'Order companies by amount of people' },
-        ],
       },
     },
   });
@@ -99,6 +92,12 @@ export default function AssistantWithDataSource() {
         pageSizeOptions={[10, 20, 50]}
         showToolbar
         allowAiAssistantDataSampling
+        aiAssistantSuggestions={[
+          { value: 'Sort by name' },
+          { value: 'Show people from the EU' },
+          { value: 'Sort by company name and employee name' },
+          { value: 'Order companies by amount of people' },
+        ]}
         aiAssistant
         onPrompt={mockPromptResolver}
         aggregationFunctions={aggregationFunctions}
