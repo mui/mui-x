@@ -13,6 +13,7 @@ import {
   gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationSelector,
+  gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -135,20 +136,27 @@ function GridAiAssistantPanel() {
   const classes = useUtilityClasses(rootProps);
   const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
+  const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const { aiAssistantPanelTriggerRef } = useGridPanelContext();
   const conversationTitle =
     activeConversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
 
   const createConversation = React.useCallback(() => {
-    apiRef.current.aiAssistant.setConversations((conversations) => [
-      ...conversations,
-      {
-        title: apiRef.current.getLocaleText('aiAssistantPanelNewConversation'),
-        prompts: [],
-      },
-    ]);
-  }, [apiRef]);
+    const newConversation = conversations.findIndex((conversation) => !conversation.prompts.length);
+    if (newConversation !== -1) {
+      apiRef.current.aiAssistant.setActiveConversationIndex(newConversation);
+    } else {
+      apiRef.current.aiAssistant.setConversations((newConversations) => [
+        ...newConversations,
+        {
+          title: apiRef.current.getLocaleText('aiAssistantPanelNewConversation'),
+          prompts: [],
+        },
+      ]);
+      apiRef.current.aiAssistant.setActiveConversationIndex(conversations.length);
+    }
+  }, [apiRef, conversations]);
 
   return (
     <AiAssistantPanelRoot
@@ -179,6 +187,7 @@ function GridAiAssistantPanel() {
           <span>
             <rootProps.slots.baseIconButton
               {...rootProps.slotProps?.baseIconButton}
+              disabled={!conversations.length || !activeConversation?.prompts.length}
               onClick={createConversation}
             >
               <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
