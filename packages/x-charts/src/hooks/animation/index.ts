@@ -1,3 +1,4 @@
+export * from './useAnimate';
 export * from './useAnimateArea';
 export * from './useAnimateBar';
 export * from './useAnimateBarLabel';

@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/introduction/roadmap` },
     ],
   },
@@ -488,6 +489,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
             children: [
+              { pathname: '/x/react-charts/animation' },
               { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
