@@ -16,7 +16,7 @@ The AI assistant feature lets users interact with the Data Grid component using 
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
-To enable client-side of this feature, pass `aiAssistant` prop.
+To enable this feature on the Data Grid, pass the `aiAssistant` prop.
 
 ## Improving accuracy with example values
 
