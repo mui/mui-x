@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
-import { version } from '@mui/material';
+import { major } from '@mui/material/version';
 
 const isMaterialUIv6 = String(version).startsWith('6.');
 const isMaterialUIv7 = String(version).startsWith('7.');
