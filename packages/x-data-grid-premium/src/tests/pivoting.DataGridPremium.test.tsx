@@ -623,5 +623,34 @@ describe('<DataGridPremium /> - Pivoting', () => {
         'stock',
       ]);
     });
+
+    setProps({ pivotActive: true });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    act(() => {
+      // Remove the first row
+      apiRef.current?.setRows(ROWS.slice(1));
+    });
+
+    await waitFor(() => {
+      expect(getRowValues(2)).to.deep.equal(['AAPL (1)', '6,700']);
+    });
+    expect(getRowValues(0)).to.deep.equal(['GOOGL (2)', '6,800']);
+
+    setProps({ pivotActive: false });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '2',
+        '16/03/2024',
+        'GOOGL',
+        '$125.67',
+        '3,200',
+        'stock',
+      ]);
+    });
   });
 });
