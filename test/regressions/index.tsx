@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } fro
 import { Globals } from '@react-spring/web';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
-import TestViewer, { RouteContext } from './TestViewer';
+import TestViewer from './TestViewer';
 import type { Test } from './tests';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
@@ -123,7 +123,6 @@ function useHash() {
 }
 
 function computeIsDev(hash: string) {
-  return true;
   if (hash === '#dev') {
     return true;
   }
