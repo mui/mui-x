@@ -24,7 +24,6 @@ import {
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
-import { GridAiAssistantPanel } from '../components/aiAssistantPanel/GridAiAssistantPanel';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { Sidebar } from '../components/sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
@@ -95,7 +94,6 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sidePanel={sidePanel}
       >
         {watermark}
-        {props.aiAssistant && <GridAiAssistantPanel />}
       </GridRoot>
     </GridContextProvider>
   );
@@ -158,10 +156,6 @@ DataGridPremiumRaw.propTypes = {
       title: PropTypes.string,
     }),
   ),
-  /**
-   * If `true`, the AI Assistant panel is open.
-   */
-  aiAssistantPanelOpen: PropTypes.bool,
   /**
    * The suggestions of the AI Assistant.
    */
@@ -707,11 +701,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {Conversation[]} conversations The new AI Assistant conversations.
    */
   onAiAssistantConversationsChange: PropTypes.func,
-  /**
-   * Callback fired when the AI Assistant panel open state changes.
-   * @param {boolean} aiAssistantPanelOpen Whether the AI Assistant panel is visible.
-   */
-  onAiAssistantPanelOpenChange: PropTypes.func,
   /**
    * Callback fired when the AI Assistant suggestions change.
    * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.

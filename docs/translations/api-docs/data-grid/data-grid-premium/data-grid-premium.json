@@ -11,9 +11,6 @@
       "description": "The index of the active AI Assistant conversation."
     },
     "aiAssistantConversations": { "description": "The conversations with the AI Assistant." },
-    "aiAssistantPanelOpen": {
-      "description": "If <code>true</code>, the AI Assistant panel is open."
-    },
     "aiAssistantSuggestions": { "description": "The suggestions of the AI Assistant." },
     "allowAiAssistantDataSampling": {
       "description": "If <code>true</code>, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context."
@@ -298,10 +295,6 @@
     "onAiAssistantConversationsChange": {
       "description": "Callback fired when the AI Assistant conversations change.",
       "typeDescriptions": { "conversations": "The new AI Assistant conversations." }
-    },
-    "onAiAssistantPanelOpenChange": {
-      "description": "Callback fired when the AI Assistant panel open state changes.",
-      "typeDescriptions": { "aiAssistantPanelOpen": "Whether the AI Assistant panel is visible." }
     },
     "onAiAssistantSuggestionsChange": {
       "description": "Callback fired when the AI Assistant suggestions change.",

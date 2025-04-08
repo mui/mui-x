@@ -22,13 +22,6 @@
   },
   {
     "projects": ["x-data-grid-premium"],
-    "name": "aiAssistantPanelOpenChange",
-    "description": "Fired when the AI Assistant panel open state changes.",
-    "params": "boolean",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid-premium"],
     "name": "aiAssistantSuggestionsChange",
     "description": "Fired when the AI Assistant suggestions change.",
     "params": "PromptSuggestion[]",

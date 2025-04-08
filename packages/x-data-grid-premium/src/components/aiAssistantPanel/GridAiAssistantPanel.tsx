@@ -1,16 +1,10 @@
 import * as React from 'react';
-import {
-  useGridSelector,
-  getDataGridUtilityClass,
-  gridClasses,
-  GridSlotProps,
-} from '@mui/x-data-grid-pro';
-import { vars, useGridPanelContext, NotRendered } from '@mui/x-data-grid-pro/internals';
+import { useGridSelector, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
-  gridAiAssistantPanelOpenSelector,
   gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantConversationsSelector,
@@ -41,16 +35,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const AiAssistantPanelRoot = styled(NotRendered<GridSlotProps['panel']>, {
+const AiAssistantPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanel',
 })<{ ownerState: OwnerState }>({
-  [`& .${gridClasses.paper}`]: {
-    flexDirection: 'column',
-    width: 380,
-    maxHeight: 'none',
-    overflow: 'hidden',
-  },
+  flexDirection: 'column',
+  width: 380,
+  maxHeight: 'none',
+  overflow: 'hidden',
 });
 
 const AiAssistantPanelHeader = styled('div', {
@@ -134,11 +126,9 @@ function GridAiAssistantPanel() {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
-  const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
-  const { aiAssistantPanelTriggerRef } = useGridPanelContext();
   const conversationTitle =
     activeConversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
 
@@ -159,15 +149,7 @@ function GridAiAssistantPanel() {
   }, [apiRef, conversations]);
 
   return (
-    <AiAssistantPanelRoot
-      as={rootProps.slots.panel}
-      open={open}
-      target={aiAssistantPanelTriggerRef.current}
-      className={classes.root}
-      ownerState={rootProps}
-      onClose={() => apiRef.current.aiAssistant.setPanelOpen(false)}
-      {...rootProps.slotProps?.panel}
-    >
+    <AiAssistantPanelRoot className={classes.root} ownerState={rootProps}>
       <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
         <AiAssistantPanelTitleContainer className={classes.titleContainer} ownerState={rootProps}>
           <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
@@ -198,14 +180,14 @@ function GridAiAssistantPanel() {
         <rootProps.slots.baseIconButton
           {...rootProps.slotProps?.baseIconButton}
           aria-label={apiRef.current.getLocaleText('aiAssistantPanelClose')}
-          onClick={() => apiRef.current.aiAssistant.setPanelOpen(false)}
+          onClick={apiRef.current.hidePreferences}
         >
           <rootProps.slots.aiAssistantPanelCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
         {activeConversation && activeConversation.prompts.length > 0 ? (
-          <GridAiAssistantPanelConversation open={open} conversation={activeConversation} />
+          <GridAiAssistantPanelConversation conversation={activeConversation} />
         ) : (
           <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
             {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}

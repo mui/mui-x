@@ -10,11 +10,6 @@ const gridAiAssistantStateSelector = createRootSelector(
   (state: GridStatePremium) => state.aiAssistant,
 );
 
-export const gridAiAssistantPanelOpenSelector = createSelector(
-  gridAiAssistantStateSelector,
-  (aiAssistant) => aiAssistant?.panelOpen,
-);
-
 export const gridAiAssistantActiveConversationIndexSelector = createSelector(
   gridAiAssistantStateSelector,
   (aiAssistant) => aiAssistant?.activeConversationIndex,

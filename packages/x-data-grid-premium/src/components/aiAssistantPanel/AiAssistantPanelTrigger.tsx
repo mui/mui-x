@@ -7,11 +7,15 @@ import {
   RenderProp,
   useGridPanelContext,
 } from '@mui/x-data-grid-pro/internals';
-import { GridSlotProps, useGridSelector } from '@mui/x-data-grid-pro';
+import {
+  gridPreferencePanelStateSelector,
+  GridPreferencePanelsValue,
+  GridSlotProps,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridAiAssistantPanelOpenSelector } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 
 export interface AiAssistantPanelState {
   /**
@@ -50,14 +54,20 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
     const buttonId = useId();
     const panelId = useId();
     const apiRef = useGridApiContext();
-    const open = useGridSelector(apiRef, gridAiAssistantPanelOpenSelector);
+    const panelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    const open =
+      panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.aiAssistant;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const { aiAssistantPanelTriggerRef } = useGridPanelContext();
     const handleRef = useForkRef(ref, aiAssistantPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.aiAssistant.setPanelOpen((currentOpen) => !currentOpen);
+      if (open) {
+        apiRef.current.hidePreferences();
+      } else {
+        apiRef.current.showPreferences(GridPreferencePanelsValue.aiAssistant, panelId, buttonId);
+      }
       onClick?.(event);
     };
 
@@ -74,7 +84,6 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        // TODO: Hook up the panel/trigger IDs to the assistant panel
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
