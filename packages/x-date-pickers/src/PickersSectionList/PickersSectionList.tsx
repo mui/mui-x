@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
@@ -12,19 +12,6 @@ import {
 } from './pickersSectionListClasses';
 import type { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-
-const underlineStyle = (theme: Theme) => ({
-  textDecoration: 'underline transparent',
-  textDecorationThickness: '3px',
-  textUnderlineOffset: '100%',
-  transition: theme.transitions.create('text-decoration', {
-    duration: theme.transitions.duration.standard,
-  }),
-  [`[data-active-range-position="start"] &[data-range-position="start"],
-  [data-active-range-position="end"] &[data-range-position="end"]`]: {
-    textDecorationColor: (theme.vars || theme).palette.primary.main,
-  },
-});
 
 export const PickersSectionListRoot = styled('div', {
   name: 'MuiPickersSectionList',
@@ -45,19 +32,17 @@ export const PickersSectionListSectionSeparator = styled('span', {
   name: 'MuiPickersSectionList',
   slot: 'SectionSeparator',
   overridesResolver: (props, styles) => styles.sectionSeparator,
-})(({ theme }) => ({
+})({
   whiteSpace: 'pre',
-  ...underlineStyle(theme),
-}));
+});
 
 export const PickersSectionListSectionContent = styled('span', {
   name: 'MuiPickersSectionList',
   slot: 'SectionContent',
   overridesResolver: (props, styles) => styles.sectionContent,
-})(({ theme }) => ({
+})({
   outline: 'none',
-  ...underlineStyle(theme),
-}));
+});
 
 const useUtilityClasses = (classes: Partial<PickersSectionListClasses> | undefined) => {
   const slots = {

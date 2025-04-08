@@ -146,6 +146,30 @@ const PickersInputBaseInput = styled('input', {
   ...visuallyHidden,
 });
 
+const PickersInputBaseActiveBar = styled('div', {
+  name: 'MuiPickersInputBase',
+  slot: 'ActiveBar',
+  overridesResolver: (props, styles) => styles.activeBar,
+})<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
+  display: 'none',
+  position: 'absolute',
+  height: 2,
+  bottom: 2,
+  borderTopLeftRadius: 2,
+  borderTopRightRadius: 2,
+  transition: 'left 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
+  backgroundColor: (theme.vars || theme).palette.primary.main,
+  '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
+    display: 'block',
+  },
+  '[data-active-range-position="start"] &': {
+    left: ownerState.sectionOffsets[0],
+  },
+  '[data-active-range-position="end"] &': {
+    left: ownerState.sectionOffsets[1],
+  },
+}));
+
 const useUtilityClasses = (
   classes: Partial<PickersInputBaseClasses> | undefined,
   ownerState: PickerTextFieldOwnerState,
@@ -181,6 +205,7 @@ const useUtilityClasses = (
     sectionContent: ['sectionContent'],
     sectionBefore: ['sectionBefore'],
     sectionAfter: ['sectionAfter'],
+    activeBar: ['activeBar'],
   };
 
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
@@ -232,6 +257,8 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const activeBarRef = React.useRef<HTMLDivElement>(null);
+  const [sectionOffsets, setSectionOffsets] = React.useState<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
@@ -291,6 +318,33 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   });
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
+  const isSingleInputRange = elements.some(
+    (element) => element.content['data-range-position'] !== undefined,
+  );
+  React.useEffect(() => {
+    if (isSingleInputRange) {
+      let activeBarWidth = 0;
+      const firstSectionOffsetLeft =
+        rootRef.current?.querySelector<HTMLSpanElement>(
+          `[data-sectionindex="0"]:has([id="${elements[0].content.id}"])`,
+        )?.offsetLeft || 0;
+      for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
+        const currentElement = elements[i];
+        if (currentElement.content.id) {
+          const currentSectionElement = rootRef.current?.querySelector<HTMLSpanElement>(
+            `[data-sectionindex="${i}"]:has([id="${currentElement.content.id}"])`,
+          );
+          activeBarWidth += currentSectionElement?.clientWidth || 0;
+          if (activeBarRef.current) {
+            activeBarRef.current.style.width = `${activeBarWidth}px`;
+          }
+          if (i === elements.length / 2) {
+            setSectionOffsets([firstSectionOffsetLeft, currentSectionElement?.offsetLeft || 0]);
+          }
+        }
+      }
+    }
+  }, [elements, isSingleInputRange]);
 
   return (
     <InputRoot {...inputRootProps}>
@@ -349,6 +403,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         {...inputProps}
         ref={handleInputRef}
       />
+      {isSingleInputRange && (
+        <PickersInputBaseActiveBar
+          className={classes.activeBar}
+          ref={activeBarRef}
+          ownerState={{ sectionOffsets }}
+        />
+      )}
     </InputRoot>
   );
 });
