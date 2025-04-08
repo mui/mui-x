@@ -29,6 +29,23 @@ function GridAiAssistantPanelConversationsMenu() {
     setOpen(false);
   };
 
+  // Ordered by most recent prompt in conversations
+  const sortedConversations = React.useMemo(() => {
+    return [...conversations].sort((a, b) => {
+      if (!a.prompts.length) {
+        return -1;
+      }
+      // New conversations should be at the top
+      if (!b.prompts.length) {
+        return 1;
+      }
+      return (
+        b.prompts[b.prompts.length - 1].createdAt.getTime() -
+        a.prompts[a.prompts.length - 1].createdAt.getTime()
+      );
+    });
+  }, [conversations]);
+
   return (
     <React.Fragment>
       <rootProps.slots.baseTooltip
@@ -57,19 +74,22 @@ function GridAiAssistantPanelConversationsMenu() {
           autoFocusItem
           {...rootProps.slotProps?.baseMenuList}
         >
-          {conversations.map((conversation, index) => (
-            <rootProps.slots.baseMenuItem
-              key={`${conversation.id}-${index}`}
-              selected={activeConversationIndex === index}
-              material={{ dense: true }}
-              onClick={() => {
-                apiRef.current.aiAssistant.setActiveConversationIndex(index);
-                handleClose();
-              }}
-            >
-              {conversation.title}
-            </rootProps.slots.baseMenuItem>
-          ))}
+          {sortedConversations.map((conversation, sortedIndex) => {
+            const conversationIndex = conversations.findIndex((c) => c === conversation);
+            return (
+              <rootProps.slots.baseMenuItem
+                key={`${conversation.id}-${sortedIndex}`}
+                selected={conversationIndex === activeConversationIndex}
+                material={{ dense: true }}
+                onClick={() => {
+                  apiRef.current.aiAssistant.setActiveConversationIndex(conversationIndex);
+                  handleClose();
+                }}
+              >
+                {conversation.title}
+              </rootProps.slots.baseMenuItem>
+            );
+          })}
         </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
