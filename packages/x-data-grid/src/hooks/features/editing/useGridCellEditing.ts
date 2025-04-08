@@ -37,7 +37,6 @@ import {
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
 import { GridUpdateRowParams } from '../../../models/gridDataSource';
-import { GridUpdateRowError } from '../dataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
