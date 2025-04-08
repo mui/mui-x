@@ -324,7 +324,12 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     [elements],
   );
   const isSingleInputRange = React.useMemo(
-    () => elements.some((element) => element.content['data-range-position'] !== undefined),
+    () =>
+      elements.some(
+        (element) =>
+          Object.hasOwn(element.content, 'data-range-position') &&
+          element.content['data-range-position'] !== undefined,
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [elementsIdList],
   );
