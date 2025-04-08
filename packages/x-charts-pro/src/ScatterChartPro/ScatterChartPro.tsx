@@ -26,10 +26,6 @@ export interface ScatterChartProProps
       'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
     > {}
 
-export type ScatterChartProApi = NonNullable<
-  NonNullable<ScatterChartProProps['apiRef']>['current']
->;
-
 /**
  * Demos:
  *
