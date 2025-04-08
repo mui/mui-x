@@ -61,12 +61,15 @@ export function usePointerType(): null | PointerType {
       }
     });
 
-    const setPointerHandler = instance.addInteractionListener('pointerEnter', (state) => {
-      setPointerType({
-        height: Math.max(state.event.height, 24),
-        pointerType: state.event.pointerType as PointerType['pointerType'],
-      });
-    });
+    const setPointerHandler = instance.addMultipleInteractionListeners(
+      ['pointerEnter', 'pointerDown'],
+      (state) => {
+        setPointerType({
+          height: Math.max(state.event.height, 24),
+          pointerType: state.event.pointerType as PointerType['pointerType'],
+        });
+      },
+    );
 
     return () => {
       removePointerHandler.cleanup();
