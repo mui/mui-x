@@ -105,6 +105,14 @@ const COLUMNS: GridColDef[] = [
     type: 'date',
     headerName: 'Date',
     valueGetter: (value) => new Date(value),
+    // Avoid the localization of the date to simplify the checks
+    valueFormatter: (value?: Date) => {
+      if (value == null) {
+        return '';
+      }
+
+      return value.toLocaleDateString('en-GB');
+    },
   },
   { field: 'ticker', headerName: 'Ticker' },
   {
