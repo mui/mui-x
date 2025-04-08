@@ -1,9 +1,8 @@
 import * as React from 'react';
+import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
-
-export const RouteContext = React.createContext<string | undefined>(undefined);
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest',
@@ -84,7 +83,7 @@ function MockTime(props: any) {
 
 function LoadFont(props: any) {
   const { children, ...other } = props;
-  const route = React.useContext(RouteContext);
+  const location = useLocation();
 
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
@@ -122,7 +121,7 @@ function LoadFont(props: any) {
       document.fonts.removeEventListener('loading', handleFontsEvent);
       document.fonts.removeEventListener('loadingdone', handleFontsEvent);
     };
-  }, [route]);
+  }, [location]);
 
   return (
     <StyledBox aria-busy={!ready} data-testid="testcase" {...other}>
