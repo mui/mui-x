@@ -29,14 +29,14 @@ window.muiFixture = {
   },
 };
 
-let testsBySuite: typeof import('./testsBySuite');
+let testsBySuite: typeof import('./testsBySuite').testsBySuite;
 
 main();
 
 async function main() {
   setupFakeClock();
 
-  testsBySuite = await import('./testsBySuite');
+  testsBySuite = (await import('./testsBySuite')).testsBySuite;
 
   restoreFakeClock();
 
@@ -68,7 +68,7 @@ function Root() {
             <nav id="tests">
               <ol>
                 {Object.values(testsBySuite).map((suite) => (
-                  <>
+                  <React.Fragment>
                     {suite.map((test) => {
                       const path = computePath(test);
                       return (
@@ -77,7 +77,7 @@ function Root() {
                         </li>
                       );
                     })}
-                  </>
+                  </React.Fragment>
                 ))}
               </ol>
             </nav>

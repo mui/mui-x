@@ -96,7 +96,7 @@ if (unusedBlacklistPatterns.size > 0) {
   );
 }
 
-const testsBySuite = tests.reduce(
+export const testsBySuite = tests.reduce(
   (acc, test) => {
     if (!acc[test.suite]) {
       acc[test.suite] = [];
@@ -106,5 +106,3 @@ const testsBySuite = tests.reduce(
   },
   {} as Record<string, Test[]>,
 );
-
-export default testsBySuite;
