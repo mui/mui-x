@@ -1,42 +1,3 @@
-const blacklist = [
-  /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  /^docs-data-grid-custom-columns-cell-renderers\/(.*)\.png$/, // Custom components used to build docs pages
-  'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
-  'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
-  /^docs-charts-tooltip\/(.*).png/, // Needs interaction
-  'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
-  // 'docs-system-typography',
-];
-
-const unusedBlacklistPatterns = new Set(blacklist);
-
-function excludeTest(suite: string, name: string) {
-  return blacklist.some((pattern) => {
-    if (typeof pattern === 'string') {
-      if (pattern === suite) {
-        unusedBlacklistPatterns.delete(pattern);
-
-        return true;
-      }
-      if (pattern === `${suite}/${name}.png`) {
-        unusedBlacklistPatterns.delete(pattern);
-
-        return true;
-      }
-
-      return false;
-    }
-
-    // assume regex
-    if (pattern.test(`${suite}/${name}.png`)) {
-      unusedBlacklistPatterns.delete(pattern);
-      return true;
-    }
-    return false;
-  });
-}
-
 export interface Test {
   path: string;
   suite: string;
@@ -48,8 +9,25 @@ const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
 // @ts-ignore
-const requireDocs = import.meta.glob('../../docs/data/**/*.js', { eager: true });
-Object.keys(requireDocs).forEach((path: string) => {
+const docsImports = import.meta.glob<React.ComponentType>(
+  [
+    'docsx/data/**/[A-Z]*.js',
+    // Hooks examples
+    'docsx/data/**/use[A-Z]*.js',
+    // ================== Exclusions ==================
+    '!docsx/data/charts/lines/GDPperCapita.js',
+    '!docsx/data/data-grid/list-view/components/*.js',
+    // Excludes demos that we don't want
+    '!docsx/data/**/*NoSnap.*',
+    '!docsx/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
+    '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
+    '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
+    '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
+    '!docsx/data/charts/tooltip/*', // Needs interaction
+  ],
+  { eager: true },
+);
+Object.keys(docsImports).forEach((path: string) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
     .replace('.js', '')
@@ -57,11 +35,7 @@ Object.keys(requireDocs).forEach((path: string) => {
     .reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
-  if (excludeTest(suite, name)) {
-    return;
-  }
-
-  if (requireDocs[path].default === undefined) {
+  if (docsImports[path].default === undefined) {
     return;
   }
 
@@ -69,13 +43,13 @@ Object.keys(requireDocs).forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireDocs[path].default,
+    case: docsImports[path].default,
   });
 });
 
 // @ts-ignore
-const requireRegressions = import.meta.glob('./data-grid/**/*.js', { eager: true });
-Object.keys(requireRegressions).forEach((path: string) => {
+const regressionsImports = import.meta.glob('./data-grid/**/*.js', { eager: true });
+Object.keys(regressionsImports).forEach((path: string) => {
   const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
 
@@ -83,18 +57,9 @@ Object.keys(requireRegressions).forEach((path: string) => {
     path,
     suite,
     name,
-    case: requireRegressions[path].default,
+    case: regressionsImports[path].default,
   });
 });
-
-if (unusedBlacklistPatterns.size > 0) {
-  console.warn(
-    [
-      'The following patterns are unused:',
-      ...Array.from(unusedBlacklistPatterns).map((pattern) => `- ${pattern}`),
-    ].join('\n'),
-  );
-}
 
 export const testsBySuite = tests.reduce(
   (acc, test) => {
