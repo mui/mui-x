@@ -24,8 +24,6 @@ export interface BarChartProProps
       'series' | 'plugins' | 'seriesConfig'
     > {}
 
-export type BarChartProApi = NonNullable<NonNullable<BarChartProProps['apiRef']>['current']>;
-
 /**
  * Demos:
  *

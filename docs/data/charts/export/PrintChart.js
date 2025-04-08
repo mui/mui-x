@@ -2,6 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+
 import { data } from './randomData';
 
 export default function PrintChart() {
