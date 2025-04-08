@@ -62,8 +62,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       activeConversationIndex: 0,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
-      suggestions:
-        props.aiAssistantSuggestions ?? props.initialState?.aiAssistant?.suggestions ?? [],
+      suggestions: props.aiAssistantSuggestions ?? [],
     } as GridAiAssistantState,
   };
 };
