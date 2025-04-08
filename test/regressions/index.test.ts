@@ -6,8 +6,8 @@ import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
 import { major } from '@mui/material/version';
 
-const isMaterialUIv6 = String(version).startsWith('6.');
-const isMaterialUIv7 = String(version).startsWith('7.');
+const isMaterialUIv6 = major === 6;
+const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
