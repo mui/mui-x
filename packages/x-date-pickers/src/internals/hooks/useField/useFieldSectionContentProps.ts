@@ -9,6 +9,7 @@ import { usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { FieldRangeSection } from '../../models';
+import { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
  * Generate the props to pass to the content element of each section of the field.
@@ -230,7 +231,7 @@ interface UseFieldSectionContentPropsParameters {
 type UseFieldSectionContentPropsReturnValue = (
   section: FieldSection,
   sectionIndex: number,
-) => React.HTMLAttributes<HTMLSpanElement>;
+) => PickersSectionElement['content'];
 
 function getSectionValueText(section: FieldSection, utils: MuiPickersAdapter): string | undefined {
   if (!section.value) {
