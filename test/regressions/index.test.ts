@@ -1,4 +1,3 @@
-import * as url from 'url';
 import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
@@ -27,8 +26,7 @@ await main();
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
-  const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
-  const screenshotDir = path.resolve(currentDirectory, './screenshots/chrome');
+  const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
     args: [

@@ -1,9 +1,6 @@
-import url from 'url';
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
-
-const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   build: {
@@ -15,10 +12,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@mui/docs': path.resolve(
-        currentDirectory,
+        import.meta.dirname,
         '../../node_modules/@mui/monorepo/packages/mui-docs/src',
       ),
-      docsx: path.resolve(currentDirectory, '../../docs'),
+      docsx: path.resolve(import.meta.dirname, '../../docs'),
     },
   },
   worker: {
