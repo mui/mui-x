@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
   GridColDef,
   GridPivotModel,
+  type GridApi,
 } from '@mui/x-data-grid-premium';
 import {
   getColumnHeadersTextContent,
@@ -577,6 +578,50 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     await waitFor(() => {
       expect(getAvailableFields()).to.deep.equal(['ID', 'Price', 'Type']);
+    });
+  });
+
+  it('should recalculate pivot values when a row is updated while in pivot mode', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const { setProps } = render(
+      <Test
+        apiRef={apiRef}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+
+    act(() => {
+      apiRef.current?.updateRows([{ ...ROWS[0], volume: 6000 }]);
+    });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    setProps({ pivotActive: false });
+
+    // The row should keep the updated volume after disabling pivot mode
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '1',
+        '15/03/2024',
+        'AAPL',
+        '$192.45',
+        '6,000',
+        'stock',
+      ]);
     });
   });
 });
