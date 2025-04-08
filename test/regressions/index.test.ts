@@ -54,29 +54,6 @@ async function main() {
     }
   });
 
-  // Pick the new/fake "now" for you test pages.
-  const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
-
-  // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
-  // Update the Date accordingly in your test pages
-  await page.addInitScript(`{
-    const OriginalDate = Date;
-    // Extend Date constructor to default to fakeNow
-    Date = class Date extends OriginalDate {
-      constructor(...args) {
-        if (args.length === 0) {
-          super(${fakeNow});
-        } else {
-          super(...args);
-        }
-      }
-    }
-    // Override Date.now() to start from fakeNow
-    const __DateNowOffset = ${fakeNow} - Date.now();
-    const __DateNow = Date.now;
-    Date.now = () => __DateNow() + __DateNowOffset;
-  }`);
-
   let errorConsole: string | undefined;
 
   page.on('console', (msg) => {
