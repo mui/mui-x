@@ -27,11 +27,14 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   markType: ChartsLabelMarkProps['type'];
 }
 
-export type UseItemTooltipReturnValue<T extends ChartSeriesType> = T extends 'radar'
-  ? (ItemTooltip<T> & { axisFormattedValue?: string })[]
-  : ItemTooltip<T>;
+export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
+export type UseRadarItemTooltipReturnValue<T extends ChartSeriesType> = (ItemTooltip<T> & {
+  axisFormattedValue?: string;
+})[];
 
-export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipReturnValue<T> | null {
+export function useInternalItemTooltip<T extends ChartSeriesType>():
+  | (T extends 'radar' ? UseRadarItemTooltipReturnValue<T> : ItemTooltip<T>)
+  | null {
   const store = useStore();
   const identifier = useSelector(store, selectorChartsInteractionItem);
   const seriesConfig = useSelector(store, selectorChartSeriesConfig);
@@ -93,3 +96,21 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
     identifier,
   });
 }
+
+/**
+ * Returns a config object when the tooltip contains a single item to display.
+ * Some specific charts like radar need more complex structure. Use specific hook like `useRadarItemTooltip` for them.
+ * @returns The tooltip item config
+ */
+export const useItemTooltip = <T extends Exclude<ChartSeriesType, 'radar'>>() => {
+  return useInternalItemTooltip<T>() as UseItemTooltipReturnValue<T> | null;
+};
+
+/**
+ * Returns an array config object when the tooltip displays a radar series content.
+ * COntains an object per value with their content and the label of the associated metric.
+ * @returns The tooltip item configs
+ */
+export const useRadarItemTooltip = () => {
+  return useInternalItemTooltip<'radar'>() as UseRadarItemTooltipReturnValue<'radar'> | null;
+};

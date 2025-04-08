@@ -8,7 +8,12 @@ export * from './ChartsItemTooltipContent';
 
 export * from './ChartsTooltipTable';
 
-export * from './useItemTooltip';
+export type {
+  ItemTooltip,
+  UseItemTooltipReturnValue,
+  UseRadarItemTooltipReturnValue,
+} from './useItemTooltip';
+export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
 export * from './useAxisTooltip';
 export * from './useAxesTooltip';
 

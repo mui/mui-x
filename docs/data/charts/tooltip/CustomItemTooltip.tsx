@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 
 export function CustomItemTooltip() {
-  const tooltipData = useItemTooltip<'bar'>();
+  const tooltipData = useItemTooltip();
   if (!tooltipData) {
     return null;
   }

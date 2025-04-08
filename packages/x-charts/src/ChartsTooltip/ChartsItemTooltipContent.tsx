@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useItemTooltip } from './useItemTooltip';
+import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -24,7 +24,7 @@ export interface ChartsItemTooltipContentProps {
 
 function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const { classes: propClasses, sx } = props;
-  const tooltipData = useItemTooltip();
+  const tooltipData = useInternalItemTooltip();
 
   const classes = useUtilityClasses(propClasses);
 
