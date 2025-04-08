@@ -27,13 +27,11 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   markType: ChartsLabelMarkProps['type'];
 }
 
-export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
+export type UseItemTooltipReturnValue<T extends ChartSeriesType> = T extends 'radar'
+  ? (ItemTooltip<T> & { axisFormattedValue?: string })[]
+  : ItemTooltip<T>;
 
-export function useItemTooltip<T extends ChartSeriesType>():
-  | (T extends 'radar'
-      ? (ItemTooltip<T> & { axisFormattedValue?: string })[]
-      : UseItemTooltipReturnValue<T>)
-  | null {
+export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipReturnValue<T> | null {
   const store = useStore();
   const identifier = useSelector(store, selectorChartsInteractionItem);
   const seriesConfig = useSelector(store, selectorChartSeriesConfig);
