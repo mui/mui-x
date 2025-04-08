@@ -608,7 +608,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    });
 
     act(() => {
       apiRef.current?.updateRows([{ ...ROWS[0], volume: 6000 }]);
