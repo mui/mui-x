@@ -6,6 +6,7 @@ import {
   GridRowId,
   gridRowIdSelector,
   gridRowNodeSelector,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { type GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -105,7 +106,10 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
 }) => {
   const pivotActive = gridPivotActiveSelector(apiRef);
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
-    const cellAggregationResult = getCellAggregationResult(params.id, params.field);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const cellAggregationResult = useGridSelector(apiRef, () =>
+      getCellAggregationResult(params.id, params.field),
+    );
     if (cellAggregationResult != null) {
       if (!renderCell) {
         if (cellAggregationResult.position === 'footer') {
