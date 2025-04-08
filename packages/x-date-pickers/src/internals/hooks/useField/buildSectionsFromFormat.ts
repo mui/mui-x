@@ -244,7 +244,6 @@ const buildSections = (
           startSeparator += char;
         } else {
           sections[sections.length - 1].endSeparator += char;
-          sections[sections.length - 1].isEndFormatSeparator = true;
         }
       }
 

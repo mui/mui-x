@@ -195,9 +195,7 @@ export const useFieldV7TextField = <
       },
       after: {
         children: section.endSeparator,
-        'data-range-position': section.isEndFormatSeparator
-          ? (section as FieldRangeSection).dateName
-          : undefined,
+        'data-range-position': (section as FieldRangeSection).dateName,
       },
     }));
   }, [state.sections, createSectionContainerProps, createSectionContentProps]);
