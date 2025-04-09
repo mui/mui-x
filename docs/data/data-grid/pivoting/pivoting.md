@@ -13,6 +13,11 @@ This makes it possible to analyze data from different angles and gain insights t
 If you're new to pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn what pivoting is and how it works through interactive examples.
 :::
 
+:::warning
+Pivoting performs certain computations and uses them to override corresponding props.
+When pivot mode is active, the following props are ignored: `rows`, `columns`, `rowGroupingModel`, `aggregationModel`, `getAggregationPosition`, `columnVisibilityModel`, `columnGroupingModel`, `groupingColDef`, `headerFilters`, `disableRowGrouping`, and `disableAggregation`.
+:::
+
 ## Quick start
 
 Pivoting is enabled by default and can be accessed through the icon in the toolbar.
