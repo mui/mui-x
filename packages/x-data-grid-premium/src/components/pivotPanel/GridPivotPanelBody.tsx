@@ -174,13 +174,16 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
       if (pivotModelFields.has(field)) {
         return false;
       }
+      if (initialColumns.get(field)?.pivotable === false) {
+        return false;
+      }
       if (searchValue) {
         const fieldName = getColumnName(field);
         return fieldName.toLowerCase().includes(searchValue.toLowerCase());
       }
       return true;
     });
-  }, [searchValue, fields, getColumnName, pivotModelFields]);
+  }, [searchValue, fields, getColumnName, pivotModelFields, initialColumns]);
 
   const handleDragStart = (modelKey: FieldTransferObject['modelKey']) => {
     setDrag({ active: true, initialModelKey: modelKey, dropZone: null });

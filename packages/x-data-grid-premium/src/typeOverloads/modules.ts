@@ -74,6 +74,11 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @returns {V} The converted value.
    */
   pastedValueParser?: GridPastedValueParser<R, V, F>;
+  /**
+   * If `false`, the column will not be available for pivoting in the pivot panel.
+   * @default true
+   */
+  pivotable?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

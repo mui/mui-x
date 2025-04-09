@@ -83,11 +83,23 @@ Subscribe to [this issue](https://github.com/mui/mui-x/issues/17302) to get noti
 
 ## Disable pivoting
 
-To disable pivoting, set the `disablePivoting` prop to `true`:
+To disable pivoting feature completely, set the `disablePivoting` prop to `true`:
 
 ```tsx
 <DataGridPremium disablePivoting />
 ```
+
+### Disable pivoting for specific columns
+
+To exclude specific column from pivoting, set the `pivotable: false` on its [column definition](/x/api/data-grid/grid-col-def/#grid-col-def-prop-pivotable):
+
+```tsx
+const columns: GridColDef[] = [{ field: 'id', pivotable: false }];
+
+<DataGridPremium columns={columns} />;
+```
+
+{{"demo": "GridNonPivotableColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Derived columns in pivot mode
 
