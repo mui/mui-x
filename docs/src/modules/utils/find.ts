@@ -1,5 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as url from 'url';
+
+const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 
 const jsRegex = /\.js$/;
 const blackList = ['/.eslintrc', '/_document', '/_app'];
@@ -18,7 +21,7 @@ interface FindPagesOptions {
 // Each pathname is a route you can navigate to.
 export function findPages(
   options: FindPagesOptions = {},
-  directory: string = path.resolve(import.meta.dirname, '../../../pages'),
+  directory: string = path.resolve(currentDirectory, '../../../pages'),
   pages: NextJSPage[] = [],
 ) {
   fs.readdirSync(directory).forEach((item) => {

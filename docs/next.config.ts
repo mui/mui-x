@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // @ts-expect-error This expected error should be gone once we update the monorepo
@@ -11,9 +12,11 @@ import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
+
 const require = createRequire(import.meta.url);
 
-const WORKSPACE_ROOT = path.resolve(import.meta.dirname, '../');
+const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
@@ -93,7 +96,7 @@ export default withDocsInfra({
           ...MONOREPO_ALIASES,
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
-          docsx: path.resolve(import.meta.dirname, '../docs'),
+          docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
       module: {
