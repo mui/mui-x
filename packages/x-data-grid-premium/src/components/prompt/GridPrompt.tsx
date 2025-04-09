@@ -450,7 +450,10 @@ function GridPrompt(props: GridPromptProps) {
           </React.Fragment>
         ) : null}
       </PromptContent>
-      <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')}>
+      <rootProps.slots.baseTooltip
+        title={apiRef.current.getLocaleText('promptRerun')}
+        enterDelay={500}
+      >
         <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>
           <rootProps.slots.promptRerunIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
