@@ -98,7 +98,7 @@ export const useGridPivoting = (
     | 'pivotingColDef'
     | 'aggregationFunctions'
   >,
-  originalColumns: readonly GridColDef[],
+  originalColumnsProp: readonly GridColDef[],
 ) => {
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
@@ -142,13 +142,13 @@ export const useGridPivoting = (
     const rows = rowIds.map((id) => rowsLookup[id]);
 
     const initialColumns = getInitialColumns(
-      originalColumns,
+      originalColumnsProp,
       props.getPivotDerivedColumns,
       apiRef.current.getLocaleText,
     );
 
     return { rows, columns: initialColumns };
-  }, [apiRef, props.getPivotDerivedColumns, originalColumns]);
+  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp]);
 
   const computePivotingState = React.useCallback(
     ({ active, model: pivotModel }: Pick<GridPivotingState, 'active' | 'model'>) => {
@@ -466,8 +466,8 @@ export const useGridPivoting = (
   );
 
   useEnhancedEffect(() => {
-    apiRef.current.updateNonPivotColumns(originalColumns, false);
-  }, [originalColumns, apiRef]);
+    apiRef.current.updateNonPivotColumns(originalColumnsProp, false);
+  }, [originalColumnsProp, apiRef]);
 
   useEnhancedEffect(() => {
     if (props.pivotModel !== undefined) {
