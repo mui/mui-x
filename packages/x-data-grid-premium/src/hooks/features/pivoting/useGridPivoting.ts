@@ -103,8 +103,7 @@ export const useGridPivoting = (
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<
-    | { rows: GridRowModel[]; columns: Map<string, GridColDef>; rowsUpdatedDuringPivoting: boolean }
-    | undefined
+    { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
   >(undefined);
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
@@ -148,7 +147,7 @@ export const useGridPivoting = (
       apiRef.current.getLocaleText,
     );
 
-    return { rows, columns: initialColumns, rowsUpdatedDuringPivoting: false };
+    return { rows, columns: initialColumns };
   }, [apiRef, props.getPivotDerivedColumns, originalColumns]);
 
   const computePivotingState = React.useCallback(
@@ -217,7 +216,7 @@ export const useGridPivoting = (
         apiRef.current.restoreState(exportedStateRef.current);
         exportedStateRef.current = null;
       }
-      if (nonPivotDataRef.current && nonPivotDataRef.current.rowsUpdatedDuringPivoting) {
+      if (nonPivotDataRef.current) {
         apiRef.current.setRows(nonPivotDataRef.current.rows);
         nonPivotDataRef.current = undefined;
       }
@@ -441,10 +440,8 @@ export const useGridPivoting = (
         });
 
         nonPivotDataRef.current.rows = Array.from(rowsMap.values());
-        nonPivotDataRef.current.rowsUpdatedDuringPivoting = true;
       } else {
         nonPivotDataRef.current.rows = rows;
-        nonPivotDataRef.current.rowsUpdatedDuringPivoting = true;
       }
 
       apiRef.current.setState((state) => {
