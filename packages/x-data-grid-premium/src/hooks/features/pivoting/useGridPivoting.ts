@@ -322,6 +322,7 @@ export const useGridPivoting = (
       if (!isPivotingAvailable) {
         return;
       }
+      apiRef.current.selectRows([], false, true);
       apiRef.current.setState((state) => {
         const newPivotMode =
           typeof callback === 'function' ? callback(state.pivoting?.active) : callback;
