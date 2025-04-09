@@ -319,41 +319,35 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
-  const elementsIdList = React.useMemo(
-    () => elements.map((element) => element.content.id).join(','),
-    [elements],
-  );
   const isSingleInputRange = React.useMemo(
     () => elements.some((element) => element.content['data-range-position'] !== undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elementsIdList],
+    [elements],
   );
   React.useEffect(() => {
-    if (isSingleInputRange) {
-      let activeBarWidth = 0;
-      const firstSectionOffsetLeft =
-        rootRef.current?.querySelector<HTMLSpanElement>(
-          `[data-sectionindex="0"]:has([id="${elements[0].content.id}"])`,
-        )?.offsetLeft || 0;
-      for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
-        const currentElement = elements[i];
-        if (currentElement.content.id) {
-          const currentSectionElement = rootRef.current?.querySelector<HTMLSpanElement>(
-            `[data-sectionindex="${i}"]:has([id="${currentElement.content.id}"])`,
-          );
-          activeBarWidth += currentSectionElement?.clientWidth || 0;
-          if (activeBarRef.current) {
-            activeBarRef.current.style.width = `${activeBarWidth}px`;
-          }
-          if (i === elements.length / 2) {
-            setSectionOffsets([firstSectionOffsetLeft, currentSectionElement?.offsetLeft || 0]);
-          }
+    if (!isSingleInputRange || !ownerState.isPickerOpen) {
+      return;
+    }
+    let activeBarWidth = 0;
+    const firstSectionOffsetLeft =
+      rootRef.current?.querySelector<HTMLSpanElement>(
+        `[data-sectionindex="0"]:has([id="${elements[0].content.id}"])`,
+      )?.offsetLeft || 0;
+    for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
+      const currentElement = elements[i];
+      if (currentElement.content.id) {
+        const currentSectionElement = rootRef.current?.querySelector<HTMLSpanElement>(
+          `[data-sectionindex="${i}"]:has([id="${currentElement.content.id}"])`,
+        );
+        activeBarWidth += currentSectionElement?.clientWidth || 0;
+        if (activeBarRef.current) {
+          activeBarRef.current.style.width = `${activeBarWidth}px`;
+        }
+        if (i === elements.length / 2) {
+          setSectionOffsets([firstSectionOffsetLeft, currentSectionElement?.offsetLeft || 0]);
         }
       }
     }
-    // `elementsIdList` is used to update the offset when the actual elements content changes (i.e. when format changes)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elementsIdList, isSingleInputRange]);
+  }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
 
   return (
     <InputRoot {...inputRootProps}>
