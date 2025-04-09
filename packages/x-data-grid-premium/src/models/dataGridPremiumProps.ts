@@ -303,11 +303,6 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   aiAssistantSuggestions?: PromptSuggestion[];
   /**
-   * Callback fired when the AI Assistant suggestions change.
-   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
-   */
-  onAiAssistantSuggestionsChange?: (aiAssistantSuggestions: PromptSuggestion[]) => void;
-  /**
    * The index of the active AI Assistant conversation.
    */
   aiAssistantActiveConversationIndex?: number;

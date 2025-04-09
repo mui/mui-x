@@ -5,7 +5,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
-  gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
@@ -128,7 +127,6 @@ function GridAiAssistantPanel() {
   const classes = useUtilityClasses(rootProps);
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
-  const suggestions = useGridSelector(apiRef, gridAiAssistantSuggestionsSelector);
   const conversationTitle =
     activeConversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
 
@@ -197,7 +195,9 @@ function GridAiAssistantPanel() {
       </AiAssistantPanelBody>
       <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
         <GridPromptField onSubmit={apiRef.current.aiAssistant.processPrompt} />
-        {suggestions.length > 0 && <GridAiAssistantPanelSuggestions suggestions={suggestions} />}
+        {rootProps.aiAssistantSuggestions && rootProps.aiAssistantSuggestions.length > 0 && (
+          <GridAiAssistantPanelSuggestions suggestions={rootProps.aiAssistantSuggestions} />
+        )}
       </AiAssistantPanelFooter>
     </AiAssistantPanelRoot>
   );

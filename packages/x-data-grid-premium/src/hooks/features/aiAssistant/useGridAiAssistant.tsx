@@ -27,7 +27,6 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridAiAssistantConversationsSelector,
-  gridAiAssistantSuggestionsSelector,
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
@@ -38,10 +37,7 @@ const DEFAULT_SAMPLE_COUNT = 5;
 // TODO: uncomment all comments tagged withg {PIVOTING} once https://github.com/mui/mui-x/pull/9877 is merged
 
 export const aiAssistantStateInitializer: GridStateInitializer<
-  Pick<
-    DataGridPremiumProcessedProps,
-    'initialState' | 'aiAssistantConversations' | 'aiAssistantSuggestions' | 'aiAssistant'
-  >
+  Pick<DataGridPremiumProcessedProps, 'initialState' | 'aiAssistantConversations' | 'aiAssistant'>
 > = (state, props) => {
   if (!props.aiAssistant) {
     return {
@@ -49,7 +45,6 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       aiAssistant: {
         activeConversationIndex: 0,
         conversations: [],
-        suggestions: [],
       } as GridAiAssistantState,
     };
   }
@@ -60,7 +55,6 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       activeConversationIndex: 0,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
-      suggestions: props.aiAssistantSuggestions ?? [],
     } as GridAiAssistantState,
   };
 };
@@ -71,11 +65,9 @@ export const useGridAiAssistant = (
     DataGridPremiumProcessedProps,
     | 'aiAssistant'
     | 'aiAssistantConversations'
-    | 'aiAssistantSuggestions'
     | 'aiAssistantActiveConversationIndex'
     | 'allowAiAssistantDataSampling'
     | 'onAiAssistantConversationsChange'
-    | 'onAiAssistantSuggestionsChange'
     | 'onAiAssistantActiveConversationIndexChange'
     | 'onPrompt'
     | 'disableColumnFilter'
@@ -105,14 +97,6 @@ export const useGridAiAssistant = (
     propOnChange: props.onAiAssistantConversationsChange,
     stateSelector: gridAiAssistantConversationsSelector,
     changeEvent: 'aiAssistantConversationsChange',
-  });
-
-  apiRef.current.registerControlState({
-    stateId: 'aiAssistantSuggestions',
-    propModel: props.aiAssistantSuggestions,
-    propOnChange: props.onAiAssistantSuggestionsChange,
-    stateSelector: gridAiAssistantSuggestionsSelector,
-    changeEvent: 'aiAssistantSuggestionsChange',
   });
 
   apiRef.current.registerControlState({

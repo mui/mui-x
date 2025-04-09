@@ -19,10 +19,9 @@ export type Conversation = {
 export type GridAiAssistantState = {
   activeConversationIndex: number;
   conversations: Conversation[];
-  suggestions: PromptSuggestion[];
 };
 
-export type GridAiAssistantInitialState = Partial<Omit<GridAiAssistantState, 'suggestions'>>;
+export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
 
 type ColumnSort = {
   column: string;

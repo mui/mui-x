@@ -702,11 +702,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onAiAssistantConversationsChange: PropTypes.func,
   /**
-   * Callback fired when the AI Assistant suggestions change.
-   * @param {string[]} aiAssistantSuggestions The new AI Assistant suggestions.
-   */
-  onAiAssistantSuggestionsChange: PropTypes.func,
-  /**
    * Callback fired before the clipboard paste operation starts.
    * Use it to confirm or cancel the paste operation.
    * @param {object} params Params passed to the callback.

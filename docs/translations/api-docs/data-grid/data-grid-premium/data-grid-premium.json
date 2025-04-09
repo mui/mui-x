@@ -296,10 +296,6 @@
       "description": "Callback fired when the AI Assistant conversations change.",
       "typeDescriptions": { "conversations": "The new AI Assistant conversations." }
     },
-    "onAiAssistantSuggestionsChange": {
-      "description": "Callback fired when the AI Assistant suggestions change.",
-      "typeDescriptions": { "aiAssistantSuggestions": "The new AI Assistant suggestions." }
-    },
     "onBeforeClipboardPasteStart": {
       "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",
       "typeDescriptions": { "params": "Params passed to the callback." }

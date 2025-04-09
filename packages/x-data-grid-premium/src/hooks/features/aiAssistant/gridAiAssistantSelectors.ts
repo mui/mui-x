@@ -25,8 +25,3 @@ export const gridAiAssistantActiveConversationSelector = createSelectorMemoized(
   gridAiAssistantActiveConversationIndexSelector,
   (conversations, index) => conversations[index] as Conversation | undefined,
 );
-
-export const gridAiAssistantSuggestionsSelector = createSelector(
-  gridAiAssistantStateSelector,
-  (aiAssistant) => aiAssistant?.suggestions,
-);
