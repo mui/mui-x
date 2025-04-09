@@ -12,45 +12,11 @@ MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as
 Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
 :::
 
-The AI assistant feature lets users interact with the Data Grid component using natural language.
+The AI Assistant feature lets users interact with the Data Grid component using natural language.
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
 To enable this feature on the Data Grid, pass the `aiAssistant` prop.
-
-:::info
-To check out this feature without a processing backend, use `mockPromptResolver()` to simulate the API that resolves user's prompts.
-`mockPromptResolver()` can handle a predefined set of prompts:
-
-- sort by name
-- sort by company name and employee name
-- show people from the EU
-- order companies by amount of people
-
-You can use suggestions to quickly enter prompts that are supported by the mock resolver.
-
-```ts
-import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { mockPromptResolver } from '@mui/x-data-grid-generator';
-
-...
-  <DataGridPremium
-    {...otherProps}
-    aiAssistantSuggestions={[
-      { value: 'Sort by name' },
-      { value: 'Show people from the EU' },
-      { value: 'Sort by company name and employee name' },
-      { value: 'Order companies by amount of people' },
-    ]}
-    aiAssistant
-    onPrompt={mockPromptResolver}
-    showToolbar
-  />
-...
-
-```
-
-:::
 
 ## Improving accuracy with example values
 
@@ -62,7 +28,7 @@ Use the `examples` prop in the `columns` array to provide custom examples as con
 The `examples` prop should contain an array of possible values for its respective column.
 
 :::info
-AI assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
+AI Assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
 :::
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
@@ -78,7 +44,7 @@ Data is collected randomly at the cell level, which means that the examples for 
 
 ### Using server-side data
 
-The example below shows how to combine the AI assistant with [server-side data](/x/react-data-grid/server-side-data/).
+The example below shows how to combine the AI Assistant with [server-side data](/x/react-data-grid/server-side-data/).
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
@@ -147,7 +113,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 4. Provide data examples in either of the following ways:
-   - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI assistant.
+   - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
 
 ### With a custom service
