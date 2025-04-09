@@ -20,6 +20,7 @@ import {
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
+  PickersSectionElement,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 import { PickerTextFieldOwnerState } from '../PickersTextField.types';
@@ -211,6 +212,51 @@ const useUtilityClasses = (
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
 };
 
+function resolveSectionElementWidth(
+  sectionElement: PickersSectionElement,
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  index: number,
+  dateRangePosition: 'start' | 'end',
+) {
+  if (sectionElement.content.id) {
+    const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
+      `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
+    );
+    if (activeSectionElements) {
+      return Array.from(activeSectionElements).reduce((currentActiveBarWidth, element) => {
+        return currentActiveBarWidth + element.offsetWidth;
+      }, 0);
+    }
+  }
+  return 0;
+}
+
+function resolveSectionWidthAndOffsets(
+  elements: PickersSectionElement[],
+  rootRef: React.RefObject<HTMLDivElement | null>,
+) {
+  let activeBarWidth = 0;
+  const activeRangePosition = rootRef.current?.getAttribute('data-active-range-position');
+  if (activeRangePosition === 'end') {
+    for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'end');
+    }
+  } else {
+    for (let i = 0; i < elements.length / 2; i += 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'start');
+    }
+  }
+  return {
+    activeBarWidth,
+    sectionOffsets: [
+      rootRef.current?.querySelector<HTMLSpanElement>(`[data-sectionindex="0"]`)?.offsetLeft || 0,
+      rootRef.current?.querySelector<HTMLSpanElement>(
+        `[data-sectionindex="${elements.length / 2}"]`,
+      )?.offsetLeft || 0,
+    ],
+  };
+}
+
 /**
  * @ignore - internal component.
  */
@@ -258,7 +304,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const activeBarRef = React.useRef<HTMLDivElement>(null);
-  const [sectionOffsets, setSectionOffsets] = React.useState<number[]>([]);
+  const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
@@ -319,33 +365,17 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
-  const isSingleInputRange = React.useMemo(
-    () => elements.some((element) => element.content['data-range-position'] !== undefined),
-    [elements],
+  const isSingleInputRange = elements.some(
+    (element) => element.content['data-range-position'] !== undefined,
   );
   React.useEffect(() => {
     if (!isSingleInputRange || !ownerState.isPickerOpen) {
       return;
     }
-    let activeBarWidth = 0;
-    const firstSectionOffsetLeft =
-      rootRef.current?.querySelector<HTMLSpanElement>(
-        `[data-sectionindex="0"]:has([id="${elements[0].content.id}"])`,
-      )?.offsetLeft || 0;
-    for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
-      const currentElement = elements[i];
-      if (currentElement.content.id) {
-        const currentSectionElement = rootRef.current?.querySelector<HTMLSpanElement>(
-          `[data-sectionindex="${i}"]:has([id="${currentElement.content.id}"])`,
-        );
-        activeBarWidth += currentSectionElement?.clientWidth || 0;
-        if (activeBarRef.current) {
-          activeBarRef.current.style.width = `${activeBarWidth}px`;
-        }
-        if (i === elements.length / 2) {
-          setSectionOffsets([firstSectionOffsetLeft, currentSectionElement?.offsetLeft || 0]);
-        }
-      }
+    const { activeBarWidth, sectionOffsets } = resolveSectionWidthAndOffsets(elements, rootRef);
+    sectionOffsetsRef.current = [sectionOffsets[0], sectionOffsets[1]];
+    if (activeBarRef.current) {
+      activeBarRef.current.style.width = `${activeBarWidth}px`;
     }
   }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
 
@@ -410,7 +440,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         <PickersInputBaseActiveBar
           className={classes.activeBar}
           ref={activeBarRef}
-          ownerState={{ sectionOffsets }}
+          ownerState={{ sectionOffsets: sectionOffsetsRef.current }}
         />
       )}
     </InputRoot>
