@@ -51,7 +51,6 @@ export const useGridCellEditing = (
     | 'onProcessRowUpdateError'
     | 'signature'
     | 'dataSource'
-    | 'onDataSourceError'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});

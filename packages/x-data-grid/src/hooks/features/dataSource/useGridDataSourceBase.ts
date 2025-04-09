@@ -141,8 +141,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
-                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
               ],
               'error',
@@ -198,7 +198,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   );
 
   const dataSourceUpdateRow = props.dataSource?.updateRow;
-  const onDataSourceError = props.onDataSourceError;
   const handleEditRowOption = options.handleEditRow;
 
   const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
@@ -220,8 +219,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
         return finalRowUpdate;
       } catch (errorThrown) {
-        if (typeof onDataSourceError === 'function') {
-          onDataSourceError(
+        if (typeof onDataSourceErrorProp === 'function') {
+          onDataSourceErrorProp(
             new GridUpdateRowError({
               message: (errorThrown as Error)?.message,
               params,
@@ -242,7 +241,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         throw errorThrown; // Let the caller handle the error further
       }
     },
-    [apiRef, dataSourceUpdateRow, onDataSourceError, handleEditRowOption],
+    [apiRef, dataSourceUpdateRow, onDataSourceErrorProp, handleEditRowOption],
   );
 
   const dataSourceApi: GridDataSourceApi = {

@@ -59,7 +59,6 @@ export const useGridRowEditing = (
     | 'onRowModesModelChange'
     | 'signature'
     | 'dataSource'
-    | 'onDataSourceError'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
