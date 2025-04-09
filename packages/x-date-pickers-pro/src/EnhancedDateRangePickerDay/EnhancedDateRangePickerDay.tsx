@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -15,6 +15,7 @@ import {
 } from './EnhancedDateRangePickerDay.types';
 import {
   enhancedDateRangePickerDayClasses,
+  EnhancedDateRangePickerDayClassKey,
   getEnhancedDateRangePickerDayUtilityClass,
 } from './enhancedDateRangePickerDayClasses';
 
@@ -46,7 +47,7 @@ const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => 
       isDayDisabled && 'disabled',
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
-      isDayFillerCell && 'hiddenDay',
+      isDayFillerCell && 'fillerCell',
       isDaySelected && 'selected',
       isDayPreviewStart && 'previewStart',
       isDayPreviewEnd && 'previewEnd',
@@ -66,14 +67,17 @@ const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => 
   return composeClasses(slots, getEnhancedDateRangePickerDayUtilityClass, {});
 };
 
-const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSInterpolation>) => {
+const overridesResolver = (
+  props: { ownerState: EnhancedDateRangePickerDayOwnerState },
+  styles: Record<EnhancedDateRangePickerDayClassKey, CSSInterpolation>,
+) => {
   const { ownerState } = props;
   return [
     styles.root,
-    !ownerState.disableHighlightToday && ownerState.today && styles.today,
+    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
     !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
-    ownerState.isDayFillerCell && styles.hiddenDay,
-    ownerState.isDaySelected && styles.selected,
+    ownerState.isDayFillerCell && styles.fillerCell,
+    ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
     ownerState.isDayPreviewStart && styles.previewStart,
     ownerState.isDayPreviewEnd && styles.previewEnd,
     ownerState.isDayInsidePreview && styles.insidePreviewing,
@@ -87,7 +91,7 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
 };
 
 const SET_MARGIN = '2px'; // should be working with any given margin
-const highlightStyles = (theme) => ({
+const highlightStyles = (theme: Theme) => ({
   zIndex: 0,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
@@ -98,7 +102,7 @@ const highlightStyles = (theme) => ({
     : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   boxSizing: 'content-box',
 });
-const previewStyles = (theme) => ({
+const previewStyles = (theme: Theme) => ({
   zIndex: 0,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
@@ -110,7 +114,7 @@ const previewStyles = (theme) => ({
   boxSizing: 'content-box',
 });
 
-const selectedDayStyles = (theme) => ({
+const selectedDayStyles = (theme: Theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   fontWeight: theme.typography.fontWeightMedium,
@@ -127,7 +131,7 @@ const selectedDayStyles = (theme) => ({
   },
 });
 
-const styleArg = ({ theme }) => ({
+const styleArg = ({ theme }: { theme: Theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
   marginRight: SET_MARGIN,
@@ -220,11 +224,16 @@ const styleArg = ({ theme }) => ({
         },
       },
     },
+    {
+      props: { isDaySelected: true, isDayInsideSelection: false },
+      style: {
+        ...selectedDayStyles(theme),
+      },
+    },
 
     {
       props: { isDaySelectionStart: true },
       style: {
-        ...selectedDayStyles(theme),
         '::before': {
           ...highlightStyles(theme),
           borderTopLeftRadius: '50%',
@@ -237,7 +246,6 @@ const styleArg = ({ theme }) => ({
     {
       props: { isDaySelectionEnd: true },
       style: {
-        ...selectedDayStyles(theme),
         '::before': {
           ...highlightStyles(theme),
           borderTopRightRadius: '50%',

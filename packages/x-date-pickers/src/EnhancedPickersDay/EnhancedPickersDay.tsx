@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -10,6 +10,7 @@ import {
 import { DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   enhancedPickersDayClasses,
+  EnhancedPickersDayClassKey,
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
 import { useUtils } from '../internals/hooks/useUtils';
@@ -35,26 +36,29 @@ const useUtilityClasses = (ownerState: EnhancedPickersDayOwnerState) => {
       isDayDisabled && 'disabled',
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
-      isDayFillerCell && 'hiddenDay',
+      isDayFillerCell && 'fillerCell',
     ],
   };
 
   return composeClasses(slots, getEnhancedPickersDayUtilityClass, {});
 };
 
-const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSInterpolation>) => {
+const overridesResolver = (
+  props: { ownerState: EnhancedPickersDayOwnerState },
+  styles: Record<EnhancedPickersDayClassKey, CSSInterpolation>,
+) => {
   const { ownerState } = props;
   return [
     styles.root,
-    !ownerState.disableHighlightToday && ownerState.today && styles.today,
+    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
     !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
-    ownerState.isDayFillerCell && styles.hiddenDay,
+    ownerState.isDayFillerCell && styles.fillerCell,
   ];
 };
 
 const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 
-export const defaultEnhancedDayStyle = ({ theme }) => ({
+export const defaultEnhancedDayStyle = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -81,7 +85,7 @@ export const defaultEnhancedDayStyle = ({ theme }) => ({
   },
 });
 
-const styleArg = ({ theme }) => ({
+const styleArg = ({ theme }: { theme: Theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
   marginRight: SET_MARGIN,

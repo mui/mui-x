@@ -27,6 +27,7 @@ export interface EnhancedDateRangePickerDayClasses {
   startOfMonth: string;
   endOfMonth: string;
   previewed: string;
+  draggable: string;
 }
 
 export type EnhancedDateRangePickerDayClassKey = keyof EnhancedDateRangePickerDayClasses;
@@ -54,4 +55,5 @@ export const enhancedDateRangePickerDayClasses =
     'endOfMonth',
     'previewed',
     'selected',
+    'draggable',
   ]);
