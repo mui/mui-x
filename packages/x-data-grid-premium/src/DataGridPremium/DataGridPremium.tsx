@@ -8,6 +8,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  GridConfiguration,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -23,7 +24,7 @@ import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaA
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
