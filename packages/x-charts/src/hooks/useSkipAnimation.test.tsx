@@ -6,7 +6,11 @@ import { useSkipAnimation } from './useSkipAnimation';
 
 function createWrapper({ skipAnimation }: { skipAnimation?: boolean } = {}) {
   return function Wrapper({ children }: React.PropsWithChildren) {
-    return <ChartProvider pluginParams={{ skipAnimation }}>{children}</ChartProvider>;
+    return (
+      <ChartProvider pluginParams={{ skipAnimation, width: 100, height: 100 }}>
+        {children}
+      </ChartProvider>
+    );
   };
 }
 
