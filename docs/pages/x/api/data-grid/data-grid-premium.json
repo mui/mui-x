@@ -283,13 +283,6 @@
         "describedArgs": ["conversations"]
       }
     },
-    "onAiAssistantSuggestionsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(aiAssistantSuggestions: Array<string>) => void",
-        "describedArgs": ["aiAssistantSuggestions"]
-      }
-    },
     "onBeforeClipboardPasteStart": {
       "type": { "name": "func" },
       "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
