@@ -187,16 +187,22 @@ export const useFieldV7TextField = <
   });
 
   const elements = React.useMemo<PickersSectionElement[]>(() => {
-    return state.sections.map((section, sectionIndex) => ({
-      container: createSectionContainerProps(sectionIndex),
-      content: createSectionContentProps(section, sectionIndex),
-      before: {
-        children: section.startSeparator,
-      },
-      after: {
-        children: section.endSeparator,
-      },
-    }));
+    return state.sections.map((section, sectionIndex) => {
+      const content = createSectionContentProps(section, sectionIndex);
+      return {
+        container: createSectionContainerProps(sectionIndex),
+        content: createSectionContentProps(section, sectionIndex),
+        before: {
+          children: section.startSeparator,
+        },
+        after: {
+          children: section.endSeparator,
+          'data-range-position': section.isEndFormatSeparator
+            ? content['data-range-position']
+            : undefined,
+        },
+      };
+    });
   }, [state.sections, createSectionContainerProps, createSectionContentProps]);
 
   React.useEffect(() => {
