@@ -22,6 +22,9 @@ interface GridToolbarColumnsButtonProps {
   };
 }
 
+/**
+ * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/columns-panel/ Columns Panel Trigger} component instead. This component will be removed in a future major release.
+ */
 const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
     const { slotProps = {} } = props;
