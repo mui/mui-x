@@ -201,7 +201,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const handleEditRowOption = options.handleEditRow;
 
   const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
-    async (params, handleError) => {
+    async (params) => {
       if (!dataSourceUpdateRow) {
         return undefined;
       }
@@ -237,7 +237,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             'error',
           );
         }
-        handleError();
         throw errorThrown; // Let the caller handle the error further
       }
     },

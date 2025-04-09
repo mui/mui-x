@@ -22,13 +22,9 @@ export interface GridDataSourceApiBase {
   /**
    * Syncs the row with the server and updates in the grid.
    * @param {GridUpdateRowParams} params The parameters for the edit operation.
-   * @param {() => void} handleError The callback to be fired when the update fails.
    * @returns {Promise<GridRowModel> | undefined} The updated row or `undefined` if `dataSource.updateRow` is not passed.
    */
-  editRow: (
-    params: GridUpdateRowParams,
-    handleError: () => void,
-  ) => Promise<GridRowModel> | undefined;
+  editRow: (params: GridUpdateRowParams) => Promise<GridRowModel> | undefined;
 }
 
 export interface GridDataSourceApi {

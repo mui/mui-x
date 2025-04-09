@@ -440,7 +440,7 @@ export const useGridCellEditing = (
           previousRow: row,
         };
         try {
-          await apiRef.current.dataSource.editRow(updateRowParams, handleError);
+          await apiRef.current.dataSource.editRow(updateRowParams);
           finishCellEditMode();
         } catch {
           handleError();

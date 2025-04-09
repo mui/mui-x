@@ -554,7 +554,7 @@ export const useGridRowEditing = (
           previousRow: row,
         };
         try {
-          await apiRef.current.dataSource.editRow(updateRowParams, handleError);
+          await apiRef.current.dataSource.editRow(updateRowParams);
           finishRowEditMode();
         } catch {
           handleError();
