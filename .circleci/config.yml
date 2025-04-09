@@ -88,6 +88,7 @@ commands:
           command: |
             node --version
             pnpm --version
+            pnpm store path
       - when:
           condition:
             equal: [stable, << parameters.react-version >>]
