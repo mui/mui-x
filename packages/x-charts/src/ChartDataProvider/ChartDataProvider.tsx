@@ -10,7 +10,7 @@ import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = Omit<ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'> &
+> = Omit<{} & ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'> &
   Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'> & {
     children?: React.ReactNode;
   };
