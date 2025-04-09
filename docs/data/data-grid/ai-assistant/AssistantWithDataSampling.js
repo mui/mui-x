@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
+import {
+  DataGridPremium,
+  unstable_gridDefaultPromptResolver as promptResolver,
+} from '@mui/x-data-grid-premium';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = [
   'name',
@@ -13,6 +16,15 @@ const VISIBLE_FIELDS = [
   'dateCreated',
   'isAdmin',
 ];
+
+function processPrompt(prompt, context, conversationId) {
+  return promptResolver(
+    'https://backend.mui.com/api/datagrid/prompt',
+    prompt,
+    context,
+    conversationId,
+  );
+}
 
 export default function AssistantWithDataSampling() {
   const { data } = useDemoData({
@@ -33,7 +45,7 @@ export default function AssistantWithDataSampling() {
         ]}
         allowAiAssistantDataSampling
         aiAssistant
-        onPrompt={mockPromptResolver}
+        onPrompt={processPrompt}
         showToolbar
       />
     </div>

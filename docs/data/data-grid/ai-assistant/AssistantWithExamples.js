@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
 import {
-  mockPromptResolver,
+  DataGridPremium,
+  unstable_gridDefaultPromptResolver as promptResolver,
+} from '@mui/x-data-grid-premium';
+import {
   randomBoolean,
   randomCompanyName,
   randomCountry,
@@ -37,6 +39,15 @@ function createExamples(column) {
     default:
       return [];
   }
+}
+
+function processPrompt(prompt, context, conversationId) {
+  return promptResolver(
+    'https://backend.mui.com/api/datagrid/prompt',
+    prompt,
+    context,
+    conversationId,
+  );
 }
 
 const VISIBLE_FIELDS = [
@@ -79,7 +90,7 @@ export default function AssistantWithExamples() {
           { value: 'Order companies by amount of people' },
         ]}
         aiAssistant
-        onPrompt={mockPromptResolver}
+        onPrompt={processPrompt}
         showToolbar
       />
     </div>

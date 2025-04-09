@@ -8,6 +8,6 @@
     { value: 'Order companies by amount of people' },
   ]}
   aiAssistant
-  onPrompt={mockPromptResolver}
+  onPrompt={processPrompt}
   showToolbar
 />

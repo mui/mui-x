@@ -18,14 +18,8 @@ In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechR
 
 To enable this feature on the Data Grid, pass the `aiAssistant` prop.
 
-## Improving accuracy with example values
-
-To increase the accuracy of the language processing, provide example values for the available columns via one of the methods below.
-
 :::info
-AI assistant demos use a utility function `mockPromptResolver()` to simulate the API that resolves user's prompts.
-In a real-world scenario, you'd need to replace this with [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service) or [your own custom service](/x/react-data-grid/ai-assistant/#with-a-custom-service).
-
+To check out this feature without a processing backend, use `mockPromptResolver()` to simulate the API that resolves user's prompts.
 `mockPromptResolver()` can handle a predefined set of prompts:
 
 - sort by name
@@ -35,12 +29,41 @@ In a real-world scenario, you'd need to replace this with [MUI's processing serv
 
 You can use suggestions to quickly enter prompts that are supported by the mock resolver.
 
+```ts
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { mockPromptResolver } from '@mui/x-data-grid-generator';
+
+...
+  <DataGridPremium
+    {...otherProps}
+    aiAssistantSuggestions={[
+      { value: 'Sort by name' },
+      { value: 'Show people from the EU' },
+      { value: 'Sort by company name and employee name' },
+      { value: 'Order companies by amount of people' },
+    ]}
+    aiAssistant
+    onPrompt={mockPromptResolver}
+    showToolbar
+  />
+...
+
+```
+
 :::
+
+## Improving accuracy with example values
+
+To increase the accuracy of the language processing, provide example values for the available columns via one of the methods below.
 
 ### Provide custom examples
 
 Use the `examples` prop in the `columns` array to provide custom examples as context for prompt processing.
 The `examples` prop should contain an array of possible values for its respective column.
+
+:::info
+AI assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
+:::
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
@@ -108,13 +131,14 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        ? 'http://localhost:3000'
        : 'https://api.my-proxy.com';
 
-   function processPrompt(query: string, context: string) {
+   function processPrompt(query: string, context: string, conversationId?: string) {
      const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
      return unstable_gridDefaultPromptResolver(
        `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
        query,
        context,
+       conversationId,
        additionalContext,
      );
    }
@@ -138,8 +162,11 @@ Integrate these elements with your custom components and methods to suit your sp
 You can use a fully custom solution and apply the processing result using other Grid APIs such as [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without the need to structure it as a `PromptResponse`.
 
 To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
+
 The body of the request requires `query` and `context` parameters.
-`additionalContext` is optional.
+`conversationId` and `additionalContext` are optional.
+To keep the previous messages in the context you should pass the `conversationId` from the previous response.
+
 The API response type is `Result<PromptResponse>`.
 
 ```ts

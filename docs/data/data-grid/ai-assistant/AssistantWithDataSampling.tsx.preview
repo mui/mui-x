@@ -8,6 +8,6 @@
   ]}
   allowAiAssistantDataSampling
   aiAssistant
-  onPrompt={mockPromptResolver}
+  onPrompt={processPrompt}
   showToolbar
 />
