@@ -115,7 +115,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default (groupNode) => groupNode == null ? 'footer' : 'inline'
+   * @default (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
   /**
