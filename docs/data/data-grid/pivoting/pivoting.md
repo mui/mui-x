@@ -10,7 +10,7 @@ The Data Grid Premium's pivoting feature lets users transform the data in their 
 This makes it possible to analyze data from different angles and gain insights that would be difficult to see in the default grid view.
 
 :::success
-If you're new to pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn what pivoting is and how it works through interactive examples.
+If you're new to pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn how it works through interactive examples.
 :::
 
 :::warning
@@ -111,8 +111,8 @@ const columns: GridColDef[] = [{ field: 'id', pivotable: false }];
 In pivot mode, it's often useful to group data by a year or quarter.
 The Data Grid automatically generates year and quarter columns for each **Date** column for this purpose.
 
-For example, the sales dataset we've been using throughout the examples has a **Quarter** column.
-But often in real-world datasets, each sale record would have a precise **Transaction Date** field, like in the following demo.
+For example, the sales dataset used throughout the examples has a **Quarter** column.
+But in a real-world dataset, each sales record would typically have a precise **Transaction Date** field, as in the following demo.
 
 The **Transaction Date** column is represented by additional columns in pivot mode: **Transaction Date (Year)** and **Transaction Date (Quarter)**:
 
@@ -151,6 +151,8 @@ You can use the `sx` prop to apply the necessary styles:
 {{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Advanced demo
+
+The following demo showcases pivoting on a larger Commodities dataset with over 30 different columns to choose for pivoting parameters.
 
 {{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
 
