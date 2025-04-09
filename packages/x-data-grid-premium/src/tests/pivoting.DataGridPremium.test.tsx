@@ -745,4 +745,83 @@ describe('<DataGridPremium /> - Pivoting', () => {
       );
     });
   });
+
+  it('should recalculate pivot values when `rows` prop changes while in pivot mode', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    let rowsProp = ROWS;
+
+    const { setProps } = render(
+      <Test
+        apiRef={apiRef}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    });
+
+    rowsProp = ROWS.map((row, index) => {
+      if (index === 0) {
+        return { ...row, volume: 6000 };
+      }
+      return row;
+    });
+    setProps({ rows: rowsProp });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    setProps({ rows: rowsProp, pivotActive: false });
+
+    // The row should keep the updated volume after disabling pivot mode
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '1',
+        '15/03/2024',
+        'AAPL',
+        '$192.45',
+        '6,000',
+        'stock',
+      ]);
+    });
+
+    setProps({ rows: rowsProp, pivotActive: true });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    rowsProp = ROWS.slice(1);
+    setProps({ rows: rowsProp });
+
+    await waitFor(() => {
+      expect(getRowValues(2)).to.deep.equal(['AAPL (1)', '6,700']);
+    });
+    expect(getRowValues(0)).to.deep.equal(['GOOGL (2)', '6,800']);
+
+    setProps({ rows: rowsProp, pivotActive: false });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '2',
+        '16/03/2024',
+        'GOOGL',
+        '$125.67',
+        '3,200',
+        'stock',
+      ]);
+    });
+  });
 });

@@ -172,7 +172,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
-  useGridPivoting(apiRef, props, inProps.columns);
+  useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
