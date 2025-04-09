@@ -53,11 +53,8 @@ const GridPanelContent = styled('div', {
   backgroundColor: vars.colors.background.overlay,
   borderRadius: vars.radius.base,
   boxShadow: vars.shadows.overlay,
-  minWidth: 300,
-  maxHeight: 450,
   display: 'flex',
   maxWidth: `calc(100vw - ${vars.spacing(0.5)})`,
-  overflow: 'auto',
 });
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
