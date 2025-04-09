@@ -117,6 +117,28 @@ In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` an
 
 ## Components breaking changes
 
+### Updated view selection process
+
+The view selection process has been updated to be more clear across all Pickers.
+Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to end range position when start value is selected.
+In essence, the automatic range position and view switching has been removed in favor of manual confirmation.
+The new default behavior for all other cases is as follows:
+
+- Selection on a given view has to be confirmed by clicking "**Next**" action button if there are other selection steps.
+- The "**Next**" action is replaced with ""**OK**" if there is no next step.
+- The ""**OK**" action has to be clicked to confirm the selection and close the Picker.
+
+Here are a few examples of how the new behavior works:
+
+- On `<DesktopDateTimePicker />`:
+
+  - Previously selecting a date and selecting all time sections automatically closed the Picker.
+  - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
+
+- On `<MobileDateTimeRangePicker />`:
+  - Previously selecting a start date automatically switched to start time selection step. After the last time section was selected, the Picker switched to the end date step.
+  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switched the Picker to the end date step.
+
 ### New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
