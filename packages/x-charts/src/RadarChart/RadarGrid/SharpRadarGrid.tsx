@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import { RadarGridRenderProps } from './RadarGrid.types';
 
 /**
  * @ignore - internal component.
  */
 export function SharpRadarGrid(props: RadarGridRenderProps) {
-  const { center, corners, divisions } = props;
-  const theme = useTheme();
+  const { center, corners, divisions, strokeColor, classes } = props;
 
   const divisionRatio = Array.from({ length: divisions }, (_, index) => (index + 1) / divisions);
 
@@ -17,9 +15,11 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
         <path
           key={i}
           d={`M ${center.x} ${center.y} L ${x} ${y}`}
-          stroke={(theme.vars || theme).palette.text.primary}
+          stroke={strokeColor}
           strokeWidth={1}
+          strokeOpacity={0.3}
           fill="none"
+          className={classes?.radial}
         />
       ))}
       {divisionRatio.map((ratio) => (
@@ -31,9 +31,11 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
                 `${center.x * (1 - ratio) + ratio * x} ${center.y * (1 - ratio) + ratio * y}`,
             )
             .join(' L ')} Z`}
-          stroke={(theme.vars || theme).palette.text.primary}
+          stroke={strokeColor}
           strokeWidth={1}
+          strokeOpacity={0.3}
           fill="none"
+          className={classes?.divider}
         />
       ))}
     </React.Fragment>

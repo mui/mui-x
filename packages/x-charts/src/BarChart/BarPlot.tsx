@@ -143,6 +143,9 @@ const useAggregatedData = (): {
 
       return baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
+          if (currentSeriesData[dataIndex] == null) {
+            return null;
+          }
           const values = stackedData[dataIndex];
           const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
