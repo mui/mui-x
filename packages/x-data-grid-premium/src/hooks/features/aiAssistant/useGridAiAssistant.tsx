@@ -194,6 +194,7 @@ export const useGridAiAssistant = (
         interestColumns.push(...result.filters.map((f) => f.column));
       }
 
+      const appliedPivoting = false; // {PIVOTING} remove this line
       // {PIVOTING}let appliedPivoting = false;
       // {PIVOTING} if (!disablePivoting && 'columns' in result.pivoting) {
       // {PIVOTING} apiRef.current.setPivotActive(true);
