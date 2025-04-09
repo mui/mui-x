@@ -93,8 +93,7 @@ export const useItemTooltip = <T extends Exclude<ChartSeriesType, 'radar'>>() =>
 };
 
 /**
- * Returns an array config object when the tooltip displays a radar series content.
- * COntains an object per value with their content and the label of the associated metric.
+ * Contains an object per value with their content and the label of the associated metric.
  * @returns The tooltip item configs
  */
 export const useRadarItemTooltip = () => {

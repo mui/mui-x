@@ -443,7 +443,7 @@ export type PolarAxisDefaultized<
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
-     * Indicate if the axis should be considered by a tooltip with `trigger='axis'`.
+     * If true, the contents of the axis will be displayed by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
   };

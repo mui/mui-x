@@ -102,7 +102,7 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelector(
 );
 
 /**
- * Get radius-axis ids and corresponding data index that should be display in the tooltip.
+ * Get radius-axis ids and corresponding data index that should be displayed in the tooltip.
  */
 export const selectorChartsInteractionTooltipRadiusAxes = createSelector([], () => {
   // TODO implement this selector and add it to the `selectorChartsInteractionPolarAxisTooltip`

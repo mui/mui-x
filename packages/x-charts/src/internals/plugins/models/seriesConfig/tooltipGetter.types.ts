@@ -19,7 +19,7 @@ import { ColorGetter } from './colorProcessor.types';
 
 export interface ItemTooltip<T extends ChartSeriesType> {
   /**
-   * An object that identified the item to display.
+   * An object that identifies the item to display.
    */
   identifier: ChartItemIdentifier<T>;
   /**

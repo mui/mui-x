@@ -5,7 +5,7 @@ import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 /**
  * Map data index to a color.
- * If dataIndex is not defined, it fallback on the series color when defined.
+ * If dataIndex is not defined, it falls back to the series color when defined.
  */
 export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType extends
   | 'pie'
@@ -16,7 +16,7 @@ export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType exten
 
 /**
  * Transforms charts config to a color getter.
- * If dataIndex is not defined, it fallback on the series color.
+ * If dataIndex is not defined, it falls back to the series color.
  */
 export type ColorProcessor<TSeriesType extends ChartSeriesType> = (
   series: DefaultizedSeriesType<TSeriesType>,
