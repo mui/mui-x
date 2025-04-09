@@ -15,29 +15,30 @@ export const useChartAnimation: ChartPlugin<UseChartAnimationSignature> = ({ par
   }, [store, params.skipAnimation]);
 
   const disableAnimation = React.useCallback(() => {
-    const disableAnimationSymbol = Symbol('Disable animation request');
+    let disableCalled = false;
 
-    store.update((prevState) => {
-      const skipAnimationRequests = new Set(prevState.animation.skipAnimationRequests);
-
-      skipAnimationRequests.add(disableAnimationSymbol);
-
-      return {
-        ...prevState,
-        animation: { ...prevState.animation, skipAnimationRequests },
-      };
-    });
+    store.update((prevState) => ({
+      ...prevState,
+      animation: {
+        ...prevState.animation,
+        skipAnimationRequests: prevState.animation.skipAnimationRequests + 1,
+      },
+    }));
 
     return () => {
-      store.update((prevState) => {
-        const skipAnimationRequests = new Set(prevState.animation.skipAnimationRequests);
-        skipAnimationRequests.delete(disableAnimationSymbol);
+      if (disableCalled) {
+        return;
+      }
 
-        return {
-          ...prevState,
-          animation: { ...prevState.animation, skipAnimationRequests },
-        };
-      });
+      disableCalled = true;
+
+      store.update((prevState) => ({
+        ...prevState,
+        animation: {
+          ...prevState.animation,
+          skipAnimationRequests: prevState.animation.skipAnimationRequests - 1,
+        },
+      }));
     };
   }, [store]);
 
@@ -92,9 +93,8 @@ useChartAnimation.getInitialState = ({ skipAnimation }) => {
   return {
     animation: {
       skip: skipAnimation,
-      skipAnimationRequests: new Set(
-        disableAnimations ? [Symbol('Animation disabled environment')] : [],
-      ),
+      // By initializing the skipAnimationRequests to 1, we ensure that the animation is always skipped
+      skipAnimationRequests: disableAnimations ? 1 : 0,
     },
   };
 };

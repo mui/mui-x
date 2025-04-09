@@ -6,5 +6,5 @@ const selectorChartAnimationState: ChartRootSelector<UseChartAnimationSignature>
 
 export const selectorChartSkipAnimation = createSelector(
   selectorChartAnimationState,
-  (state) => state.skip || state.skipAnimationRequests.size > 0,
+  (state) => state.skip || state.skipAnimationRequests > 0,
 );

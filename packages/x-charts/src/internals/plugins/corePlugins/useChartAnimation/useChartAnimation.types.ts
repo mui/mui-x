@@ -19,10 +19,10 @@ export interface UseChartAnimationState {
      */
     skip: boolean;
     /**
-     * Holds temporary requests to skip animations.
+     * Count of requests to skip animations.
      * If there is at least one request, animations are skipped.
      */
-    skipAnimationRequests: Set<Symbol>;
+    skipAnimationRequests: number;
   };
 }
 
