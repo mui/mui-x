@@ -92,7 +92,7 @@ commands:
       - restore_cache:
           name: Restore pnpm cache
           keys:
-            - pnpm-cache-1
+            - pnpm-cache-{{ checksum "pnpm-lock.yaml" }}
 
       - when:
           condition:
@@ -111,7 +111,7 @@ commands:
 
       - save_cache:
           name: Save pnpm cache
-          key: pnpm-cache-1
+          key: pnpm-cache-{{ checksum "pnpm-lock.yaml" }}
           paths:
             - ~/.local/share/pnpm/store/v10
 
