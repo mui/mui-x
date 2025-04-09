@@ -3,7 +3,8 @@ import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useCha
 
 export interface UseChartAnimationParameters {
   /**
-   * If true, animations should be skipped.
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation?: boolean;
 }
