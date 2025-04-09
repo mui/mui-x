@@ -55,7 +55,7 @@ Data is collected randomly at the cell level, which means that the examples for 
 
 ### Using server-side data
 
-The example below shows how to combine AI assistant with [server-side data](/x/react-data-grid/server-side-data/).
+The example below shows how to combine the AI assistant with [server-side data](/x/react-data-grid/server-side-data/).
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
@@ -123,8 +123,8 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 4. Provide data examples in either of the following ways:
-   - Fill the `examples` prop in the `columns` array; it's recommended if you want to avoid exposing the row data to the AI assistant.
-   - Provide access to the row data with `allowAiAssistantDataSampling` prop; since actual data is used, it may result in better processing results.
+   - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI assistant.
+   - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
 
 ### With a custom service
 
