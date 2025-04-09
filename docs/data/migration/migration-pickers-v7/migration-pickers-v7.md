@@ -36,9 +36,9 @@ You can skip them and come back to them later if you experience any issues after
 :::
 
 :::warning
-There are some behavioral changes that are marked with a ⚠️ emoji for better visibility.
+Some behavioral changes are marked with a ⚠️ emoji for better visibility.
 
-Make sure to double check them to avoid unexpected changes in your flow.
+Make sure to double-check them to avoid unexpected changes in your flow.
 
 If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
 :::
@@ -127,14 +127,14 @@ In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` an
 
 ### ⚠️ Updated view selection process
 
-The view selection process has been updated to be more clear across all Pickers.
-Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to end range position when start value is selected.
-In essence, the automatic range position and view switching has been removed in favor of manual confirmation.
+The view selection process has been updated to make it clearer across all Pickers.
+Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to the end range position when the start value is selected.
+In essence, the automatic range position and view switching have been removed in favor of manual confirmation.
 The new default behavior for all other cases is as follows:
 
-- Selection on a given view has to be confirmed by clicking "**Next**" action button if there are other selection steps.
+- Selection on a given view has to be confirmed by clicking the "**Next**" action button if there are other selection steps.
 - The "**Next**" action is replaced with ""**OK**" if there is no next step.
-- The ""**OK**" action has to be clicked to confirm the selection and close the Picker.
+- The "**OK**" action has to be clicked to confirm the selection and close the Picker.
 
 Here are a few examples of how the new behavior works:
 
@@ -145,11 +145,11 @@ Here are a few examples of how the new behavior works:
 
 - On `<DesktopDateTimeRangePicker />`:
 
-  - Previously selecting a start date and then selecting all time sections automatically switched to end date selection step. After the last end time section was selected, the Picker closed.
+  - Previously selecting a start date and then selecting all time sections automatically switched to the end date selection step. After the last end time section was selected, the Picker closed.
   - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
 
 - On `<MobileDateTimeRangePicker />`:
-  - Previously selecting a start date automatically switched to start time selection step. After the last time section was selected, the Picker switched to the end date step.
+  - Previously selecting a start date automatically switched to the start time selection step. After the last time section selection, the Picker switched to the end date step.
   - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switches the Picker to the end date step.
 
 ### ⚠️ New DOM structure for the field
