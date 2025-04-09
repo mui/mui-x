@@ -165,6 +165,7 @@ function GridAiAssistantPanel() {
         </AiAssistantPanelTitleContainer>
         <rootProps.slots.baseTooltip
           title={apiRef.current.getLocaleText('aiAssistantPanelNewConversation')}
+          enterDelay={500}
         >
           <span>
             <rootProps.slots.baseIconButton

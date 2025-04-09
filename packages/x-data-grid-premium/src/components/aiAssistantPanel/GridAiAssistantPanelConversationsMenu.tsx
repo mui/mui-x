@@ -50,6 +50,7 @@ function GridAiAssistantPanelConversationsMenu() {
     <React.Fragment>
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('aiAssistantPanelConversationHistory')}
+        enterDelay={500}
       >
         <span>
           <rootProps.slots.baseIconButton
