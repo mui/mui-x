@@ -11,12 +11,10 @@ const tooltipGetter: TooltipGetter<'radar'> = (params) => {
 
   const label = getLabel(series.label, 'tooltip');
   const formatter = (v: any) =>
-    v == null
-      ? ''
-      : (rotationAxis.valueFormatter?.(v, {
-          location: 'tooltip',
-          scale: rotationAxis.scale,
-        }) ?? v.toLocaleString());
+    rotationAxis.valueFormatter?.(v, {
+      location: 'tooltip',
+      scale: rotationAxis.scale,
+    }) ?? (v == null ? '' : v.toLocaleString());
 
   return {
     identifier,

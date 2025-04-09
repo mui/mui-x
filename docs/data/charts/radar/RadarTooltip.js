@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
+import Typography from '@mui/material/Typography';
 
 export default function RadarTooltip() {
   return (
@@ -12,12 +13,14 @@ export default function RadarTooltip() {
       justifyContent="space-around"
     >
       <Box sx={{ maxWidth: 300 }}>
+        <Typography sx={{ textAlign: 'center' }}>Axis</Typography>
         <RadarChart
           {...radarChartsParams}
           slotProps={{ tooltip: { trigger: 'axis' } }}
         />
       </Box>
       <Box sx={{ maxWidth: 300 }}>
+        <Typography sx={{ textAlign: 'center' }}>Item</Typography>
         <RadarChart
           {...radarChartsParams}
           highlight="series"
