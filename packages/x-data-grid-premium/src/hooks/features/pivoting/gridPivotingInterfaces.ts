@@ -15,6 +15,8 @@ export type GridPivotingPropsOverrides = {
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
   groupingColDef: NonNullable<DataGridPremiumProcessedProps['groupingColDef']>;
   headerFilters: NonNullable<DataGridPremiumProcessedProps['headerFilters']>;
+  disableAggregation: NonNullable<DataGridPremiumProcessedProps['disableAggregation']>;
+  disableRowGrouping: NonNullable<DataGridPremiumProcessedProps['disableRowGrouping']>;
 };
 
 export interface GridPivotingState extends GridPivotingStatePartial {
