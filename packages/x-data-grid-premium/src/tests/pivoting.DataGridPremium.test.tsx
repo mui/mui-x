@@ -9,6 +9,7 @@ import {
   type GridApi,
 } from '@mui/x-data-grid-premium';
 import {
+  getCell,
   getColumnHeadersTextContent,
   getColumnValues,
   getRowValues,
@@ -681,5 +682,67 @@ describe('<DataGridPremium /> - Pivoting', () => {
     );
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+  });
+
+  it('should not revert prior edits when pivot mode is disabled', async () => {
+    const columns = COLUMNS.map((col) => {
+      if (col.field === 'ticker') {
+        return { ...col, editable: true };
+      }
+      return col;
+    });
+
+    const { setProps, user } = render(
+      <Test
+        columns={columns}
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    const cell = getCell(0, 2);
+
+    await user.dblClick(cell);
+
+    await user.keyboard('[Backspace>4]BRKB');
+    // await user.keyboard('{Enter}'); // This kept showing act warning in karma, so I used click instead
+    await user.click(getCell(1, 2));
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '1',
+        '15/03/2024',
+        'BRKB',
+        '$192.45',
+        '5,500',
+        'stock',
+      ]);
+    });
+
+    await act(async () => {
+      setProps({ pivotActive: true });
+    });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['BRKB (1)', '5,500']);
+    });
+
+    await act(async () => {
+      setProps({ pivotActive: false });
+    });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(
+        ['1', '15/03/2024', 'BRKB', '$192.45', '5,500', 'stock'],
+        'The value should not revert to the original value',
+      );
+    });
   });
 });
