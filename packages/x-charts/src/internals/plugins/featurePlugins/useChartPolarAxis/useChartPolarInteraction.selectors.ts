@@ -16,12 +16,12 @@ const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
  * Get interaction indexes
  */
 
-function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids?: AxisId): number;
+function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids: AxisId): number;
 function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids: AxisId[]): number[];
 function indexGetter(
   value: number,
   axes: ComputeResult<ChartsAxisProps>,
-  ids: AxisId | AxisId[] = axes.axisIds[0],
+  ids: AxisId | AxisId[],
 ): number | number[] {
   return Array.isArray(ids)
     ? ids.map((id) => getAxisIndex(axes.axis[id], value))
@@ -43,14 +43,14 @@ const selectorChartsInteractionRotationAngle = createSelector(
 
 export const selectorChartsInteractionRotationAxisIndex = createSelector(
   [selectorChartsInteractionRotationAngle, selectorChartRotationAxis, optionalGetAxisId],
-  (rotation, rotationAxis, id) =>
+  (rotation, rotationAxis, id = rotationAxis.axisIds[0]) =>
     rotation === null ? null : indexGetter(rotation, rotationAxis, id),
 );
 
 export const selectorChartsInteractionRotationAxisIndexes = createSelector(
   [selectorChartsInteractionRotationAngle, selectorChartRotationAxis, optionalGetAxisIds],
-  (rotation, rotationAxis, ids) =>
-    rotation === null ? null : indexGetter(rotation, rotationAxis, ids ?? rotationAxis.axisIds),
+  (rotation, rotationAxis, ids = rotationAxis.axisIds) =>
+    rotation === null ? null : indexGetter(rotation, rotationAxis, ids),
 );
 
 export const selectorChartsInteractionRotationAxisValue = createSelector(
