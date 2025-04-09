@@ -36,11 +36,11 @@ You can skip them and come back to them later if you experience any issues after
 :::
 
 :::warning
-There are some behavioral changes that are marked with a ⚠️ emoji.
+There are some behavioral changes that are marked with a ⚠️ emoji for better visibility.
 
-Pay attention to them to be aware of these adjustments.
+Make sure to double check them to avoid unexpected changes in your flow.
 
-If you do not agree with any of them, please feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
+If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
 :::
 
 ## Package layout changes
