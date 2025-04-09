@@ -1,39 +1,25 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import {
-  ChartItemIdentifier,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-  ChartsSeriesConfig,
-} from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
-import { ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import {
+  ItemTooltip,
+  ItemTooltipWithMultipleValues,
   TooltipGetter,
   TooltipGetterAxesConfig,
 } from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
-
-export interface ItemTooltip<T extends ChartSeriesType> {
-  identifier: ChartItemIdentifier<T>;
-  color: string;
-  label: string | undefined;
-  value: ChartsSeriesConfig[T]['valueType'];
-  formattedValue: string | null;
-  markType: ChartsLabelMarkProps['type'];
-}
+import { ColorProcessor } from '../internals/plugins/models/seriesConfig';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
-export type UseRadarItemTooltipReturnValue<T extends ChartSeriesType> = (ItemTooltip<T> & {
-  axisFormattedValue?: string;
-})[];
+export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
 
 export function useInternalItemTooltip<T extends ChartSeriesType>():
-  | (T extends 'radar' ? UseRadarItemTooltipReturnValue<T> : ItemTooltip<T>)
+  | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
   const store = useStore();
   const identifier = useSelector(store, selectorChartsInteractionItem);
@@ -66,7 +52,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   }
 
   const getColor =
-    seriesConfig[itemSeries.type].colorProcessor?.(
+    (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
       itemSeries as any,
       xAxisId && xAxis[xAxisId],
       yAxisId && yAxis[yAxisId],
@@ -112,5 +98,5 @@ export const useItemTooltip = <T extends Exclude<ChartSeriesType, 'radar'>>() =>
  * @returns The tooltip item configs
  */
 export const useRadarItemTooltip = () => {
-  return useInternalItemTooltip<'radar'>() as UseRadarItemTooltipReturnValue<'radar'> | null;
+  return useInternalItemTooltip<'radar'>() as UseRadarItemTooltipReturnValue | null;
 };

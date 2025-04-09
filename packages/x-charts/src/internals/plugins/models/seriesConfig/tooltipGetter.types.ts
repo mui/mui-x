@@ -1,8 +1,8 @@
-import type { ItemTooltip } from '../../../../ChartsTooltip';
 import type {
   ChartItemIdentifier,
   ChartSeriesDefaultized,
   ChartSeriesType,
+  ChartsSeriesConfig,
 } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import {
@@ -14,6 +14,59 @@ import {
   ChartsRadiusAxisProps,
   PolarAxisDefaultized,
 } from '../../../../models/axis';
+import { ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
+import { ColorGetter } from './colorProcessor.types';
+
+export interface ItemTooltip<T extends ChartSeriesType> {
+  /**
+   * An object that identified the item to display.
+   */
+  identifier: ChartItemIdentifier<T>;
+  /**
+   * The color associated to the item.
+   */
+  color: string;
+  /**
+   * The item label.
+   */
+  label: string | undefined;
+  /**
+   * The item value.
+   */
+  value: ChartsSeriesConfig[T]['valueType'];
+  /**
+   * The value formatted with context set to "tooltip".
+   */
+  formattedValue: string | null;
+  /**
+   * The series mark type.
+   */
+  markType: ChartsLabelMarkProps['type'];
+}
+
+export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
+  ItemTooltip<T>,
+  'identifier' | 'color' | 'label' | 'markType'
+> & {
+  values: {
+    /**
+     * The metric label.
+     */
+    label: string | undefined;
+    /**
+     * The value.
+     */
+    value: ChartsSeriesConfig[T]['valueType'];
+    /**
+     * The value formatted with context set to "tooltip".
+     */
+    formattedValue: string | null;
+    /**
+     * The series mark type.
+     */
+    markType: ChartsLabelMarkProps['type'];
+  }[];
+};
 
 export interface TooltipGetterAxesConfig {
   x?: AxisDefaultized<any, any, ChartsXAxisProps>;
@@ -25,11 +78,11 @@ export interface TooltipGetterAxesConfig {
 export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   series: ChartSeriesDefaultized<TSeriesType>;
   axesConfig: TooltipGetterAxesConfig;
-  getColor: (dataIndex: number) => string;
+  getColor: ColorGetter<TSeriesType>;
   identifier: ChartItemIdentifier<TSeriesType> | null;
 }) =>
   | (TSeriesType extends 'radar'
-      ? (ItemTooltip<TSeriesType> & { axisFormattedValue?: string })[]
+      ? ItemTooltipWithMultipleValues<TSeriesType>
       : ItemTooltip<TSeriesType>)
   | null;
 

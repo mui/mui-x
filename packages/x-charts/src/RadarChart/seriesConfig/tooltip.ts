@@ -18,15 +18,18 @@ const tooltipGetter: TooltipGetter<'radar'> = (params) => {
           scale: rotationAxis.scale,
         }) ?? v.toLocaleString());
 
-  return series.data.map((value, dataIndex) => ({
+  return {
     identifier,
-    color: getColor(dataIndex),
+    color: getColor(),
     label,
-    value,
-    formattedValue: series.valueFormatter(value as any, { dataIndex }),
     markType: series.labelMarkType,
-    axisFormattedValue: formatter(rotationAxis?.data?.[dataIndex]),
-  }));
+    values: series.data.map((value, dataIndex) => ({
+      value,
+      formattedValue: series.valueFormatter(value, { dataIndex }),
+      markType: series.labelMarkType,
+      label: formatter(rotationAxis?.data?.[dataIndex]),
+    })),
+  };
 };
 
 export const axisTooltipGetter: AxisTooltipGetter<'radar', 'rotation'> = (series) => {
