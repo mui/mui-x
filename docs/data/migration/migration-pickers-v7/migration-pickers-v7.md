@@ -140,12 +140,17 @@ Here are a few examples of how the new behavior works:
 
 - On `<DesktopDateTimePicker />`:
 
-  - Previously selecting a date and selecting all time sections automatically closed the Picker.
+  - Previously selecting a date and then selecting all time sections automatically closed the Picker.
   - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
+
+- On `<DesktopDateTimeRangePicker />`:
+
+  - Previously selecting a start date and then selecting all time sections automatically switched to end date selection step. After the last end time section was selected, the Picker closed.
+  - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
 
 - On `<MobileDateTimeRangePicker />`:
   - Previously selecting a start date automatically switched to start time selection step. After the last time section was selected, the Picker switched to the end date step.
-  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switched the Picker to the end date step.
+  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switches the Picker to the end date step.
 
 ### ⚠️ New DOM structure for the field
 
