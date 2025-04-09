@@ -28,10 +28,10 @@ In a real-world scenario, you'd need to replace this with [MUI's processing serv
 
 `mockPromptResolver()` can handle a predefined set of prompts:
 
-- `sort by name`
-- `sort by company name and employee name`
-- `show people from the EU`
-- `order companies by amount of people`
+- sort by name
+- sort by company name and employee name
+- show people from the EU
+- order companies by amount of people
 
 You can use suggestions to quickly enter prompts that are supported by the mock resolver.
 
