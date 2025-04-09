@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridRoot,
+  GridContextProvider,
+  GridValidRowModel,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
@@ -21,6 +26,8 @@ import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { gridCellAggregationResultSelector } from '../hooks';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -29,6 +36,10 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: (id, field) => {
+      const apiRef = useGridApiContext();
+      return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
+    },
   },
 };
 const releaseInfo = getReleaseInfo();
