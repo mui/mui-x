@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
-import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
@@ -11,10 +10,7 @@ import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = Omit<
-  AnimationProviderProps & ChartProviderProps<TSeries, TSignatures>['pluginParams'],
-  'children'
-> &
+> = Omit<ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'> &
   Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'> & {
     children?: React.ReactNode;
   };
@@ -50,13 +46,9 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, animationProviderProps, chartProviderProps } = useChartDataProviderProps(props);
+  const { children, chartProviderProps } = useChartDataProviderProps(props);
 
-  return (
-    <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
-      <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-    </ChartProvider>
-  );
+  return <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>{children}</ChartProvider>;
 }
 
 ChartDataProvider.propTypes = {

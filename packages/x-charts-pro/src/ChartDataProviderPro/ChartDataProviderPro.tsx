@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartProvider,
-  AnimationProvider,
   ChartSeriesType,
   ChartAnyPluginSignature,
   ChartProviderProps,
@@ -55,17 +54,14 @@ function ChartDataProviderPro<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProProps<TSeries, TSignatures>) {
-  const { children, animationProviderProps, chartProviderProps } =
-    useChartDataProviderProProps(props);
+  const { children, chartProviderProps } = useChartDataProviderProProps(props);
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
   return (
     <ChartProvider {...chartProviderProps}>
-      <AnimationProvider {...animationProviderProps}>
-        {children}
-        <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
-      </AnimationProvider>
+      {children}
+      <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
     </ChartProvider>
   );
 }
