@@ -35,6 +35,14 @@ Changes that might impact such users are marked with a ⏩ emoji.
 You can skip them and come back to them later if you experience any issues after the migration.
 :::
 
+:::warning
+There are some behavioral changes that are marked with a ⚠️ emoji.
+
+Pay attention to them to be aware of these adjustments.
+
+If you do not agree with any of them, please feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
+:::
+
 ## Package layout changes
 
 MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
@@ -117,7 +125,7 @@ In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` an
 
 ## Components breaking changes
 
-### Updated view selection process
+### ⚠️ Updated view selection process
 
 The view selection process has been updated to be more clear across all Pickers.
 Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to end range position when start value is selected.
@@ -139,7 +147,7 @@ Here are a few examples of how the new behavior works:
   - Previously selecting a start date automatically switched to start time selection step. After the last time section was selected, the Picker switched to the end date step.
   - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switched the Picker to the end date step.
 
-### New DOM structure for the field
+### ⚠️ New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
 Unfortunately it presented accessibility limitations, which are impossible to resolve.
