@@ -79,6 +79,8 @@ For fully controlled pivoting state, you can use the following props:
 
 While this is not supported yet, we are working to bring this feature to the Data Grid.
 
+Subscribe to [this issue](https://github.com/mui/mui-x/issues/17302) to get notified when it's available.
+
 ## Disable pivoting
 
 To disable pivoting, set the `disablePivoting` prop to `true`:
