@@ -10,7 +10,7 @@ import {
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 
-describe('<DesktopTimeRangePicker /> - Describe Value', () => {
+describe('<DesktopTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(DesktopTimeRangePicker, () => ({
@@ -22,6 +22,11 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
     fieldType: 'multi-input',
     defaultProps: {
       slots: { field: MultiInputTimeRangeField },
+      slotProps: {
+        tabs: {
+          hidden: false,
+        },
+      },
     },
     values: [
       // initial start and end dates
@@ -79,6 +84,10 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
         );
         if (hasMeridiem) {
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        }
+        if (setEndDate) {
+          // Switch back to start date "range position" in case we'd need to repeat selection
+          fireEvent.click(screen.getByRole('tab', { name: 'Start' }));
         }
       } else {
         selectSection('hours');

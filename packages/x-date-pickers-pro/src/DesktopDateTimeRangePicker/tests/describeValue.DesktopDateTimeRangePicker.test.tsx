@@ -22,6 +22,11 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
     fieldType: 'multi-input',
     defaultProps: {
       slots: { field: MultiInputDateTimeRangeField },
+      slotProps: {
+        tabs: {
+          hidden: false,
+        },
+      },
     },
     values: [
       // initial start and end dates
@@ -96,6 +101,14 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         );
         if (hasMeridiem) {
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        }
+        if (setEndDate) {
+          // Switch back to start date "range position" in case we'd need to repeat selection
+          let previousViewButton = screen.queryByRole('button', { name: 'Open previous view' });
+          while (previousViewButton) {
+            fireEvent.click(previousViewButton);
+            previousViewButton = screen.queryByRole('button', { name: 'Open previous view' });
+          }
         }
       } else {
         selectSection('day');

@@ -9,7 +9,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
-describe('<DesktopTimeRangePicker /> - Describe Value', () => {
+describe('<DesktopTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(DesktopTimeRangePicker, () => ({
@@ -26,6 +26,13 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
       [adapterToUse.date('2018-01-02T12:35:00'), adapterToUse.date('2018-01-05T12:50:00')],
     ],
     emptyValue: [null, null],
+    defaultProps: {
+      slotProps: {
+        tabs: {
+          hidden: false,
+        },
+      },
+    },
     assertRenderedValue: (expectedValues: any[]) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const expectedPlaceholder = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
@@ -76,6 +83,10 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
         );
         if (hasMeridiem) {
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        }
+        if (setEndDate) {
+          // Switch back to start date "range position" in case we'd need to repeat selection
+          fireEvent.click(screen.getByRole('tab', { name: 'Start' }));
         }
       } else {
         selectSection('hours');
