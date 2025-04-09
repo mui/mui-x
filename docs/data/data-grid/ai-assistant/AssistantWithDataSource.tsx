@@ -5,8 +5,9 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  unstable_gridDefaultPromptResolver as promptResolver,
 } from '@mui/x-data-grid-premium';
-import { mockPromptResolver, useMockServer } from '@mui/x-data-grid-generator';
+import { useMockServer } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = [
   'name',
@@ -27,6 +28,15 @@ const aggregationFunctions = {
   max: { columnTypes: ['number', 'date', 'dateTime'] },
   size: {},
 };
+
+function processPrompt(prompt: string, context: string, conversationId?: string) {
+  return promptResolver(
+    'https://backend.mui.com/api/datagrid/prompt',
+    prompt,
+    context,
+    conversationId,
+  );
+}
 
 export default function AssistantWithDataSource() {
   const apiRef = useGridApiRef();
@@ -99,7 +109,7 @@ export default function AssistantWithDataSource() {
           { value: 'Order companies by amount of people' },
         ]}
         aiAssistant
-        onPrompt={mockPromptResolver}
+        onPrompt={processPrompt}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}
       />
