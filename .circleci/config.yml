@@ -302,7 +302,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: sudo apt update && sudo apt upgrade -y && sudo apt install ffmpeg -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
