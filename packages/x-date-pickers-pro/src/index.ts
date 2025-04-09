@@ -1,6 +1,7 @@
 export * from '@mui/x-date-pickers';
 
 export * from './DateRangePickerDay';
+export * from './EnhancedDateRangePickerDay';
 
 // Fields
 export * from './MultiInputDateRangeField';

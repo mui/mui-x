@@ -1,0 +1,169 @@
+{
+  "props": {
+    "day": { "type": { "name": "object" }, "required": true },
+    "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },
+    "isHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "required": true },
+    "isPreviewing": { "type": { "name": "bool" }, "required": true },
+    "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
+    "action": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
+      }
+    },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableMargin": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "draggable": { "type": { "name": "bool" }, "default": "false" },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusVisibleClassName": { "type": { "name": "string" } },
+    "isVisuallySelected": { "type": { "name": "bool" } },
+    "onFocusVisible": { "type": { "name": "func" } },
+    "selected": { "type": { "name": "bool" }, "default": "false" },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "today": { "type": { "name": "bool" }, "default": "false" },
+    "TouchRippleProps": { "type": { "name": "object" } },
+    "touchRippleRef": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { pulsate: func, start: func, stop: func } }"
+      }
+    }
+  },
+  "name": "EnhancedDateRangePickerDay",
+  "imports": [
+    "import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro/EnhancedDateRangePickerDay';",
+    "import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "dayOutsideMonth",
+      "className": "MuiEnhancedDateRangePickerDay-dayOutsideMonth",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "draggable",
+      "className": "MuiEnhancedDateRangePickerDay-draggable",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "endOfMonth",
+      "className": "MuiEnhancedDateRangePickerDay-endOfMonth",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "endOfWeek",
+      "className": "MuiEnhancedDateRangePickerDay-endOfWeek",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "fillerCell",
+      "className": "MuiEnhancedDateRangePickerDay-fillerCell",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "insidePreviewing",
+      "className": "MuiEnhancedDateRangePickerDay-insidePreviewing",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "insideSelection",
+      "className": "MuiEnhancedDateRangePickerDay-insideSelection",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "previewed",
+      "className": "MuiEnhancedDateRangePickerDay-previewed",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "previewEnd",
+      "className": "MuiEnhancedDateRangePickerDay-previewEnd",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "previewStart",
+      "className": "MuiEnhancedDateRangePickerDay-previewStart",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiEnhancedDateRangePickerDay-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `selected=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "selectionEnd",
+      "className": "MuiEnhancedDateRangePickerDay-selectionEnd",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "selectionStart",
+      "className": "MuiEnhancedDateRangePickerDay-selectionStart",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "startOfMonth",
+      "className": "MuiEnhancedDateRangePickerDay-startOfMonth",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "startOfWeek",
+      "className": "MuiEnhancedDateRangePickerDay-startOfWeek",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "today",
+      "className": "MuiEnhancedDateRangePickerDay-today",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiEnhancedDateRangePickerDay",
+  "filename": "/packages/x-date-pickers-pro/src/EnhancedDateRangePickerDay/EnhancedDateRangePickerDay.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
+  "cssComponent": false
+}

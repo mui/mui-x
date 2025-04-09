@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -135,7 +136,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
   marginRight: SET_MARGIN,
-
   variants: [
     {
       props: { isDayDisabled: true },
@@ -192,7 +192,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
         },
       },
     },
-
     {
       props: { isDayPreviewEnd: true },
       style: {
@@ -213,7 +212,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
         },
       },
     },
-
     {
       props: { isDayInsidePreview: true },
       style: {
@@ -230,7 +228,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
         ...selectedDayStyles(theme),
       },
     },
-
     {
       props: { isDaySelectionStart: true },
       style: {
@@ -259,7 +256,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       props: { isDayInsideSelection: true },
       color: 'initial',
       background: 'initial',
-
       style: {
         '::before': {
           ...highlightStyles(theme),
@@ -268,7 +264,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
         },
       },
     },
-
     {
       props: { isDayEndOfWeek: true },
       style: {
@@ -457,6 +452,192 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
     </EnhancedDateRangePickerDayRoot>
   );
 });
+
+EnhancedDateRangePickerDayRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * A ref for imperative actions.
+   * It currently only supports `focusVisible()` action.
+   */
+  action: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focusVisible: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * If `true`, the ripples are centered.
+   * They won't start at the cursor interaction position.
+   * @default false
+   */
+  centerRipple: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  component: PropTypes.elementType,
+  /**
+   * The date to show.
+   */
+  day: PropTypes.object.isRequired,
+  /**
+   * If `true`, renders as disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday: PropTypes.bool,
+  /**
+   * If `true`, days are rendering without margin. Useful for displaying linked range of days.
+   * @default false
+   */
+  disableMargin: PropTypes.bool,
+  /**
+   * If `true`, the ripple effect is disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `.Mui-focusVisible` class.
+   * @default false
+   */
+  disableRipple: PropTypes.bool,
+  /**
+   * If `true`, the touch ripple effect is disabled.
+   * @default false
+   */
+  disableTouchRipple: PropTypes.bool,
+  /**
+   * If `true`, the day can be dragged to change the current date range.
+   * @default false
+   */
+  draggable: PropTypes.bool,
+  /**
+   * If `true`, the base button will have a keyboard focus ripple.
+   * @default false
+   */
+  focusRipple: PropTypes.bool,
+  /**
+   * This prop can help identify which element has keyboard focus.
+   * The class name will be applied when the element gains the focus through keyboard interaction.
+   * It's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
+   * The rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).
+   * A [polyfill can be used](https://github.com/WICG/focus-visible) to apply a `focus-visible` class to other components
+   * if needed.
+   */
+  focusVisibleClassName: PropTypes.string,
+  isAnimating: PropTypes.bool,
+  /**
+   * Set to `true` if the `day` is the end of a highlighted date range.
+   */
+  isEndOfHighlighting: PropTypes.bool.isRequired,
+  /**
+   * Set to `true` if the `day` is the end of a previewing date range.
+   */
+  isEndOfPreviewing: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * Set to `true` if the `day` is in a highlighted date range.
+   */
+  isHighlighting: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * Set to `true` if the `day` is in a preview date range.
+   */
+  isPreviewing: PropTypes.bool.isRequired,
+  /**
+   * Set to `true` if the `day` is the start of a highlighted date range.
+   */
+  isStartOfHighlighting: PropTypes.bool.isRequired,
+  /**
+   * Set to `true` if the `day` is the start of a previewing date range.
+   */
+  isStartOfPreviewing: PropTypes.bool.isRequired,
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected: PropTypes.bool,
+  onBlur: PropTypes.func,
+  onDaySelect: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
+  /**
+   * Callback fired when the component is focused with a keyboard.
+   * We trigger a `onFocus` callback too.
+   */
+  onFocusVisible: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  /**
+   * If `true`, day is outside of month and will be hidden.
+   */
+  outsideCurrentMonth: PropTypes.bool.isRequired,
+  /**
+   * If `true`, renders as selected.
+   * @default false
+   */
+  selected: PropTypes.bool,
+  /**
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
+   * @default false
+   */
+  showDaysOutsideCurrentMonth: PropTypes.bool,
+  style: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * @default 0
+   */
+  tabIndex: PropTypes.number,
+  /**
+   * If `true`, renders as today date.
+   * @default false
+   */
+  today: PropTypes.bool,
+  /**
+   * Props applied to the `TouchRipple` element.
+   */
+  TouchRippleProps: PropTypes.object,
+  /**
+   * A ref that points to the `TouchRipple` element.
+   */
+  touchRippleRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        pulsate: PropTypes.func.isRequired,
+        start: PropTypes.func.isRequired,
+        stop: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+} as any;
 
 export const EnhancedDateRangePickerDay = React.memo(
   EnhancedDateRangePickerDayRaw,
