@@ -166,9 +166,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'mer',
 
   // Column pinning text
-  pinToLeft: 'Fäst till vänster',
-  pinToRight: 'Fäst till höger',
-  unpin: 'Ta bort fästning',
+  pinToLeft: 'Lås till vänster',
+  pinToRight: 'Lås till höger',
+  unpin: 'Lås upp',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupp',
