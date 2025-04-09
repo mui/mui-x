@@ -29,7 +29,6 @@ function innerDescribeAdapters<P extends {}>(
     describe(`${title} - adapter: ${adapterName}`, () => {
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
-        clock: 'fake',
         clockConfig: new Date(2022, 5, 15),
         instance: adapterName === 'moment' ? momentTZ : undefined,
       });

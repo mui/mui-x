@@ -259,12 +259,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+    it('should call onClose and onAccept with the live value when pressing Escape', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection, pressKey } = renderWithProps(
+      const { selectSection, pressKey, user } = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true,
           onChange,
@@ -281,7 +281,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      await user.keyboard('[Escape]');
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       if (isRangeType) {
