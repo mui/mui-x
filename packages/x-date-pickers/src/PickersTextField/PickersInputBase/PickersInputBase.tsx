@@ -158,7 +158,9 @@ const PickersInputBaseActiveBar = styled('div', {
   bottom: 2,
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
-  transition: 'left, width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
+  transition: theme.transitions.create(['width', 'left'], {
+    duration: theme.transitions.duration.shortest,
+  }),
   backgroundColor: (theme.vars || theme).palette.primary.main,
   '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
     display: 'block',
