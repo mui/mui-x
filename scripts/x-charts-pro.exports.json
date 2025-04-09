@@ -367,7 +367,6 @@
   { "name": "useAnimatePieArcLabel", "kind": "Function" },
   { "name": "UseAnimateReturn", "kind": "TypeAlias" },
   { "name": "useAxesTooltip", "kind": "Function" },
-  { "name": "useAxisSystem", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
   { "name": "UseAxisTooltipParams", "kind": "Interface" },
   { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },

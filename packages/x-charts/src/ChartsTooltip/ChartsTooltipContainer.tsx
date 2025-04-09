@@ -17,7 +17,7 @@ import {
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
-import { useAxisSystem } from '../hooks/useAxis';
+import { useAxisSystem } from '../hooks/useAxisSystem';
 
 const noAxis = () => false;
 

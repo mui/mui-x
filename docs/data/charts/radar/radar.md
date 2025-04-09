@@ -59,12 +59,6 @@ The radar chart displays a grid behind the series that can be configured with:
 
 {{"demo": "DemoRadar.js" }}
 
-## Interaction 🚧
-
-### Axis click 🚧
-
-### Item click 🚧
-
 ## Highlight
 
 ### Axis highlight
@@ -104,15 +98,37 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 {{"demo": "RadarTooltip.js" }}
 
-## Composition 🚧
+## Composition
 
 For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
 
-Providing components for radar composition is still a work in progress.
-If you miss some element or explanation, please open an issue describing what you want to achieve, and what is missing.
+In the background, you can render the `RadarGrid` and `RadarMetricLabels` that will display the grid and the labels.
 
-In this example, we uses `RadarSeriesArea` and `RadarSeriesMarks` to modify the order of the elements:
-all the marks are on top of all the path.
-Additionally, we apply different properties based on the series id.
+To display series, you have `RadarSeriesPlot` component (the area and marks).
+Or `RadarSeriesArea` and `RadarSeriesMarks` that allows to display at different level the area and marks.
+
+The `RadarAxisHighlight` component displays the axis highlight.
 
 {{"demo": "CompositionExample.js" }}
+
+For info here is the composition of the `RadarChart` component.
+
+```jsx
+<RadarDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      // The background of the chart
+      <RadarGrid />
+      <RadarMetricLabels />
+      // The data with axis highlight on top of area and below marks
+      <RadarSeriesArea />
+      <RadarAxisHighlight />
+      <RadarSeriesMarks />
+      // Other components
+      <ChartsOverlay />
+      <Tooltip />
+    </ChartsSurface>
+  </ChartsWrapper>
+</RadarDataProvider>
+```
