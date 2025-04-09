@@ -63,7 +63,7 @@ npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quo
 
 A combination of all important transformers for migrating v7 to v8.
 ⚠️ This codemod should be run only once.
-It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
 <!-- #default-branch-switch -->
