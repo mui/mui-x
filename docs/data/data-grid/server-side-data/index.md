@@ -294,7 +294,7 @@ If you have a specific use case that requires preserving the client-side cache d
 The position and/or visibility of the edited row on the current page is kept, even if features like sorting or filtering are enabled and should affect the row after the value update.
 Change in the position and/or visibility is applied when the page is fetched again.
 
-You could manually trigger the re-fetch by calling the API method `dataSource.fetchRows()`.
+Trigger the re-fetch manually by calling `dataSource.fetchRows()` API method.
 :::
 
 ## Error handling
