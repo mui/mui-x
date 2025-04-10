@@ -1,4 +1,3 @@
-import type { MakeOptional } from '@mui/x-internals/types';
 import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import type {
@@ -14,6 +13,7 @@ import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
+import { XAxis, YAxis } from '../../../../types';
 
 export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
@@ -25,13 +25,13 @@ export interface UseChartCartesianAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  xAxis?: ReadonlyArray<XAxis>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  yAxis?: ReadonlyArray<YAxis>;
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */

@@ -24,3 +24,4 @@ export * from './RadarChart';
 export * from './ChartsSurface';
 export * from './ChartContainer';
 export * from './ChartDataProvider';
+export * from './types';

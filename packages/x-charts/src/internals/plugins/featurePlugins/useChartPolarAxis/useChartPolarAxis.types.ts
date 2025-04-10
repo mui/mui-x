@@ -1,3 +1,4 @@
+import { RadiusAxis, RotationAxis } from '../../../../types';
 import { ChartPluginSignature } from '../../models';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
@@ -60,13 +61,13 @@ export interface UseChartPolarAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  rotationAxis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+  rotationAxis?: RotationAxis[];
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  radiusAxis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+  radiusAxis?: RadiusAxis[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
