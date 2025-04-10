@@ -23,7 +23,7 @@ export interface ItemTooltip<T extends ChartSeriesType> {
    */
   identifier: ChartItemIdentifier<T>;
   /**
-   * The color associated to the item.
+   * The color associated with the item.
    */
   color: string;
   /**
