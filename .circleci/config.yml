@@ -89,11 +89,6 @@ commands:
             node --version
             pnpm --version
 
-      - restore_cache:
-          name: Restore pnpm cache
-          keys:
-            - pnpm-cache-{{ checksum "pnpm-lock.yaml" }}
-
       - when:
           condition:
             equal: [stable, << parameters.react-version >>]
@@ -108,12 +103,6 @@ commands:
             - run:
                 name: Install js dependencies without frozen lockfile
                 command: pnpm install --no-frozen-lockfile
-
-      - save_cache:
-          name: Save pnpm cache
-          key: pnpm-cache-{{ checksum "pnpm-lock.yaml" }}
-          paths:
-            - ~/.local/share/pnpm/store/v10
 
       - run:
           name: Resolve React version
