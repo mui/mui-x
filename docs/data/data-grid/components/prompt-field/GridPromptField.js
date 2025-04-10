@@ -9,6 +9,7 @@ import {
   IS_SPEECH_RECOGNITION_SUPPORTED,
   useGridApiContext,
 } from '@mui/x-data-grid-premium';
+import { styled } from '@mui/material/styles';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -17,32 +18,38 @@ import Tooltip from '@mui/material/Tooltip';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import SendIcon from '@mui/icons-material/Send';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
-const PROMPT_STATUS = {
-  idle: 'Waiting for prompt...',
-  success: 'Prompt applied',
-  processing: 'Processing prompt...',
-};
+const StyledToolbar = styled(Toolbar)({
+  minHeight: 'auto',
+  justifyContent: 'center',
+});
+
+const SUCCESS_STATUS_TEXT = 'Prompt applied';
 
 function CustomToolbar() {
   const apiRef = useGridApiContext();
-  const [statusText, setStatusText] = React.useState(PROMPT_STATUS.idle);
-  const [error, setError] = React.useState(false);
+  const [statusText, setStatusText] = React.useState(null);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const placeholder = IS_SPEECH_RECOGNITION_SUPPORTED
+    ? 'Type or record a prompt…'
+    : 'Type a prompt…';
 
   const handlePromptSubmit = async (prompt) => {
-    setError(false);
-    setStatusText(PROMPT_STATUS.processing);
+    setStatusText(null);
     const response = await apiRef.current.aiAssistant.processPrompt(prompt);
     if (response instanceof Error) {
-      setError(true);
       setStatusText(response.message);
+      setSnackbarOpen(true);
     } else {
-      setStatusText(PROMPT_STATUS.success);
+      setStatusText(SUCCESS_STATUS_TEXT);
+      setSnackbarOpen(true);
     }
   };
 
   return (
-    <Toolbar style={{ minHeight: 'auto' }}>
+    <StyledToolbar>
       <PromptField onSubmit={handlePromptSubmit}>
         <PromptFieldControl
           render={({ ref, ...controlProps }, state) => (
@@ -50,9 +57,7 @@ function CustomToolbar() {
               {...controlProps}
               inputRef={ref}
               aria-label="Prompt"
-              placeholder={state.recording ? 'Listening for prompt…' : ''}
-              error={!!error}
-              helperText={statusText}
+              placeholder={state.recording ? 'Listening for prompt…' : placeholder}
               size="small"
               sx={{ width: 320 }}
               slotProps={{
@@ -99,7 +104,20 @@ function CustomToolbar() {
           )}
         />
       </PromptField>
-    </Toolbar>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity={statusText === SUCCESS_STATUS_TEXT ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {statusText}
+        </Alert>
+      </Snackbar>
+    </StyledToolbar>
   );
 }
 
