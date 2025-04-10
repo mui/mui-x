@@ -51,13 +51,20 @@ function processPrompt(prompt, context, conversationId) {
 }
 
 const VISIBLE_FIELDS = [
+  'id',
+  'avatar',
   'name',
+  'website',
+  'rating',
   'email',
+  'phone',
+  'username',
   'position',
   'company',
   'salary',
-  'phone',
   'country',
+  'city',
+  'lastUpdated',
   'dateCreated',
   'isAdmin',
 ];
