@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { useSkipAnimation } from '@mui/x-charts/hooks/useSkipAnimation';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useAnimateGaugeValueArc } from '../hooks/animation/useAnimateGaugeValueArc';
 import { useGaugeState } from './GaugeProvider';
 
