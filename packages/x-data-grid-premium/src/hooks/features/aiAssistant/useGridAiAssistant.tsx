@@ -255,6 +255,7 @@ export const useGridAiAssistant = (
       disableRowGrouping,
       disableAggregation,
       disableColumnSorting,
+      disablePivoting,
       columnsLookup,
       isAiAssistantAvailable,
     ],
