@@ -6,30 +6,32 @@ import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-d
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
-})<{ isDataGridTest?: boolean; isDataGridPivotTest?: boolean; }>(({ theme, isDataGridTest, isDataGridPivotTest }) => ({
-  backgroundColor: theme.palette.background.default,
-  display: 'flex',
-  padding: theme.spacing(1),
-  justifyContent: 'center',
-  ...(isDataGridTest && {
-    width: isDataGridPivotTest ? 800 : 500,
-    minHeight: 400,
-    // Workaround the min-height limitation
-    '& .grid-container': {
-      position: 'relative',
-      '& > .MuiDataGrid-root': {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        left: 0,
-        bottom: 0,
+})<{ isDataGridTest?: boolean; isDataGridPivotTest?: boolean }>(
+  ({ theme, isDataGridTest, isDataGridPivotTest }) => ({
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    padding: theme.spacing(1),
+    justifyContent: 'center',
+    ...(isDataGridTest && {
+      width: isDataGridPivotTest ? 800 : 500,
+      minHeight: 400,
+      // Workaround the min-height limitation
+      '& .grid-container': {
+        position: 'relative',
+        '& > .MuiDataGrid-root': {
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+        },
       },
-    },
+    }),
   }),
-}));
+);
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, path } = props;
 
   return (
     <React.Fragment>
@@ -60,7 +62,11 @@ function TestViewer(props: any) {
         }}
       />
       <MockTime isDataGridTest={isDataGridTest}>
-        <LoadFont isDataGridTest={isDataGridTest} data-testpath={path}>
+        <LoadFont
+          isDataGridTest={isDataGridTest}
+          isDataGridPivotTest={isDataGridPivotTest}
+          data-testpath={path}
+        >
           {children}
         </LoadFont>
       </MockTime>
