@@ -105,11 +105,6 @@ export interface GridBaseSlots {
    * @default Switch
    */
   baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
-  /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
 }
 
 /**

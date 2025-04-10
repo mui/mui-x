@@ -2,12 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import {
   GridSlotProps,
-  NotRendered,
   useGridSelector,
   getDataGridUtilityClass,
   gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
-import { vars } from '@mui/x-data-grid-pro/internals';
+import { vars, NotRendered } from '@mui/x-data-grid-pro/internals';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

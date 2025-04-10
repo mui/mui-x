@@ -20,16 +20,6 @@ export interface GridPremiumIconSlotsComponent {
    */
   columnMenuAggregationIcon: React.JSXElementConstructor<IconProps>;
   /**
-   * Icon used for the button that sends a prompt
-   * @default GridFunctionsIcon
-   */
-  toolbarPromptSendIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon used for the button that starts/stops recording the prompt
-   * @default GridFunctionsIcon
-   */
-  toolbarPromptRecordIcon: React.JSXElementConstructor<IconProps>;
-  /**
    * Icon used for the pivot icon
    * @default GridPivotIcon
    */

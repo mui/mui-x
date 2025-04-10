@@ -662,7 +662,6 @@ const baseSlots: GridBaseSlots = {
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseButton: BaseButton,
-  baseChip: BaseChip,
   baseIconButton: BaseIconButton,
   baseTooltip: BaseTooltip,
   basePagination: BasePagination,

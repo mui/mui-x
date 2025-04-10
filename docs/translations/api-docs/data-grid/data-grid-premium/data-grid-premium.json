@@ -1314,18 +1314,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pivot panel switch label"
     },
-    "resizablePanelHandle": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resizable panel handles"
-    },
-    "resizablePanelHandle--horizontal": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "horizontal resizable panel handles"
-    },
-    "resizablePanelHandle--vertical": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "vertical resizable panel handles"
-    },
     "prompt": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt root element"
@@ -1357,6 +1345,18 @@
     "promptText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt text element"
+    },
+    "resizablePanelHandle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resizable panel handles"
+    },
+    "resizablePanelHandle--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "horizontal resizable panel handles"
+    },
+    "resizablePanelHandle--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "vertical resizable panel handles"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1650,6 +1650,8 @@
     "sidebarCloseIcon": "Icon displayed in the sidebar close button.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
+    "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
+    "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }

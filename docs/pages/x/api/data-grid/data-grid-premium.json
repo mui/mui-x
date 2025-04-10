@@ -1017,12 +1017,6 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -2291,24 +2285,6 @@
       "isGlobal": false
     },
     {
-      "key": "resizablePanelHandle",
-      "className": "MuiDataGridPremium-resizablePanelHandle",
-      "description": "Styles applied to resizable panel handles.",
-      "isGlobal": false
-    },
-    {
-      "key": "resizablePanelHandle--horizontal",
-      "className": "MuiDataGridPremium-resizablePanelHandle--horizontal",
-      "description": "Styles applied to horizontal resizable panel handles.",
-      "isGlobal": false
-    },
-    {
-      "key": "resizablePanelHandle--vertical",
-      "className": "MuiDataGridPremium-resizablePanelHandle--vertical",
-      "description": "Styles applied to vertical resizable panel handles.",
-      "isGlobal": false
-    },
-    {
       "key": "prompt",
       "className": "MuiDataGridPremium-prompt",
       "description": "Styles applied to the prompt root element.",
@@ -2354,6 +2330,24 @@
       "key": "promptText",
       "className": "MuiDataGridPremium-promptText",
       "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle",
+      "className": "MuiDataGridPremium-resizablePanelHandle",
+      "description": "Styles applied to resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--horizontal",
+      "className": "MuiDataGridPremium-resizablePanelHandle--horizontal",
+      "description": "Styles applied to horizontal resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--vertical",
+      "className": "MuiDataGridPremium-resizablePanelHandle--vertical",
+      "description": "Styles applied to vertical resizable panel handles.",
       "isGlobal": false
     },
     {
