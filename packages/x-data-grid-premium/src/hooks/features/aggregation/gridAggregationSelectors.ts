@@ -1,4 +1,4 @@
-import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
+import { createSelector, createSelectorV8 } from '@mui/x-data-grid-pro/internals';
 import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationPosition } from './gridAggregationInterfaces';
@@ -24,7 +24,7 @@ export const gridAggregationLookupSelector = createSelector(
   (aggregationState) => aggregationState.lookup,
 );
 
-export const gridCellAggregationResultSelector = createSelector(
+export const gridCellAggregationResultSelector = createSelectorV8(
   gridRowTreeSelector,
   gridAggregationLookupSelector,
   (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string }) => {

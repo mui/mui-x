@@ -2,18 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-  useGridSelector,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
   GridConfiguration,
+  useGridSelectorV8,
 } from '@mui/x-data-grid-pro/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
@@ -36,7 +32,7 @@ const configuration: GridConfiguration = {
     useGridRowAriaAttributes,
     useCellAggregationResult: (id, field) => {
       const apiRef = useGridApiContext();
-      return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
+      return useGridSelectorV8(apiRef, gridCellAggregationResultSelector, { id, field });
     },
   },
 };

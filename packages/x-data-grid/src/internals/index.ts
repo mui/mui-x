@@ -184,8 +184,4 @@ export * from './utils';
 export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';
 
-export * from './demo';
-
-export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
-
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
