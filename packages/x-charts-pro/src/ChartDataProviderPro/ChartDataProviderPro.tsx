@@ -21,7 +21,7 @@ export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = ChartDataProviderProps<TSeries, TSignatures> &
-  Omit<ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'>;
+  ChartProviderProps<TSeries, TSignatures>['pluginParams'];
 
 /**
  * Orchestrates the data providers for the chart components and hooks.

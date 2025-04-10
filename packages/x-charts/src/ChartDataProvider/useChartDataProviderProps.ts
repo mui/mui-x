@@ -17,7 +17,7 @@ export const useChartDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: Omit<ChartProviderProps<TSeries, TSignatures>, 'children'> = {
+  const chartProviderProps: ChartProviderProps<TSeries, TSignatures> = {
     plugins,
     seriesConfig,
     pluginParams: {
