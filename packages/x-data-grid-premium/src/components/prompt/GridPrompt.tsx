@@ -5,7 +5,6 @@ import {
   gridColumnLookupSelector,
   useGridSelector,
   GridSingleSelectColDef,
-  GridExpandMoreIcon,
 } from '@mui/x-data-grid-pro';
 import {
   unstable_composeClasses as composeClasses,
@@ -24,6 +23,7 @@ type GridPromptProps = Prompt & { onRerun: () => void };
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
   variant?: 'success' | 'error' | 'processing';
+  showChanges: boolean;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -39,6 +39,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     feedback: ['promptFeedback'],
     changeList: ['promptChangeList'],
     changesToggle: ['promptChangesToggle'],
+    changesToggleIcon: ['promptChangesToggleIcon'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -180,17 +181,34 @@ const PromptChangesToggle = styled('button', {
   },
 });
 
+const PromptChangesToggleIcon = styled('svg', {
+  name: 'MuiDataGrid',
+  slot: 'PromptChangesToggleIcon',
+})<{ ownerState: OwnerState }>({
+  variants: [
+    {
+      props: {
+        showChanges: true,
+      },
+      style: {
+        transform: 'rotate(180deg)',
+      },
+    },
+  ],
+});
+
 function GridPrompt(props: GridPromptProps) {
   const { value, response, helperText, variant, onRerun } = props;
   const rootProps = useGridRootProps();
+  const [showChanges, setShowChanges] = React.useState(false);
   const ownerState = {
     classes: rootProps.classes,
     variant,
+    showChanges,
   };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
-  const [showChanges, setShowChanges] = React.useState(false);
   const changesListId = useId();
 
   const getColumnName = React.useCallback(
@@ -419,15 +437,10 @@ function GridPrompt(props: GridPromptProps) {
               onClick={() => setShowChanges(!showChanges)}
             >
               {apiRef.current.getLocaleText('promptAppliedChanges')}
-              <GridExpandMoreIcon
+              <PromptChangesToggleIcon
+                as={rootProps.slots.promptChangesToggleIcon}
+                ownerState={ownerState}
                 fontSize="small"
-                sx={
-                  showChanges
-                    ? {
-                        transform: 'rotate(180deg)',
-                      }
-                    : {}
-                }
               />
             </PromptChangesToggle>
             {showChanges && (

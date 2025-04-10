@@ -1213,6 +1213,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt change list element"
     },
+    "promptChangesToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle element"
+    },
+    "promptChangesToggleIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle icon element"
+    },
     "promptContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the prompt content element"
