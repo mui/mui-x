@@ -24,8 +24,8 @@ To increase the accuracy of the language processing, provide example values for 
 
 ### Provide custom examples
 
-Use the `examples` prop in the `columns` array to provide custom examples as context for prompt processing.
-The `examples` prop should contain an array of possible values for its respective column.
+Use the `examples` property on items of the `columns` array to provide custom examples as context for prompt processing.
+The `examples` property should contain an array of possible values for its respective column.
 
 :::info
 AI Assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
