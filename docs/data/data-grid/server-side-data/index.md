@@ -263,7 +263,7 @@ To disable the data source cache, pass `null` to the `dataSourceCache` prop.
 
 ## Updating data
 
-The data source supports an optional method (`updateRow()`) for updating data on the server.
+The data source supports an optional `updateRow()` method for updating data on the server.
 
 This method returns a promise that resolves when the row is updated.
 If the promise resolves, the grid updates the row and mutates the cache. In case of an error, `onDataSourceError` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
@@ -282,29 +282,29 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 {{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
 :::warning
-When using the `updateRow()` method, the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
+When using the `updateRow()` method, the data source cache is automatically cleared after successful updates to prevent displaying outdated data.
 This means any previously cached data will be refetched on the next request.
 
-For applications requiring caching with editing operations, consider implementing server-side cache instead.
+For applications requiring caching with editing operations, consider implementing server-side caching instead.
 
-If you have a specific use case that requires preserving the client-side cache during edit operations, please open an issue on [GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
+If you have a specific use case that requires preserving the client-side cache during edit operations, please [open an issue on GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
 :::
 
 :::warning
-The position and/or visibility of the edited row on the current page is kept, even if features like sorting or filtering are enabled and should affect the row after the value update.
-Change in the position and/or visibility is applied when the page is fetched again.
+The position and visibility of the edited row on the current page are maintained—even if features like sorting or filtering are enabled—and will take affect on the row after the values update.
+Any changes to the position or visibility will be applied when the page is fetched again.
 
-Trigger the re-fetch manually by calling `dataSource.fetchRows()` API method.
+You can manually trigger a refetch by calling the `dataSource.fetchRows()` API method.
 :::
 
 ## Error handling
 
-You could handle the errors with the data source by providing an error handler function using the `onDataSourceError()`.
-It will be called whenever there's an error in fetching or updating the data.
+You can handle errors with the data source by providing an error handler function with `onDataSourceError()`.
+This gets called whenever there's an error in fetching or updating the data.
 
 This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
 
-For different error types, different `error.params` type is passed as an argument to the callback:
+Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
 
 | Error type           | Type of `error.params` |
 | :------------------- | :--------------------- |
