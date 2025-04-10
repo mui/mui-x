@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
-import materialPackageJson from '@mui/material/package.json';
+import { major } from '@mui/material/version';
 
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
@@ -11,8 +11,8 @@ function sleep(timeoutMS: number | undefined) {
   });
 }
 
-const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
-const isMaterialUIv7 = materialPackageJson.version.startsWith('7.');
+const isMaterialUIv6 = major === 6;
+const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
