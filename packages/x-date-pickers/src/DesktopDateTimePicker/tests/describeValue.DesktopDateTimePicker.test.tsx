@@ -52,8 +52,6 @@ describe('<DesktopDateTimePicker /> - Describe Value', () => {
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
-          // meridiem is an extra view on `DesktopDateTimePicker`
-          // we need to click it to finish selection
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {

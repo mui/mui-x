@@ -12,16 +12,18 @@ import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: () => null,
   },
 };
 

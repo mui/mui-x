@@ -208,4 +208,6 @@ export * from './demo';
 
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
 
+export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+
 export * from '../hooks/features/pivoting';
