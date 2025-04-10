@@ -37,7 +37,7 @@ export default function AssistantWithDataSampling() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
-    rowLength: 10000,
+    rowLength: 1000,
   });
 
   return (
