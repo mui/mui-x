@@ -20,19 +20,19 @@ export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
-export interface UseChartCartesianAxisParameters {
+export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName> {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: ReadonlyArray<XAxis>;
+  xAxis?: ReadonlyArray<XAxis<S>>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: ReadonlyArray<YAxis>;
+  yAxis?: ReadonlyArray<YAxis<S>>;
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
@@ -52,10 +52,11 @@ export interface UseChartCartesianAxisParameters {
   disableAxisListener?: boolean;
 }
 
-export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {
-  defaultizedXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-  defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
-};
+export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
+  UseChartCartesianAxisParameters<S> & {
+    defaultizedXAxis: AxisConfig<S, any, ChartsXAxisProps>[];
+    defaultizedYAxis: AxisConfig<S, any, ChartsYAxisProps>[];
+  };
 
 export interface DefaultizedZoomOptions extends Required<ZoomOptions> {
   axisId: AxisId;

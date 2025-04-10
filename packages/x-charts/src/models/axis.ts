@@ -414,6 +414,9 @@ export type PolarAxisConfig<
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisConfigExtension;
 
+/**
+ * Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.
+ */
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
@@ -494,7 +497,17 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
-export type XAxis = MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>;
-export type YAxis = MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
-export type RotationAxis = AxisConfig<ScaleName, any, ChartsRotationAxisProps>;
-export type RadiusAxis = AxisConfig<'linear', any, ChartsRadiusAxisProps>;
+export type XAxis<S extends ScaleName = ScaleName> = MakeOptional<
+  AxisConfig<S, any, ChartsXAxisProps>,
+  'id'
+>;
+export type YAxis<S extends ScaleName = ScaleName> = MakeOptional<
+  AxisConfig<S, any, ChartsYAxisProps>,
+  'id'
+>;
+export type RotationAxis<S extends ScaleName = ScaleName> = AxisConfig<
+  S,
+  any,
+  ChartsRotationAxisProps
+>;
+export type RadiusAxis<S extends 'linear' = 'linear'> = AxisConfig<S, any, ChartsRadiusAxisProps>;
