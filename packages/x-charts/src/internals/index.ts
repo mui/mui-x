@@ -51,8 +51,6 @@ export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 
 // contexts
-
-export type * from '../context/context.types';
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartProvider';
 

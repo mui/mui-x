@@ -29,20 +29,3 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
 
   return reverse ? axisData!.length - 1 - dataIndex : dataIndex;
 }
-
-/**
- * For a pointer coordinate, this function returns the value and dataIndex associated.
- * Returns `null` if the coordinate is outside of values.
- */
-export function getAxisValue(
-  axisConfig: PolarAxisDefaultized,
-  pointerValue: number,
-): number | null {
-  const dataIndex = getAxisIndex(axisConfig, pointerValue);
-
-  if (dataIndex < 0) {
-    return null;
-  }
-
-  return axisConfig.data?.[dataIndex];
-}
