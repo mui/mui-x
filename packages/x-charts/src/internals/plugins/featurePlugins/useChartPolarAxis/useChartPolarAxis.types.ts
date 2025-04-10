@@ -1,4 +1,3 @@
-import { RadiusAxis, RotationAxis } from '../../../../types';
 import { ChartPluginSignature } from '../../models';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
@@ -7,6 +6,8 @@ import {
   AxisConfig,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
+  RadiusAxis,
+  RotationAxis,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { DefaultizedAxisConfig } from '../useChartCartesianAxis';

@@ -8,12 +8,13 @@ import type {
   AxisId,
   AxisConfig,
   ChartsAxisData,
+  YAxis,
+  XAxis,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
-import { XAxis, YAxis } from '../../../../types';
 
 export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;

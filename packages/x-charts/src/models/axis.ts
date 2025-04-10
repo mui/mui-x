@@ -1,16 +1,16 @@
 import type {
   ScaleBand,
-  ScaleLogarithmic,
-  ScalePower,
-  ScaleTime,
   ScaleLinear,
-  ScalePoint,
+  ScaleLogarithmic,
   ScaleOrdinal,
+  ScalePoint,
+  ScalePower,
   ScaleSequential,
   ScaleThreshold,
+  ScaleTime,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
-import { MakeRequired } from '@mui/x-internals/types';
+import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -493,3 +493,8 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<string, number | null | undefined>;
 }
+
+export type XAxis = MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>;
+export type YAxis = MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
+export type RotationAxis = AxisConfig<ScaleName, any, ChartsRotationAxisProps>;
+export type RadiusAxis = AxisConfig<'linear', any, ChartsRadiusAxisProps>;
