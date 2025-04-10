@@ -53,7 +53,7 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
+import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features
 import { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
@@ -90,10 +90,10 @@ import {
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
-  inputApiRef: RefObject<GridApiPro | null> | undefined,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const apiRef = useGridInitialization<GridPrivateApiPro, GridApiPro>(inputApiRef, props);
+  useGridInitialization<GridPrivateApiPro>(apiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -177,6 +177,4 @@ export const useDataGridProComponent = (
   useGridVirtualization(apiRef, props);
   useGridDataSource(apiRef, props);
   useGridListView(apiRef, props);
-
-  return apiRef;
 };

@@ -96,12 +96,17 @@ function App() {
       children: Object.keys(testsBySuite).map((suite) => {
         const isDataGridTest =
           suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+        const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
         return {
           path: suite,
           children: testsBySuite[suite].map((test) => ({
             path: test.name,
             element: (
-              <TestViewer isDataGridTest={isDataGridTest} path={computePath(test)}>
+              <TestViewer
+                isDataGridTest={isDataGridTest}
+                isDataGridPivotTest={isDataGridPivotTest}
+                path={computePath(test)}
+              >
                 <test.case />
               </TestViewer>
             ),

@@ -1,13 +1,21 @@
 {
   "props": {
-    "colors": { "type": { "name": "any" }, "default": "rainbowSurgePalette" },
-    "dataset": { "type": { "name": "any" } },
-    "height": { "type": { "name": "any" } },
-    "id": { "type": { "name": "any" } },
-    "margin": { "type": { "name": "any" } },
-    "series": { "type": { "name": "any" } },
-    "skipAnimation": { "type": { "name": "any" } },
-    "width": { "type": { "name": "any" } }
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "width": { "type": { "name": "number" } }
   },
   "name": "ChartDataProvider",
   "imports": [

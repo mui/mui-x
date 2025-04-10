@@ -5,14 +5,14 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 
 const StyledBox = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'isDataGridTest',
-})<{ isDataGridTest?: boolean }>(({ theme, isDataGridTest }) => ({
+  shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
+})<{ isDataGridTest?: boolean; isDataGridPivotTest?: boolean; }>(({ theme, isDataGridTest, isDataGridPivotTest }) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
   padding: theme.spacing(1),
   justifyContent: 'center',
   ...(isDataGridTest && {
-    width: 500,
+    width: isDataGridPivotTest ? 800 : 500,
     minHeight: 400,
     // Workaround the min-height limitation
     '& .grid-container': {
