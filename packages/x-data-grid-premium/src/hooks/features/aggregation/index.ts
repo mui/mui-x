@@ -1,20 +1,4 @@
-export type {
-  GridAggregationState,
-  GridAggregationInitialState,
-  GridAggregationInternalCache,
-  GridAggregationApi,
-  GridAggregationGetCellValueParams,
-  GridAggregationFunction,
-  GridAggregationFunctionDataSource,
-  GridAggregationParams,
-  GridAggregationModel,
-  GridAggregationLookup,
-  GridAggregationPosition,
-  GridAggregationCellMeta,
-  GridAggregationHeaderMeta,
-  GridAggregationRule,
-  GridAggregationRules,
-} from './gridAggregationInterfaces';
+export * from './gridAggregationInterfaces';
 export {
   gridAggregationStateSelector,
   gridAggregationLookupSelector,
