@@ -70,7 +70,7 @@ export interface ZoomOptions {
    *
    * @default 'keep'
    */
-  filterMode?: 'discard' | 'keep';
+  filterMode?: ZoomFilterMode;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

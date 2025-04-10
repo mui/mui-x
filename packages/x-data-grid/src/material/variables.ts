@@ -51,7 +51,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
 
-    [k.colors.interactive.hover]: removeOpacity((t.vars || t).palette.action.hover),
+    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,

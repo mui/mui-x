@@ -3,8 +3,8 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { ponyfillGlobal } from '@mui/utils';
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { getTelemetryEnvConfig } from './config';
-import { muiXTelemetrySettings } from '../index';
 
 describe('Telemetry: getTelemetryConfig', () => {
   beforeEach(() => {

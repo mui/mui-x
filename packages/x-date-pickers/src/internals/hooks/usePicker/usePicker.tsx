@@ -28,6 +28,7 @@ import { useViews } from '../useViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
+import type { PickersActionBarAction } from '../../../PickersActionBar';
 
 export const usePicker = <
   TValue extends PickerValidValue,
@@ -40,6 +41,7 @@ export const usePicker = <
   valueType,
   variant,
   validator,
+  onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
   localeText,
@@ -58,6 +60,7 @@ export const usePicker = <
     reduceAnimations: reduceAnimationsProp,
     orientation: orientationProp,
     disableOpenPicker,
+    closeOnSelect,
     // Form props
     disabled,
     readOnly,
@@ -95,17 +98,31 @@ export const usePicker = <
   const rootRef = useForkRef(ref, rootRefObject);
 
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
-    useValueAndOpenStates<TValue, TView, TExternalProps>({ props, valueManager, validator });
-
-  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
-    useViews({
-      view: viewProp,
-      views,
-      openTo,
-      onChange: setValueFromView,
-      onViewChange,
-      autoFocus: autoFocusView,
+    useValueAndOpenStates<TValue, TView, TExternalProps>({
+      props,
+      valueManager,
+      validator,
     });
+
+  const {
+    view,
+    setView,
+    defaultView,
+    focusedView,
+    setFocusedView,
+    setValueAndGoToNextView,
+    goToNextStep,
+    hasNextStep,
+    hasSeveralSteps,
+  } = useViews({
+    view: viewProp,
+    views,
+    openTo,
+    onChange: setValueFromView,
+    onViewChange,
+    autoFocus: autoFocusView,
+    getStepNavigation,
+  });
 
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
@@ -223,13 +240,15 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
-  const stepNavigation = getStepNavigation({
-    setView,
-    view,
-    initialView: initialView ?? views[0],
-    views,
-  });
-  const wrappedGoToNextStep = useEventCallback(stepNavigation.goToNextStep);
+  const wrappedGoToNextStep = useEventCallback(goToNextStep);
+
+  const defaultActionBarActions = React.useMemo<PickersActionBarAction[]>(() => {
+    if (closeOnSelect && !hasSeveralSteps) {
+      return [];
+    }
+
+    return ['cancel', 'nextOrAccept'];
+  }, [closeOnSelect, hasSeveralSteps]);
 
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
@@ -272,7 +291,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
-      hasNextStep: stepNavigation.hasNextStep,
+      hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -295,7 +314,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
-      stepNavigation.hasNextStep,
+      hasNextStep,
       timezone,
       state.open,
       popperView,
@@ -315,6 +334,8 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
+      onPopperExited,
     }),
     [
       dismissViews,
@@ -324,6 +345,8 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
+      onPopperExited,
     ],
   );
 

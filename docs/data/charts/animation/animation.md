@@ -54,4 +54,4 @@ Alternatively, you can use your own animation library to create custom animation
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
-Note that sometimes JavaScript animation libraries cause performance issues, especially when rendering many data points or when interactions are enabled (e.g., zoom, highlight).
+Note that sometimes JavaScript animation libraries cause performance issues, especially when rendering many data points or when interactions are enabled (for example: zoom, highlight).

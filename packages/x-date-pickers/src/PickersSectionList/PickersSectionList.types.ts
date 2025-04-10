@@ -29,7 +29,7 @@ export interface PickersSectionListSlotProps {
 
 export interface PickersSectionElement {
   container: React.HTMLAttributes<HTMLSpanElement>;
-  content: React.HTMLAttributes<HTMLSpanElement>;
+  content: React.HTMLAttributes<HTMLSpanElement> & { 'data-range-position': string | undefined };
   before: React.HTMLAttributes<HTMLSpanElement>;
   after: React.HTMLAttributes<HTMLSpanElement>;
 }

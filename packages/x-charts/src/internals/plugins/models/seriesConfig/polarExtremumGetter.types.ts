@@ -17,8 +17,3 @@ export type PolarExtremumGetterResult = [number, number];
 export type PolarExtremumGetter<TSeriesType extends PolarChartSeriesType> = (
   params: PolarExtremumGetterParams<TSeriesType>,
 ) => PolarExtremumGetterResult;
-
-export type PolarExtremumFilter = (
-  value: { x: number | Date | string | null; y: number | Date | string | null },
-  dataIndex: number,
-) => boolean;

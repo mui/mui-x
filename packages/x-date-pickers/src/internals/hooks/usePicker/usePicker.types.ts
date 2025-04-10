@@ -34,7 +34,10 @@ export interface UsePickerBaseProps<
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
 > extends OnErrorProps<TValue, TError>,
-    Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
+    Omit<
+      UseViewsOptions<any, TView>,
+      'onChange' | 'onFocusedViewChange' | 'focusedView' | 'getStepNavigation'
+    >,
     TimezoneProps,
     FormProps {
   /**
@@ -173,6 +176,7 @@ export interface UsePickerParameters<
   >;
   props: TExternalProps;
   getStepNavigation: CreateStepNavigationReturnValue;
+  onPopperExited?: () => void;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {

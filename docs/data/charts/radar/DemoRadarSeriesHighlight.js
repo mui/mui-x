@@ -6,6 +6,9 @@ import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 
 import Box from '@mui/material/Box';
 
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 function valueFormatter(v) {
   if (v === null) {
     return 'NaN';
@@ -15,6 +18,14 @@ function valueFormatter(v) {
 
 export default function DemoRadarSeriesHighlight() {
   const [highlightedItem, setHighlightedItem] = React.useState(null);
+  const [fillArea, setFillArea] = React.useState(false);
+
+  const withOptions = (series) =>
+    series.map((item) => ({
+      ...item,
+      fillArea,
+      type: 'radar',
+    }));
 
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
@@ -50,10 +61,18 @@ export default function DemoRadarSeriesHighlight() {
           highlight="series"
           highlightedItem={highlightedItem}
           onHighlightChange={setHighlightedItem}
-          series={series}
+          series={withOptions(series)}
           radar={radar}
         />
       </Box>
+      <FormControlLabel
+        checked={fillArea}
+        control={
+          <Checkbox onChange={(event) => setFillArea(event.target.checked)} />
+        }
+        label="fill area"
+        labelPlacement="end"
+      />
     </Stack>
   );
 }

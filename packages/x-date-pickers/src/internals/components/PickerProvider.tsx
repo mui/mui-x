@@ -18,6 +18,7 @@ import {
 } from '../hooks/useNullableFieldPrivateContext';
 import { PickerContext } from '../../hooks/usePickerContext';
 import type { PickersShortcutsItemContext } from '../../PickersShortcuts';
+import type { PickersActionBarAction } from '../../PickersActionBar';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<
   any,
@@ -41,6 +42,8 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   getCurrentViewMode: () => 'UI',
   triggerElement: null,
   viewContainerRole: null,
+  defaultActionBarActions: [],
+  onPopperExited: undefined,
 });
 
 /**
@@ -358,4 +361,12 @@ export interface PickerPrivateContextValue {
    * It is always equal to null if the component you are accessing the context from is not wrapped with a Picker.
    */
   viewContainerRole: 'dialog' | 'tooltip' | null;
+  /**
+   * The actions to render in the action bar if the user doesn't provide any.
+   */
+  defaultActionBarActions: PickersActionBarAction[];
+  /**
+   * The function to call when the Popper is closing animation is finished.
+   */
+  onPopperExited: (() => void) | undefined;
 }

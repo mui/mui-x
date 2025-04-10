@@ -9,9 +9,13 @@ export interface RadarSeriesType extends CommonSeriesType<number> {
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * If `true` show marks at value position.
+   * If `true` hide marks at value position.
    */
-  showMark?: boolean;
+  hideMark?: boolean;
+  /**
+   * If `true` fill the series area.
+   */
+  fillArea?: boolean;
 }
 
 /**

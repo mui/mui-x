@@ -80,14 +80,11 @@ export type ExtremumFilter = (
   dataIndex: number,
 ) => boolean;
 
-export interface UseChartCartesianAxisInstance {}
-
 export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartCartesianAxisParameters;
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
-    // instance: UseChartCartesianAxisInstance;
     dependencies: [UseChartSeriesSignature<SeriesType>];
     optionalDependencies: [UseChartInteractionSignature];
   }>;

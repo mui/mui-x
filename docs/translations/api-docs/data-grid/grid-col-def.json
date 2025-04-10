@@ -55,6 +55,9 @@
     "pinnable": {
       "description": "If <code>false</code>, the menu items for column pinning menu will not be rendered.<br />Only available in DataGridPro."
     },
+    "pivotable": {
+      "description": "If <code>false</code>, the column will not be available for pivoting in the pivot panel."
+    },
     "preProcessEditCellProps": {
       "description": "Callback fired when the edit props of the cell changes.<br />Processes the props before being saved into the state."
     },

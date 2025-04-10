@@ -4,11 +4,11 @@ title: Usage with Material UI v5 and v6
 
 # Usage with Material UI v5/v6
 
-<p class="description">This guide describes the changes needed to use the Data Grid with Material UI v5/v6.</p>
+<p class="description">This guide describes the changes needed to use MUI X v8 with Material UI v5/v6.</p>
 
 ## Package layout changes
 
-MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material UI v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
 
 MUI X v8 packages are compatible with Material UI v7 out of the box.
 We encourage upgrading to Material UI v7 to take advantage of better ESM support.
@@ -18,7 +18,7 @@ Material UI v6 and v5 can still be used but require some additional steps if yo
 ### General recommendations
 
 We recommend trying to run the app without any changes suggested in this guide first to avoid unnecessary complexity.
-If you run into the error, e.g. `ERR_UNSUPPORTED_DIR_IMPORT`, then it means you're trying to load the library in native Node.js ESM and need to follow this guide.
+If you run into the error, for example, `ERR_UNSUPPORTED_DIR_IMPORT`, then it means you're trying to load the library in native Node.js ESM and need to follow this guide.
 
 Make sure to pass `require` [condition](https://nodejs.org/api/cli.html#-c-condition---conditionscondition) when importing MUI X packages in Node.js environment:
 
@@ -35,8 +35,7 @@ When using this option, make sure to run Node with [`--conditions` flag](https:/
 See [Vite docs](https://vite.dev/config/ssr-options#ssr-resolve-externalconditions) for more details.
 :::
 
-```ts
-// vite.config.js
+```ts title="vite.config.js"
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -48,18 +47,17 @@ export default defineConfig({
 });
 ```
 
-### Next.js Pages router
+### Next.js Pages Router
 
-With [Next.js App router](https://nextjs.org/docs#app-router-vs-pages-router), you don't need to do anything.
+With [Next.js App Router](https://nextjs.org/docs#app-router-vs-pages-router), you don't need to do anything.
 
-With Next.js Pages router, update Next.js configuration to pass the `require` condition and transpile MUI X packages:
+With Next.js Pages Router, update Next.js configuration to pass the `require` condition and transpile MUI X packages:
 
-```ts
-// next.config.js
-
+```ts title="next.config.mjs"
 export default {
   webpack: (config) => {
-    config.resolve.conditionNames = ['require', '...']; // '...' is important here – it keeps the default webpack conditionNames
+    // '...' is important here – it keeps the default webpack conditionNames
+    config.resolve.conditionNames = ['require', '...'];
     return config;
   },
   transpilePackages: [
@@ -76,17 +74,16 @@ export default {
 };
 ```
 
-### Webpack
+### webpack
 
-Update Webpack configuration to pass the `require` condition:
+Update webpack configuration to pass the `require` condition:
 
-```ts
-// webpack.config.js
-
+```ts title="webpack.config.js"
 export default {
-  // ...
+  // other webpack config
   resolve: {
-    conditionNames: ['require', '...'], // '...' is important here – it keeps the default webpack conditionNames
+    // '...' is important here – it keeps the default webpack conditionNames
+    conditionNames: ['require', '...'],
   },
 };
 ```

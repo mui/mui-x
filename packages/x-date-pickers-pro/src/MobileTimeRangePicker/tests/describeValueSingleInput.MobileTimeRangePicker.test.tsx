@@ -62,6 +62,9 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
       }
 
+      // Go to the start date or the end date
+      fireEvent.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],
@@ -75,13 +78,16 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `MobileTimeRangePicker`
-        // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       if (closeMobilePicker) {
-        fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        if (setEndDate) {
+          fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        } else {
+          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        }
       }
 
       return newValue;

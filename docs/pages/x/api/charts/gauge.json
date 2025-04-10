@@ -23,6 +23,7 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'100%'"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
     "value": { "type": { "name": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { RadarAxisSliceHighlight } from './RadarAxisSliceHighlight';
-import { RadarAxisPointsHighlight } from './RadarAxisPointsHighlight';
+import { useRadarAxisHighlight } from './useRadarAxisHighlight';
+
 import {
   getRadarAxisHighlightUtilityClass,
   RadarAxisHighlightClasses,
@@ -12,7 +13,6 @@ const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
   const slots = {
     root: ['root'],
     line: ['line'],
-    slice: ['slice'],
     dot: ['dot'],
   };
 
@@ -21,25 +21,64 @@ const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
 
 export interface RadarAxisHighlightProps {
   /**
-   * Switch between different axis highlight visualization.
-   * - points: display points on each highlighted value. Recommended for radar with multiple series.
-   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
-   * The default value is computed depending on the number of series provided.
-   */
-  axisHighlightShape: 'points' | 'slice';
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<RadarAxisHighlightClasses>;
 }
 
+/**
+ * Attributes to display a shadow around a mark.
+ */
+const highlightMarkShadow = {
+  r: 7,
+  opacity: 0.3,
+};
+
+/**
+ * Attributes to display a mark.
+ */
+const highlightMark = {
+  r: 3,
+  opacity: 1,
+};
+
 function RadarAxisHighlight(props: RadarAxisHighlightProps) {
   const classes = useUtilityClasses(props.classes);
 
-  return props.axisHighlightShape === 'slice' ? (
-    <RadarAxisSliceHighlight classes={classes} />
-  ) : (
-    <RadarAxisPointsHighlight classes={classes} />
+  const theme = useTheme();
+  const data = useRadarAxisHighlight();
+
+  if (data === null) {
+    return null;
+  }
+
+  const { center, series, points, radius, highlightedAngle, instance } = data;
+
+  const [x, y] = instance.polar2svg(radius, highlightedAngle);
+  return (
+    <g className={classes.root}>
+      <path
+        d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
+        stroke={(theme.vars || theme).palette.text.primary}
+        strokeWidth={1}
+        className={classes.line}
+        pointerEvents="none"
+        strokeDasharray="4 4"
+      />
+      {points.map(({ highlighted }, seriesIndex) => {
+        return (
+          <circle
+            key={series[seriesIndex].id}
+            fill={series[seriesIndex].color}
+            cx={highlighted.x}
+            cy={highlighted.y}
+            className={classes.dot}
+            pointerEvents="none"
+            {...(series[seriesIndex].hideMark ? highlightMark : highlightMarkShadow)}
+          />
+        );
+      })}
+    </g>
   );
 }
 
@@ -48,13 +87,6 @@ RadarAxisHighlight.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Switch between different axis highlight visualization.
-   * - points: display points on each highlighted value. Recommended for radar with multiple series.
-   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
-   * The default value is computed depending on the number of series provided.
-   */
-  axisHighlightShape: PropTypes.oneOf(['points', 'slice']).isRequired,
   /**
    * Override or extend the styles applied to the component.
    */

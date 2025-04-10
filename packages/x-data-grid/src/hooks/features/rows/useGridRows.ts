@@ -44,6 +44,7 @@ import {
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
+import { gridPivotActiveSelector } from '../pivoting';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -165,6 +166,10 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(rows, false);
+        return;
+      }
       const cache = createRowsInternalCache({
         rows,
         getRowId: props.getRowId,
@@ -188,6 +193,11 @@ export const useGridRows = (
             'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
           ].join('\n'),
         );
+      }
+
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(updates);
+        return;
       }
 
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);

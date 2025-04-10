@@ -47,6 +47,7 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
+      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
       const hoursNumber = adapterToUse.getHours(newValue);
@@ -55,8 +56,6 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
         screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `DesktopDateTimePicker`
-        // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 

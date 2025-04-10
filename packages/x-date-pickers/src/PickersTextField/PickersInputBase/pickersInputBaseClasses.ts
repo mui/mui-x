@@ -20,14 +20,16 @@ export interface PickersInputBaseClasses {
   sectionsContainer: string;
   /** Styles applied to the content of a section. */
   sectionContent: string;
-  /** Styles applied to the separator before a section */
+  /** Styles applied to the separator before a section. */
   sectionBefore: string;
-  /** Styles applied to the separator after a section */
+  /** Styles applied to the separator after a section. */
   sectionAfter: string;
-  /** Styles applied to the root if there is a startAdornment present */
+  /** Styles applied to the root if there is a startAdornment present. */
   adornedStart: string;
-  /** Styles applied to the root if there is an endAdornment present */
+  /** Styles applied to the root if there is an endAdornment present. */
   adornedEnd: string;
+  /** Styles applied to the active section bar. */
+  activeBar: string;
 }
 
 export type PickersInputBaseClassKey = keyof PickersInputBaseClasses;
@@ -50,5 +52,6 @@ export const pickersInputBaseClasses = generateUtilityClasses<PickersInputBaseCl
     'adornedStart',
     'adornedEnd',
     'input',
+    'activeBar',
   ],
 );

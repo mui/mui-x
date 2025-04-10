@@ -41,7 +41,7 @@ export interface RadarDataProviderProps
    * The series to display in the bar chart.
    * An array of [[RadarSeriesType]] objects.
    */
-  series: MakeOptional<RadarSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<RadarSeriesType, 'type'>>[];
   /**
    * The configuration of the radar scales.
    */

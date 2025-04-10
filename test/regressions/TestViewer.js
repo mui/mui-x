@@ -6,14 +6,14 @@ import { useLocation } from 'react-router';
 import { useFakeTimers } from 'sinon';
 
 const StyledBox = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'isDataGridTest',
-})(({ theme, isDataGridTest }) => ({
+  shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
+})(({ theme, isDataGridTest, isDataGridPivotTest }) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
   padding: theme.spacing(1),
   justifyContent: 'center',
   ...(isDataGridTest && {
-    width: 500,
+    width: isDataGridPivotTest ? 800 : 500,
     minHeight: 400,
     // Workaround the min-height limitation
     '& .grid-container': {
@@ -41,6 +41,7 @@ function MockTime(props) {
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
       // We need to let time advance to use `useDemoData`, but on the pickers test it makes the tests flaky
       shouldAdvanceTime: props.isDataGridTest,
+      shouldClearNativeTimers: true,
     });
     setReady(true);
 
@@ -110,7 +111,7 @@ LoadFont.propTypes = {
 };
 
 function TestViewer(props) {
-  const { children, isDataGridTest, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, path } = props;
 
   return (
     <React.Fragment>
@@ -141,7 +142,11 @@ function TestViewer(props) {
         }}
       />
       <MockTime isDataGridTest={isDataGridTest}>
-        <LoadFont isDataGridTest={isDataGridTest} data-testpath={path}>
+        <LoadFont
+          isDataGridTest={isDataGridTest}
+          isDataGridPivotTest={isDataGridPivotTest}
+          data-testpath={path}
+        >
           {children}
         </LoadFont>
       </MockTime>
@@ -151,6 +156,7 @@ function TestViewer(props) {
 
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
+  isDataGridPivotTest: PropTypes.bool.isRequired,
   isDataGridTest: PropTypes.bool.isRequired,
   path: PropTypes.string.isRequired,
 };

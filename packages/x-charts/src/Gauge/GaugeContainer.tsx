@@ -158,6 +158,11 @@ GaugeContainer.propTypes = {
    */
   outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The start angle (deg).
    * @default 0
    */

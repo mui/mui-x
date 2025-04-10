@@ -122,7 +122,7 @@ For circles, the `markerSize` is the radius of the point in pixels.
 
 {{"demo": "ScatterCustomSize.js"}}
 
-## Plot Customization
+## Plot customization
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 

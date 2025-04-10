@@ -9,7 +9,7 @@ import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicke
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should allow to select the same day and move to the next view', () => {
+  it('should allow to select the same day', () => {
     const onChange = spy();
     render(
       <StaticDateTimePicker onChange={onChange} defaultValue={adapterToUse.date('2018-01-01')} />,
@@ -17,8 +17,6 @@ describe('<StaticDateTimePicker />', () => {
 
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
     expect(onChange.callCount).to.equal(1);
-
-    expect(screen.getByLabelText('35 minutes')).toBeVisible();
   });
 
   describe('Component slot: Tabs', () => {

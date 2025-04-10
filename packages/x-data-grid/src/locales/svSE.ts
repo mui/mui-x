@@ -7,6 +7,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Inga resultat funna.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
@@ -49,6 +50,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Ladda ner som CSV',
   toolbarExportPrint: 'Skriv ut',
   toolbarExportExcel: 'Ladda ner som Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Sök',
@@ -131,6 +135,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Ta bort sortering',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -166,9 +171,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'mer',
 
   // Column pinning text
-  pinToLeft: 'Fäst till vänster',
-  pinToRight: 'Fäst till höger',
-  unpin: 'Ta bort fästning',
+  pinToLeft: 'Lås till vänster',
+  pinToRight: 'Lås till höger',
+  unpin: 'Lås upp',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupp',
@@ -223,6 +228,35 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'antal',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
 export const svSE: Localization = getGridLocalization(svSEGrid);

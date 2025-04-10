@@ -66,5 +66,9 @@ export function renderCountry(params: GridRenderCellParams<CountryIsoOption, any
     return null;
   }
 
+  if (params.rowNode.type === 'group') {
+    return params.value;
+  }
+
   return <Country value={params.value} />;
 }
