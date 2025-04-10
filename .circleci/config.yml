@@ -114,8 +114,7 @@ commands:
           steps:
             - run:
                 name: Install playwright
-                command: |
-                  pnpx playwright@1.51.1 install --with-deps
+                command: pnpx playwright@1.51.1 install --with-deps
 
 jobs:
   checkout:
