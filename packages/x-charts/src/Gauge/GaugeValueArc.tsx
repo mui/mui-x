@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSkipAnimation } from '@mui/x-charts/hooks/useSkipAnimation';
 import { useAnimateGaugeValueArc } from '../hooks/animation/useAnimateGaugeValueArc';
@@ -13,7 +14,7 @@ const StyledPath = styled('path', {
   fill: (theme.vars || theme).palette.primary.main,
 }));
 
-export function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimation?: boolean }) {
+function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimation?: boolean }) {
   const {
     value,
     valueMin,
@@ -47,6 +48,16 @@ export function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimat
     />
   );
 }
+
+GaugeValueArc.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  skipAnimation: PropTypes.bool,
+} as any;
+
+export { GaugeValueArc };
 
 interface AnimatedGaugeValueArcProps extends React.ComponentProps<'path'> {
   cx: number;
@@ -82,3 +93,18 @@ function AnimatedGaugeValueArc({
 
   return <StyledPath {...animatedProps} transform={`translate(${cx}, ${cy})`} {...other} />;
 }
+
+AnimatedGaugeValueArc.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  cornerRadius: PropTypes.number.isRequired,
+  cx: PropTypes.number.isRequired,
+  cy: PropTypes.number.isRequired,
+  endAngle: PropTypes.number.isRequired,
+  innerRadius: PropTypes.number.isRequired,
+  outerRadius: PropTypes.number.isRequired,
+  skipAnimation: PropTypes.bool,
+  startAngle: PropTypes.number.isRequired,
+} as any;

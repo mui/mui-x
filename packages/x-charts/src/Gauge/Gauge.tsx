@@ -12,11 +12,6 @@ import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
   children?: React.ReactNode;
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation?: boolean;
 }
 
 const useUtilityClasses = (props: GaugeProps) => {
