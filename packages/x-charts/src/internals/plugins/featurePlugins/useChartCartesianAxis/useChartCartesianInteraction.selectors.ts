@@ -9,7 +9,6 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisR
 import { ComputeResult } from './computeAxisValue';
 
 const optionalGetAxisId = (_: unknown, id?: AxisId) => id;
-const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
 
 /**
  * Get interaction indexes
@@ -32,19 +31,9 @@ export const selectorChartsInteractionXAxisIndex = createSelector(
   (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
 );
 
-export const selectorChartsInteractionXAxisIndexes = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisIds],
-  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
-);
-
 export const selectorChartsInteractionYAxisIndex = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
   (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
-);
-
-export const selectorChartsInteractionYAxisIndexes = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisIds],
-  (value, axes, ids) => (value === null ? null : indexGetter(value, axes, ids)),
 );
 
 /**

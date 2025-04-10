@@ -89,13 +89,6 @@ export type PolarChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type StackableChartSeriesType = keyof Pick<
-  ChartsSeriesConfig,
-  {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { canBeStacked: true } ? Key : never;
-  }[ChartSeriesType]
->;
-
 export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seriesInput'];
 
 export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
