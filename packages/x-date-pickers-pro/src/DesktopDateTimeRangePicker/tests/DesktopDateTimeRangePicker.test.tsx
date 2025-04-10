@@ -54,6 +54,29 @@ describe('<DesktopDateTimeRangePicker />', () => {
       const sectionsContainer = getFieldSectionsContainer();
       expectFieldValueV7(sectionsContainer, '04/11/2022 02:15 PM – MM/DD/YYYY hh:mm aa');
     });
+
+    it('should cycle focused views among the visible step after selection', () => {
+      render(<DesktopDateTimeRangePicker />);
+
+      openPicker({ type: 'date-time-range', initialFocus: 'start', fieldType: 'single-input' });
+
+      const day = screen.getByRole('gridcell', { name: '10' });
+      expect(day).toHaveFocus();
+      fireEvent.click(day);
+
+      const hours = screen.getByRole('option', { name: '12 hours' });
+      expect(hours).toHaveFocus();
+      fireEvent.click(hours);
+
+      const minutes = screen.getByRole('option', { name: '0 minutes' });
+      expect(minutes).toHaveFocus();
+      fireEvent.click(minutes);
+
+      const meridiem = screen.getByRole('option', { name: 'AM' });
+      expect(meridiem).toHaveFocus();
+      const sectionsContainer = getFieldSectionsContainer();
+      expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
+    });
   });
 
   describe('disabled dates', () => {
