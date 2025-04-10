@@ -77,15 +77,6 @@ function valueGetter(
       )
     : getAxisValue(axes.axis[ids], value, indexes as number);
 }
-export const selectorChartsInteractionXAxisValues = createSelector(
-  [
-    selectorChartsInteractionPointerX,
-    selectorChartXAxis,
-    selectorChartsInteractionXAxisIndexes,
-    optionalGetAxisIds,
-  ],
-  (value, axes, indexes, ids) => (value === null ? null : valueGetter(value, axes, indexes!, ids)),
-);
 
 export const selectorChartsInteractionXAxisValue = createSelector(
   [
@@ -100,16 +91,6 @@ export const selectorChartsInteractionXAxisValue = createSelector(
     }
     return valueGetter(x, xAxes, xIndex, id);
   },
-);
-
-export const selectorChartsInteractionYAxisValues = createSelector(
-  [
-    selectorChartsInteractionPointerY,
-    selectorChartYAxis,
-    selectorChartsInteractionYAxisIndexes,
-    optionalGetAxisIds,
-  ],
-  (value, axes, indexes, ids) => (value === null ? null : valueGetter(value, axes, indexes!, ids)),
 );
 
 export const selectorChartsInteractionYAxisValue = createSelector(
