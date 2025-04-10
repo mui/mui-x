@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { styled } from '@mui/material/styles';
+import { useSkipAnimation } from '@mui/x-charts/hooks/useSkipAnimation';
+import { useAnimateGaugeValueArc } from '../hooks/animation/useAnimateGaugeValueArc';
 import { useGaugeState } from './GaugeProvider';
 
 const StyledPath = styled('path', {
@@ -12,7 +13,7 @@ const StyledPath = styled('path', {
   fill: (theme.vars || theme).palette.primary.main,
 }));
 
-export function GaugeValueArc(props: React.ComponentProps<'path'>) {
+export function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimation?: boolean }) {
   const {
     value,
     valueMin,
@@ -29,21 +30,55 @@ export function GaugeValueArc(props: React.ComponentProps<'path'>) {
   if (value === null) {
     return null;
   }
+
   const valueAngle =
     startAngle + ((value - valueMin) / (valueMax - valueMin)) * (endAngle - startAngle);
 
   return (
-    <StyledPath
-      transform={`translate(${cx}, ${cy})`}
-      d={
-        d3Arc().cornerRadius(cornerRadius)({
-          startAngle,
-          endAngle: valueAngle,
-          innerRadius,
-          outerRadius,
-        })!
-      }
+    <AnimatedGaugeValueArc
       {...props}
+      cx={cx}
+      cy={cy}
+      startAngle={startAngle}
+      endAngle={valueAngle}
+      cornerRadius={cornerRadius}
+      innerRadius={innerRadius}
+      outerRadius={outerRadius}
     />
   );
+}
+
+interface AnimatedGaugeValueArcProps extends React.ComponentProps<'path'> {
+  cx: number;
+  cy: number;
+  startAngle: number;
+  endAngle: number;
+  cornerRadius: number;
+  innerRadius: number;
+  outerRadius: number;
+  skipAnimation?: boolean;
+}
+
+function AnimatedGaugeValueArc({
+  cx,
+  cy,
+  startAngle,
+  endAngle,
+  cornerRadius,
+  innerRadius,
+  outerRadius,
+  skipAnimation: inSkipAnimation,
+  ...other
+}: AnimatedGaugeValueArcProps) {
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const animatedProps = useAnimateGaugeValueArc({
+    startAngle,
+    endAngle,
+    cornerRadius,
+    innerRadius,
+    outerRadius,
+    skipAnimation,
+  });
+
+  return <StyledPath {...animatedProps} transform={`translate(${cx}, ${cy})`} {...other} />;
 }

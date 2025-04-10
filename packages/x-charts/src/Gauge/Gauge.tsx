@@ -12,6 +12,11 @@ import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
   children?: React.ReactNode;
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation?: boolean;
 }
 
 const useUtilityClasses = (props: GaugeProps) => {
@@ -28,12 +33,13 @@ const useUtilityClasses = (props: GaugeProps) => {
 };
 
 const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
-  const { text, children, classes: propsClasses, className, ...other } = props;
+  const { text, children, classes: propsClasses, className, skipAnimation, ...other } = props;
   const classes = useUtilityClasses(props);
+
   return (
     <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
       <GaugeReferenceArc className={classes.referenceArc} />
-      <GaugeValueArc className={classes.valueArc} />
+      <GaugeValueArc className={classes.valueArc} skipAnimation={skipAnimation} />
       <GaugeValueText className={classes.valueText} text={text} />
       {children}
     </GaugeContainer>
