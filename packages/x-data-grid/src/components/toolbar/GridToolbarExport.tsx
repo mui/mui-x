@@ -118,6 +118,9 @@ GridPrintExportMenuItem.propTypes = {
   }),
 } as any;
 
+/**
+ * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/export/ Export} components instead. This component will be removed in a future major release.
+ */
 const GridToolbarExport = forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
     const {
