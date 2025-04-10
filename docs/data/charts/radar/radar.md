@@ -102,10 +102,11 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
 
-In the background, you can render the `RadarGrid` and `RadarMetricLabels` that will display the grid and the labels.
+The `RadarGrid` and `RadarMetricLabels` components render the grid and the labels.
 
-To display series, you have `RadarSeriesPlot` component (the area and marks).
-Or `RadarSeriesArea` and `RadarSeriesMarks` that allows to display at different level the area and marks.
+The `RadarSeriesPlot` renders series (the area and the marks) on top of each other.
+The `RadarSeriesArea` and `RadarSeriesMarks` provide an alternative by rendering all series areas in the first component and all the marks in the second.
+The second approach allows rendering some elements on top of areas and below marks.
 
 The `RadarAxisHighlight` component displays the axis highlight.
 
@@ -118,14 +119,14 @@ For info here is the composition of the `RadarChart` component.
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
-      // The background of the chart
+      {/* The background of the chart */}
       <RadarGrid />
       <RadarMetricLabels />
-      // The data with axis highlight on top of area and below marks
+      {/* The data with axis highlight on top of area and below marks */}
       <RadarSeriesArea />
       <RadarAxisHighlight />
       <RadarSeriesMarks />
-      // Other components
+      {/* Other components */}
       <ChartsOverlay />
       <Tooltip />
     </ChartsSurface>
