@@ -130,7 +130,19 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          {
+            pathname: '/x/react-data-grid/pivoting-group',
+            title: 'Pivoting',
+            plan: 'premium',
+            newFeature: true,
+            children: [
+              { pathname: '/x/react-data-grid/pivoting', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/pivoting-explained',
+                title: 'Understanding pivoting',
+              },
+            ],
+          },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
@@ -186,6 +198,12 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/filter-panel',
             title: 'Filter Panel',
             planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/pivot-panel',
+            title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
           },
         ],
       },
