@@ -73,7 +73,7 @@ export default function AssistantWithExamples() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
-    rowLength: 10000,
+    rowLength: 1000,
   });
 
   const columns = React.useMemo(

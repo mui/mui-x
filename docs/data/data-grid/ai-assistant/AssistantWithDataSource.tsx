@@ -53,7 +53,7 @@ export default function AssistantWithDataSource() {
       visibleFields: VISIBLE_FIELDS,
       maxColumns: 16,
       rowGrouping: true,
-      rowLength: 10000,
+      rowLength: 1000,
     },
     { useCursorPagination: false },
   );
