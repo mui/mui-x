@@ -323,13 +323,16 @@ function GridPrompt(props: GridPromptProps) {
       if (!('columns' in pivoting)) {
         return [];
       }
-      return [
+      const changes = [
         {
           label: apiRef.current.getLocaleText('promptChangePivotEnableLabel'),
           icon: rootProps.slots.promptPivotIcon,
           description: apiRef.current.getLocaleText('promptChangePivotEnableDescription'),
         },
-        {
+      ];
+
+      if (pivoting.columns.length) {
+        changes.push({
           label: apiRef.current.getLocaleText('promptChangePivotColumnsLabel')(
             pivoting.columns.length,
           ),
@@ -342,13 +345,19 @@ function GridPrompt(props: GridPromptProps) {
               ),
             )
             .join(`, `),
-        },
-        {
+        });
+      }
+
+      if (pivoting.rows.length) {
+        changes.push({
           label: apiRef.current.getLocaleText('promptChangePivotRowsLabel')(pivoting.rows.length),
           icon: rootProps.slots.densityStandardIcon,
           description: pivoting.rows.map((column) => getColumnName(column)).join(`, `),
-        },
-        {
+        });
+      }
+
+      if (pivoting.values.length) {
+        changes.push({
           label: apiRef.current.getLocaleText('promptChangePivotValuesLabel')(
             pivoting.values.length,
           ),
@@ -363,8 +372,10 @@ function GridPrompt(props: GridPromptProps) {
               ),
             )
             .join(`, `),
-        },
-      ];
+        });
+      }
+
+      return changes;
     },
     [apiRef, getColumnName, rootProps.slots],
   );
