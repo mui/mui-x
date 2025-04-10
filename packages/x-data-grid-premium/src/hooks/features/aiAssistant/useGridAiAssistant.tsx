@@ -198,7 +198,10 @@ export const useGridAiAssistant = (
         apiRef.current.setPivotModel({
           columns: result.pivoting.columns.map((c) => ({ field: c.column, sort: c.direction })),
           rows: result.pivoting.rows.map((r) => ({ field: r })),
-          values: result.pivoting.values.map((v) => ({ field: v.column, aggFunc: v.aggFunc })),
+          values: result.pivoting.values.map((valueObj) => {
+            const [field] = Object.keys(valueObj);
+            return { field, aggFunc: valueObj[field] };
+          }),
         });
         appliedPivoting = true;
       } else if ('columns' in result.pivoting) {
@@ -209,8 +212,9 @@ export const useGridAiAssistant = (
         result.pivoting.rows.forEach((r) => {
           result.grouping.push({ column: r });
         });
-        result.pivoting.values.forEach((v) => {
-          result.aggregation[v.column] = v.aggFunc;
+        result.pivoting.values.forEach((valueObj) => {
+          const [field] = Object.keys(valueObj);
+          result.aggregation[field] = valueObj[field];
         });
         // remove the pivoting results data
         result.pivoting = {};
