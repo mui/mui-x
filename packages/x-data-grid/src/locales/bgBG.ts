@@ -7,6 +7,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Няма намерени резултати.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -48,6 +49,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
   toolbarExportExcel: 'Изтегли като Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Търсене',
@@ -130,6 +134,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Отмени сортирането',
   columnMenuSortAsc: 'Сортирай по възходящ ред',
   columnMenuSortDesc: 'Сортирай по низходящ ред',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
@@ -221,6 +226,35 @@ const bgBGGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'размер',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid);

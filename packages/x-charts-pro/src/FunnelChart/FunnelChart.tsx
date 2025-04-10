@@ -147,7 +147,6 @@ FunnelChart.propTypes = {
     tickLabelStyle: PropTypes.object,
     tickSize: PropTypes.number,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
