@@ -39,7 +39,6 @@ import type {
   SwitchProps,
   TooltipProps,
   TextFieldProps,
-  ChipProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;

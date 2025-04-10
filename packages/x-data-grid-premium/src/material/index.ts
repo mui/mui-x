@@ -11,16 +11,12 @@ import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
   GridFilterAltIcon,
-  GridExpandMoreIcon,
-  GridAddIcon,
 } from '@mui/x-data-grid-pro';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
   GridWorkspacesIcon,
   GridGroupWorkIcon,
   GridFunctionsIcon,
-  GridSendPromptIcon,
-  GridRecordPromptIcon,
   GridMoveToTopIcon,
   GridMoveToBottomIcon,
   GridExpandLessIcon,
@@ -31,7 +27,6 @@ import {
   GridAssistantIcon,
   GridPromptIcon,
   GridRerunIcon,
-  GridPivotIcon,
   GridHistoryIcon,
 } from './icons';
 
@@ -40,8 +35,6 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   columnMenuUngroupIcon: GridWorkspacesIcon,
   columnMenuGroupIcon: GridGroupWorkIcon,
   columnMenuAggregationIcon: GridFunctionsIcon,
-  toolbarPromptSendIcon: GridSendPromptIcon,
-  toolbarPromptRecordIcon: GridRecordPromptIcon,
   pivotIcon: GridPivotIcon,
   pivotSearchIcon: GridSearchIcon,
   pivotSearchClearIcon: GridClearIcon,
