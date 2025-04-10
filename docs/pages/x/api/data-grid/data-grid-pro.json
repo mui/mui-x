@@ -1965,6 +1965,18 @@
       "isGlobal": false
     },
     {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGridPro-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggleIcon",
+      "className": "MuiDataGridPro-promptChangesToggleIcon",
+      "description": "Styles applied to the prompt changes toggle icon element.",
+      "isGlobal": false
+    },
+    {
       "key": "promptContent",
       "className": "MuiDataGridPro-promptContent",
       "description": "Styles applied to the prompt content element.",

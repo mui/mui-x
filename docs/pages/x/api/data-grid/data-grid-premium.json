@@ -1428,7 +1428,7 @@
       "name": "promptChangesToggleIcon",
       "description": "Icon used on the toggle button of the changes list",
       "default": "GridExpandMoreIcon",
-      "class": null
+      "class": "MuiDataGridPremium-promptChangesToggleIcon"
     }
   ],
   "classes": [
@@ -2288,6 +2288,12 @@
       "key": "promptChangeList",
       "className": "MuiDataGridPremium-promptChangeList",
       "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGridPremium-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
       "isGlobal": false
     },
     {

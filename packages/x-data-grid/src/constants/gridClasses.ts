@@ -887,6 +887,14 @@ export interface GridClasses {
    */
   promptChangeList: string;
   /**
+   * Styles applied to the prompt changes toggle element.
+   */
+  promptChangesToggle: string;
+  /**
+   * Styles applied to the prompt changes toggle icon element.
+   */
+  promptChangesToggleIcon: string;
+  /**
    * Styles applied to the prompt icon element.
    */
   promptIconContainer: string;
@@ -1126,6 +1134,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'promptText',
   'promptFeedback',
   'promptChangeList',
+  'promptChangesToggle',
+  'promptChangesToggleIcon',
   'promptIcon',
   'promptIconContainer',
   'promptError',
