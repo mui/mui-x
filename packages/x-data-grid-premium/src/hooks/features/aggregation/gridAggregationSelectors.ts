@@ -1,5 +1,7 @@
-import { createSelector } from '@mui/x-data-grid-pro/internals';
+import { createSelector, createSelectorV8 } from '@mui/x-data-grid-pro/internals';
+import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid';
 import { GridStatePremium } from '../../../models/gridStatePremium';
+import { GridAggregationPosition } from './gridAggregationInterfaces';
 
 export const gridAggregationStateSelector = (state: GridStatePremium) => state.aggregation;
 
@@ -20,4 +22,37 @@ export const gridAggregationModelSelector = createSelector(
 export const gridAggregationLookupSelector = createSelector(
   gridAggregationStateSelector,
   (aggregationState) => aggregationState.lookup,
+);
+
+export const gridCellAggregationResultSelector = createSelectorV8(
+  gridRowTreeSelector,
+  gridAggregationLookupSelector,
+  (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string }) => {
+    let cellAggregationPosition: GridAggregationPosition | null = null;
+    const rowNode = rowTree[id];
+
+    if (!rowNode) {
+      return null;
+    }
+
+    if (rowNode.type === 'group') {
+      cellAggregationPosition = 'inline';
+    } else if (id.toString().startsWith('auto-generated-group-footer-')) {
+      cellAggregationPosition = 'footer';
+    }
+
+    if (cellAggregationPosition == null) {
+      return null;
+    }
+
+    // TODO: Add custom root id
+    const groupId = cellAggregationPosition === 'inline' ? id : (rowNode.parent ?? '');
+
+    const aggregationResult = aggregationLookup?.[groupId]?.[field];
+    if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {
+      return null;
+    }
+
+    return aggregationResult;
+  },
 );

@@ -8,6 +8,8 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  GridConfiguration,
+  useGridSelectorV8,
 } from '@mui/x-data-grid-pro/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
@@ -19,13 +21,19 @@ import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: (id, field) => {
+      const apiRef = useGridApiContext();
+      return useGridSelectorV8(apiRef, gridCellAggregationResultSelector, { id, field });
+    },
   },
 };
 const releaseInfo = getReleaseInfo();

@@ -183,3 +183,5 @@ export { serializeCellValue } from '../hooks/features/export/serializers/csvSeri
 export * from './utils';
 export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';
+
+export type { GridConfiguration } from '../models/configuration/gridConfiguration';

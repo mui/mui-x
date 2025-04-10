@@ -48,27 +48,6 @@ type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
   ) => GridAggregationLookup[GridRowId][string] | null;
 }) => GridBaseColDef[P];
 
-const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
-  value: valueGetter,
-  getCellAggregationResult,
-}) => {
-  const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef.current.state, row);
-    const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
-    if (cellAggregationResult != null) {
-      return cellAggregationResult?.value ?? null;
-    }
-
-    if (valueGetter) {
-      return valueGetter(value, row, column, apiRef);
-    }
-
-    return row[column.field];
-  };
-
-  return wrappedValueGetter;
-};
-
 const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueFormatter'> = ({
   value: valueFormatter,
   aggregationRule,
@@ -257,7 +236,6 @@ export const wrapColumnWithAggregationValue = ({
     }
   };
 
-  wrapColumnProperty('valueGetter', getAggregationValueWrappedValueGetter);
   wrapColumnProperty('valueFormatter', getAggregationValueWrappedValueFormatter);
   wrapColumnProperty('renderCell', getAggregationValueWrappedRenderCell);
   wrapColumnProperty('renderHeader', getWrappedRenderHeader);
