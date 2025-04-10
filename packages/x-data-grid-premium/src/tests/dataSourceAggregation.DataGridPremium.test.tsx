@@ -104,9 +104,7 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
-    await waitFor(async () => {
-      expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
-    });
+    await screen.findByLabelText('Aggregation');
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
