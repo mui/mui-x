@@ -104,6 +104,8 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+    // wait for the column menu to be open first
+    await screen.findByRole('menu', { name: 'id column menu' });
     await screen.findByLabelText('Aggregation');
   });
 
