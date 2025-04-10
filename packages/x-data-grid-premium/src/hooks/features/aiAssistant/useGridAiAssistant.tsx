@@ -34,8 +34,6 @@ import { GridAiAssistantPanel } from '../../../components/aiAssistantPanel/GridA
 
 const DEFAULT_SAMPLE_COUNT = 5;
 
-// TODO: uncomment all comments tagged withg {PIVOTING} once https://github.com/mui/mui-x/pull/9877 is merged
-
 export const aiAssistantStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'initialState' | 'aiAssistantConversations' | 'aiAssistant'>
 > = (state, props) => {
@@ -74,7 +72,7 @@ export const useGridAiAssistant = (
     | 'disableRowGrouping'
     | 'disableAggregation'
     | 'disableColumnSorting'
-    // {PIVOTING} | disablePivoting
+    | 'disablePivoting'
   >,
 ) => {
   const {
@@ -84,7 +82,7 @@ export const useGridAiAssistant = (
     disableRowGrouping,
     disableAggregation,
     disableColumnSorting,
-    // {PIVOTING} disablePivoting,
+    disablePivoting,
   } = props;
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
@@ -194,18 +192,16 @@ export const useGridAiAssistant = (
         interestColumns.push(...result.filters.map((f) => f.column));
       }
 
-      const appliedPivoting = false; // {PIVOTING} remove this line
-      // {PIVOTING}let appliedPivoting = false;
-      // {PIVOTING} if (!disablePivoting && 'columns' in result.pivoting) {
-      // {PIVOTING} apiRef.current.setPivotActive(true);
-      // {PIVOTING} apiRef.current.setPivotModel({
-      //   columns: result.pivoting.columns.map((c) => ({ field: c.column, sort: c.direction })),
-      //   rows: result.pivoting.rows.map((r) => ({ field: r })),
-      //   values: result.pivoting.values.map((v) => ({ field: v.column, aggFunc: v.aggFunc })),
-      // });
-      // {PIVOTING} appliedPivoting = true;
-      // {PIVOTING}} else if ('columns' in result.pivoting) {
-      if ('columns' in result.pivoting) {
+      let appliedPivoting = false;
+      if (!disablePivoting && 'columns' in result.pivoting) {
+        apiRef.current.setPivotActive(true);
+        apiRef.current.setPivotModel({
+          columns: result.pivoting.columns.map((c) => ({ field: c.column, sort: c.direction })),
+          rows: result.pivoting.rows.map((r) => ({ field: r })),
+          values: result.pivoting.values.map((v) => ({ field: v.column, aggFunc: v.aggFunc })),
+        });
+        appliedPivoting = true;
+      } else if ('columns' in result.pivoting) {
         // if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
         result.pivoting.columns.forEach((c) => {
           result.grouping.push({ column: c.column });
@@ -216,6 +212,8 @@ export const useGridAiAssistant = (
         result.pivoting.values.forEach((v) => {
           result.aggregation[v.column] = v.aggFunc;
         });
+        // remove the pivoting results data
+        result.pivoting = {};
       }
 
       if (!disableRowGrouping && !appliedPivoting) {
