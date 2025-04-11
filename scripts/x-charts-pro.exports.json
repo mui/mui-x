@@ -53,6 +53,7 @@
   { "name": "blueberryTwilightPaletteDark", "kind": "Variable" },
   { "name": "blueberryTwilightPaletteLight", "kind": "Variable" },
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
+  { "name": "CategoryAxis", "kind": "TypeAlias" },
   { "name": "ChartContainerPro", "kind": "Variable" },
   { "name": "ChartContainerProProps", "kind": "TypeAlias" },
   { "name": "ChartDataProvider", "kind": "Function" },
@@ -317,10 +318,12 @@
   { "name": "RadarSeriesPlotClassKey", "kind": "TypeAlias" },
   { "name": "RadarSeriesPlotProps", "kind": "Interface" },
   { "name": "RadarSeriesType", "kind": "Interface" },
+  { "name": "RadiusAxis", "kind": "TypeAlias" },
   { "name": "rainbowSurgePalette", "kind": "Variable" },
   { "name": "rainbowSurgePaletteDark", "kind": "Variable" },
   { "name": "rainbowSurgePaletteLight", "kind": "Variable" },
   { "name": "referenceLineClasses", "kind": "Variable" },
+  { "name": "RotationAxis", "kind": "TypeAlias" },
   { "name": "ScaleName", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
   { "name": "ScatterChart", "kind": "Variable" },
@@ -420,5 +423,7 @@
   { "name": "useYScale", "kind": "Function" },
   { "name": "useZAxes", "kind": "Function" },
   { "name": "useZAxis", "kind": "Function" },
-  { "name": "useZColorScale", "kind": "Function" }
+  { "name": "useZColorScale", "kind": "Function" },
+  { "name": "XAxis", "kind": "TypeAlias" },
+  { "name": "YAxis", "kind": "TypeAlias" }
 ]
