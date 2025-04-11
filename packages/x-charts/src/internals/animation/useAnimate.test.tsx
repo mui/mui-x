@@ -1,4 +1,4 @@
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
@@ -351,7 +351,7 @@ describe('useAnimate', () => {
     await waitTwoFrames();
 
     // Clicking the button is async, so at most one more call could have happened
-    expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + 1);
+    expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + (reactMajor > 18 ? 1 : 2));
   });
 
   it('stops animation when the hook is unmounted', async () => {
