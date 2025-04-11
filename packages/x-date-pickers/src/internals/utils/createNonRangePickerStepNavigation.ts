@@ -8,12 +8,12 @@ export function createNonRangePickerStepNavigation(
 
   return createStepNavigation({
     steps,
-    isCurrentViewMatchingStep: (view, step) => {
+    isViewMatchingStep: (view, step) => {
       return step.views == null || step.views.includes(view);
     },
-    onStepChange: ({ step, initialView, setView, view, views }) => {
+    onStepChange: ({ step, defaultView, setView, view, views }) => {
       const targetView =
-        step.views == null ? initialView : step.views.find((viewBis) => views.includes(viewBis));
+        step.views == null ? defaultView : step.views.find((viewBis) => views.includes(viewBis));
       if (targetView !== view) {
         setView(targetView);
       }

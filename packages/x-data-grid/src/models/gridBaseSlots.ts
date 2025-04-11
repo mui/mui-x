@@ -83,7 +83,7 @@ export type AutocompleteProps<
 
 export type BadgeProps = CommonProps & {
   badgeContent?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   color?: 'primary' | 'default' | 'error';
   invisible?: boolean;
   overlap?: 'circular';
@@ -109,7 +109,6 @@ export type CheckboxProps = CommonProps & {
   id?: string;
   autoFocus?: boolean;
   checked?: boolean;
-  className?: string;
   disabled?: boolean;
   fullWidth?: boolean;
   indeterminate?: boolean;
@@ -125,6 +124,16 @@ export type CheckboxProps = CommonProps & {
   style?: React.CSSProperties;
   tabIndex?: number;
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
+};
+
+export type ChipProps = CommonProps & {
+  ref?: Ref<HTMLDivElement>;
+  id?: string;
+  label: string;
+  size?: 'small' | 'medium';
+  icon?: React.ReactElement;
+  children?: null;
+  variant?: 'filled' | 'outlined';
 };
 
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
@@ -277,6 +286,7 @@ export type SwitchProps = CommonProps & {
   checked?: boolean;
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
+  label?: React.ReactNode;
 };
 
 export type TextFieldProps = CommonProps & {

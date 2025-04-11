@@ -6,7 +6,7 @@ import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from 
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
 import { usePieSeriesContext } from '../hooks/usePieSeries';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useDrawingArea } from '../hooks';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
