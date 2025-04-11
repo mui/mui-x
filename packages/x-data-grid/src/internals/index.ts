@@ -217,3 +217,5 @@ export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadi
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
 
 export * from '../hooks/features/pivoting';
+
+export { createSvgIcon } from '../material/icons/createSvgIcon';
