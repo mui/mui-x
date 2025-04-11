@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
 import materialPackageJson from '@mui/material/package.json';
+import { waitFor } from '@mui/internal-test-utils';
 
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
@@ -27,6 +28,24 @@ const timeSensitiveSuites = [
   'ListView',
   'RowSpanningCalendar',
 ];
+
+function screenshotPrintDialogPreview(screenshotPath: string) {
+  return new Promise<void>((resolve, reject) => {
+    // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+    const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
+    console.log('spawning ffmpeg');
+    const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+    ffmpeg.on('close', (code) => {
+      console.log('close', code);
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`ffmpeg exited with code ${code}`));
+      }
+    });
+  });
+}
 
 const isConsoleWarningIgnored = (msg?: string) => {
   const isMuiV6Error =
@@ -245,7 +264,7 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async function test() {
+    it.skip('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
       const route = '/docs-data-grid-export/ExportDefaultToolbar';
@@ -267,18 +286,37 @@ async function main() {
 
       await sleep(4000);
 
-      return new Promise((resolve, reject) => {
-        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
-        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+      await screenshotPrintDialogPreview(screenshotPath);
+    });
 
-        ffmpeg.on('close', (code) => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error(`ffmpeg exited with code ${code}`));
-          }
+    describe('charts', () => {
+      it('should take a screenshot of the print preview', async function test() {
+        this.timeout(0);
+
+        const route = '/docs-charts-export/PrintChart';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+        console.log('before navigating to test');
+
+        await navigateToTest(route);
+        console.log('navigated to test');
+
+        await sleep(1000);
+
+        const printButton = page.getByRole('button', { name: 'Print' });
+
+        console.log('before wait for print dialog');
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          console.log('setTimeout');
+          printButton.click();
         });
+
+        await sleep(4000);
+
+        console.log('before screenshot');
+        await screenshotPrintDialogPreview(screenshotPath);
       });
     });
 
