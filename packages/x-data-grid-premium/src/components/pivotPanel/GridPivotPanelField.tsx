@@ -7,11 +7,10 @@ import {
   GridMenu,
   GridSlotProps,
   GridSortDirection,
-  NotRendered,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { GridColumnSortButton, vars } from '@mui/x-data-grid-pro/internals';
+import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';

@@ -36,6 +36,11 @@ import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import {
+  Conversation,
+  PromptResponse,
+  PromptSuggestion,
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -149,6 +154,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
         getLocaleText: GridLocaleTextApi['getLocaleText'],
       ) => GridColDef[] | undefined)
     | null;
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -279,4 +289,42 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
         originalColumnField: GridColDef['field'],
         columnGroupPath: string[],
       ) => Partial<GridPivotingColDefOverrides> | undefined);
+  /**
+   * The conversations with the AI Assistant.
+   */
+  aiAssistantConversations?: Conversation[];
+  /**
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
+   */
+  onAiAssistantConversationsChange?: (conversations: Conversation[]) => void;
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions?: PromptSuggestion[];
+  /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex?: number;
+  /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange?: (aiAssistantActiveConversationIndex: number) => void;
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling?: boolean;
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt?: (
+    prompt: string,
+    promptContext: string,
+    conversationId?: string,
+  ) => Promise<PromptResponse>;
 }

@@ -31,6 +31,7 @@ export interface GridPanelProps
    */
   classes?: Partial<GridPanelClasses>;
   open: boolean;
+  onClose?: () => void;
 }
 
 export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
@@ -52,15 +53,14 @@ const GridPanelContent = styled('div', {
   backgroundColor: vars.colors.background.overlay,
   borderRadius: vars.radius.base,
   boxShadow: vars.shadows.overlay,
-  minWidth: 300,
-  maxHeight: 450,
   display: 'flex',
-  maxWidth: `calc(100vw - ${vars.spacing(0.5)})`,
+  maxWidth: `calc(100vw - ${vars.spacing(2)})`,
+  margin: vars.spacing(1),
   overflow: 'auto',
 });
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, onClose, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
@@ -71,12 +71,12 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const onDidHide = useEventCallback(() => setIsPlaced(false));
 
   const handleClickAway = useEventCallback(() => {
-    apiRef.current.hidePreferences();
+    onClose?.();
   });
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
-      apiRef.current.hidePreferences();
+      onClose?.();
     }
   });
 
@@ -134,6 +134,7 @@ GridPanel.propTypes = {
   className: PropTypes.string,
   flip: PropTypes.bool,
   id: PropTypes.string,
+  onClose: PropTypes.func,
   open: PropTypes.bool.isRequired,
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
 } as any;

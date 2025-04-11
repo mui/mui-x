@@ -97,9 +97,7 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
   }
 
   if (options.visibleFields) {
-    columns = columns.map((col) =>
-      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
-    );
+    columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
   if (options.maxColumns) {
     columns = columns.slice(0, options.maxColumns);

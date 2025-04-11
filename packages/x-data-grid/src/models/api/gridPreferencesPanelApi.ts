@@ -6,7 +6,7 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 export interface GridPreferencesPanelApi {
   /**
    * Displays the preferences panel. The `newValue` argument controls the content of the panel.
-   * @param {GridPreferencePanelsValue} newValue The panel to open. Use `"filters"` or `"columns"`.
+   * @param {GridPreferencePanelsValue} newValue The panel to open.
    * @param {string} panelId The unique panel id
    * @param {string} labelId The unique button id
    */

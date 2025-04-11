@@ -10,7 +10,7 @@ import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
-import { NotRendered } from '../utils';
+import { NotRendered } from '../utils/assert';
 
 export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   field: string;

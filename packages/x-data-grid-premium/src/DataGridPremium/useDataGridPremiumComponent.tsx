@@ -102,6 +102,10 @@ import {
   useGridPivoting,
 } from '../hooks/features/pivoting/useGridPivoting';
 import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
+import {
+  useGridAiAssistant,
+  aiAssistantStateInitializer,
+} from '../hooks/features/aiAssistant/useGridAiAssistant';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -171,6 +175,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
+  useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
 
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
@@ -216,6 +221,7 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
+  useGridAiAssistant(apiRef, props);
 
   return props;
 };

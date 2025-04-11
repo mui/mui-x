@@ -40,18 +40,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Zadajte požiadavku…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Zadajte alebo nahrajte požiadavku…',
-  toolbarPromptControlRecordingPlaceholder: 'Počúvam požiadavku…',
-  toolbarPromptControlLabel: 'Vstup požiadavky',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrávať',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zastaviť nahrávanie',
-  toolbarPromptControlSendActionLabel: 'Odoslať',
-  toolbarPromptControlSendActionAriaLabel: 'Odoslať požiadavku',
-  toolbarPromptControlErrorMessage:
-    'Pri spracovaní požiadavky došlo k chybe. Skúste to znova s inou požiadavkou.',
-
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -61,6 +49,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Vyhľadať',
@@ -280,6 +271,54 @@ const skSKGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Vstup požiadavky',
+  promptFieldPlaceholder: 'Zadajte požiadavku…',
+  promptFieldPlaceholderWithRecording: 'Zadajte alebo nahrajte požiadavku…',
+  promptFieldPlaceholderListening: 'Počúvam požiadavku…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Odoslať',
+  promptFieldRecord: 'Nahrávať',
+  promptFieldStopRecording: 'Zastaviť nahrávanie',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid);
