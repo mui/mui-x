@@ -9,7 +9,6 @@ export default function CustomLocaleOverlay() {
       series={[]}
       height={200}
       width={300}
-      margin={0}
       xAxis={[{ scaleType: 'band', data: ['Q1', 'Q2', 'Q3', 'Q4'] }]}
     />
   );
