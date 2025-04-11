@@ -322,4 +322,5 @@ export type TooltipProps = CommonProps & {
 
 export type IconProps = CommonProps & {
   fontSize?: 'small' | 'medium' | 'large' | 'inherit';
+  color: 'action';
 };
