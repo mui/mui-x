@@ -55,7 +55,7 @@ function ChartDataProvider<
 
   return (
     <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
-      <ChartsLocalizationProvider localeText={localeText}> {children}</ChartsLocalizationProvider>
+      <ChartsLocalizationProvider localeText={localeText}>{children}</ChartsLocalizationProvider>
     </ChartProvider>
   );
 }
