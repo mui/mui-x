@@ -23,6 +23,8 @@ export function useNoData() {
 export type CommonOverlayProps = React.SVGAttributes<SVGTextElement> & {
   /**
    * The message displayed by the overlay.
+   * @deprecated The customization of the message should be done with the localization key `loading` and `noData`.
+   * @see See {@link https://mui.com/x/react-charts/localization/ localization docs} for more details.
    */
   message?: string;
   sx?: SxProps<Theme>;

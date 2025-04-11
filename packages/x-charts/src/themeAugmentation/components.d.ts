@@ -23,6 +23,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsLegend'];
   };
+  MuiChartsLocalizationProvider?: {
+    defaultProps?: ComponentsProps['MuiChartsLocalizationProvider'];
+  };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsTooltip'];

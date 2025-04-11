@@ -13,6 +13,7 @@ export * from './ChartsText';
 export * from './ChartsTooltip';
 export * from './ChartsLabel';
 export * from './ChartsLegend';
+export * from './ChartsLocalizationProvider';
 export * from './ChartsAxisHighlight';
 export * from './BarChart';
 export * from './LineChart';
