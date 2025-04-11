@@ -230,6 +230,10 @@ BarChart.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Locale for charts components texts
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *

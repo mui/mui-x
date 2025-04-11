@@ -24,6 +24,7 @@
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "localeText": { "description": "Locale for charts components texts" },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
