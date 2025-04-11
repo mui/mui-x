@@ -34,6 +34,7 @@
       "default": "\"mobile\""
     },
     "displayWeekNumber": { "type": { "name": "bool" } },
+    "enableEnhancedDaySlot": { "type": { "name": "bool" }, "default": "false" },
     "fixedWeekNumber": { "type": { "name": "number" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },

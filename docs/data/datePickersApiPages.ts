@@ -104,6 +104,15 @@ const datePickersApiPages: MuiPage[] = [
     title: 'DigitalClock',
   },
   {
+    pathname: '/x/api/date-pickers/enhanced-date-range-picker-day',
+    title: 'EnhancedDateRangePickerDay',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/enhanced-pickers-day',
+    title: 'EnhancedPickersDay',
+  },
+  {
     pathname: '/x/api/date-pickers/localization-provider',
     title: 'LocalizationProvider',
   },

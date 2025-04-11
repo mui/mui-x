@@ -35,6 +35,7 @@
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
+    "enableEnhancedDaySlot": { "type": { "name": "bool" }, "default": "false" },
     "fixedWeekNumber": { "type": { "name": "number" } },
     "focusedView": { "type": { "name": "enum", "description": "'day'" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },

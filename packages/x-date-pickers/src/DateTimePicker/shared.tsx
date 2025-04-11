@@ -174,6 +174,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
+    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       toolbar: DateTimePickerToolbar,
       tabs: DateTimePickerTabs,
