@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -142,6 +143,14 @@ const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparat
 const PickersInputBaseInput = styled('input', {
   name: 'MuiPickersInputBase',
   slot: 'Input',
+  overridesResolver: (props, styles) => styles.hiddenInput,
+})({
+  ...visuallyHidden,
+});
+
+const PickersInputBaseSubmitInput = styled('input', {
+  name: 'MuiPickersInputBase',
+  slot: 'SubmitInput',
   overridesResolver: (props, styles) => styles.hiddenInput,
 })({
   ...visuallyHidden,
@@ -306,9 +315,11 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const activeBarRef = React.useRef<HTMLDivElement>(null);
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
+  const submitInputRef = React.useRef<HTMLInputElement>(null);
   const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
-  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
+  const handleInputRef = useForkRef(inputProps?.ref, inputRef, internalInputRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -325,6 +336,15 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const handleHiddenInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     handleInputFocus(event);
+  };
+
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      event.preventDefault();
+      // Click the hidden submit input to trigger the form submission
+      submitInputRef.current?.click();
+    }
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
@@ -394,7 +414,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         slots={{
           root: InputSectionsContainer,
           section: PickersInputBaseSection,
@@ -437,6 +457,15 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onFocus={handleHiddenInputFocus}
         {...inputProps}
         ref={handleInputRef}
+      />
+      <PickersInputBaseSubmitInput
+        ref={submitInputRef}
+        type="submit"
+        aria-hidden="true"
+        readOnly={readOnly}
+        required={muiFormControl.required}
+        disabled={muiFormControl.disabled}
+        tabIndex={-1}
       />
       {isSingleInputRange && (
         <PickersInputBaseActiveBar

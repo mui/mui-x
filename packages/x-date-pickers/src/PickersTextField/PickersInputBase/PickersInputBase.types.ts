@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
+import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
 
 export interface PickersInputPropsUsedByField
@@ -15,7 +16,7 @@ export interface PickersInputPropsUsedByField
   areAllSectionsEmpty: boolean;
 
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  onKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
+  onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
 
