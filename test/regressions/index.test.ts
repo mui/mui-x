@@ -299,7 +299,7 @@ async function main() {
         await fse.ensureDir(path.dirname(screenshotPath));
         console.log('before navigating to test');
 
-        // await page.reload();
+        await page.reload();
         await navigateToTest(route);
         console.log('navigated to test');
 
