@@ -25,6 +25,11 @@ export const ChartsTooltipTable = styled('table', {
   overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
+  [`& .${chartsTooltipClasses.markContainer}`]: {
+    display: 'inline-block',
+    width: `calc(20px + ${theme.spacing(1.5)})`,
+    verticalAlign: 'middle',
+  },
   '& caption': {
     borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
     padding: theme.spacing(0.5, 1.5),
@@ -68,12 +73,6 @@ export const ChartsTooltipCell = styled(Typography, {
   },
   [`&.${chartsTooltipClasses.labelCell}`]: {
     fontWeight: theme.typography.fontWeightRegular,
-  },
-
-  [`& .${chartsTooltipClasses.markContainer}`]: {
-    display: 'inline-block',
-    width: `calc(20px + ${theme.spacing(1.5)})`,
-    verticalAlign: 'middle',
   },
   [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {
     color: (theme.vars || theme).palette.text.primary,

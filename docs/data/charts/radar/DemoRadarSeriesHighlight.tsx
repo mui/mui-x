@@ -62,6 +62,7 @@ export default function DemoRadarSeriesHighlight() {
           highlight="series"
           highlightedItem={highlightedItem}
           onHighlightChange={setHighlightedItem}
+          slotProps={{ tooltip: { trigger: 'none' } }}
           series={withOptions(series)}
           radar={radar}
         />

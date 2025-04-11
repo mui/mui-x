@@ -2,8 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsLegend } from '../ChartsLegend';
-import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
@@ -12,9 +17,17 @@ import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/R
 import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
+import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
 
-export interface RadarChartSlots {}
-export interface RadarChartSlotProps {}
+export interface RadarChartSlots
+  extends ChartsTooltipSlots,
+    ChartsOverlaySlots,
+    ChartsLegendSlots {}
+
+export interface RadarChartSlotProps
+  extends ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps,
+    ChartsLegendSlotProps {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
@@ -53,6 +66,8 @@ const RadarChart = React.forwardRef(function RadarChart(
     children,
   } = useRadarChartProps(props);
 
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
   return (
     <RadarDataProvider {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
@@ -64,6 +79,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
       </ChartsWrapper>

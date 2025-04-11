@@ -3,7 +3,7 @@ import getColor from './getColor';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
 import legendGetter from './legend';
-import tooltipGetter from './tooltip';
+import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
@@ -11,6 +11,7 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   seriesProcessor: formatter,
   legendGetter,
   tooltipGetter,
+  axisTooltipGetter,
   getSeriesWithDefaultValues,
   radiusExtremumGetter,
   rotationExtremumGetter,
