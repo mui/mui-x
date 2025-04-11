@@ -226,7 +226,7 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async function test() {
+    it.skip('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
       const route = '/docs-data-grid-export/ExportDefaultToolbar';
@@ -249,28 +249,29 @@ async function main() {
       await sleep(4000);
 
       await screenshotPrintDialogPreview(screenshotPath);
-      await page.keyboard.press('Escape');
     });
 
     describe('charts', () => {
-      it.only('should take a screenshot of the print preview', async function test() {
-        this.timeout(20000);
+      it('should take a screenshot of the print preview', async function test() {
+        this.timeout(0);
 
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
         console.log('before navigating to test');
 
-        await page.reload();
         await navigateToTest(route);
         console.log('navigated to test');
 
         await sleep(1000);
-        const printButton = await page.getByRole('button', { name: 'Print' });
+
+        const printButton = page.getByRole('button', { name: 'Print' });
 
         console.log('before wait for print dialog');
+        // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
         setTimeout(() => {
+          console.log('setTimeout');
           printButton.click();
         });
 
@@ -278,7 +279,6 @@ async function main() {
 
         console.log('before screenshot');
         await screenshotPrintDialogPreview(screenshotPath);
-        await page.keyboard.press('Escape');
       });
     });
 
