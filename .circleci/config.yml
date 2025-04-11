@@ -113,8 +113,11 @@ commands:
           condition: << parameters.playwright >>
           steps:
             - run:
-                name: Install playwright
-                command: pnpx playwright@1.51.1 install --with-deps
+                name: Install playwright & ffmpeg
+                command: |
+                  pnpx playwright@1.51.1 install --with-deps
+                  # Avoids installing a system version of ffmpeg
+                  ln -s ~/.cache/ms-playwright/ffmpeg-1011 ~/bin/ffmpeg
 
 jobs:
   checkout:
@@ -293,9 +296,6 @@ jobs:
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-      - run:
-          name: Install ffmpeg
-          command: sudo apt update && sudo apt upgrade -y && sudo apt install ffmpeg -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
