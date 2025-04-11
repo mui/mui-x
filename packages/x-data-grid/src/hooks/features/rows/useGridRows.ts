@@ -213,7 +213,7 @@ export const useGridRows = (
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
 
-  const updateServerRows = React.useCallback<GridRowProPrivateApi['updateServerRows']>(
+  const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
     (updates, groupKeys) => {
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
@@ -494,7 +494,7 @@ export const useGridRows = (
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {
-    updateServerRows,
+    updateNestedRows,
   };
 
   /**

@@ -13,6 +13,7 @@ import {
   gridPaginationModelSelector,
   gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
+  gridRowIdSelector,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -267,6 +268,8 @@ export const useGridDataSourceLazyLoader = (
 
       const { response, fetchParams } = params;
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+      const tree = privateApiRef.current.state.rows.tree;
+      const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
       if (response.rowCount !== undefined || pageRowCount === undefined) {
         privateApiRef.current.setRowCount(response.rowCount === undefined ? -1 : response.rowCount);
       }
@@ -277,12 +280,48 @@ export const useGridDataSourceLazyLoader = (
         // the rows can safely be replaced. skeleton rows will be added later
         privateApiRef.current.setRows(response.rows);
       } else {
+        const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+        const rootGroupChildren = [...rootGroup.children];
         const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(privateApiRef);
 
         const startingIndex =
           typeof fetchParams.start === 'string'
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
+
+        // Check for duplicate rows
+        let duplicateRowCount = 0;
+        response.rows.forEach((row) => {
+          const rowId = gridRowIdSelector(privateApiRef, row);
+          if (tree[rowId] || dataRowIdToModelLookup[rowId]) {
+            const index = rootGroupChildren.indexOf(rowId);
+            if (index !== -1) {
+              const skeletonId = getSkeletonRowId(index);
+              rootGroupChildren[index] = skeletonId;
+              tree[skeletonId] = {
+                type: 'skeletonRow',
+                id: skeletonId,
+                parent: GRID_ROOT_GROUP_ID,
+                depth: 0,
+              };
+            }
+            delete tree[rowId];
+            delete dataRowIdToModelLookup[rowId];
+            duplicateRowCount += 1;
+          }
+        });
+
+        if (duplicateRowCount > 0) {
+          tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+          privateApiRef.current.setState((state) => ({
+            ...state,
+            rows: {
+              ...state.rows,
+              tree,
+              dataRowIdToModelLookup,
+            },
+          }));
+        }
 
         privateApiRef.current.unstable_replaceRows(startingIndex, response.rows);
       }

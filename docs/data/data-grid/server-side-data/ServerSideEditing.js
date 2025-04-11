@@ -1,34 +1,16 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
-import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
+import Button from '@mui/material/Button';
 
-const pageSizeOptions = [5, 10, 50];
-const dataSetOptions = {
-  dataSet: 'Employee',
-  rowLength: 1000,
-  editable: true,
-  treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
-};
-
-export default function ServerSideTreeData() {
+export default function ServerSideEditing() {
   const apiRef = useGridApiRef();
-
-  const { fetchRows, editRow, columns, initialState } =
-    useMockServer(dataSetOptions);
-
-  const initialStateWithPagination = React.useMemo(
-    () => ({
-      ...initialState,
-      pagination: {
-        paginationModel: {
-          pageSize: 5,
-        },
-        rowCount: 0,
-      },
-    }),
-    [initialState],
-  );
+  const {
+    columns,
+    initialState: initState,
+    fetchRows,
+    editRow,
+  } = useMockServer({ editable: true }, { useCursorPagination: false });
 
   const dataSource = React.useMemo(
     () => ({
@@ -37,7 +19,6 @@ export default function ServerSideTreeData() {
           paginationModel: JSON.stringify(params.paginationModel),
           filterModel: JSON.stringify(params.filterModel),
           sortModel: JSON.stringify(params.sortModel),
-          groupKeys: JSON.stringify(params.groupKeys),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -51,27 +32,38 @@ export default function ServerSideTreeData() {
         const syncedRow = await editRow(params.rowId, params.updatedRow);
         return syncedRow;
       },
-      getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
-      getChildrenCount: (row) => row.descendantCount,
     }),
     [fetchRows, editRow],
   );
 
+  const initialState = React.useMemo(
+    () => ({
+      ...initState,
+      pagination: {
+        paginationModel: { pageSize: 10, page: 0 },
+        rowCount: 0,
+      },
+    }),
+    [initState],
+  );
+
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
-        Reset cache
+      <Button
+        onClick={() => {
+          apiRef.current?.dataSource.cache.clear();
+        }}
+      >
+        Clear cache
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPro
+          apiRef={apiRef}
           columns={columns}
           dataSource={dataSource}
-          treeData
-          apiRef={apiRef}
           pagination
-          pageSizeOptions={pageSizeOptions}
-          initialState={initialStateWithPagination}
-          showToolbar
+          initialState={initialState}
+          pageSizeOptions={[10, 20, 50]}
         />
       </div>
     </div>
