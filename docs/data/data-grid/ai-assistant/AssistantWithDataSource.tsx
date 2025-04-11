@@ -119,6 +119,7 @@ export default function AssistantWithDataSource() {
         onPrompt={processPrompt}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}
+        disablePivoting
       />
     </div>
   );
