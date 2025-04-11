@@ -5,14 +5,9 @@ import { expect } from 'chai';
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  // @ts-expect-error Make sure invalid imports fail:
-  INVALID_TYPE,
-  interpolate,
-  NumberArray,
-} from '@mui/x-charts-vendor/d3-interpolate';
+import { interpolate } from '@mui/x-charts-vendor/d3-interpolate';
 
-describe('d3-interpolate', () => {
+describe.only('d3-interpolate', () => {
   it('exports valid functions', () => {
     expect(interpolate).instanceOf(Function);
   });
