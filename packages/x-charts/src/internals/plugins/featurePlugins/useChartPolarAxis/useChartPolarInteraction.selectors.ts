@@ -6,7 +6,7 @@ import {
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { ComputeResult } from './computeAxisValue';
 import { generateSvg2rotation } from './coordinateTransformation';
-import { getAxisIndex } from './getAxisValue';
+import { getAxisIndex } from './getAxisIndex';
 import { selectorChartPolarCenter, selectorChartRotationAxis } from './useChartPolarAxis.selectors';
 
 const optionalGetAxisId = (_: unknown, id?: AxisId) => id;

@@ -57,7 +57,6 @@ const rendererInterceptor = function RendererInterceptor(
 
   const finalProps = {
     ...otherRendererProps,
-    focusedView: null,
     sx: [
       {
         width: DIALOG_WIDTH,
