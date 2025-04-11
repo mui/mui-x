@@ -12,8 +12,6 @@ packageName: '@mui/x-charts'
 
 Install the Charts package that best suits your needs—Community or Pro:
 
-<!-- #default-branch-switch -->
-
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
 ### Peer dependencies

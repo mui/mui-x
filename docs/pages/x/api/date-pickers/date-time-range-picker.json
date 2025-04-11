@@ -39,7 +39,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the <a href=\"https://next.mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },

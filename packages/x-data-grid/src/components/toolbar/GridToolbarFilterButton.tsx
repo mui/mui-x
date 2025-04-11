@@ -57,7 +57,7 @@ export interface GridToolbarFilterButtonProps {
 }
 
 /**
- * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/filter-panel/ Filter Panel Trigger} component instead. This component will be removed in a future major release.
+ * @deprecated Use the {@link https://mui.com/x/react-data-grid/components/filter-panel/ Filter Panel Trigger} component instead. This component will be removed in a future major release.
  */
 const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
