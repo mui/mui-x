@@ -320,7 +320,7 @@ export type TooltipProps = CommonProps & {
   title: React.ReactNode;
 };
 
-export type IconProps = CommonProps & {
+export type IconProps = CommonProps<SVGSVGElement> & {
   fontSize?: 'small' | 'medium' | 'large' | 'inherit';
-  color?: 'action';
+  color?: 'action' | string;
 };
