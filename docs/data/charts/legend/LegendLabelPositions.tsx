@@ -25,7 +25,7 @@ export default function LegendLabelPositions() {
       height={200}
       yAxis={[
         {
-          valueFormatter: (value) => `${value}°`,
+          valueFormatter: (value: number) => `${value}°`,
           colorMap: {
             type: 'continuous',
             min: -0.5,
@@ -36,7 +36,7 @@ export default function LegendLabelPositions() {
       ]}
       xAxis={[
         {
-          valueFormatter: (value) => `${value}°`,
+          valueFormatter: (value: number) => `${value}°`,
           colorMap: {
             type: 'piecewise',
             thresholds: [0, 1.5],

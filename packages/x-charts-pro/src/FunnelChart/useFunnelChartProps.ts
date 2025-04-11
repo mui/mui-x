@@ -5,9 +5,8 @@ import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import useId from '@mui/utils/useId';
 import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import { ChartsWrapperProps, defaultizeMargin } from '@mui/x-charts/internals';
+import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 import { warnOnce } from '@mui/x-internals/warning';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
@@ -18,19 +17,19 @@ function getCategoryAxisConfig(
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   direction: 'y',
-): AxisConfig<ScaleName, any, ChartsYAxisProps>;
+): YAxis;
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   direction: 'x',
-): AxisConfig<ScaleName, any, ChartsXAxisProps>;
-function getCategoryAxisConfig(
+): XAxis;
+function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
-  direction: 'x' | 'y',
-): AxisConfig<ScaleName, any, any> {
+  direction: D,
+): XAxis | YAxis {
   const maxSeriesLength = Math.max(...series.map((s) => (s.data ?? []).length), 0);
   const maxSeriesValue = Array.from({ length: maxSeriesLength }, (_, index) =>
     series.reduce((a, s) => a + (s.data?.[index]?.value ?? 0), 0),
@@ -56,7 +55,7 @@ function getCategoryAxisConfig(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
+    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
   } as const;
 
   // If the scaleType is not defined or is 'band', our job is simple.
@@ -96,7 +95,7 @@ function getCategoryAxisConfig(
     valueFormatter: (value) =>
       `${categoryAxis.categories?.toReversed()[tickValues.findIndex((v) => v === value) - 1]}`,
     ...categoryValues,
-  } as const;
+  } satisfies XAxis | YAxis;
 }
 
 /**
