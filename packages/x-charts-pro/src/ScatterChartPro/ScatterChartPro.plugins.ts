@@ -11,6 +11,10 @@ import {
   UseChartVoronoiSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
+import {
+  useChartProExport,
+  UseChartProExportSignature,
+} from '../internals/plugins/useChartProExport';
 import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 export type ScatterChartProPluginsSignatures = [
@@ -20,6 +24,7 @@ export type ScatterChartProPluginsSignatures = [
   UseChartHighlightSignature,
   UseChartVoronoiSignature,
   UseChartProZoomSignature,
+  UseChartProExportSignature,
 ];
 
 export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginsSignatures> =
@@ -30,4 +35,5 @@ export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChar
     useChartHighlight,
     useChartVoronoi,
     useChartProZoom,
+    useChartProExport,
   ];
