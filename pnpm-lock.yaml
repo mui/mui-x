@@ -99,8 +99,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#a7e08b43255f84826e14f28bf4abd3984315bd39
-        version: https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
+        specifier: github:mui/material-ui#6dfff6699c34e18c1b8369a7fc8db6a67c0d0a54
+        version: https://codeload.github.com/mui/material-ui/tar.gz/6dfff6699c34e18c1b8369a7fc8db6a67c0d0a54(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^7.0.1
         version: 7.0.1(@types/react@19.0.12)(react@19.0.0)
@@ -444,8 +444,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/material-nextjs':
-        specifier: ^7.0.0
-        version: 7.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/server@11.11.0)(@types/react@19.0.12)(next@15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs
+        version: https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/server@11.11.0)(@types/react@19.0.12)(next@15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@mui/system':
         specifier: ^7.0.1
         version: 7.0.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
@@ -3168,8 +3168,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/material-nextjs@7.0.0':
-    resolution: {integrity: sha512-C0rY/W6oln6Qy1CCCB8p+ORyS/DYThhVmD+yoBO08cnI8FaIq4mWdkpVXeafOX8Pzinn6NlbHQlquNrMcW4acw==}
+  '@mui/material-nextjs@https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs}
+    version: 7.0.2
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/cache': ^11.11.0
@@ -3206,10 +3207,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39}
-    version: 7.0.1
-    engines: {pnpm: 10.7.0}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6dfff6699c34e18c1b8369a7fc8db6a67c0d0a54':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/6dfff6699c34e18c1b8369a7fc8db6a67c0d0a54}
+    version: 7.0.2
+    engines: {pnpm: 10.8.0}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -12267,7 +12268,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/material-nextjs@7.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/server@11.11.0)(@types/react@19.0.12)(next@15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
+  '@mui/material-nextjs@https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/server@11.11.0)(@types/react@19.0.12)(next@15.2.4(@babel/core@7.26.10)(@playwright/test@1.51.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.27.0
       '@emotion/react': 11.14.0(@types/react@19.0.12)(react@19.0.0)
@@ -12299,7 +12300,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/a7e08b43255f84826e14f28bf4abd3984315bd39(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6dfff6699c34e18c1b8369a7fc8db6a67c0d0a54(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.6.0(encoding@0.1.13)
       '@netlify/functions': 3.0.4

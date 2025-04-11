@@ -32,7 +32,7 @@
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.10",
     "@mui/material": "^7.0.1",
-    "@mui/material-nextjs": "^7.0.0",
+    "@mui/material-nextjs": "https://pkg.csb.dev/mui/material-ui/commit/e7de7804/@mui/material-nextjs",
     "@mui/system": "^7.0.1",
     "@mui/utils": "^7.0.1",
     "@mui/x-charts": "workspace:*",
