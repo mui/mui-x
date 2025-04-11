@@ -225,11 +225,11 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
-        if (version === 'v7') {
+        if (version === 'v8') {
           // #default-branch-switch
           return {
             text: version,
-            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+            current: true,
           };
         }
         return {
