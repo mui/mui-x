@@ -1,6 +1,7 @@
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
 import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { ChipProps } from '@mui/material/Chip';
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { DividerProps } from '@mui/material/Divider';
 import type { LinearProgressProps } from '@mui/material/LinearProgress';
@@ -26,6 +27,9 @@ declare module '@mui/x-data-grid' {
   }
   interface BaseCheckboxPropsOverrides {
     material?: Partial<CheckboxProps>;
+  }
+  interface BaseChipPropsOverrides {
+    material?: Partial<ChipProps>;
   }
   interface BaseCircularProgressPropsOverrides {
     material?: Partial<CircularProgressProps>;

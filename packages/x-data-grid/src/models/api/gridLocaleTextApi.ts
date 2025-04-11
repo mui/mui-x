@@ -10,6 +10,7 @@ export interface GridLocaleText {
   noResultsOverlayLabel: string;
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
+  emptyPivotOverlayLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -51,6 +52,9 @@ export interface GridLocaleText {
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
+
+  // Toolbar pivot button
+  toolbarPivot: string;
 
   // Columns management text
   columnsManagementSearchTitle: string;
@@ -133,6 +137,7 @@ export interface GridLocaleText {
   columnMenuUnsort: React.ReactNode;
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuManagePivot: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -202,6 +207,35 @@ export interface GridLocaleText {
     estimated: number | undefined;
   }) => string;
   paginationItemAriaLabel: (type: 'first' | 'last' | 'previous' | 'next') => string;
+
+  // Pivot
+  pivotToggleLabel: string;
+  pivotCloseButton: string;
+  pivotSearchButton: string;
+  pivotSearchControlPlaceholder: string;
+  pivotSearchControlLabel: string;
+  pivotSearchControlClear: string;
+  pivotNoFields: string;
+  pivotRows: string;
+  pivotColumns: string;
+  pivotValues: string;
+  pivotMenuMoveUp: string;
+  pivotMenuMoveDown: string;
+  pivotMenuMoveToTop: string;
+  pivotMenuMoveToBottom: string;
+  pivotMenuRows: string;
+  pivotMenuColumns: string;
+  pivotMenuValues: string;
+  pivotMenuOptions: string;
+  pivotMenuAddToRows: string;
+  pivotMenuAddToColumns: string;
+  pivotMenuAddToValues: string;
+  pivotMenuRemove: string;
+  pivotDragToRows: string;
+  pivotDragToColumns: string;
+  pivotDragToValues: string;
+  pivotYearColumnHeaderName: string;
+  pivotQuarterColumnHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

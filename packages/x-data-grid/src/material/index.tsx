@@ -75,19 +75,23 @@ export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)({
+const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
-    marginRight: '-7px',
+    marginRight: theme.spacing(-0.75),
   },
-});
+}));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   margin: 0,
+  overflow: 'hidden',
   [`& .${formControlLabelClasses.label}`]: {
     fontSize: theme.typography.pxToRem(14),
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   variants: [
     {
@@ -294,6 +298,11 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   return <MUIButton {...rest} {...material} ref={ref} />;
 });
 
+const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIChip {...rest} {...material} ref={ref} />;
+});
+
 const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
   const { material, ...rest } = props;
   return <MUIIconButton {...rest} {...material} ref={ref} />;
@@ -310,8 +319,19 @@ const BaseSkeleton = forwardRef<any, P['baseSkeleton']>(function BaseSkeleton(pr
 });
 
 const BaseSwitch = forwardRef<any, P['baseSwitch']>(function BaseSwitch(props, ref) {
-  const { material, ...rest } = props;
-  return <MUISwitch {...rest} {...material} ref={ref} />;
+  const { material, label, className, ...rest } = props;
+
+  if (!label) {
+    return <MUISwitch {...rest} {...material} className={className} ref={ref} />;
+  }
+
+  return (
+    <FormControlLabel
+      className={className}
+      control={<MUISwitch {...rest} {...material} ref={ref} />}
+      label={label}
+    />
+  );
 });
 
 const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(props, ref) {
@@ -635,6 +655,7 @@ const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
   baseBadge: BaseBadge,
   baseCheckbox: BaseCheckbox,
+  baseChip: BaseChip,
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,
