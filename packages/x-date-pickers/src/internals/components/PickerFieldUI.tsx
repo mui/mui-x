@@ -369,7 +369,7 @@ export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
+    Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
     {},
     FieldOwnerState
   >;

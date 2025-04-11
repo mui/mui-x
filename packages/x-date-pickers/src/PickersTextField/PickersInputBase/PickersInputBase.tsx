@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -337,13 +338,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     handleInputFocus(event);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter') {
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
       event.preventDefault();
       // Click the hidden submit input to trigger the form submission
       submitInputRef.current?.click();
     }
-    onKeyDown?.(event);
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
