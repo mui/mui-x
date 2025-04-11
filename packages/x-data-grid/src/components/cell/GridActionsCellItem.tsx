@@ -6,7 +6,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement<GridBaseIconProps>;
+  icon?: React.JSXElementConstructor<GridBaseIconProps> | React.ReactNode;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }
