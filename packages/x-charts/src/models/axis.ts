@@ -497,17 +497,15 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
-export type XAxis<S extends ScaleName = ScaleName> = MakeOptional<
-  AxisConfig<S, any, ChartsXAxisProps>,
-  'id'
->;
-export type YAxis<S extends ScaleName = ScaleName> = MakeOptional<
-  AxisConfig<S, any, ChartsYAxisProps>,
-  'id'
->;
-export type RotationAxis<S extends ScaleName = ScaleName> = AxisConfig<
-  S,
-  any,
-  ChartsRotationAxisProps
->;
-export type RadiusAxis<S extends 'linear' = 'linear'> = AxisConfig<S, any, ChartsRadiusAxisProps>;
+export type XAxis<S extends ScaleName = ScaleName> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, any, ChartsXAxisProps>, 'id'>
+  : never;
+export type YAxis<S extends ScaleName = ScaleName> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, any, ChartsYAxisProps>, 'id'>
+  : never;
+export type RotationAxis<S extends ScaleName = ScaleName> = S extends ScaleName
+  ? AxisConfig<S, any, ChartsRotationAxisProps>
+  : never;
+export type RadiusAxis<S extends 'linear' = 'linear'> = S extends 'linear'
+  ? AxisConfig<S, any, ChartsRadiusAxisProps>
+  : never;
