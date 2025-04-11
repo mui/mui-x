@@ -19,17 +19,17 @@ With the v8 you can now:
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `latest`.
 
 ```diff
 -"@mui/x-charts": "^7.0.0",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "latest",
 
 -"@mui/x-charts-pro": "^7.0.0",
-+"@mui/x-charts-pro": "next",
++"@mui/x-charts-pro": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Using `latest` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0`.
 
 ## Package layout changes
 
@@ -373,7 +373,7 @@ It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
 
-> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart

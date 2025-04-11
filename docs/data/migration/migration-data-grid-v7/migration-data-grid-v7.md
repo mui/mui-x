@@ -13,20 +13,20 @@ This is a reference guide for upgrading `@mui/x-data-grid` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the Data Grid package to `next`.
+In `package.json`, change the version of the Data Grid package to `latest`.
 
 ```diff
 -"@mui/x-data-grid": "^7.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "latest",
 
 -"@mui/x-data-grid-pro": "^7.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "latest",
 
 -"@mui/x-data-grid-premium": "^7.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Using `latest` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0`.
 
 ## Package layout changes
 

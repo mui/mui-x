@@ -12,17 +12,17 @@ This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the Tree View package to `next`.
+In `package.json`, change the version of the Tree View package to `latest`.
 
 ```diff
 -"@mui/x-tree-view": "7.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "latest",
 
 -"@mui/x-tree-view-pro": "7.x.x",
-+"@mui/x-tree-view-pro": "next",
++"@mui/x-tree-view-pro": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Using `latest` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
