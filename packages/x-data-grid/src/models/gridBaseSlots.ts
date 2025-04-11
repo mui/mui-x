@@ -323,4 +323,5 @@ export type TooltipProps = CommonProps & {
 export type IconProps = CommonProps<SVGSVGElement> & {
   fontSize?: 'small' | 'medium' | 'large' | 'inherit';
   color?: 'action' | string;
+  titleAccess?: string;
 };
