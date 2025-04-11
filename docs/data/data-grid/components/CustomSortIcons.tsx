@@ -12,10 +12,6 @@ export function SortedAscendingIcon() {
   return <ExpandLessIcon className="icon" />;
 }
 
-export function UnsortedIcon() {
-  return <SortIcon className="icon" />;
-}
-
 const rows = [
   {
     id: 1,
@@ -46,7 +42,6 @@ export default function CustomSortIcons() {
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,
-          columnUnsortedIcon: UnsortedIcon,
         }}
       />
     </div>
