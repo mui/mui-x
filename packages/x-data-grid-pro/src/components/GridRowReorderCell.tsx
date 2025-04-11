@@ -9,6 +9,7 @@ import {
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
+  gridClasses,
 } from '@mui/x-data-grid';
 import { gridEditRowsStateSelector, isEventTargetInPortal } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -77,11 +78,19 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [apiRef, params.id],
   );
 
+  const onMouseDown = React.useCallback(() => {
+    // Prevent text selection as it will block all the drag events. More context: https://github.com/mui/mui-x/issues/16303
+    apiRef.current.rootElementRef?.current?.classList.add(
+      gridClasses['root--disableUserSelection'],
+    );
+  }, [apiRef]);
+
   const draggableEventHandlers = isDraggable
     ? {
         onDragStart: publish('rowDragStart'),
         onDragOver: publish('rowDragOver'),
         onDragEnd: publish('rowDragEnd'),
+        onMouseDown,
       }
     : null;
 
