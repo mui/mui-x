@@ -24,7 +24,7 @@ In `package.json`, change the version of the date pickers package to `latest`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v7 to v8.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 :::success
 The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
