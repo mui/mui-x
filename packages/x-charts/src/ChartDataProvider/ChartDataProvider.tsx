@@ -6,6 +6,10 @@ import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import {
+  ChartsLocalizationProvider,
+  ChartsLocalizationProviderProps,
+} from '../ChartsLocalizationProvider';
 
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -13,7 +17,8 @@ export type ChartDataProviderProps<
 > = React.PropsWithChildren<
   ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
     Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
->;
+> &
+  ChartsLocalizationProviderProps;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -46,9 +51,13 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, chartProviderProps } = useChartDataProviderProps(props);
+  const { children, localeText, chartProviderProps } = useChartDataProviderProps(props);
 
-  return <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>{children}</ChartProvider>;
+  return (
+    <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
+      <ChartsLocalizationProvider localeText={localeText}> {children}</ChartsLocalizationProvider>
+    </ChartProvider>
+  );
 }
 
 ChartDataProvider.propTypes = {
@@ -77,6 +86,10 @@ ChartDataProvider.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * Locale for charts components texts
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

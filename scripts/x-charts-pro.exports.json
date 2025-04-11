@@ -380,6 +380,7 @@
   { "name": "useChartGradientId", "kind": "Function" },
   { "name": "useChartGradientIdObjectBound", "kind": "Function" },
   { "name": "useChartId", "kind": "Function" },
+  { "name": "useChartsLocalization", "kind": "Variable" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
   { "name": "useHeatmapSeries", "kind": "Function" },

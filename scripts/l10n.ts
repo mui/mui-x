@@ -39,6 +39,13 @@ const packagesWithL10n = [
     localesRelativePath: 'packages/x-date-pickers/src/locales',
     documentationReportPath: 'docs/data/date-pickers/localization/data.json',
   },
+  {
+    key: 'charts',
+    reportName: '📊 Charts',
+    constantsRelativePath: 'packages/x-charts/src/constants/defaultLocale.ts',
+    localesRelativePath: 'packages/x-charts/src/locales',
+    documentationReportPath: 'docs/data/charts/localization/data.json',
+  },
 ];
 
 const BABEL_PLUGINS = [require.resolve('@babel/plugin-syntax-typescript')];
@@ -72,7 +79,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers)/.test(node.id.name)) {
+          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|Charts)/.test(node.id.name)) {
             visitorPath.skip();
             return;
           }
