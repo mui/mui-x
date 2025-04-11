@@ -1,89 +1,92 @@
 import * as React from 'react';
+import { BaseSlots } from '@mui/x-data-grid/internals';
+
+type IconProps = BaseSlots.IconProps;
 
 export interface GridPremiumIconSlotsComponent {
   /**
    * Icon displayed in column menu for ungrouping
    * @default GridWorkspacesIcon
    */
-  columnMenuUngroupIcon: React.JSXElementConstructor<any>;
+  columnMenuUngroupIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in column menu for grouping
    * @default GridGroupWorkIcon
    */
-  columnMenuGroupIcon: React.JSXElementConstructor<any>;
+  columnMenuGroupIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in column menu for aggregation
    * @default GridFunctionsIcon
    */
-  columnMenuAggregationIcon: React.JSXElementConstructor<any>;
+  columnMenuAggregationIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon used for the button that sends a prompt
    * @default GridFunctionsIcon
    */
-  toolbarPromptSendIcon: React.JSXElementConstructor<any>;
+  toolbarPromptSendIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon used for the button that starts/stops recording the prompt
    * @default GridFunctionsIcon
    */
-  toolbarPromptRecordIcon: React.JSXElementConstructor<any>;
+  toolbarPromptRecordIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon used for the pivot icon
    * @default GridPivotIcon
    */
-  pivotIcon: React.JSXElementConstructor<any>;
+  pivotIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon used for the search icon in the sidebar search field
    * @default GridSearchIcon
    */
-  pivotSearchIcon: React.JSXElementConstructor<any>;
+  pivotSearchIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon used for the clear button in the sidebar search field
    * @default GridClearIcon
    */
-  pivotSearchClearIcon: React.JSXElementConstructor<any>;
+  pivotSearchClearIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for adding a field to a pivot section.
    * @default GridAddIcon
    */
-  pivotMenuAddIcon: React.JSXElementConstructor<any>;
+  pivotMenuAddIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for moving a field up.
    * @default GridExpandLessIcon
    */
-  pivotMenuMoveUpIcon: React.JSXElementConstructor<any>;
+  pivotMenuMoveUpIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for moving a field down.
    * @default GridExpandMoreIcon
    */
-  pivotMenuMoveDownIcon: React.JSXElementConstructor<any>;
+  pivotMenuMoveDownIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for moving a field to the top.
    * @default GridMoveToTopIcon
    */
-  pivotMenuMoveToTopIcon: React.JSXElementConstructor<any>;
+  pivotMenuMoveToTopIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for moving a field to the bottom.
    * @default GridMoveToBottomIcon
    */
-  pivotMenuMoveToBottomIcon: React.JSXElementConstructor<any>;
+  pivotMenuMoveToBottomIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu to signify a pivot section is selected.
    * @default GridCheckIcon
    */
-  pivotMenuCheckIcon: React.JSXElementConstructor<any>;
+  pivotMenuCheckIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the pivot menu for removing a field from the pivot.
    * @default GridDeleteIcon
    */
-  pivotMenuRemoveIcon: React.JSXElementConstructor<any>;
+  pivotMenuRemoveIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the sidebar close button.
    * @default GridCloseIcon
    */
-  sidebarCloseIcon: React.JSXElementConstructor<any>;
+  sidebarCloseIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in the collapsible to indicate if it is open or closed.
    * @default GridExpandMoreIcon
    */
-  collapsibleIcon: React.JSXElementConstructor<any>;
+  collapsibleIcon: React.JSXElementConstructor<IconProps>;
 }

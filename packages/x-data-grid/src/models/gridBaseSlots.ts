@@ -126,6 +126,16 @@ export type CheckboxProps = CommonProps & {
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
 };
 
+export type ChipProps = CommonProps & {
+  ref?: Ref<HTMLDivElement>;
+  id?: string;
+  label: string;
+  size?: 'small' | 'medium';
+  icon?: React.ReactElement;
+  children?: null;
+  variant?: 'filled' | 'outlined';
+};
+
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   label?: string;
   color?: 'default' | 'inherit' | 'primary';
@@ -310,12 +320,8 @@ export type TooltipProps = CommonProps & {
   title: React.ReactNode;
 };
 
-export type ChipProps = CommonProps & {
-  ref?: Ref<HTMLDivElement>;
-  id?: string;
-  label: string;
-  size?: 'small' | 'medium';
-  icon?: React.ReactElement;
-  children?: null;
-  variant?: 'filled' | 'outlined';
+export type IconProps = CommonProps<SVGSVGElement> & {
+  fontSize?: 'small' | 'medium' | 'large' | 'inherit';
+  color?: 'action' | string;
+  titleAccess?: string;
 };

@@ -11,6 +11,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils';
+import { GridColumnUnsortedIcon } from './GridColumnUnsortedIcon';
 
 export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   field: string;
@@ -60,7 +61,7 @@ function getIcon(
   } else if (direction === 'desc') {
     Icon = icons.columnSortedDescendingIcon;
   } else {
-    Icon = icons.columnUnsortedIcon;
+    Icon = GridColumnUnsortedIcon;
     iconProps.sortingOrder = sortingOrder;
   }
   return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;

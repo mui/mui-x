@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
+import { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement<any>;
+  icon?: React.ReactElement<GridBaseIconProps>;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }

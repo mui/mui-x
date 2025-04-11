@@ -784,12 +784,6 @@
       "class": null
     },
     {
-      "name": "columnUnsortedIcon",
-      "description": "Icon displayed on the side of the column header title when unsorted.",
-      "default": "GridColumnUnsortedIcon",
-      "class": null
-    },
-    {
       "name": "columnSortedAscendingIcon",
       "description": "Icon displayed on the side of the column header title when sorted in ascending order.",
       "default": "GridArrowUpwardIcon",

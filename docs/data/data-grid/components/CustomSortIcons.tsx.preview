@@ -7,6 +7,5 @@
   slots={{
     columnSortedDescendingIcon: SortedDescendingIcon,
     columnSortedAscendingIcon: SortedAscendingIcon,
-    columnUnsortedIcon: UnsortedIcon,
   }}
 />
