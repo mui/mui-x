@@ -35,7 +35,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #default-branch-switch
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -46,6 +46,7 @@ ponyfillGlobal.muiDocConfig = {
     const newDeps = { ...deps };
 
     // #default-branch-switch
+    // TODO: Do we really need this? The condition does not make that much sense tbh!
     // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
     newDeps['@mui/material'] =
       versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
@@ -226,7 +227,6 @@ function AppWrapper(props) {
           };
         }
         if (version === 'v8') {
-          // #default-branch-switch
           return {
             text: version,
             current: true,
