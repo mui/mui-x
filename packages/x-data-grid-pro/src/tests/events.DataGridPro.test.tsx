@@ -123,6 +123,7 @@ describe('<DataGridPro /> - Events params', () => {
         colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
+        api: apiRef.current,
       });
     });
 
