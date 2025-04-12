@@ -117,7 +117,9 @@ commands:
                 command: |
                   pnpx playwright@1.51.1 install --with-deps
                   # Avoids installing a system version of ffmpeg
-                  ln -s ~/.cache/ms-playwright/ffmpeg-1011 ~/bin/ffmpeg
+                  ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
+                  echo "Using $ffmpeg_bin"
+                  ln -s "$ffmpeg_bin" ~/bin/ffmpeg
 
 jobs:
   checkout:
