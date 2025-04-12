@@ -1,4 +1,3 @@
-import * as url from 'url';
 import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
@@ -29,17 +28,17 @@ async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
-const browser = await chromium.launch({
-  args: [
-    // We could add the hide-scrollbars flag, which should improve argos
-    // flaky tests based on the scrollbars.
-    // '--hide-scrollbars',
-  ],
-  headless: false,
-});
-// reuse viewport from `vrtest`
-// https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+  const browser = await chromium.launch({
+    args: [
+      // We could add the hide-scrollbars flag, which should improve argos
+      // flaky tests based on the scrollbars.
+      // '--hide-scrollbars',
+    ],
+    headless: false,
+  });
+  // reuse viewport from `vrtest`
+  // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
@@ -93,127 +92,13 @@ const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
       window.muiFixture.navigate(`${_route}#no-dev`);
     }, route);
   }
-});
 
-let errorConsole: string | undefined;
-
-page.on('console', (msg) => {
-  // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
-  if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
-    errorConsole = msg.text();
-  }
-});
-
-// Wait for all requests to finish.
-// This should load shared resources such as fonts.
-await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
-
-// Simulate portrait mode for date pickers.
-// See `usePickerOrientation`.
-await page.evaluate(() => {
-  Object.defineProperty(window.screen.orientation, 'angle', {
-    get() {
-      return 0;
-    },
-  });
-});
-
-let routes = await page.$$eval('#tests a', (links) => {
-  return links.map((link) => {
-    return (link as HTMLAnchorElement).href;
-  });
-});
-routes = routes.map((route) => route.replace(baseUrl, ''));
-
-// prepare screenshots
-await fse.emptyDir(screenshotDir);
-
-async function navigateToTest(route: string) {
-  // Use client-side routing which is much faster than full page navigation via page.goto().
-  await page.waitForFunction(() => window.muiFixture.isReady());
-  return page.evaluate((_route) => {
-    window.muiFixture.navigate(`${_route}#no-dev`);
-  }, route);
-}
-
-describe('visual regressions', () => {
-  after(async () => {
-    await browser.close();
-  });
-
-  it('should have no errors after the initial render', () => {
-    const msg = errorConsole;
-    errorConsole = undefined;
-    if (isConsoleWarningIgnored(msg)) {
-      return;
-    }
-    expect(msg).to.equal(undefined);
-  });
-
-  routes.forEach((route) => {
-    it(`creates screenshots of ${route}`, async function test() {
-      // Move cursor offscreen to not trigger unwanted hover effects.
-      // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
-      await page.mouse.move(0, 0);
-
-      // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
-      if (process.env.PWDEBUG) {
-        this.timeout(0);
-      }
-
-      if (route === '/docs-components-data-grid-overview/DataGridProDemo') {
-        this.timeout(6000);
-      }
-
-      try {
-        await navigateToTest(route);
-      } catch (error) {
-        // When one demo crashes, the page becomes empty and there are no links to demos,
-        // so navigation to the next demo throws an error.
-        // Reloading the page fixes this.
-        await page.reload();
-        await navigateToTest(route);
-      }
-
-      const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
-      await fse.ensureDir(path.dirname(screenshotPath));
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
-      const images = await page.evaluate(() => document.querySelectorAll('img'));
-      if (images.length > 0) {
-        await page.evaluate(() => {
-          images.forEach((img) => {
-            if (!img.complete && img.loading === 'lazy') {
-              // Force lazy-loaded images to load
-              img.setAttribute('loading', 'eager');
-            }
-          });
-        });
-        // Wait for the flags to load
-        await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
-          timeout: 2000,
-        });
-      }
-
-      if (/^\/docs-charts-.*/.test(route)) {
-        // Run one tick of the clock to get the final animation state
-        await sleep(10);
-      }
-
-      if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
-        await sleep(100);
-      }
-
-      // Wait for the page to settle after taking the screenshot.
-      await page.waitForLoadState();
-
-      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+  describe('visual regressions', () => {
+    after(async () => {
+      await browser.close();
     });
 
-    it(`should have no errors rendering ${route}`, () => {
+    it('should have no errors after the initial render', () => {
       const msg = errorConsole;
       errorConsole = undefined;
       if (isConsoleWarningIgnored(msg)) {
