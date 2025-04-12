@@ -123,8 +123,8 @@ describe('<DataGridPro /> - Events params', () => {
         colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
-        api: apiRef.current,
       });
+      expect(eventArgs!.params.api).to.not.equal(null);
     });
 
     it('should include the correct params when grid is sorted', () => {
