@@ -1,7 +1,6 @@
 import * as vm from 'node:vm';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, basename, join as joinPath } from 'node:path';
-import { mkdirp } from 'mkdirp';
 import { transform as lightning } from 'lightningcss';
 import { packageDirectorySync } from 'pkg-dir';
 import * as Babel from '@babel/core';
