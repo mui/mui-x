@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
@@ -32,7 +31,10 @@ export interface GridToolbarExportProps {
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: {
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
+  };
   // TODO v8: Remove this loophole
   // Refactored from: [key: string]: any;
   [x: `data-${string}`]: string;
@@ -116,6 +118,9 @@ GridPrintExportMenuItem.propTypes = {
   }),
 } as any;
 
+/**
+ * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/export/ Export} components instead. This component will be removed in a future major release.
+ */
 const GridToolbarExport = forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
     const {

@@ -1,6 +1,6 @@
 # Data Grid - Export
 
-<p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
+<p class="description">Export the rows in CSV or Excel formats, or use the browser's print dialog to print or save as PDF.</p>
 
 ## Enabling export
 
@@ -178,7 +178,7 @@ With media query, you have to start your `sx` object with `@media print` key, su
 />
 ```
 
-With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity).
 
 ```jsx
 // Default toolbar:

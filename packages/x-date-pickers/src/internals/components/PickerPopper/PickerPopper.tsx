@@ -332,7 +332,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
-  const { dismissViews, getCurrentViewMode, triggerElement, viewContainerRole } =
+  const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
   React.useEffect(() => {
@@ -445,7 +445,15 @@ export function PickerPopper(inProps: PickerPopperProps) {
           isEnabled={() => true}
           {...slotProps?.desktopTrapFocus}
         >
-          <Transition {...TransitionProps} {...slotProps?.desktopTransition}>
+          <Transition
+            {...TransitionProps}
+            {...slotProps?.desktopTransition}
+            onExited={(event) => {
+              onPopperExited?.();
+              slotProps?.desktopTransition?.onExited?.(event);
+              TransitionProps?.onExited?.();
+            }}
+          >
             <PickerPopperPaperWrapper
               PaperComponent={Paper}
               ownerState={ownerState}

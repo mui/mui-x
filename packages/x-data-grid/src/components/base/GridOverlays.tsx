@@ -121,5 +121,6 @@ GridOverlayWrapper.propTypes = {
     'noResultsOverlay',
     'noRowsOverlay',
     'noColumnsOverlay',
+    'emptyPivotOverlay',
   ]),
 } as any;

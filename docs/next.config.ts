@@ -1,6 +1,6 @@
 import * as path from 'path';
-import * as url from 'url';
 import * as fs from 'fs';
+import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // @ts-expect-error This expected error should be gone once we update the monorepo
@@ -13,6 +13,7 @@ import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
+
 const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');

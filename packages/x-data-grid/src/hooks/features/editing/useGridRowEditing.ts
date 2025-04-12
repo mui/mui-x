@@ -3,10 +3,8 @@ import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  useGridApiEventHandler,
-  useGridApiOptionHandler,
-} from '../../utils/useGridApiEventHandler';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
@@ -46,6 +44,7 @@ import {
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
+import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -59,6 +58,7 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
+    | 'dataSource'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -314,16 +314,16 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
-  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfEditModeIsRow(handleCellFocusIn));
-  useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsRow(handleCellFocusOut));
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsRow(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
+  useGridEvent(apiRef, 'cellFocusIn', runIfEditModeIsRow(handleCellFocusIn));
+  useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsRow(handleCellFocusOut));
+  useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsRow(handleCellKeyDown));
 
-  useGridApiEventHandler(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
-  useGridApiEventHandler(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));
+  useGridEvent(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
+  useGridEvent(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));
 
-  useGridApiOptionHandler(apiRef, 'rowEditStart', props.onRowEditStart);
-  useGridApiOptionHandler(apiRef, 'rowEditStop', props.onRowEditStop);
+  useGridEventPriority(apiRef, 'rowEditStart', props.onRowEditStart);
+  useGridEventPriority(apiRef, 'rowEditStop', props.onRowEditStop);
 
   const getRowMode = React.useCallback<GridRowEditingApi['getRowMode']>(
     (id) => {
@@ -497,7 +497,7 @@ export const useGridRowEditing = (
   );
 
   const updateStateToStopRowEditMode = useEventCallback<[GridStopRowEditModeParams], void>(
-    (params) => {
+    async (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
       apiRef.current.runPendingEditCellValueMutation(id);
@@ -537,7 +537,29 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
-      if (processRowUpdate) {
+      if (props.dataSource?.updateRow) {
+        if (isDeepEqual(row, rowUpdate)) {
+          finishRowEditMode();
+          return;
+        }
+        const handleError = () => {
+          prevRowModesModel.current[id].mode = GridRowModes.Edit;
+          // Revert the mode in the rowModesModel prop back to "edit"
+          updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
+        };
+
+        const updateRowParams: GridUpdateRowParams = {
+          rowId: id,
+          updatedRow: rowUpdate,
+          previousRow: row,
+        };
+        try {
+          await apiRef.current.dataSource.editRow(updateRowParams);
+          finishRowEditMode();
+        } catch {
+          handleError();
+        }
+      } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
           // The row might have been deleted
           if (prevRowModesModel.current[id]) {

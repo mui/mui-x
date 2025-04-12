@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { replaceCodePlugin } from 'vite-plugin-replace';
 
 export default defineConfig({
   build: {
@@ -8,17 +7,14 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    replaceCodePlugin({
-      replacements: [
-        {
-          from: '__RELEASE_INFO__',
-          to: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
-        },
-        {
-          from: 'DISABLE_CHANCE_RANDOM',
-          to: JSON.stringify(true),
-        },
-      ],
-    }),
+    {
+      name: 'replace-code',
+      enforce: 'post',
+      async transform(code) {
+        return code
+          .replaceAll('__RELEASE_INFO__', 'MTU5NjMxOTIwMDAwMA==') // 2020-08-02
+          .replaceAll('DISABLE_CHANCE_RANDOM', 'true');
+      },
+    },
   ],
 });

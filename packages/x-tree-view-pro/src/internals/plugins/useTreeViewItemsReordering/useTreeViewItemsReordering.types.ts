@@ -108,17 +108,13 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
 
 export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
-    draggedItemId: string;
-    targetItemId: string;
-    newPosition: TreeViewItemReorderPosition | null;
-    action: TreeViewItemsReorderingAction | null;
-  } | null;
-}
-
-interface UseTreeViewItemsReorderingContextValue {
-  itemsReordering: {
-    enabled: boolean;
-    isItemReorderable: ((itemId: string) => boolean) | undefined;
+    isItemReorderable: (itemId: string) => boolean;
+    currentReorder: {
+      draggedItemId: string;
+      targetItemId: string;
+      newPosition: TreeViewItemReorderPosition | null;
+      action: TreeViewItemsReorderingAction | null;
+    } | null;
   };
 }
 
@@ -127,7 +123,6 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   defaultizedParams: UseTreeViewItemsReorderingDefaultizedParameters;
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
-  contextValue: UseTreeViewItemsReorderingContextValue;
   dependencies: [UseTreeViewItemsSignature];
 }>;
 

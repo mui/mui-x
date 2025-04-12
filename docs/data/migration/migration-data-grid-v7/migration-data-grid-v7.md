@@ -28,6 +28,16 @@ In `package.json`, change the version of the Data Grid package to `next`.
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/data-grid/preset-safe` targeting only Data Grid or `v8.0.0/preset-safe` to target the other packages as well.
@@ -74,20 +84,7 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
-## `@mui/material` peer dependency change
-
-The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
-This change should resolve ESM and CJS interoperability issues in various environments.
-
-:::info
-The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
-
-- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
-- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
-
-:::
-
-### Setting license key
+### ✅ Setting license key
 
 The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
 You have to import it from `@mui/x-license` instead:
@@ -112,7 +109,7 @@ You have to import it from `@mui/x-license` instead:
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
-- The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
+- ✅ The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
   The `exclude` selection type allows to select all rows except the ones in the `ids` set.
 
@@ -120,7 +117,6 @@ You have to import it from `@mui/x-license` instead:
 
   - `rowSelectionModel`
   - `onRowSelectionModelChange`
-  - `initialState.rowSelectionModel`
 
   ```diff
   -const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
@@ -150,25 +146,25 @@ You have to import it from `@mui/x-license` instead:
   ```
 
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
-- The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
-- The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
+- ✅ The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
+- ✅ The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
 
 ### Changes to the public API
 
 - ✅ The `rowPositionsDebounceMs` prop was removed.
-- The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
+- ✅ The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
 - The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
 - The `sanitizeFilterItemValue()` utility is not exported anymore.
-- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
+- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `gridRowIdSelector` method instead.
 
   ```diff
   -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
   -const rowId = idToIdLookup[id];
   +const rowsLookup = gridRowsLookupSelector(apiRef);
-  +const rowId = apiRef.current.getRowId(rowsLookup[id]);
+  +const rowId = gridRowIdSelector(apiRef, rowsLookup[id]);
   ```
 
 - ✅ The feature row spanning is now stable.
@@ -180,7 +176,7 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
-- The data source feature and its related props are now stable.
+- ✅ The data source feature and its related props are now stable.
 
   ```diff
    <DataGridPro
@@ -188,10 +184,12 @@ You have to import it from `@mui/x-license` instead:
   -  unstable_dataSourceCache={cache}
   -  unstable_lazyLoading
   -  unstable_lazyLoadingRequestThrottleMs={100}
+  -  unstable_onDataSourceError={() => {}}
   +  dataSource={dataSource}
   +  dataSourceCache={cache}
   +  lazyLoading
   +  lazyLoadingRequestThrottleMs={100}
+  +  onDataSourceError={() => {}}
    />
   ```
 
@@ -200,6 +198,29 @@ You have to import it from `@mui/x-license` instead:
   ```diff
   - apiRef.current.unstable_dataSource.getRows()
   + apiRef.current.dataSource.getRows()
+  ```
+
+- The list view feature and its related props are now stable.
+
+  ✅ The `unstable_listView` prop has been renamed to `listView`.
+
+  ✅ The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+
+  The `GridListColDef` type has been renamed to `GridListViewColDef`.
+
+  ```diff
+  -const listViewColDef: GridListColDef = {
+  +const listViewColDef: GridListViewColDef = {
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
+
+   <DataGridPro
+  -  unstable_listView
+  -  unstable_listColumn={listViewColDef}
+  +  listView
+  +  listViewColumn={listViewColDef}
+   />
   ```
 
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
@@ -215,7 +236,7 @@ You have to import it from `@mui/x-license` instead:
 
 - `GridSortItem` interface is not exported anymore.
 - `createUseGridApiEventHandler()` is not exported anymore.
-- The `showToolbar` prop is now required to display the toolbar.
+- ✅ The `showToolbar` prop is now required to display the toolbar.
 
   It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
 
@@ -230,22 +251,25 @@ You have to import it from `@mui/x-license` instead:
 
 - The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
 
-- The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
+- The signature of `onDataSourceError()` has been updated to support future use-cases.
 
   ```diff
    <DataGrid
-  -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
+  -  onDataSourceError={(error: Error, params: GridGetRowsParams) => {
   -    if (params.filterModel) {
   -      // do something
   -    }
   -  }}
-  +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
+  +  onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
   +    if (error instanceof GridGetRowsError && error.params.filterModel) {
   +      // do something
   +    }
   +  }}
    />
   ```
+
+- The `useGridApiEventHandler()` hook has been renamed to `useGridEvent()`.
+- The `useGridApiOptionHandler()` hook has been renamed to `useGridEventPriority()`.
 
 ### Behavioral changes
 
@@ -348,9 +372,11 @@ You have to import it from `@mui/x-license` instead:
 
 ### Slots
 
+- The `base*` slots have a new set of typings.
 - The `baseFormControl` slot was removed.
 - The `baseInputLabel` slot was removed.
 - The `baseInputAdornment` slot was removed.
+- The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing

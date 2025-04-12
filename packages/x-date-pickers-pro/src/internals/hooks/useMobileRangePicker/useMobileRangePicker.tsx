@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { useLicenseVerifier } from '@mui/x-license';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
@@ -22,6 +23,7 @@ import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const releaseInfo = getReleaseInfo();
 
@@ -36,6 +38,7 @@ export const useMobileRangePicker = <
   >,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -45,6 +48,11 @@ export const useMobileRangePicker = <
   const fieldType = getRangeFieldType(slots.field);
   const rangePositionResponse = useRangePosition(props);
   const contextTranslations = usePickerTranslations();
+
+  const getStepNavigation = createRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerRangeValue,
@@ -57,6 +65,8 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     viewContainerRole: 'dialog',
     localeText,
+    getStepNavigation,
+    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
   });
 
   const labelId = providerProps.privateContextValue.labelId;

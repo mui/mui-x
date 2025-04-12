@@ -16,8 +16,7 @@ import {
   useGridApiRef,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -45,7 +44,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Aggregation', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -202,6 +201,34 @@ describe('<DataGridPremium /> - Aggregation', () => {
         '5' /* Agg "Cat B" */,
         '5',
         '5' /* Agg root */,
+      ]);
+    });
+
+    it('should update aggregation values after filtering', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category2'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '9', // Agg "Cat 1"
+        '6', // Agg "Cat 2"
+        '15', // Agg root
+      ]);
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '5', // Agg "Cat 1"
+        '5', // Agg root
       ]);
     });
 
@@ -388,31 +415,29 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Column menu', () => {
-    it('should render select on aggregable column', () => {
+    it('should render select on aggregable column', async () => {
       render(<Test />);
 
-      act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
+      await act(async () => apiRef.current?.showColumnMenu('id'));
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
     });
 
-    it('should update the aggregation when changing "Aggregation" select value', () => {
-      render(<Test />);
+    it('should update the aggregation when changing "Aggregation" select value', async () => {
+      const { user } = render(<Test />);
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
-      fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
-      fireUserEvent.mousePress(
+      await act(async () => apiRef.current?.showColumnMenu('id'));
+
+      await user.click(screen.getByLabelText('Aggregation'));
+      await user.click(
         within(
           screen.getByRole('listbox', {
             name: 'Aggregation',
           }),
         ).getByText('max'),
       );
-      clock.runToLast();
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
@@ -557,7 +582,6 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       act(() => apiRef.current?.showColumnMenu('id'));
-      clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
     });

@@ -49,6 +49,11 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridToolbarQuickFilter',
   },
   {
+    pathname: '/x/api/data-grid/pivot-panel-trigger',
+    title: 'PivotPanelTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/quick-filter',
     title: 'QuickFilter',
   },
@@ -59,6 +64,10 @@ const dataGridApiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/quick-filter-control',
     title: 'QuickFilterControl',
+  },
+  {
+    pathname: '/x/api/data-grid/quick-filter-trigger',
+    title: 'QuickFilterTrigger',
   },
   {
     pathname: '/x/api/data-grid/toolbar',
