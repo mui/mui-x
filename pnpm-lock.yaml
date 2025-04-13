@@ -1758,7 +1758,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/x-license/build
       '@playwright/test':
-        specifier: ^1.51.0
+        specifier: ^1.51.1
         version: 1.51.1
       '@types/chai':
         specifier: ^4.3.20
@@ -1896,7 +1896,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/x-tree-view-pro/build
       '@playwright/test':
-        specifier: ^1.51.0
+        specifier: ^1.51.1
         version: 1.51.1
       '@types/chai':
         specifier: ^4.3.20
