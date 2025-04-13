@@ -29,7 +29,7 @@
     "@types/moment-jalaali": "^0.7.9",
     "@types/react": "^19.0.10",
     "@types/react-router": "^5.1.20",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.0",
     "@vitejs/plugin-react": "^4.3.4",
     "chai": "^4.5.0",
     "react": "^19.0.0",

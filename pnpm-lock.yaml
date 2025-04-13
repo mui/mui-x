@@ -1776,7 +1776,7 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/semver':
-        specifier: ^7.5.8
+        specifier: ^7.7.0
         version: 7.7.0
       '@vitejs/plugin-react':
         specifier: ^4.3.4
@@ -1914,7 +1914,7 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/semver':
-        specifier: ^7.5.8
+        specifier: ^7.7.0
         version: 7.7.0
       '@vitejs/plugin-react':
         specifier: ^4.3.4
