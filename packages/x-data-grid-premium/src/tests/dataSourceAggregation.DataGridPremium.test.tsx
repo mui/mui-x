@@ -99,7 +99,18 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   }
 
   it('should show aggregation option in the column menu', async () => {
-    const { user } = render(<TestDataSourceAggregation />);
+    const dataSource = {
+      getRows: async () => {
+        fetchRowsSpy();
+        return {
+          rows: [],
+          rowCount: 0,
+          aggregateRow: {},
+        };
+      },
+      getAggregatedValue: () => 'Agg value',
+    };
+    const { user } = render(<TestDataSourceAggregation dataSource={dataSource} />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
