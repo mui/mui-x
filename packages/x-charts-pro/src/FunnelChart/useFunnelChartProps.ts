@@ -92,7 +92,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     tickLabelInterval: (_: any, i: number) => i !== 0,
     // We trick the valueFormatter to show the category values.
     // By using the index of the tickValues array we can get the category value.
-    valueFormatter: (value) =>
+    valueFormatter: (value: any) =>
       `${categoryAxis.categories?.toReversed()[tickValues.findIndex((v) => v === value) - 1]}`,
     ...categoryValues,
   } satisfies XAxis | YAxis;
