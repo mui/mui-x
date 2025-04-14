@@ -24,7 +24,7 @@ export async function exportImage(
 
   const iframe = createExportIframe(fileName);
 
-  let resolve;
+  let resolve: (value: void) => void;
   const iframeLoadPromise = new Promise((res) => {
     resolve = res;
   });
@@ -57,10 +57,11 @@ export async function exportImage(
     doc.body.removeChild(iframe);
   }
 
+  let resolveBlobPromise: (value: Blob | null) => void;
   const blobPromise = new Promise<Blob | null>((res) => {
-    resolve = res;
+    resolveBlobPromise = res;
   });
-  canvas.toBlob((blob) => resolve(blob), type, quality);
+  canvas.toBlob((blob) => resolveBlobPromise(blob), type, quality);
 
   const blob = await blobPromise;
 
