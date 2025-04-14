@@ -7,14 +7,13 @@ interface CommonRadarSeriesPlotProps {
    * If undefined all series are displayed.
    */
   seriesId?: string;
-}
-
-export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<RadarSeriesPlotClasses>;
 }
+
+export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {}
 
 export interface RadarSeriesMarksProps
   extends CommonRadarSeriesPlotProps,

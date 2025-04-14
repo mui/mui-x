@@ -6,13 +6,10 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,6 +21,7 @@ import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
 import InfoCard from '../InfoCard';
 import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
 import ConfigToggleButtons from '../ConfigToggleButtons';
+import DemoWrapper from '../DemoWrapper';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -43,59 +41,6 @@ const internationalizationFeatures = [
     description: 'We have all use cases covered for you and your end users.',
   },
 ];
-
-function DemoWrapper({
-  children,
-  controls: ToolbarControls,
-  link,
-}: {
-  children: React.ReactNode;
-  controls?: React.ReactNode;
-  link: string;
-}) {
-  return (
-    <Box
-      component="div"
-      sx={(brandingTheme) => ({
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 1,
-        flexGrow: 1,
-        width: '100%',
-        justifyContent: 'space-between',
-        background: (brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle,
-      })}
-    >
-      {children}
-
-      <Paper
-        component="div"
-        elevation={0}
-        sx={(brandingTheme) => ({
-          width: '100%',
-          border: '1px solid transparent',
-          borderTopColor: 'divider',
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
-          display: 'flex',
-          padding: brandingTheme.spacing(1),
-          justifyContent: 'flex-end',
-          alignItems: { md: 'center' },
-          gap: 2,
-        })}
-      >
-        {ToolbarControls}
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-        <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
-          More info
-        </Button>
-      </Paper>
-    </Box>
-  );
-}
 
 function TimezonesDemo() {
   const [selectedTimezone, setSelectedTimezone] = React.useState<null | string>(null);

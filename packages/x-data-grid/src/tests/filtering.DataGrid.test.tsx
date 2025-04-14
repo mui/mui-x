@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -15,7 +15,7 @@ import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -237,7 +237,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
-    it('should allow to update the filters when initialized with initialState', () => {
+    it('should allow to update the filters when initialized with initialState', async () => {
       render(
         <TestCase
           initialState={{
@@ -258,8 +258,10 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      });
     });
   });
 
@@ -1407,8 +1409,8 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('filter button tooltip', () => {
-    it('should display `falsy` value', () => {
-      const { setProps } = render(
+    it('should display `falsy` value', async () => {
+      const { setProps, user } = render(
         <DataGrid
           filterModel={{
             items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
@@ -1445,8 +1447,16 @@ describe('<DataGrid /> - Filter', () => {
       const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
-      fireEvent.mouseOver(filterButton);
-      clock.tick(1000); // tooltip display delay
+      await user.hover(filterButton);
+
+      await waitFor(
+        () => {
+          expect(screen.queryByRole('tooltip')).not.to.equal(null);
+        },
+        {
+          timeout: 2000,
+        },
+      );
 
       const tooltip = screen.getByRole('tooltip');
 
@@ -1459,8 +1469,8 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('custom `filterOperators`', () => {
-    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', () => {
-      render(
+    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', async () => {
+      const { user } = render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
             filterModel={{
@@ -1511,8 +1521,11 @@ describe('<DataGrid /> - Filter', () => {
       const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
-      fireEvent.mouseOver(filterButton);
-      clock.tick(1000); // tooltip display delay
+      await user.hover(filterButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('tooltip')).not.to.equal(null);
+      });
 
       const tooltip = screen.getByRole('tooltip');
 

@@ -9,6 +9,10 @@ export interface RadarSeriesPlotClasses {
   highlighted: string;
   /** Styles applied to the series element if it is faded. */
   faded: string;
+  /** Styles applied to the series area element. */
+  area: string;
+  /** Styles applied to the series mark element. */
+  mark: string;
 }
 
 export type RadarSeriesPlotClassKey = keyof RadarSeriesPlotClasses;
@@ -19,6 +23,8 @@ export function getRadarSeriesPlotUtilityClass(slot: string) {
 
 export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', [
   'root',
+  'area',
+  'mark',
   'highlighted',
   'faded',
 ]);
@@ -26,6 +32,8 @@ export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot
 export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>) => {
   const slots = {
     root: ['root'],
+    area: ['area'],
+    mark: ['mark'],
     highlighted: ['highlighted'],
     faded: ['faded'],
   };

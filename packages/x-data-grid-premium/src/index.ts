@@ -42,3 +42,6 @@ export type {
   GridDataSourceApiBasePremium as GridDataSourceApiBase,
   GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
 } from './hooks/features/dataSource/models';
+
+export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
+export type { GridPivotModel } from './hooks/features/pivoting/gridPivotingInterfaces';
