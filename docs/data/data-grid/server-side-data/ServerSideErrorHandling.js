@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, GridGetRowsError } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
-const datasetOptions = {};
+const datasetOptions = { editable: true };
 
 const StyledDiv = styled('div')(({ theme: t }) => ({
   position: 'absolute',
@@ -38,9 +40,10 @@ function ErrorOverlay({ error }) {
 export default function ServerSideErrorHandling() {
   const apiRef = useGridApiRef();
   const [error, setError] = React.useState();
+  const [snackbar, setSnackbar] = React.useState(null);
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, ...props } = useMockServer(
+  const { fetchRows, editRow, ...props } = useMockServer(
     datasetOptions,
     serverOptions,
     shouldRequestsFail,
@@ -62,8 +65,12 @@ export default function ServerSideErrorHandling() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   const initialState = React.useMemo(
@@ -78,6 +85,10 @@ export default function ServerSideErrorHandling() {
     }),
     [props.initialState],
   );
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(null);
+  };
 
   return (
     <div style={{ width: '100%' }}>
@@ -104,7 +115,13 @@ export default function ServerSideErrorHandling() {
         <DataGrid
           {...props}
           dataSource={dataSource}
-          onDataSourceError={(dataSourceError) => setError(dataSourceError.message)}
+          onDataSourceError={(dataSourceError) => {
+            if (dataSourceError instanceof GridGetRowsError) {
+              setError(dataSourceError.message);
+              return;
+            }
+            setSnackbar({ children: dataSourceError.message, severity: 'error' });
+          }}
           dataSourceCache={null}
           apiRef={apiRef}
           pagination
@@ -112,6 +129,16 @@ export default function ServerSideErrorHandling() {
           initialState={initialState}
           showToolbar
         />
+        {!!snackbar && (
+          <Snackbar
+            open
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            onClose={handleCloseSnackbar}
+            autoHideDuration={6000}
+          >
+            <Alert {...snackbar} onClose={handleCloseSnackbar} />
+          </Snackbar>
+        )}
         {error && <ErrorOverlay error={error} />}
       </div>
     </div>
