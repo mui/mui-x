@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
 export interface ChartsLocalizationProviderProps {
   children?: React.ReactNode;
   /**
-   * Locale for charts components texts
+   * Locale for charts components texts.
    */
   localeText?: Partial<ChartsLocaleText>;
 }
@@ -80,7 +80,7 @@ ChartsLocalizationProvider.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   /**
-   * Locale for charts components texts
+   * Locale for charts components texts.
    */
   localeText: PropTypes.object,
 } as any;

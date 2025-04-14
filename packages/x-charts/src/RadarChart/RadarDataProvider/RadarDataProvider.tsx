@@ -185,7 +185,7 @@ RadarDataProvider.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * Locale for charts components texts
+   * Locale for charts components texts.
    */
   localeText: PropTypes.object,
   /**

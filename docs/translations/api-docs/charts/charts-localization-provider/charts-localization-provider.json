@@ -1,5 +1,5 @@
 {
   "componentDescription": "",
-  "propDescriptions": { "localeText": { "description": "Locale for charts components texts" } },
+  "propDescriptions": { "localeText": { "description": "Locale for charts components texts." } },
   "classDescriptions": {}
 }
