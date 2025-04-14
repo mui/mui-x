@@ -41,6 +41,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
 
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-charts': '@mui/x-charts/modern',
+-      '@mui/x-charts-pro': '@mui/x-charts-pro/modern',
+     }
+   }
+ }
+```
+
 ## Breaking changes
 
 Since v8 is a major release, it contains some changes that affect the public API.
