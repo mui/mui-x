@@ -12,7 +12,6 @@ interface Fixture {
 
 const fixtures: Fixture[] = [];
 
-// @ts-ignore
 const fixturesImports = import.meta.glob<React.ComponentType>('./fixtures/**/*', {
   eager: true,
   import: 'default',
