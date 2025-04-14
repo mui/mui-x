@@ -18,6 +18,9 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
    */
   params: TreeViewUsedDefaultizedParams<TSignature>;
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
+  /**
+   * The store that can be used to access the state of other plugins.
+   */
   store: TreeViewUsedStore<TSignature>;
   /**
    * Reference to the root element.
@@ -44,7 +47,6 @@ export type TreeViewPluginSignature<
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
-    cache?: {};
     experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
     optionalDependencies?: readonly TreeViewAnyPluginSignature[];
@@ -72,7 +74,6 @@ export type TreeViewPluginSignature<
    * The state is the mutable data that will actually be stored in the plugin state and can be accessed by other plugins.
    */
   state: T extends { state: {} } ? T['state'] : {};
-  cache: T extends { cache: {} } ? T['cache'] : {};
   experimentalFeatures: T extends { experimentalFeatures: string }
     ? { [key in T['experimentalFeatures']]?: boolean }
     : {};
@@ -89,7 +90,6 @@ export type TreeViewPluginSignature<
 };
 
 export type TreeViewAnyPluginSignature = {
-  cache: any;
   state: any;
   instance: any;
   params: any;
@@ -177,7 +177,9 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @returns {TSignature['state']} The initial state of the plugin.
    */
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
-  getInitialCache?: () => TSignature['cache'];
+  /**
+   * An object where each property used by the plugin is set to `true`.
+   */
   params: Record<keyof TSignature['params'], true>;
   itemPlugin?: TreeViewItemPlugin;
   /**

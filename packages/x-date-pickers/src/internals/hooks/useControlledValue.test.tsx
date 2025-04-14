@@ -8,7 +8,6 @@ import { singleItemValueManager } from '../utils/valueManagers';
 
 describe('useValueWithTimezone', () => {
   const { render, adapter } = createPickerRenderer({
-    clock: 'fake',
     adapterName: 'luxon',
   });
 
