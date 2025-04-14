@@ -42,7 +42,7 @@
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.6",
+    "@mui/internal-test-utils": "^2.0.7",
     "@types/device-uuid": "^1.0.3",
     "rimraf": "^6.0.1"
   },
