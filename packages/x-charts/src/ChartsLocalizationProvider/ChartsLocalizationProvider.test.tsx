@@ -65,36 +65,36 @@ describe('<ChartsLocalizationProvider />', () => {
 
     render(
       <ThemeProvider theme={theme}>
-        <ChartsLocalizationProvider localeText={{ noData: 'Priotized' }}>
+        <ChartsLocalizationProvider localeText={{ noData: 'Prioritized' }}>
           <ContextListener onContextChange={handleContextChange} />
         </ChartsLocalizationProvider>
       </ThemeProvider>,
     );
 
     const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
-    expect(localeText.noData).to.equal('Priotized');
+    expect(localeText.noData).to.equal('Prioritized');
   });
 
   it('should prioritize deepest LocalizationProvider when using nested ones', () => {
     const handleContextChange = spy();
 
     render(
-      <ChartsLocalizationProvider localeText={{ noData: 'Not Priotized' }}>
-        <ChartsLocalizationProvider localeText={{ noData: 'Priotized' }}>
+      <ChartsLocalizationProvider localeText={{ noData: 'Not Prioritized' }}>
+        <ChartsLocalizationProvider localeText={{ noData: 'Prioritized' }}>
           <ContextListener onContextChange={handleContextChange} />
         </ChartsLocalizationProvider>
       </ChartsLocalizationProvider>,
     );
 
     const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
-    expect(localeText.noData).to.equal('Priotized');
+    expect(localeText.noData).to.equal('Prioritized');
   });
 
-  it("should not loose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
+  it("should not lose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
     const handleContextChange = spy();
 
     render(
-      <ChartsLocalizationProvider localeText={{ noData: 'Priotized' }}>
+      <ChartsLocalizationProvider localeText={{ noData: 'Prioritized' }}>
         <ChartsLocalizationProvider localeText={{ loading: 'Other Locale' }}>
           <ContextListener onContextChange={handleContextChange} />
         </ChartsLocalizationProvider>
@@ -102,7 +102,7 @@ describe('<ChartsLocalizationProvider />', () => {
     );
 
     const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
-    expect(localeText.noData).to.equal('Priotized');
+    expect(localeText.noData).to.equal('Prioritized');
     expect(localeText.loading).to.equal('Other Locale');
   });
 });

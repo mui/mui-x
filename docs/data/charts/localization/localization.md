@@ -21,8 +21,6 @@ In the following example, the labels of the loading overlay are customized.
 
 ## Locale text
 
-The default locale of MUI X is English (United States).
-
 You can use the theme to configure the locale text:
 
 ```jsx
@@ -104,12 +102,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 ### Supported locales
 
-{{"demo": "ChartsLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "ChartsLocalizationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-charts/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+Note that these translations of charts component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
 ## RTL Support
 

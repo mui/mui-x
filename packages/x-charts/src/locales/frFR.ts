@@ -2,7 +2,7 @@ import { ChartsLocaleText } from './utils/chartsLocaleTextApi';
 import { getChartsLocalization } from './utils/getChartsLocalization';
 
 const frFRCharts: Partial<ChartsLocaleText> = {
-  // No group
+  // Overlay
   loading: 'Chargement…',
   noData: 'Pas de données',
 };

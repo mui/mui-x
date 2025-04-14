@@ -4,7 +4,7 @@ export interface ChartsLocaleText {
    */
   loading: string;
   /**
-   * Title displayed in the overlay if their is no data to display.
+   * Title displayed in the overlay if there is no data to display.
    */
   noData: string;
 }

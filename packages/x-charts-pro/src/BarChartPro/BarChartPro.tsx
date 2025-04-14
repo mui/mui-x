@@ -193,7 +193,7 @@ BarChartPro.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Locale for charts components texts
+   * Locale text for charts components.
    */
   localeText: PropTypes.object,
   /**

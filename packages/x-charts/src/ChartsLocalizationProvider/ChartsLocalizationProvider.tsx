@@ -28,14 +28,11 @@ export interface ChartsLocalizationProviderProps {
 /**
  * Demos:
  *
- * - [Date format and localization](https://mui.com/x/react-date-pickers/adapters-locale/)
- * - [Calendar systems](https://mui.com/x/react-date-pickers/calendar-systems/)
- * - [Translated components](https://mui.com/x/react-date-pickers/localization/)
- * - [UTC and timezones](https://mui.com/x/react-date-pickers/timezone/)
+ * - [localization](https://mui.com/x/react-charts/localization/)
  *
  * API:
  *
- * - [LocalizationProvider API](https://mui.com/x/api/date-pickers/localization-provider/)
+ * - [ChartsLocalizationProvider API](https://mui.com/x/api/charts/charts-localization-provider/)
  */
 function ChartsLocalizationProvider(inProps: ChartsLocalizationProviderProps) {
   const { localeText: inLocaleText, ...other } = inProps;
