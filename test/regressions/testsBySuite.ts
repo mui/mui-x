@@ -8,7 +8,6 @@ export interface Test {
 const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
-// @ts-ignore
 const docsImports = import.meta.glob<React.ComponentType>(
   [
     'docsx/data/**/[A-Z]*.js',
@@ -47,7 +46,6 @@ Object.keys(docsImports).forEach((path: string) => {
   });
 });
 
-// @ts-ignore
 const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.js', {
   eager: true,
   import: 'default',
