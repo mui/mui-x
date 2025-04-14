@@ -16,7 +16,13 @@ The AI Assistant feature lets users interact with the Data Grid component using 
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
-To enable this feature on the Data Grid, pass the `aiAssistant` prop and use `<GridAiAssistantPanel />` in `aiAssistantPanel` slot.
+To enable this feature on the Data Grid, pass the `aiAssistant` prop and use the `GridAiAssistantPanel` component for `aiAssistantPanel` slot:
+
+```tsx
+import { DataGridPremium, GridAiAssistantPanel } from '@mui/x-data-grid-premium';
+// ...
+<DataGridPremium aiAssistant slots={{ aiAssistantPanel: GridAiAssistantPanel }} />
+```
 
 ## Improving accuracy with example values
 
