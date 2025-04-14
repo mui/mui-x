@@ -55,8 +55,8 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
-  } as const;
+    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
+  };
 
   // If the scaleType is not defined or is 'band', our job is simple.
   if (!categoryAxis?.scaleType || categoryAxis.scaleType === 'band') {
@@ -70,7 +70,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
           Array.from({ length: maxSeriesLength }, (_, index) => index),
       tickLabelPlacement: 'middle',
       ...categoryValues,
-    } as const;
+    };
   }
 
   // If the scaleType is other than 'band', we have to do some magic.
@@ -84,7 +84,6 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   ];
 
   return {
-    scaleType: categoryAxis.scaleType,
     domainLimit: 'strict',
     tickLabelPlacement: 'middle',
     tickInterval: tickValues,
@@ -95,7 +94,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     valueFormatter: (value: any) =>
       `${categoryAxis.categories?.toReversed()[tickValues.findIndex((v) => v === value) - 1]}`,
     ...categoryValues,
-  } satisfies XAxis | YAxis;
+  };
 }
 
 /**
