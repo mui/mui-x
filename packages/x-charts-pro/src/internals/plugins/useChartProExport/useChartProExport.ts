@@ -1,6 +1,6 @@
 import { ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
-import { exportImage } from './export-image';
+import { exportImage } from './exportImage';
 import {
   ChartImageExportOptions,
   ChartPrintExportOptions,
