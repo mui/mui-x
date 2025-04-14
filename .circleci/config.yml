@@ -113,8 +113,16 @@ commands:
           condition: << parameters.playwright >>
           steps:
             - run:
-                name: Install playwright
-                command: pnpx playwright@1.51.1 install --with-deps
+                name: Install playwright & ffmpeg
+                command: |
+                  pnpx playwright@1.51.1 install --with-deps
+                  # Avoids installing a system version of ffmpeg
+                  ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
+                  if [[ -z "$ffmpeg_bin" ]]; then
+                    >&2 echo "Could not find ffmpeg location"
+                    exit 1
+                  fi
+                  ln -s "$ffmpeg_bin" ~/bin/ffmpeg
 
 jobs:
   checkout:
@@ -293,9 +301,6 @@ jobs:
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-      - run:
-          name: Install ffmpeg
-          command: sudo apt update && sudo apt upgrade -y && sudo apt install ffmpeg -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
