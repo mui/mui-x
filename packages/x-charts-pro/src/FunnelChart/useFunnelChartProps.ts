@@ -55,13 +55,12 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
+    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
   };
 
   // If the scaleType is not defined or is 'band', our job is simple.
   if (!categoryAxis?.scaleType || categoryAxis.scaleType === 'band') {
     return {
-      scaleType: 'band',
       categoryGapRatio: 0,
       // Use the categories as the domain if they are defined.
       data: categoryAxis?.categories
@@ -70,6 +69,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
           Array.from({ length: maxSeriesLength }, (_, index) => index),
       tickLabelPlacement: 'middle',
       ...categoryValues,
+      scaleType: 'band',
     };
   }
 

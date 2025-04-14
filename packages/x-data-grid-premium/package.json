@@ -9,7 +9,9 @@
     "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/x/react-data-grid/",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "publishConfig": {
     "access": "public",
     "directory": "build"

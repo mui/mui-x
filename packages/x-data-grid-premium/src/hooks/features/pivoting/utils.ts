@@ -164,6 +164,7 @@ export const getPivotedData = ({
       valueFormatter: initialColumn.valueFormatter,
       headerName: initialColumn.headerName,
       renderCell: initialColumn.renderCell,
+      display: initialColumn.display,
     };
 
     return attributes;
