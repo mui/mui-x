@@ -10,4 +10,7 @@
   aiAssistant
   onPrompt={processPrompt}
   showToolbar
+  slots={{
+    aiAssistantPanel: GridAiAssistantPanel,
+  }}
 />

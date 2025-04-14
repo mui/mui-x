@@ -16,7 +16,7 @@ The AI Assistant feature lets users interact with the Data Grid component using 
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
-To enable this feature on the Data Grid, pass the `aiAssistant` prop.
+To enable this feature on the Data Grid, pass the `aiAssistant` prop and use `<GridAiAssistantPanel />` in `aiAssistantPanel` slot.
 
 ## Improving accuracy with example values
 
@@ -81,8 +81,10 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   This adds a new button to the Toolbar that opens the Assistant Panel to receive the user's prompts.
-3. Provide the `onPrompt()` callback to pass the user's prompts to the service.
+   This adds a new button to the Toolbar that controlls the Assistant Panel open state.
+3. Provide `<GridAiAssistantPanel />` as a component for the `aiAssistantPanel` slot.
+   Slot is by default `null` to prevent bundling of the panel and its child components in the projects that are not using the AI Assistant feature.
+4. Provide the `onPrompt()` callback to pass the user's prompts to the service.
    The service's response is used internally by the Data Grid to make the necessary state updates.
 
    :::success
@@ -112,7 +114,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 
    :::
 
-4. Provide data examples in either of the following ways:
+5. Provide data examples in either of the following ways:
    - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
 

@@ -6,6 +6,7 @@ import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
+  GridAiAssistantPanel,
   GridApi,
   GridRowsProp,
   useGridApiRef,
@@ -59,6 +60,9 @@ describe('<DataGridPremium /> - Prompt', () => {
           apiRef={apiRef}
           aiAssistant
           showToolbar
+          slots={{
+            aiAssistantPanel: GridAiAssistantPanel,
+          }}
           onPrompt={promptSpy}
           {...props}
         />

@@ -30,7 +30,6 @@ import {
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
-import { GridAiAssistantPanel } from '../../../components/aiAssistantPanel/GridAiAssistantPanel';
 
 const DEFAULT_SAMPLE_COUNT = 5;
 
@@ -68,6 +67,7 @@ export const useGridAiAssistant = (
     | 'onAiAssistantConversationsChange'
     | 'onAiAssistantActiveConversationIndexChange'
     | 'onPrompt'
+    | 'slots'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
     | 'disableAggregation'
@@ -78,6 +78,7 @@ export const useGridAiAssistant = (
   const {
     onPrompt,
     allowAiAssistantDataSampling,
+    slots,
     disableColumnFilter,
     disableRowGrouping,
     disableAggregation,
@@ -107,13 +108,17 @@ export const useGridAiAssistant = (
 
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
-      if (value === GridPreferencePanelsValue.aiAssistant) {
-        return <GridAiAssistantPanel />;
+      if (
+        isAiAssistantAvailable &&
+        slots.aiAssistantPanel &&
+        value === GridPreferencePanelsValue.aiAssistant
+      ) {
+        return <slots.aiAssistantPanel />;
       }
 
       return initialValue;
     },
-    [],
+    [isAiAssistantAvailable, slots],
   );
 
   const collectSampleData = React.useCallback(() => {

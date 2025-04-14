@@ -1,5 +1,7 @@
 [
+  { "name": "AiAssistantPanelState", "kind": "Interface" },
   { "name": "AiAssistantPanelTrigger", "kind": "Variable" },
+  { "name": "AiAssistantPanelTriggerProps", "kind": "TypeAlias" },
   { "name": "BaseAutocompletePropsOverrides", "kind": "Interface" },
   { "name": "BaseBadgePropsOverrides", "kind": "Interface" },
   { "name": "BaseButtonPropsOverrides", "kind": "Interface" },
@@ -126,6 +128,7 @@
   { "name": "GridAggregationRules", "kind": "TypeAlias" },
   { "name": "GridAggregationState", "kind": "Interface" },
   { "name": "gridAggregationStateSelector", "kind": "Variable" },
+  { "name": "GridAiAssistantPanel", "kind": "Function" },
   { "name": "GridAlignment", "kind": "TypeAlias" },
   { "name": "GridApi", "kind": "TypeAlias" },
   { "name": "GridApiCommon", "kind": "Interface" },

@@ -775,10 +775,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
     },
-    "aiAssistantPanel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element of the AI assistant panel"
-    },
     "aiAssistantPanelBody": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the AI assistant panel body"
@@ -1544,6 +1540,7 @@
   },
   "slotDescriptions": {
     "aiAssistantIcon": "Icon used for the AI Assistant button",
+    "aiAssistantPanel": "Component rendered when AI Assistant panel is open. Only needed when <code>aiAssistant</code> prop is passed to the grid. Pass <code>GridAiAssistantPanel</code> to render the default AI Assistant panel.",
     "aiAssistantPanelCloseIcon": "Icon used for the AI Assistant panel close button",
     "aiAssistantPanelHistoryIcon": "Icon used for the AI Assistant panel history icon",
     "aiAssistantPanelNewConversationIcon": "Icon used for the AI Assistant panel new conversation button",

@@ -4,6 +4,7 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
   unstable_gridDefaultPromptResolver as promptResolver,
+  GridAiAssistantPanel,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -113,6 +114,9 @@ export default function AssistantWithDataSource() {
           { value: 'Order companies by amount of people' },
         ]}
         aiAssistant
+        slots={{
+          aiAssistantPanel: GridAiAssistantPanel,
+        }}
         onPrompt={processPrompt}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}

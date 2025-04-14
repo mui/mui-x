@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridAiAssistantPanel,
   unstable_gridDefaultPromptResolver as promptResolver,
 } from '@mui/x-data-grid-premium';
 import {
@@ -99,6 +100,9 @@ export default function AssistantWithExamples() {
         aiAssistant
         onPrompt={processPrompt}
         showToolbar
+        slots={{
+          aiAssistantPanel: GridAiAssistantPanel,
+        }}
       />
     </div>
   );

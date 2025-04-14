@@ -754,6 +754,12 @@
   ],
   "slots": [
     {
+      "name": "aiAssistantPanel",
+      "description": "Component rendered when AI Assistant panel is open. Only needed when `aiAssistant` prop is passed to the grid.\nPass `GridAiAssistantPanel` to render the default AI Assistant panel.",
+      "default": "null",
+      "class": "MuiDataGridPremium-aiAssistantPanel"
+    },
+    {
       "name": "emptyPivotOverlay",
       "description": "Component rendered when pivot mode is enabled but no rows are defined.",
       "default": "GridEmptyPivotOverlay",
@@ -1472,12 +1478,6 @@
       "key": "aggregationRowOverlayWrapper",
       "className": "MuiDataGridPremium-aggregationRowOverlayWrapper",
       "description": "Styles applied to the aggregation row overlay wrapper.",
-      "isGlobal": false
-    },
-    {
-      "key": "aiAssistantPanel",
-      "className": "MuiDataGridPremium-aiAssistantPanel",
-      "description": "Styles applied to the root element of the AI assistant panel.",
       "isGlobal": false
     },
     {

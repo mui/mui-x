@@ -1,1 +1,2 @@
-export { AiAssistantPanelTrigger } from './AiAssistantPanelTrigger';
+export * from './AiAssistantPanelTrigger';
+export * from './GridAiAssistantPanel';
