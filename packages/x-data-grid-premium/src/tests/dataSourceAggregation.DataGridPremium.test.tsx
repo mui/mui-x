@@ -103,14 +103,16 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       getRows: async () => {
         fetchRowsSpy();
         return {
-          rows: [],
-          rowCount: 0,
+          rows: [{ id: 123 }],
+          rowCount: 1,
           aggregateRow: {},
         };
       },
       getAggregatedValue: () => 'Agg value',
     };
-    const { user } = render(<TestDataSourceAggregation dataSource={dataSource} />);
+    const { user } = render(
+      <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
+    );
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
