@@ -21,7 +21,7 @@ To enable this feature on the Data Grid, pass the `aiAssistant` prop and use the
 ```tsx
 import { DataGridPremium, GridAiAssistantPanel } from '@mui/x-data-grid-premium';
 // ...
-<DataGridPremium aiAssistant slots={{ aiAssistantPanel: GridAiAssistantPanel }} />
+<DataGridPremium aiAssistant slots={{ aiAssistantPanel: GridAiAssistantPanel }} />;
 ```
 
 ## Improving accuracy with example values
