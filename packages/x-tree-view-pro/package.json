@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.1",
+    "@mui/utils": "^7.0.2",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
@@ -73,8 +73,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.7",
-    "@mui/material": "^7.0.1",
-    "@mui/system": "^7.0.1",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.2",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
     "react": "^19.0.0",

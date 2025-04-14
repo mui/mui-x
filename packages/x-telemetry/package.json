@@ -35,7 +35,7 @@
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "@mui/utils": "^7.0.1",
+    "@mui/utils": "^7.0.2",
     "ci-info": "^4.2.0",
     "conf": "^11.0.2",
     "is-docker": "^3.0.0",
