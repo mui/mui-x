@@ -25,7 +25,7 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/*', // Needs interaction
   ],
-  { eager: true },
+  { eager: true, import: 'default' },
 );
 Object.keys(docsImports).forEach((path: string) => {
   const [name, ...suiteArray] = path
@@ -35,7 +35,7 @@ Object.keys(docsImports).forEach((path: string) => {
     .reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
-  if (docsImports[path].default === undefined) {
+  if (docsImports[path] === undefined) {
     return;
   }
 
@@ -43,12 +43,15 @@ Object.keys(docsImports).forEach((path: string) => {
     path,
     suite,
     name,
-    case: docsImports[path].default,
+    case: docsImports[path],
   });
 });
 
 // @ts-ignore
-const regressionsImports = import.meta.glob('./data-grid/**/*.js', { eager: true });
+const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.js', {
+  eager: true,
+  import: 'default',
+});
 Object.keys(regressionsImports).forEach((path: string) => {
   const name = path.replace('./data-grid/', '').replace('.js', '');
   const suite = `test-regressions-data-grid`;
@@ -57,7 +60,7 @@ Object.keys(regressionsImports).forEach((path: string) => {
     path,
     suite,
     name,
-    case: regressionsImports[path].default,
+    case: regressionsImports[path],
   });
 });
 

@@ -24,9 +24,6 @@ const timeSensitiveSuites = [
 
 await main();
 
-// Pick the new/fake "now" for you test pages.
-const fakeNow = new Date('Mon Aug 18 14:11:54 2014 -0500').valueOf();
-
 async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
@@ -42,25 +39,6 @@ async function main() {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
   const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
-
-  // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
-  // Update the Date accordingly in your test pages
-  await page.addInitScript(`{
-    // Extend Date constructor to default to fakeNow
-    Date = class extends Date {
-      constructor(...args) {
-        if (args.length === 0) {
-          super(${fakeNow});
-        } else {
-          super(...args);
-        }
-      }
-    }
-    // Override Date.now() to start from fakeNow
-    const __DateNowOffset = ${fakeNow} - Date.now();
-    const __DateNow = Date.now;
-    Date.now = () => __DateNow() + __DateNowOffset;
-  }`);
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
