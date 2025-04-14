@@ -204,6 +204,34 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
+    it('should update aggregation values after filtering', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category2'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '9', // Agg "Cat 1"
+        '6', // Agg "Cat 2"
+        '15', // Agg root
+      ]);
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '5', // Agg "Cat 1"
+        '5', // Agg root
+      ]);
+    });
+
     describe('prop: getAggregationPosition', () => {
       it('should not aggregate groups if props.getAggregationPosition returns null', () => {
         render(

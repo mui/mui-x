@@ -123,8 +123,7 @@ export interface GridRowProPrivateApi {
   /**
    * Allows to update, insert and delete rows at a specific nested level.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
-   * @param {string[]} groupKeys The group keys of the rows to update.
-   * @param {boolean} throttle Whether to throttle the updates or not. (default: `true`)
+   * @param {string[]} nestedLevel The nested level of the rows to update, it represents the path to the row in the tree based on `node.groupingKey`.
    */
-  updateServerRows: (updates: GridRowModelUpdate[], groupKeys?: string[]) => void;
+  updateNestedRows: (updates: GridRowModelUpdate[], nestedLevel?: string[]) => void;
 }

@@ -59,7 +59,7 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 You can manage the zoom state by two means:
 
 - By defining an initial state with the `initialZoom` prop.
-- By imperatively set a zoom value with the `setZoomData` method of the public api.
+- By imperatively setting a zoom value with the `setZoomData()` method of the public API.
 
 In addition, the `onZoomChange` prop is a function that receives the new zoom state.
 

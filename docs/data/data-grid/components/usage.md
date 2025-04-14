@@ -11,6 +11,7 @@ By default, the `<DataGrid />` component includes all of the interfaces necessar
 - [Quick Filter](/x/react-data-grid/components/quick-filter/)
 - [Columns Panel](/x/react-data-grid/components/columns-panel/) 🚧
 - [Filter Panel](/x/react-data-grid/components/filter-panel/) 🚧
+- [Pivot Panel](/x/react-data-grid/components/pivot-panel/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
 
 ## Composition
 

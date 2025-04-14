@@ -4,14 +4,14 @@ import {
   chromium,
   webkit,
   firefox,
-  Page,
-  Browser,
-  BrowserContext,
   devices,
-  BrowserContextOptions,
-  BrowserType,
-  WebError,
-  Locator,
+  type Page,
+  type Browser,
+  type BrowserContext,
+  type BrowserContextOptions,
+  type BrowserType,
+  type WebError,
+  type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -109,7 +109,7 @@ async function initializeEnvironment(
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
-  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
+  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 8 : 4) * 1000);
   page = await context.newPage();
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
@@ -926,9 +926,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="dialog"]', { state: 'visible' });
 
         // Click 'OK' button to close dialog
-        await page.keyboard.press('Tab'); // move focus to 'cancel' action
-        await page.keyboard.press('Tab'); // move focus to 'accept' action
-        await page.keyboard.press('Enter');
+        await page.getByRole('button', { name: 'OK' }).click();
 
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
