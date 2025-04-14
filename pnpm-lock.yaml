@@ -159,10 +159,10 @@ importers:
         specifier: ^17.0.33
         version: 17.0.33
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.29.0
+        specifier: ^8.29.1
         version: 8.29.1(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.29.1
         version: 8.29.1(eslint@8.57.1)(typescript@5.8.3)
       autoprefixer:
         specifier: ^10.4.21
@@ -718,13 +718,13 @@ importers:
         specifier: ^8.56.12
         version: 8.56.12
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.29.1
         version: 8.29.1(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/rule-tester':
-        specifier: ^8.29.0
+        specifier: ^8.29.1
         version: 8.29.1(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/utils':
-        specifier: ^8.29.0
+        specifier: ^8.29.1
         version: 8.29.1(eslint@8.57.1)(typescript@5.8.3)
 
   packages/x-charts:
