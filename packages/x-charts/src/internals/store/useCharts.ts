@@ -98,7 +98,7 @@ export function useCharts<
     });
 
     if (pluginResponse.publicAPI) {
-      Object.assign(publicAPI, pluginResponse.publicAPI);
+      Object.assign(publicAPI.current, pluginResponse.publicAPI);
     }
 
     if (pluginResponse.instance) {
@@ -112,7 +112,7 @@ export function useCharts<
     () => ({
       store: storeRef.current as ChartStore<TSignaturesWithCorePluginSignatures> &
         UseChartInteractionState,
-      publicAPI,
+      publicAPI: publicAPI.current,
       instance,
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
@@ -123,18 +123,21 @@ export function useCharts<
   return { contextValue };
 }
 
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+  if (inputApiRef.current == null) {
+    inputApiRef.current = {} as T;
+  }
+  return inputApiRef as React.RefObject<T>;
+}
+
 export function useChartApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
-): T {
+): React.RefObject<T> {
   const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      // eslint-disable-next-line react-compiler/react-compiler
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
+    return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApiRef.current;
+  return fallbackPublicApiRef;
 }
