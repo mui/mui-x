@@ -47,7 +47,7 @@ export default function MarginAndLabelPosition() {
         hideLegend
         yAxis={[
           {
-            valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+            valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
             width: fixMargin ? 85 : undefined,
           },
