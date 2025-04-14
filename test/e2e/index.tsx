@@ -12,8 +12,10 @@ interface Fixture {
 
 const fixtures: Fixture[] = [];
 
-// @ts-ignore
-const fixturesImports = import.meta.glob('./fixtures/**/*', { eager: true });
+const fixturesImports = import.meta.glob<React.ComponentType>('./fixtures/**/*', {
+  eager: true,
+  import: 'default',
+});
 Object.keys(fixturesImports).forEach((path: string) => {
   const [suite, name] = path
     .replace('./fixtures/', '')
@@ -24,7 +26,7 @@ Object.keys(fixturesImports).forEach((path: string) => {
     path,
     suite: `e2e/${suite}`,
     name,
-    Component: fixturesImports[path].default,
+    Component: fixturesImports[path],
   });
 });
 

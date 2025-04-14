@@ -98,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.4",
+    "@mui/internal-test-utils": "^2.0.7",
     "@mui/material": "^7.0.1",
     "@mui/system": "^7.0.1",
     "@types/luxon": "^3.6.2",
