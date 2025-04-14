@@ -392,12 +392,6 @@ importers:
       util:
         specifier: ^0.12.5
         version: 0.12.5
-      vite:
-        specifier: ^6.2.4
-        version: 6.2.4(@types/node@20.17.30)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
-      vite-plugin-replace:
-        specifier: ^0.1.1
-        version: 0.1.1(vite@6.2.4(@types/node@20.17.30)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))
       webpack:
         specifier: ^5.98.0
         version: 5.98.0(@swc/core@1.11.11(@swc/helpers@0.5.15))(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.98.0))
@@ -10415,11 +10409,6 @@ packages:
     resolution: {integrity: sha512-V+IxPAE2FvXpTCHXyNem0M+gWm6J7eRyWPR6vYoG/Gl+IscNOjXzztUhimQgTxaAoUoj40Qqimaa0NLIOOAH4w==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
-
-  vite-plugin-replace@0.1.1:
-    resolution: {integrity: sha512-v+okl3JNt2pf1jDYijw+WPVt6h9FWa/atTi+qnSFBqmKThLTDhlesx0r3bh+oFPmxRJmis5tNx9HtN6lGFoqWg==}
-    peerDependencies:
-      vite: ^2
 
   vite@6.2.4:
     resolution: {integrity: sha512-veHMSew8CcRzhL5o8ONjy8gkfmFJAd5Ac16oxBUjlwgX3Gq2Wqr+qNC3TjPIpy7TPV/KporLga5GT9HqdrCizw==}
@@ -20821,10 +20810,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-
-  vite-plugin-replace@0.1.1(vite@6.2.4(@types/node@20.17.30)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)):
-    dependencies:
-      vite: 6.2.4(@types/node@20.17.30)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
 
   vite@6.2.4(@types/node@20.17.30)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0):
     dependencies:
