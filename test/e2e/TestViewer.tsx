@@ -1,7 +1,6 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
-function TestViewer(props) {
+function TestViewer(props: any) {
   const { children } = props;
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
@@ -17,9 +16,5 @@ function TestViewer(props) {
     </div>
   );
 }
-
-TestViewer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default TestViewer;
