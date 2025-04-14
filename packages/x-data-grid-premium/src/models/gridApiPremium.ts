@@ -18,6 +18,10 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type {
+  GridPivotingApi,
+  GridPivotingPrivateApi,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -34,6 +38,7 @@ export interface GridApiPremium
     GridRowPinningApi,
     GridDataSourceApiPremium,
     GridCellSelectionApi,
+    GridPivotingApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -43,4 +48,5 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
-    GridDetailPanelPrivateApi {}
+    GridDetailPanelPrivateApi,
+    GridPivotingPrivateApi {}

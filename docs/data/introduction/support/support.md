@@ -70,10 +70,10 @@ If you cannot find your answer, [ask a new question](https://stackoverflow.com/q
 ## Technical support
 
 :::info
-The technical support covers only MUI X components.
+The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your active license.
+When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
@@ -83,7 +83,7 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
 
 ## Long-term support (LTS)
 

@@ -2,7 +2,20 @@
 import { AxisId } from '../../../../models/axis';
 import type { ExtremumFilter } from './useChartCartesianAxis.types';
 
-export type ZoomData = { axisId: AxisId; start: number; end: number };
+export type ZoomData = {
+  /**
+   * The id of the zoomed axis.
+   */
+  axisId: AxisId;
+  /**
+   * The starting percentage of the zoom range. In the range of 0 to 100.
+   */
+  start: number;
+  /**
+   * The ending percentage of the zoom range. In the range of 0 to 100.
+   */
+  end: number;
+};
 
 export type ZoomFilterMode = 'keep' | 'discard';
 
@@ -57,7 +70,7 @@ export interface ZoomOptions {
    *
    * @default 'keep'
    */
-  filterMode?: 'discard' | 'keep';
+  filterMode?: ZoomFilterMode;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

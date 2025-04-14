@@ -4,22 +4,21 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { TreeItemIconProps } from './TreeItemIcon.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 function TreeItemIcon(props: TreeItemIconProps) {
-  const { slots, slotProps, status } = props;
+  const { slots: slotsFromTreeItem, slotProps: slotPropsFromTreeItem, status } = props;
 
-  const context = useTreeViewContext<[UseTreeViewIconsSignature]>();
+  const { slots: slotsFromTreeView, slotProps: slotPropsFromTreeView } = useTreeViewStyleContext();
 
-  const contextIcons = {
-    ...context.icons.slots,
-    expandIcon: context.icons.slots.expandIcon ?? TreeViewExpandIcon,
-    collapseIcon: context.icons.slots.collapseIcon ?? TreeViewCollapseIcon,
+  const slots = {
+    collapseIcon:
+      slotsFromTreeItem?.collapseIcon ?? slotsFromTreeView.collapseIcon ?? TreeViewCollapseIcon,
+    expandIcon: slotsFromTreeItem?.expandIcon ?? slotsFromTreeView.expandIcon ?? TreeViewExpandIcon,
+    endIcon: slotsFromTreeItem?.endIcon ?? slotsFromTreeView.endIcon,
+    icon: slotsFromTreeItem?.icon,
   };
-
-  const contextIconProps = context.icons.slotProps;
 
   let iconName: 'collapseIcon' | 'expandIcon' | 'endIcon' | 'icon';
   if (slots?.icon) {
@@ -34,15 +33,15 @@ function TreeItemIcon(props: TreeItemIconProps) {
     iconName = 'endIcon';
   }
 
-  const Icon = slots?.[iconName] ?? contextIcons[iconName as keyof typeof contextIcons];
+  const Icon = slots[iconName];
   const iconProps = useSlotProps({
     elementType: Icon,
     externalSlotProps: (tempOwnerState: any) => ({
       ...resolveComponentProps(
-        contextIconProps[iconName as keyof typeof contextIconProps],
+        slotPropsFromTreeView[iconName as keyof typeof slotPropsFromTreeView],
         tempOwnerState,
       ),
-      ...resolveComponentProps(slotProps?.[iconName], tempOwnerState),
+      ...resolveComponentProps(slotPropsFromTreeItem?.[iconName], tempOwnerState),
     }),
     // TODO: Add proper ownerState
     ownerState: {},

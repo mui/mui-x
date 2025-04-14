@@ -113,8 +113,8 @@ export function useValueAndOpenStates<
       onOpen();
     }
 
-    if (!newOpen && onClose) {
-      onClose();
+    if (!newOpen) {
+      onClose?.();
     }
   });
 
@@ -197,6 +197,7 @@ export function useValueAndOpenStates<
           clockShallowValue: newValue,
           hasBeenModifiedSinceMount: true,
         }));
+        return;
       }
 
       setValue(newValue, {

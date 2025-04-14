@@ -14,12 +14,12 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro /> - Cell editing', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -337,9 +337,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
-        clock.withFakeTimers();
-
-        it('should debounce multiple changes if debounceMs > 0', () => {
+        it('should debounce multiple changes if debounceMs > 0', async () => {
           const renderEditCell = spy((() => <input />) as (
             props: GridRenderEditCellParams,
           ) => React.ReactNode);
@@ -362,8 +360,11 @@ describe('<DataGridPro /> - Cell editing', () => {
             debounceMs: 100,
           });
           expect(renderEditCell.callCount).to.equal(0);
-          clock.tick(100);
-          expect(renderEditCell.callCount).not.to.equal(0);
+
+          await waitFor(() => {
+            expect(renderEditCell.callCount).not.to.equal(0);
+          });
+
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         });
       });

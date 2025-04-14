@@ -7,6 +7,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: '沒有結果',
   noColumnsOverlayLabel: '沒有欄位',
   noColumnsOverlayManageColumns: '管理欄位',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -48,6 +49,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: '匯出 CSV',
   toolbarExportPrint: '列印',
   toolbarExportExcel: '匯出 Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: '搜尋',
@@ -130,6 +134,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '預設排序',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,
@@ -212,6 +217,35 @@ const zhTWGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小',
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '尺寸',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid);

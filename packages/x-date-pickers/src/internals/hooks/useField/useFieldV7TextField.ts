@@ -103,6 +103,7 @@ export const useFieldV7TextField = <
 
   function focusField(newSelectedSections: number | FieldSectionType = 0) {
     if (
+      disabled ||
       !sectionListRef.current ||
       // if the field is already focused, we don't need to focus it again
       getActiveSectionIndex(sectionListRef) != null
@@ -129,7 +130,10 @@ export const useFieldV7TextField = <
     domGetters,
   });
   const hiddenInputProps = useFieldHiddenInputProps({ manager, stateResponse });
-  const createSectionContainerProps = useFieldSectionContainerProps({ stateResponse });
+  const createSectionContainerProps = useFieldSectionContainerProps({
+    stateResponse,
+    internalPropsWithDefaults,
+  });
   const createSectionContentProps = useFieldSectionContentProps({
     manager,
     stateResponse,
@@ -155,6 +159,11 @@ export const useFieldV7TextField = <
   });
 
   const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // The click event on the clear or open button would propagate to the input, trigger this handler and result in an inadvertent section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a propagated call, which should be skipped.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     onClick?.(event);
     rootProps.onClick(event);
   });
@@ -183,16 +192,22 @@ export const useFieldV7TextField = <
   });
 
   const elements = React.useMemo<PickersSectionElement[]>(() => {
-    return state.sections.map((section, sectionIndex) => ({
-      container: createSectionContainerProps(sectionIndex),
-      content: createSectionContentProps(section, sectionIndex),
-      before: {
-        children: section.startSeparator,
-      },
-      after: {
-        children: section.endSeparator,
-      },
-    }));
+    return state.sections.map((section, sectionIndex) => {
+      const content = createSectionContentProps(section, sectionIndex);
+      return {
+        container: createSectionContainerProps(sectionIndex),
+        content: createSectionContentProps(section, sectionIndex),
+        before: {
+          children: section.startSeparator,
+        },
+        after: {
+          children: section.endSeparator,
+          'data-range-position': section.isEndFormatSeparator
+            ? content['data-range-position']
+            : undefined,
+        },
+      };
+    });
   }, [state.sections, createSectionContainerProps, createSectionContentProps]);
 
   React.useEffect(() => {
@@ -202,16 +217,16 @@ export const useFieldV7TextField = <
           'MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
           'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
           '',
-          'If you want to keep using an `<input />` HTML element for the editing, please remove the `enableAccessibleFieldDOMStructure` prop from your Picker or Field component:',
+          'If you want to keep using an `<input />` HTML element for the editing, please add the `enableAccessibleFieldDOMStructure={false}` prop to your Picker or Field component:',
           '',
-          '<DatePicker slots={{ textField: MyCustomTextField }} />',
+          '<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />',
           '',
           'Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
         ].join('\n'),
       );
     }
 
-    if (autoFocus && sectionListRef.current) {
+    if (autoFocus && !disabled && sectionListRef.current) {
       sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -239,7 +254,7 @@ export const useFieldV7TextField = <
     getSections: () => state.sections,
     getActiveSectionIndex: () => getActiveSectionIndex(sectionListRef),
     setSelectedSections: (newSelectedSections) => {
-      if (!sectionListRef.current) {
+      if (disabled || !sectionListRef.current) {
         return;
       }
 

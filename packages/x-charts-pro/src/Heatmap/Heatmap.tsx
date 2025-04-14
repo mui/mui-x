@@ -27,7 +27,7 @@ import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro'
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
@@ -225,7 +225,6 @@ Heatmap.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -376,6 +375,7 @@ Heatmap.propTypes = {
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -467,6 +467,7 @@ Heatmap.propTypes = {
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),

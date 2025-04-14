@@ -56,7 +56,7 @@ To modify the text's layout, use the `gaugeClasses.valueText` class name.
 
 ## Arc design
 
-To customize the Gauge styles, use the `chartsGaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
+To customize the Gauge styles, use the `gaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
 
 For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
 

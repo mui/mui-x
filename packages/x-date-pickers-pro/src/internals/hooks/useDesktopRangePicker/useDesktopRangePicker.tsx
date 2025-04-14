@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -61,6 +62,7 @@ export const useDesktopRangePicker = <
     viewContainerRole,
     localeText,
     getStepNavigation,
+    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
   });
 
   const Field = slots.field;
@@ -69,6 +71,11 @@ export const useDesktopRangePicker = <
     elementType: Field,
     externalSlotProps: slotProps?.field,
     ownerState,
+    additionalProps: {
+      'data-active-range-position': providerProps.contextValue.open
+        ? rangePositionResponse.rangePosition
+        : undefined,
+    },
   });
 
   const Layout = slots?.layout ?? PickersLayout;
