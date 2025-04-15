@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
 export interface ChartsLocalizationProviderProps {
   children?: React.ReactNode;
   /**
-   * Locale for charts components texts.
+   * Localized text for chart components.
    */
   localeText?: Partial<ChartsLocaleText>;
 }
