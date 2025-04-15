@@ -147,14 +147,16 @@ module.exports = function getBabelConfig(api) {
           ],
         },
       ]);
-
-      plugins.push([
-        'transform-replace-expressions',
-        {
-          replace: [['LICENSE_DISABLE_CHECK', 'false']],
-        },
-      ]);
     }
+  }
+
+  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
+    plugins.push([
+      'transform-replace-expressions',
+      {
+        replace: [['LICENSE_DISABLE_CHECK', 'false']],
+      },
+    ]);
   }
 
   if (useESModules) {
