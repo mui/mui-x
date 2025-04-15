@@ -4,7 +4,7 @@ type DataSourceCacheDefaultConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
-   * @default 300000 (5 minutes)
+   * @default 300_000 (5 minutes)
    */
   ttl?: number;
 };
@@ -33,7 +33,7 @@ export class DataSourceCacheDefault {
 
   private ttl: number;
 
-  constructor({ ttl = 300000 }: DataSourceCacheDefaultConfig) {
+  constructor({ ttl = 300_000 }: DataSourceCacheDefaultConfig) {
     this.cache = {};
     this.ttl = ttl;
   }
