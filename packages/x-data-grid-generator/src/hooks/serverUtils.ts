@@ -623,10 +623,16 @@ export const processRowGroupingRows = (
   const rowsWithMissingGroups: GridValidRowModel[] = [];
 
   // add paths and generate parent rows based on `groupFields`
-  const groupFields = queryOptions.groupFields;
+  const groupFields = queryOptions.groupFields.map((field) => ({
+    field,
+    type: columnsWithDefaultColDef.find((col) => col.field === field)?.type || 'string',
+  }));
+
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => String(row[field]));
+      const partialPath = groupFields.map(({ field, type }) =>
+        String(type === 'singleSelect' ? row[field].label : row[field]),
+      );
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
