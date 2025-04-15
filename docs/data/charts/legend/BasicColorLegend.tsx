@@ -39,12 +39,11 @@ export default function BasicColorLegend() {
           {
             disableLine: true,
             disableTicks: true,
-            valueFormatter: (value) => `${value}°`,
+            valueFormatter: (value: number) => `${value}°`,
           },
         ]}
         grid={{ horizontal: true }}
         height={300}
-        margin={{ top: 20, right: 20 }}
         slotProps={{
           legend: {
             axisDirection: 'x',

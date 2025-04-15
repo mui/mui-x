@@ -4,9 +4,11 @@ import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { Toolbar } from '../toolbarV8';
 
 export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
@@ -24,18 +26,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridToolbarContainerRoot = styled('div', {
+const GridToolbarContainerRoot = styled(Toolbar, {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
-  overridesResolver: (_, styles) => styles.toolbarContainer,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'ownerState',
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
-  gap: theme.spacing(1),
-  padding: theme.spacing(0.5, 0.5, 0),
-}));
+  gap: vars.spacing(1),
+  padding: vars.spacing(0.5),
+  minHeight: 'auto',
+});
 
+/**
+ * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/toolbar/ Toolbar} component instead. This component will be removed in a future major release.
+ */
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;

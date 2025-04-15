@@ -1,16 +1,18 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import Box from '@mui/material/Box';
+import { vars } from '@mui/x-data-grid/internals';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridGroupNode,
+  gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { gridPivotActiveSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 
@@ -41,6 +43,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     gridFilteredDescendantCountLookupSelector,
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const maxTreeDepth = gridRowMaximumTreeDepthSelector(apiRef);
+  const shouldShowToggleContainer = !pivotActive || maxTreeDepth > 2;
+  const shouldShowToggleButton = !pivotActive || rowNode.depth < maxTreeDepth - 2;
 
   const Icon = rowNode.childrenExpanded
     ? rootProps.slots.groupingCriteriaCollapseIcon
@@ -73,41 +79,39 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={[
-        rootProps.rowGroupingColumnMode === 'multiple'
-          ? {
-              ml: 0,
-            }
-          : (theme) => ({
-              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
-            }),
-      ]}
-      style={{ '--depth': rowNode.depth } as any}
+      style={{
+        marginLeft:
+          rootProps.rowGroupingColumnMode === 'multiple'
+            ? 0
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${rowNode.depth} * ${vars.spacing(1)})`,
+      }}
     >
-      <div className={classes.toggle}>
-        {filteredDescendantCount > 0 && (
-          <rootProps.slots.baseIconButton
-            size="small"
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            tabIndex={-1}
-            aria-label={
-              rowNode.childrenExpanded
-                ? apiRef.current.getLocaleText('treeDataCollapse')
-                : apiRef.current.getLocaleText('treeDataExpand')
-            }
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <Icon fontSize="inherit" />
-          </rootProps.slots.baseIconButton>
-        )}
-      </div>
+      {shouldShowToggleContainer ? (
+        <div className={classes.toggle}>
+          {shouldShowToggleButton && filteredDescendantCount > 0 && (
+            <rootProps.slots.baseIconButton
+              size="small"
+              onClick={handleClick}
+              onKeyDown={handleKeyDown}
+              tabIndex={-1}
+              aria-label={
+                rowNode.childrenExpanded
+                  ? apiRef.current.getLocaleText('treeDataCollapse')
+                  : apiRef.current.getLocaleText('treeDataExpand')
+              }
+              {...rootProps.slotProps?.baseIconButton}
+            >
+              <Icon fontSize="inherit" />
+            </rootProps.slots.baseIconButton>
+          )}
+        </div>
+      ) : null}
       {cellContent}
       {!hideDescendantCount && filteredDescendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

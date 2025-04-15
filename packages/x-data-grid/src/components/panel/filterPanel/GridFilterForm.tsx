@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../../constants/cssVariables';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
@@ -26,6 +26,10 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import {
+  gridPivotActiveSelector,
+  gridPivotInitialColumnsSelector,
+} from '../../../hooks/features/pivoting';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -145,10 +149,10 @@ const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
   overridesResolver: (props, styles) => styles.filterForm,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
-  gap: theme.spacing(1.5),
-}));
+  gap: vars.spacing(1.5),
+});
 
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
@@ -156,7 +160,9 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
+  display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const FilterFormLogicOperatorInput = styled('div', {
@@ -240,14 +246,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
-    const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
-
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? false;
 
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
+
+    const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+    const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
 
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
@@ -259,6 +266,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (selectedNonFilterableColumn) {
         return {
           filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
+      if (pivotActive) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) => initialColumns.get(column.field) !== undefined,
+          ),
           selectedField: itemField,
         };
       }
@@ -283,7 +299,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
+    }, [
+      item.field,
+      columnLookup,
+      pivotActive,
+      filterColumns,
+      filterableColumns,
+      filterModel?.items,
+      initialColumns,
+    ]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -313,7 +337,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const field = event.target.value as string;
         const column = apiRef.current.getColumn(field)!;
 
@@ -366,7 +390,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const operator = event.target.value as string;
 
         const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
@@ -385,7 +409,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeLogicOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const logicOperator =
           (event.target.value as string) === GridLogicOperator.And.toString()
             ? GridLogicOperator.And
@@ -422,14 +446,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         ref={ref}
       >
         <FilterFormDeleteIcon
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
           {...deleteIconProps}
-          className={clsx(
-            classes.deleteIcon,
-            baseFormControlProps.className,
-            deleteIconProps.className,
-          )}
+          className={clsx(classes.deleteIcon, deleteIconProps.className)}
           ownerState={rootProps}
         >
           <rootProps.slots.baseIconButton
@@ -515,9 +533,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="outlined"
-          size="small"
           as={rootProps.slots.baseSelect}
+          size="small"
           {...operatorInputProps}
           className={clsx(classes.operatorInput, operatorInputProps.className)}
           ownerState={rootProps}
@@ -546,9 +563,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="outlined"
-          size="small"
-          as={rootProps.slots.baseFormControl}
           {...valueInputPropsOther}
           className={clsx(classes.valueInput, valueInputPropsOther.className)}
           ownerState={rootProps}

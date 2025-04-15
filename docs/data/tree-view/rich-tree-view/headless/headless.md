@@ -273,12 +273,6 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   events: UseCustomPluginEvents;
   // The states defined by your plugin
   state: UseCustomPluginState;
-  // The context value defined by your plugin and passed to the items
-  contextValue: UseCustomPluginContextValue;
-  // The slots used by this plugin
-  slots: UseCustomPluginSlots;
-  // The slot props used by this plugin
-  slotProps: UseCustomPluginSlotProps;
   // The name of the models defined by your plugin
   modelNames: UseCustomPluginModelNames;
   // The plugins this plugin needs to work correctly

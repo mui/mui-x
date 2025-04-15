@@ -9,22 +9,20 @@ import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
+import { UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
 import { useChartVoronoi, UseChartVoronoiSignature } from './featurePlugins/useChartVoronoi';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
-import { ConvertSignaturesIntoPlugins } from './models/helpers';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<TSeries>,
+  UseChartPolarAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVoronoiSignature,
 ];
 
-export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<AllPluginSignatures<TSeries>>;
-
-export const ALL_PLUGINS = [
+export const DEFAULT_PLUGINS = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,

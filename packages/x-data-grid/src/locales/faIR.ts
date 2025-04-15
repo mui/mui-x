@@ -1,4 +1,3 @@
-import { faIR as faIRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'نتیجه‌ای پیدا نشد.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'تراکم',
@@ -50,6 +50,9 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'دانلود به صورت CSV',
   toolbarExportPrint: 'چاپ',
   toolbarExportExcel: 'دانلود به صورت اکسل',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'جستجو',
@@ -124,6 +127,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'فهرست',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'نمایش ستون‌ها',
   columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',
@@ -131,6 +135,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌سازی صعودی',
   columnMenuSortDesc: 'مرتب‌سازی نزولی',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -185,6 +190,34 @@ const faIRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
 
+  // Pagination
+  paginationRowsPerPage: 'تعداد سطرهای هر صفحه:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'رفتن به اولین صفحه';
+    }
+    if (type === 'last') {
+      return 'رفتن به آخرین صفحه';
+    }
+    if (type === 'next') {
+      return 'رفتن به صفحه‌ی بعدی';
+    }
+    // if (type === 'previous') {
+    return 'رفتن به صفحه‌ی قبلی';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'ترتیب مجدد سطر',
 
@@ -195,6 +228,35 @@ const faIRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'حداقل',
   aggregationFunctionLabelMax: 'حداکثر',
   aggregationFunctionLabelSize: 'اندازه',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
+export const faIR: Localization = getGridLocalization(faIRGrid);

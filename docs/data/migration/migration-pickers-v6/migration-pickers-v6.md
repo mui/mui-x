@@ -300,7 +300,7 @@ All the date-related props are now strictly typed to only accept the date format
 (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
 
 :::info
-See [Date and time types](/x/react-date-pickers/quickstart/#date-and-time-types) for more details.
+See [Date value types](/x/react-date-pickers/quickstart/#date-value-types) for more details.
 :::
 
 ## Field components
@@ -439,7 +439,7 @@ then you can look at the page to see all the examples improved and updated to us
 
 #### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
 
-The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
+The headless field hooks (for example `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
 
 :::info
@@ -902,7 +902,7 @@ It no longer accept `any` as a value but only `string | null | undefined`
 #### Restrict the input format of the `isEqual` method
 
 The `isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
-The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
+The method has been simplified and now only accepts an already-parsed date or `null` (this uses the same formats used by the `value` prop in the pickers)
 
 ```diff
  const adapterDayjs = new AdapterDayjs();

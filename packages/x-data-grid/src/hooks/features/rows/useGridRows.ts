@@ -19,11 +19,12 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowGroupsToFetchSelector,
   gridRowNodeSelector,
+  gridDataRowsSelector,
 } from './gridRowsSelector';
 import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
@@ -43,11 +44,12 @@ import {
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
+import { gridPivotActiveSelector } from '../pivoting';
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
+  Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  const isDataSourceAvailable = !!props.unstable_dataSource;
+  const isDataSourceAvailable = !!props.dataSource;
   apiRef.current.caches.rows = createRowsInternalCache({
     rows: isDataSourceAvailable ? [] : props.rows,
     getRowId: props.getRowId,
@@ -79,7 +81,7 @@ export const useGridRows = (
     | 'pagination'
     | 'paginationMode'
     | 'loading'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -164,6 +166,10 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(rows, false);
+        return;
+      }
       const cache = createRowsInternalCache({
         rows,
         getRowId: props.getRowId,
@@ -189,6 +195,11 @@ export const useGridRows = (
         );
       }
 
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(updates);
+        return;
+      }
+
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
@@ -202,7 +213,7 @@ export const useGridRows = (
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
 
-  const updateServerRows = React.useCallback<GridRowProPrivateApi['updateServerRows']>(
+  const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
     (updates, groupKeys) => {
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
@@ -483,7 +494,7 @@ export const useGridRows = (
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {
-    updateServerRows,
+    updateNestedRows,
   };
 
   /**
@@ -525,20 +536,20 @@ export const useGridRows = (
     throttledRowsChange,
   ]);
 
-  const previousDataSource = useLazyRef(() => props.unstable_dataSource);
+  const previousDataSource = useLazyRef(() => props.dataSource);
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
-      if (props.unstable_dataSource && props.unstable_dataSource !== previousDataSource.current) {
-        previousDataSource.current = props.unstable_dataSource;
+      if (props.dataSource && props.dataSource !== previousDataSource.current) {
+        previousDataSource.current = props.dataSource;
         return;
       }
       if (methodName === 'rowTreeCreation') {
         groupRows();
       }
     },
-    [groupRows, previousDataSource, props.unstable_dataSource],
+    [groupRows, previousDataSource, props.dataSource],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -554,8 +565,8 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
-  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
+  useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridEvent(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
   /**
    * APPLIERS
@@ -609,9 +620,7 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
-    const currentRows = props.unstable_dataSource
-      ? Array.from(apiRef.current.getRowModels().values())
-      : props.rows;
+    const currentRows = props.dataSource ? gridDataRowsSelector(apiRef) : props.rows;
     const areNewRowsAlreadyInState =
       apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =
@@ -661,7 +670,7 @@ export const useGridRows = (
     props.rowCount,
     props.getRowId,
     props.loading,
-    props.unstable_dataSource,
+    props.dataSource,
     logger,
     throttledRowsChange,
     apiRef,

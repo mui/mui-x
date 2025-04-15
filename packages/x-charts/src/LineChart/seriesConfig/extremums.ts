@@ -1,7 +1,7 @@
 import {
   CartesianExtremumFilter,
   CartesianExtremumGetter,
-} from '../../internals/plugins/models/seriesConfig/extremumGetter.types';
+} from '../../internals/plugins/models/seriesConfig';
 
 export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {
   const { axis } = params;
@@ -15,7 +15,7 @@ type GetValues = (d: [number, number]) => [number, number];
 
 function getSeriesExtremums(
   getValues: GetValues,
-  data: (number | null)[],
+  data: readonly (number | null)[],
   stackedData: [number, number][],
   filter?: CartesianExtremumFilter,
 ): [number, number] {

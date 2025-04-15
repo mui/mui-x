@@ -1,7 +1,7 @@
 name: 'Priority Support: SLA ⏰'
 description: I'm an MUI X Premium user and we have purchased the Priority Support add-on. I can't find a solution to my problem with MUI X.
 title: '[question] '
-labels: ['status: waiting for maintainer', 'support: commercial', 'support: unknown']
+labels: ['status: waiting for maintainer', 'support: unknown']
 body:
   - type: markdown
     attributes:

@@ -10,7 +10,10 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionXAxisIndex,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {
@@ -53,12 +56,10 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const { instance } = useChartContext();
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const highlightedIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
-  const highlightedIndex = xAxisIdentifier?.index;
-
-  if (highlightedIndex === undefined) {
+  if (highlightedIndex === null) {
     return null;
   }
 

@@ -7,6 +7,7 @@ import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
 import { MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'children'>,
@@ -54,7 +55,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
       pluginParams={{
         width: inWidth,
         height: inHeight,
-        margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+        margin: defaultizeMargin(margin, { left: 10, right: 10, top: 10, bottom: 10 }),
       }}
       plugins={[]}
     >
@@ -137,14 +138,18 @@ GaugeContainer.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The radius between circle center and the end of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -152,6 +157,11 @@ GaugeContainer.propTypes = {
    * @default '100%'
    */
   outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The start angle (deg).
    * @default 0

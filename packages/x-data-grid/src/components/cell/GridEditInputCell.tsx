@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
+import { vars } from '../../constants/cssVariables';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -29,14 +30,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  ...theme.typography.body2,
+})<{ ownerState: OwnerState }>({
+  font: vars.typography.font.body,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',
     height: '100%',
   },
-}));
+});
 
 export interface GridEditInputCellProps extends GridRenderEditCellParams {
   debounceMs?: number;

@@ -7,10 +7,7 @@ import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'tes
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describeConformance(<StaticDateRangePicker />, () => ({
     classes: {} as any,
@@ -30,10 +27,10 @@ describe('<StaticDateRangePicker />', () => {
 
   describeRangeValidation(StaticDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'static-picker',
     views: ['day'],
     variant: 'mobile',
+    fieldType: 'no-input',
   }));
 
   it('allows disabling dates', () => {

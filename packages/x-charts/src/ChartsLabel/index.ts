@@ -1,6 +1,5 @@
-// export * from './ChartsLabel';
-export type { ChartsLabelMarkProps } from './ChartsLabelMark';
-// export * from './ChartsLabelGradient';
+export type { ChartsLabelMarkProps, ChartsLabelCustomMarkProps } from './ChartsLabelMark';
+export { ChartsLabelMark } from './ChartsLabelMark';
 export { labelClasses } from './labelClasses';
 export type { ChartsLabelClasses } from './labelClasses';
 export { labelMarkClasses } from './labelMarkClasses';

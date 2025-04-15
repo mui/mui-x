@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -28,10 +26,10 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { useGridApiOptionHandler } from '../../utils';
+import { useGridEventPriority } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import {
@@ -41,7 +39,6 @@ import {
   type GridRowId,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
@@ -59,6 +56,7 @@ import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -103,7 +101,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
-  const { unstable_listView: listView } = rootProps;
+  const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
     listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
@@ -120,7 +118,7 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+  const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
   const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
@@ -399,6 +397,7 @@ export const useGridVirtualScroller = () => {
     if (!params.rows && !currentPage.range) {
       return [];
     }
+    const rowTree = gridRowTreeSelector(apiRef);
 
     let baseRenderContext = renderContext;
     if (params.renderContext) {
@@ -455,6 +454,17 @@ export const useGridVirtualScroller = () => {
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
+
+      // In certain cases, the state might already be updated and `currentPage.rows` (which sets `rowModels`)
+      // contains stale data.
+      // In that case, skip any further row processing.
+      // See:
+      // - https://github.com/mui/mui-x/issues/16638
+      // - https://github.com/mui/mui-x/issues/17022
+      if (!rowTree[id]) {
+        return;
+      }
+
       const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
@@ -492,12 +502,7 @@ export const useGridVirtualScroller = () => {
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
-      let isSelected: boolean;
-      if (selectedRowsLookup[id] == null) {
-        isSelected = false;
-      } else {
-        isSelected = apiRef.current.isRowSelectable(id);
-      }
+      const isSelected = rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id);
 
       let isFirstVisible = false;
       if (params.position === undefined) {
@@ -693,9 +698,9 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
-  useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 
   return {
     renderContext,
@@ -723,12 +728,10 @@ export const useGridVirtualScroller = () => {
     getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({
       ref: scrollbarVerticalRef,
-      role: 'presentation',
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
       ref: scrollbarHorizontalRef,
-      role: 'presentation',
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
@@ -778,7 +781,7 @@ function inputsSelector(
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef);
   const currentPage = getVisibleRows(apiRef, rootProps);
-  const visibleColumns = rootProps.unstable_listView
+  const visibleColumns = rootProps.listView
     ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
@@ -804,7 +807,7 @@ function inputsSelector(
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     visibleColumns,
     hiddenCellsOriginMap,
-    listView: rootProps.unstable_listView ?? false,
+    listView: rootProps.listView ?? false,
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }

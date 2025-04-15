@@ -1,9 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import { DateRangeIcon } from '@mui/x-date-pickers/icons';
+import { ClearIcon, DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -29,6 +27,18 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
+const BrowserIconButton = styled('button', {
+  name: 'BrowserField',
+  slot: 'IconButton',
+})({
+  backgroundColor: 'transparent',
+  border: 0,
+  cursor: 'pointer',
+  '&:hover, &:focus': {
+    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  },
+});
+
 function BrowserSingleInputDateRangeField(props) {
   const fieldResponse = useSingleInputDateRangeField(props);
 
@@ -45,6 +55,8 @@ function BrowserSingleInputDateRangeField(props) {
     onInput,
     onPaste,
     onKeyDown,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
     // Can be passed to a hidden <input /> element
     onChange,
     value,
@@ -85,11 +97,24 @@ function BrowserSingleInputDateRangeField(props) {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      <InputAdornment position="end">
-        <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
-          <DateRangeIcon />
-        </IconButton>
-      </InputAdornment>
+      {clearable && value && (
+        <BrowserIconButton
+          type="button"
+          title="Clear"
+          tabIndex={-1}
+          onClick={onClear}
+          sx={{ marginLeft: 1 }}
+        >
+          <ClearIcon fontSize="small" />
+        </BrowserIconButton>
+      )}
+      <BrowserIconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        aria-label={openPickerAriaLabel}
+        sx={{ marginLeft: 1 }}
+      >
+        <DateRangeIcon />
+      </BrowserIconButton>
     </BrowserFieldRoot>
   );
 }

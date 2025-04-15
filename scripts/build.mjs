@@ -8,6 +8,28 @@ import * as fs from 'fs/promises';
 import { cjsCopy } from '@mui/monorepo/scripts/copyFilesUtils.mjs';
 import { getWorkspaceRoot } from './utils.mjs';
 
+function getVersionEnvVariables(pkg) {
+  const version = pkg.version;
+  if (!version) {
+    throw new Error('No version found in package.json');
+  }
+
+  const [versionNumber, prerelease] = version.split('-');
+  const [major, minor, patch] = versionNumber.split('.');
+
+  if (!major || !minor || !patch) {
+    throw new Error(`Couldn't parse version from package.json`);
+  }
+
+  return {
+    MUI_VERSION: version,
+    MUI_MAJOR_VERSION: major,
+    MUI_MINOR_VERSION: minor,
+    MUI_PATCH_VERSION: patch,
+    MUI_PRERELEASE: prerelease,
+  };
+}
+
 const exec = promisify(childProcess.exec);
 
 const validBundles = [
@@ -70,19 +92,19 @@ async function run(argv) {
     MUI_BUILD_VERBOSE: verbose,
     MUI_BABEL_RUNTIME_VERSION: babelRuntimeVersion,
     MUI_OUT_FILE_EXTENSION: outFileExtension,
+    ...getVersionEnvVariables(packageJson),
   };
 
+  // prettier-ignore
   const babelArgs = [
-    '--config-file',
-    babelConfigPath,
-    '--extensions',
-    `"${extensions.join(',')}"`,
+    '--config-file', babelConfigPath,
+    '--extensions', `"${extensions.join(',')}"`,
     srcDir,
-    '--out-dir',
-    outDir,
-    '--ignore',
+    '--out-dir', outDir,
     // Need to put these patterns in quotes otherwise they might be evaluated by the used terminal.
-    `"${ignore.join('","')}"`,
+    '--ignore', `"${ignore.join('","')}"`,
+    '--copy-files',
+    '--no-copy-ignored',
   ];
 
   if (outFileExtension !== '.js') {

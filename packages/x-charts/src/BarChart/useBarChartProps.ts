@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -11,7 +12,7 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
+import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
@@ -34,10 +35,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     axisHighlight,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -61,32 +58,53 @@ export const useBarChartProps = (props: BarChartProps) => {
     layout === 'horizontal' ||
     (layout === undefined && series.some((item) => item.layout === 'horizontal'));
 
-  const defaultAxisConfig = {
-    scaleType: 'band',
-    data: Array.from(
-      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-      (_, index) => index,
-    ),
-  } as const;
+  const defaultBandXAxis: AxisConfig<'band', number, ChartsXAxisProps>[] = React.useMemo(
+    () => [
+      {
+        id: DEFAULT_X_AXIS_KEY,
+        scaleType: 'band',
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ],
+    [dataset, series],
+  );
 
+  const defaultBandYAxis: AxisConfig<'band', number, ChartsYAxisProps>[] = React.useMemo(
+    () => [
+      {
+        id: DEFAULT_Y_AXIS_KEY,
+        scaleType: 'band',
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ],
+    [dataset, series],
+  );
+
+  const seriesWithDefault = React.useMemo(
+    () =>
+      series.map((s) => ({
+        type: 'bar' as const,
+        ...s,
+        layout: hasHorizontalSeries ? ('horizontal' as const) : ('vertical' as const),
+      })),
+    [hasHorizontalSeries, series],
+  );
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
-    series: series.map((s) => ({
-      type: 'bar' as const,
-      ...s,
-      layout: hasHorizontalSeries ? ('horizontal' as const) : ('vertical' as const),
-    })),
+    series: seriesWithDefault,
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
-    xAxis:
-      xAxis ??
-      (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY, ...defaultAxisConfig }]),
-    yAxis:
-      yAxis ??
-      (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined),
+    xAxis: xAxis ?? (hasHorizontalSeries ? undefined : defaultBandXAxis),
+    yAxis: yAxis ?? (hasHorizontalSeries ? defaultBandYAxis : undefined),
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
@@ -126,10 +144,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

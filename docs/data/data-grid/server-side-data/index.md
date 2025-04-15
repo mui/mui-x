@@ -2,15 +2,9 @@
 title: React Data Grid - Server-side data
 ---
 
-# Data Grid - Server-side data 🧪
+# Data Grid - Server-side data
 
 <p class="description">The Data Grid server-side data.</p>
-
-:::warning
-This feature is under development and is marked as **unstable**.
-While you can use this feature in production, the API could change in the future.
-Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
-:::
 
 ## Introduction
 
@@ -97,7 +91,7 @@ interface GridDataSource {
 :::info
 
 The above interface is a minimal configuration required for a data source to work.
-More specific properties like `getChildrenCount` and `getGroupKey` will be discussed in the corresponding sections.
+More specific properties like `getChildrenCount()` and `getGroupKey()` will be discussed in the corresponding sections.
 
 :::
 
@@ -121,7 +115,7 @@ const customDataSource: GridDataSource = {
 
 <DataGrid
   columns={columns}
-  unstable_dataSource={customDataSource}
+  dataSource={customDataSource}
   pagination
 />
 ```
@@ -134,8 +128,8 @@ The data source changes how the existing server-side features like `filtering`, 
 
 ### Without data source
 
-When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
-In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
+Without data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
+In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange()`](/x/react-data-grid/filtering/server-side/), [`onSortModelChange()`](/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange()`](/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
 
 ```tsx
 <DataGrid
@@ -161,13 +155,13 @@ In order for them to work with server-side data, you need to set them to `server
 
 With the data source, the features `filtering`, `sorting`, `pagination` are automatically set to `server`.
 
-When the corresponding models update, the Data Grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
+When the corresponding models update, the Data Grid calls the `getRows()` method with the updated values of type `GridGetRowsParams` to get updated data.
 
 ```tsx
 <DataGrid
   columns={columns}
   // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
-  unstable_dataSource={customDataSource}
+  dataSource={customDataSource}
 />
 ```
 
@@ -176,7 +170,7 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The data source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
@@ -185,7 +179,7 @@ Open the Info section of your browser console to see the requests being made and
 ## Data caching
 
 The data source caches fetched data by default.
-This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
+This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows()` function again to avoid unnecessary calls to the server.
 
 The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
 
@@ -228,7 +222,7 @@ Changing those would require a new response to be retrieved and stored in the ch
 
 ### Customize the cache lifetime
 
-The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `unstable_dataSourceCache` prop.
+The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceCacheDefault } from '@mui/x-data-grid';
@@ -237,8 +231,8 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 <DataGrid
   columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_dataSourceCache={lowTTLCache}
+  dataSource={customDataSource}
+  dataSourceCache={lowTTLCache}
 />;
 ```
 
@@ -246,7 +240,7 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 ### Custom cache
 
-To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based on another cache library.
+To provide a custom cache, use `dataSourceCache` prop, which could be either written from scratch or based on another cache library.
 This prop accepts a generic interface of type `GridDataSourceCache`.
 
 ```tsx
@@ -259,43 +253,82 @@ export interface GridDataSourceCache {
 
 ### Disable cache
 
-To disable the data source cache, pass `null` to the `unstable_dataSourceCache` prop.
+To disable the data source cache, pass `null` to the `dataSourceCache` prop.
 
 ```tsx
-<DataGrid
-  columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_dataSourceCache={null}
-/>
+<DataGrid columns={columns} dataSource={customDataSource} dataSourceCache={null} />
 ```
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
+## Updating data
+
+The data source supports an optional `updateRow()` method for updating data on the server.
+
+This method returns a promise that resolves when the row is updated.
+If the promise resolves, the grid updates the row and mutates the cache. In case of an error, `onDataSourceError` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
+
+```diff
+ const dataSource: GridDataSource = {
+  getRows: async (params: GridGetRowsParams) => {
+    // fetch rows from the server
+  },
++ updateRow: async (params: GridUpdateRowParams) => {
++   // update row on the server
++ },
+ }
+```
+
+{{"demo": "ServerSideEditing.js", "bg": "inline"}}
+
+:::warning
+When using the `updateRow()` method, the data source cache is automatically cleared after successful updates to prevent displaying outdated data.
+This means any previously cached data will be refetched on the next request.
+
+For applications requiring caching with editing operations, consider implementing server-side caching instead.
+
+If you have a specific use case that requires preserving the client-side cache during edit operations, please [open an issue on GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
+:::
+
+:::warning
+The position and visibility of the edited row on the current page are maintained—even if features like sorting or filtering are enabled—and will take affect on the row after the values update.
+Any changes to the position or visibility will be applied when the page is fetched again.
+
+You can manually trigger a refetch by calling the `dataSource.fetchRows()` API method.
+:::
+
 ## Error handling
 
-You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
-It will be called whenever there's an error in fetching the data.
+You can handle errors with the data source by providing an error handler function with `onDataSourceError()`.
+This gets called whenever there's an error in fetching or updating the data.
 
-The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
+This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
+
+Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
+
+| Error type           | Type of `error.params` |
+| :------------------- | :--------------------- |
+| `GridGetRowsError`   | `GridGetRowsParams`    |
+| `GridUpdateRowError` | `GridUpdateRowParams`  |
 
 ```tsx
-<DataGridPro
+<DataGrid
   columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_onDataSourceError={(error, params) => {
-    console.error(error);
+  dataSource={customDataSource}
+  onDataSourceError={(error) => {
+    if (error instanceof GridGetRowsError) {
+      // `error.params` is of type `GridGetRowsParams`
+      // fetch related logic, e.g set an overlay state
+    }
+    if (error instanceof GridUpdateRowError) {
+      // `error.params` is of type `GridUpdateRowParams`
+      // update related logic, e.g set a snackbar state
+    }
   }}
 />
 ```
 
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
-
-## Updating data 🚧
-
-This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row.
-It will work in a similar way as the `processRowUpdate` prop.
-
-Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
 
 ## API
 

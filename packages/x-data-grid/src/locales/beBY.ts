@@ -1,4 +1,3 @@
-import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -27,6 +26,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',
@@ -73,6 +73,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Спампаваць у фармаце CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Спампаваць у фармаце Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
@@ -147,6 +150,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Паказаць слупкі',
   columnMenuManageColumns: 'Кіраваць слупкамі',
   columnMenuFilter: 'Фільтр',
@@ -154,6 +158,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Скасаваць сартыроўку',
   columnMenuSortAsc: 'Сартыраваць па нарастанню',
   columnMenuSortDesc: 'Сартыраваць па спаданню',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -214,6 +219,34 @@ const beBYGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгарнуць',
   collapseDetailPanel: 'Згарнуць',
 
+  // Pagination
+  paginationRowsPerPage: 'Радкоў на старонцы:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перайсці на першую старонку';
+    }
+    if (type === 'last') {
+      return 'Перайсці на апошнюю старонку';
+    }
+    if (type === 'next') {
+      return 'Перайсці на наступную старонку';
+    }
+    // if (type === 'previous') {
+    return 'Перайсці на папярэднюю старонку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Змяненне чарговасці радкоў',
 
@@ -224,6 +257,35 @@ const beBYGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мінімум',
   aggregationFunctionLabelMax: 'максімум',
   aggregationFunctionLabelSize: 'памер',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const beBY: Localization = getGridLocalization(beBYGrid, beBYCore);
+export const beBY: Localization = getGridLocalization(beBYGrid);

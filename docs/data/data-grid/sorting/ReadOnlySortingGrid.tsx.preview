@@ -1,0 +1,13 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  initialState={{
+    sorting: {
+      sortModel: [{ field: 'firstName', sort: 'asc' }],
+    },
+  }}
+  slots={{
+    toolbar: CustomToolbar,
+  }}
+  showToolbar
+/>

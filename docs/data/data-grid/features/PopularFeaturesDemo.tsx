@@ -7,9 +7,11 @@ import {
   GridEventListener,
   GridRenderCellParams,
   GridRowParams,
-  GridToolbarContainer,
-  GridToolbarQuickFilter,
+  Toolbar,
   useGridApiRef,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
@@ -18,8 +20,12 @@ import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
-import { useTheme, alpha } from '@mui/material/styles';
+import { useTheme, alpha, styled } from '@mui/material/styles';
 import { yellow, blue, green } from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import CancelIcon from '@mui/icons-material/Cancel';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -39,6 +45,7 @@ import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
+import GridPivotingInitialState from '../pivoting/GridPivotingInitialState';
 
 type Row = {
   id: number;
@@ -84,7 +91,7 @@ export const featuresSet: Row[] = [
     name: 'Lazy loading',
     description: 'Paginate rows and only fetch what you need.',
     plan: 'Pro',
-    detailPage: '/pagination/',
+    detailPage: '/row-updates/#lazy-loading',
     demo: <LazyLoadingGrid />,
     linkToCode: '/row-updates/#system-LazyLoadingGrid.tsx',
   },
@@ -226,6 +233,16 @@ export const featuresSet: Row[] = [
     demo: <HeaderFilteringDataGridPro />,
     linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
   },
+  {
+    id: 20,
+    name: 'Pivoting',
+    description:
+      'Rearrange rows and columns to view data from multiple perspectives.',
+    plan: 'Premium',
+    detailPage: '/pivoting/',
+    demo: <GridPivotingInitialState />,
+    linkToCode: '/pivoting/#system-GridPivotingInitialState.tsx',
+  },
 ];
 
 function getChipProperties(plan: string) {
@@ -239,7 +256,25 @@ function getChipProperties(plan: string) {
   }
 }
 
-function PlanTag(props: { plan: string }) {
+const chipColor = {
+  light: {
+    Premium: { background: yellow[50], border: alpha(yellow[900], 0.4) },
+    Pro: { background: blue[50], border: alpha(blue[900], 0.2) },
+    Community: { background: green[50], border: alpha(green[900], 0.2) },
+  },
+  dark: {
+    Premium: {
+      background: alpha(yellow[900], 0.4),
+      border: alpha(yellow[300], 0.4),
+    },
+    Pro: { background: alpha(blue[600], 0.4), border: alpha(blue[300], 0.4) },
+    Community: {
+      background: alpha(green[600], 0.4),
+      border: alpha(green[300], 0.4),
+    },
+  },
+} as const;
+function PlanTag(props: { plan: 'Premium' | 'Pro' | 'Community' }) {
   const theme = useTheme();
   const chipProperties = getChipProperties(props.plan);
   const avatar = !chipProperties.avatarLink ? undefined : (
@@ -253,30 +288,13 @@ function PlanTag(props: { plan: string }) {
       label={props.plan}
       sx={{
         pl: 0.5,
-        ...(props.plan === 'Premium' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(yellow[900], 0.4) : yellow[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(yellow[300], 0.4)
-              : alpha(yellow[900], 0.4),
+        backgroundColor: chipColor.light[props.plan].background,
+        borderColor: chipColor.light[props.plan].border,
+        ...theme.applyStyles('dark', {
+          backgroundColor: chipColor.dark[props.plan].background,
+          borderColor: chipColor.dark[props.plan].border,
         }),
-        ...(props.plan === 'Pro' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(blue[600], 0.4) : blue[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(blue[300], 0.4)
-              : alpha(blue[900], 0.2),
-        }),
-        ...(props.plan === 'Community' && {
-          backgroundColor:
-            theme.palette.mode === 'dark' ? alpha(green[600], 0.4) : green[50],
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? alpha(green[300], 0.4)
-              : alpha(green[900], 0.2),
-        }),
+
         '& .MuiChip-label': {
           fontWeight: 'medium',
           fontSize: theme.typography.pxToRem(12),
@@ -290,13 +308,55 @@ function PlanTag(props: { plan: string }) {
   );
 }
 
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  padding: theme.spacing(1.5),
+  minHeight: 'auto',
+}));
+
+const StyledQuickFilter = styled(QuickFilter)({
+  margin: 0,
+  width: '100%',
+});
+
 function CustomToolbar() {
   return (
-    <GridToolbarContainer
-      sx={{ p: 2.5, borderBottom: '1px solid', borderColor: 'divider' }}
-    >
-      <GridToolbarQuickFilter />
-    </GridToolbarContainer>
+    <StyledToolbar>
+      <StyledQuickFilter>
+        <QuickFilterControl
+          render={({ ref, ...other }) => (
+            <TextField
+              {...other}
+              sx={{ width: '100%' }}
+              inputRef={ref}
+              aria-label="Search"
+              placeholder="Search by feature name or description"
+              size="small"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: other.value ? (
+                    <InputAdornment position="end">
+                      <QuickFilterClear
+                        edge="end"
+                        size="small"
+                        aria-label="Clear search"
+                        material={{ sx: { marginRight: -0.75 } }}
+                      >
+                        <CancelIcon fontSize="small" />
+                      </QuickFilterClear>
+                    </InputAdornment>
+                  ) : null,
+                },
+              }}
+            />
+          )}
+        />
+      </StyledQuickFilter>
+    </StyledToolbar>
   );
 }
 
@@ -308,19 +368,16 @@ function RowDemo(props: { row: Row }) {
     <Box
       sx={{
         py: 6,
-        bgcolor: theme.palette.mode === 'dark' ? '#141A1F' : 'grey.50', // dark color is the branding theme's primaryDark.800
+        bgcolor: 'grey.50', // dark color is the branding theme's primaryDark.800
+        ...theme.applyStyles('dark', {
+          bgcolor: '#141A1F',
+        }),
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}
     >
       <div style={{ width: '90%', margin: 'auto' }}>
-        <Box
-          sx={{
-            backgroundColor: theme.palette.mode === 'dark' ? '#0B0D0E' : '#fff', // dark color is the branding theme's common black
-          }}
-        >
-          {row.demo}
-        </Box>
+        <div>{row.demo}</div>
         {row.linkToCode ? (
           <Link
             href={`/x/react-data-grid${row.linkToCode}`}
@@ -436,7 +493,7 @@ const columns: GridColDef[] = [
       if (!params.value) {
         return '';
       }
-      return <PlanTag plan={params.value} />;
+      return <PlanTag plan={params.value as 'Premium' | 'Pro' | 'Community'} />;
     },
     sortComparator: (p1, p2) => {
       function getSortingValue(plan: string) {
@@ -455,6 +512,9 @@ const columns: GridColDef[] = [
     },
   },
 ];
+
+const mainDataGridCellClassName = 'main-data-grid-cell';
+const getCellClassName = () => mainDataGridCellClassName;
 
 export default function PopularFeaturesDemo() {
   const apiRef = useGridApiRef();
@@ -512,9 +572,7 @@ export default function PopularFeaturesDemo() {
           detailPanelExpandIcon: ArrowDown,
           detailPanelCollapseIcon: ArrowUp,
         }}
-        slotProps={{
-          toolbar: { showQuickFilter: true },
-        }}
+        showToolbar
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
         getRowHeight={getRowHeight}
@@ -523,10 +581,11 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',
           // Do not target cells in nested grids
-          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
+          [`.${gridClasses.cell}.${mainDataGridCellClassName}`]: {
             py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
@@ -536,7 +595,7 @@ export default function PopularFeaturesDemo() {
             borderColor: 'divider',
           },
           [`& .${gridClasses.detailPanel}`]: {
-            background: 'transparent',
+            backgroundColor: 'transparent',
           },
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',

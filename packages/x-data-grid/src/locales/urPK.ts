@@ -1,4 +1,3 @@
-import { urPKCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'کوئی نتائج نہیں',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'کثافت',
@@ -50,6 +50,9 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'CSV کے طور پر ڈاوٴنلوڈ کریں',
   toolbarExportPrint: 'پرنٹ کریں',
   toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'تلاش',
@@ -124,6 +127,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'مینیو',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'کالم دکھائیں',
   columnMenuManageColumns: 'کالم مینج کریں',
   columnMenuFilter: 'فلٹر',
@@ -131,6 +135,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'sort ختم کریں',
   columnMenuSortAsc: 'ترتیب صعودی',
   columnMenuSortDesc: 'ترتیب نزولی',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -183,8 +188,36 @@ const urPKGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'پھیلائیں',
   collapseDetailPanel: 'تنگ کریں',
 
+  // Pagination
+  paginationRowsPerPage: 'ایک صفحے پر قطاریں:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'پہلے صفحے پر جائیں';
+    }
+    if (type === 'last') {
+      return 'آخری صفحے پر جائیں';
+    }
+    if (type === 'next') {
+      return 'اگلے صفحے پر جائیں';
+    }
+    // if (type === 'previous') {
+    return 'پچھلے صفحے پر جائیں';
+  },
+
   // Row reordering text
-  rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
+  // rowReorderingHeaderName: 'Row reordering',
 
   // Aggregation
   aggregationMenuItemHeader: 'ایگریگیشن',
@@ -193,6 +226,35 @@ const urPKGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'کم از کم',
   aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
   aggregationFunctionLabelSize: 'سائز',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
+export const urPK: Localization = getGridLocalization(urPKGrid);

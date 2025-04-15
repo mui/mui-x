@@ -4,14 +4,14 @@ import {
   chromium,
   webkit,
   firefox,
-  Page,
-  Browser,
-  BrowserContext,
   devices,
-  BrowserContextOptions,
-  BrowserType,
-  WebError,
-  Locator,
+  type Page,
+  type Browser,
+  type BrowserContext,
+  type BrowserContextOptions,
+  type BrowserType,
+  type WebError,
+  type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -109,7 +109,7 @@ async function initializeEnvironment(
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
-  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
+  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 8 : 4) * 1000);
   page = await context.newPage();
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
@@ -522,7 +522,7 @@ async function initializeEnvironment(
 
         await page.hover('div[role="columnheader"][data-field="birthday"]');
         await page.click(
-          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
         await page.keyboard.type('08/04/2024', { delay: 10 });
@@ -598,6 +598,39 @@ async function initializeEnvironment(
           return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
         });
         expect(scrollTop).not.to.equal(0);
+      });
+
+      // https://github.com/mui/mui-x/issues/14726
+      it('should not cause scroll jumping when the focused cell is outside of the viewport', async () => {
+        await renderFixture('DataGrid/DynamicRowHeight');
+
+        await page.click('[role="row"][data-id="2"] [role="gridcell"][data-field="id"]');
+
+        const scrollPositions: number[] = [];
+        await page.exposeFunction('storeScrollPosition', async (scrollTop: number) => {
+          scrollPositions.push(scrollTop);
+        });
+        await page.evaluate(() => {
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.addEventListener('scroll', () => {
+            // @ts-ignore
+            window.storeScrollPosition(virtualScroller.scrollTop);
+          });
+        });
+
+        await page.mouse.wheel(0, 150);
+        await page.waitForTimeout(500);
+
+        const hadScrollJump = scrollPositions.some((scrollTop, index) => {
+          if (index === 0) {
+            return false;
+          }
+          // When scrolling down, the scrollTop should be always decreasing
+          const prevScrollTop = scrollPositions[index - 1];
+          return scrollTop < prevScrollTop;
+        });
+
+        expect(hadScrollJump).to.equal(false, `Scroll jumped, scrollPositions: ${scrollPositions}`);
       });
     });
 
@@ -893,9 +926,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="dialog"]', { state: 'visible' });
 
         // Click 'OK' button to close dialog
-        await page.keyboard.press('Tab'); // move focus to 'cancel' action
-        await page.keyboard.press('Tab'); // move focus to 'accept' action
-        await page.keyboard.press('Enter');
+        await page.getByRole('button', { name: 'OK' }).click();
 
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
@@ -951,7 +982,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -975,7 +1006,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -994,31 +1025,30 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input field with an accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with an accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
         await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
+        await page.getByRole('button').click();
 
-        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
-
-        // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        // assert that the dialog has been opened
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 – 04/13/2022',
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input field with a non-accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
@@ -1027,17 +1057,16 @@ async function initializeEnvironment(
         await renderFixture(
           'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
         );
-
-        await page.getByRole('textbox').click();
+        await page.getByRole('button').click();
 
         // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
@@ -1055,7 +1084,7 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
 
         // open the picker
-        await page.getByRole('group').click();
+        await page.getByRole('button').click();
 
         await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
 
@@ -1112,7 +1141,7 @@ describe('e2e: chromium on Android', () => {
   });
 
   it('should allow re-selecting value to have the same start and end date', async () => {
-    await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+    await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
     // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
     await page.locator(`.${pickersSectionListClasses.root}`).first().tap();

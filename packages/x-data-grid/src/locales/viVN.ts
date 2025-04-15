@@ -1,4 +1,3 @@
-import { viVN as viVNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -50,6 +50,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Xuất CSV',
   toolbarExportPrint: 'In',
   toolbarExportExcel: 'Xuất Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Tìm kiếm',
@@ -124,6 +127,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Danh mục',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Danh sách cột',
   columnMenuManageColumns: 'Quản lý cột',
   columnMenuFilter: 'Bộ lọc',
@@ -131,6 +135,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -183,6 +188,34 @@ const viVNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Mở rộng',
   collapseDetailPanel: 'Thu nhỏ',
 
+  // Pagination
+  paginationRowsPerPage: 'Số hàng mỗi trang:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Tới trang đầu tiên';
+    }
+    if (type === 'last') {
+      return 'Tới trang cuối cùng';
+    }
+    if (type === 'next') {
+      return 'Tới trang tiếp theo';
+    }
+    // if (type === 'previous') {
+    return 'Về trang trước đó';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sắp xếp hàng',
 
@@ -193,6 +226,35 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Tối thiểu',
   aggregationFunctionLabelMax: 'Tối đa',
   aggregationFunctionLabelSize: 'Kích cỡ',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
+export const viVN: Localization = getGridLocalization(viVNGrid);

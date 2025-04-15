@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
@@ -74,7 +75,8 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { useGridSelector } from '@mui/x-data-grid-pro';
+import { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
@@ -95,12 +97,29 @@ import {
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
+import {
+  pivotingStateInitializer,
+  useGridPivoting,
+} from '../hooks/features/pivoting/useGridPivoting';
+import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: RefObject<GridApiPremium | null> | undefined,
-  props: DataGridPremiumProcessedProps,
+  apiRef: RefObject<GridPrivateApiPremium>,
+  inProps: DataGridPremiumProcessedProps,
 ) => {
-  const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
+  const pivotPropsOverrides = useGridSelector(apiRef, gridPivotPropsOverridesSelector);
+
+  const props = React.useMemo(() => {
+    if (pivotPropsOverrides) {
+      return {
+        ...inProps,
+        ...pivotPropsOverrides,
+      };
+    }
+    return inProps;
+  }, [inProps, pivotPropsOverrides]);
+
+  useGridInitialization<GridPrivateApiPremium>(apiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -132,6 +151,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
@@ -152,6 +172,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
+  useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
@@ -196,5 +217,5 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
 
-  return apiRef;
+  return props;
 };

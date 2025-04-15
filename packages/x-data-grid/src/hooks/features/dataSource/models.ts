@@ -1,5 +1,10 @@
-import { GridDataSourceCache, GridGetRowsParams } from '../../../models/gridDataSource';
-import { GridRowId } from '../../../models/gridRows';
+import type {
+  GridDataSourceCache,
+  GridGetRowsParams,
+  GridUpdateRowParams,
+} from '../../../models/gridDataSource';
+import type { GridRowId, GridRowModel } from '../../../models/gridRows';
+import type { GridDataSourceCacheDefaultConfig } from './cache';
 
 export interface GridDataSourceApiBase {
   /**
@@ -14,11 +19,24 @@ export interface GridDataSourceApiBase {
    * The data source cache object.
    */
   cache: GridDataSourceCache;
+  /**
+   * Syncs the row with the server and updates in the grid.
+   * @param {GridUpdateRowParams} params The parameters for the edit operation.
+   * @returns {Promise<GridRowModel> | undefined} The updated row or `undefined` if `dataSource.updateRow` is not passed.
+   */
+  editRow: (params: GridUpdateRowParams) => Promise<GridRowModel> | undefined;
 }
 
 export interface GridDataSourceApi {
   /**
    * The data source API.
    */
-  unstable_dataSource: GridDataSourceApiBase;
+  dataSource: GridDataSourceApiBase;
+}
+
+export interface GridDataSourceBaseOptions {
+  cacheOptions?: GridDataSourceCacheDefaultConfig;
+  fetchRowChildren?: (parents: GridRowId[]) => void;
+  clearDataSourceState?: () => void;
+  handleEditRow?: (params: GridUpdateRowParams, updatedRow: GridRowModel) => void;
 }

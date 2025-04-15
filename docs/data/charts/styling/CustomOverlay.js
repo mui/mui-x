@@ -6,7 +6,7 @@ import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 
 const ratios = [0.2, 0.8, 0.6, 0.5];
 
-const LoadingReact = styled('rect')({
+const LoadingRect = styled('rect')({
   opacity: 0.2,
   fill: 'lightgray',
 });
@@ -35,7 +35,7 @@ function LoadingOverlay() {
         const barHeight = ratio * (bottom - top);
 
         return (
-          <LoadingReact
+          <LoadingRect
             key={index}
             x={xScale(item)}
             width={bandWidth}
@@ -59,7 +59,6 @@ export default function CustomOverlay() {
           noDataOverlay: { message: 'No data to display in this chart' },
         }}
         series={[]}
-        margin={{ top: 10, right: 10, left: 25, bottom: 25 }}
         height={150}
       />
       <BarChart
@@ -69,7 +68,6 @@ export default function CustomOverlay() {
         ]}
         slots={{ loadingOverlay: LoadingOverlay }}
         series={[]}
-        margin={{ top: 10, right: 10, left: 25, bottom: 25 }}
         height={150}
       />
     </Stack>

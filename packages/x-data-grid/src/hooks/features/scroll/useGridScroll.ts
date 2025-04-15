@@ -55,7 +55,7 @@ function scrollIntoView(dimensions: {
  */
 export const useGridScroll = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'listView'>,
 ): void => {
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
@@ -67,7 +67,7 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const dimensions = gridDimensionsSelector(apiRef);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = props.unstable_listView
+      const visibleColumns = props.listView
         ? [gridListColumnSelector(apiRef)!]
         : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
@@ -143,14 +143,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [
-      logger,
-      apiRef,
-      virtualScrollerRef,
-      props.pagination,
-      visibleSortedRows,
-      props.unstable_listView,
-    ],
+    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows, props.listView],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(

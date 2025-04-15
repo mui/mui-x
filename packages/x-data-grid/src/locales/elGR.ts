@@ -1,4 +1,3 @@
-import { elGR as elGRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Ύψος σειράς',
@@ -50,6 +50,9 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Λήψη ως CSV',
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportExcel: 'Λήψη ως Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
@@ -124,6 +127,7 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Μενού',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   columnMenuManageColumns: 'Διαχείριση στηλών',
   columnMenuFilter: 'Φίλτρο',
@@ -131,6 +135,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -185,6 +190,35 @@ const elGRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Ανάπτυξη',
   collapseDetailPanel: 'Σύμπτυξη',
 
+  // Pagination
+  paginationRowsPerPage: 'Γραμμές ανα σελίδα:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Πρώτη σελίδα';
+    }
+    if (type === 'last') {
+      return 'Τελευταία σελίδα';
+    }
+    if (type === 'next') {
+      return 'Επόμενη σελίδα';
+    }
+
+    // if (type === "previous") {
+    return 'Προηγούμενη σελίδα';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Αναδιάταξη γραμμών',
 
@@ -195,6 +229,35 @@ const elGRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'ελάχιστο',
   aggregationFunctionLabelMax: 'μέγιστο',
   aggregationFunctionLabelSize: 'μέγεθος',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);
+export const elGR: Localization = getGridLocalization(elGRGrid);

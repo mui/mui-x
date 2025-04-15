@@ -39,7 +39,7 @@ The following options are available:
 - **maxSpan**: Restricts the maximum span size.
 - **panning**: Enables or disables panning.
 
-{{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "ZoomOptions.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Zoom filtering
 
@@ -52,12 +52,14 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## External zoom management
+## Zoom management
+
+### External zoom management
 
 You can manage the zoom state by two means:
 
 - By defining an initial state with the `initialZoom` prop.
-- By imperatively set a zoom value with the `setZoomData` method of the public api.
+- By imperatively setting a zoom value with the `setZoomData()` method of the public API.
 
 In addition, the `onZoomChange` prop is a function that receives the new zoom state.
 
@@ -66,5 +68,11 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 - **axisId**: The id of the axis to control.
 - **start**: The starting percentage of the axis range.
 - **end**: The ending percentage of the zoom range.
+
+{{"demo": "ExternalZoomManagement.js"}}
+
+### Zoom synchronization
+
+To synchronize zoom between multiple charts, you can control the zoom state.
 
 {{"demo": "ZoomControlled.js"}}

@@ -58,22 +58,22 @@ You can use a starter template to build a reproduction case with:
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
 
-You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x+or+mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker):
+You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker+or+mui-x-tree-view):
 
-- mui-x
 - mui-x-data-grid
 - mui-x-date-picker
 - mui-x-charts
+- mui-x-tree-view
 
 If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
 
 ## Technical support
 
 :::info
-The technical support covers only MUI X components.
+The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your active license.
+When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
@@ -83,7 +83,7 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
 
 ## Long-term support (LTS)
 

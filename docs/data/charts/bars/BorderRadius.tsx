@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import TextField from '@mui/material/TextField';
@@ -48,9 +47,10 @@ export default function BorderRadius() {
         borderRadius={radius}
       />
       <HighlightedCode
-        code={[`<BarChart`, `  /* ... */`, `  borderRadius={${radius}}`, `/>`].join(
-          '\n',
-        )}
+        code={`<BarChart
+  // ...
+  borderRadius={${radius}}
+/>`}
         language="jsx"
         copyButtonHidden
       />
@@ -72,11 +72,6 @@ const chartSettingsH: Partial<BarChartProps> = {
   dataset,
   height: 300,
   yAxis: [{ scaleType: 'band', dataKey: 'order' }],
-  sx: {
-    [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
   slotProps: {
     legend: {
       direction: 'horizontal',

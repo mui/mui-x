@@ -8,7 +8,7 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
@@ -188,7 +188,7 @@ export const useGridSorting = (
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem[];
+      let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
         sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {
@@ -354,11 +354,11 @@ export const useGridSorting = (
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, 'rowsSet', apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
-  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridEvent(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
+  useGridEvent(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridEvent(apiRef, 'rowsSet', apiRef.current.applySorting);
+  useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
+  useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
   /**
    * 1ST RENDER

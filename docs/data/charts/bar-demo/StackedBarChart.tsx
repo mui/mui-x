@@ -16,13 +16,13 @@ const xLabels = [
 export default function StackedBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', id: 'pvId', stack: 'total' },
         { data: uData, label: 'uv', id: 'uvId', stack: 'total' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }

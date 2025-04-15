@@ -114,7 +114,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
-          {!rootProps.unstable_listView && <GridHeaders />}
+          {!rootProps.listView && <GridHeaders />}
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
@@ -132,7 +132,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </rootProps.slots.bottomContainer>
       </Scroller>
-      {hasScrollX && !rootProps.unstable_listView && (
+      {hasScrollX && !rootProps.listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}

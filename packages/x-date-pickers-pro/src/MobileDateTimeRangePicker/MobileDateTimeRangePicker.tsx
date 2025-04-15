@@ -14,6 +14,7 @@ import {
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
+  TIME_VIEWS,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -34,10 +35,18 @@ import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
-import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
+import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+
+const STEPS: PickerRangeStep[] = [
+  { views: ['day'], rangePosition: 'start' },
+  { views: TIME_VIEWS, rangePosition: 'start' },
+  { views: ['day'], rangePosition: 'end' },
+  { views: TIME_VIEWS, rangePosition: 'end' },
+];
 
 const rendererInterceptor = function RendererInterceptor(
   props: PickerRendererInterceptorProps<PickerRangeValue, DateTimeRangePickerView, any>,
@@ -48,7 +57,6 @@ const rendererInterceptor = function RendererInterceptor(
 
   const finalProps = {
     ...otherRendererProps,
-    focusedView: null,
     sx: [
       {
         width: DIALOG_WIDTH,
@@ -152,7 +160,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     // force current calendar position, since we only have one calendar
     currentMonthCalendarPosition: 1,
     slots: {
-      field: MultiInputDateTimeRangeField,
+      field: SingleInputDateTimeRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -183,6 +191,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     valueType: 'date-time',
     validator: validateDateTimeRange,
     rendererInterceptor,
+    steps: STEPS,
   });
 
   return renderPicker();
@@ -266,7 +275,8 @@ MobileDateTimeRangePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

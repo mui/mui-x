@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
   GridDataSourceGroupNode,
-  GridRowId,
   useGridSelector,
-  GridDataSourceCacheDefaultConfig,
+  GridGetRowsError,
+  gridRowIdSelector,
+  gridRowNodeSelector,
+  GridRowModelUpdate,
+  GridRowModel,
+  gridRowTreeSelector,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -14,10 +20,12 @@ import {
   gridGetRowsParamsSelector,
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
+  GridDataSourceBaseOptions,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { NestedDataManager, RequestStatus } from './utils';
+import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
 import {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
@@ -35,10 +43,7 @@ export const INITIAL_STATE = {
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   apiRef: RefObject<Api>,
   props: DataGridProProcessedProps,
-  options: {
-    cacheOptions?: GridDataSourceCacheDefaultConfig;
-    fetchRowChildren?: (parentId: GridRowId) => void;
-  } = {},
+  options: GridDataSourceBaseOptions = {},
 ) => {
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -56,21 +61,33 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     return null;
   }, [apiRef, nestedDataManager]);
 
+  const handleEditRow = React.useCallback(
+    (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
+      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
+      apiRef.current.updateNestedRows([updatedRow], groupKeys);
+      if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
+        // Reset the outdated cache, only if the row is _actually_ updated
+        apiRef.current.dataSource.cache.clear();
+      }
+    },
+    [apiRef],
+  );
+
   const { api, strategyProcessor, events, cacheChunkManager, cache } = useGridDataSourceBase(
     apiRef,
     props,
-    { ...options, fetchRowChildren: nestedDataManager.queue, clearDataSourceState },
+    { fetchRowChildren: nestedDataManager.queue, clearDataSourceState, handleEditRow, ...options },
   );
 
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
-      props.unstable_dataSource && !props.unstable_lazyLoading ? () => true : () => false,
+      props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, props.unstable_dataSource, props.unstable_lazyLoading]);
+  }, [apiRef, props.dataSource, props.lazyLoading]);
 
-  const onError = props.unstable_onDataSourceError;
+  const onDataSourceErrorProp = props.onDataSourceError;
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -82,7 +99,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         nestedDataManager.clearPendingRequest(id);
         return;
       }
-      const getRows = props.unstable_dataSource?.getRows;
+      const getRows = props.dataSource?.getRows;
       if (!getRows) {
         nestedDataManager.clearPendingRequest(id);
         return;
@@ -109,16 +126,16 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
-        apiRef.current.updateServerRows(rows, rowNode.path);
+        apiRef.current.updateNestedRows(rows, rowNode.path);
         apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         apiRef.current.setRowChildrenExpansion(id, true);
-        apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
         return;
       }
 
       const existingError = gridDataSourceErrorsSelector(apiRef)[id] ?? null;
       if (existingError) {
-        apiRef.current.unstable_dataSource.setChildrenFetchError(id, null);
+        apiRef.current.dataSource.setChildrenFetchError(id, null);
       }
 
       try {
@@ -129,7 +146,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           return;
         }
         if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
-          apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+          apiRef.current.dataSource.setChildrenLoading(id, false);
           return;
         }
         nestedDataManager.setRequestSettled(id);
@@ -142,14 +159,44 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.setRowCount(
           getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
         );
-        apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
+        // Remove existing outdated rows before setting the new ones
+        const rowsToDelete: GridRowModelUpdate[] = [];
+        getRowsResponse.rows.forEach((row) => {
+          const rowId = gridRowIdSelector(apiRef, row);
+          const treeNode = gridRowNodeSelector(apiRef, rowId);
+          if (treeNode) {
+            rowsToDelete.push({ id: rowId, _action: 'delete' });
+          }
+        });
+        if (rowsToDelete.length > 0) {
+          // TODO: Make this happen in a single pass by modifying the pre-processing of the rows
+          apiRef.current.updateNestedRows(rowsToDelete, rowNode.path);
+        }
+        apiRef.current.updateNestedRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
         const childrenFetchError = error as Error;
-        apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
-        onError?.(childrenFetchError, fetchParams);
+        apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
+        if (typeof onDataSourceErrorProp === 'function') {
+          onDataSourceErrorProp(
+            new GridGetRowsError({
+              message: childrenFetchError.message,
+              params: fetchParams,
+              cause: childrenFetchError,
+            }),
+          );
+        } else if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            [
+              'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
+              'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
+              'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+            ],
+            'error',
+          );
+        }
       } finally {
-        apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
       }
     },
@@ -157,10 +204,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       nestedDataManager,
       cacheChunkManager,
       cache,
-      onError,
+      onDataSourceErrorProp,
       apiRef,
       props.treeData,
-      props.unstable_dataSource?.getRows,
+      props.dataSource?.getRows,
     ],
   );
 
@@ -223,8 +270,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   }, [apiRef]);
 
   const dataSourceApi: GridDataSourceApiPro = {
-    unstable_dataSource: {
-      ...api.public.unstable_dataSource,
+    dataSource: {
+      ...api.public.dataSource,
       setChildrenLoading,
       setChildrenFetchError,
     },

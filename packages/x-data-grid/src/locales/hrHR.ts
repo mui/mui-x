@@ -1,4 +1,3 @@
-import { hrHR as hrHRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nema rezultata.',
   noColumnsOverlayLabel: 'Nema stupaca',
   noColumnsOverlayManageColumns: 'Upravljaj stupcima',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Gustoća',
@@ -57,6 +57,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Preuzmi kao CSV',
   toolbarExportPrint: 'Štampaj',
   toolbarExportExcel: 'Preuzmi kao Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Traži',
@@ -131,6 +134,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Izbornik',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Prikaži stupce',
   columnMenuManageColumns: 'Upravljanje stupcima',
   columnMenuFilter: 'Filter',
@@ -138,6 +142,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Poništi sortiranje',
   columnMenuSortAsc: 'Poredaj uzlazno',
   columnMenuSortDesc: 'Poredaj silazno',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -204,6 +209,34 @@ const hrHRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Proširiti',
   collapseDetailPanel: 'Skupiti',
 
+  // Pagination
+  paginationRowsPerPage: 'Redova po stranici:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Idi na prvu stranicu';
+    }
+    if (type === 'last') {
+      return 'Idi na posljednju stranicu';
+    }
+    if (type === 'next') {
+      return 'Idi na sljedeću stranicu';
+    }
+    // if (type === 'previous') {
+    return 'Idi na prethodnu stranicu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Promjena redoslijeda',
 
@@ -214,6 +247,35 @@ const hrHRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'veličina',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const hrHR = getGridLocalization(hrHRGrid, hrHRCore);
+export const hrHR = getGridLocalization(hrHRGrid);

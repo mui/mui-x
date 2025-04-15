@@ -1,40 +1,35 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
 import { UseChartInteractionSignature } from './useChartInteraction.types';
 
-const selectInteraction: ChartRootSelector<UseChartInteractionSignature> = (state) =>
+const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature> = (state) =>
   state.interaction;
+
+export const selectorChartsInteractionIsInitialized = createSelector(
+  selectInteraction,
+  (interaction) => interaction !== undefined,
+);
 
 export const selectorChartsInteractionItem = createSelector(
   selectInteraction,
-  (interaction) => interaction.item,
+  (interaction) => interaction?.item ?? null,
 );
 
-export const selectorChartsInteractionAxis = createSelector(
+export const selectorChartsInteractionPointer = createSelector(
   selectInteraction,
-  (interaction) => interaction.axis,
+  (interaction) => interaction?.pointer ?? null,
 );
 
-export const selectorChartsInteractionXAxis = createSelector(
-  selectInteraction,
-  (interaction) => interaction.axis.x,
+export const selectorChartsInteractionPointerX = createSelector(
+  selectorChartsInteractionPointer,
+  (pointer) => pointer && pointer.x,
 );
 
-export const selectorChartsInteractionYAxis = createSelector(
-  selectInteraction,
-  (interaction) => interaction.axis.y,
+export const selectorChartsInteractionPointerY = createSelector(
+  selectorChartsInteractionPointer,
+  (pointer) => pointer && pointer.y,
 );
 
 export const selectorChartsInteractionItemIsDefined = createSelector(
   selectorChartsInteractionItem,
   (item) => item !== null,
-);
-
-export const selectorChartsInteractionXAxisIsDefined = createSelector(
-  selectorChartsInteractionXAxis,
-  (x) => x !== null,
-);
-
-export const selectorChartsInteractionYAxisIsDefined = createSelector(
-  selectorChartsInteractionYAxis,
-  (y) => y !== null,
 );

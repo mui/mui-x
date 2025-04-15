@@ -7,25 +7,47 @@
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
     "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "colorMap": {
       "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
     },
-    "data": { "type": { "description": "V[]" } },
+    "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
+    "disableLine": { "type": { "description": "boolean" }, "default": "false" },
+    "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
         "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
       }
     },
+    "fill": { "type": { "description": "string" }, "default": "'currentColor'" },
+    "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
+    "ignoreTooltip": { "type": { "description": "boolean" } },
+    "label": { "type": { "description": "string" } },
+    "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "max": { "type": { "description": "number | Date" } },
     "min": { "type": { "description": "number | Date" } },
+    "offset": { "type": { "description": "number" }, "default": "0" },
+    "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
     "reverse": { "type": { "description": "boolean" } },
+    "slotProps": {
+      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
+      "default": "{}"
+    },
+    "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
+    "stroke": { "type": { "description": "string" }, "default": "'currentColor'" },
+    "sx": { "type": { "description": "SxProps" } },
     "tickInterval": {
       "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean) | any[]" },
       "default": "'auto'"
     },
+    "tickLabelInterval": {
+      "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean)" },
+      "default": "'auto'"
+    },
     "tickLabelPlacement": { "type": { "description": "'middle' | 'tick'" }, "default": "'middle'" },
+    "tickLabelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "tickMaxStep": { "type": { "description": "number" } },
     "tickMinStep": { "type": { "description": "number" } },
     "tickNumber": { "type": { "description": "number" } },
@@ -33,6 +55,7 @@
       "type": { "description": "'start' | 'end' | 'middle' | 'extremities'" },
       "default": "'extremities'"
     },
+    "tickSize": { "type": { "description": "number" }, "default": "6" },
     "valueFormatter": {
       "type": {
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"

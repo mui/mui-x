@@ -23,7 +23,7 @@ type GetDataGridProForcedProps = (
 
 const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: 'DataGridPro',
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',
@@ -51,9 +51,9 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,
   treeData: false,
-  unstable_listView: false,
-  unstable_lazyLoading: false,
-  unstable_lazyLoadingRequestThrottleMs: 500,
+  lazyLoading: false,
+  lazyLoadingRequestThrottleMs: 500,
+  listView: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;

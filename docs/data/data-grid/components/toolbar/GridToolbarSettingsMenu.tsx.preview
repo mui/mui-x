@@ -1,0 +1,15 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  density={settings.density}
+  showCellVerticalBorder={settings.showCellBorders}
+  showColumnVerticalBorder={settings.showColumnBorders}
+  slots={{ toolbar: CustomToolbar }}
+  slotProps={{
+    toolbar: {
+      settings,
+      onSettingsChange: setSettings,
+    },
+  }}
+  showToolbar
+/>

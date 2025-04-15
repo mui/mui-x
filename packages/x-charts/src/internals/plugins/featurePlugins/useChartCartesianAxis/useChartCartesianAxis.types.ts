@@ -1,7 +1,6 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models';
-import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import {
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type {
   AxisDefaultized,
   ScaleName,
   ChartsXAxisProps,
@@ -9,51 +8,35 @@ import {
   AxisId,
   AxisConfig,
   ChartsAxisData,
+  YAxis,
+  XAxis,
 } from '../../../../models/axis';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { ZoomData, ZoomOptions } from './zoom.types';
-import { UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { ZoomData, ZoomOptions } from './zoom.types';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
-export type DefaultizedAxisConfig<AxisProps> = {
+export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
-export type CartesianContextState = {
-  /**
-   * Mapping from x-axis key to scaling configuration.
-   */
-  xAxis: DefaultizedAxisConfig<ChartsXAxisProps>;
-  /**
-   * Mapping from y-axis key to scaling configuration.
-   */
-  yAxis: DefaultizedAxisConfig<ChartsYAxisProps>;
-  /**
-   * The x-axes IDs sorted by order they got provided.
-   */
-  xAxisIds: AxisId[];
-  /**
-   * The y-axes IDs sorted by order they got provided.
-   */
-  yAxisIds: AxisId[];
-};
-
-export interface UseChartCartesianAxisParameters {
+export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName> {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  xAxis?: ReadonlyArray<XAxis<S>>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  yAxis?: ReadonlyArray<YAxis<S>>;
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
@@ -69,10 +52,11 @@ export interface UseChartCartesianAxisParameters {
   disableAxisListener?: boolean;
 }
 
-export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {
-  defaultizedXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-  defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
-};
+export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
+  UseChartCartesianAxisParameters<S> & {
+    defaultizedXAxis: AxisConfig<S, any, ChartsXAxisProps>[];
+    defaultizedYAxis: AxisConfig<S, any, ChartsYAxisProps>[];
+  };
 
 export interface DefaultizedZoomOptions extends Required<ZoomOptions> {
   axisId: AxisId;
@@ -85,7 +69,7 @@ export interface UseChartCartesianAxisState {
    */
   zoom?: {
     isInteracting: boolean;
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
     x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
@@ -98,13 +82,11 @@ export type ExtremumFilter = (
   dataIndex: number,
 ) => boolean;
 
-export interface UseChartCartesianAxisInstance {}
-
 export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartCartesianAxisParameters;
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
-    // instance: UseChartCartesianAxisInstance;
-    dependencies: [UseChartInteractionSignature, UseChartSeriesSignature<SeriesType>];
+    dependencies: [UseChartSeriesSignature<SeriesType>];
+    optionalDependencies: [UseChartInteractionSignature];
   }>;

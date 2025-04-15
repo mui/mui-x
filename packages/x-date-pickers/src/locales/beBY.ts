@@ -36,12 +36,14 @@ const beBYPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Ачысціць',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сёння',
+  nextStepButtonLabel: 'Наступны',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Абраць дату',
   dateTimePickerToolbarTitle: 'Абраць дату і час',
   timePickerToolbarTitle: 'Абраць час',
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,11 +61,12 @@ const beBYPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тыдзень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Абраць дату, абрана дата  ${formattedDate}` : 'Абраць дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Абраць час, абрыны час  ${formattedTime}` : 'Абраць час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

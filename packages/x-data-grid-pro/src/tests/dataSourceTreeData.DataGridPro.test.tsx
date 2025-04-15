@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -83,7 +83,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         <DataGridPro
           apiRef={apiRef}
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           pagination
           treeData
@@ -160,7 +160,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   });
 
-  it('should fetch nested data when calling API method `unstable_dataSource.fetchRows`', async () => {
+  it('should fetch nested data when calling API method `dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
 
     if (!apiRef.current?.state) {
@@ -175,7 +175,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
-    apiRef.current?.unstable_dataSource.fetchRows(firstChildId);
+
+    await act(async () => {
+      apiRef.current?.dataSource.fetchRows(firstChildId);
+    });
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);

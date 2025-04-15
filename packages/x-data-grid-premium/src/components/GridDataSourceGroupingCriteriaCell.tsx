@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
 import {
   useGridPrivateApiContext,
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
   gridRowSelector,
+  vars,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -54,7 +54,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.unstable_dataSource.fetchRows(id);
+      apiRef.current.dataSource.fetchRows(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }
@@ -74,7 +74,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     );
   }
 
-  return descendantCount > 0 ? (
+  return descendantCount === -1 || descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
@@ -105,7 +105,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   let cellContent: React.ReactNode;
@@ -120,14 +120,13 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={{
-        ml:
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>
@@ -143,6 +142,6 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

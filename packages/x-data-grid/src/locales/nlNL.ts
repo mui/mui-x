@@ -1,4 +1,3 @@
-import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Geen resultaten gevonden.',
   noColumnsOverlayLabel: 'Geen kolommen',
   noColumnsOverlayManageColumns: 'Kolommen beheren',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Grootte',
@@ -50,6 +50,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Exporteer naar CSV',
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Downloaden als Excel-bestand',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Zoeken',
@@ -124,6 +127,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Toon kolommen',
   columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
@@ -131,6 +135,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -185,6 +190,34 @@ const nlNLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Regels per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ga naar eerste pagina';
+    }
+    if (type === 'last') {
+      return 'Ga naar laatste pagina';
+    }
+    if (type === 'next') {
+      return 'Ga naar volgende pagina';
+    }
+    // if (type === 'previous') {
+    return 'Ga naar vorige pagina';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
 
@@ -195,6 +228,35 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'grootte',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
+export const nlNL: Localization = getGridLocalization(nlNLGrid);

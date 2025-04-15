@@ -7,9 +7,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
-import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
+import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -49,9 +49,9 @@ export default function ComponentFamilies() {
           'DateField',
           'TimeField',
           'DateTimeField',
-          'MultiInputDateRangeField',
-          'MultiInputTimeRangeField',
-          'MultiInputDateTimeRangeField',
+          'SingleInputDateRangeField',
+          'SingleInputTimeRangeField',
+          'SingleInputDateTimeRangeField',
         ]}
       >
         <DemoItem label="Date">
@@ -65,25 +65,25 @@ export default function ComponentFamilies() {
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Range</ProLabel>}
-          component="MultiInputDateRangeField"
+          component="SingleInputDateRangeField"
         >
-          <MultiInputDateRangeField
+          <SingleInputDateRangeField
             defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Time Range</ProLabel>}
-          component="MultiInputTimeRangeField"
+          component="SingleInputTimeRangeField"
         >
-          <MultiInputTimeRangeField
+          <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-17T18:30')]}
           />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Time Range</ProLabel>}
-          component="MultiInputDateTimeRangeField"
+          component="SingleInputDateTimeRangeField"
         >
-          <MultiInputDateTimeRangeField
+          <SingleInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
         </DemoItem>

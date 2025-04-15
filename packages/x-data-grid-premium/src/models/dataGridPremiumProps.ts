@@ -4,6 +4,10 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridGetRowsError,
+  GridUpdateRowError,
+  type GridColDef,
+  GridLocaleTextApi,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -24,6 +28,10 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type {
+  GridPivotingColDefOverrides,
+  GridPivotModel,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
 import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
@@ -91,7 +99,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
+   * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   aggregationFunctions:
     | Record<string, GridAggregationFunction>
@@ -107,7 +115,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default (groupNode) => groupNode == null ? 'footer' : 'inline'
+   * @default (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
   /**
@@ -122,12 +130,31 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: boolean;
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns:
+    | ((
+        column: GridColDef,
+        getLocaleText: GridLocaleTextApi['getLocaleText'],
+      ) => GridColDef[] | undefined)
+    | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
     DataGridProPropsWithoutDefaultValue<R>,
-    'initialState' | 'apiRef' | 'unstable_dataSource' | 'unstable_onDataSourceError'
+    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
   > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -201,11 +228,55 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Data source object.
    */
-  unstable_dataSource?: GridDataSource;
+  dataSource?: GridDataSource;
   /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * The pivot model of the grid.
+   * Will be used to generate the pivot data.
+   * In case of `pivotActive` being `false`, the pivot model is still used to populate the pivot panel.
+   */
+  pivotModel?: GridPivotModel;
+  /**
+   * Callback fired when the pivot model changes.
+   * @param {GridPivotModel} pivotModel The new pivot model.
+   */
+  onPivotModelChange?: (pivotModel: GridPivotModel) => void;
+  /**
+   * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
+   * @default false
+   */
+  pivotActive?: boolean;
+  /**
+   * Callback fired when the pivot active state changes.
+   * @param {boolean} isPivotActive Whether the data grid is in pivot mode.
+   */
+  onPivotActiveChange?: (isPivotActive: boolean) => void;
+  /**
+   * If `true`, the pivot side panel is visible.
+   * @default false
+   */
+  pivotPanelOpen?: boolean;
+  /**
+   * Callback fired when the pivot side panel open state changes.
+   * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   */
+  onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
+
+  /**
+   * The column definition overrides for the columns generated by the pivoting feature.
+   * @param {string} originalColumnField The field of the original column.
+   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
+   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * @default undefined
+   */
+  pivotingColDef?:
+    | Partial<GridPivotingColDefOverrides>
+    | ((
+        originalColumnField: GridColDef['field'],
+        columnGroupPath: string[],
+      ) => Partial<GridPivotingColDefOverrides> | undefined);
 }

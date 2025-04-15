@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import ownerDocument from '@mui/utils/ownerDocument';
 import { throttle } from '@mui/x-internals/throttle';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEventPriority } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { createSelector } from '../../../utils/createSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -32,7 +31,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { isDeepEqual } from '../../../utils/utils';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -175,9 +173,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const rootElement = apiRef.current.rootElementRef.current;
-
-    const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(
+      apiRef.current.mainElementRef.current,
+      props.scrollbarSize,
+    );
 
     const rowsMeta = gridRowsMetaSelector(apiRef);
     const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
@@ -373,9 +372,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
-  useGridApiOptionHandler(apiRef, 'rootMount', handleRootMount);
-  useGridApiOptionHandler(apiRef, 'resize', handleResize);
-  useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
+  useGridEventPriority(apiRef, 'rootMount', handleRootMount);
+  useGridEventPriority(apiRef, 'resize', handleResize);
+  useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
@@ -423,32 +422,32 @@ function getStaticDimensions(
 }
 
 const scrollbarSizeCache = new WeakMap<Element, number>();
-function measureScrollbarSize(rootElement: Element | null, scrollbarSize: number | undefined) {
+function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
   }
 
-  if (rootElement === null) {
+  if (element === null) {
     return 0;
   }
 
-  const cachedSize = scrollbarSizeCache.get(rootElement);
+  const cachedSize = scrollbarSizeCache.get(element);
   if (cachedSize !== undefined) {
     return cachedSize;
   }
 
-  const doc = ownerDocument(rootElement);
+  const doc = ownerDocument(element);
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
   scrollDiv.className = 'scrollDiv';
-  rootElement.appendChild(scrollDiv);
+  element.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  rootElement.removeChild(scrollDiv);
+  element.removeChild(scrollDiv);
 
-  scrollbarSizeCache.set(rootElement, size);
+  scrollbarSizeCache.set(element, size);
 
   return size;
 }

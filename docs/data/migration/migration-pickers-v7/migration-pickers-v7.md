@@ -28,6 +28,31 @@ Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v7 to v8.
 
+:::success
+The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
+
+Changes that might impact such users are marked with a ⏩ emoji.
+You can skip them and come back to them later if you experience any issues after the migration.
+:::
+
+:::warning
+Some behavioral changes are marked with a ⚠️ emoji for better visibility.
+
+Make sure to double-check them to avoid unexpected changes in your flow.
+
+If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
+:::
+
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v8.0.0/preset-safe` to target the other packages as well.
@@ -68,9 +93,66 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## ✅ Rename `date-fns` adapter imports
+
+:::warning
+This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+
+In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+:::
+
+- The `AdapterDateFns` and `AdapterDateFnsJalali` adapters have been renamed to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectively.
+  If you were using the old imports, you need to update them:
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+  Or consider updating the `date-fns` or `date-fns-jalali` package to the latest version and use the updated adapters.
+
+- The `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` adapters have been renamed to `AdapterDateFns` and `AdapterDateFnsJalali` respectively.
+  If you were using the old imports, you need to update them:
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
 ## Components breaking changes
 
-### New DOM structure for the field
+### ⚠️ Updated view selection process
+
+The view selection process has been updated to make it clearer across all Pickers.
+Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to the end range position when the start value is selected.
+In essence, the automatic range position and view switching have been removed in favor of manual confirmation.
+The new default behavior for all other cases is as follows:
+
+- Selection on a given view has to be confirmed by clicking the "**Next**" action button if there are other selection steps.
+- The "**Next**" action is replaced with ""**OK**" if there is no next step.
+- The "**OK**" action has to be clicked to confirm the selection and close the Picker.
+
+Here are a few examples of how the new behavior works:
+
+- On `<DesktopDateTimePicker />`:
+
+  - Previously selecting a date and then selecting all time sections automatically closed the Picker.
+  - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
+
+- On `<DesktopDateTimeRangePicker />`:
+
+  - Previously selecting a start date and then selecting all time sections automatically switched to the end date selection step. After the last end time section was selected, the Picker closed.
+  - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
+
+- On `<MobileDateTimeRangePicker />`:
+  - Previously selecting a start date automatically switched to the start time selection step. After the last time section selection, the Picker switched to the end date step.
+  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switches the Picker to the end date step.
+
+### ⚠️ New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
 Unfortunately it presented accessibility limitations, which are impossible to resolve.
@@ -95,7 +177,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 
 - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
-  Both components below will respect the leading zeroes on digit sections:
+  Both components below respect the leading zeroes on digit sections:
 
   ```js
   <DatePicker
@@ -110,7 +192,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 - For the props forwarded to the `TextField`,
   you can have a look at the next section to see how the migration impact them.
 
-  Both components below will render a small size UI:
+  Both components below render a small size UI:
 
   ```js
   <DatePicker
@@ -125,9 +207,9 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
 #### Migrate `slotProps.textField`
 
 If you are passing props to `slotProps.textField`,
-these props will now be received by `PickersTextField` and should keep working the same way as before.
+the `PickersTextField` component now receives these props and should keep working the same as before.
 
-Both components below will render a small size UI:
+Both components below render a small size UI:
 
 ```js
 <DatePicker
@@ -141,13 +223,13 @@ Both components below will render a small size UI:
 
 :::info
 If you are passing `inputProps` to `slotProps.textField`,
-these props will now be passed to the hidden `<input />` element.
+these props are now passed to the hidden `<input />` element.
 :::
 
 #### Migrate `slots.field`
 
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
-This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
+This new component needs to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
 You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section to have a concrete example.
 
@@ -262,10 +344,63 @@ const theme = createTheme({
 });
 ```
 
-### Field editing on mobile Pickers
+### Clean the `ownerState`
+
+The `ownerState` is an object describing the current state of a given component to let you do more advanced customization.
+It is used in two different APIs:
+
+1. In the theme's `styleOverrides`, the `ownerState` is passed to the function that returns the style:
+
+```ts
+const theme = createTheme({
+  components: {
+    MuiDateCalendar: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          /** Style based on the ownerState */
+        }),
+      },
+    },
+  },
+});
+```
+
+2. In the `slotProps`, the `ownerState` is passed to the function that returns the custom props:
+
+```tsx
+<DatePicker
+  slotProps={{
+    actionBar: (ownerState) => ({
+      /** Props based on the ownerState */
+    }),
+  }}
+/>
+```
+
+Before version `v8.x`, the `ownerState` contained every prop of the component, plus some additional internal states if needed.
+This presented a few problems:
+
+- It was hard to know which ancestor defines the `ownerState` and therefore which props it contains (is the `actionBar` slot handled by `DatePicker`, by `DesktopDatePicker` or by `PickerLayout`?).
+
+- Many properties of the `ownerState` were not intended for public use, which complicated the evolution of the codebase. All the props received by an internal component became part of the public API, and consequently, any changes to them would have resulted in a breaking change.
+
+- Some properties that would have been useful for customizing a component were not present if the component was not using them by default. For example, if the built-in styles for the `actionBar` didn't need to know if the picker is disabled, then the `ownerState` of the `actionBar` didn't contain this information.
+
+- The naming of the props made it difficult to understand which element they applied to. If the `ownerState` of the `monthButton` slot contained `disabled`, it was hard to establish whether the disabled state applied to the `monthButton` or the Picker itself.
+
+To solve these issues, the `ownerState` has been reworked.
+Every component's `ownerState` contains a shared set of properties describing the state of the picker it is in (`isPickerValueEmpty`, `isPickerOpen`, `isPickerDisabled`, `isPickerReadOnly`, `pickerVariant` and `pickerOrientation`).
+Some component's `ownerState` contain additional properties describing their own state (`isMonthDisabled` for the month button, `toolbarOrientation` for the toolbar, `isDaySelected` for the day button, etc.).
+
+:::success
+Most of the properties needed to properly customize your component should be present in the `ownerState`.
+If you need some property that is currently not included, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
+:::
+
+### ⏩ Field editing on mobile Pickers
 
 The field is now editable if rendered inside a mobile Picker.
-Before v8, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
+Before version `v8.x`, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
 The mobile and desktop Pickers now behave similarly:
 
 - clicking on the field allows editing the value with the keyboard
@@ -276,7 +411,37 @@ If you prefer the old behavior, you can create a custom field that renders a rea
 See [Custom field—Using a read-only Text Field on mobile](/x/react-date-pickers/custom-field/#using-a-read-only-text-field-on-mobile) to learn more.
 :::
 
-### Month Calendar
+### ⏩ New default fields for the range pickers
+
+The range pickers now use single input fields by default:
+
+- Date Range Picker: `<SingleInputDateRangeField />` instead of `<MultiInputDateRangeField />`
+- Time Range Picker: `<SingleInputTimeRangeField />` instead of `<MultiInputTimeRangeField />`
+- Date Time Range Picker: `<SingleInputDateTimeRangeField />` instead of `<MultiInputDateTimeRangeField />`
+
+You can manually pass the multi input fields to your picker if you prefer them:
+
+```diff
+ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
++import { MultiInputDateRangePicker } from '@mui/x-date-pickers-pro/MultiInputDateRangePicker';
+
+ <DateRangePicker
++  slots={{ field: MultiInputDateRangePicker }}
+ />
+```
+
+If you were already using a single input field, you no longer need to manually pass it to the picker:
+
+```diff
+ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+-import { SingleInputDateRangePicker } from '@mui/x-date-pickers-pro/SingleInputDateRangePicker';
+
+ <DateRangePicker
+-  slots={{ field: SingleInputDateRangePicker }}
+ />
+```
+
+### ⏩ Month Calendar
 
 To simplify the theme and class structure, the `<PickersMonth />` component has been moved inside the Month Calendar component.
 This change causes a few breaking changes:
@@ -302,8 +467,8 @@ This change causes a few breaking changes:
   ```diff
    const theme = createTheme({
      components: {
-  -    PickersMonth: {
-  +    MonthCalendar: {
+  -    MuiPickersMonth: {
+  +    MuiMonthCalendar: {
          styleOverrides: {
   -        monthButton: {
   +        button: {
@@ -317,7 +482,7 @@ This change causes a few breaking changes:
 
 - The button to render a single month is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Month Calendar.
 
-### Year Calendar
+### ⏩ Year Calendar
 
 To simplify the theme and class structure, the `<PickersYear />` component has been moved inside the Year Calendar component.
 This change causes a few breaking changes:
@@ -343,8 +508,8 @@ This change causes a few breaking changes:
   ```diff
    const theme = createTheme({
      components: {
-  -    PickersYear: {
-  +    YearCalendar: {
+  -    MuiPickersYear: {
+  +    MuiYearCalendar: {
          styleOverrides: {
   -        yearButton: {
   +        button: {
@@ -358,7 +523,59 @@ This change causes a few breaking changes:
 
 - The button to render a single year is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Year Calendar.
 
-### Update default `closeOnSelect` and Action Bar `actions` values
+### ⏩ Treat partially filled date as `null` in `onChange`
+
+Before version `v8.x`, entering a partially filled date in the field would fire `onChange` with an invalid date.
+The date now remains `null` until fully filled.
+
+Here are two concrete examples:
+
+#### A user fills a Date Field that has no default value
+
+1. The user enters the month, the rendered value is `01/DD/YYYY`, `onChange` is not fired.
+2. The user enters the day, the rendered value is `01/01/YYYY`, `onChange` is not fired.
+3. The user enters the year, the rendered value is `01/01/2025`, `onChange` is fired with the new date.
+
+#### A user cleans the year of a Date Field and enters a new year
+
+1. The user cleans the year, the rendered value is `01/01/YYYY`, `onChange` is fired with `null`.
+2. The user enters a new year, the rendered value is `01/01/2026`, `onChange` is fired with the new date.
+
+### ⏩ Deprecate the `disableOpenPicker` prop
+
+The `disableOpenPicker` prop has been deprecated on all Picker components and will be removed in the next major release (v9.0.0).
+If you only want to allow editing through the field, you can use the [field component](/x/react-date-pickers/fields/) directly:
+
+```diff
+-<DatePicker disableOpenPicker />
++<DateField />
+
+-<TimePicker disableOpenPicker />
++<TimeField />
+
+-<DateTimePicker disableOpenPicker />
++<DateTimeField />
+```
+
+```diff
+-<DateRangePicker disableOpenPicker>
++<SingleInputDateRangeField> // If you want a single input for both dates.
++<MultiInputDateRangeField> // If you want one input for each date.
+
+-<TimeRangePicker disableOpenPicker>
++<SingleInputTimeRangeField> // If you want a single input for both dates.
++<MultiInputTimeRangeField> // If you want one input for each date.
+
+-<DateTimeRangePicker disableOpenPicker>
++<SingleInputDateTimeRangeField> // If you want a single input for both dates.
++<MultiInputDateTimeRangeField> // If you want one input for each date.
+```
+
+:::success
+Using the field instead of the picker significantly decreases your bundle size since all the view components won't be bundled anymore.
+:::
+
+### ⏩ Update default `closeOnSelect` and Action Bar `actions` values
 
 The default value of the `closeOnSelect` prop has been updated to `false` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`, which still have `closeOnSelect` set to `true`.
 
@@ -447,7 +664,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    }
   ```
 
-- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label` and `name` props.
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label`, `name`, `autoFocus`, `focused` and `readOnly` props.
   You can use the `usePickerContext` hook instead:
 
   ```diff
@@ -482,6 +699,17 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
   -const { name } = props;
   +const { name } = usePickerContext();
+
+  -const { autoFocus } = props;
+  +const { autoFocus: pickerAutoFocus, open } = usePickerContext();
+  +const autoFocus = pickerAutoFocus && !open,
+
+  -const { focused } = props;
+  +const { open } = usePickerContext();
+  +const focused = open ? true : undefined;
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
   :::success
@@ -553,7 +781,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    />
   ```
 
-### Slot: `layout`
+### ⏩ Slot: `layout`
 
 - The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:
 
@@ -684,10 +912,10 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
    // This contains a small behavior change.
    // If the picker is not controlled and has a default value,
-   // opening it and calling `acceptValueChanges` without any change will call `onAccept`
+   // opening it and calling `acceptValueChanges` without any change calls `onAccept`
    // with the default value.
-   // Whereas before, opening it and calling `onDimiss` without any change would
-   // not have called `onAccept`.
+   // Whereas before, opening it and calling `onDimiss` without any change
+   // did not call `onAccept`.
   -const { onDismiss } = props;
   +const { acceptValueChanges } = usePickerActionsContext();
   +const onDismiss = acceptValueChanges
@@ -725,7 +953,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +setRangePosition('start');
   ```
 
-### Slot: `toolbar`
+### ⏩ Slot: `toolbar`
 
 - The component passed to the `toolbar` slot no longer receives the `value` prop.
   You can use the `usePickerContext` hook instead:
@@ -814,7 +1042,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +setRangePosition('start');
   ```
 
-### Slot: `tabs`
+### ⏩ Slot: `tabs`
 
 - The component passed to the `tabs` slot no longer receives the `view`, `views` and `onViewChange` props.
   You can use the `usePickerContext` hook instead:
@@ -846,7 +1074,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +setRangePosition('start');
   ```
 
-### Slot: `actionBar`
+### ⏩ Slot: `actionBar`
 
 - The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props.
   You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
@@ -872,7 +1100,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
-### Slot: `shortcuts`
+### ⏩ Slot: `shortcuts`
 
 - The component passed to the `shortcuts` slot no longer receives the `isLandscape` prop.
   You can use the `usePickerContext` hook instead:
@@ -912,11 +1140,11 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const isTodayValid = isValidValue(dayjs());
   ```
 
-## Renamed variables and types
+## ✅ Renamed variables and types
 
 The following variables and types have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
-- `usePickersTranslations`
+- ✅ `usePickersTranslations`
 
   ```diff
   -import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
@@ -931,7 +1159,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +const translations = usePickerTranslations();
   ```
 
-- `usePickersContext`
+- ✅ `usePickersContext`
 
   ```diff
   -import { usePickersContext } from '@mui/x-date-pickers/hooks';
@@ -958,7 +1186,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +import { PickerValueType } from '@mui/x-date-pickers-pro';
   ```
 
-- `RangeFieldSection`
+- ✅ `RangeFieldSection`
 
   ```diff
   -import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
@@ -968,19 +1196,21 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
   ```
 
-- `PickerShortcutChangeImportance`
+- ✅ `PickerShortcutChangeImportance`
 
   ```diff
   -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
   -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers';
+  -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers-pro';
 
   +import { PickerChangeImportance } from '@mui/x-date-pickers/models';
   +import { PickerChangeImportance } from '@mui/x-date-pickers';
+  +import { PickerChangeImportance } from '@mui/x-date-pickers-pro';
   ```
 
-## Hooks breaking changes
+## ⏩ Hooks breaking changes
 
-### `useMultiInputDateRangeField`
+### ⏩ `useMultiInputDateRangeField`
 
 This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
 
@@ -1031,7 +1261,7 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
 The associated types have also been removed. [Learn how to migrate them](/x/migration/migration-pickers-v7/#removed-types).
 :::
 
-### `useMultiInputTimeRangeField`
+### ⏩ `useMultiInputTimeRangeField`
 
 This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
 
@@ -1083,7 +1313,7 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
 The associated types have also been removed. [Learn how to migrate them](/x/migration/migration-pickers-v7/#removed-types).
 :::
 
-### `useMultiInputDateTimeRangeField`
+### ⏩ `useMultiInputDateTimeRangeField`
 
 This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
 
@@ -1135,7 +1365,7 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
 The associated types have also been removed. [Learn how to migrate them](/x/migration/migration-pickers-v7/#removed-types).
 :::
 
-### `usePickerContext`
+### ⏩ `usePickerContext`
 
 - The `onOpen` and `onClose` methods have been replaced with a single `setOpen` method.
   This method no longer takes an event, which was used to prevent the browser default behavior:
@@ -1173,6 +1403,36 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
    />
   ```
 
+### ⏩ `useClearableField`
+
+This hook has been removed. The custom field component now receives the `clearable` and `onClear` props.
+
+You can remove the `useClearableField` hook from your component and use the new props to conditionally render the clear button:
+
+```diff
+-import { useClearableField } from '@mui/x-date-pickers-pro/hooks';
+
+ function CustomField(props) {
+   const {
+     id,
+     label
+     value,
++    clearable,
++    onClear,
+   } = props;
+-  const processedFieldProps = useClearableField({
+-    ...fieldResponse,
+-    slots,
+-    slotProps,
+-  });
++  {clearable && value && (
++    <IconButton title="Clear" tabIndex={-1} onClick={onClear}>
++      <ClearIcon />
++    </IconButton>
++  )}
+ }
+```
+
 ## Typing breaking changes
 
 ### Do not pass the date object as a generic
@@ -1204,10 +1464,15 @@ The `TSection` generic of the `FieldRef` type has been replaced with the `TValue
 +const fieldRef = React.useRef<DateRange<Dayjs>>(null);
 ```
 
-### Removed types
+### ⏩ Removed types
 
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
-If you were using them, you need to replace them with the following code:
+
+:::success
+If you were using them, you can replace them with the examples below.
+
+However, consider looking into your usage to see if you really need those types.
+:::
 
 - `NonEmptyDateRange`
 
@@ -1619,9 +1884,50 @@ If you were using them, you need to replace them with the following code:
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
 
+- `ExportedUseClearableFieldProps`
+
+  ```ts
+  interface ExportedUseClearableFieldProps {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler;
+  }
+  ```
+
+- `UseClearableFieldSlots`
+
+  ```ts
+  interface UseClearableFieldSlots {
+    clearIcon?: React.ElementType;
+    clearButton?: React.ElementType;
+  }
+  ```
+
+- `UseClearableFieldSlotProps`
+
+  ```ts
+  import { SlotComponentProps } from '@mui/utils';
+  import { FieldOwnerState } from '@mui/x-date-pickers/models';
+  import { ClearIcon } from '@mui/x-date-pickers/icons';
+  import IconButton from '@mui/material/IconButton';
+
+  interface UseClearableFieldSlotProps {
+    clearIcon?: SlotComponentProps<typeof ClearIcon, {}, FieldOwnerState>;
+    clearButton?: SlotComponentProps<typeof IconButton, {}, FieldOwnerState>;
+  }
+  ```
+
+- `UseClearableFieldResponse`
+
+  ```ts
+  type UseClearableFieldResponse<TFieldProps extends {}> = Omit<
+    TFieldProps,
+    'clearable' | 'onClear' | 'slots' | 'slotProps'
+  >;
+  ```
+
 ## Theme breaking change
 
-### `MuiPickersPopper`
+### ⏩ `MuiPickersPopper`
 
 The theme entry have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
@@ -1652,37 +1958,7 @@ const theme = createTheme({
 });
 ```
 
-## ✅ Rename `date-fns` adapter imports
-
-:::warning
-This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
-
-In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
-:::
-
-- The `AdapterDateFns` and `AdapterDateFnsJalali` adapters have been renamed to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectively.
-  If you were using the old imports, you need to update them:
-
-  ```diff
-  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
-  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
-  ```
-
-  Or consider updating the `date-fns` or `date-fns-jalali` package to the latest version and use the updated adapters.
-
-- The `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` adapters have been renamed to `AdapterDateFns` and `AdapterDateFnsJalali` respectively.
-  If you were using the old imports, you need to update them:
-
-  ```diff
-  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
-  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-  ```
-
-## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
+## ⏩ Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
 
 The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package.
 You can import it from `@mui/x-license` instead:
@@ -1694,7 +1970,7 @@ You can import it from `@mui/x-license` instead:
  LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-## Stop passing `utils` and the date object to some translation keys
+## ⏩ Stop passing `utils` and the date object to some translation keys
 
 Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
 If you have customized those translation keys, you have to update them following the examples below:
@@ -1792,7 +2068,7 @@ If you have customized those translation keys, you have to update them following
 +);
 ```
 
-## Remove unused adapter formats
+## ⏩ Remove unused adapter formats
 
 The following unused formats have been removed from the adapters and can no longer be overridden via the `dateFormats` prop on the `<LocalizationProvider />` component:
 

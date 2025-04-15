@@ -15,14 +15,15 @@
     },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "outerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'100%'"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
     "value": { "type": { "name": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },

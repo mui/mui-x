@@ -1,4 +1,3 @@
-import { isIS as isISCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const isISGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Engar niðurstöður',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Þéttleiki',
@@ -50,6 +50,9 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Hlaða niður sem CSV',
   toolbarExportPrint: 'Prenta',
   toolbarExportExcel: 'Hlaða niður sem Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
@@ -124,6 +127,7 @@ const isISGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Valmynd',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Sýna dálka',
   columnMenuManageColumns: 'Stjórna dálkum',
   columnMenuFilter: 'Síur',
@@ -131,6 +135,7 @@ const isISGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Fjarlægja röðun',
   columnMenuSortAsc: 'Raða hækkandi',
   columnMenuSortDesc: 'Raða lækkandi',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -183,6 +188,34 @@ const isISGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Stækka',
   collapseDetailPanel: 'Minnka',
 
+  // Pagination
+  paginationRowsPerPage: 'Raðir á síðu:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Fara á fyrstu síðu';
+    }
+    if (type === 'last') {
+      return 'Fara á síðustu síðu';
+    }
+    if (type === 'next') {
+      return 'Fara á næstu síðu';
+    }
+    // if (type === 'previous') {
+    return 'Fara á fyrri síðu';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Endurröðun raða',
 
@@ -193,6 +226,35 @@ const isISGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'stærð',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const isIS: Localization = getGridLocalization(isISGrid, isISCore);
+export const isIS: Localization = getGridLocalization(isISGrid);

@@ -9,14 +9,14 @@ import {
 import { PickerManager, DateTimeValidationError } from '../models';
 import { validateDateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { AmPmProps } from '../internals/models/props/time';
 import {
   ExportedValidateDateTimeProps,
   ValidateDateTimeProps,
-  ValidateDateTimePropsToDefault,
 } from '../validation/validateDateTime';
-import { PickerValue } from '../internals/models';
+import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -31,52 +31,93 @@ export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends bo
       internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
-        ...internalProps,
-        ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
-      }),
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
-        return localeText.openDatePickerDialogue(formattedValue);
-      },
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToDateTimeFieldInternalProps,
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure],
   );
 }
 
-/**
- * Private utility function to get the default internal props for the field with date time editing.
- * Is used by the `useDateTimeManager` and `useDateTimeRangeManager` hooks.
- */
-export function getDateTimeFieldInternalPropsDefaults(
-  parameters: GetDateTimeFieldInternalPropsDefaultsParameters,
-): GetDateTimeFieldInternalPropsDefaultsReturnValue {
-  const { defaultDates, utils, internalProps } = parameters;
-  const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm
-    ? utils.formats.keyboardDateTime12h
-    : utils.formats.keyboardDateTime24h;
+function useOpenPickerButtonAriaLabel(value: PickerValue) {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
 
-  return {
-    disablePast: internalProps.disablePast ?? false,
-    disableFuture: internalProps.disableFuture ?? false,
-    format: internalProps.format ?? defaultFormat,
-    disableIgnoringDatePartForTimeValidation: Boolean(
-      internalProps.minDateTime || internalProps.maxDateTime,
-    ),
-    minDate: applyDefaultDate(
+  return React.useMemo(() => {
+    const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+    return translations.openDatePickerDialogue(formattedValue);
+  }, [value, translations, utils]);
+}
+
+function useApplyDefaultValuesToDateTimeFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToDateTimeValidationProps(internalProps);
+
+  const ampm = React.useMemo(
+    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, utils],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format:
+        internalProps.format ??
+        (ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h),
+    }),
+    [internalProps, validationProps, ampm, utils],
+  );
+}
+
+type SharedDateTimeAndDateTimeRangeValidationProps =
+  | 'disablePast'
+  | 'disableFuture'
+  | 'minTime'
+  | 'maxTime'
+  | 'minDate'
+  | 'maxDate';
+
+export function useApplyDefaultValuesToDateTimeValidationProps(
+  props: Pick<
+    ExportedValidateDateTimeProps,
+    SharedDateTimeAndDateTimeRangeValidationProps | 'minDateTime' | 'maxDateTime'
+  >,
+): Pick<ValidateDateTimeProps, SharedDateTimeAndDateTimeRangeValidationProps> {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
+
+  return React.useMemo(
+    () => ({
+      disablePast: props.disablePast ?? false,
+      disableFuture: props.disableFuture ?? false,
+      // TODO: Explore if we can remove it from the public API
+      disableIgnoringDatePartForTimeValidation:
+        !!props.minDateTime || !!props.maxDateTime || !!props.disableFuture || !!props.disablePast,
+      minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
+      maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
+      minTime: props.minDateTime ?? props.minTime,
+      maxTime: props.maxDateTime ?? props.maxTime,
+    }),
+    [
+      props.minDateTime,
+      props.maxDateTime,
+      props.minTime,
+      props.maxTime,
+      props.minDate,
+      props.maxDate,
+      props.disableFuture,
+      props.disablePast,
       utils,
-      internalProps.minDateTime ?? internalProps.minDate,
-      defaultDates.minDate,
-    ),
-    maxDate: applyDefaultDate(
-      utils,
-      internalProps.maxDateTime ?? internalProps.maxDate,
-      defaultDates.maxDate,
-    ),
-    minTime: internalProps.minDateTime ?? internalProps.minTime,
-    maxTime: internalProps.maxDateTime ?? internalProps.maxTime,
-  };
+      defaultDates,
+    ],
+  );
 }
 
 export interface UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
@@ -88,8 +129,8 @@ export type UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure ext
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeValidationError,
-    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+    ValidateDateTimeProps,
+    DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
   >;
 
 export interface DateTimeManagerFieldInternalProps<
@@ -104,33 +145,3 @@ export interface DateTimeManagerFieldInternalProps<
     >,
     ExportedValidateDateTimeProps,
     AmPmProps {}
-
-interface DateTimeManagerFieldInternalPropsWithDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<
-      PickerValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateTimeValidationError
-    >,
-    ValidateDateTimeProps {}
-
-type DateTimeManagerFieldPropsToDefault =
-  | 'format'
-  // minTime and maxTime can still be undefined after applying defaults.
-  | 'minTime'
-  | 'maxTime'
-  | ValidateDateTimePropsToDefault;
-
-interface GetDateTimeFieldInternalPropsDefaultsParameters
-  extends Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> {
-  internalProps: Pick<
-    DateTimeManagerFieldInternalProps<true>,
-    DateTimeManagerFieldPropsToDefault | 'minDateTime' | 'maxDateTime' | 'ampm'
-  >;
-}
-
-interface GetDateTimeFieldInternalPropsDefaultsReturnValue
-  extends Pick<
-    DateTimeManagerFieldInternalPropsWithDefaults<true>,
-    DateTimeManagerFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
-  > {}

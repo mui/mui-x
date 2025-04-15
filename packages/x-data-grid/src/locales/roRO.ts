@@ -1,4 +1,3 @@
-import { roRO as roROCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -8,6 +7,7 @@ const roROGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
   // noColumnsOverlayLabel: 'No columns',
   // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -51,6 +51,9 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Download în format CSV',
   toolbarExportPrint: 'Printare',
   toolbarExportExcel: 'Download în format Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Caută',
@@ -125,6 +128,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meniu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Afișează toate coloanele',
   columnMenuManageColumns: 'Gestionează coloane',
   columnMenuFilter: 'Filtru',
@@ -132,6 +136,7 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -186,6 +191,34 @@ const roROGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Extindere',
   collapseDetailPanel: 'Restrângere',
 
+  // Pagination
+  paginationRowsPerPage: 'Rânduri pe pagină:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Mergi la prima pagină';
+    }
+    if (type === 'last') {
+      return 'Mergi la ultima pagină';
+    }
+    if (type === 'next') {
+      return 'Mergi la pagina următoare';
+    }
+    // if (type === 'previous') {
+    return 'Mergi la pagina precedentă';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Reordonare rânduri',
 
@@ -196,6 +229,35 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minim',
   aggregationFunctionLabelMax: 'Maxim',
   aggregationFunctionLabelSize: 'Numărul elementelor',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const roRO: Localization = getGridLocalization(roROGrid, roROCore);
+export const roRO: Localization = getGridLocalization(roROGrid);

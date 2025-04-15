@@ -40,6 +40,7 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
+  withSidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
@@ -125,6 +126,22 @@ export interface GridClasses {
    * Styles applied to the column header element.
    */
   columnHeader: string;
+  /**
+   * Styles applied to the collapsible element.
+   */
+  collapsible: string;
+  /**
+   * Styles applied to the collapsible icon element.
+   */
+  collapsibleIcon: string;
+  /**
+   * Styles applied to the collapsible trigger element.
+   */
+  collapsibleTrigger: string;
+  /**
+   * Styles applied to the collapsible panel element.
+   */
+  collapsiblePanel: string;
   /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
@@ -266,6 +283,14 @@ export interface GridClasses {
    */
   columnsManagementFooter: string;
   /**
+   * Styles applied to the columns management scroll area element.
+   */
+  columnsManagementScrollArea: string;
+  /**
+   * Styles applied to the columns management empty text element.
+   */
+  columnsManagementEmptyText: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -385,6 +410,7 @@ export interface GridClasses {
    * Styles applied to the column header filter row.
    */
   headerFilterRow: string;
+  mainContent: string; // TODO: come up with a better name
   /**
    * Styles applied to the main container element.
    */
@@ -451,6 +477,18 @@ export interface GridClasses {
    * Styles applied to the virtualization render zone.
    */
   virtualScrollerRenderZone: string;
+  /**
+   * Styles applied to resizable panel handles.
+   */
+  resizablePanelHandle: string;
+  /**
+   * Styles applied to horizontal resizable panel handles.
+   */
+  'resizablePanelHandle--horizontal': string;
+  /**
+   * Styles applied to vertical resizable panel handles.
+   */
+  'resizablePanelHandle--vertical': string;
   /**
    * Styles applied to the root element.
    */
@@ -568,9 +606,38 @@ export interface GridClasses {
    */
   selectedRowCount: string;
   /**
-   * Styles applied to the sort icon element.
+   * Styles applied to the sort button element.
+   */
+  sortButton: string;
+  /**
+   * Styles applied to the sort button icon element.
    */
   sortIcon: string;
+  /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
+   * Styles applied to the toolbar label element.
+   */
+  toolbarLabel: string;
+  /**
+   * Styles applied to the toolbar divider element.
+   */
+  toolbarDivider: string;
+  /**
+   * Styles applied to the shadow scroll area element.
+   * @ignore - do not document.
+   */
+  shadowScrollArea: string;
+  /**
+   * Styles applied to the sidebar element.
+   */
+  sidebar: string;
+  /**
+   * Styles applied to the sidebar header element.
+   */
+  sidebarHeader: string;
   /**
    * Styles applied to the toolbar container element.
    */
@@ -599,6 +666,18 @@ export interface GridClasses {
    * Styles applied to the toolbar prompt control send button element.
    */
   toolbarPromptControlSendButton: string;
+  /**
+   * Styles applied to the toolbar quick filter root element.
+   */
+  toolbarQuickFilter: string;
+  /**
+   * Styles applied to the toolbar quick filter trigger element.
+   */
+  toolbarQuickFilterTrigger: string;
+  /**
+   * Styles applied to the toolbar quick filter control element.
+   */
+  toolbarQuickFilterControl: string;
   /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
@@ -659,6 +738,78 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
+  /**
+   * Styles applied to the pivot panel available fields.
+   */
+  pivotPanelAvailableFields: string;
+  /**
+   * Styles applied to the pivot panel body.
+   */
+  pivotPanelBody: string;
+  /**
+   * Styles applied to the pivot panel field.
+   */
+  pivotPanelField: string;
+  /**
+   * Styles applied to the pivot panel field action container.
+   */
+  pivotPanelFieldActionContainer: string;
+  /**
+   * Styles applied to the pivot panel field checkbox.
+   */
+  pivotPanelFieldCheckbox: string;
+  /**
+   * Styles applied to the pivot panel field drag icon.
+   */
+  pivotPanelFieldDragIcon: string;
+  /**
+   * Styles applied to the pivot panel field list.
+   */
+  pivotPanelFieldList: string;
+  /**
+   * Styles applied to the pivot panel field name.
+   */
+  pivotPanelFieldName: string;
+  /**
+   * Styles applied to the pivot panel field when sorted.
+   */
+  'pivotPanelField--sorted': string;
+  /**
+   * Styles applied to the pivot panel header.
+   */
+  pivotPanelHeader: string;
+  /**
+   * Styles applied to the pivot panel placeholder.
+   */
+  pivotPanelPlaceholder: string;
+  /**
+   * Styles applied to the pivot panel scroll area.
+   */
+  pivotPanelScrollArea: string;
+  /**
+   * Styles applied to the pivot panel search container.
+   */
+  pivotPanelSearchContainer: string;
+  /**
+   * Styles applied to the pivot panel section.
+   */
+  pivotPanelSection: string;
+  /**
+   * Styles applied to the pivot panel section title.
+   */
+  pivotPanelSectionTitle: string;
+  /**
+   * Styles applied to the pivot panel sections.
+   */
+  pivotPanelSections: string;
+  /**
+   * Styles applied to the pivot panel switch.
+   */
+  pivotPanelSwitch: string;
+  /**
+   * Styles applied to the pivot panel switch label.
+   */
+  pivotPanelSwitchLabel: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -677,6 +828,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
+  'mainContent',
+  'withSidePanel',
   'booleanCell',
   'cell--editable',
   'cell--editing',
@@ -697,6 +850,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cellSkeleton',
   'cellOffsetLeft',
   'checkboxInput',
+  'collapsible',
+  'collapsibleTrigger',
+  'collapsibleIcon',
+  'collapsiblePanel',
   'columnHeader',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -733,6 +890,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementHeader',
   'columnsManagementSearchInput',
   'columnsManagementFooter',
+  'columnsManagementScrollArea',
+  'columnsManagementEmptyText',
   'container--top',
   'container--bottom',
   'detailPanel',
@@ -802,14 +961,24 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--horizontal',
   'scrollbarFiller',
   'selectedRowCount',
+  'sortButton',
   'sortIcon',
+  'shadowScrollArea',
+  'sidebar',
+  'sidebarHeader',
   'toolbarContainer',
+  'toolbar',
+  'toolbarLabel',
+  'toolbarDivider',
   'toolbarFilterList',
   'toolbarPromptControl',
   'toolbarPromptControl--recording',
   'toolbarPromptControlRecordingIndicator',
   'toolbarPromptControlRecordButton',
   'toolbarPromptControlSendButton',
+  'toolbarQuickFilter',
+  'toolbarQuickFilterTrigger',
+  'toolbarQuickFilterControl',
   'virtualScroller',
   'virtualScroller--hasScrollX',
   'virtualScrollerContent',
@@ -830,4 +999,21 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
+  'pivotPanelAvailableFields',
+  'pivotPanelField',
+  'pivotPanelField--sorted',
+  'pivotPanelFieldActionContainer',
+  'pivotPanelFieldCheckbox',
+  'pivotPanelFieldDragIcon',
+  'pivotPanelFieldList',
+  'pivotPanelFieldName',
+  'pivotPanelHeader',
+  'pivotPanelPlaceholder',
+  'pivotPanelScrollArea',
+  'pivotPanelSearchContainer',
+  'pivotPanelSection',
+  'pivotPanelSectionTitle',
+  'pivotPanelSections',
+  'pivotPanelSwitch',
+  'pivotPanelSwitchLabel',
 ]);

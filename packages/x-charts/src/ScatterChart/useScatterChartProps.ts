@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -8,7 +9,6 @@ import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
 import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 
@@ -35,10 +35,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     colors,
     sx,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     onItemClick,
     children,
     slots,
@@ -50,12 +46,16 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
+  const seriesWithDefault = React.useMemo(
+    () => series.map((s) => ({ type: 'scatter' as const, ...s })),
+    [series],
+  );
   const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
-    series: series.map((s) => ({ type: 'scatter' as const, ...s })),
+    series: seriesWithDefault,
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     xAxis,
     yAxis,
@@ -72,10 +72,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

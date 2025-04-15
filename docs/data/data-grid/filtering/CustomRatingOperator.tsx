@@ -5,18 +5,8 @@ import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterOperator,
-  GridToolbarFilterButton,
-  GridToolbarContainer,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function Toolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton />
-    </GridToolbarContainer>
-  );
-}
 
 function RatingInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef } = props;
@@ -100,9 +90,7 @@ export default function CustomRatingOperator() {
         {...data}
         loading={loading}
         columns={columns}
-        slots={{
-          toolbar: Toolbar,
-        }}
+        showToolbar
         initialState={{
           ...data.initialState,
           filter: {

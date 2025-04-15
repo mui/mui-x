@@ -1,4 +1,3 @@
-import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -26,8 +25,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Нет столбцов',
+  noColumnsOverlayManageColumns: 'Управление столбцами',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -58,15 +58,16 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Введите запрос…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Введите или запишите запрос…',
+  toolbarPromptControlRecordingPlaceholder: 'Прослушивание запроса…',
+  toolbarPromptControlLabel: 'Ввод запроса',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Запись',
+  toolbarPromptControlRecordButtonActiveLabel: 'Остановить запись',
+  toolbarPromptControlSendActionLabel: 'Отправить',
+  toolbarPromptControlSendActionAriaLabel: 'Отправить запрос',
+  toolbarPromptControlErrorMessage:
+    'При обработке запроса произошла ошибка. Пожалуйста, повторите попытку с другим запросом.',
 
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
@@ -75,12 +76,15 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Печать',
   toolbarExportExcel: 'Скачать в формате Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Поиск',
   columnsManagementNoColumns: 'Нет столбцов',
   columnsManagementShowHideAllText: 'Показать/Скрыть Всё',
   columnsManagementReset: 'Сбросить',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Очистить',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
@@ -96,9 +100,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'содержит',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не содержит',
   filterOperatorEquals: 'равен',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не равен',
   filterOperatorStartsWith: 'начинается с',
   filterOperatorEndsWith: 'заканчивается на',
   filterOperatorIs: 'равен',
@@ -119,9 +123,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'содержит',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'не содержит',
   headerFilterOperatorEquals: 'равен',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'не равен',
   headerFilterOperatorStartsWith: 'начинается с',
   headerFilterOperatorEndsWith: 'заканчивается на',
   headerFilterOperatorIs: 'равен',
@@ -139,7 +143,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'больше или равно',
   'headerFilterOperator<': 'меньше чем',
   'headerFilterOperator<=': 'меньше или равно',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Очистить фильтр',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -148,6 +152,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показать столбцы',
   columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
@@ -155,6 +160,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -215,6 +221,34 @@ const ruRUGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
+  // Pagination
+  paginationRowsPerPage: 'Строк на странице:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на первую страницу';
+    }
+    if (type === 'last') {
+      return 'Перейти на последнюю страницу';
+    }
+    if (type === 'next') {
+      return 'Перейти на следующую страницу';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на предыдущую страницу';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Изменение порядка строк',
 
@@ -225,6 +259,35 @@ const ruRUGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мин',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'счет',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);
+export const ruRU: Localization = getGridLocalization(ruRUGrid);

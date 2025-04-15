@@ -1,14 +1,5 @@
 import * as React from 'react';
-import type { ComponentsPropsList } from '@mui/material/styles';
-import type { WrappedLabelDisplayedRows } from '../../components/GridPagination';
 import type { GridColDef } from '../colDef';
-
-export type MuiTablePaginationLocalizedProps = Omit<
-  ComponentsPropsList['MuiTablePagination'],
-  'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange' | 'labelDisplayedRows'
-> & {
-  labelDisplayedRows?: WrappedLabelDisplayedRows;
-};
 
 /**
  * Set the types of the texts in the grid.
@@ -19,6 +10,7 @@ export interface GridLocaleText {
   noResultsOverlayLabel: string;
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
+  emptyPivotOverlayLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -60,6 +52,9 @@ export interface GridLocaleText {
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
+
+  // Toolbar pivot button
+  toolbarPivot: string;
 
   // Columns management text
   columnsManagementSearchTitle: string;
@@ -134,6 +129,7 @@ export interface GridLocaleText {
 
   // Column menu text
   columnMenuLabel: string;
+  columnMenuAriaLabel: (columnName: string) => string;
   columnMenuShowColumns: React.ReactNode;
   columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
@@ -141,6 +137,7 @@ export interface GridLocaleText {
   columnMenuUnsort: React.ReactNode;
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuManagePivot: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -201,8 +198,44 @@ export interface GridLocaleText {
   aggregationFunctionLabelMax: string;
   aggregationFunctionLabelSize: string;
 
-  // Used core components translation keys
-  MuiTablePagination: MuiTablePaginationLocalizedProps;
+  // Pagination
+  paginationRowsPerPage: string;
+  paginationDisplayedRows: (params: {
+    from: number;
+    to: number;
+    count: number;
+    estimated: number | undefined;
+  }) => string;
+  paginationItemAriaLabel: (type: 'first' | 'last' | 'previous' | 'next') => string;
+
+  // Pivot
+  pivotToggleLabel: string;
+  pivotCloseButton: string;
+  pivotSearchButton: string;
+  pivotSearchControlPlaceholder: string;
+  pivotSearchControlLabel: string;
+  pivotSearchControlClear: string;
+  pivotNoFields: string;
+  pivotRows: string;
+  pivotColumns: string;
+  pivotValues: string;
+  pivotMenuMoveUp: string;
+  pivotMenuMoveDown: string;
+  pivotMenuMoveToTop: string;
+  pivotMenuMoveToBottom: string;
+  pivotMenuRows: string;
+  pivotMenuColumns: string;
+  pivotMenuValues: string;
+  pivotMenuOptions: string;
+  pivotMenuAddToRows: string;
+  pivotMenuAddToColumns: string;
+  pivotMenuAddToValues: string;
+  pivotMenuRemove: string;
+  pivotDragToRows: string;
+  pivotDragToColumns: string;
+  pivotDragToValues: string;
+  pivotYearColumnHeaderName: string;
+  pivotQuarterColumnHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

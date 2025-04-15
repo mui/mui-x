@@ -99,6 +99,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     // Props used by InputLabel
     label,
     InputLabelProps,
+    // @ts-ignore
+    'data-active-range-position': dataActiveRangePosition,
     ...other
   } = props;
 
@@ -191,6 +193,9 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           name={name}
           role="group"
           aria-labelledby={inputLabelId}
+          aria-describedby={helperTextId}
+          aria-live={helperTextId ? 'polite' : undefined}
+          data-active-range-position={dataActiveRangePosition}
           {...InputProps}
         />
         {helperText && (

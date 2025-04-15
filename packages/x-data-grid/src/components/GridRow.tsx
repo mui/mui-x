@@ -24,7 +24,10 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import {
+  gridRowMaximumTreeDepthSelector,
+  gridRowNodeSelector,
+} from '../hooks/features/rows/gridRowsSelector';
 import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
@@ -124,7 +127,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowReordering,
   );
   const handleRef = useForkRef(ref, refProp);
-  const rowNode = apiRef.current.getRowNode(rowId);
+  const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
     rowId,
     editMode: rootProps.editMode,
@@ -280,7 +283,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
-  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
+  const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -292,11 +295,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     rowClassNames.push(rootProps.getRowClassName(rowParams));
-  }
-
-  /* Start of rendering */
-  if (!rowNode) {
-    return null;
   }
 
   const getCell = (
@@ -327,7 +325,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       scrollbarWidth,
     );
 
-    if (rowNode?.type === 'skeletonRow') {
+    if (rowNode.type === 'skeletonRow') {
       return (
         <slots.skeletonCell
           key={column.field}

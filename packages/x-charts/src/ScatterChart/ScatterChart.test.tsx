@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+
+const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';
 
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
@@ -50,14 +52,16 @@ describe('<ScatterChart />', () => {
       { id: 4, x: 0, y: 0 },
       { id: 5, x: 5, y: 5 },
     ],
-    margin: { top: 0, left: 0, bottom: 0, right: 0 },
+    margin: 0,
+    xAxis: [{ position: 'none' }],
+    yAxis: [{ position: 'none' }],
     width: 100,
     height: 100,
-  };
+  } as const;
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)('should show the tooltip without errors in default config', () => {
-    render(
+  testSkipIf(isJSDOM)('should show the tooltip without errors in default config', async () => {
+    const { user } = render(
       <div
         style={{
           margin: -8, // Removes the body default margins
@@ -65,30 +69,37 @@ describe('<ScatterChart />', () => {
           height: 100,
         }}
       >
-        <ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} />
+        <ScatterChart
+          {...config}
+          series={[{ id: 's1', label: 'series', data: config.dataset }]}
+          hideLegend
+        />
       </div>,
     );
     const svg = document.querySelector<HTMLElement>('svg')!;
+    await user.pointer([
+      // Set tooltip position voronoi value
+      { target: svg, coords: { clientX: 10, clientY: 10 } },
+    ]);
 
-    fireEvent.pointerEnter(svg); // Trigger the tooltip
-    fireEvent.pointerMove(svg, {
-      clientX: 10,
-      clientY: 10,
-    }); // Set tooltip position voronoi value
+    let cells: NodeListOf<HTMLElement> = [] as any;
 
-    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['series', '(0, 10)']);
 
-    fireEvent.pointerMove(svg, {
-      clientX: 40,
-      clientY: 60,
-    }); // Update voronoi value
-    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    await user.pointer([
+      // Set tooltip position voronoi value
+      { target: svg, coords: { clientX: 40, clientY: 60 } },
+    ]);
+
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['series', '(5, 5)']);
   });
 
-  testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', () => {
-    render(
+  testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
+    const { user } = render(
       <div
         style={{
           margin: -8, // Removes the body default margins
@@ -99,19 +110,27 @@ describe('<ScatterChart />', () => {
         <ScatterChart {...config} disableVoronoi series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
-    const svg = document.querySelector<HTMLElement>('svg')!;
     const marks = document.querySelectorAll<HTMLElement>('circle');
 
-    fireEvent.pointerEnter(svg); // Trigger the tooltip
-    fireEvent.pointerMove(marks[0]); // Only to set the tooltip position
+    await user.pointer([
+      // Only to set the tooltip position
+      { target: marks[0] },
+    ]);
 
-    fireEvent.pointerEnter(marks[0]);
-    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+    let cells: NodeListOf<HTMLElement> = [] as any;
 
-    fireEvent.pointerEnter(marks[4]);
-    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(0, 10)']);
+
+    await user.pointer([
+      // Only to set the tooltip position
+      { target: marks[4] },
+    ]);
+
+    await screen.findByRole('tooltip');
+    cells = document.querySelectorAll<HTMLElement>(cellSelector);
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
   testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
@@ -156,5 +175,11 @@ describe('<ScatterChart />', () => {
 
     const labelY = await screen.findByText('600');
     expect(labelY).toBeVisible();
+  });
+
+  it('should render "No data to display" when axes are empty arrays', () => {
+    render(<ScatterChart series={[]} width={100} height={100} xAxis={[]} yAxis={[]} />);
+
+    expect(screen.getByText('No data to display')).toBeVisible();
   });
 });

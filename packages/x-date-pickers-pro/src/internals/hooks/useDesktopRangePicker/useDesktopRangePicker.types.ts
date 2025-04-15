@@ -1,24 +1,48 @@
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   PickerPopperSlots,
   PickerPopperSlotProps,
-  UsePickerViewsProps,
+  UsePickerProps,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from '@mui/x-date-pickers/internals';
 import {
-  RangeOnlyPickerProps,
-  UseRangePickerParams,
+  ExportedPickersLayoutSlotProps,
+  ExportedPickersLayoutSlots,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
+  NonStaticRangePickerProps,
+  NonStaticRangePickerHookParameters,
   UseRangePickerProps,
-  UseRangePickerSlotProps,
-  UseRangePickerSlots,
-} from '../models/useRangePicker';
+} from '../../models';
 
-export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickerPopperSlots {}
+export interface UseDesktopRangePickerSlots
+  extends PickerPopperSlots,
+    ExportedPickersLayoutSlots<PickerRangeValue>,
+    PickerFieldUISlotsFromContext {
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  field: React.ElementType;
+}
 
 export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    PickerPopperSlotProps {}
+  extends PickerPopperSlotProps,
+    ExportedPickersLayoutSlotProps<PickerRangeValue>,
+    PickerFieldUISlotPropsFromContext {
+  field?: SlotComponentPropsFromProps<
+    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
+      dateSeparator?: string;
+    },
+    {},
+    PickerOwnerState
+  >;
+}
 
-export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
+export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -29,7 +53,7 @@ export interface UseDesktopRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
 > extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
@@ -52,4 +76,4 @@ export interface UseDesktopRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps> {}
+> extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

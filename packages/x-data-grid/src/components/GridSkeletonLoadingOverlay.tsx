@@ -12,7 +12,7 @@ import {
   gridDimensionsSelector,
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridSelector,
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
@@ -259,7 +259,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     }
   };
 
-  useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
+  useGridEvent(apiRef, 'columnResize', handleColumnResize);
 
   return (
     <SkeletonOverlay className={classes.root} {...rest} ref={handleRef}>

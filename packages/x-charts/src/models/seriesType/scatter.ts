@@ -15,7 +15,7 @@ export interface ScatterSeriesType
   extends CommonSeriesType<ScatterValueType | null>,
     CartesianSeriesType {
   type: 'scatter';
-  data?: ScatterValueType[];
+  data?: readonly ScatterValueType[];
   markerSize?: number;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
@@ -68,4 +68,4 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color'> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {}

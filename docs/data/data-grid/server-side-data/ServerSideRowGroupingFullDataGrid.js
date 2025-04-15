@@ -3,7 +3,6 @@ import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridToolbar,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
@@ -11,11 +10,12 @@ import Button from '@mui/material/Button';
 export default function ServerSideRowGroupingFullDataGrid() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, columns, loadNewData } = useMockServer({
+  const { fetchRows, editRow, columns, loadNewData } = useMockServer({
     rowGrouping: true,
     rowLength: 1000,
     dataSet: 'Commodity',
     maxColumns: 20,
+    editable: true,
   });
 
   const dataSource = React.useMemo(() => {
@@ -36,10 +36,14 @@ export default function ServerSideRowGroupingFullDataGrid() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
     };
-  }, [fetchRows]);
+  }, [fetchRows, editRow]);
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
@@ -62,17 +66,10 @@ export default function ServerSideRowGroupingFullDataGrid() {
       <div style={{ height: 450, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
+          showToolbar
           groupingColDef={{
             width: 250,
           }}

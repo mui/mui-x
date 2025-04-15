@@ -1,4 +1,3 @@
-import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -28,6 +27,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Дані не знайдено.',
   noColumnsOverlayLabel: 'Немає стовпців',
   noColumnsOverlayManageColumns: 'Керування стовпцями',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -75,6 +75,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Завантажити у форматі CSV',
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Завантажити у форматі Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
 
   // Columns management text
   columnsManagementSearchTitle: 'Пошук',
@@ -149,6 +152,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показати стовпці',
   columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
@@ -156,6 +160,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Скасувати сортування',
   columnMenuSortAsc: 'Сортувати за зростанням',
   columnMenuSortDesc: 'Сортувати за спаданням',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -216,6 +221,34 @@ const ukUAGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Показати',
   collapseDetailPanel: 'Приховати',
 
+  // Pagination
+  paginationRowsPerPage: 'Рядків на сторінці:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перейти на першу сторінку';
+    }
+    if (type === 'last') {
+      return 'Перейти на останню сторінку';
+    }
+    if (type === 'next') {
+      return 'Перейти на наступну сторінку';
+    }
+    // if (type === 'previous') {
+    return 'Перейти на попередню сторінку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Порядок рядків',
 
@@ -226,6 +259,35 @@ const ukUAGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
   aggregationFunctionLabelSize: 'кількість',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
 };
 
-export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
+export const ukUA: Localization = getGridLocalization(ukUAGrid);

@@ -69,6 +69,7 @@ export default chartsApiPages;
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
       'x-charts/src/LineChart/CircleMarkElement.tsx',
+      'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
@@ -77,7 +78,7 @@ export default chartsApiPages;
   importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
-    // propsWithoutDefaultVerification: [],
+    propsWithoutDefaultVerification: ['stripeColor'],
   },
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),

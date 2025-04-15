@@ -22,6 +22,7 @@ const defaultAlias = {
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
   '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
   '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
+  '@mui/x-telemetry': resolveAliasPath('./packages/x-telemetry/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
@@ -80,8 +81,8 @@ module.exports = function getBabelConfig(api) {
       '@babel/plugin-transform-runtime',
       {
         useESModules,
-        // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
-        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.25.0',
+        // any package needs to declare 7.27.0 as a runtime dependency. default is ^7.0.0
+        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.27.0',
       },
     ],
     [
@@ -89,6 +90,18 @@ module.exports = function getBabelConfig(api) {
       {
         mode: 'unsafe-wrap',
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
+      },
+    ],
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'MUI_VERSION',
+          'MUI_MAJOR_VERSION',
+          'MUI_MINOR_VERSION',
+          'MUI_PATCH_VERSION',
+          'MUI_PRERELEASE',
+        ],
       },
     ],
   ];
@@ -118,7 +131,7 @@ module.exports = function getBabelConfig(api) {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    if (!process.env.E2E_BUILD) {
+    if (!process.env.TEST_BUILD) {
       plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
     }
 

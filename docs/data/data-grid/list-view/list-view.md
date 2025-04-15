@@ -2,31 +2,27 @@
 title: Data Grid - List view
 ---
 
-# Data Grid - List view [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Data Grid - List view [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Display data in a single-column list view. Can be used to present a more compact grid on smaller screens and mobile devices.</p>
 
-:::warning
-This feature is marked as **unstable**. While you can use this feature in production, the API could change in the future.
-:::
-
-List view can be enabled by providing the `unstable_listView` prop.
+List view can be enabled by providing the `listView` prop.
 
 Unlike the default grid view, the list view makes no assumptions on how data is presented to end users.
 
-In order to display data in a list view, a `unstable_listColumn` prop must be provided with a `renderCell` function.
+In order to display data in a list view, a `listViewColumn` prop must be provided with a `renderCell` function.
 
 ```tsx
 function ListViewCell(params: GridRenderCellParams) {
   return <>{params.row.id}</>;
 }
 
-const listColDef: GridListColDef = {
+const listViewColDef: GridListViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
 
-<DataGridPro unstable_listColumn={listColDef} unstable_listView={true} />;
+<DataGridPro listViewColumn={listViewColDef} listView={true} />;
 ```
 
 {{"demo": "ListView.js", "bg": true}}
@@ -49,7 +45,7 @@ The [editing feature](/x/react-data-grid/editing/) is not supported in list view
 
 The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens, as shown below.
 
-{{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 360, "height": 600}}
+{{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 400, "height": 600}}
 
 ## Feature compatibility
 
@@ -76,4 +72,4 @@ If you need to use list view with any other features, please [open a feature req
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
-- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
+- [GridListViewColDef](/x/api/data-grid/grid-list-view-col-def/)

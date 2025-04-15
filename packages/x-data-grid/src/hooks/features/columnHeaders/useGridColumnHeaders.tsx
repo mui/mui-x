@@ -6,7 +6,7 @@ import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import {
@@ -153,10 +153,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       : null;
   }, [pinnedColumns.right.length, visibleColumns.length]);
 
-  useGridApiEventHandler(apiRef, 'columnResizeStart', handleColumnResizeStart);
-  useGridApiEventHandler(apiRef, 'columnResizeStop', handleColumnResizeStop);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
+  useGridEvent(apiRef, 'columnResizeStart', handleColumnResizeStart);
+  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
+  useGridEvent(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
+  useGridEvent(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
@@ -252,7 +252,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         pinnedPosition,
         indexInSection,
         sectionLength,
-        rootProps.showCellVerticalBorder,
+        rootProps.showColumnVerticalBorder,
         gridHasFiller,
       );
 
@@ -436,7 +436,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             pinnedPosition,
             indexInSection,
             visibleColumnGroupHeader.length,
-            rootProps.showCellVerticalBorder,
+            rootProps.showColumnVerticalBorder,
             gridHasFiller,
           )}
         />
