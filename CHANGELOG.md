@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.28.4
+
+_Apr 16, 2025_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Swedish (sv-SE) locale
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lubka272, @ptuukkan.
+
+Following are all team members who have contributed to this release:
+@michelengelen, @oliviertassinari, @michelengelen
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.28.4`
+
+- [l10n] Improve Swedish (sv-SE) locale (#17306) @ptuukkan
+
+#### `@mui/x-data-grid-pro@7.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.28.4`.
+
+#### `@mui/x-data-grid-premium@7.28.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.28.4`, plus:
+
+- [DataGridPremium] Fix stale aggregation results after filtering (#17303) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.28.4`
+
+- [l10n] Improve Slovak (sk-SK) locale (#17204) @lubka272
+
+#### `@mui/x-date-pickers-pro@7.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.28.4`.
+
+### Docs
+
+- [docs] Fix 404 link on the marketing page (#17276) @oliviertassinari
+- [docs] Fix country columns throwing on grouping (#17317) @cherniavskii
+- [release] Changes to v7 for major release (#17320) @michelengelen
+
 ## 7.28.3
 
 _Apr 3, 2025_
