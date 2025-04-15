@@ -12,6 +12,11 @@ export interface MarkElementClasses {
   faded: string;
   /** Styles applied to the root element when animation is not skipped. */
   animate: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type MarkElementClassKey = keyof MarkElementClasses;
@@ -34,6 +39,7 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
   'highlighted',
   'faded',
   'animate',
+  'series',
 ]);
 
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {

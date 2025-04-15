@@ -8,7 +8,7 @@ import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
 
-export const selectorChartPolarAxisState = (state: ChartState<[UseChartPolarAxisSignature]>) =>
+export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>
   state.polarAxis;
 
 export const selectorChartRawRotationAxis = createSelector(

@@ -232,6 +232,37 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
+    it('should apply sorting on the aggregated values', async () => {
+      const { user } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal([
+        '10' /* Agg "Cat A" */,
+        '5' /* Agg "Cat B" */,
+        '15' /* Agg root */,
+      ]);
+
+      const header = getColumnHeaderCell(1);
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['5' /* Agg "Cat B" */, '10' /* Agg "Cat A" */, '15' /* Agg root */],
+        'sorted asc',
+      );
+
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['10' /* Agg "Cat A" */, '5' /* Agg "Cat B" */, '15' /* Agg root */],
+        'sorted desc',
+      );
+    });
+
     describe('prop: getAggregationPosition', () => {
       it('should not aggregate groups if props.getAggregationPosition returns null', () => {
         render(

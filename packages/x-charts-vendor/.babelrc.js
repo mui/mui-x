@@ -19,7 +19,7 @@ if (!babelRuntimeVersion) {
 }
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['modern', 'stable', 'rollup']);
+  const useESModules = api.env(['stable', 'rollup']);
 
   return {
     only: [/node_modules\/(d3-.*|internmap|delaunator|robust-predicates)\/.*\.js/],

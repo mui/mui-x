@@ -21,6 +21,14 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     licenseKey = generateTestLicenseKey();
   });
 
+  // In Node.js>20: window.navigator !== navigator
+  mochaHooks.beforeAll.push(function func() {
+    Object.defineProperty(globalThis, 'navigator', {
+      value: globalThis.window.navigator,
+      configurable: false,
+    });
+  });
+
   mochaHooks.beforeEach.push(function setupCommon() {
     setupTestLicenseKey(licenseKey);
     // disable "react-transition-group" transitions

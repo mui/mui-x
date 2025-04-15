@@ -21,13 +21,14 @@ import {
 import { useChartContext } from '../context/ChartProvider';
 import { ScatterMarker } from './ScatterMarker';
 import { SeriesId } from '../models/seriesType/common';
+import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
-  colorGetter?: (dataIndex: number) => string;
+  colorGetter?: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.

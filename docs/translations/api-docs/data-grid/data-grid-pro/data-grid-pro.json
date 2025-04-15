@@ -1405,7 +1405,6 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
-    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
