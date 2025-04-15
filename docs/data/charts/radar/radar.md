@@ -18,7 +18,7 @@ Not all the feature are implemented and its API might change in the future if ne
 
 Radar charts series should contain a `data` property containing an array of values.
 
-Radar charts also require a `radar` prop with `metrics` property containing an array of string or objects.
+Radar charts also require a `radar` prop with a `metrics` property containing an array of string or objects.
 Each item of this array define a metric of the radar.
 
 {{"demo": "BasicRadar.js"}}
