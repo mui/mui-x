@@ -123,6 +123,7 @@
     "babel-plugin-search-and-replace": "^1.1.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "babel-plugin-transform-replace-expressions": "^0.2.0",
     "chai": "^4.5.0",
     "chai-dom": "^1.12.1",
     "compression-webpack-plugin": "^11.1.0",
