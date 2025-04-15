@@ -487,6 +487,7 @@ PickersInputBase.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multiinput': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
