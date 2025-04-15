@@ -28,7 +28,6 @@ async function addLicense(packageData) {
     [
       './index.js',
       './esm/index.js',
-      './modern/index.js',
       './umd/material-ui.development.js',
       './umd/material-ui.production.min.js',
     ].map(async (file) => {

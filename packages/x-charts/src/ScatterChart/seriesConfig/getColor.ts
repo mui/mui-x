@@ -6,7 +6,10 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   const xColorScale = xAxis?.colorScale;
 
   if (zColorScale) {
-    return (dataIndex: number) => {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
       if (zAxis?.data?.[dataIndex] !== undefined) {
         const color = zColorScale(zAxis?.data?.[dataIndex]);
         if (color !== null) {
@@ -22,7 +25,10 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
     };
   }
   if (yColorScale) {
-    return (dataIndex: number) => {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
       const value = series.data[dataIndex];
       const color = value === null ? series.color : yColorScale(value.y);
       if (color === null) {
@@ -32,7 +38,10 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
     };
   }
   if (xColorScale) {
-    return (dataIndex: number) => {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
       const value = series.data[dataIndex];
       const color = value === null ? series.color : xColorScale(value.x);
       if (color === null) {

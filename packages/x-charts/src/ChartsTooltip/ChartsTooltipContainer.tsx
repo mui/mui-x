@@ -16,6 +16,10 @@ import {
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+import { useAxisSystem } from '../hooks/useAxisSystem';
+
+const noAxis = () => false;
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -64,11 +68,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
+  const axisSystem = useAxisSystem();
+
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const isOpen = useSelector(
     store,
     trigger === 'axis'
-      ? selectorChartsInteractionAxisTooltip
+      ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
+          (axisSystem === 'cartesian' && selectorChartsInteractionAxisTooltip) ||
+          noAxis
       : selectorChartsInteractionItemIsDefined,
   );
 

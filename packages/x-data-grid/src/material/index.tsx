@@ -34,7 +34,6 @@ import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -619,7 +618,6 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelDeleteIcon: GridCloseIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
-  columnUnsortedIcon: GridColumnUnsortedIcon,
   columnSortedAscendingIcon: GridArrowUpwardIcon,
   columnSortedDescendingIcon: GridArrowDownwardIcon,
   columnResizeIcon: GridSeparatorIcon,

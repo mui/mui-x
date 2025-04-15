@@ -38,6 +38,21 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
 
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-data-grid': '@mui/x-data-grid/modern',
+-      '@mui/x-data-grid-pro': '@mui/x-data-grid-pro/modern',
+-      '@mui/x-data-grid-premium': '@mui/x-data-grid-premium/modern',
+     }
+   }
+ }
+```
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/data-grid/preset-safe` targeting only Data Grid or `v8.0.0/preset-safe` to target the other packages as well.
@@ -378,6 +393,9 @@ You have to import it from `@mui/x-license` instead:
 - The `baseInputAdornment` slot was removed.
 - The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
+- The `columnUnsortedIcon` slot was removed.
+- The icon slots now require material icons to be passed like `Icon as any`.
+  Note: This is due to typing issues that might be resolved later.
 
 <!-- ### Editing
 
