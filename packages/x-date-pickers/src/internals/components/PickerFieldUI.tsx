@@ -460,7 +460,7 @@ interface UseFieldTextFieldPropsParameters {
   slotProps:
     | {
         textField?: SlotComponentPropsFromProps<
-          PickersTextFieldProps | TextFieldProps,
+          Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
           {},
           FieldOwnerState
         >;
