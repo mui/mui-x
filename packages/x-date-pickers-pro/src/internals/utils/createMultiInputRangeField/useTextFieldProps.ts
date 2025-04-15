@@ -55,5 +55,7 @@ export function useTextFieldProps({
     }
   }
 
+  textFieldProps.InputProps['data-multiinput'] = position;
+
   return textFieldProps;
 }

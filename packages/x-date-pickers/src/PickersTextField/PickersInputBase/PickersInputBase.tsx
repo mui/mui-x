@@ -331,6 +331,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
     onKeyDown?.(event);
     if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      // Do nothing if it's a multi input field
+      if (rootRef.current?.dataset.multiinput) {
+        return;
+      }
       const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
       const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
       if (!closestForm || !submitTrigger) {
