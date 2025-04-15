@@ -36,7 +36,7 @@ export const selectorChartZoomIsInteracting = createSelector(
   (zoom) => zoom?.isInteracting,
 );
 
-const selectorChartZoomMap = createSelector(
+export const selectorChartZoomMap = createSelector(
   selectorChartZoomState,
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );

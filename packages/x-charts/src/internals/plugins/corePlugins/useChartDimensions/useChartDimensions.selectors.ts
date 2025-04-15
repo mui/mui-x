@@ -11,7 +11,7 @@ export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsS
   state,
 ) => state.dimensions;
 
-const selectorChartMargin = createSelector(
+export const selectorChartMargin = createSelector(
   selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.margin,
 );
