@@ -3,6 +3,8 @@ import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DownloadIcon from '@mui/icons-material/Download';
+// Define the data structure
+
 // Mock API function to simulate server-side data fetching
 const fetchUsers = async (page, pageSize) => {
   // Simulate API delay
@@ -51,6 +53,7 @@ function CustomExport() {
   });
 
   const apiRef = useGridApiRef();
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     { field: 'name', headerName: 'Name', width: 200 },
