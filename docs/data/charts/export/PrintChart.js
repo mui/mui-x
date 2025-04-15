@@ -24,7 +24,7 @@ export default function PrintChart() {
           },
         ]}
       />
-      <Button onClick={() => apiRef.current?.print()}>Print</Button>
+      <Button onClick={() => apiRef.current?.exportAsPrint()}>Print</Button>
     </Stack>
   );
 }

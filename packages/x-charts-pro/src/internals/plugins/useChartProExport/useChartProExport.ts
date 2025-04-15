@@ -20,7 +20,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
   chartRootRef,
   instance,
 }) => {
-  const print = async (options?: ChartPrintExportOptions) => {
+  const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
 
     if (chartRoot) {
@@ -37,10 +37,10 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
 
   return {
     publicAPI: {
-      print,
+      exportAsPrint,
     },
     instance: {
-      print,
+      exportAsPrint,
     },
   };
 };
