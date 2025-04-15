@@ -149,45 +149,45 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
 
 type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
   ? {
-    /**
-     * Position of the axis.
-     *
-     * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-     *
-     * Set to 'none' to hide the axis.
-     *
-     * The first axis in the list will always have a default position.
-     */
-    position?: 'top' | 'bottom' | 'none';
-    /**
-     * The height of the axis.
-     * @default 30
-     */
-    height?: number;
-  }
+      /**
+       * Position of the axis.
+       *
+       * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+       *
+       * Set to 'none' to hide the axis.
+       *
+       * The first axis in the list will always have a default position.
+       */
+      position?: 'top' | 'bottom' | 'none';
+      /**
+       * The height of the axis.
+       * @default 30
+       */
+      height?: number;
+    }
   : AxisProps extends ChartsYAxisProps
-  ? {
-    /**
-     * Position of the axis.
-     *
-     * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-     *
-     * Set to 'none' to hide the axis.
-     *
-     * The first axis in the list will always have a default position.
-     */
-    position?: 'left' | 'right' | 'none';
-    /**
-     * The width of the axis.
-     * @default 30
-     */
-    width?: number;
-  }
-  : {
-    position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
-    height?: number;
-    width?: number;
-  };
+    ? {
+        /**
+         * Position of the axis.
+         *
+         * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+         *
+         * Set to 'none' to hide the axis.
+         *
+         * The first axis in the list will always have a default position.
+         */
+        position?: 'left' | 'right' | 'none';
+        /**
+         * The width of the axis.
+         * @default 30
+         */
+        width?: number;
+      }
+    : {
+        position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
+        height?: number;
+        width?: number;
+      };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   /**
@@ -280,17 +280,17 @@ export interface AxisScaleConfig {
 export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
-    | ScaleOrdinal<string | number | Date, string, string | null>
-    | ScaleOrdinal<number, string, string | null>
-    | ScaleSequential<string, string | null>
-    | ScaleThreshold<number | Date, string | null>;
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   point: {
     colorScale?:
-    | ScaleOrdinal<string | number | Date, string, string | null>
-    | ScaleOrdinal<number, string, string | null>
-    | ScaleSequential<string, string | null>
-    | ScaleThreshold<number | Date, string | null>;
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
@@ -303,13 +303,13 @@ export interface AxisScaleComputedConfig {
   };
   time: {
     colorScale?:
-    | ScaleSequential<string, string | null>
-    | ScaleThreshold<number | Date, string | null>;
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
     colorScale?:
-    | ScaleSequential<string, string | null>
-    | ScaleThreshold<number | Date, string | null>;
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
@@ -318,27 +318,27 @@ export interface AxisScaleComputedConfig {
 
 export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
   | {
-    /**
-     * Location indicates where the value will be displayed.
-     * - `'tick'` The value is displayed on the axis ticks.
-     * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
-     * - `'legend'` The value is displayed in the legend when using color legend.
-     */
-    location: 'legend';
-  }
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       */
+      location: 'legend';
+    }
   | {
-    /**
-     * Location indicates where the value will be displayed.
-     * - `'tick'` The value is displayed on the axis ticks.
-     * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
-     * - `'legend'` The value is displayed in the legend when using color legend.
-     */
-    location: 'tick' | 'tooltip';
-    /**
-     * The d3-scale instance associated to the axis.
-     */
-    scale: AxisScaleConfig[S]['scale'];
-  };
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       */
+      location: 'tick' | 'tooltip';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+    };
 
 /**
  * Config that is shared between cartesian and polar axes.
@@ -469,8 +469,8 @@ export type AxisDefaultized<
   } & (AxisProps extends ChartsXAxisProps
     ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
     : AxisProps extends ChartsYAxisProps
-    ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
-    : AxisSideConfig<AxisProps>);
+      ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
+      : AxisSideConfig<AxisProps>);
 
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,

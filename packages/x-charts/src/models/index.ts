@@ -12,7 +12,7 @@ export type {
   RadiusAxis,
   RotationAxis,
   ChartsXAxisConfig,
-  ChartsYAxisConfig
+  ChartsYAxisConfig,
 } from './axis';
 
 // Utils shared across the X packages
