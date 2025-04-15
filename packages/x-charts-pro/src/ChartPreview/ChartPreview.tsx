@@ -84,8 +84,6 @@ function Preview({
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
   const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
-  const leftPreviewHandleRef = React.useRef<SVGRectElement>(null);
-  const rightPreviewHandleRef = React.useRef<SVGRectElement>(null);
 
   React.useEffect(() => {
     const activePreviewRect = activePreviewRectRef.current;
@@ -158,141 +156,71 @@ function Preview({
     };
   }, [axisId, store]);
 
-  React.useEffect(() => {
-    const leftPreviewHandle = leftPreviewHandleRef.current;
+  const onResizeLeft = (delta: number) => {
+    store.update((state) => {
+      const { width } = selectorChartDrawingArea(state);
 
-    if (!leftPreviewHandle) {
-      return;
-    }
+      const zoom = selectorChartAxisZoomData(state, axisId);
 
-    let prevX = 0;
+      if (!zoom) {
+        return state;
+      }
 
-    const onPointerMove = (event: PointerEvent) => {
-      store.update((state) => {
-        const { width } = selectorChartDrawingArea(state);
+      const deltaZoom = delta / width;
 
-        const zoom = selectorChartAxisZoomData(state, axisId);
+      const newState = {
+        ...state,
+        zoom: {
+          ...state.zoom,
+          zoomData: state.zoom.zoomData.map((data) => {
+            if (data.axisId === axisId) {
+              return {
+                ...data,
+                start: Math.max(0, Math.min(zoom.end, zoom.start + deltaZoom * 100)),
+              };
+            }
 
-        if (!zoom) {
-          return state;
-        }
+            return data;
+          }),
+        },
+      };
 
-        const deltaX = event.clientX - prevX;
-        prevX = event.clientX;
+      return newState;
+    });
+  };
 
-        const deltaZoom = deltaX / width;
+  const onResizeRight = (delta: number) => {
+    store.update((state) => {
+      const { width } = selectorChartDrawingArea(state);
 
-        const newState = {
-          ...state,
-          zoom: {
-            ...state.zoom,
-            zoomData: state.zoom.zoomData.map((data) => {
-              if (data.axisId === axisId) {
-                return {
-                  ...data,
-                  start: Math.max(0, Math.min(zoom.end, zoom.start + deltaZoom * 100)),
-                };
-              }
+      const zoom = selectorChartAxisZoomData(state, axisId);
 
-              return data;
-            }),
-          },
-        };
+      if (!zoom) {
+        return state;
+      }
 
-        return newState;
-      });
-    };
+      const deltaZoom = delta / width;
 
-    const onPointerUp = () => {
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerup', onPointerUp);
-      prevX = 0;
-    };
+      const newState = {
+        ...state,
+        zoom: {
+          ...state.zoom,
+          zoomData: state.zoom.zoomData.map((data) => {
+            if (data.axisId === axisId) {
+              return {
+                ...data,
+                end: Math.min(100, Math.max(zoom.start, zoom.end + deltaZoom * 100)),
+              };
+            }
 
-    const onPointerDown = (event: PointerEvent) => {
-      // Prevent text selection when dragging the handle
-      event.preventDefault();
-      event.stopPropagation();
-      prevX = event.clientX;
-      document.addEventListener('pointerup', onPointerUp);
-      document.addEventListener('pointermove', onPointerMove);
-    };
+            return data;
+          }),
+        },
+      };
 
-    leftPreviewHandle.addEventListener('pointerdown', onPointerDown);
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      leftPreviewHandle.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [axisId, store]);
-
-  React.useEffect(() => {
-    const rightHandle = rightPreviewHandleRef.current;
-
-    if (!rightHandle) {
-      return;
-    }
-
-    let prevX = 0;
-
-    const onPointerMove = (event: PointerEvent) => {
-      store.update((state) => {
-        const { width } = selectorChartDrawingArea(state);
-
-        const zoom = selectorChartAxisZoomData(state, axisId);
-
-        if (!zoom) {
-          return state;
-        }
-
-        const deltaX = event.clientX - prevX;
-        prevX = event.clientX;
-
-        const deltaZoom = deltaX / width;
-
-        const newState = {
-          ...state,
-          zoom: {
-            ...state.zoom,
-            zoomData: state.zoom.zoomData.map((data) => {
-              if (data.axisId === axisId) {
-                return {
-                  ...data,
-                  end: Math.min(100, Math.max(zoom.start, zoom.end + deltaZoom * 100)),
-                };
-              }
-
-              return data;
-            }),
-          },
-        };
-
-        return newState;
-      });
-    };
-
-    const onPointerUp = () => {
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerup', onPointerUp);
-      prevX = 0;
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      // Prevent text selection when dragging the handle
-      event.preventDefault();
-      event.stopPropagation();
-      prevX = event.clientX;
-      document.addEventListener('pointerup', onPointerUp);
-      document.addEventListener('pointermove', onPointerMove);
-    };
-
-    rightHandle.addEventListener('pointerdown', onPointerDown);
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      rightHandle.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [axisId, store]);
+      return newState;
+    });
+  };
 
   return (
     <React.Fragment>
@@ -304,16 +232,16 @@ function Preview({
         height={size}
       />
       <ChartPreviewHandle
-        ref={leftPreviewHandleRef}
         x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         height={size}
+        onResize={onResizeLeft}
       />
       <ChartPreviewHandle
-        ref={rightPreviewHandleRef}
         x={drawingArea.left + (zoomData.end / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         height={size}
+        onResize={onResizeRight}
       />
     </React.Fragment>
   );
