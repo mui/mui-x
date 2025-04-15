@@ -148,14 +148,6 @@ const PickersInputBaseInput = styled('input', {
   ...visuallyHidden,
 });
 
-const PickersInputBaseSubmitInput = styled('input', {
-  name: 'MuiPickersInputBase',
-  slot: 'SubmitInput',
-  overridesResolver: (props, styles) => styles.hiddenInput,
-})({
-  ...visuallyHidden,
-});
-
 const PickersInputBaseActiveBar = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'ActiveBar',
@@ -315,11 +307,9 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const activeBarRef = React.useRef<HTMLDivElement>(null);
-  const internalInputRef = React.useRef<HTMLInputElement>(null);
-  const submitInputRef = React.useRef<HTMLInputElement>(null);
   const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
-  const handleInputRef = useForkRef(inputProps?.ref, inputRef, internalInputRef);
+  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -341,9 +331,15 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
     onKeyDown?.(event);
     if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
+      const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
+      if (!closestForm || !submitTrigger) {
+        // do nothing if there is no form or no submit button (trigger)
+        return;
+      }
       event.preventDefault();
-      // Click the hidden submit input to trigger the form submission
-      submitInputRef.current?.click();
+      // native input trigger submit with the `submitter` field set
+      closestForm.requestSubmit(submitTrigger);
     }
   };
 
@@ -457,15 +453,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onFocus={handleHiddenInputFocus}
         {...inputProps}
         ref={handleInputRef}
-      />
-      <PickersInputBaseSubmitInput
-        ref={submitInputRef}
-        type="submit"
-        aria-hidden="true"
-        readOnly={readOnly}
-        required={muiFormControl.required}
-        disabled={muiFormControl.disabled}
-        tabIndex={-1}
       />
       {isSingleInputRange && (
         <PickersInputBaseActiveBar
