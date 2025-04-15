@@ -249,28 +249,26 @@ async function main() {
       await screenshotPrintDialogPreview(screenshotPath);
     });
 
-    describe('charts', () => {
-      it('should take a screenshot of the print preview', async function test() {
-        this.timeout(20000);
+    it('should take a screenshot of the charts print preview', async function test() {
+      this.timeout(20000);
 
-        const route = '/docs-charts-export/PrintChart';
-        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
+      const route = '/docs-charts-export/PrintChart';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
 
-        await navigateToTest(route);
+      await navigateToTest(route);
 
-        const printButton = page.getByRole('button', { name: 'Print' });
+      const printButton = page.getByRole('button', { name: 'Print' });
 
-        // Trigger the action async because window.print() is blocking the main thread
-        // like window.alert() is.
-        setTimeout(() => {
-          printButton.click();
-        });
-
-        await sleep(4000);
-
-        await screenshotPrintDialogPreview(screenshotPath);
+      // Trigger the action async because window.print() is blocking the main thread
+      // like window.alert() is.
+      setTimeout(() => {
+        printButton.click();
       });
+
+      await sleep(4000);
+
+      await screenshotPrintDialogPreview(screenshotPath);
     });
 
     // describe('DateTimePicker', () => {

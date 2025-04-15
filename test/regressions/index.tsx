@@ -1,17 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
-import { Globals } from '@react-spring/web';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
 import type { Test } from './testsBySuite';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
-
-Globals.assign({
-  skipAnimation: true,
-});
 
 declare global {
   interface Window {
@@ -34,11 +29,11 @@ let testsBySuite: typeof import('./testsBySuite').testsBySuite;
 main();
 
 async function main() {
-  setupFakeClock();
+  // setupFakeClock();
 
   testsBySuite = (await import('./testsBySuite')).testsBySuite;
 
-  restoreFakeClock();
+  // restoreFakeClock();
 
   ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 }
@@ -94,8 +89,10 @@ function App() {
       path: '/',
       element: <Root />,
       children: Object.keys(testsBySuite).map((suite) => {
+        const isChartTest =
+          suite.startsWith('docs-charts') || suite === 'test-regressions-data-grid';
         const isDataGridTest =
-          suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+          suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
         return {
           path: suite,
@@ -105,6 +102,7 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
+                isChartTest={isChartTest}
                 path={computePath(test)}
               >
                 <test.case />
