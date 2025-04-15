@@ -19,10 +19,13 @@ const cache = new WeakMap<
  */
 export type TreeViewRootSelector<
   TSignature extends TreeViewAnyPluginSignature,
-  IsOptional extends boolean = false,
-> = <TSignatures extends [TSignature]>(
-  state: TreeViewState<TSignatures>,
-) => IsOptional extends true
+  TIsOptional extends boolean = false,
+> = <
+  TSignatures extends TIsOptional extends true ? [] : [TSignature],
+  TOptionalSignatures extends TIsOptional extends true ? [TSignature] : [],
+>(
+  state: TreeViewState<TSignatures, TOptionalSignatures>,
+) => TIsOptional extends true
   ? TSignature['state'][keyof TSignature['state']] | undefined
   : TSignature['state'][keyof TSignature['state']];
 
