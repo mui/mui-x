@@ -11,6 +11,6 @@ const Rect = styled('rect')(({ theme }) => ({
 export const ChartPreviewHandle = React.forwardRef<
   SVGRectElement,
   Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height'>
->(function ChartPreviewHandle({ x, y, height }, ref) {
-  return <Rect ref={ref} x={x} y={y} width={3} height={height} />;
+>(function ChartPreviewHandle({ x, y, width = 4, height }, ref) {
+  return <Rect ref={ref} x={x} y={y} width={width} height={height} />;
 });

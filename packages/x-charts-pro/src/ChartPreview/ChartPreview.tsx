@@ -143,6 +143,8 @@ function Preview({
     };
 
     const onPointerDown = (event: PointerEvent) => {
+      // Prevent text selection when dragging the handle
+      event.preventDefault();
       previewPrevX = event.clientX;
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointermove', onPointerMove);
@@ -208,6 +210,8 @@ function Preview({
     };
 
     const onPointerDown = (event: PointerEvent) => {
+      // Prevent text selection when dragging the handle
+      event.preventDefault();
       event.stopPropagation();
       prevX = event.clientX;
       document.addEventListener('pointerup', onPointerUp);
@@ -274,6 +278,8 @@ function Preview({
     };
 
     const onPointerDown = (event: PointerEvent) => {
+      // Prevent text selection when dragging the handle
+      event.preventDefault();
       event.stopPropagation();
       prevX = event.clientX;
       document.addEventListener('pointerup', onPointerUp);
@@ -290,17 +296,17 @@ function Preview({
 
   return (
     <React.Fragment>
-      <ChartPreviewHandle
-        ref={leftPreviewHandleRef}
-        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
-        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        height={size}
-      />
       <ActivePreviewRect
         ref={activePreviewRectRef}
         x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         width={(drawingArea.width * (zoomData.end - zoomData.start)) / 100}
+        height={size}
+      />
+      <ChartPreviewHandle
+        ref={leftPreviewHandleRef}
+        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
+        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         height={size}
       />
       <ChartPreviewHandle
