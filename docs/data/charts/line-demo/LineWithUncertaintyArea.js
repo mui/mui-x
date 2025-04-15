@@ -14,7 +14,8 @@ import {
   useYScale,
 } from '@mui/x-charts/hooks';
 import * as d3Shape from '@mui/x-charts-vendor/d3-shape';
-import { useTheme } from '@mui/system';
+
+import { useTheme } from '@mui/material/styles';
 
 function CustomAnimatedLine(props) {
   const { limit, sxBefore, sxAfter, ...other } = props;

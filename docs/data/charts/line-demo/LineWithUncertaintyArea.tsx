@@ -19,7 +19,8 @@ import {
   useYScale,
 } from '@mui/x-charts/hooks';
 import * as d3Shape from '@mui/x-charts-vendor/d3-shape';
-import { SxProps, Theme, useTheme } from '@mui/system';
+import { SxProps } from '@mui/system';
+import { useTheme, Theme } from '@mui/material/styles';
 
 interface CustomAnimatedLineProps extends AnimatedLineProps {
   limit?: number;
