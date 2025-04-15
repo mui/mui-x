@@ -31,7 +31,7 @@ export interface UseChartProExportPublicApi {
    * @param {ChartPrintExportOptions} options Options to customize the print export.
    * @returns {void}
    */
-  print: (options?: ChartPrintExportOptions) => void;
+  exportAsPrint: (options?: ChartPrintExportOptions) => void;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}
