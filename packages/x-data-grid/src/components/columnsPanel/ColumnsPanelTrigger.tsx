@@ -38,7 +38,7 @@ export type ColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classN
  *
  * Demos:
  *
- * - [Columns Panel](https://mui.com/x/react-data-grid/components/columns-panel/)
+ * - [Columns panel](https://mui.com/x/react-data-grid/components/columns-panel/)
  *
  * API:
  *

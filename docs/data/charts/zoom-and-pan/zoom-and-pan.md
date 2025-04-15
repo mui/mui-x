@@ -1,5 +1,5 @@
 ---
-title: Charts - Zooming and panning
+title: Charts - Zoom and pan
 productId: x-charts
 components: ScatterChartPro, BarChartPro, LineChartPro
 ---

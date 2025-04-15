@@ -1,20 +1,20 @@
 ---
-title: React Data Grid - Filter Panel component
+title: React Data Grid - Filter panel component
 productId: x-data-grid
 components: FilterPanelTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Filter Panel 🚧
+# Data Grid - Filter panel 🚧
 
 <p class="description">Customize the Data Grid's filter panel.</p>
 
 :::warning
 This component is incomplete.
 
-Currently, the Filter Panel Trigger is the only part of the Filter Panel component available.
-Future versions of the Filter Panel component will make it possible to compose each of its parts to create a custom filter panel.
+Currently, the Filter panel trigger is the only part of the Filter panel component available.
+Future versions of the Filter panel component will make it possible to compose each of its parts to create a custom filter panel.
 
 In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
 See [Filter customization—Custom filter panel](/x/react-data-grid/filtering/customization/#custom-filter-panel)
@@ -36,7 +36,7 @@ import { FilterPanelTrigger } from '@mui/x-data-grid';
 <FilterPanelTrigger />;
 ```
 
-### Filter Panel Trigger
+### Filter panel trigger
 
 `<FilterPanelTrigger />` is a button that opens and closes the filter panel.
 It renders the `baseButton` slot.
@@ -44,7 +44,7 @@ It renders the `baseButton` slot.
 ## Custom elements
 
 Use the `render` prop to replace default elements.
-See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Filter Panel Trigger.
+See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Filter panel trigger.
 
 ## Accessibility
 

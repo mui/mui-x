@@ -1,20 +1,20 @@
 ---
-title: React Data Grid - Pivot Panel component
+title: React Data Grid - Pivot panel component
 productId: x-data-grid
 components: PivotPanelTrigger
 packageName: '@mui/x-data-grid-premium'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Pivot Panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
+# Data Grid - Pivot panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 <p class="description">Customize the Data Grid's pivot panel.</p>
 
 :::warning
 This component is incomplete.
 
-Currently, the Pivot Panel Trigger is the only part of the Pivot Panel component available.
-Future versions of the Pivot Panel component will make it possible to compose each of its parts to create a custom pivot panel.
+Currently, the Pivot panel trigger is the only part of the Pivot panel component available.
+Future versions of the Pivot panel component will make it possible to compose each of its parts to create a custom pivot panel.
 
 :::
 
@@ -32,7 +32,7 @@ import { PivotPanelTrigger } from '@mui/x-data-grid-premium';
 <PivotPanelTrigger />;
 ```
 
-### Pivot Panel Trigger
+### Pivot panel trigger
 
 `<PivotPanelTrigger />` is a button that opens and closes the pivot panel.
 It renders the `baseButton` slot.

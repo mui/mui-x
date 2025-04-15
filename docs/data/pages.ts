@@ -191,10 +191,10 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
-          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
-          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
-          { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
+          { pathname: '/x/react-data-grid/components/usage' },
+          { pathname: '/x/react-data-grid/components/toolbar' },
+          { pathname: '/x/react-data-grid/components/export' },
+          { pathname: '/x/react-data-grid/components/quick-filter' },
           {
             pathname: '/x/react-data-grid/components/prompt-field',
             title: 'Prompt Field',
@@ -202,17 +202,14 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-data-grid/components/columns-panel',
-            title: 'Columns Panel',
             planned: true,
           },
           {
             pathname: '/x/react-data-grid/components/filter-panel',
-            title: 'Filter Panel',
             planned: true,
           },
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
-            title: 'Pivot Panel',
             planned: true,
             plan: 'premium',
           },
@@ -605,7 +602,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/editing',
+            title: 'Label editing',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
