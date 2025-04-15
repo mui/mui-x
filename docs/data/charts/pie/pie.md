@@ -10,9 +10,9 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 ## Basics
 
-To plot a pie chart, a series must have a data property containing an array of objects.
-Those objects should contain a property `value`.
-They can also have a `label` property.
+Pie charts series should contain a `data` property containing an array of objects.
+Each object corresponds to a slice of the pie.
+It must contain a property `value` and can have other optional properties like `label`.
 
 If you plan to update/reorder those data, you should add an `id` property which is used for `key` props.
 

@@ -10,12 +10,20 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip
 
 ## Basics
 
-The Heatmap requires two axes with `data` properties.
-Those data defined the x and y categories.
-
-The series `data` is an array of 3-tuples.
+Heatmap charts series should contain a `data` property containing an array of 3-tuples.
 The 2 first numbers are respectively the x and y indexes of the cell.
 And the third is its value.
+
+```jsx
+series={[{
+    data: [
+        [0, 2, 2.7], // Cell (0, 2) get the value 2.7
+        [1, 2, 4.5], // Cell (1, 2) get the value 4.5
+    ]
+}]}
+```
+
+You can specify x and y ticks with the `xAxis` and `yAxis` props.
 
 {{"demo": "BasicHeatmap.js"}}
 
