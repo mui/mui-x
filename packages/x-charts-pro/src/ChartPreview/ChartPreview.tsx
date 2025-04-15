@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   selectorChartDrawingArea,
   selectorChartMargin,
-  selectorChartZoomMap,
   useDrawingArea,
   useSelector,
   useStore,
@@ -12,6 +11,10 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes } from '@mui/x-charts/hooks';
 import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
+import {
+  selectorChartAxisZoomData,
+  UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 import { ChartPreviewHandle } from './ChartPreviewHandle';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
@@ -42,10 +45,9 @@ export function ChartPreview({
   const margin = useSelector(store, selectorChartMargin);
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
   const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
-  const zoomMap = useSelector(store, selectorChartZoomMap);
-  const zoomState = zoomMap?.get(axisId);
+  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
 
-  if (!zoomState) {
+  if (!zoomData) {
     return null;
   }
 
@@ -62,7 +64,7 @@ export function ChartPreview({
         height={margin.bottom}
         width={drawingArea.width}
       />
-      <Preview size={size} zoomData={zoomState} axisId={axisId} />
+      <Preview size={size} zoomData={zoomData} axisId={axisId} />
     </g>
   );
 }
@@ -76,7 +78,7 @@ function Preview({
   axisId: string;
   zoomData: ZoomData;
 }) {
-  const store = useStore();
+  const store = useStore<[UseChartProZoomSignature]>();
   const xAxes = useXAxes();
   const drawingArea = useDrawingArea();
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
@@ -94,17 +96,18 @@ function Preview({
 
     let previewPrevX = 0;
 
+    // TODO: Do we want to raf this?
     const onPointerMove = (event: PointerEvent) => {
       store.update((state) => {
         const { width } = selectorChartDrawingArea(state);
 
-        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+        const zoom = selectorChartAxisZoomData(state, axisId);
 
-        if (!zoomData) {
+        if (!zoom) {
           return state;
         }
 
-        const zoomSpan = zoomData.end - zoomData.start;
+        const zoomSpan = zoom.end - zoom.start;
 
         const deltaX = event.clientX - previewPrevX;
         previewPrevX = event.clientX;
@@ -119,8 +122,8 @@ function Preview({
               if (data.axisId === axisId) {
                 return {
                   ...data,
-                  start: Math.max(0, Math.min(100 - zoomSpan, zoomData.start + deltaZoom * 100)),
-                  end: Math.min(100, Math.max(zoomSpan, zoomData.end + deltaZoom * 100)),
+                  start: Math.max(0, Math.min(100 - zoomSpan, zoom.start + deltaZoom * 100)),
+                  end: Math.min(100, Math.max(zoomSpan, zoom.end + deltaZoom * 100)),
                 };
               }
 
@@ -166,9 +169,9 @@ function Preview({
       store.update((state) => {
         const { width } = selectorChartDrawingArea(state);
 
-        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+        const zoom = selectorChartAxisZoomData(state, axisId);
 
-        if (!zoomData) {
+        if (!zoom) {
           return state;
         }
 
@@ -185,7 +188,7 @@ function Preview({
               if (data.axisId === axisId) {
                 return {
                   ...data,
-                  start: Math.max(0, Math.min(zoomData.end, zoomData.start + deltaZoom * 100)),
+                  start: Math.max(0, Math.min(zoom.end, zoom.start + deltaZoom * 100)),
                 };
               }
 
@@ -232,9 +235,9 @@ function Preview({
       store.update((state) => {
         const { width } = selectorChartDrawingArea(state);
 
-        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+        const zoom = selectorChartAxisZoomData(state, axisId);
 
-        if (!zoomData) {
+        if (!zoom) {
           return state;
         }
 
@@ -251,7 +254,7 @@ function Preview({
               if (data.axisId === axisId) {
                 return {
                   ...data,
-                  end: Math.min(100, Math.max(zoomData.start, zoomData.end + deltaZoom * 100)),
+                  end: Math.min(100, Math.max(zoom.start, zoom.end + deltaZoom * 100)),
                 };
               }
 
