@@ -151,9 +151,7 @@ module.exports = function getBabelConfig(api) {
       plugins.push([
         'transform-replace-expressions',
         {
-          replace: [
-            ['LICENSE_DISABLE_CHECK', 'false'],
-          ],
+          replace: [['LICENSE_DISABLE_CHECK', 'false']],
         },
       ]);
     }
