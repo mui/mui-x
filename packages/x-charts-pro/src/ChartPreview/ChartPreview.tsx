@@ -1,19 +1,18 @@
+'use client';
 import * as React from 'react';
 import {
+  selectorChartDrawingArea,
   selectorChartMargin,
   selectorChartZoomMap,
+  useDrawingArea,
   useSelector,
   useStore,
+  ZoomData,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
+import { useXAxes } from '@mui/x-charts/hooks';
+import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartPreviewHandle } from './ChartPreviewHandle';
-import {
-  DEFAULT_X_AXIS_KEY,
-  ScatterPlot,
-  useDrawingArea,
-  useScatterSeriesContext,
-  useXAxes,
-} from '..';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
@@ -26,6 +25,7 @@ const ActivePreviewRect = styled('rect')(({ theme }) => ({
   '&': {
     fill: (theme.vars || theme).palette.grey[500],
     opacity: 0.4,
+    cursor: 'grab',
   },
 }));
 
@@ -42,7 +42,6 @@ export function ChartPreview({
   const margin = useSelector(store, selectorChartMargin);
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
   const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
-  const xAxis = xAxes.xAxis[axisId];
   const zoomMap = useSelector(store, selectorChartZoomMap);
   const zoomState = zoomMap?.get(axisId);
 
@@ -63,28 +62,250 @@ export function ChartPreview({
         height={margin.bottom}
         width={drawingArea.width}
       />
-      <g
-        data-testid="ChartPreview"
-        transform={`translate(0 ${drawingArea.height + bottomAxesHeight + margin.bottom}) scale(1 ${size / drawingArea.height})`}
-      >
-        <ScatterPlot />
-      </g>
+      <Preview size={size} zoomData={zoomState} axisId={axisId} />
+    </g>
+  );
+}
+
+function Preview({
+  size = 30,
+  axisId,
+  zoomData,
+}: {
+  size: number;
+  axisId: string;
+  zoomData: ZoomData;
+}) {
+  const store = useStore();
+  const xAxes = useXAxes();
+  const drawingArea = useDrawingArea();
+  const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
+  const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
+  const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const leftPreviewHandleRef = React.useRef<SVGRectElement>(null);
+  const rightPreviewHandleRef = React.useRef<SVGRectElement>(null);
+
+  React.useEffect(() => {
+    const activePreviewRect = activePreviewRectRef.current;
+
+    if (!activePreviewRect) {
+      return;
+    }
+
+    let previewPrevX = 0;
+
+    const onPointerMove = (event: PointerEvent) => {
+      store.update((state) => {
+        const { width } = selectorChartDrawingArea(state);
+
+        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+
+        if (!zoomData) {
+          return state;
+        }
+
+        const zoomSpan = zoomData.end - zoomData.start;
+
+        const deltaX = event.clientX - previewPrevX;
+        previewPrevX = event.clientX;
+
+        const deltaZoom = deltaX / width;
+
+        const newState = {
+          ...state,
+          zoom: {
+            ...state.zoom,
+            zoomData: state.zoom.zoomData.map((data) => {
+              if (data.axisId === axisId) {
+                return {
+                  ...data,
+                  start: Math.max(0, Math.min(100 - zoomSpan, zoomData.start + deltaZoom * 100)),
+                  end: Math.min(100, Math.max(zoomSpan, zoomData.end + deltaZoom * 100)),
+                };
+              }
+
+              return data;
+            }),
+          },
+        };
+
+        return newState;
+      });
+    };
+
+    const onPointerUp = () => {
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      previewPrevX = 0;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      previewPrevX = event.clientX;
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointermove', onPointerMove);
+    };
+
+    activePreviewRect.addEventListener('pointerdown', onPointerDown);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      activePreviewRect.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [axisId, store]);
+
+  React.useEffect(() => {
+    const leftPreviewHandle = leftPreviewHandleRef.current;
+
+    if (!leftPreviewHandle) {
+      return;
+    }
+
+    let prevX = 0;
+
+    const onPointerMove = (event: PointerEvent) => {
+      store.update((state) => {
+        const { width } = selectorChartDrawingArea(state);
+
+        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+
+        if (!zoomData) {
+          return state;
+        }
+
+        const deltaX = event.clientX - prevX;
+        prevX = event.clientX;
+
+        const deltaZoom = deltaX / width;
+
+        const newState = {
+          ...state,
+          zoom: {
+            ...state.zoom,
+            zoomData: state.zoom.zoomData.map((data) => {
+              if (data.axisId === axisId) {
+                return {
+                  ...data,
+                  start: Math.max(0, Math.min(zoomData.end, zoomData.start + deltaZoom * 100)),
+                };
+              }
+
+              return data;
+            }),
+          },
+        };
+
+        return newState;
+      });
+    };
+
+    const onPointerUp = () => {
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      prevX = 0;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      event.stopPropagation();
+      prevX = event.clientX;
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointermove', onPointerMove);
+    };
+
+    leftPreviewHandle.addEventListener('pointerdown', onPointerDown);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      leftPreviewHandle.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [axisId, store]);
+
+  React.useEffect(() => {
+    const rightHandle = rightPreviewHandleRef.current;
+
+    if (!rightHandle) {
+      return;
+    }
+
+    let prevX = 0;
+
+    const onPointerMove = (event: PointerEvent) => {
+      store.update((state) => {
+        const { width } = selectorChartDrawingArea(state);
+
+        const zoomData = selectorChartZoomMap(state)?.get(axisId);
+
+        if (!zoomData) {
+          return state;
+        }
+
+        const deltaX = event.clientX - prevX;
+        prevX = event.clientX;
+
+        const deltaZoom = deltaX / width;
+
+        const newState = {
+          ...state,
+          zoom: {
+            ...state.zoom,
+            zoomData: state.zoom.zoomData.map((data) => {
+              if (data.axisId === axisId) {
+                return {
+                  ...data,
+                  end: Math.min(100, Math.max(zoomData.start, zoomData.end + deltaZoom * 100)),
+                };
+              }
+
+              return data;
+            }),
+          },
+        };
+
+        return newState;
+      });
+    };
+
+    const onPointerUp = () => {
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      prevX = 0;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      event.stopPropagation();
+      prevX = event.clientX;
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointermove', onPointerMove);
+    };
+
+    rightHandle.addEventListener('pointerdown', onPointerDown);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      rightHandle.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [axisId, store]);
+
+  return (
+    <React.Fragment>
       <ChartPreviewHandle
-        x={drawingArea.left + (zoomState.start / 100) * drawingArea.width}
+        ref={leftPreviewHandleRef}
+        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         height={size}
       />
       <ActivePreviewRect
-        x={drawingArea.left + (zoomState.start / 100) * drawingArea.width}
+        ref={activePreviewRectRef}
+        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        width={(drawingArea.width * (zoomState.end - zoomState.start)) / 100}
+        width={(drawingArea.width * (zoomData.end - zoomData.start)) / 100}
         height={size}
       />
       <ChartPreviewHandle
-        x={drawingArea.left + (zoomState.end / 100) * drawingArea.width}
+        ref={rightPreviewHandleRef}
+        x={drawingArea.left + (zoomData.end / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         height={size}
       />
-    </g>
+    </React.Fragment>
   );
 }
