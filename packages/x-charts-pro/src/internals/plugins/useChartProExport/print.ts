@@ -7,10 +7,8 @@ export function printChart(
 ) {
   const printWindow = buildPrintWindow(fileName);
   const doc = ownerDocument(element);
-  console.log('print chart');
 
   printWindow.onload = async () => {
-    console.log('print load');
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as HTMLElement | SVGElement;
     const container = document.createElement('div');
@@ -25,7 +23,6 @@ export function printChart(
     mediaQueryList.addEventListener('change', (mql) => {
       const isAfterPrint = mql.matches === false;
       if (isAfterPrint) {
-        console.log('print finished');
         doc.body.removeChild(printWindow);
       }
     });

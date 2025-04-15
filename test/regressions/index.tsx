@@ -29,11 +29,11 @@ let testsBySuite: typeof import('./testsBySuite').testsBySuite;
 main();
 
 async function main() {
-  // setupFakeClock();
+  setupFakeClock();
 
   testsBySuite = (await import('./testsBySuite')).testsBySuite;
 
-  // restoreFakeClock();
+  restoreFakeClock();
 
   ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 }
@@ -89,8 +89,7 @@ function App() {
       path: '/',
       element: <Root />,
       children: Object.keys(testsBySuite).map((suite) => {
-        const isChartTest =
-          suite.startsWith('docs-charts') || suite === 'test-regressions-data-grid';
+        const isChartTest = suite.startsWith('docs-charts');
         const isDataGridTest =
           suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
