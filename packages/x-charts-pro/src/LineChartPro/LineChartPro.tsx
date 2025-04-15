@@ -192,7 +192,7 @@ LineChartPro.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Locale for charts components texts.
+   * Localized text for chart components.
    */
   localeText: PropTypes.object,
   /**

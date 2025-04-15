@@ -313,7 +313,7 @@ SparkLineChart.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * Locale for charts components texts.
+   * Localized text for chart components.
    */
   localeText: PropTypes.object,
   /**
