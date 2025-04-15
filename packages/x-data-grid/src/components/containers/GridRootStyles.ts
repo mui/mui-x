@@ -12,10 +12,6 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 export type OwnerState = DataGridProcessedProps;
 
 const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
-    width: 'auto',
-  },
   [`& .${c.menuIcon}`]: {
     width: 'auto',
     visibility: 'visible',
@@ -443,7 +439,13 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:hover`]: {
+        ...columnHeaderStyles,
+        [`& .${c.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
+      },
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
