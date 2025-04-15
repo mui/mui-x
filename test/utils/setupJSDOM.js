@@ -1,5 +1,6 @@
 const coreExports = require('@mui/internal-test-utils/setupJSDOM');
 
+require('./licenseRelease');
 require('./addChaiAssertions');
 require('./setupPickers');
 const { createXMochaHooks } = require('./mochaHooks');
