@@ -101,6 +101,8 @@
   { "name": "ChartsLegendSlotExtension", "kind": "Interface" },
   { "name": "ChartsLegendSlotProps", "kind": "Interface" },
   { "name": "ChartsLegendSlots", "kind": "Interface" },
+  { "name": "ChartsLocalizationProvider", "kind": "Function" },
+  { "name": "ChartsLocalizationProviderProps", "kind": "Interface" },
   { "name": "ChartsPieSorting", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
