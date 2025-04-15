@@ -52,6 +52,12 @@ The demo below shows how to display export options within a menu on the toolbar.
 
 {{"demo": "GridExportMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Setting up custom Excel Export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+You can setup a custom export button to download entire data outside of the current page. It follows your sorting/filtering/grouping and exports data in excel format. It uses the in-built [exportDataAsExcel](/x/react-data-grid/export/#excel) API for this.
+
+{{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom elements
 
 Use the `render` prop to replace default elements.
