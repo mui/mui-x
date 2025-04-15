@@ -130,7 +130,7 @@ export function verifyLicense({
   licenseKey?: string;
   packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
-  if (location.host === 'mui.com') {
+  if (process.env.MUI_DISABLE_LICENSE_CHECK) {
     return { status: LICENSE_STATUS.Valid };
   }
 
