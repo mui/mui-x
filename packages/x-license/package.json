@@ -10,8 +10,7 @@
   },
   "homepage": "https://mui.com/x/introduction/licensing/",
   "sideEffects": [
-    "./utils/licenseInfo.js",
-    "./esm/utils/licenseInfo.js"
+    "./utils/licenseInfo.js"
   ],
   "publishConfig": {
     "access": "public",

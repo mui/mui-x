@@ -164,7 +164,7 @@
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
     "karma-webpack": "^5.0.1",
-    "lerna": "^8.2.1",
+    "lerna": "^8.2.2",
     "lodash": "^4.17.21",
     "markdownlint-cli2": "^0.17.2",
     "mocha": "^11.1.0",
@@ -189,7 +189,7 @@
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "vite": "^6.2.4",
-    "webpack": "^5.98.0",
+    "webpack": "^5.99.5",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "yargs": "^17.7.2"

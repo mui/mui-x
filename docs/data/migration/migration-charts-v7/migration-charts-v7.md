@@ -239,8 +239,8 @@ You can now use `ChartContainer` as a responsive container which works now exact
 ```diff
 -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 -import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 
 -<ResponsiveChartContainer>
 +<ChartContainer>

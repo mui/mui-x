@@ -134,7 +134,7 @@ async function run(argv) {
     const rootBundlePackageJson = path.join(outDir, 'package.json');
     await fs.writeFile(
       rootBundlePackageJson,
-      JSON.stringify({ type: 'module', sideEffects: false }),
+      JSON.stringify({ type: 'module', sideEffects: packageJson.sideEffects }),
     );
   }
 

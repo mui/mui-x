@@ -393,6 +393,9 @@ You have to import it from `@mui/x-license` instead:
 - The `baseInputAdornment` slot was removed.
 - The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
+- The `columnUnsortedIcon` slot was removed.
+- The icon slots now require material icons to be passed like `Icon as any`.
+  Note: This is due to typing issues that might be resolved later.
 
 <!-- ### Editing
 
