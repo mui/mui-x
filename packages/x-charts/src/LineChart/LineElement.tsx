@@ -18,6 +18,11 @@ export interface LineElementClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type LineElementClassKey = keyof LineElementClasses;
@@ -39,6 +44,7 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {

@@ -10,8 +10,9 @@ export interface BarElementClasses {
   highlighted: string;
   /** Styles applied to the root element if it is faded. */
   faded: string;
-  /** Styles applied to the root element for a specified series.
-   *  Needs to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.
    */
   series: string;
 }
