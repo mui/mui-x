@@ -1,5 +1,5 @@
 import * as vm from 'node:vm';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, basename, join as joinPath } from 'node:path';
 import { transform as lightning } from 'lightningcss';
 import { packageDirectorySync } from 'pkg-dir';
@@ -12,6 +12,7 @@ const PLUGIN_NAME = 'mui-css';
 const CONFIG_FILENAME = 'mui-css.config.json';
 
 type State = {
+  enabled: boolean;
   options: any;
   config: ProjectConfig;
   rules: { content: string }[];
@@ -23,7 +24,7 @@ type ProjectConfig = {
   variablesCode: string | undefined;
 };
 
-const configsByPath = new Map<string, ProjectConfig>();
+const configsByPath = new Map<string, ProjectConfig | null>();
 
 function getConfigPath(filepath: string) {
   const configPath = joinPath(packageDirectorySync({ cwd: dirname(filepath) }), CONFIG_FILENAME);
@@ -33,9 +34,15 @@ function getConfigPath(filepath: string) {
 function getConfig(filepath: string) {
   const configPath = getConfigPath(filepath);
   let config = configsByPath.get(configPath);
-  if (config) {
+  if (config !== undefined) {
     return config;
   }
+
+  if (!existsSync(configPath)) {
+    configsByPath.set(configPath, null);
+    return null
+  }
+
   const data = JSON.parse(readFileSync(configPath).toString());
   config = {
     configPath,
@@ -56,14 +63,19 @@ export default function transformCSS({ types: t }: BabelT) {
       const options = findSelf(file.opts.plugins).options;
       const config = getConfig(file.opts.filename);
       file.metadata.muiCSS = {
+        enabled: config !== null && !file.opts.filename.includes('cssVariables'),
         options,
         config,
         rules: [],
       } as State;
+      console.log(file.opts.filename, file.metadata.muiCSS)
     },
 
     async post(file) {
       const state = file.metadata.muiCSS as State;
+      if (!state.enabled) {
+        return;
+      }
       if (state.rules.length === 0) {
         return;
       }
@@ -73,6 +85,9 @@ export default function transformCSS({ types: t }: BabelT) {
       Program: {
         exit(path, { file }) {
           const state = file.metadata.muiCSS as State;
+          if (!state.enabled) {
+            return;
+          }
           if (state.rules.length === 0) {
             return;
           }
@@ -102,6 +117,9 @@ export default function transformCSS({ types: t }: BabelT) {
       // });
       CallExpression(path, { file }) {
         const state = file.metadata.muiCSS as State;
+        if (!state.enabled) {
+          return;
+        }
         const {
           callee: { name: calleeName },
           arguments: args,

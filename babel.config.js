@@ -107,12 +107,7 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
-  if (fs.existsSync('./mui-css.config.json')) {
-    plugins.push([
-      './packages/babel-plugin-mui-css/build/index.js',
-      JSON.parse(fs.readFileSync('./mui-css.config.json')),
-    ]);
-  }
+  plugins.push(path.join(__dirname, './packages/babel-plugin-mui-css/build/index.js'));
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);

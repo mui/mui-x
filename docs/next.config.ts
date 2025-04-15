@@ -54,6 +54,7 @@ export default withDocsInfra({
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
     '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
+    '@mui/x-data-grid',
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
