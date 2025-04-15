@@ -43,7 +43,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:20.19
+    - image: cimg/node:23.11
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -60,36 +60,27 @@ default-context: &default-context
 commands:
   install_js:
     parameters:
-      browsers:
+      playwright:
+        description: If playwright should be installed.
         type: boolean
         default: false
-        description: 'Set to true if you intend to any browser (for example with playwright).'
       react-version:
+        description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
-        description: The version of React to use.
 
     steps:
-      - when:
-          condition: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                command: corepack enable
-      - when:
-          condition:
-            not: << parameters.browsers >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                # See https://stackoverflow.com/a/73411601
-                command: corepack enable --install-directory ~/bin
+      - run:
+          name: Install pnpm package manager
+          # See https://stackoverflow.com/a/73411601
+          command: corepack enable --install-directory ~/bin
 
       - run:
           name: View install environment
           command: |
             node --version
             pnpm --version
+
       - when:
           condition:
             equal: [stable, << parameters.react-version >>]
@@ -118,6 +109,20 @@ commands:
             - run:
                 name: Install @mui/material v6
                 command: pnpm use-material-ui-v6
+      - when:
+          condition: << parameters.playwright >>
+          steps:
+            - run:
+                name: Install playwright & ffmpeg
+                command: |
+                  pnpx playwright@1.51.1 install --with-deps
+                  # Avoids installing a system version of ffmpeg
+                  ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
+                  if [[ -z "$ffmpeg_bin" ]]; then
+                    >&2 echo "Could not find ffmpeg location"
+                    exit 1
+                  fi
+                  ln -s "$ffmpeg_bin" ~/bin/ffmpeg
 
 jobs:
   checkout:
@@ -240,12 +245,10 @@ jobs:
 
   test_browser:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
           react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
@@ -272,24 +275,20 @@ jobs:
             NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
           react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -297,16 +296,11 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.51.0-noble
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
           react-version: << parameters.react-version >>
-      - run:
-          name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
@@ -416,10 +410,6 @@ workflows:
       - test_browser:
           <<: *default-context
           name: test_browser_react_18
-          react-version: ^18
-      - test_regressions:
-          <<: *default-context
-          name: test_regressions_react_18
           react-version: ^18
       - test_e2e:
           <<: *default-context

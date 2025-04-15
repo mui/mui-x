@@ -294,7 +294,7 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(type: GridColDef['type']) {
+export function getDefaultColTypeDef(type: GridColDef['type']) {
   let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
   if (type && COLUMN_TYPES[type]) {
     colDef = COLUMN_TYPES[type];
@@ -452,10 +452,10 @@ export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
+    'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
   >,
 ) {
-  if (props.unstable_listView) {
+  if (props.listView) {
     return 0;
   }
 

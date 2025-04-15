@@ -12,14 +12,18 @@ import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
+import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: () => null,
   },
 };
 
@@ -28,7 +32,11 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    props.apiRef,
+    props,
+  );
+  useDataGridComponent(privateApiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);
@@ -74,11 +82,11 @@ DataGridRaw.propTypes = {
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -125,6 +133,7 @@ DataGridRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -379,6 +388,12 @@ DataGridRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -796,6 +811,7 @@ DataGridRaw.propTypes = {
       sort: PropTypes.oneOf(['asc', 'desc']),
     }),
   ),
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

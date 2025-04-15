@@ -2,7 +2,6 @@ import type { GridStateColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter of the column resize event.
- * TODO: Move to `x-data-grid-pro` folder
  */
 export interface GridColumnResizeParams {
   /**

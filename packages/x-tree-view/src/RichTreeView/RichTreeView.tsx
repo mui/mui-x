@@ -26,11 +26,22 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+    };
 
-  return composeClasses(slots, getRichTreeViewUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewRoot = styled('ul', {
@@ -64,6 +75,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -78,12 +90,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props,
+    props: other,
   });
   const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
   const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
@@ -104,7 +115,12 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>

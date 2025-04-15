@@ -4,7 +4,10 @@ import { getValueToPositionMapper, useYScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsInteractionYAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsInteractionYAxisValue,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
@@ -23,15 +26,15 @@ export default function ChartsYHighlight(props: {
 
   const yScale = useYScale();
 
-  const store = useStore();
-  const axisY = useSelector(store, selectorChartsInteractionYAxis);
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const axisYValue = useSelector(store, selectorChartsInteractionYAxisValue);
 
   const getYPosition = getValueToPositionMapper(yScale);
 
-  const isBandScaleY = type === 'band' && axisY !== null && isBandScale(yScale);
+  const isBandScaleY = type === 'band' && axisYValue !== null && isBandScale(yScale);
 
   if (process.env.NODE_ENV !== 'production') {
-    const isError = isBandScaleY && yScale(axisY.value) === undefined;
+    const isError = isBandScaleY && yScale(axisYValue) === undefined;
 
     if (isError) {
       console.error(
@@ -46,22 +49,20 @@ export default function ChartsYHighlight(props: {
 
   return (
     <React.Fragment>
-      {isBandScaleY && yScale(axisY.value) !== undefined && (
+      {isBandScaleY && yScale(axisYValue) !== undefined && (
         <ChartsAxisHighlightPath
           d={`M ${left} ${
             // @ts-expect-error, yScale value is checked in the statement above
-            yScale(axisY.value) - (yScale.step() - yScale.bandwidth()) / 2
+            yScale(axisYValue) - (yScale.step() - yScale.bandwidth()) / 2
           } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
           className={classes.root}
           ownerState={{ axisHighlight: 'band' }}
         />
       )}
 
-      {type === 'line' && axisY !== null && (
+      {type === 'line' && axisYValue !== null && (
         <ChartsAxisHighlightPath
-          d={`M ${left} ${getYPosition(axisY.value)} L ${left + width} ${getYPosition(
-            axisY.value,
-          )}`}
+          d={`M ${left} ${getYPosition(axisYValue)} L ${left + width} ${getYPosition(axisYValue)}`}
           className={classes.root}
           ownerState={{ axisHighlight: 'line' }}
         />

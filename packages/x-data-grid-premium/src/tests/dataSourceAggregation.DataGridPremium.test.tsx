@@ -99,12 +99,27 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   }
 
   it('should show aggregation option in the column menu', async () => {
-    const { user } = render(<TestDataSourceAggregation />);
+    const dataSource = {
+      getRows: async () => {
+        fetchRowsSpy();
+        return {
+          rows: [{ id: 123 }],
+          rowCount: 1,
+          aggregateRow: {},
+        };
+      },
+      getAggregatedValue: () => 'Agg value',
+    };
+    const { user } = render(
+      <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
+    );
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
-    expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
+    // wait for the column menu to be open first
+    await screen.findByRole('menu', { name: 'id column menu' });
+    await screen.findByLabelText('Aggregation');
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
@@ -143,8 +158,10 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {

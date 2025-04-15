@@ -7,17 +7,15 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useXAxis } from '../hooks';
+import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsInteractionItemIsDefined,
-  selectorChartsInteractionXAxisIsDefined,
-  selectorChartsInteractionYAxisIsDefined,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+  selectorChartsInteractionAxisTooltip,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -44,8 +42,6 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
-const axisHasData = (axis: AxisDefaultized) => axis?.data !== undefined && axis.data.length !== 0;
-
 /**
  * Demos:
  *
@@ -64,19 +60,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
-  const xAxis = useXAxis();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const isOpen = useSelector(
     store,
-    // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
-      ? axisHasData(xAxis)
-        ? selectorChartsInteractionXAxisIsDefined
-        : selectorChartsInteractionYAxisIsDefined
+      ? selectorChartsInteractionAxisTooltip
       : selectorChartsInteractionItemIsDefined,
   );
 
@@ -196,7 +188,7 @@ ChartsTooltipContainer.propTypes = {
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
    *
-   * @deprecated use the `slots` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
+   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -205,7 +197,7 @@ ChartsTooltipContainer.propTypes = {
   /**
    * The props used for each slot inside the Popper.
    *
-   * @deprecated use the `slotProps` prop instead. This prop will be removed in v7. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({

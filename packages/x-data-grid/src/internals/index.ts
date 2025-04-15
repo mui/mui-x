@@ -9,8 +9,9 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
-export { GridToolbar } from '../components/toolbarV8/GridToolbar';
+export { GridToolbar, GridToolbarDivider } from '../components/toolbarV8/GridToolbar';
 export type { GridToolbarProps } from '../components/toolbarV8/GridToolbar';
+export { GridColumnSortButton } from '../components/GridColumnSortButton';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
@@ -31,7 +32,7 @@ export type {
   GridStrategyProcessorName,
 } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
-export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
+export { unwrapPrivateAPI, useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export * from '../hooks/features/columnHeaders/useGridColumnHeaders';
@@ -164,7 +165,11 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * from '../models/props/DataGridProps';
-export type { GridDataSourceApiBase, GridDataSourceApi } from '../hooks/features/dataSource/models';
+export type {
+  GridDataSourceApiBase,
+  GridDataSourceApi,
+  GridDataSourceBaseOptions,
+} from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
@@ -206,3 +211,7 @@ export type { Localization } from '../utils/getGridLocalization';
 export * from './demo';
 
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
+
+export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+
+export * from '../hooks/features/pivoting';
