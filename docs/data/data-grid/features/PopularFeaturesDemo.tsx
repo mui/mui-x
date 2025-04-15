@@ -569,8 +569,8 @@ export default function PopularFeaturesDemo() {
         onRowClick={onRowClick}
         slots={{
           toolbar: CustomToolbar,
-          detailPanelExpandIcon: ArrowDown,
-          detailPanelCollapseIcon: ArrowUp,
+          detailPanelExpandIcon: ArrowDown as any,
+          detailPanelCollapseIcon: ArrowUp as any,
         }}
         showToolbar
         getDetailPanelContent={getDetailPanelContent}
