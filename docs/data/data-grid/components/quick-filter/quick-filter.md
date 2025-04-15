@@ -33,22 +33,22 @@ import {
 </QuickFilter>;
 ```
 
-### Quick filter
+### Quick Filter
 
 `<QuickFilter />` is the top level component that provides context to child components.
 It renders a `<div />` element.
 
-### Quick filter control
+### Quick Filter Control
 
 `<QuickFilterControl />` takes user input and filters row data.
 It renders the `baseTextField` slot.
 
-### Quick filter clear
+### Quick Filter Clear
 
 `<QuickFilterClear />` is a button that resets the filter value.
 It renders the `baseIconButton` slot.
 
-### Quick filter trigger
+### Quick Filter Trigger
 
 `<QuickFilterTrigger />` is a button that expands and collapses the quick filter.
 It renders the `baseButton` slot.
@@ -56,11 +56,11 @@ It renders the `baseButton` slot.
 ## Custom elements
 
 Use the `render` prop to replace default elements.
-See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick filter.
+See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick Filter.
 
 ## Recipes
 
-Below are some ways the Quick filter component can be used.
+Below are some ways the Quick Filter component can be used.
 
 ### Default expanded state
 

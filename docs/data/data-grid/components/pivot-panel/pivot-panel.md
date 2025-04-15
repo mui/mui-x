@@ -13,8 +13,8 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the Pivot panel trigger is the only part of the Pivot panel component available.
-Future versions of the Pivot panel component will make it possible to compose each of its parts to create a custom pivot panel.
+Currently, the Pivot Panel Trigger is the only part of the Pivot Panel component available.
+Future versions of the Pivot Panel component will make it possible to compose each of its parts to create a custom pivot panel.
 
 :::
 
@@ -32,7 +32,7 @@ import { PivotPanelTrigger } from '@mui/x-data-grid-premium';
 <PivotPanelTrigger />;
 ```
 
-### Pivot panel trigger
+### Pivot Panel Trigger
 
 `<PivotPanelTrigger />` is a button that opens and closes the pivot panel.
 It renders the `baseButton` slot.
