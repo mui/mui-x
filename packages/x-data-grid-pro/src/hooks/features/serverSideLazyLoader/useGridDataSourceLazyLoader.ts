@@ -11,7 +11,6 @@ import {
   GridGroupNode,
   GridSkeletonRowNode,
   gridPaginationModelSelector,
-  gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
 } from '@mui/x-data-grid';
@@ -45,19 +44,13 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
 /**
  * @requires useGridRows (state)
  * @requires useGridPagination (state)
- * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method
  */
 export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'pagination'
-    | 'paginationMode'
-    | 'dataSource'
-    | 'lazyLoading'
-    | 'lazyLoadingRequestThrottleMs'
-    | 'scrollEndThreshold'
+    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs'
   >,
 ): void => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -354,41 +347,32 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
   }, [privateApiRef, updateLoadingTrigger, addSkeletonRows]);
 
-  const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
-    (newScrollPosition) => {
-      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
-        return;
-      }
+  const handleIntersection: GridEventListener<'onIntersection'> = React.useCallback(() => {
+    if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+      return;
+    }
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
-      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
-        return;
-      }
+    const renderContext = gridRenderContextSelector(privateApiRef);
+    if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
+      return;
+    }
 
-      const dimensions = gridDimensionsSelector(privateApiRef);
-      const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
-      const target = dimensions.contentSize.height - props.scrollEndThreshold;
+    previousLastRowIndex.current = renderContext.lastRowIndex;
 
-      if (position >= target) {
-        previousLastRowIndex.current = renderContext.lastRowIndex;
+    const paginationModel = gridPaginationModelSelector(privateApiRef);
+    const sortModel = gridSortModelSelector(privateApiRef);
+    const filterModel = gridFilterModelSelector(privateApiRef);
+    const getRowsParams: GridGetRowsParams = {
+      start: renderContext.lastRowIndex,
+      end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+      sortModel,
+      filterModel,
+    };
 
-        const paginationModel = gridPaginationModelSelector(privateApiRef);
-        const sortModel = gridSortModelSelector(privateApiRef);
-        const filterModel = gridFilterModelSelector(privateApiRef);
-        const getRowsParams: GridGetRowsParams = {
-          start: renderContext.lastRowIndex,
-          end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
-          sortModel,
-          filterModel,
-        };
+    privateApiRef.current.setLoading(true);
 
-        privateApiRef.current.setLoading(true);
-
-        fetchRows(adjustRowParams(getRowsParams));
-      }
-    },
-    [privateApiRef, props.scrollEndThreshold, adjustRowParams, fetchRows],
-  );
+    fetchRows(adjustRowParams(getRowsParams));
+  }, [privateApiRef, adjustRowParams, fetchRows]);
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -446,6 +430,7 @@ export const useGridDataSourceLazyLoader = (
     () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
     [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
+
   React.useEffect(() => {
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
@@ -519,8 +504,8 @@ export const useGridDataSourceLazyLoader = (
   );
   useGridEvent(
     privateApiRef,
-    'scrollPositionChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleScrolling),
+    'onIntersection',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleIntersection),
   );
   useGridEvent(
     privateApiRef,
