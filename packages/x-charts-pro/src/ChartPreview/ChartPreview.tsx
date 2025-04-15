@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
+  selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   selectorChartMargin,
   useDrawingArea,
   useSelector,
   useStore,
   ZoomData,
+  ZoomOptions,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes } from '@mui/x-charts/hooks';
@@ -160,27 +162,23 @@ function Preview({
     store.update((state) => {
       const { width } = selectorChartDrawingArea(state);
 
-      const zoom = selectorChartAxisZoomData(state, axisId);
-
-      if (!zoom) {
-        return state;
-      }
-
-      const deltaZoom = delta / width;
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
       const newState = {
         ...state,
         zoom: {
           ...state.zoom,
-          zoomData: state.zoom.zoomData.map((data) => {
-            if (data.axisId === axisId) {
+          zoomData: state.zoom.zoomData.map((zoom) => {
+            if (zoom.axisId === axisId) {
+              const deltaZoom = (delta / width) * 100;
+
               return {
-                ...data,
-                start: Math.max(0, Math.min(zoom.end, zoom.start + deltaZoom * 100)),
+                ...zoom,
+                start: calculateZoomStart(zoom.start + deltaZoom, zoom, zoomOptions),
               };
             }
 
-            return data;
+            return zoom;
           }),
         },
       };
@@ -193,27 +191,24 @@ function Preview({
     store.update((state) => {
       const { width } = selectorChartDrawingArea(state);
 
-      const zoom = selectorChartAxisZoomData(state, axisId);
-
-      if (!zoom) {
-        return state;
-      }
-
-      const deltaZoom = delta / width;
+      // TODO: What about non-cartesian axes? Are these the only ones that can be zoomed?
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
       const newState = {
         ...state,
         zoom: {
           ...state.zoom,
-          zoomData: state.zoom.zoomData.map((data) => {
-            if (data.axisId === axisId) {
+          zoomData: state.zoom.zoomData.map((zoom) => {
+            if (zoom.axisId === axisId) {
+              const deltaZoom = (delta / width) * 100;
+
               return {
-                ...data,
-                end: Math.min(100, Math.max(zoom.start, zoom.end + deltaZoom * 100)),
+                ...zoom,
+                end: calculateZoomEnd(zoom.end + deltaZoom, zoom, zoomOptions),
               };
             }
 
-            return data;
+            return zoom;
           }),
         },
       };
@@ -244,5 +239,30 @@ function Preview({
         onResize={onResizeRight}
       />
     </React.Fragment>
+  );
+}
+
+// TODO: Test
+function calculateZoomStart(
+  newStart: number,
+  currentZoom: ZoomData,
+  options: Required<ZoomOptions>,
+) {
+  const { minStart, minSpan, maxSpan } = options;
+
+  return Math.max(
+    minStart,
+    currentZoom.end - maxSpan,
+    Math.min(currentZoom.end - minSpan, newStart),
+  );
+}
+
+function calculateZoomEnd(newEnd: number, currentZoom: ZoomData, options: Required<ZoomOptions>) {
+  const { maxEnd, minSpan, maxSpan } = options;
+
+  return Math.min(
+    maxEnd,
+    currentZoom.start + maxSpan,
+    Math.max(currentZoom.start + minSpan, newEnd),
   );
 }
