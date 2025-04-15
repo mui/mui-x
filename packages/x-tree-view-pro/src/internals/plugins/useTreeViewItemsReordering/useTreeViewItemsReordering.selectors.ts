@@ -1,4 +1,9 @@
-import { createSelector, TreeViewState, selectorItemMetaLookup } from '@mui/x-tree-view/internals';
+import {
+  createSelector,
+  TreeViewState,
+  selectorItemMetaLookup,
+  selectorIsAnItemEdited,
+} from '@mui/x-tree-view/internals';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 
 /**
@@ -68,6 +73,6 @@ export const selectorIsItemValidReorderingTarget = createSelector(
  * @returns {boolean} `true` if the items can be reordered, `false` otherwise.
  */
 export const selectorCanItemBeReordered = createSelector(
-  [selectorItemsReordering, (_, itemId: string) => itemId],
-  (itemsReordering, itemId) => itemsReordering.isItemReorderable(itemId),
+  [selectorItemsReordering, selectorIsAnItemEdited, (_, itemId: string) => itemId],
+  (itemsReordering, isEditing, itemId) => !isEditing && itemsReordering.isItemReorderable(itemId),
 );

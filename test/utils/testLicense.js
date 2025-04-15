@@ -1,7 +1,6 @@
 import { LicenseInfo, generateLicense } from '@mui/x-license';
 
-export function generateTestLicenseKey() {
-  const expiryDate = new Date();
+export function generateTestLicenseKey(expiryDate = new Date()) {
   // Set the expiry date to 1 hour from now just to be on the safe side.
   // Tests usually take up to 15 minutes to run on CI.
   expiryDate.setHours(expiryDate.getHours() + 1);

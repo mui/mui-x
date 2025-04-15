@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import type { GridGetRowsResponse } from '@mui/x-data-grid';
 import {
   getGridDefaultColumnTypes,
+  type GridGetRowsResponse,
+  type GridRowId,
   type GridRowModel,
   type GridColDef,
   type GridInitialState,
@@ -41,6 +42,7 @@ type UseMockServerResponse<T> = {
   getGroupKey?: (row: GridRowModel) => string;
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<T>;
+  editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>;
   loadNewData: () => void;
   isReady: boolean;
 };
@@ -149,7 +151,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
   serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse<T> => {
-  const [data, setData] = React.useState<GridMockServerData>();
+  const dataRef = React.useRef<GridMockServerData>(null);
+  const [isDataReady, setDataReady] = React.useState(false);
   const [index, setIndex] = React.useState(0);
   const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
 
@@ -210,13 +213,15 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     // of the demos.
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
-      setData(newData);
+      dataRef.current = newData;
+      setDataReady(true);
       return undefined;
     }
 
     if (options.dataSet === 'Movies') {
       const rowsData = { rows: getMovieRows(), columns };
-      setData(rowsData);
+      dataRef.current = rowsData;
+      setDataReady(true);
       dataCache.set(cacheKey, rowsData);
       return undefined;
     }
@@ -250,7 +255,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       }
 
       dataCache.set(cacheKey, rowData);
-      setData(rowData);
+      dataRef.current = rowData;
+      setDataReady(true);
     })();
 
     return () => {
@@ -270,7 +276,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<T> => {
-      if (!requestUrl || !data?.rows) {
+      if (!requestUrl || !isDataReady) {
         return sendEmptyResponse<T>();
       }
       const params = decodeParams(requestUrl);
@@ -301,7 +307,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
       if (isTreeData) {
         const { rows, rootRowCount, aggregateRow } = await processTreeDataRows(
-          data?.rows ?? [],
+          dataRef.current?.rows ?? [],
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -314,7 +320,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         };
       } else if (isRowGrouping) {
         const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
-          data?.rows ?? [],
+          dataRef.current?.rows ?? [],
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -327,7 +333,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         };
       } else {
         const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
-          data?.rows ?? [],
+          dataRef.current?.rows ?? [],
           { ...params, ...params.paginationModel },
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -348,7 +354,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       });
     },
     [
-      data,
+      dataRef,
+      isDataReady,
       serverOptions?.verbose,
       serverOptions?.minDelay,
       serverOptions?.maxDelay,
@@ -359,15 +366,70 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     ],
   );
 
+  const editRow = React.useCallback(
+    async (rowId: GridRowId, updatedRow: GridRowModel) => {
+      return new Promise<GridRowModel>((resolve, reject) => {
+        const minDelay = serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay;
+        const maxDelay = serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay;
+        const delay = randomInt(minDelay, maxDelay);
+
+        const verbose = serverOptions?.verbose ?? true;
+        // eslint-disable-next-line no-console
+        const print = console.info;
+        if (verbose) {
+          print('MUI X: DATASOURCE EDIT ROW REQUEST', { rowId, updatedRow });
+        }
+
+        if (shouldRequestsFailRef.current) {
+          setTimeout(
+            () => reject(new Error(`Could not update the row with the id ${rowId}`)),
+            delay,
+          );
+          if (verbose) {
+            print('MUI X: DATASOURCE EDIT ROW FAILURE', { rowId, updatedRow });
+          }
+          return;
+        }
+
+        const newRows = [...(dataRef.current?.rows || [])];
+        const rowIndex = newRows.findIndex((row) => row.id === rowId) ?? -1;
+        if (rowIndex === -1) {
+          return;
+        }
+        newRows[rowIndex] = updatedRow;
+        const newData = { ...dataRef.current, rows: newRows } as GridDemoData;
+        const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+        dataCache.set(cacheKey, newData!);
+        setTimeout(() => {
+          if (verbose) {
+            print('MUI X: DATASOURCE EDIT ROW SUCCESS', { rowId, updatedRow });
+          }
+          resolve(updatedRow);
+        }, delay);
+        dataRef.current = newData;
+      });
+    },
+    [
+      index,
+      options.dataSet,
+      options.maxColumns,
+      options.rowLength,
+      serverOptions?.maxDelay,
+      serverOptions?.minDelay,
+      serverOptions?.verbose,
+    ],
+  );
+
   return {
     columns: columnsWithDefaultColDef,
     initialState: options.dataSet === 'Movies' ? {} : initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,
+    editRow,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
-    isReady: Boolean(data?.rows?.length),
+    isReady: isDataReady,
   };
 };

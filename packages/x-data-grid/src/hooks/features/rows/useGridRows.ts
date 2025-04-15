@@ -44,6 +44,7 @@ import {
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
+import { gridPivotActiveSelector } from '../pivoting';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -165,6 +166,10 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(rows, false);
+        return;
+      }
       const cache = createRowsInternalCache({
         rows,
         getRowId: props.getRowId,
@@ -190,6 +195,11 @@ export const useGridRows = (
         );
       }
 
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotRows(updates);
+        return;
+      }
+
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
@@ -203,7 +213,7 @@ export const useGridRows = (
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
 
-  const updateServerRows = React.useCallback<GridRowProPrivateApi['updateServerRows']>(
+  const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
     (updates, groupKeys) => {
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
@@ -484,7 +494,7 @@ export const useGridRows = (
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {
-    updateServerRows,
+    updateNestedRows,
   };
 
   /**

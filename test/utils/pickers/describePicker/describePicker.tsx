@@ -187,6 +187,23 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       },
     );
   });
+
+  testSkipIf(variant === 'static' || fieldType === 'multi-input')(
+    'should bring the focus back to the open button when the picker is closed',
+    async () => {
+      const { user } = render(<ElementToTest />);
+
+      const openButton = screen.getByRole('button', { name: /Choose/ });
+      // open Picker
+      await user.click(openButton);
+
+      // close Picker
+      await user.keyboard('[Escape]');
+
+      expect(openButton).to.toHaveFocus();
+      expect(document.activeElement).to.equal(openButton);
+    },
+  );
 }
 
 /**

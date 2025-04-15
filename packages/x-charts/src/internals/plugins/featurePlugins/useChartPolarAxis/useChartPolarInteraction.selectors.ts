@@ -4,7 +4,7 @@ import {
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { generateSvg2rotation } from './coordinateTransformation';
-import { getAxisIndex } from './getAxisValue';
+import { getAxisIndex } from './getAxisIndex';
 import { selectorChartPolarCenter, selectorChartRotationAxis } from './useChartPolarAxis.selectors';
 
 export const selectorChartsInteractionRotationAxisIndex = createSelector(

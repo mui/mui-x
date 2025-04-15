@@ -159,6 +159,11 @@ export const useFieldV7TextField = <
   });
 
   const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // The click event on the clear or open button would propagate to the input, trigger this handler and result in an inadvertent section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a propagated call, which should be skipped.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     onClick?.(event);
     rootProps.onClick(event);
   });

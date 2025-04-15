@@ -131,7 +131,7 @@ module.exports = function getBabelConfig(api) {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    if (!process.env.E2E_BUILD) {
+    if (!process.env.TEST_BUILD) {
       plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
     }
 

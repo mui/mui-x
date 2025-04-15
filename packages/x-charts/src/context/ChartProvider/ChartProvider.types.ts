@@ -52,5 +52,4 @@ export interface ChartProviderProps<
    * @ignore Unstable props for internal usage.
    */
   seriesConfig?: ChartSeriesConfig<TSeries>;
-  children: React.ReactNode;
 }

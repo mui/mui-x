@@ -39,6 +39,9 @@ const GridToolbarContainerRoot = styled(Toolbar, {
   minHeight: 'auto',
 });
 
+/**
+ * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/toolbar/ Toolbar} component instead. This component will be removed in a future major release.
+ */
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;

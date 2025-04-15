@@ -29,9 +29,14 @@ export default function HeaderFilteringInlineClearDataGridPro() {
           filter: {
             filterModel: {
               items: [
-                { field: 'name', operator: 'contains', value: 'a' },
-                { field: 'website', operator: 'contains', value: 'http://' },
-                { field: 'rating', operator: '>', value: 2 },
+                { id: 'name', field: 'name', operator: 'contains', value: 'a' },
+                {
+                  id: 'website',
+                  field: 'website',
+                  operator: 'contains',
+                  value: 'http://',
+                },
+                { id: 'rating', field: 'rating', operator: '>', value: 2 },
               ],
             },
           },

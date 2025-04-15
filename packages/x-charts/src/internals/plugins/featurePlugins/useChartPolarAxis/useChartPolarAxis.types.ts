@@ -2,13 +2,13 @@ import { ChartPluginSignature } from '../../models';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
   ScaleName,
-  AxisId,
   AxisConfig,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
+  RadiusAxis,
+  RotationAxis,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { DefaultizedAxisConfig } from '../useChartCartesianAxis';
 import { UseChartInteractionSignature } from '../useChartInteraction';
 
 export interface UseChartPolarAxisInstance {
@@ -35,38 +35,19 @@ export interface UseChartPolarAxisInstance {
   svg2rotation: (x: number, y: number) => number;
 }
 
-export type PolarAxisState = {
-  /**
-   * Mapping from rotation-axis key to scaling configuration.
-   */
-  rotationAxis: DefaultizedAxisConfig<ChartsRotationAxisProps>;
-  /**
-   * Mapping from radius-axis key to scaling configuration.
-   */
-  radiusAxis: DefaultizedAxisConfig<ChartsRadiusAxisProps>;
-  /**
-   * The rotation-axes IDs sorted by order they were provided.
-   */
-  rotationAxisIds: AxisId[];
-  /**
-   * The radius-axes IDs sorted by order they were provided.
-   */
-  radiusAxisIds: AxisId[];
-};
-
 export interface UseChartPolarAxisParameters {
   /**
    * The configuration of the rotation-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  rotationAxis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+  rotationAxis?: RotationAxis[];
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  radiusAxis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+  radiusAxis?: RadiusAxis[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */

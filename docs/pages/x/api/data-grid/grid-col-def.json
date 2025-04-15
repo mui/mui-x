@@ -57,6 +57,7 @@
       "isPremiumPlan": true
     },
     "pinnable": { "type": { "description": "boolean" }, "default": "true" },
+    "pivotable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "preProcessEditCellProps": {
       "type": {
         "description": "(params: GridPreProcessEditCellProps) =&gt; GridEditCellProps | Promise&lt;GridEditCellProps&gt;"

@@ -12,24 +12,25 @@ interface Fixture {
 
 const fixtures: Fixture[] = [];
 
-// @ts-ignore
-const requireFixtures = require.context('./fixtures', true, /\.(js|ts|tsx)$/);
-requireFixtures.keys().forEach((path: string) => {
-  // require.context contains paths for module alias imports and relative imports
-  if (!path.startsWith('.')) {
-    return;
-  }
+const fixturesImports = import.meta.glob<React.ComponentType>('./fixtures/**/*', {
+  eager: true,
+  import: 'default',
+});
+Object.keys(fixturesImports).forEach((path: string) => {
   const [suite, name] = path
-    .replace('./', '')
+    .replace('./fixtures/', '')
     .replace(/\.\w+$/, '')
     .split('/');
+
   fixtures.push({
     path,
     suite: `e2e/${suite}`,
     name,
-    Component: requireFixtures(path).default,
+    Component: fixturesImports[path],
   });
 });
+
+ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 
 function App() {
   function computeIsDev() {
@@ -126,5 +127,3 @@ function App() {
     </Router>
   );
 }
-
-ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);

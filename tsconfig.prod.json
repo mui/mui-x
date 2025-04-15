@@ -1,0 +1,45 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@mui/x-date-pickers": ["./packages/x-date-pickers/src"],
+      "@mui/x-date-pickers/*": ["./packages/x-date-pickers/src/*"],
+      "@mui/x-date-pickers-pro": ["./packages/x-date-pickers-pro/src"],
+      "@mui/x-date-pickers-pro/*": ["./packages/x-date-pickers-pro/src/*"],
+      "@mui/x-charts": ["./packages/x-charts/src"],
+      "@mui/x-charts/*": ["./packages/x-charts/src/*"],
+      "@mui/x-charts-pro": ["./packages/x-charts-pro/src"],
+      "@mui/x-charts-pro/*": ["./packages/x-charts-pro/src/*"],
+      "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
+      "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
+      "@mui/x-tree-view": ["./packages/x-tree-view/src"],
+      "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
+      "@mui/x-tree-view-pro": ["./packages/x-tree-view-pro/src"],
+      "@mui/x-tree-view-pro/*": ["./packages/x-tree-view-pro/src/*"],
+      "@mui/x-license": ["./packages/x-license/src"],
+      "@mui/x-license/*": ["./packages/x-license/src/*"],
+      "@mui/x-internals": ["./packages/x-internals/src"],
+      "@mui/x-internals/*": ["./packages/x-internals/src/*"],
+      "@mui/x-telemetry": ["./packages/x-telemetry/src"],
+      "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
+      "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
+      "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],
+      "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
+      "@types/react-docgen": [
+        "./node_modules/@mui/monorepo/packages/react-docgen-types/index.d.ts"
+      ],
+      "@mui-internal/api-docs-builder/*": [
+        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
+      ],
+      "test/*": ["./test/*"],
+      "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
+      "docsx/*": ["./docs/*"]
+    },
+    "skipLibCheck": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}

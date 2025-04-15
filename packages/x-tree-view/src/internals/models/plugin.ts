@@ -60,7 +60,6 @@ export type TreeViewPluginSignature<
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
-    cache?: {};
     modelNames?: keyof T['defaultizedParams'];
     experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
@@ -89,7 +88,6 @@ export type TreeViewPluginSignature<
    * The state is the mutable data that will actually be stored in the plugin state and can be accessed by other plugins.
    */
   state: T extends { state: {} } ? T['state'] : {};
-  cache: T extends { cache: {} } ? T['cache'] : {};
   /**
    * A helper for controlled properties.
    * Properties defined here can be controlled by the user. If they are not controlled, they will be initialized by the plugin.
@@ -117,7 +115,6 @@ export type TreeViewPluginSignature<
 };
 
 export type TreeViewAnyPluginSignature = {
-  cache: any;
   state: any;
   instance: any;
   params: any;
@@ -214,7 +211,6 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @returns {TSignature['state']} The initial state of the plugin.
    */
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
-  getInitialCache?: () => TSignature['cache'];
   /**
    * The configuration of properties that can be controlled by the user.
    * If they are not controlled, they will be initialized by the plugin.
