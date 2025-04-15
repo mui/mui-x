@@ -130,7 +130,9 @@ export function verifyLicense({
   licenseKey?: string;
   packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
-  if (process.env.MUI_DISABLE_LICENSE_CHECK) {
+  // Gets replaced at build time
+  // @ts-ignore
+  if (LICENSE_DISABLE_CHECK) {
     return { status: LICENSE_STATUS.Valid };
   }
 

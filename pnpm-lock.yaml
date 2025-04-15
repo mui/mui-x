@@ -197,6 +197,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: ^0.4.24
         version: 0.4.24
+      babel-plugin-transform-replace-expressions:
+        specifier: ^0.2.0
+        version: 0.2.0(@babel/core@7.26.10)
       chai:
         specifier: ^4.5.0
         version: 4.5.0
@@ -5086,6 +5089,11 @@ packages:
 
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
+
+  babel-plugin-transform-replace-expressions@0.2.0:
+    resolution: {integrity: sha512-Eh1rRd9hWEYgkgoA3D0kGp7xJ/wgVshgsqmq60iC4HVWD+Lux+fNHSHBa2v1Hsv+dHflShC71qKhiH40OiPtDA==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -14508,6 +14516,11 @@ snapshots:
   babel-plugin-transform-inline-environment-variables@0.4.4: {}
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
+
+  babel-plugin-transform-replace-expressions@0.2.0(@babel/core@7.26.10):
+    dependencies:
+      '@babel/core': 7.26.10
+      '@babel/parser': 7.27.0
 
   bail@2.0.2: {}
 
