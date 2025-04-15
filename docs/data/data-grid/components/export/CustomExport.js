@@ -1,13 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DownloadIcon from '@mui/icons-material/Download';
 // Mock API function to simulate server-side data fetching
-const fetchUsers = async ( page, pageSize) => {
+const fetchUsers = async (page, pageSize) => {
   // Simulate API delay
   await new Promise((resolve) => {
     setTimeout(resolve, 500);
@@ -79,7 +76,7 @@ function CustomExport() {
       try {
         const response = await fetchUsers(
           paginationModel.page,
-          paginationModel.pageSize
+          paginationModel.pageSize,
         );
         setRows(response.rows);
         setRowCount(response.rowCount);
@@ -96,29 +93,29 @@ function CustomExport() {
   return (
     <div style={{ height: 520, width: '100%' }}>
       <Box gap={1} mb={1} flexWrap="wrap">
-          <Button
-            variant="contained"
-            startIcon={<DownloadIcon />}
-            onClick={handleExport}
-            disabled={loading}
-          >
-            Export to Excel
-          </Button>
-        </Box>
-        <Box style={{ height: 480, width: '100%' }}>
-          <DataGridPremium
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            rowCount={rowCount}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            pageSizeOptions={[10, 25, 50]}
-            loading={loading}
-            paginationMode="server"
-            pagination
-          />
-        </Box>
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handleExport}
+          disabled={loading}
+        >
+          Export to Excel
+        </Button>
+      </Box>
+      <Box style={{ height: 480, width: '100%' }}>
+        <DataGridPremium
+          apiRef={apiRef}
+          rows={rows}
+          columns={columns}
+          rowCount={rowCount}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50]}
+          loading={loading}
+          paginationMode="server"
+          pagination
+        />
+      </Box>
     </div>
   );
 }

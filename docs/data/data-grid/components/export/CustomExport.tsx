@@ -18,7 +18,7 @@ interface User {
 // Mock API function to simulate server-side data fetching
 const fetchUsers = async (
   page: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<{ rows: User[]; rowCount: number }> => {
   // Simulate API delay
   await new Promise((resolve) => {
@@ -92,7 +92,7 @@ function CustomExport() {
       try {
         const response = await fetchUsers(
           paginationModel.page,
-          paginationModel.pageSize
+          paginationModel.pageSize,
         );
         setRows(response.rows);
         setRowCount(response.rowCount);
@@ -109,29 +109,29 @@ function CustomExport() {
   return (
     <div style={{ height: 520, width: '100%' }}>
       <Box gap={1} mb={1} flexWrap="wrap">
-          <Button
-            variant="contained"
-            startIcon={<DownloadIcon />}
-            onClick={handleExport}
-            disabled={loading}
-          >
-            Export to Excel
-          </Button>
-        </Box>
-        <Box style={{ height: 480, width: '100%' }}>
-          <DataGridPremium
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            rowCount={rowCount}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            pageSizeOptions={[10, 25, 50]}
-            loading={loading}
-            paginationMode="server"
-            pagination
-          />
-        </Box>
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handleExport}
+          disabled={loading}
+        >
+          Export to Excel
+        </Button>
+      </Box>
+      <Box style={{ height: 480, width: '100%' }}>
+        <DataGridPremium
+          apiRef={apiRef}
+          rows={rows}
+          columns={columns}
+          rowCount={rowCount}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50]}
+          loading={loading}
+          paginationMode="server"
+          pagination
+        />
+      </Box>
     </div>
   );
 }
