@@ -91,7 +91,7 @@ function ForecastArea({ limit, forecast }) {
           .y0((d) => yScale(d.y0))
           .y1((d) => yScale(d.y1))(data);
 
-        return <path key={`forecast-aria-${series.id}`} d={path} fill="#0000ff44" />;
+        return <path key={`forecast-area-${series.id}`} d={path} fill="#0000ff44" />;
       })}
     </React.Fragment>
   );
