@@ -102,6 +102,8 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
 
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components.
+
 The `RadarGrid` and `RadarMetricLabels` components render the grid and the labels.
 
 The `RadarSeriesPlot` renders series (the area and the marks) on top of each other.

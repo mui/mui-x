@@ -159,8 +159,6 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
-
 If you're using composition, you can get those click event as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
@@ -188,3 +186,30 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Composition
+
+For composition, use the `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props.
+
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the `BarPlot` that renders the bars and their label.
+
+For info here is the composition of the `BarChart` component.
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}> 
+        <BarPlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <Tooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

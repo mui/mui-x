@@ -259,3 +259,45 @@ This will lead to strange behaviors.
 ```
 
 {{"demo": "LineAnimation.js"}}
+
+## Composition
+
+For composition, use the `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props.
+
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the `AreaPlot`, `LinePlot`, and `MarkPlot` to renders different part of the chart.
+
+The `LineHighlightPlot` renders mark dots on the highlighted values.
+
+For info here is the composition of the `LineChart` component.
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        {/* Elements clipped inside the drawing area. */}
+        <AreaPlot />
+        <LinePlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <MarkPlot />
+      </g>
+      <LineHighlightPlot />
+      <Tooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered as part of the drawing are, even if they overflow.
+
+This is useful when mark elements are on the border of the drawing area like in [this issue](https://github.com/mui/mui-x/issues/13659).
+:::
