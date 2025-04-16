@@ -256,17 +256,23 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
+      await page.reload();
+      console.log('reload');
       await navigateToTest(route);
+      console.log('navigate');
 
       const printButton = page.getByRole('button', { name: 'Print' });
+      console.log('before setTimeout');
 
       // Trigger the action async because window.print() is blocking the main thread
       // like window.alert() is.
       setTimeout(() => {
+        console.log('before print');
         printButton.click();
       });
 
       await sleep(4000);
+      console.log('after sleep');
 
       await screenshotPrintDialogPreview(screenshotPath);
     });
