@@ -450,7 +450,7 @@
     "onFetchRows": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -615,7 +615,7 @@
     "onRowsScrollEnd": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -704,7 +704,7 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\"",
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
