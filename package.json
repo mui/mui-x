@@ -55,7 +55,7 @@
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
-    "release:build": "lerna run --scope '{@mui/*,babel-plugin-mui-css}' build",
+    "release:build": "cross-env NODE_OPTIONS=--no-warnings=ExperimentalWarning lerna run --scope '@mui/*' build",
     "release:publish": "pnpm publish --recursive --tag latest",
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",

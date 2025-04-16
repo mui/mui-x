@@ -1466,6 +1466,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.27.0
         version: 7.27.0
+      '@mui/system':
+        specifier: ^7.0.2
+        version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@mui/utils':
         specifier: ^7.0.2
         version: 7.0.2(@types/react@19.0.12)(react@19.0.0)

@@ -1,5 +1,5 @@
 import type { CSSObject } from '@mui/system';
-import unitLessProperties from './unitLessProperties.js';
+import unitLessProperties from './unitLessProperties.ts';
 
 /* eslint-disable prefer-template */
 
