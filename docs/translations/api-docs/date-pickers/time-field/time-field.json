@@ -53,7 +53,7 @@
       "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/input-label/\"><code>InputLabel</code></a> element. Pointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
     },
     "inputProps": {
-      "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes\">Attributes</a> applied to the <code>input</code> element."
+      "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes\">Attributes</a> applied to the <code>input</code> element."
     },
     "InputProps": {
       "description": "Props applied to the Input element. It will be a <a href=\"https://mui.com/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"https://mui.com/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"https://mui.com/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value."
