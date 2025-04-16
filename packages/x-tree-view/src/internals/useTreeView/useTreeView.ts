@@ -24,19 +24,19 @@ function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
   if (inputApiRef.current == null) {
     inputApiRef.current = {} as T;
   }
-  return inputApiRef.current;
+  return inputApiRef as React.RefObject<T>;
 }
 
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
-): T {
-  const [fallbackPublicApi] = React.useState({});
+): React.RefObject<T> {
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
     return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApi as T;
+  return fallbackPublicApiRef;
 }
 
 let globalId: number = 0;
@@ -102,7 +102,7 @@ export const useTreeView = <
   const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
-    publicAPI,
+    publicAPI: publicAPI.current,
     store: storeRef.current as TreeViewStore<any>,
     rootRef: innerRootRef,
   });
@@ -126,7 +126,7 @@ export const useTreeView = <
     }
 
     if (pluginResponse.publicAPI) {
-      Object.assign(publicAPI, pluginResponse.publicAPI);
+      Object.assign(publicAPI.current, pluginResponse.publicAPI);
     }
 
     if (pluginResponse.instance) {
