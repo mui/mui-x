@@ -69,11 +69,13 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
     axisDirection === 'x'
       ? drawingArea.left
       : axis.position === 'right'
-        ? drawingArea.left + drawingArea.width + axis.offset
+        ? drawingArea.left + drawingArea.width + axis.offset + axisSize
         : drawingArea.left - axis.offset - axisSize - size;
   const y =
     axisDirection === 'x'
-      ? drawingArea.top + drawingArea.height + axis.offset + axisSize
+      ? axis.position === 'bottom'
+        ? drawingArea.top + drawingArea.height + axis.offset + axisSize
+        : drawingArea.top - axis.offset - axisSize - size
       : drawingArea.top;
 
   return (
