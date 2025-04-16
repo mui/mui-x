@@ -195,7 +195,7 @@
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 58,
+    "missingKeysCount": 57,
     "totalKeysCount": 191,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/plPL.ts"
   },
