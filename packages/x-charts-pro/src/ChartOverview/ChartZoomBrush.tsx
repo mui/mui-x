@@ -5,7 +5,6 @@ import {
   DefaultizedZoomOptions,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
-  selectorChartMargin,
   useDrawingArea,
   useSelector,
   useStore,
@@ -13,7 +12,6 @@ import {
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes } from '@mui/x-charts/hooks';
-import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -36,19 +34,23 @@ const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
 }));
 
 const PREVIEW_HANDLE_WIDTH = 4;
-const PREVIEW_HEIGHT = 40;
 
-export function ChartZoomBrush({
-  size = PREVIEW_HEIGHT,
-  axisId = DEFAULT_X_AXIS_KEY,
-}: {
-  size: number;
+interface ChartZoomBrushProps {
+  /**
+   * The ID of the axis this overview refers to.
+   */
   axisId: AxisId;
-}) {
+  /**
+   * The size of the overview.
+   * This represents the height if the axis is an x-axis, or the width if the axis is a y-axis.
+   */
+  size: number;
+}
+
+export function ChartZoomBrush({ size, axisId }: ChartZoomBrushProps) {
   const store = useStore();
   const xAxes = useXAxes();
   const drawingArea = useDrawingArea();
-  const margin = useSelector(store, selectorChartMargin);
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
   const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
@@ -59,17 +61,9 @@ export function ChartZoomBrush({
 
   return (
     <g
-      x={drawingArea.left}
-      y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-      width={drawingArea.width}
-      height={margin.bottom}
+      transform={`translate(${drawingArea.left} ${drawingArea.top + drawingArea.height + bottomAxesHeight})`}
     >
-      <PreviewBackgroundRect
-        x={drawingArea.left}
-        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        height={size}
-        width={drawingArea.width}
-      />
+      <PreviewBackgroundRect height={size} width={drawingArea.width} />
       <ChartZoomBrushRange size={size} zoomData={zoomData} axisId={axisId} />
     </g>
   );
@@ -85,10 +79,7 @@ function ChartZoomBrushRange({
   zoomData: ZoomData;
 }) {
   const store = useStore<[UseChartProZoomSignature]>();
-  const xAxes = useXAxes();
   const drawingArea = useDrawingArea();
-  const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
-  const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const previewHandleHeight = 0.6 * size;
 
@@ -226,25 +217,23 @@ function ChartZoomBrushRange({
     <React.Fragment>
       <ZoomRangePreviewRect
         ref={activePreviewRectRef}
-        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
-        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
+        x={(zoomData.start / 100) * drawingArea.width}
         width={(drawingArea.width * (zoomData.end - zoomData.start)) / 100}
         height={size}
       />
+      {
+        // TODO: In RTL languages, should we start from the right?
+      }
       <ChartZoomBrushHandle
-        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
-        y={
-          drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
-        }
+        x={(zoomData.start / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
+        y={(size - previewHandleHeight) / 2}
         width={PREVIEW_HANDLE_WIDTH}
         height={previewHandleHeight}
         onResize={onResizeLeft}
       />
       <ChartZoomBrushHandle
-        x={drawingArea.left + (zoomData.end / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
-        y={
-          drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
-        }
+        x={(zoomData.end / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
+        y={(size - previewHandleHeight) / 2}
         width={PREVIEW_HANDLE_WIDTH}
         height={previewHandleHeight}
         onResize={onResizeRight}

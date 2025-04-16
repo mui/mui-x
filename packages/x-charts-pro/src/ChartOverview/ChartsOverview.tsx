@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AxisId } from '@mui/x-charts/internals';
 import { ChartZoomBrush } from './ChartZoomBrush';
 
-export interface ChartOverviewProps {
+export interface ChartsOverviewProps {
   /**
    * The ID of the axis this overview refers to.
    */
@@ -14,6 +14,6 @@ export interface ChartOverviewProps {
   size?: number;
 }
 
-export function ChartOverview({ axisId, size = 30 }: ChartOverviewProps) {
+export function ChartsOverview({ axisId, size = 40 }: ChartsOverviewProps) {
   return <ChartZoomBrush size={size} axisId={axisId} />;
 }
