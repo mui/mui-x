@@ -5,6 +5,156 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0
+
+_Apr 16, 2025_
+
+We're excited to [announce the first v8 stable release](https://mui.com/blog/mui-x-v8/)! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Migration guides are available with a complete list of the breaking changes:
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v7/)
+- [Date and Time Pickers](https://mui.com/x/migration/migration-pickers-v7/)
+- [Tree View](https://mui.com/x/migration/migration-tree-view-v7/)
+- [Charts](https://mui.com/x/migration/migration-charts-v7/)
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+<!-- TODO: add highlights -->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0`
+
+- [DataGrid] Data source with editing (#16045) @MBilalShafi
+- [DataGrid] Deprecate old toolbar components (#17294) @KenanYusuf
+- [DataGrid] Refactor: add typings to icons (#17291) @romgrk
+- [DataGrid] Skip flaky aggregation test (#17391) @MBilalShafi
+- [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @LukasTy
+- [l10n] Improve Swedish (sv-SE) locale (#17293) @ptuukkan
+
+#### `@mui/x-data-grid-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0`, plus:
+
+- [DataGridPro] Fix row virtualization not working in list view (#17399) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
+
+- [DataGridPremium] AI Assistant (#16992) @arminmeh
+- [DataGridPremium] Fix aggregated values sorting (#17326) @cherniavskii
+- [DataGridPremium] Fix cell display with custom renderers in pivot mode (#17323) @cherniavskii
+- [DataGridPremium] Fix stale aggregation results after filtering (#17296) @cherniavskii
+- [DataGridPremium] Pivoting (#9877) @cherniavskii
+
+### Date and Time Pickers
+
+From https://github.com/mui/mui-x/pull/17166
+
+- The view selection process has been updated to make it clear across all Pickers.
+  Pickers no longer automatically switch between **date** and **time views** or **start** and **end positions**.
+  Moving between views and range positions is achieved using the new "Next" action button.
+
+#### `@mui/x-date-pickers@8.0.0`
+
+- [fields] Fix the error message when a custom field with an `<input />` but the field expects the accessible DOM structure (#17237) @flaviendelangle
+- [fields] Fix to submit a form on `Enter` press with accessible DOM structure (#17328) @LukasTy
+- [fields] Prevent focusing the field or any section when `disabled=true` (#17215) @flaviendelangle
+- [l10n] Improve Czech (cs-CZ) locale (#17205) @lubka272 (#17387) @LukasTy
+- [l10n] Improve Slovak (sk-SK) locale (#17249) @LukasTy
+- [pickers] Fix to not process default prevented propagated events (#17312) @LukasTy
+- [pickers] Mark active range position field section with underline (#16938) @LukasTy
+- [pickers] Remove automatic switch between date and time or between range positions (#17166) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0`, plus:
+
+- [DateTimeRangePicker] Fix focused view behavior (#17313) @LukasTy
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/17304
+
+- 🎁 Animate gauge chart
+
+#### `@mui/x-charts@8.0.0`
+
+- [charts] Add `slotProps.legend.hidden` to migration docs (#17379) @bernardobelchior
+- [charts] Add labels above bars example (#16860) @bernardobelchior
+- [charts] Add tooltip to the radar (#16950) @alexfauquette
+- [charts] Add uncertainty area to line with forecast demo (#17355) @bernardobelchior
+- [charts] Animate gauge chart (#17304) @bernardobelchior
+- [charts] Convert `AnimationContext` into a plugin (#17299) @bernardobelchior
+- [charts] Export 'series' class as part of barElementClasses (#17273) @10tacion
+- [charts] Expose axes types (#17309) @bernardobelchior
+- [charts] Expose higher level `useAnimate` hook (#17162) @bernardobelchior
+- [charts] Fix axis types not narrowing (#17321) @bernardobelchior
+- [charts] Fix bar chart with partial data (#17290) @alexfauquette
+- [charts] Fix useAnimate test flakiness (#17372) @bernardobelchior
+- [charts] Radar design refinement (#17165) @alexfauquette
+- [charts] Remove unused code (#17310) @bernardobelchior
+- [charts] Remove unused files (#17242) @JCQuintas
+- [charts] Use `useEventCallback` to memoize `onZoomChange` without triggering a re-render (#17233) @JCQuintas
+- [charts] document series class name (#17362) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0`, plus:
+
+- [charts-pro] Update zoom using `requestAnimationFrame` (#17137) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0`
+
+- [TreeView] Add React Compiler linting rules (#16357) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0`.
+
+### Docs
+
+- [docs] Add intro section for Telemetry (#17244) @prakhargupta1
+- [docs] Add migration guide for the picker's `ownerState` changes (#17151) @flaviendelangle
+- [docs] Add whats-new section for MUI X v8 (#17397) @joserodolfofreitas
+- [docs] Fix ESM guide (#17280) @oliviertassinari
+- [docs] Fix Vale errors (#17281) @oliviertassinari
+- [docs] Fix country columns throwing on grouping (#17315) @cherniavskii
+- [docs] Fix paths in `ResponsiveChartContainer` migration guide (#17364) @MonstraG
+- [docs] Mention priority support on MUI X docs (#16467) @prakhargupta1
+- [docs] Match title side nav @oliviertassinari
+- [docs] Fix incorrect mention of PDF export (#17277) @oliviertassinari
+- [docs] Fix row spanning lab icon (#17278) @oliviertassinari
+- [docs] Fix header Sentence case consistency (#17274) @oliviertassinari
+- [docs] Flag experimental API (#17279) @oliviertassinari
+
+### Core
+
+- [core] Always use the correct babel runtime (#17241) @alexfauquette
+- [core] Document TelemetryContextType (#17282) @oliviertassinari
+- [core] Fix proptypes (#17378) @cherniavskii
+- [core] Remove modern bundles (#17359) @LukasTy
+- [core] Setup testing to work with CSS imports (#17214) @romgrk
+- [core] Testing setup fixes & lints (#17356) @romgrk
+- [code-infra] Align build script with core to handle sideEffects (#17370) @Janpot
+- [code-infra] CI optimization: re-use ffmpeg (#17333) @romgrk
+- [code-infra] Charts `vitest` changes (#17247) @JCQuintas
+- [code-infra] Further datagrid changes for `vitest` (#17251) @JCQuintas
+- [code-infra] Prepare argos script call for required arg (#17371) @Janpot
+- [code-infra] Remove more `clock=fake` from pickers tests (#17225) @JCQuintas
+- [code-infra] Tentative fix for datagrid flaky test (#17289) @JCQuintas
+- [code-infra] Update MUI Internal and slightly cleanup regressions test setup (#17182) @renovate[bot]
+- [infra] Update support label from 'priority' to 'unknown' (#17288) @michelengelen
+- [release] Major release preparation (#17319) @michelengelen
+- [test] Fix flaky data source aggregation test (#17307) @KenanYusuf
+- [test] Fix flaky data source aggregation test (take 2) (#17311) @cherniavskii
+- [test] Fix flaky data source aggregation test (take 3) (#17316) @LukasTy
+
 ## 8.0.0-beta.3
 
 _Apr 3, 2025_
