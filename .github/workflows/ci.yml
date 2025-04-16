@@ -7,8 +7,6 @@ on:
       # We don't need to run CI twice (push+pull_request)
       - 'renovate/**'
   pull_request:
-    paths-ignore:
-      - 'examples/**'
 
 permissions: {}
 
@@ -22,12 +20,11 @@ jobs:
           fetch-depth: 0
       - name: Set up pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js 20.x
+      - name: Use Node.js 23.x
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 20
+          node-version: 23
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-      - run: npm install -g npm@latest
       - run: pnpm install:codesandbox
       - run: pnpm build:codesandbox
       - run: pnpm pkg-pr-new-release

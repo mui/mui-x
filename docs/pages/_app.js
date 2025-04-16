@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
@@ -37,11 +36,10 @@ function getMuiPackageVersion(packageName, commitRef) {
     // Once the major release is finished we can go back to "latest"
     return 'next';
   }
-  const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-ponyfillGlobal.muiDocConfig = {
+globalThis.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
