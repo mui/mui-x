@@ -109,6 +109,11 @@ async function main() {
 
     routes.forEach((route) => {
       it(`creates screenshots of ${route}`, async function test() {
+        if (/^\/docs-charts-tooltip.*/.test(route)) {
+          // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+          return;
+        }
+
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
@@ -243,6 +248,60 @@ async function main() {
           }
         });
       });
+    });
+
+    it.only('should position charts axis tooltip 8px away from the pointer', async () => {
+      const route = '/docs-charts-tooltip/Interaction';
+      const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
+      const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
+      await fse.ensureDir(path.dirname(axisScreenshotPath));
+      await fse.ensureDir(path.dirname(itemScreenshotPath));
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      // Axis tooltip
+      await page.evaluate(() => {
+        const charts = [...document.querySelectorAll('svg')];
+
+        const item = charts[0].querySelector('.MuiBarElement-series-auto-generated-id-2')!;
+        const position = item.getBoundingClientRect();
+
+        charts[0].dispatchEvent(
+          new PointerEvent('pointermove', {
+            clientX: position.x + position.width / 2,
+            clientY: position.y + position.height / 2,
+          }),
+        );
+      });
+      await testcase.screenshot({ path: axisScreenshotPath, type: 'png' });
+
+      // Item tooltip
+      await page.evaluate(() => {
+        const charts = [...document.querySelectorAll('svg')];
+
+        const item = charts[1].querySelector('.MuiBarElement-series-auto-generated-id-2')!;
+        const position = item.getBoundingClientRect();
+
+        charts[1].dispatchEvent(
+          new PointerEvent('pointermove', {
+            clientX: position.x + position.width / 2,
+            clientY: position.y + position.height / 2,
+          }),
+        );
+        item.dispatchEvent(
+          new PointerEvent('pointerenter', {
+            clientX: position.x + position.width / 2,
+            clientY: position.y + position.height / 2,
+            pointerType: 'mouse',
+            height: 0,
+          }),
+        );
+      });
+      await testcase.screenshot({ path: itemScreenshotPath, type: 'png' });
     });
 
     // describe('DateTimePicker', () => {

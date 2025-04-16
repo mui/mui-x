@@ -125,7 +125,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         options: {
           offset: ({ placement }: { placement: PopperPlacementType }) => {
             if (pointerType?.pointerType !== 'touch') {
-              return [0, 0];
+              // The popper offset: [skidding, distance]
+              return [0, 8];
             }
 
             const isBottom = placement.startsWith('bottom');
