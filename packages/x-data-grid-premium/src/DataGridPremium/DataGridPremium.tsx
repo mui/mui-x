@@ -121,6 +121,54 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: PropTypes.bool,
+  /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex: PropTypes.number,
+  /**
+   * The conversations with the AI Assistant.
+   */
+  aiAssistantConversations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      prompts: PropTypes.arrayOf(
+        PropTypes.shape({
+          createdAt: PropTypes.instanceOf(Date).isRequired,
+          helperText: PropTypes.string,
+          response: PropTypes.shape({
+            aggregation: PropTypes.object.isRequired,
+            conversationId: PropTypes.string.isRequired,
+            filterOperator: PropTypes.oneOf(['and', 'or']),
+            filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+            grouping: PropTypes.arrayOf(PropTypes.object).isRequired,
+            pivoting: PropTypes.object.isRequired,
+            select: PropTypes.number.isRequired,
+            sorting: PropTypes.arrayOf(PropTypes.object).isRequired,
+          }),
+          value: PropTypes.string.isRequired,
+          variant: PropTypes.oneOf(['error', 'processing', 'success']),
+        }),
+      ).isRequired,
+      title: PropTypes.string,
+    }),
+  ),
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+    }),
+  ),
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling: PropTypes.bool,
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
@@ -644,6 +692,16 @@ DataGridPremiumRaw.propTypes = {
    */
   onAggregationModelChange: PropTypes.func,
   /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
+   */
+  onAiAssistantConversationsChange: PropTypes.func,
+  /**
    * Callback fired before the clipboard paste operation starts.
    * Use it to confirm or cancel the paste operation.
    * @param {object} params Params passed to the callback.
@@ -810,7 +868,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows: PropTypes.func,
   /**
@@ -885,6 +943,14 @@ DataGridPremiumRaw.propTypes = {
    */
   onProcessRowUpdateError: PropTypes.func,
   /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt: PropTypes.func,
+  /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -953,7 +1019,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -1163,7 +1229,7 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**

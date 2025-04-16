@@ -187,6 +187,7 @@ PickersInput.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.

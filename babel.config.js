@@ -43,7 +43,7 @@ const defaultAlias = {
 
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['modern', 'stable', 'rollup']);
+  const useESModules = api.env(['stable', 'rollup']);
 
   const presets = [
     [
@@ -53,7 +53,6 @@ module.exports = function getBabelConfig(api) {
         browserslistEnv: api.env() || process.env.NODE_ENV,
         debug: process.env.MUI_BUILD_VERBOSE === 'true',
         modules: useESModules ? false : 'commonjs',
-        shippedProposals: api.env('modern'),
       },
     ],
     [
@@ -151,6 +150,15 @@ module.exports = function getBabelConfig(api) {
         },
       ]);
     }
+  }
+
+  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
+    plugins.push([
+      'transform-replace-expressions',
+      {
+        replace: [['LICENSE_DISABLE_CHECK', 'false']],
+      },
+    ]);
   }
 
   if (useESModules) {

@@ -56,7 +56,6 @@ const dirname =
     fs.writeFileSync(targetPath, format(JSON.stringify(contextData, null, 2)));
   };
 
-  writeContextData('modern', (content) => `export default ${content};`);
   writeContextData('esm', (content) => `export default ${content};`);
   writeContextData('', (content) =>
     [

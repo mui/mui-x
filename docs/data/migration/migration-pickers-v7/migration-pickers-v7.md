@@ -12,21 +12,19 @@ This is a reference guide for upgrading `@mui/x-date-pickers` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `latest`.
 
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "latest",
 
 -"@mui/x-date-pickers-pro": "7.x.x",
-+"@mui/x-date-pickers-pro": "next",
++"@mui/x-date-pickers-pro": "latest",
 ```
-
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v7 to v8.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 :::success
 The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
@@ -52,6 +50,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-date-pickers': '@mui/x-date-pickers/modern',
+-      '@mui/x-date-pickers-pro': '@mui/x-date-pickers-pro/modern',
+     }
+   }
+ }
+```
 
 ## Run codemods
 

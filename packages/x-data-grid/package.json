@@ -35,8 +35,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
@@ -50,7 +49,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.1",
+    "@mui/utils": "^7.0.2",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -74,10 +73,10 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.1",
-    "@mui/system": "^7.0.1",
-    "@mui/types": "^7.4.0",
+    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.2",
+    "@mui/types": "^7.4.1",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
     "babel-plugin-mui-css": "workspace:*",
