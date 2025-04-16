@@ -1,4 +1,4 @@
-# MUI X Scheduker
+# MUI X Scheduler
 
 This package is the Community plan edition of the Scheduler component.
 It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
