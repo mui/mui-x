@@ -19,6 +19,10 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
   if (itemData.dataIndex === undefined) {
     return null;
   }
+  // this can be missed item on the `itemData.dataIndex` index in series.data
+  if(series.type === 'pie' && !series.data[itemData.dataIndex]) {
+    return null;
+  }
   const { displayedLabel, color } =
     series.type === 'pie'
       ? {
