@@ -19,7 +19,31 @@ Migration guides are available with a complete list of the breaking changes:
 - [Tree View](https://mui.com/x/migration/migration-tree-view-v7/)
 - [Charts](https://mui.com/x/migration/migration-charts-v7/)
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+Here are the highlights from alpha and beta releases included in this stable release:
+
+- ⚛️ React 19 support.
+
+- 🛠️ New and improved Data Grid [Toolbar component](https://mui.com/x/react-data-grid/components/toolbar/).
+- 📦 Data Grid [data source](https://mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
+- 🚫 Add ["No columns" overlay](https://mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
+- 🍬 Improved design for Data Grid [Header filters](https://mui.com/x/react-data-grid/filtering/header-filters/).
+- 🔄 Add Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration).
+- 💫 Support [aggregation with server-side data](https://mui.com/x/react-data-grid/server-side-data/aggregation/).
+- 🎁 Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching).
+- 🏎️ Improve Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
+- 🎨 Improve Data Grid theming and add default background color.
+
+- 📊 New Pro chart: [Funnel](https://mui.com/x/react-charts/funnel/).
+- 📊 New Community chart: [Radar](https://mui.com/x/react-charts/radar/) is available in preview for testing.
+- 📊 Charts legend is now an HTML element which can be styled more easily.
+- 📊 Create [custom HTML components](https://mui.com/x/react-charts/components/#html-components) using chart data.
+- 📊 Refactor Charts [Tooltip customization](https://mui.com/x/react-charts/tooltip/#overriding-content).
+- 📊 Improve Charts [composition](https://mui.com/x/react-charts/composition/#overview).
+- 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering).
+- 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`)
+
+- 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
 - 🎁 [Gauge charts](https://mui.com/x/react-charts/gauge/) animation
 - 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/) in Data Grid
