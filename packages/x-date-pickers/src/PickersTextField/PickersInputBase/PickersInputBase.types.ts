@@ -68,5 +68,5 @@ export interface PickersInputBaseProps
     root?: any;
     input?: any;
   };
-  'data-multiinput'?: string;
+  'data-multi-input'?: string;
 }
