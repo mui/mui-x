@@ -1,4 +1,3 @@
-const fs = require('fs');
 // @ts-check
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
