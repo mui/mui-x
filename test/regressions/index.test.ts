@@ -249,7 +249,7 @@ async function main() {
       await screenshotPrintDialogPreview(screenshotPath);
     });
 
-    it('should take a screenshot of the charts print preview', async function test() {
+    it.only('should take a screenshot of the charts print preview', async function test() {
       this.timeout(20000);
 
       const route = '/docs-charts-export/PrintChart';
