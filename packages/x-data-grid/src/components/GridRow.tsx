@@ -129,7 +129,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowReordering,
   );
   const handleRef = useForkRef(ref, refProp);
-  const rowNode = apiRef.current.getRowNode(rowId);
+  const rowNode = apiRef.current.getRowNode(rowId)!;
   const editing = useGridSelectorV8(apiRef, gridRowIsEditingSelector, {
     rowId,
     editMode: rootProps.editMode,
@@ -284,7 +284,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
-  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
+  const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -296,11 +296,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     rowClassNames.push(rootProps.getRowClassName(rowParams));
-  }
-
-  /* Start of rendering */
-  if (!rowNode) {
-    return null;
   }
 
   const getCell = (
@@ -331,7 +326,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       scrollbarWidth,
     );
 
-    if (rowNode?.type === 'skeletonRow') {
+    if (rowNode.type === 'skeletonRow') {
       return (
         <slots.skeletonCell
           key={column.field}

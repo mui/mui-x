@@ -38,11 +38,11 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: '匯出 Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: '搜尋',
+  columnsManagementNoColumns: '沒有欄位',
+  columnsManagementShowHideAllText: '顯示/隱藏所有',
+  columnsManagementReset: '重置',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
@@ -58,9 +58,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等於',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '不等於',
   filterOperatorStartsWith: '以...開頭',
   filterOperatorEndsWith: '以...結束',
   filterOperatorIs: '為',
@@ -81,9 +81,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等於',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等於',
   headerFilterOperatorStartsWith: '以...開頭',
   headerFilterOperatorEndsWith: '以...結束',
   headerFilterOperatorIs: '為',
@@ -109,6 +109,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '選單',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 欄位選單`,
   columnMenuShowColumns: '顯示欄位',
   columnMenuManageColumns: '管理欄位',
   columnMenuFilter: '篩選器',

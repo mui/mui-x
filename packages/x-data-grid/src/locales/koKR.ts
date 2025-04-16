@@ -109,6 +109,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '메뉴',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '열 표시',
   columnMenuManageColumns: '열 관리',
   columnMenuFilter: '필터',
@@ -170,7 +171,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: '행 재배치',
 
   // Aggregation
-  aggregationMenuItemHeader: '총계',
+  aggregationMenuItemHeader: '집계',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',

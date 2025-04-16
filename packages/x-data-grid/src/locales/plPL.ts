@@ -38,11 +38,11 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Pobierz jako plik Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'Szukaj',
+  columnsManagementNoColumns: 'Brak kolumn',
+  columnsManagementShowHideAllText: 'Wyświetl/Ukryj wszystkie',
+  columnsManagementReset: 'Resetuj',
+  columnsManagementDeleteIconLabel: 'Wyczyść',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
@@ -72,12 +72,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
   filterOperatorIsAnyOf: 'jest jednym z',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': 'równa się',
+  'filterOperator!=': 'nie równa się',
+  'filterOperator>': 'większy niż',
+  'filterOperator>=': 'większy lub równy',
+  'filterOperator<': 'mniejszy niż',
+  'filterOperator<=': 'mniejszy lub równy',
 
   // Header filter operators text
   headerFilterOperatorContains: 'Zawiera',
@@ -88,19 +88,19 @@ const plPLGrid: Partial<GridLocaleText> = {
   headerFilterOperatorEndsWith: 'Kończy się na',
   // headerFilterOperatorIs: 'Is',
   headerFilterOperatorNot: 'Niepuste',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorAfter: 'Jest po',
+  headerFilterOperatorOnOrAfter: 'Jest w lub po',
+  headerFilterOperatorBefore: 'Jest przed',
+  headerFilterOperatorOnOrBefore: 'Jest w lub przed',
+  headerFilterOperatorIsEmpty: 'Jest pusty',
+  headerFilterOperatorIsNotEmpty: 'Nie jest pusty',
+  headerFilterOperatorIsAnyOf: 'Is any of',
+  'headerFilterOperator=': 'Równa się',
+  'headerFilterOperator!=': 'Nie równa się',
+  'headerFilterOperator>': 'Większy niż',
+  'headerFilterOperator>=': 'Większy lub równy',
+  'headerFilterOperator<': 'Mniejszy niż',
+  'headerFilterOperator<=': 'Mniejszy lub równy',
 
   // Filter values text
   filterValueAny: 'dowolny',
@@ -109,6 +109,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
   columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',
@@ -170,12 +171,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Porządkowanie wierszy',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregacja',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'średnia',
+  aggregationFunctionLabelMin: 'minimum',
+  aggregationFunctionLabelMax: 'maximum',
+  aggregationFunctionLabelSize: 'rozmiar',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

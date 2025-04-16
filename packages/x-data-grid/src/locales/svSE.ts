@@ -110,6 +110,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Visa kolumner',
   columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
@@ -152,9 +153,9 @@ const svSEGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'mer',
 
   // Column pinning text
-  pinToLeft: 'Fäst till vänster',
-  pinToRight: 'Fäst till höger',
-  unpin: 'Ta bort fästning',
+  pinToLeft: 'Lås till vänster',
+  pinToRight: 'Lås till höger',
+  unpin: 'Lås upp',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupp',

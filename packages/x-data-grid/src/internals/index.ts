@@ -12,6 +12,7 @@ export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
+export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
@@ -182,3 +183,5 @@ export { serializeCellValue } from '../hooks/features/export/serializers/csvSeri
 export * from './utils';
 export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';
+
+export type { GridConfiguration } from '../models/configuration/gridConfiguration';

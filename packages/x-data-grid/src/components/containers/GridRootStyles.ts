@@ -446,13 +446,13 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
-      zIndex: 4, // Should be above the column separator
+      zIndex: 40, // Should be above the column separator
       background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
       overflow: 'hidden',
-      zIndex: 3,
+      zIndex: 30,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -697,7 +697,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
-      zIndex: 3,
+      zIndex: 30,
       background: 'var(--DataGrid-pinnedBackground)',
       '&.Mui-selected': {
         backgroundColor: pinnedSelectedBackgroundColor,

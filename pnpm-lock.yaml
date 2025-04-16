@@ -737,7 +737,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-charts-vendor':
         specifier: workspace:*
@@ -802,7 +802,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-charts':
         specifier: workspace:*
@@ -987,7 +987,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1093,7 +1093,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
@@ -1161,7 +1161,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
@@ -1220,7 +1220,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1306,7 +1306,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-date-pickers':
         specifier: workspace:*
@@ -1380,7 +1380,7 @@ importers:
         specifier: ^7.25.7
         version: 7.26.0
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
@@ -1403,7 +1403,7 @@ importers:
         specifier: ^7.25.7
         version: 7.26.0
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1435,7 +1435,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1488,7 +1488,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -3021,6 +3021,7 @@ packages:
   '@mui/base@5.0.0-beta.40-0':
     resolution: {integrity: sha512-hG3atoDUxlvEy+0mqdMpWd04wca8HKr2IHjW/fAjlkCHQolSLazhZM46vnHjOf15M4ESu25mV/3PgjczyjVM4w==}
     engines: {node: '>=12.0.0'}
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3181,6 +3182,7 @@ packages:
   '@mui/styles@5.16.13':
     resolution: {integrity: sha512-cz/i2npBmy3PfZ94OH7vHyToDXai3Xlo7DjerO7N2C1E/Xv6oh6cRX5EyQyj4z3IzWS4hXOBoInRiWN3iG/95Q==}
     engines: {node: '>=12.0.0'}
+    deprecated: Deprecated, check the migration instruction in https://mui.com/material-ui/migration/migrating-from-jss/
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4913,8 +4915,8 @@ packages:
   camelize@1.0.1:
     resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
 
-  caniuse-lite@1.0.30001667:
-    resolution: {integrity: sha512-7LTwJjcRkzKFmtqGsibMeuXmvFDfZq/nzIjnmgCGzKKRVzjD72selLDK1oPF/Oxzmt4fNcPvTDvGqSDG4tCALw==}
+  caniuse-lite@1.0.30001707:
+    resolution: {integrity: sha512-3qtRjw/HQSMlDWf+X79N206fepf4SOOU6SQLMaq/0KkZLmSjPxAkBOQQ+FxbHKfHmYLZFfdWsO3KA90ceHPSnw==}
 
   chai-dom@1.12.0:
     resolution: {integrity: sha512-pLP8h6IBR8z1AdeQ+EMcJ7dXPdsax/1Q7gdGZjsnAmSBl3/gItQUYSCo32br1qOy4SlcBjvqId7ilAf3uJ2K1w==}
@@ -6477,6 +6479,7 @@ packages:
   gm@1.25.0:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
+    deprecated: The gm module has been sunset. Please migrate to an alternative. https://github.com/aheckmann/gm?tab=readme-ov-file#2025-02-24-this-project-is-not-maintained
 
   google-auth-library@9.15.0:
     resolution: {integrity: sha512-7ccSEJFDFO7exFbO6NRyC+xH8/mZ1GZGG2xxx9iHxZWcjUjJpjWxIMw3cofAKcueZ6DATiukmmprD7yavQHOyQ==}
@@ -7371,6 +7374,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.groupby@4.6.0:
     resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
@@ -7386,6 +7390,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isfunction@3.0.9:
     resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
@@ -13681,7 +13686,7 @@ snapshots:
   autoprefixer@10.4.20(postcss@8.4.47):
     dependencies:
       browserslist: 4.24.0
-      caniuse-lite: 1.0.30001667
+      caniuse-lite: 1.0.30001707
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.1.1
@@ -13893,7 +13898,7 @@ snapshots:
 
   browserslist@4.24.0:
     dependencies:
-      caniuse-lite: 1.0.30001667
+      caniuse-lite: 1.0.30001707
       electron-to-chromium: 1.5.32
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.24.0)
@@ -13993,7 +13998,7 @@ snapshots:
 
   camelize@1.0.1: {}
 
-  caniuse-lite@1.0.30001667: {}
+  caniuse-lite@1.0.30001707: {}
 
   chai-dom@1.12.0(chai@4.5.0):
     dependencies:
@@ -17611,7 +17616,7 @@ snapshots:
       '@swc/counter': 0.1.3
       '@swc/helpers': 0.5.15
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001667
+      caniuse-lite: 1.0.30001707
       postcss: 8.4.31
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)

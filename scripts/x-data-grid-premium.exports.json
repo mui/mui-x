@@ -519,6 +519,7 @@
   { "name": "GridRowHeightReturnValue", "kind": "TypeAlias" },
   { "name": "GridRowId", "kind": "TypeAlias" },
   { "name": "GridRowIdGetter", "kind": "TypeAlias" },
+  { "name": "gridRowIdSelector", "kind": "Variable" },
   { "name": "GridRowIdToModelLookup", "kind": "TypeAlias" },
   { "name": "gridRowMaximumTreeDepthSelector", "kind": "Variable" },
   { "name": "GridRowMode", "kind": "TypeAlias" },

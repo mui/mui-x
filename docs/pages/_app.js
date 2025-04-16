@@ -39,16 +39,13 @@ function getMuiPackageVersion(packageName, commitRef) {
 }
 
 ponyfillGlobal.muiDocConfig = {
-  csbIncludePeerDependencies: (deps, { versions }) => {
+  csbIncludePeerDependencies: (deps) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
-    // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
-    newDeps['@mui/material'] =
-      versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
+    newDeps['@mui/material'] = '^6';
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/icons-material'] = '^6';
     }
     return newDeps;
   },
@@ -212,8 +209,8 @@ function AppWrapper(props) {
       name: 'MUI X',
       versions: [
         {
-          text: `next`,
-          href: `https://next.mui.com${languagePrefix}/x/introduction/`,
+          text: `v8`,
+          href: `https://mui.com${languagePrefix}/x/introduction/`,
         },
         {
           text: `v${process.env.LIB_VERSION}`,
@@ -231,8 +228,8 @@ function AppWrapper(props) {
         name: 'Data Grid',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-data-grid/`,
+            text: `v8`,
+            href: `https://mui.com${languagePrefix}/x/react-data-grid/`,
           },
           {
             text: `v${process.env.DATA_GRID_VERSION}`,
@@ -249,8 +246,8 @@ function AppWrapper(props) {
         name: 'Date Pickers',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/`,
+            text: `v8`,
+            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           {
             text: `v${process.env.DATE_PICKERS_VERSION}`,
@@ -272,8 +269,8 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-charts/`,
+            text: `v8`,
+            href: `https://mui.com${languagePrefix}/x/react-charts/`,
           },
           {
             text: `v${process.env.CHARTS_VERSION}`,
@@ -288,8 +285,8 @@ function AppWrapper(props) {
         name: 'Tree View',
         versions: [
           {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/react-tree-view/`,
+            text: `v8`,
+            href: `https://mui.com${languagePrefix}/x/react-tree-view/`,
           },
           {
             text: `v${process.env.TREE_VIEW_VERSION}`,

@@ -9,6 +9,7 @@ import { useGridLocaleText } from './useGridLocaleText';
 import { useGridPipeProcessing } from './pipeProcessing';
 import { useGridStrategyProcessing } from './strategyProcessing';
 import { useGridStateInitialization } from './useGridStateInitialization';
+import { useGridProps } from './useGridProps';
 
 /**
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
@@ -23,6 +24,7 @@ export const useGridInitialization = <
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);
 
   useGridRefs(privateApiRef);
+  useGridProps(privateApiRef, props);
   useGridIsRtl(privateApiRef);
   useGridLoggerFactory(privateApiRef, props);
   useGridStateInitialization(privateApiRef);

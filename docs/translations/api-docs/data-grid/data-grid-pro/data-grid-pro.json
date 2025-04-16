@@ -150,7 +150,9 @@
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
-    "getRowId": { "description": "Return the id of a given GridRowModel." },
+    "getRowId": {
+      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+    },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
@@ -545,6 +547,9 @@
         "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
+    },
+    "resetPageOnSortFilter": {
+      "description": "If <code>true</code>, the page is set to 0 after each sorting or filtering. This prop will be removed in the next major version and resetting the page will become the default behavior."
     },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },

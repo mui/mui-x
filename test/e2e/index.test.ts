@@ -523,7 +523,7 @@ async function initializeEnvironment(
 
         await page.hover('div[role="columnheader"][data-field="birthday"]');
         await page.click(
-          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
         await page.keyboard.type('08/04/2024', { delay: 10 });
@@ -599,6 +599,39 @@ async function initializeEnvironment(
           return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
         });
         expect(scrollTop).not.to.equal(0);
+      });
+
+      // https://github.com/mui/mui-x/issues/14726
+      it('should not cause scroll jumping when the focused cell is outside of the viewport', async () => {
+        await renderFixture('DataGrid/DynamicRowHeight');
+
+        await page.click('[role="row"][data-id="2"] [role="gridcell"][data-field="id"]');
+
+        const scrollPositions: number[] = [];
+        await page.exposeFunction('storeScrollPosition', async (scrollTop: number) => {
+          scrollPositions.push(scrollTop);
+        });
+        await page.evaluate(() => {
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.addEventListener('scroll', () => {
+            // @ts-ignore
+            window.storeScrollPosition(virtualScroller.scrollTop);
+          });
+        });
+
+        await page.mouse.wheel(0, 150);
+        await page.waitForTimeout(500);
+
+        const hadScrollJump = scrollPositions.some((scrollTop, index) => {
+          if (index === 0) {
+            return false;
+          }
+          // When scrolling down, the scrollTop should be always decreasing
+          const prevScrollTop = scrollPositions[index - 1];
+          return scrollTop < prevScrollTop;
+        });
+
+        expect(hadScrollJump).to.equal(false, `Scroll jumped, scrollPositions: ${scrollPositions}`);
       });
     });
 
@@ -1056,6 +1089,38 @@ async function initializeEnvironment(
         expect(thrownErrors).not.to.contain(
           'MUI X: The timezone of the start and the end date should be the same.',
         );
+      });
+
+      it('should keep the focus on the clicked section', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/DesktopDateRangePickerWithValue');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
+
+      it('should keep the focus on the clicked section with single input field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
       });
     });
   });

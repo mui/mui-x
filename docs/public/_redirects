@@ -61,5 +61,11 @@
 # 2024
 /x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
 /x/react-charts/tree-map/ /x/react-charts/treemap/ 301
+# 2025
+/x/react-charts/quickstart/ /x/react-charts/getting-started/ 301
+/x/react-data-grid/quickstart/ /x/react-data-grid/getting-started/ 301
+/x/react-date-pickers/quickstart/ /x/react-date-pickers/getting-started/ 301
+/x/react-tree-view/quickstart/ /x/react-tree-view/getting-started/ 301
+/x/react-data-grid/features/ /x/react-data-grid/demo/ 301
 
 # Proxies

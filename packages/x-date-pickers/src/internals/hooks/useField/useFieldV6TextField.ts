@@ -201,6 +201,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
         return nextSectionIndex === -1 ? sections.length - 1 : nextSectionIndex - 1;
       },
       focusField: (newSelectedSection = 0) => {
+        if (getActiveElement(document) === inputRef.current) {
+          return;
+        }
         inputRef.current?.focus();
         setSelectedSections(newSelectedSection);
       },

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import '../typeOverloads/modules';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';

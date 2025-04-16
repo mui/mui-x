@@ -63,11 +63,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Завантажити у форматі Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'Пошук',
+  columnsManagementNoColumns: 'Немає стовпців',
+  columnsManagementShowHideAllText: 'Показати/Приховати всі',
+  columnsManagementReset: 'Скинути',
+  columnsManagementDeleteIconLabel: 'Очистити',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
@@ -83,9 +83,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'містить',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не містить',
   filterOperatorEquals: 'дорівнює',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не дорівнює',
   filterOperatorStartsWith: 'починається з',
   filterOperatorEndsWith: 'закінчується на',
   filterOperatorIs: 'дорівнює',
@@ -106,9 +106,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Містить',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Не містить',
   headerFilterOperatorEquals: 'Дорівнює',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Не дорівнює',
   headerFilterOperatorStartsWith: 'Починається з',
   headerFilterOperatorEndsWith: 'Закінчується на',
   headerFilterOperatorIs: 'Дорівнює',
@@ -134,6 +134,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Показати стовпці',
   columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',

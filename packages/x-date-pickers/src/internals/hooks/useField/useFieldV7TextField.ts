@@ -114,7 +114,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
       },
       focusField: (newSelectedSections = 0) => {
-        if (!sectionListRef.current) {
+        if (
+          !sectionListRef.current ||
+          // if the field is already focused, we don't need to focus it again
+          interactions.getActiveSectionIndexFromDOM() != null
+        ) {
           return;
         }
 

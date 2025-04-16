@@ -158,6 +158,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         name={name}
         role="group"
         aria-labelledby={inputLabelId}
+        aria-describedby={helperTextId}
+        aria-live={helperTextId ? 'polite' : undefined}
         {...InputProps}
       />
       {helperText && (

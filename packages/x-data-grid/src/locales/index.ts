@@ -2,6 +2,7 @@
 export * from './arSD';
 export * from './beBY';
 export * from './bgBG';
+export * from './bnBD';
 export * from './csCZ';
 export * from './daDK';
 export * from './deDE';

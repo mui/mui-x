@@ -49,8 +49,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Vyhľadať',
   columnsManagementNoColumns: 'Žiadne stĺpce',
   columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementReset: 'Resetovať',
+  columnsManagementDeleteIconLabel: 'Vymazať',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
@@ -66,9 +66,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'neobsahuje',
   filterOperatorEquals: 'rovná sa',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nerovná sa',
   filterOperatorStartsWith: 'začína s',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -89,9 +89,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Neobsahuje',
   headerFilterOperatorEquals: 'Rovná sa',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nerovná sa',
   headerFilterOperatorStartsWith: 'Začína s',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',
@@ -117,6 +117,7 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  columnMenuAriaLabel: (columnName: string) => `Ponuka stĺpca ${columnName}`,
   columnMenuShowColumns: 'Zobraziť stĺpce',
   columnMenuManageColumns: 'Spravovať stĺpce',
   columnMenuFilter: 'Filter',

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "7.26.0",
+  "version": "7.28.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",
-    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@mui/utils": "^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
     "@mui/x-internals": "workspace:*"
   },
   "peerDependencies": {
