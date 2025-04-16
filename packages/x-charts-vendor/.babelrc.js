@@ -12,8 +12,14 @@ const packageJsonPath = path.resolve('./package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
 const babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
 
+if (!babelRuntimeVersion) {
+  throw new Error(
+    'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
+  );
+}
+
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['modern', 'stable', 'rollup']);
+  const useESModules = api.env(['stable', 'rollup']);
 
   return {
     only: [/node_modules\/(d3-.*|internmap|delaunator|robust-predicates)\/.*\.js/],

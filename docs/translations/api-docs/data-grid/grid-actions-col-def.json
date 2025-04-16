@@ -29,6 +29,9 @@
       "description": "Display mode for the cell:<br /> - &#39;text&#39;: For text-based cells (default)<br /> - &#39;flex&#39;: For cells with HTMLElement children"
     },
     "editable": { "description": "If <code>true</code>, the cells of the column are editable." },
+    "examples": {
+      "description": "Example values that can be used by the grid to get more context about the column."
+    },
     "filterable": { "description": "If <code>true</code>, the column is filterable." },
     "filterOperators": { "description": "Allows setting the filter operators for this column." },
     "flex": { "description": "The flex grow factor of the column. Must be a positive number." },
@@ -57,6 +60,9 @@
     "pinnable": {
       "description": "If <code>false</code>, the menu items for column pinning menu will not be rendered.<br />Only available in DataGridPro."
     },
+    "pivotable": {
+      "description": "If <code>false</code>, the column will not be available for pivoting in the pivot panel."
+    },
     "preProcessEditCellProps": {
       "description": "Callback fired when the edit props of the cell changes.<br />Processes the props before being saved into the state."
     },
@@ -75,9 +81,6 @@
     "sortable": { "description": "If <code>false</code>, disables sorting for this column." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
-    "unstable_examples": {
-      "description": "Example values that can be used by the grid to get more context about the column."
-    },
     "valueFormatter": { "description": "Formats the cell value before rendering." },
     "valueGetter": {
       "description": "Function that returns specific data to render in the cell instead of using the field value."

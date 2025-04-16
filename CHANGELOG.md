@@ -5,6 +5,147 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.3
+
+_Apr 3, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚫 Removed `react-spring` as a dependency of `@mui/x-charts`
+- 📦 Data Grid list view feature is now stable
+- 💫 Support title in Data Grid
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The list view feature and its related props are now stable.
+
+  The `unstable_listColumn` prop has been renamed to `listViewColumn`.
+
+  The `GridListColDef` type has been renamed to `GridListViewColDef`.
+
+  ```diff
+  -const listViewColDef: GridListColDef = {
+  +const listViewColDef: GridListViewColDef = {
+     field: 'listColumn',
+     renderCell: ListViewCell,
+   };
+
+   <DataGridPro
+  -  unstable_listView
+  -  unstable_listColumn={listViewColDef}
+  +  listView
+  +  listViewColumn={listViewColDef}
+   />
+  ```
+
+- The `useGridApiEventHandler()` hook has been renamed to `useGridEvent()`.
+- The `useGridApiOptionHandler()` hook has been renamed to `useGridEventPriority()`.
+
+#### `@mui/x-data-grid@8.0.0-beta.3`
+
+- [DataGrid] Fix "is any of" autocomplete rendering (#17226) @KenanYusuf
+- [DataGrid] Rename `useGridApiEventHandler()` to `useGridEvent()` (#17159) @romgrk
+- [DataGrid] Support adding a label to the grid (#17147) @KenanYusuf
+- [DataGrid] Refactor: remove material typings (#17119) @romgrk
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.3`, plus:
+
+- [DataGridPro] Make list view feature stable (#17217) @KenanYusuf
+- [DataGridPro] Always refetch lazy-loading rows (#16827) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-beta.3`
+
+- [pickers] Add new `nextOrAccept` action bar action (#17037) @flaviendelangle
+- [pickers] Improve the Multi Section Digital Clock scrollbar thickness (#16774) @oliviertassinari
+- [TimePicker] Align the Digital Clock scrollbar thickness (#17203) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
+
+### Charts
+
+#### Breaking changes
+
+- Removed `react-spring` as a dependency of `@mui/x-charts`.
+  A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
+
+  - the type of the `x`, `y`, `width` and `height` props of the `bar` slot are now `number`;
+  - the type of `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `arcLabelRadius`, `cornerRadius` and `paddingAngle` props of `pieArc` and `pieArcLabel` slot are now `number`.
+
+  Additionally, the `pieArc` slot now receives a `skipAnimation` prop to configure whether animations should be enabled or disabled.
+
+- Tick labels in the y-axis of cartesian charts will now have an ellipsis applied to prevent overflow.
+  If your tick labels are being clipped sooner than you would like, you can increase the y-axis size by increasing its width property.
+
+- The tooltip DOM structure is modified to improve accessibility. If you relied on it to apply some style or run tests, you might be impacted by this modification.
+  - The axis tooltip displays a table per axis with the axis value in a caption.
+  - Cells containing the series label and the color mark got merged in a th cell.
+
+#### `@mui/x-charts@8.0.0-beta.3`
+
+- [charts] Adjust color palettes (#17209) @noraleonte
+- [charts] Allow multiple axes in the tooltip (#17058) @alexfauquette
+- [charts] Improve custom legend docs (#17231) @JCQuintas
+- [charts] Fix crash when item shown in tooltip is unmounted (#17169) @bernardobelchior
+- [charts] Migrate some animations from `react-spring` (#16961) @bernardobelchior
+- [charts] Remove `react-spring` (#17123) @bernardobelchior
+- [charts] Fix y-axis tick label overflow (#16846) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-beta.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
+
+### `@mui/x-codemod@8.0.0-beta.3`
+
+- [codemod] Add `listView` prop rename codemod (#17220) @MBilalShafi
+
+### Docs
+
+- [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
+- [docs] Fix 301 link @oliviertassinari
+- [docs] Fix redirection getting-started (#17200) @oliviertassinari
+- [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
+- [docs] Update Localization Provider JSDoc link (#17207) @LukasTy
+
+### Core
+
+- [core] Cleanup `@mui` dependency versions (#17160) @LukasTy
+- [core] Sync scorecards.yml across codebase @oliviertassinari
+- [core] Revert upgrade to React 19.1 (#17206) @bernardobelchior
+- [code-infra] Fix `test:unit` warning (#17224) @JCQuintas
+- [code-infra] Fix pickers failing test after clock=fake removal (#17202) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValidation` (#17150) @JCQuintas
+- [code-infra] Remove clock=fake from `describeValue` (#17199) @JCQuintas
+- [infra] Add write permission for actions in issue status label handler (#17161) @michelengelen
+
 ## 8.0.0-beta.2
 
 _Mar 27, 2025_
@@ -8019,7 +8160,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
 
-  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (for example: Sunday for `en-US`, Monday for `fr-FR`).
 
 - 📈 Fix a lot of Charts package issues
 - 🎉 The Data Grid features Cell selection and Clipboard paste are now stable

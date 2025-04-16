@@ -94,6 +94,7 @@ const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridR
 
 const getRowComparator = (
   sortModel: GridSortModel | undefined,
+  aggregationModel: GridAggregationModel | undefined,
   columnsWithDefaultColDef: GridColDef[],
 ) => {
   if (!sortModel) {
@@ -101,8 +102,10 @@ const getRowComparator = (
     return comparator;
   }
   const sortOperators = sortModel.map((sortItem) => {
-    const columnField = sortItem.field;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    const columnField = aggregationModel?.[sortItem.field]
+      ? `${sortItem.field}Aggregate`
+      : sortItem.field;
+    const colDef = columnsWithDefaultColDef.find(({ field }) => field === sortItem.field) as any;
     return {
       ...sortItem,
       valueGetter: simplifiedValueGetter(columnField, colDef),
@@ -342,7 +345,11 @@ export const loadServerRows = (
 
   let filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
 
-  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+  const rowComparator = getRowComparator(
+    queryOptions.sortModel,
+    queryOptions.aggregationModel,
+    columnsWithDefaultColDef,
+  );
   filteredRows = [...filteredRows].sort(rowComparator);
 
   let aggregateRow = {};
@@ -550,7 +557,11 @@ export const processTreeDataRows = (
 
   if (queryOptions.sortModel) {
     // apply sorting
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
   }
 
@@ -612,10 +623,16 @@ export const processRowGroupingRows = (
   const rowsWithMissingGroups: GridValidRowModel[] = [];
 
   // add paths and generate parent rows based on `groupFields`
-  const groupFields = queryOptions.groupFields;
+  const groupFields = queryOptions.groupFields.map((field) => ({
+    field,
+    type: columnsWithDefaultColDef.find((col) => col.field === field)?.type || 'string',
+  }));
+
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => String(row[field]));
+      const partialPath = groupFields.map(({ field, type }) =>
+        String(type === 'singleSelect' ? row[field].label : row[field]),
+      );
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
@@ -691,7 +708,11 @@ export const processRowGroupingRows = (
   });
 
   if (queryOptions.sortModel) {
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
     const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
     childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];

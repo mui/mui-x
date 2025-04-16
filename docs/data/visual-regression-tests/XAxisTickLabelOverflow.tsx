@@ -51,7 +51,7 @@ export default function XAxisTickLabelOverflow() {
       hideLegend
       yAxis={[
         {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+          valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
           width: 60,
         },
       ]}

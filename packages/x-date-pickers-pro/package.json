@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "The Pro plan edition of the Date and Time Picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -28,8 +28,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
@@ -43,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
+    "@mui/utils": "^7.0.2",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -54,8 +53,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "date-fns": "^2.25.0 || ^3.2.0 || ^4.0.0",
     "date-fns-jalali": "^2.13.0-0 || ^3.2.0-0 || ^4.0.0-0",
     "dayjs": "^1.10.7",
@@ -96,10 +95,10 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.1",
-    "@mui/system": "^7.0.1",
-    "@types/luxon": "^3.6.0",
+    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.2",
+    "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "date-fns": "^4.1.0",
     "date-fns-jalali": "^4.1.0-0",

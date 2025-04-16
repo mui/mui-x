@@ -4,7 +4,6 @@ import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
-  MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
@@ -20,8 +19,6 @@ export interface UseTreeViewParameters<
 
 export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   apiRef: React.RefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
-  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
-  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
   experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
 }
 

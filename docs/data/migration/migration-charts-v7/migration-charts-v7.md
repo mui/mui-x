@@ -41,6 +41,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
 
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-charts': '@mui/x-charts/modern',
+-      '@mui/x-charts-pro': '@mui/x-charts-pro/modern',
+     }
+   }
+ }
+```
+
 ## Breaking changes
 
 Since v8 is a major release, it contains some changes that affect the public API.
@@ -85,19 +99,6 @@ For example, if a codemod tries to rename a prop, but this prop is hidden with t
 After running the codemods, make sure to test your application and that you don't have any console errors.
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
-:::
-
-## `@mui/material` peer dependency change
-
-The `@mui/material` peer dependency has been updated to `^7.0.0` in an effort to smoothen the adoption of hybrid ESM and CJS support.
-This change should resolve ESM and CJS interoperability issues in various environments.
-
-:::info
-The migration to `@mui/material` v7 should not cause too many issues as it has limited amount of breaking changes.
-
-- [Upgrade](/material-ui/migration/upgrade-to-v6/) to `@mui/material` v6
-- [Upgrade](/material-ui/migration/upgrade-to-v7/) to `@mui/material` v7
-
 :::
 
 ## Series properties renaming
@@ -160,6 +161,17 @@ Renames `LegendPosition` to `Position`.
 ```diff
 -import { LegendPosition } from '@mui/x-charts/ChartsLegend';
 +import { Position } from '@mui/x-charts/models';
+```
+
+## Replace `slotProps.legend.hidden` with `hideLegend` prop
+
+The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
+
+```diff
+ <BarChart
+-  slotProps={{ legend: { hidden: true } }}
++  hideLegend
+ />
 ```
 
 ## The `getSeriesToDisplay` function was removed
@@ -238,8 +250,8 @@ You can now use `ChartContainer` as a responsive container which works now exact
 ```diff
 -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 -import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 
 -<ResponsiveChartContainer>
 +<ChartContainer>

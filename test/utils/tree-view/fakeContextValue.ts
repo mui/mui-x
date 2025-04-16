@@ -14,10 +14,6 @@ export const getFakeContextValue = (
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  icons: {
-    slots: {},
-    slotProps: {},
-  },
   rootRef: {
     current: null,
   },
@@ -33,15 +29,14 @@ export const getFakeContextValue = (
       loading: false,
       error: null,
     },
-    expansion: { expandedItemsMap: new Map(), expansionTrigger: 'content' },
+    expansion: { expandedItems: [], expansionTrigger: 'content' },
     selection: {
-      selectedItemsMap: new Map(),
-      rawSelectedItems: null,
+      selectedItems: null,
       isEnabled: true,
       isMultiSelectEnabled: false,
       isCheckboxSelectionEnabled: features.checkboxSelection ?? false,
       selectionPropagation: { parents: false, descendants: false },
     },
-    focus: { focusedItemId: null, defaultFocusableItemId: null },
+    focus: { focusedItemId: null },
   }),
 });

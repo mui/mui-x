@@ -11,8 +11,8 @@ const aggregationFunctions = {
 };
 
 export default function ServerSideDataGridAggregation() {
-  const { columns, initialState, fetchRows } = useMockServer(
-    {},
+  const { columns, initialState, fetchRows, editRow } = useMockServer(
+    { editable: true },
     { useCursorPagination: false },
   );
 
@@ -34,11 +34,15 @@ export default function ServerSideDataGridAggregation() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
       getAggregatedValue: (row, field) => {
         return row[`${field}Aggregate`];
       },
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   const initialStateWithPagination = React.useMemo(
