@@ -67,8 +67,7 @@ interface DemoItemProps {
   sx?: SxProps<Theme>;
 }
 /**
- * WARNING: This is an internal component used in documentation to achieve a desired layout.
- * Please do not use it in your application.
+ * @deprecated Will be removed in the next major version (v9.0.0).
  */
 export function DemoItem(props: DemoItemProps) {
   const { label, children, component, sx: sxProp } = props;
@@ -105,9 +104,9 @@ const isDemoItem = (child: React.ReactNode): child is React.ReactElement<DemoIte
   }
   return false;
 };
+
 /**
- * WARNING: This is an internal component used in documentation to achieve a desired layout.
- * Please do not use it in your application.
+ * @deprecated Will be removed in the next major version (v9.0.0).
  */
 export function DemoContainer(props: DemoGridProps) {
   const { children, components, sx: sxProp } = props;
