@@ -21,8 +21,10 @@ The print dialog allows you to print the chart or save it as a PDF, as well as c
 ## Composition
 
 As detailed in the [Composition](/x/react-charts/composition/) section, charts alternatively be composed of more focused components.
-When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant element is included in the export.
 
-If you are using composition and are using a custom `ChartsWrapper` element, you need to use the `useChartRootRef` hook to get a reference to the root element of the chart so that export can work properly.
+When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
+As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
+
+If you want to use a custom wrapper element, you need to use the `useChartRootRef` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
 
 {{"demo": "ExportComposition.js"}}
