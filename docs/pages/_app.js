@@ -229,7 +229,7 @@ function AppWrapper(props) {
         if (version === 'v8') {
           return {
             text: version,
-            current: true,
+            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
         return {
