@@ -13,12 +13,12 @@ const Rect = styled('rect')(({ theme }) => ({
 }));
 
 interface ChartPreviewHandleProps
-  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height'> {
+  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'> {
   onResize: (delta: number) => void;
 }
 
 export const ChartPreviewHandle = React.forwardRef<SVGRectElement, ChartPreviewHandleProps>(
-  function ChartPreviewHandle({ x, y, width = 4, height, onResize }, forwardedRef) {
+  function ChartPreviewHandle({ x, y, width, height, onResize, rx = 2, ry = 2 }, forwardedRef) {
     const handleRef = React.useRef<SVGRectElement>(null);
     const ref = useForkRef(handleRef, forwardedRef);
 
@@ -63,6 +63,6 @@ export const ChartPreviewHandle = React.forwardRef<SVGRectElement, ChartPreviewH
       };
     }, [onResizeEvent]);
 
-    return <Rect ref={ref} x={x} y={y} width={width} height={height} />;
+    return <Rect ref={ref} x={x} y={y} width={width} height={height} rx={rx} ry={ry} />;
   },
 );

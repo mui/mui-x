@@ -34,8 +34,11 @@ const ActivePreviewRect = styled('rect')(({ theme }) => ({
   },
 }));
 
+const PREVIEW_HANDLE_WIDTH = 4;
+const PREVIEW_HEIGHT = 40;
+
 export function ChartPreview({
-  size = 30,
+  size = PREVIEW_HEIGHT,
   axisId = DEFAULT_X_AXIS_KEY,
 }: {
   size: number;
@@ -63,7 +66,7 @@ export function ChartPreview({
       <PreviewBackgroundRect
         x={drawingArea.left}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        height={margin.bottom}
+        height={size}
         width={drawingArea.width}
       />
       <Preview size={size} zoomData={zoomData} axisId={axisId} />
@@ -86,6 +89,7 @@ function Preview({
   const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
   const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const previewHandleHeight = 0.6 * size;
 
   React.useEffect(() => {
     const activePreviewRect = activePreviewRectRef.current;
@@ -227,15 +231,21 @@ function Preview({
         height={size}
       />
       <ChartPreviewHandle
-        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
-        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        height={size}
+        x={drawingArea.left + (zoomData.start / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
+        y={
+          drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
+        }
+        width={PREVIEW_HANDLE_WIDTH}
+        height={previewHandleHeight}
         onResize={onResizeLeft}
       />
       <ChartPreviewHandle
-        x={drawingArea.left + (zoomData.end / 100) * drawingArea.width}
-        y={drawingArea.top + drawingArea.height + bottomAxesHeight}
-        height={size}
+        x={drawingArea.left + (zoomData.end / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
+        y={
+          drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
+        }
+        width={PREVIEW_HANDLE_WIDTH}
+        height={previewHandleHeight}
         onResize={onResizeRight}
       />
     </React.Fragment>
