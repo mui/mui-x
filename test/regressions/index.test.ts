@@ -256,10 +256,7 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      await page.reload();
-      console.log('reload');
-      await page.goto(`${baseUrl}${route}#no-dev`);
-      console.log('page goto');
+      console.log('before navigate');
       await navigateToTest(route);
       console.log('navigate');
 
