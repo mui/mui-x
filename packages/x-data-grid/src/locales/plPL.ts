@@ -58,9 +58,9 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'zawiera',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'nie zawiera',
   filterOperatorEquals: 'równa się',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nie równa się',
   filterOperatorStartsWith: 'zaczyna się od',
   filterOperatorEndsWith: 'kończy się na',
   filterOperatorIs: 'równa się',
@@ -81,12 +81,12 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Zawiera',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Nie zawiera',
   headerFilterOperatorEquals: 'Równa się',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nie równa się',
   headerFilterOperatorStartsWith: 'Zaczyna się od',
   headerFilterOperatorEndsWith: 'Kończy się na',
-  // headerFilterOperatorIs: 'Is',
+  headerFilterOperatorIs: 'Jest',
   headerFilterOperatorNot: 'Niepuste',
   headerFilterOperatorAfter: 'Jest po',
   headerFilterOperatorOnOrAfter: 'Jest w lub po',
@@ -94,7 +94,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   headerFilterOperatorOnOrBefore: 'Jest w lub przed',
   headerFilterOperatorIsEmpty: 'Jest pusty',
   headerFilterOperatorIsNotEmpty: 'Nie jest pusty',
-  headerFilterOperatorIsAnyOf: 'Is any of',
+  headerFilterOperatorIsAnyOf: 'Jest jednym z',
   'headerFilterOperator=': 'Równa się',
   'headerFilterOperator!=': 'Nie równa się',
   'headerFilterOperator>': 'Większy niż',
@@ -109,7 +109,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Menu kolumny: ${columnName}`,
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
   columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',
