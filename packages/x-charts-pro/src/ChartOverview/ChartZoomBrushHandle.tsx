@@ -4,25 +4,36 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { chartZoomBrushHandleClasses, useUtilityClasses } from './chartZoomBrushHandleClasses';
 
 const Rect = styled('rect')(({ theme }) => ({
-  '&': {
+  [`&.${chartZoomBrushHandleClasses.root}`]: {
     fill: (theme.vars || theme).palette.grey[500],
+  },
+  [`&.${chartZoomBrushHandleClasses.horizontal}`]: {
     cursor: 'ew-resize',
+  },
+  [`&.${chartZoomBrushHandleClasses.vertical}`]: {
+    cursor: 'ns-resize',
   },
 }));
 
-interface ChartZoomBrushHandleProps
-  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'> {
+export interface ChartZoomBrushHandleOwnerState {
   onResize: (delta: number) => void;
   orientation: 'horizontal' | 'vertical';
 }
+
+export interface ChartZoomBrushHandleProps
+  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'>,
+    ChartZoomBrushHandleOwnerState {}
 
 export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBrushHandleProps>(
   function ChartPreviewHandle(
     { x, y, width, height, onResize, orientation, rx = 2, ry = 2 },
     forwardedRef,
   ) {
+    const classes = useUtilityClasses({ onResize, orientation });
+
     const handleRef = React.useRef<SVGRectElement>(null);
     const ref = useForkRef(handleRef, forwardedRef);
 
@@ -68,6 +79,17 @@ export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBr
       };
     }, [onResizeEvent, orientation]);
 
-    return <Rect ref={ref} x={x} y={y} width={width} height={height} rx={rx} ry={ry} />;
+    return (
+      <Rect
+        className={classes.root}
+        ref={ref}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={rx}
+        ry={ry}
+      />
+    );
   },
 );
