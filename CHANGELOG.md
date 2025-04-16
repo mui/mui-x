@@ -18,6 +18,7 @@ Migration guides are available with a complete list of the breaking changes:
 - [Date and Time Pickers](https://mui.com/x/migration/migration-pickers-v7/)
 - [Tree View](https://mui.com/x/migration/migration-tree-view-v7/)
 - [Charts](https://mui.com/x/migration/migration-charts-v7/)
+- [Material UI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
 
 Here are the highlights from alpha and beta releases included in this stable release:
 
