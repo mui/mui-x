@@ -5,6 +5,62 @@ import {
 
 export interface GridClasses {
   /**
+   * Styles applied to the root element of the AI assistant panel.
+   */
+  aiAssistantPanel: string;
+  /**
+   * Styles applied to the AI assistant panel header.
+   */
+  aiAssistantPanelHeader: string;
+  /**
+   * Styles applied to the AI assistant panel title.
+   */
+  aiAssistantPanelTitle: string;
+  /**
+   * Styles applied to the AI assistant panel title container.
+   */
+  aiAssistantPanelTitleContainer: string;
+  /**
+   * Styles applied to the AI assistant panel body.
+   */
+  aiAssistantPanelBody: string;
+  /**
+   * Styles applied to the AI assistant panel conversation title.
+   */
+  aiAssistantPanelConversationTitle: string;
+  /**
+   * Styles applied to the AI assistant panel empty text.
+   */
+  aiAssistantPanelEmptyText: string;
+  /**
+   * Styles applied to the AI assistant panel footer.
+   */
+  aiAssistantPanelFooter: string;
+  /**
+   * Styles applied to the AI assistant panel conversation.
+   */
+  aiAssistantPanelConversation: string;
+  /**
+   * Styles applied to the AI assistant panel conversation list.
+   */
+  aiAssistantPanelConversationList: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions.
+   */
+  aiAssistantPanelSuggestions: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions list.
+   */
+  aiAssistantPanelSuggestionsList: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions item.
+   */
+  aiAssistantPanelSuggestionsItem: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions label.
+   */
+  aiAssistantPanelSuggestionsLabel: string;
+  /**
    * Styles applied to the root element of the cell with type="actions".
    */
   actionsCell: string;
@@ -667,26 +723,6 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
-   * Styles applied to the toolbar prompt control element.
-   */
-  toolbarPromptControl: string;
-  /**
-   * Styles applied to the toolbar prompt control element when recording.
-   */
-  'toolbarPromptControl--recording': string;
-  /**
-   * Styles applied to the toolbar prompt control recording indicator element.
-   */
-  toolbarPromptControlRecordingIndicator: string;
-  /**
-   * Styles applied to the toolbar prompt control record button element.
-   */
-  toolbarPromptControlRecordButton: string;
-  /**
-   * Styles applied to the toolbar prompt control send button element.
-   */
-  toolbarPromptControlSendButton: string;
-  /**
    * Styles applied to the toolbar quick filter root element.
    */
   toolbarQuickFilter: string;
@@ -830,6 +866,50 @@ export interface GridClasses {
    * Styles applied to the pivot panel switch label.
    */
   pivotPanelSwitchLabel: string;
+  /**
+   * Styles applied to the prompt root element.
+   */
+  prompt: string;
+  /**
+   * Styles applied to the prompt content element.
+   */
+  promptContent: string;
+  /**
+   * Styles applied to the prompt text element.
+   */
+  promptText: string;
+  /**
+   * Styles applied to the prompt feedback element.
+   */
+  promptFeedback: string;
+  /**
+   * Styles applied to the prompt change list element.
+   */
+  promptChangeList: string;
+  /**
+   * Styles applied to the prompt changes toggle element.
+   */
+  promptChangesToggle: string;
+  /**
+   * Styles applied to the prompt changes toggle icon element.
+   */
+  promptChangesToggleIcon: string;
+  /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIconContainer: string;
+  /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIcon: string;
+  /**
+   * Styles applied to the prompt error element.
+   */
+  promptError: string;
+  /**
+   * Styles applied to the prompt action element.
+   */
+  promptAction: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -839,6 +919,20 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+  'aiAssistantPanel',
+  'aiAssistantPanelHeader',
+  'aiAssistantPanelTitleContainer',
+  'aiAssistantPanelTitle',
+  'aiAssistantPanelBody',
+  'aiAssistantPanelEmptyText',
+  'aiAssistantPanelFooter',
+  'aiAssistantPanelConversation',
+  'aiAssistantPanelConversationList',
+  'aiAssistantPanelConversationTitle',
+  'aiAssistantPanelSuggestions',
+  'aiAssistantPanelSuggestionsList',
+  'aiAssistantPanelSuggestionsItem',
+  'aiAssistantPanelSuggestionsLabel',
   'actionsCell',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',
@@ -995,11 +1089,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'toolbarLabel',
   'toolbarDivider',
   'toolbarFilterList',
-  'toolbarPromptControl',
-  'toolbarPromptControl--recording',
-  'toolbarPromptControlRecordingIndicator',
-  'toolbarPromptControlRecordButton',
-  'toolbarPromptControlSendButton',
   'toolbarQuickFilter',
   'toolbarQuickFilterTrigger',
   'toolbarQuickFilterControl',
@@ -1040,4 +1129,15 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pivotPanelSections',
   'pivotPanelSwitch',
   'pivotPanelSwitchLabel',
+  'prompt',
+  'promptContent',
+  'promptText',
+  'promptFeedback',
+  'promptChangeList',
+  'promptChangesToggle',
+  'promptChangesToggleIcon',
+  'promptIcon',
+  'promptIconContainer',
+  'promptError',
+  'promptAction',
 ]);

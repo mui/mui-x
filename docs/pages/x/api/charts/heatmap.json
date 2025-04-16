@@ -95,6 +95,12 @@
       "className": "MuiHeatmap-highlighted",
       "description": "Styles applied to the cell element if highlighted.",
       "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiHeatmap-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${heatmapClasses.series}-${seriesId}`.",
+      "isGlobal": false
     }
   ],
   "spread": true,

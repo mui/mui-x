@@ -76,4 +76,7 @@ declare module '@mui/x-data-grid' {
   interface BaseSkeletonPropsOverrides {
     material?: Partial<SkeletonProps>;
   }
+  interface BaseChipPropsOverrides {
+    material?: Partial<ChipProps>;
+  }
 }

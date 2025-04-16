@@ -99,8 +99,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#b8ef49e59da200610abba7506c5fe9d2699ed4fe
-        version: https://codeload.github.com/mui/material-ui/tar.gz/b8ef49e59da200610abba7506c5fe9d2699ed4fe(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
+        specifier: github:mui/material-ui#a719dd339dc8a6fba6d8375264df07d322fea683
+        version: https://codeload.github.com/mui/material-ui/tar.gz/a719dd339dc8a6fba6d8375264df07d322fea683(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^7.0.2
         version: 7.0.2(@types/react@19.0.12)(react@19.0.0)
@@ -197,6 +197,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: ^0.4.24
         version: 0.4.24
+      babel-plugin-transform-replace-expressions:
+        specifier: ^0.2.0
+        version: 0.2.0(@babel/core@7.26.10)
       chai:
         specifier: ^4.5.0
         version: 4.5.0
@@ -1409,9 +1412,6 @@ importers:
       '@mui/internal-test-utils':
         specifier: ^2.0.7
         version: 2.0.7(@babel/core@7.26.10)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@mui/system':
-        specifier: ^7.0.2
-        version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -3395,8 +3395,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/b8ef49e59da200610abba7506c5fe9d2699ed4fe':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/b8ef49e59da200610abba7506c5fe9d2699ed4fe}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/a719dd339dc8a6fba6d8375264df07d322fea683':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/a719dd339dc8a6fba6d8375264df07d322fea683}
     version: 7.0.2
     engines: {pnpm: 10.8.0}
 
@@ -5089,6 +5089,11 @@ packages:
 
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
+
+  babel-plugin-transform-replace-expressions@0.2.0:
+    resolution: {integrity: sha512-Eh1rRd9hWEYgkgoA3D0kGp7xJ/wgVshgsqmq60iC4HVWD+Lux+fNHSHBa2v1Hsv+dHflShC71qKhiH40OiPtDA==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -12569,7 +12574,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/b8ef49e59da200610abba7506c5fe9d2699ed4fe(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/a719dd339dc8a6fba6d8375264df07d322fea683(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.6.0(encoding@0.1.13)
       '@netlify/functions': 3.0.4
@@ -14511,6 +14516,11 @@ snapshots:
   babel-plugin-transform-inline-environment-variables@0.4.4: {}
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
+
+  babel-plugin-transform-replace-expressions@0.2.0(@babel/core@7.26.10):
+    dependencies:
+      '@babel/core': 7.26.10
+      '@babel/parser': 7.27.0
 
   bail@2.0.2: {}
 
