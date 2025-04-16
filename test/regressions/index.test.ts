@@ -2,7 +2,7 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { chromium } from '@playwright/test';
+import { type Browser, chromium } from '@playwright/test';
 import { major } from '@mui/material/version';
 
 const isMaterialUIv6 = major === 6;
@@ -36,21 +36,8 @@ async function main() {
     ],
     headless: false,
   });
-  // reuse viewport from `vrtest`
-  // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  let page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
 
-  // Block images since they slow down tests (need download).
-  // They're also most likely decorative for documentation demos
-  await page.route(/./, async (route, request) => {
-    const type = request.resourceType();
-    // Block all images except the flags
-    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
-      route.abort();
-    } else {
-      route.continue();
-    }
-  });
+  let page = await newTestPage(browser);
 
   let errorConsole: string | undefined;
 
@@ -208,68 +195,68 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async function test() {
-      this.timeout(20000);
+    describe('print preview', () => {
+      /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
+       * page after every test. */
 
-      const route = '/docs-data-grid-export/ExportDefaultToolbar';
-      const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-      await fse.ensureDir(path.dirname(screenshotPath));
+      beforeEach(async () => {
+        page = await newTestPage(browser);
 
-      await navigateToTest(route);
-
-      // Click the export button in the toolbar.
-      await page.getByRole('button', { name: 'Export' }).click();
-
-      const printButton = page.getByRole('menuitem', { name: 'Print' });
-      // Click the print export option from the export menu in the toolbar.
-      // Trigger the action async because window.print() is blocking the main thread
-      // like window.alert() is.
-      setTimeout(() => {
-        printButton.click();
+        // Wait for all requests to finish.
+        // This should load shared resources such as fonts.
+        await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
       });
 
-      await sleep(4000);
-
-      await screenshotPrintDialogPreview(screenshotPath);
-    });
-
-    it('should take a screenshot of the charts print preview', async function test() {
-      this.timeout(20000);
-
-      const route = '/docs-charts-export/PrintChart';
-      const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-      await fse.ensureDir(path.dirname(screenshotPath));
-
-      console.log('before page close');
-      await page.close();
-      console.log('before new page');
-      // reuse viewport from `vrtest`
-      // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-      page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
-
-      console.log('before go to');
-      // Wait for all requests to finish.
-      // This should load shared resources such as fonts.
-      await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
-
-      console.log('before navigate');
-      await navigateToTest(route);
-      console.log('navigate');
-
-      const printButton = page.getByRole('button', { name: 'Print' });
-      console.log('before setTimeout');
-
-      // Trigger the action async because window.print() is blocking the main thread
-      // like window.alert() is.
-      setTimeout(() => {
-        console.log('before print');
-        printButton.click();
+      afterEach(async () => {
+        await page.close();
       });
 
-      await sleep(4000);
-      console.log('after sleep');
+      it('should take a screenshot of the data grid print preview', async function test() {
+        this.timeout(20000);
 
-      await screenshotPrintDialogPreview(screenshotPath);
+        const route = '/docs-data-grid-export/ExportDefaultToolbar';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+
+        await navigateToTest(route);
+
+        // Click the export button in the toolbar.
+        await page.getByRole('button', { name: 'Export' }).click();
+
+        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        // Click the print export option from the export menu in the toolbar.
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
+
+        await sleep(4000);
+
+        await screenshotPrintDialogPreview(screenshotPath);
+      });
+
+      it('should take a screenshot of the charts print preview', async function test() {
+        this.timeout(20000);
+
+        const route = '/docs-charts-export/PrintChart';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+
+        await navigateToTest(route);
+
+        const printButton = page.getByRole('button', { name: 'Print' });
+
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
+
+        await sleep(4000);
+
+        await screenshotPrintDialogPreview(screenshotPath);
+      });
     });
 
     // describe('DateTimePicker', () => {
@@ -351,4 +338,24 @@ function screenshotPrintDialogPreview(screenshotPath: string) {
       }
     });
   });
+}
+
+async function newTestPage(browser: Browser) {
+  // reuse viewport from `vrtest`
+  // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+
+  // Block images since they slow down tests (need download).
+  // They're also most likely decorative for documentation demos
+  await page.route(/./, async (route, request) => {
+    const type = request.resourceType();
+    // Block all images except the flags
+    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
+      route.abort();
+    } else {
+      route.continue();
+    }
+  });
+
+  return page;
 }
