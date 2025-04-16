@@ -13,7 +13,7 @@ import MUIInputBase, { InputBaseProps as MUIInputBaseProps } from '@mui/material
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
-import MUIListItemText from '@mui/material/ListItemText';
+import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText';
 import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
@@ -114,6 +114,14 @@ const Checkbox = styled(MUICheckbox, {
     },
   ],
 }));
+
+const ListItemText = styled(MUIListItemText)({
+  [`& .${listItemTextClasses.primary}`]: {
+    overflowX: 'clip',
+    textOverflow: 'ellipsis',
+    maxWidth: '300px',
+  },
+});
 
 const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
@@ -339,13 +347,13 @@ const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(pr
 });
 
 function BaseMenuItem(props: P['baseMenuItem']) {
-  const { inert, iconStart, iconEnd, children, ...other } = props;
+  const { inert, iconStart, iconEnd, children, material, ...other } = props;
   if (inert) {
     (other as any).disableRipple = true;
   }
-  return React.createElement(MUIMenuItem, other, [
+  return React.createElement(MUIMenuItem, { ...other, ...material }, [
     iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
-    <MUIListItemText key="2">{children}</MUIListItemText>,
+    <ListItemText key="2">{children}</ListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
 }

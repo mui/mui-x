@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -327,6 +328,25 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     handleInputFocus(event);
   };
 
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      // Do nothing if it's a multi input field
+      if (rootRef.current?.dataset.multiInput) {
+        return;
+      }
+      const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
+      const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
+      if (!closestForm || !submitTrigger) {
+        // do nothing if there is no form or no submit button (trigger)
+        return;
+      }
+      event.preventDefault();
+      // native input trigger submit with the `submitter` field set
+      closestForm.requestSubmit(submitTrigger);
+    }
+  };
+
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onBlur?.(event);
     onBlur?.(event);
@@ -394,7 +414,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         slots={{
           root: InputSectionsContainer,
           section: PickersInputBaseSection,
@@ -467,6 +487,7 @@ PickersInputBase.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.

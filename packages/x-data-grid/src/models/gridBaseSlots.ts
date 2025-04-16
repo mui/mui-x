@@ -312,6 +312,8 @@ export type TextFieldProps = CommonProps & {
   type?: React.HTMLInputTypeAttribute;
   value?: string;
   ref?: Ref<HTMLInputElement>;
+  multiline?: boolean;
+  autoFocus?: boolean;
 };
 
 export type TooltipProps = CommonProps & {
