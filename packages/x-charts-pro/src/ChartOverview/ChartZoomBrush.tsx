@@ -65,12 +65,29 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
 
   const axisSize = axisDirection === 'x' ? axis.height : axis.width;
 
+  const x =
+    axisDirection === 'x'
+      ? drawingArea.left
+      : axis.position === 'right'
+        ? drawingArea.left + drawingArea.width + axis.offset
+        : drawingArea.left - axis.offset - axisSize - size;
+  const y =
+    axisDirection === 'x'
+      ? drawingArea.top + drawingArea.height + axis.offset + axisSize
+      : drawingArea.top;
+
   return (
-    <g
-      transform={`translate(${drawingArea.left} ${drawingArea.top + drawingArea.height + axis.offset + axisSize})`}
-    >
-      <BackgroundRect height={size} width={drawingArea.width} />
-      <ChartZoomBrushRange size={size} zoomData={zoomData} axisId={axisId} />
+    <g transform={`translate(${x} ${y})`}>
+      <BackgroundRect
+        height={axisDirection === 'x' ? size : drawingArea.height}
+        width={axisDirection === 'x' ? drawingArea.width : size}
+      />
+      <ChartZoomBrushRange
+        size={size}
+        zoomData={zoomData}
+        axisId={axisId}
+        axisDirection={axisDirection}
+      />
     </g>
   );
 }
@@ -78,16 +95,19 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
 function ChartZoomBrushRange({
   size,
   axisId,
+  axisDirection,
   zoomData,
 }: {
   size: number;
   axisId: AxisId;
+  axisDirection: 'x' | 'y';
   zoomData: ZoomData;
 }) {
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
-  const previewHandleHeight = 0.6 * size;
+  const previewHandleWidth = axisDirection === 'x' ? PREVIEW_HANDLE_WIDTH : 0.6 * size;
+  const previewHandleHeight = axisDirection === 'x' ? 0.6 * size : PREVIEW_HANDLE_WIDTH;
 
   React.useEffect(() => {
     const activePreviewRect = activePreviewRectRef.current;
@@ -96,12 +116,13 @@ function ChartZoomBrushRange({
       return;
     }
 
-    let previewPrevX = 0;
+    let prev = 0;
 
     // TODO: Do we want to raf this?
     const onPointerMove = (event: PointerEvent) => {
       store.update((state) => {
-        const { width } = selectorChartDrawingArea(state);
+        const { height, width } = selectorChartDrawingArea(state);
+        const drawingAreaSize = axisDirection === 'x' ? width : height;
 
         const zoom = selectorChartAxisZoomData(state, axisId);
 
@@ -111,10 +132,11 @@ function ChartZoomBrushRange({
 
         const zoomSpan = zoom.end - zoom.start;
 
-        const deltaX = event.clientX - previewPrevX;
-        previewPrevX = event.clientX;
+        const current = axisDirection === 'x' ? event.clientX : event.clientY;
+        const delta = current - prev;
+        prev = current;
 
-        const deltaZoom = deltaX / width;
+        const deltaZoom = delta / drawingAreaSize;
 
         const newState = {
           ...state,
@@ -141,13 +163,13 @@ function ChartZoomBrushRange({
     const onPointerUp = () => {
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
-      previewPrevX = 0;
+      prev = 0;
     };
 
     const onPointerDown = (event: PointerEvent) => {
       // Prevent text selection when dragging the handle
       event.preventDefault();
-      previewPrevX = event.clientX;
+      prev = axisDirection === 'x' ? event.clientX : event.clientY;
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointermove', onPointerMove);
     };
@@ -158,11 +180,12 @@ function ChartZoomBrushRange({
     return () => {
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [axisId, store]);
+  }, [axisDirection, axisId, store]);
 
-  const onResizeLeft = (delta: number) => {
+  const onResizeStart = (delta: number) => {
     store.update((state) => {
-      const { width } = selectorChartDrawingArea(state);
+      const { width, height } = selectorChartDrawingArea(state);
+      const drawingAreaSize = axisDirection === 'x' ? width : height;
 
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
@@ -172,7 +195,7 @@ function ChartZoomBrushRange({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (delta / width) * 100;
+              const deltaZoom = (delta / drawingAreaSize) * 100;
 
               return {
                 ...zoom,
@@ -189,9 +212,10 @@ function ChartZoomBrushRange({
     });
   };
 
-  const onResizeRight = (delta: number) => {
+  const onResizeEnd = (delta: number) => {
     store.update((state) => {
-      const { width } = selectorChartDrawingArea(state);
+      const { width, height } = selectorChartDrawingArea(state);
+      const drawingAreaSize = axisDirection === 'x' ? width : height;
 
       // TODO: What about non-cartesian axes? Are these the only ones that can be zoomed?
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
@@ -202,7 +226,7 @@ function ChartZoomBrushRange({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (delta / width) * 100;
+              const deltaZoom = (delta / drawingAreaSize) * 100;
 
               return {
                 ...zoom,
@@ -223,26 +247,51 @@ function ChartZoomBrushRange({
     <React.Fragment>
       <ZoomRangePreviewRect
         ref={activePreviewRectRef}
-        x={(zoomData.start / 100) * drawingArea.width}
-        width={(drawingArea.width * (zoomData.end - zoomData.start)) / 100}
-        height={size}
+        x={axisDirection === 'x' ? (zoomData.start / 100) * drawingArea.width : 0}
+        y={axisDirection === 'x' ? 0 : (zoomData.start / 100) * drawingArea.height}
+        width={
+          axisDirection === 'x' ? (drawingArea.width * (zoomData.end - zoomData.start)) / 100 : size
+        }
+        height={
+          axisDirection === 'x'
+            ? size
+            : (drawingArea.height * (zoomData.end - zoomData.start)) / 100
+        }
       />
       {
         // TODO: In RTL languages, should we start from the right?
       }
       <ChartZoomBrushHandle
-        x={(zoomData.start / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
-        y={(size - previewHandleHeight) / 2}
-        width={PREVIEW_HANDLE_WIDTH}
+        x={
+          axisDirection === 'x'
+            ? (zoomData.start / 100) * drawingArea.width - previewHandleWidth / 2
+            : (size - previewHandleWidth) / 2
+        }
+        y={
+          axisDirection === 'x'
+            ? (size - previewHandleHeight) / 2
+            : (zoomData.start / 100) * drawingArea.height - previewHandleHeight / 2
+        }
+        width={previewHandleWidth}
         height={previewHandleHeight}
-        onResize={onResizeLeft}
+        orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
+        onResize={onResizeStart}
       />
       <ChartZoomBrushHandle
-        x={(zoomData.end / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
-        y={(size - previewHandleHeight) / 2}
-        width={PREVIEW_HANDLE_WIDTH}
+        x={
+          axisDirection === 'x'
+            ? (zoomData.end / 100) * drawingArea.width - previewHandleWidth / 2
+            : (size - previewHandleWidth) / 2
+        }
+        y={
+          axisDirection === 'x'
+            ? (size - previewHandleHeight) / 2
+            : (zoomData.end / 100) * drawingArea.height - previewHandleHeight / 2
+        }
+        width={previewHandleWidth}
         height={previewHandleHeight}
-        onResize={onResizeRight}
+        orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
+        onResize={onResizeEnd}
       />
     </React.Fragment>
   );

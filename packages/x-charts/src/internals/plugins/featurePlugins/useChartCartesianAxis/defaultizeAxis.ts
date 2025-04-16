@@ -103,6 +103,12 @@ export function defaultizeYAxis(
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.width;
+
+      const hasOverview = axisConfig?.zoom?.overview?.enabled;
+
+      if (hasOverview) {
+        offsets[position] += axisConfig?.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
+      }
     }
 
     // If `dataKey` is NOT provided
