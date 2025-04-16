@@ -60,7 +60,7 @@ export const selectorChartAxisZoomOptionsLookup = createSelector(
   [
     selectorChartXZoomOptionsLookup,
     selectorChartYZoomOptionsLookup,
-    (state, axisId: string) => axisId,
+    (state, axisId: AxisId) => axisId,
   ],
   (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
 );

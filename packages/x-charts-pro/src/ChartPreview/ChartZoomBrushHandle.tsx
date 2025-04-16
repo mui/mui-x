@@ -12,12 +12,12 @@ const Rect = styled('rect')(({ theme }) => ({
   },
 }));
 
-interface ChartPreviewHandleProps
+interface ChartZoomBrushHandleProps
   extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'> {
   onResize: (delta: number) => void;
 }
 
-export const ChartPreviewHandle = React.forwardRef<SVGRectElement, ChartPreviewHandleProps>(
+export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBrushHandleProps>(
   function ChartPreviewHandle({ x, y, width, height, onResize, rx = 2, ry = 2 }, forwardedRef) {
     const handleRef = React.useRef<SVGRectElement>(null);
     const ref = useForkRef(handleRef, forwardedRef);

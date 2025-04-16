@@ -71,6 +71,17 @@ export interface ZoomOptions {
    * @default 'keep'
    */
   filterMode?: ZoomFilterMode;
+  /**
+   * Configures the zoom overview. The overview is an element that shows the zoomed range and allows its manipulation.
+   */
+  overview?: ZoomOverviewOptions;
+}
+
+export interface ZoomOverviewOptions {
+  /**
+   * If `true`, the overview will be shown.
+   */
+  enabled?: boolean;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

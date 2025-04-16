@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import {
+  AxisId,
+  DefaultizedZoomOptions,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   selectorChartMargin,
@@ -8,7 +10,6 @@ import {
   useSelector,
   useStore,
   ZoomData,
-  ZoomOptions,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes } from '@mui/x-charts/hooks';
@@ -17,7 +18,7 @@ import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
-import { ChartPreviewHandle } from './ChartPreviewHandle';
+import { ChartZoomBrushHandle } from './ChartZoomBrushHandle';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
@@ -26,7 +27,7 @@ const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   },
 }));
 
-const ActivePreviewRect = styled('rect')(({ theme }) => ({
+const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
   '&': {
     fill: (theme.vars || theme).palette.grey[500],
     opacity: 0.4,
@@ -37,12 +38,12 @@ const ActivePreviewRect = styled('rect')(({ theme }) => ({
 const PREVIEW_HANDLE_WIDTH = 4;
 const PREVIEW_HEIGHT = 40;
 
-export function ChartPreview({
+export function ChartZoomBrush({
   size = PREVIEW_HEIGHT,
   axisId = DEFAULT_X_AXIS_KEY,
 }: {
   size: number;
-  axisId: string;
+  axisId: AxisId;
 }) {
   const store = useStore();
   const xAxes = useXAxes();
@@ -69,18 +70,18 @@ export function ChartPreview({
         height={size}
         width={drawingArea.width}
       />
-      <Preview size={size} zoomData={zoomData} axisId={axisId} />
+      <ChartZoomBrushRange size={size} zoomData={zoomData} axisId={axisId} />
     </g>
   );
 }
 
-function Preview({
+function ChartZoomBrushRange({
   size = 30,
   axisId,
   zoomData,
 }: {
   size: number;
-  axisId: string;
+  axisId: AxisId;
   zoomData: ZoomData;
 }) {
   const store = useStore<[UseChartProZoomSignature]>();
@@ -223,14 +224,14 @@ function Preview({
 
   return (
     <React.Fragment>
-      <ActivePreviewRect
+      <ZoomRangePreviewRect
         ref={activePreviewRectRef}
         x={drawingArea.left + (zoomData.start / 100) * drawingArea.width}
         y={drawingArea.top + drawingArea.height + bottomAxesHeight}
         width={(drawingArea.width * (zoomData.end - zoomData.start)) / 100}
         height={size}
       />
-      <ChartPreviewHandle
+      <ChartZoomBrushHandle
         x={drawingArea.left + (zoomData.start / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
         y={
           drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
@@ -239,7 +240,7 @@ function Preview({
         height={previewHandleHeight}
         onResize={onResizeLeft}
       />
-      <ChartPreviewHandle
+      <ChartZoomBrushHandle
         x={drawingArea.left + (zoomData.end / 100) * drawingArea.width - PREVIEW_HANDLE_WIDTH / 2}
         y={
           drawingArea.top + drawingArea.height + bottomAxesHeight + (size - previewHandleHeight) / 2
@@ -256,7 +257,7 @@ function Preview({
 function calculateZoomStart(
   newStart: number,
   currentZoom: ZoomData,
-  options: Required<ZoomOptions>,
+  options: DefaultizedZoomOptions,
 ) {
   const { minStart, minSpan, maxSpan } = options;
 
@@ -267,7 +268,7 @@ function calculateZoomStart(
   );
 }
 
-function calculateZoomEnd(newEnd: number, currentZoom: ZoomData, options: Required<ZoomOptions>) {
+function calculateZoomEnd(newEnd: number, currentZoom: ZoomData, options: DefaultizedZoomOptions) {
   const { maxEnd, minSpan, maxSpan } = options;
 
   return Math.min(

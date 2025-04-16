@@ -1,4 +1,5 @@
 import {
+  AxisId,
   ChartRootSelector,
   createSelector,
   selectorChartZoomMap,
@@ -20,6 +21,6 @@ export const selectorChartZoomIsEnabled = createSelector(
 );
 
 export const selectorChartAxisZoomData = createSelector(
-  [selectorChartZoomMap, (state, axisId: string) => axisId],
+  [selectorChartZoomMap, (state, axisId: AxisId) => axisId],
   (zoomMap, axisId) => zoomMap?.get(axisId),
 );

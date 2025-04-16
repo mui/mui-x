@@ -1,2 +1,2 @@
-export * from './ChartPreview';
-export { ChartPreviewHandle } from '@mui/x-charts-pro/ChartPreview/ChartPreviewHandle';
+export * from './ChartZoomBrush';
+export { ChartZoomBrushHandle } from '@mui/x-charts-pro/ChartPreview/ChartZoomBrushHandle';
