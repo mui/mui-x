@@ -48,7 +48,7 @@ export interface ChartProviderProps<
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: ChartPluginParams<TSignatures>;
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig?: ChartSeriesConfig<TSeries>;
