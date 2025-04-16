@@ -63,7 +63,7 @@ npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quo
 
 A combination of all important transformers for migrating v7 to v8.
 ⚠️ This codemod should be run only once.
-It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
 <!-- #default-branch-switch -->
@@ -385,6 +385,8 @@ The list includes these props:
 - `unstable_lazyLoading` to `lazyLoading`
 - `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
 - `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
 
 ```diff
  <DataGrid
@@ -394,12 +396,16 @@ The list includes these props:
 -  unstable_lazyLoading
 -  unstable_lazyLoadingRequestThrottleMs={100}
 -  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
 +  rowSpanning
 +  dataSource={dataSource}
 +  dataSourceCache={dataSourceCache}
 +  lazyLoading
 +  lazyLoadingRequestThrottleMs={100}
 +  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
  />
 ```
 

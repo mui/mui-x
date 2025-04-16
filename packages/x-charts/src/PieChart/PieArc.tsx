@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { useAnimatePieArc } from '../hooks';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
 
@@ -17,6 +17,11 @@ export interface PieArcClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type PieArcClassKey = keyof PieArcClasses;
@@ -38,6 +43,7 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
@@ -55,42 +61,47 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled(animated.path, {
+const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
+  transitionProperty: 'opacity, fill, filter',
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
 }));
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
-    cornerRadius: SpringValue<number>;
-    endAngle: SpringValue<number>;
-    innerRadius: SpringValue<number>;
+    cornerRadius: number;
+    endAngle: number;
+    innerRadius: number;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
-    outerRadius: SpringValue<number>;
-    paddingAngle: SpringValue<number>;
-    startAngle: SpringValue<number>;
+    outerRadius: number;
+    paddingAngle: number;
+    startAngle: number;
+    /** @default false */
+    skipAnimation: boolean;
   };
 
-function PieArc(props: PieArcProps) {
+const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
     classes: innerClasses,
     color,
-    cornerRadius,
     dataIndex,
-    endAngle,
     id,
-    innerRadius,
     isFaded,
     isHighlighted,
     onClick,
+    cornerRadius,
+    startAngle,
+    endAngle,
+    innerRadius,
     outerRadius,
     paddingAngle,
-    startAngle,
+    skipAnimation,
     ...other
   } = props;
 
@@ -105,22 +116,19 @@ function PieArc(props: PieArcProps) {
   const classes = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
+  const animatedProps = useAnimatePieArc({
+    cornerRadius,
+    startAngle,
+    endAngle,
+    innerRadius,
+    outerRadius,
+    paddingAngle,
+    skipAnimation,
+    ref,
+  });
 
   return (
     <PieArcRoot
-      d={to(
-        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
-        (sA, eA, pA, iR, oR, cR) =>
-          d3Arc().cornerRadius(cR)({
-            padAngle: pA,
-            startAngle: sA,
-            endAngle: eA,
-            innerRadius: iR,
-            outerRadius: oR,
-          })!,
-      )}
-      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
-      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
@@ -132,9 +140,10 @@ function PieArc(props: PieArcProps) {
       strokeLinejoin="round"
       {...other}
       {...interactionProps}
+      {...animatedProps}
     />
   );
-}
+});
 
 PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -142,10 +151,20 @@ PieArc.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
+  endAngle: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
+  outerRadius: PropTypes.number.isRequired,
+  paddingAngle: PropTypes.number.isRequired,
+  /**
+   * @default false
+   */
+  skipAnimation: PropTypes.bool.isRequired,
+  startAngle: PropTypes.number.isRequired,
 } as any;
 
 export { PieArc };

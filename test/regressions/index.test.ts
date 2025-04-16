@@ -3,16 +3,10 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
-import materialPackageJson from '@mui/material/package.json';
+import { major } from '@mui/material/version';
 
-function sleep(timeoutMS: number | undefined) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeoutMS);
-  });
-}
-
-const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
-const isMaterialUIv7 = materialPackageJson.version.startsWith('7.');
+const isMaterialUIv6 = major === 6;
+const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -28,43 +22,11 @@ const timeSensitiveSuites = [
   'RowSpanningCalendar',
 ];
 
-const isConsoleWarningIgnored = (msg?: string) => {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
-  const isMuiLoadingButtonWarning =
-    (isMaterialUIv6 || isMaterialUIv7) &&
-    msg?.includes(
-      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
-    );
-
-  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
-
-  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
-
-  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
-  const isTailwindCdnWarning = msg?.includes(
-    'The browser build of Tailwind CSS should not be used in production.',
-  );
-
-  if (
-    isMuiV6Error ||
-    isReactRouterFlagsError ||
-    isNoDevRoute ||
-    isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning
-  ) {
-    return true;
-  }
-  return false;
-};
+await main();
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
-  const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
+  const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
     args: [
@@ -125,6 +87,7 @@ async function main() {
 
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
+    await page.waitForFunction(() => window.muiFixture.isReady());
     return page.evaluate((_route) => {
       window.muiFixture.navigate(`${_route}#no-dev`);
     }, route);
@@ -150,12 +113,15 @@ async function main() {
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
 
+        // Skip animations
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
           this.timeout(0);
         }
 
-        if (route === '/docs-components-data-grid-overview/DataGridProDemo') {
+        if (route.includes('DataGridProDemo')) {
           this.timeout(6000);
         }
 
@@ -302,13 +268,44 @@ async function main() {
     //   });
     // });
   });
-
-  run();
 }
 
-main().catch((error) => {
-  // error during setup.
-  // Throwing lets mocha hang.
-  console.error(error);
-  process.exitCode = 1;
-});
+function isConsoleWarningIgnored(msg?: string) {
+  const isMuiV6Error =
+    isMaterialUIv6 &&
+    msg?.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    );
+
+  const isMuiLoadingButtonWarning =
+    (isMaterialUIv6 || isMaterialUIv7) &&
+    msg?.includes(
+      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
+    );
+
+  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
+
+  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
+
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function sleep(timeoutMS: number | undefined) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeoutMS);
+  });
+}

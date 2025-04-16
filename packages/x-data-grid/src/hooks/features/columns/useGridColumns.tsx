@@ -16,7 +16,7 @@ import {
   gridColumnPositionsSelector,
 } from './gridColumnsSelector';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridPipeProcessor,
@@ -39,6 +39,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { gridPivotActiveSelector } from '../pivoting';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
@@ -161,6 +162,10 @@ export function useGridColumns(
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
     (columns) => {
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotColumns(columns);
+        return;
+      }
       const columnsState = createColumnsState({
         apiRef,
         columnsToUpsert: columns,
@@ -372,13 +377,15 @@ export function useGridColumns(
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems) => {
-      if (props.disableColumnSelector) {
+      const isPivotActive = gridPivotActiveSelector(apiRef);
+
+      if (props.disableColumnSelector || isPivotActive) {
         return columnMenuItems;
       }
 
       return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
-    [props.disableColumnSelector],
+    [props.disableColumnSelector, apiRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
@@ -408,7 +415,7 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
   /**
    * APPLIERS

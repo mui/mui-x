@@ -12,11 +12,10 @@ import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTim
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-time-range',
     variant: 'mobile',
@@ -77,18 +76,21 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         ];
       }
 
-      // if we want to set the end date, we firstly need to switch to end date "range position"
-      if (setEndDate) {
-        fireEvent.click(
-          screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
-        );
-      }
+      // Go to the start date or the end date
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: adapterToUse.format(value[setEndDate ? 1 : 0], 'shortDate'),
+        }),
+      );
 
       fireEvent.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
       );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],
@@ -102,15 +104,12 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `MobileDateTimeRangePicker`
-        // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
       // Close the picker
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       } else {
         // return to the start date view in case we'd like to repeat the selection process
         fireEvent.click(

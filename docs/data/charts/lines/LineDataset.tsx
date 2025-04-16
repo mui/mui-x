@@ -13,9 +13,8 @@ const stackStrategy = {
 } as const;
 
 const customize = {
-  height: 300,
+  height: 350,
   hideLegend: true,
-  margin: { top: 5 },
 };
 
 export default function LineDataset() {
@@ -24,11 +23,12 @@ export default function LineDataset() {
       xAxis={[
         {
           dataKey: 'year',
-          valueFormatter: (value) => value.toString(),
+          valueFormatter: (value: number) => value.toString(),
           min: 1985,
           max: 2022,
         },
       ]}
+      yAxis={[{ width: 50 }]}
       series={Object.keys(keyToLabel).map((key) => ({
         dataKey: key,
         label: keyToLabel[key],

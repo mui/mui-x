@@ -20,7 +20,7 @@ const barChartsParams = {
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series z' },
   ],
-  margin: { top: 10, right: 10 },
+  margin: { right: 10 },
   sx: {
     [`& .${legendClasses.root}`]: {
       display: 'none',
@@ -62,7 +62,7 @@ export default function BandHighlight() {
         sx={{ m: 2 }}
       >
         <FormControl>
-          <FormLabel id="x-highlight-label">x highligh</FormLabel>
+          <FormLabel id="x-highlight-label">x highlight</FormLabel>
           <RadioGroup
             aria-labelledby="x-highlight-label"
             value={xHighlight}
@@ -74,7 +74,7 @@ export default function BandHighlight() {
           </RadioGroup>
         </FormControl>
         <FormControl>
-          <FormLabel id="y-highlight-label">y highligh</FormLabel>
+          <FormLabel id="y-highlight-label">y highlight</FormLabel>
           <RadioGroup
             aria-labelledby="y-highlight-label"
             value={yHighlight}

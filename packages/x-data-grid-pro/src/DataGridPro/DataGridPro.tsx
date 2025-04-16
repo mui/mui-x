@@ -3,7 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
-import { validateProps } from '@mui/x-data-grid/internals';
+import {
+  GridConfiguration,
+  validateProps,
+  useGridApiInitialization,
+} from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
@@ -13,14 +17,16 @@ import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: () => null,
   },
 };
 const releaseInfo = getReleaseInfo();
@@ -31,7 +37,11 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
-  const privateApiRef = useDataGridProComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiPro, GridApiPro>(
+    props.apiRef,
+    props,
+  );
+  useDataGridProComponent(privateApiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -81,11 +91,11 @@ DataGridProRaw.propTypes = {
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -484,6 +494,12 @@ DataGridProRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
+  /**
    * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
@@ -495,6 +511,21 @@ DataGridProRaw.propTypes = {
    * @default 500
    */
   lazyLoadingRequestThrottleMs: PropTypes.number,
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listViewColumn`.
+   */
+  listView: PropTypes.bool,
+  /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
+  listViewColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -1017,21 +1048,6 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
-   */
-  unstable_listColumn: PropTypes.shape({
-    align: PropTypes.oneOf(['center', 'left', 'right']),
-    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    display: PropTypes.oneOf(['flex', 'text']),
-    field: PropTypes.string.isRequired,
-    renderCell: PropTypes.func,
-  }),
-  /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
-   */
-  unstable_listView: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

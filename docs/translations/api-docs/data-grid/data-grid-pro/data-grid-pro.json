@@ -4,9 +4,9 @@
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
-    "aria-label": { "description": "The label of the Data Grid." },
+    "aria-label": { "description": "The <code>aria-label</code> of the Data Grid." },
     "aria-labelledby": {
-      "description": "The id of the element containing a label for the Data Grid."
+      "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
       "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
@@ -220,11 +220,20 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
+    "label": {
+      "description": "The label of the Data Grid. If the <code>showToolbar</code> prop is <code>true</code>, the label will be displayed in the toolbar and applied to the <code>aria-label</code> attribute of the grid. If the <code>showToolbar</code> prop is <code>false</code>, the label will not be visible but will be applied to the <code>aria-label</code> attribute of the grid."
+    },
     "lazyLoading": {
       "description": "Used together with <code>dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
     },
     "lazyLoadingRequestThrottleMs": {
       "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
+    },
+    "listView": {
+      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>listViewColumn</code>."
+    },
+    "listViewColumn": {
+      "description": "Definition of the column rendered when the <code>listView</code> prop is enabled."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
@@ -611,12 +620,6 @@
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
     },
-    "unstable_listColumn": {
-      "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
-    },
-    "unstable_listView": {
-      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
-    },
     "virtualizeColumnsWithAutoRowHeight": {
       "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."
     }
@@ -654,6 +657,62 @@
     "aggregationRowOverlayWrapper": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
+    },
+    "aiAssistantPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel"
+    },
+    "aiAssistantPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel body"
+    },
+    "aiAssistantPanelConversation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation"
+    },
+    "aiAssistantPanelConversationList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation list"
+    },
+    "aiAssistantPanelConversationTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation title"
+    },
+    "aiAssistantPanelEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel empty text"
+    },
+    "aiAssistantPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel footer"
+    },
+    "aiAssistantPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel header"
+    },
+    "aiAssistantPanelSuggestions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions"
+    },
+    "aiAssistantPanelSuggestionsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions item"
+    },
+    "aiAssistantPanelSuggestionsLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions label"
+    },
+    "aiAssistantPanelSuggestionsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions list"
+    },
+    "aiAssistantPanelTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title"
+    },
+    "aiAssistantPanelTitleContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title container"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -753,6 +812,22 @@
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
+    },
+    "collapsible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible element"
+    },
+    "collapsibleIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible icon element"
+    },
+    "collapsiblePanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible panel element"
+    },
+    "collapsibleTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible trigger element"
     },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
@@ -993,6 +1068,7 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
+    "mainContent": { "description": "" },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1051,6 +1127,135 @@
     "pinnedRows--top": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
+    },
+    "pivotPanelAvailableFields": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel available fields"
+    },
+    "pivotPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel body"
+    },
+    "pivotPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field"
+    },
+    "pivotPanelField--sorted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the pivot panel field",
+      "conditions": "sorted"
+    },
+    "pivotPanelFieldActionContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field action container"
+    },
+    "pivotPanelFieldCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field checkbox"
+    },
+    "pivotPanelFieldDragIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field drag icon"
+    },
+    "pivotPanelFieldList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field list"
+    },
+    "pivotPanelFieldName": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field name"
+    },
+    "pivotPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel header"
+    },
+    "pivotPanelPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel placeholder"
+    },
+    "pivotPanelScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel scroll area"
+    },
+    "pivotPanelSearchContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel search container"
+    },
+    "pivotPanelSection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section"
+    },
+    "pivotPanelSections": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel sections"
+    },
+    "pivotPanelSectionTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section title"
+    },
+    "pivotPanelSwitch": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch"
+    },
+    "pivotPanelSwitchLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch label"
+    },
+    "prompt": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt root element"
+    },
+    "promptAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt action element"
+    },
+    "promptChangeList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change list element"
+    },
+    "promptChangesToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle element"
+    },
+    "promptChangesToggleIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle icon element"
+    },
+    "promptContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt content element"
+    },
+    "promptError": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt error element"
+    },
+    "promptFeedback": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt feedback element"
+    },
+    "promptIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt text element"
+    },
+    "resizablePanelHandle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resizable panel handles"
+    },
+    "resizablePanelHandle--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "horizontal resizable panel handles"
+    },
+    "resizablePanelHandle--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "vertical resizable panel handles"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1153,38 +1358,37 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidebar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar element"
+    },
+    "sidebarHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar header element"
+    },
+    "sortButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sort button element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the sort icon element"
+      "nodeName": "the sort button icon element"
     },
     "toolbarContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar container element"
     },
+    "toolbarDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar divider element"
+    },
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
-    "toolbarPromptControl": {
+    "toolbarLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control element"
-    },
-    "toolbarPromptControl--recording": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the toolbar prompt control element",
-      "conditions": "recording"
-    },
-    "toolbarPromptControlRecordButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control record button element"
-    },
-    "toolbarPromptControlRecordingIndicator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control recording indicator element"
-    },
-    "toolbarPromptControlSendButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control send button element"
+      "nodeName": "the toolbar label element"
     },
     "toolbarQuickFilter": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1228,6 +1432,7 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
+    "withSidePanel": { "description": "" },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
@@ -1237,6 +1442,7 @@
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "baseChip": "The custom Chip component used in the grid.",
     "baseCircularProgress": "The custom CircularProgress component used in the grid.",
     "baseDivider": "The custom Divider component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
@@ -1278,7 +1484,6 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
-    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

@@ -33,10 +33,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 0,
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'end',
   gap: vars.spacing(0.25),
   padding: vars.spacing(0.75),
   minHeight: 52,
@@ -190,8 +191,8 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   const element = useGridComponentRenderer(ToolbarRoot, render, {
     role: 'toolbar',
     'aria-orientation': 'horizontal',
+    'aria-label': rootProps.label || undefined,
     className: clsx(classes.root, className),
-    ownerState: rootProps,
     ...other,
     ref,
   });

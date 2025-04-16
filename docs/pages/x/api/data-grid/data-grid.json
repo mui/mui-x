@@ -153,6 +153,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "label": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -645,6 +646,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "baseCircularProgress",
       "description": "The custom CircularProgress component used in the grid.",
       "default": "CircularProgress",
@@ -774,12 +781,6 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
-      "class": null
-    },
-    {
-      "name": "columnUnsortedIcon",
-      "description": "Icon displayed on the side of the column header title when unsorted.",
-      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -1007,6 +1008,90 @@
       "isGlobal": false
     },
     {
+      "key": "aiAssistantPanel",
+      "className": "MuiDataGrid-aiAssistantPanel",
+      "description": "Styles applied to the root element of the AI assistant panel.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGrid-aiAssistantPanelBody",
+      "description": "Styles applied to the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGrid-aiAssistantPanelConversation",
+      "description": "Styles applied to the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGrid-aiAssistantPanelConversationList",
+      "description": "Styles applied to the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationTitle",
+      "className": "MuiDataGrid-aiAssistantPanelConversationTitle",
+      "description": "Styles applied to the AI assistant panel conversation title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGrid-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGrid-aiAssistantPanelFooter",
+      "description": "Styles applied to the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGrid-aiAssistantPanelHeader",
+      "description": "Styles applied to the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGrid-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGrid-aiAssistantPanelTitle",
+      "description": "Styles applied to the AI assistant panel title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitleContainer",
+      "className": "MuiDataGrid-aiAssistantPanelTitleContainer",
+      "description": "Styles applied to the AI assistant panel title container.",
+      "isGlobal": false
+    },
+    {
       "key": "autoHeight",
       "className": "MuiDataGrid-autoHeight",
       "description": "Styles applied to the root element if `autoHeight={true}`.",
@@ -1136,6 +1221,30 @@
       "key": "checkboxInput",
       "className": "MuiDataGrid-checkboxInput",
       "description": "Styles applied to the selection checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsible",
+      "className": "MuiDataGrid-collapsible",
+      "description": "Styles applied to the collapsible element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleIcon",
+      "className": "MuiDataGrid-collapsibleIcon",
+      "description": "Styles applied to the collapsible icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsiblePanel",
+      "className": "MuiDataGrid-collapsiblePanel",
+      "description": "Styles applied to the collapsible panel element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleTrigger",
+      "className": "MuiDataGrid-collapsibleTrigger",
+      "description": "Styles applied to the collapsible trigger element.",
       "isGlobal": false
     },
     {
@@ -1493,6 +1602,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGrid-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGrid-menu",
       "description": "Styles applied to the menu element.",
@@ -1586,6 +1701,198 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGrid-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelAvailableFields",
+      "className": "MuiDataGrid-pivotPanelAvailableFields",
+      "description": "Styles applied to the pivot panel available fields.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelBody",
+      "className": "MuiDataGrid-pivotPanelBody",
+      "description": "Styles applied to the pivot panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField",
+      "className": "MuiDataGrid-pivotPanelField",
+      "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--sorted",
+      "className": "MuiDataGrid-pivotPanelField--sorted",
+      "description": "Styles applied to the pivot panel field when sorted.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldActionContainer",
+      "className": "MuiDataGrid-pivotPanelFieldActionContainer",
+      "description": "Styles applied to the pivot panel field action container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldCheckbox",
+      "className": "MuiDataGrid-pivotPanelFieldCheckbox",
+      "description": "Styles applied to the pivot panel field checkbox.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldDragIcon",
+      "className": "MuiDataGrid-pivotPanelFieldDragIcon",
+      "description": "Styles applied to the pivot panel field drag icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldList",
+      "className": "MuiDataGrid-pivotPanelFieldList",
+      "description": "Styles applied to the pivot panel field list.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldName",
+      "className": "MuiDataGrid-pivotPanelFieldName",
+      "description": "Styles applied to the pivot panel field name.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelHeader",
+      "className": "MuiDataGrid-pivotPanelHeader",
+      "description": "Styles applied to the pivot panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelPlaceholder",
+      "className": "MuiDataGrid-pivotPanelPlaceholder",
+      "description": "Styles applied to the pivot panel placeholder.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelScrollArea",
+      "className": "MuiDataGrid-pivotPanelScrollArea",
+      "description": "Styles applied to the pivot panel scroll area.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSearchContainer",
+      "className": "MuiDataGrid-pivotPanelSearchContainer",
+      "description": "Styles applied to the pivot panel search container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSection",
+      "className": "MuiDataGrid-pivotPanelSection",
+      "description": "Styles applied to the pivot panel section.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSections",
+      "className": "MuiDataGrid-pivotPanelSections",
+      "description": "Styles applied to the pivot panel sections.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSectionTitle",
+      "className": "MuiDataGrid-pivotPanelSectionTitle",
+      "description": "Styles applied to the pivot panel section title.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSwitch",
+      "className": "MuiDataGrid-pivotPanelSwitch",
+      "description": "Styles applied to the pivot panel switch.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSwitchLabel",
+      "className": "MuiDataGrid-pivotPanelSwitchLabel",
+      "description": "Styles applied to the pivot panel switch label.",
+      "isGlobal": false
+    },
+    {
+      "key": "prompt",
+      "className": "MuiDataGrid-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGrid-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGrid-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGrid-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggleIcon",
+      "className": "MuiDataGrid-promptChangesToggleIcon",
+      "description": "Styles applied to the prompt changes toggle icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGrid-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGrid-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGrid-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIcon",
+      "className": "MuiDataGrid-promptIcon",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGrid-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGrid-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle",
+      "className": "MuiDataGrid-resizablePanelHandle",
+      "description": "Styles applied to resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--horizontal",
+      "className": "MuiDataGrid-resizablePanelHandle--horizontal",
+      "description": "Styles applied to horizontal resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--vertical",
+      "className": "MuiDataGrid-resizablePanelHandle--vertical",
+      "description": "Styles applied to vertical resizable panel handles.",
       "isGlobal": false
     },
     {
@@ -1739,9 +2046,27 @@
       "isGlobal": false
     },
     {
+      "key": "sidebar",
+      "className": "MuiDataGrid-sidebar",
+      "description": "Styles applied to the sidebar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidebarHeader",
+      "className": "MuiDataGrid-sidebarHeader",
+      "description": "Styles applied to the sidebar header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sortButton",
+      "className": "MuiDataGrid-sortButton",
+      "description": "Styles applied to the sort button element.",
+      "isGlobal": false
+    },
+    {
       "key": "sortIcon",
       "className": "MuiDataGrid-sortIcon",
-      "description": "Styles applied to the sort icon element.",
+      "description": "Styles applied to the sort button icon element.",
       "isGlobal": false
     },
     {
@@ -1751,39 +2076,21 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGrid-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarPromptControl",
-      "className": "MuiDataGrid-toolbarPromptControl",
-      "description": "Styles applied to the toolbar prompt control element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControl--recording",
-      "className": "MuiDataGrid-toolbarPromptControl--recording",
-      "description": "Styles applied to the toolbar prompt control element when recording.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordButton",
-      "className": "MuiDataGrid-toolbarPromptControlRecordButton",
-      "description": "Styles applied to the toolbar prompt control record button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordingIndicator",
-      "className": "MuiDataGrid-toolbarPromptControlRecordingIndicator",
-      "description": "Styles applied to the toolbar prompt control recording indicator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlSendButton",
-      "className": "MuiDataGrid-toolbarPromptControlSendButton",
-      "description": "Styles applied to the toolbar prompt control send button element.",
+      "key": "toolbarLabel",
+      "className": "MuiDataGrid-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
       "isGlobal": false
     },
     {
@@ -1847,6 +2154,12 @@
       "isGlobal": false
     },
     {
+      "key": "withSidePanel",
+      "className": "MuiDataGrid-withSidePanel",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "withVerticalBorder",
       "className": "MuiDataGrid-withVerticalBorder",
       "description": "Styles applied the grid if `showColumnVerticalBorder={true}`.",
@@ -1857,6 +2170,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/DataGrid/DataGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

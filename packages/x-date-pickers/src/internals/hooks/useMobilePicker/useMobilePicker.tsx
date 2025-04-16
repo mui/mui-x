@@ -7,6 +7,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
+import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -25,9 +26,12 @@ export const useMobilePicker = <
   >,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
+
+  const getStepNavigation = createNonRangePickerStepNavigation({ steps });
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerValue,
@@ -40,6 +44,7 @@ export const useMobilePicker = <
     autoFocusView: true,
     viewContainerRole: 'dialog',
     variant: 'mobile',
+    getStepNavigation,
   });
 
   const labelId = providerProps.privateContextValue.labelId;

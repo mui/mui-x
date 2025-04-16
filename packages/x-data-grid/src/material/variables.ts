@@ -36,7 +36,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const fontBody = (t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2);
   const fontSmall = (t.vars as any)?.font?.caption ?? formatFont(t.typography.caption);
-
+  const fontLarge = (t.vars as any)?.font?.body1 ?? formatFont(t.typography.body1);
   const k = vars.keys;
 
   return {
@@ -50,8 +50,9 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.muted]: (t.vars || t).palette.text.secondary,
     [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
+    [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
 
-    [k.colors.interactive.hover]: removeOpacity((t.vars || t).palette.action.hover),
+    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
@@ -72,6 +73,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.fontWeight.bold]: t.typography.fontWeightBold as string,
     [k.typography.font.body]: fontBody,
     [k.typography.font.small]: fontSmall,
+    [k.typography.font.large]: fontLarge,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,

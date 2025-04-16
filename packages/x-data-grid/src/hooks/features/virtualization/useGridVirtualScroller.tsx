@@ -29,7 +29,7 @@ import {
 import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { useGridApiOptionHandler } from '../../utils';
+import { useGridEventPriority } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import {
@@ -101,7 +101,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
-  const { unstable_listView: listView } = rootProps;
+  const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
     listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
@@ -698,9 +698,9 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
-  useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 
   return {
     renderContext,
@@ -781,7 +781,7 @@ function inputsSelector(
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef);
   const currentPage = getVisibleRows(apiRef, rootProps);
-  const visibleColumns = rootProps.unstable_listView
+  const visibleColumns = rootProps.listView
     ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
@@ -807,7 +807,7 @@ function inputsSelector(
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     visibleColumns,
     hiddenCellsOriginMap,
-    listView: rootProps.unstable_listView ?? false,
+    listView: rootProps.listView ?? false,
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }
@@ -823,13 +823,6 @@ function computeRenderContext(
     firstColumnIndex: 0,
     lastColumnIndex: inputs.visibleColumns.length,
   };
-
-  if (inputs.listView) {
-    return {
-      ...renderContext,
-      lastColumnIndex: 1,
-    };
-  }
 
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
@@ -860,6 +853,13 @@ function computeRenderContext(
 
     renderContext.firstRowIndex = firstRowIndex;
     renderContext.lastRowIndex = lastRowIndex;
+  }
+
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
   }
 
   if (inputs.enabledForColumns) {

@@ -15,28 +15,41 @@ import {
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { useTreeViewModels } from './useTreeViewModels';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+  if (inputApiRef.current == null) {
+    inputApiRef.current = {} as T;
+  }
+  return inputApiRef as React.RefObject<T>;
+}
+
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
-): T {
+): React.RefObject<T> {
   const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
+    return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApiRef.current;
+  return fallbackPublicApiRef;
 }
 
 let globalId: number = 0;
+
+/**
+ * This is the main hook that sets the plugin system up for the tree-view.
+ *
+ * It manages the data used to create the tree-view.
+ *
+ * @param plugins All the plugins that will be used in the tree-view.
+ * @param props The props passed to the tree-view.
+ * @param rootRef The ref of the root element.
+ */
 export const useTreeView = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
@@ -58,13 +71,12 @@ export const useTreeView = <
     [inPlugins],
   );
 
-  const { pluginParams, forwardedProps, apiRef, experimentalFeatures, slots, slotProps } =
+  const { pluginParams, forwardedProps, apiRef, experimentalFeatures } =
     extractPluginParamsFromProps<TSignatures, typeof props>({
       plugins,
       props,
     });
 
-  const models = useTreeViewModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
   const instance = instanceRef.current as TreeViewInstance<TSignatures>;
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
@@ -87,10 +99,10 @@ export const useTreeView = <
     storeRef.current = new TreeViewStore(initialState);
   }
 
-  const baseContextValue = useTreeViewBuildContext<TSignatures>({
+  const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
-    publicAPI,
+    publicAPI: publicAPI.current,
     store: storeRef.current as TreeViewStore<any>,
     rootRef: innerRootRef,
   });
@@ -99,16 +111,12 @@ export const useTreeView = <
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
 
-  const pluginContextValues: any[] = [];
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
       params: pluginParams,
-      slots,
-      slotProps,
       experimentalFeatures,
       rootRef: innerRootRef,
-      models,
       plugins,
       store: storeRef.current as TreeViewStore<any>,
     });
@@ -118,15 +126,11 @@ export const useTreeView = <
     }
 
     if (pluginResponse.publicAPI) {
-      Object.assign(publicAPI, pluginResponse.publicAPI);
+      Object.assign(publicAPI.current, pluginResponse.publicAPI);
     }
 
     if (pluginResponse.instance) {
       Object.assign(instance, pluginResponse.instance);
-    }
-
-    if (pluginResponse.contextValue) {
-      pluginContextValues.push(pluginResponse.contextValue);
     }
   };
 
@@ -148,12 +152,6 @@ export const useTreeView = <
 
     return rootProps;
   };
-
-  const contextValue = React.useMemo(() => {
-    const copiedBaseContextValue = { ...baseContextValue };
-    return Object.assign(copiedBaseContextValue, ...pluginContextValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseContextValue, ...pluginContextValues]);
 
   return {
     getRootProps,

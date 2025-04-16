@@ -11,6 +11,7 @@ import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
+import { GridToolbarLabel } from '../toolbarV8/GridToolbar';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
@@ -24,6 +25,9 @@ export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbar
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
 
+/**
+ * @deprecated Use the `showToolbar` prop to show the default toolbar instead. This component will be removed in a future major release.
+ */
 const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(props, ref) {
   // TODO v7: think about where export option should be passed.
   // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
@@ -49,6 +53,7 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
 
   return (
     <GridToolbarContainer {...other} ref={ref}>
+      {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />

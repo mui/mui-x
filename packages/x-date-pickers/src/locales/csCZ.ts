@@ -36,12 +36,13 @@ const csCZPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Vymazat',
   okButtonLabel: 'Potvrdit',
   todayButtonLabel: 'Dnes',
+  nextStepButtonLabel: 'Další',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vyberte datum',
   dateTimePickerToolbarTitle: 'Vyberte datum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
-  dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
+  dateRangePickerToolbarTitle: 'Vyberte rozmezí dat',
   // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels

@@ -18,7 +18,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderWithProps, values, setNewValue, clock, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
     options;
 
   const isRangeType = isPickerRangeType(pickerParams.type);
@@ -55,7 +55,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onOpen.callCount).to.equal(0);
     });
 
-    it('should call onChange and onClose and onAccept (if `DesktopDatePicker` or `DesktopDateRangePicker`) when selecting a value', () => {
+    it('should call onChange, onClose and onAccept (if Desktop Date Picker or Desktop Date Range Picker) when selecting a value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -106,7 +106,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         );
 
         // Change the value
-        setNewValue(values[0], { selectSection, pressKey });
+        setNewValue(values[0], { selectSection, pressKey, closeMobilePicker: true });
         const fieldRoot = getFieldInputRoot();
         expect(fieldRoot.scrollLeft).to.be.equal(0);
       },

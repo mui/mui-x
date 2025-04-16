@@ -27,6 +27,8 @@ function App() {
         dataSourceCache={dataSourceCache}
         lazyLoading
         lazyLoadingRequestThrottleMs={100}
+        listView
+        listViewColumn={{}}
       />
     </React.Fragment>)
   );

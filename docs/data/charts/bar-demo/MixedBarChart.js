@@ -25,6 +25,7 @@ export default function MixedBarChart() {
         { data: uData, label: 'uv', stack: 'stack1' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }
