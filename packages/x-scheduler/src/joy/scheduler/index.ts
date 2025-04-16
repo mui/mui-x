@@ -1,1 +1,1 @@
-export * from './Scheduler.tsx';
+export * from './Scheduler';

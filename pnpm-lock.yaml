@@ -488,6 +488,9 @@ importers:
       '@mui/x-date-pickers-pro':
         specifier: workspace:*
         version: link:../packages/x-date-pickers-pro/build
+      '@mui/x-scheduler':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../packages/x-tree-view/build
@@ -1469,7 +1472,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
-        version: 2.0.4(@babel/core@7.26.10)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 2.0.7(@babel/core@7.26.10)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14
@@ -1918,6 +1921,9 @@ importers:
       '@mui/x-license':
         specifier: workspace:*
         version: link:../../packages/x-license/build
+      '@mui/x-scheduler':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../../packages/x-tree-view/build
