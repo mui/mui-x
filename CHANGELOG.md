@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0
 
-_Apr 16, 2025_
+_Apr 17, 2025_
 
 We're excited to [announce the first v8 stable release](https://mui.com/blog/mui-x-v8/)! 🎉🚀
 
@@ -90,12 +90,12 @@ Same changes as in `@mui/x-date-pickers@8.0.0`, plus:
 - [charts] Add uncertainty area to line with forecast demo (#17355) @bernardobelchior
 - [charts] Animate gauge chart (#17304) @bernardobelchior
 - [charts] Convert `AnimationContext` into a plugin (#17299) @bernardobelchior
-- [charts] Export 'series' class as part of barElementClasses (#17273) @10tacion
+- [charts] Export 'series' class as part of `barElementClasses` (#17273) @10tacion
 - [charts] Expose axes types (#17309) @bernardobelchior
 - [charts] Expose higher level `useAnimate` hook (#17162) @bernardobelchior
 - [charts] Fix axis types not narrowing (#17321) @bernardobelchior
 - [charts] Fix bar chart with partial data (#17290) @alexfauquette
-- [charts] Fix useAnimate test flakiness (#17372) @bernardobelchior
+- [charts] Fix `useAnimate` test flakiness (#17372) @bernardobelchior
 - [charts] Radar design refinement (#17165) @alexfauquette
 - [charts] Remove unused code (#17310) @bernardobelchior
 - [charts] Remove unused files (#17242) @JCQuintas
@@ -137,7 +137,7 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 ### Core
 
 - [core] Always use the correct babel runtime (#17241) @alexfauquette
-- [core] Document TelemetryContextType (#17282) @oliviertassinari
+- [core] Document `TelemetryContextType` (#17282) @oliviertassinari
 - [core] Fix proptypes (#17378) @cherniavskii
 - [core] Remove modern bundles (#17359) @LukasTy
 - [core] Setup testing to work with CSS imports (#17214) @romgrk
