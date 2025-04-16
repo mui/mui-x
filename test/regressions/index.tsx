@@ -1,12 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
+import { Globals } from '@react-spring/web';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
 import type { Test } from './testsBySuite';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
+
+Globals.assign({
+  skipAnimation: true,
+});
 
 declare global {
   interface Window {
