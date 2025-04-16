@@ -233,8 +233,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
-    it('should apply sorting on the aggregated values', async () => {
-      const { user } = render(
+    it('should apply sorting on the aggregated values', () => {
+      render(
         <Test
           initialState={{
             rowGrouping: { model: ['category1'] },
@@ -249,14 +249,14 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
 
       const header = getColumnHeaderCell(1);
-      await user.click(header);
+      fireEvent.click(header);
 
       expect(getColumnValues(1)).to.deep.equal(
         ['5' /* Agg "Cat B" */, '10' /* Agg "Cat A" */, '15' /* Agg root */],
         'sorted asc',
       );
 
-      await user.click(header);
+      fireEvent.click(header);
 
       expect(getColumnValues(1)).to.deep.equal(
         ['10' /* Agg "Cat A" */, '5' /* Agg "Cat B" */, '15' /* Agg root */],
