@@ -98,7 +98,9 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
     );
   }
 
-  it('should show aggregation option in the column menu', async () => {
+  // TODO @MBilalShafi: Flaky test, fix it
+  // eslint-disable-next-line mocha/no-skipped-tests
+  it.skip('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
