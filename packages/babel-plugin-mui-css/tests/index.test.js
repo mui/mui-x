@@ -1,4 +1,4 @@
-import { resolve, basename, dirname } from 'node:path';
+import { resolve, dirname } from 'node:path';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { expect } from 'chai';
@@ -60,7 +60,7 @@ describe('babel-plugin-mui-css', () => {
     // console.log(output.toString())
 
 
-    files.forEach((file, i) => {
+    files.forEach((file) => {
       const output = readFileSync(resolve(OUTPUT_DIR, file.name)).toString()
 
       expect(output).to.be.equal(outdent.string(file.output));

@@ -42,16 +42,6 @@ export default function transformCSS({ types: t }: BabelT) {
       } as State;
     },
 
-    post(file) {
-      const state = file.metadata.muiCSS as State;
-      if (!state.enabled) {
-        return;
-      }
-      if (state.rules.length === 0) {
-        return;
-      }
-    },
-
     visitor: {
       Program: {
         exit(path, { file }) {
