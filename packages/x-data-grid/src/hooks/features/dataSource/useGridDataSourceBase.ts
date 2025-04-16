@@ -275,6 +275,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   return {
     api: { public: dataSourceApi },
+    debouncedFetchRows,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
       group: 'dataSourceRowsUpdate' as const,

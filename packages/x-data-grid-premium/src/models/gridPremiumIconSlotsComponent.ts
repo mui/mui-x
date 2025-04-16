@@ -20,16 +20,6 @@ export interface GridPremiumIconSlotsComponent {
    */
   columnMenuAggregationIcon: React.JSXElementConstructor<IconProps>;
   /**
-   * Icon used for the button that sends a prompt
-   * @default GridFunctionsIcon
-   */
-  toolbarPromptSendIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon used for the button that starts/stops recording the prompt
-   * @default GridFunctionsIcon
-   */
-  toolbarPromptRecordIcon: React.JSXElementConstructor<IconProps>;
-  /**
    * Icon used for the pivot icon
    * @default GridPivotIcon
    */
@@ -89,4 +79,84 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridExpandMoreIcon
    */
   collapsibleIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the AI Assistant button
+   * @default GridAssistantIcon
+   */
+  aiAssistantIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the AI Assistant panel close button
+   * @default GridCloseIcon
+   */
+  aiAssistantPanelCloseIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the AI Assistant panel new conversation button
+   * @default GridAddIcon
+   */
+  aiAssistantPanelNewConversationIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the AI Assistant panel history icon
+   * @default GridHistoryIcon
+   */
+  aiAssistantPanelHistoryIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the prompt
+   * @default GridPromptIcon
+   */
+  promptIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the button that sends a prompt
+   * @default GridSendIcon
+   */
+  promptSendIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the button that starts and stops recording the prompt
+   * @default GridMicIcon
+   */
+  promptSpeechRecognitionIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for when speech recognition is not supported
+   * @default GridMicOffIcon
+   */
+  promptSpeechRecognitionOffIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the button that reruns a prompt
+   * @default GridRerunIcon
+   */
+  promptRerunIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display sort ascending changes
+   * @default GridArrowUpwardIcon
+   */
+  promptSortAscIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display sort descending changes
+   * @default GridArrowDownwardIcon
+   */
+  promptSortDescIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display group changes
+   * @default GridGroupWorkIcon
+   */
+  promptGroupIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display filter changes
+   * @default GridFilterAltIcon
+   */
+  promptFilterIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display pivot changes
+   * @default GridPivotIcon
+   */
+  promptPivotIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display aggregation changes
+   * @default GridFunctionsIcon
+   */
+  promptAggregationIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used on the toggle button of the changes list
+   * @default GridExpandMoreIcon
+   */
+  promptChangesToggleIcon: React.JSXElementConstructor<IconProps>;
 }
