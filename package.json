@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "postinstall": "pnpm mui-css:build",
     "start": "pnpm i && pnpm docs:dev",
     "docs:dev": "pnpm --filter docs dev",
     "docs:serve": "pnpm --filter docs serve",
