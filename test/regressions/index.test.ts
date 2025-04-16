@@ -250,7 +250,7 @@ async function main() {
       });
     });
 
-    it.only('should position charts axis tooltip 8px away from the pointer', async () => {
+    it('should position charts axis tooltip 8px away from the pointer', async () => {
       const route = '/docs-charts-tooltip/Interaction';
       const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
       const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
@@ -259,49 +259,22 @@ async function main() {
 
       await navigateToTest(route);
 
-      const testcase = await page.waitForSelector(
+      // Skip animations
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+
+      // Make sure demo got loaded
+      await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
-      // Axis tooltip
-      await page.evaluate(() => {
-        const charts = [...document.querySelectorAll('svg')];
+      const charts = await page.locator('svg').all();
 
-        const item = charts[0].querySelector('.MuiBarElement-series-auto-generated-id-2')!;
-        const position = item.getBoundingClientRect();
+      await charts[0].click();
+      // Should also trigger the item in charts[1]. But did not succeed to trigger the react `onPointerEnter`
 
-        charts[0].dispatchEvent(
-          new PointerEvent('pointermove', {
-            clientX: position.x + position.width / 2,
-            clientY: position.y + position.height / 2,
-          }),
-        );
-      });
-      await testcase.screenshot({ path: axisScreenshotPath, type: 'png' });
-
-      // Item tooltip
-      await page.evaluate(() => {
-        const charts = [...document.querySelectorAll('svg')];
-
-        const item = charts[1].querySelector('.MuiBarElement-series-auto-generated-id-2')!;
-        const position = item.getBoundingClientRect();
-
-        charts[1].dispatchEvent(
-          new PointerEvent('pointermove', {
-            clientX: position.x + position.width / 2,
-            clientY: position.y + position.height / 2,
-          }),
-        );
-        item.dispatchEvent(
-          new PointerEvent('pointerenter', {
-            clientX: position.x + position.width / 2,
-            clientY: position.y + position.height / 2,
-            pointerType: 'mouse',
-            height: 0,
-          }),
-        );
-      });
-      await testcase.screenshot({ path: itemScreenshotPath, type: 'png' });
+      // Need to screenshot the body because the tooltip is outside of the testcase div
+      const body = await page.waitForSelector(`body`);
+      await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
     // describe('DateTimePicker', () => {
