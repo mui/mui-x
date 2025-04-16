@@ -623,10 +623,7 @@ export const processRowGroupingRows = (
   const rowsWithMissingGroups: GridValidRowModel[] = [];
 
   // add paths and generate parent rows based on `groupFields`
-  const groupFields = queryOptions.groupFields.map((field) => ({
-    field,
-    type: columnsWithDefaultColDef.find((col) => col.field === field)?.type || 'string',
-  }));
+  const groupFields = queryOptions.groupFields;
 
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
