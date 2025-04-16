@@ -21,7 +21,12 @@ Migration guides are available with a complete list of the breaking changes:
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-<!-- TODO: add highlights -->
+- 🎁 [Gauge charts](https://mui.com/x/react-charts/gauge/) animation
+- 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/) in Data Grid
+- 🤖 [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/) for Data Grid
+- 📝 Data Grid [Data Source editing](https://mui.com/x/react-data-grid/server-side-data/#updating-data)
+- 🐞 Bugfixes
+- And much more in the [MUI X v8 announcement](https://mui.com/blog/mui-x-v8/)!
 
 ### Data Grid
 
@@ -52,7 +57,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
 
 ### Date and Time Pickers
 
-From https://github.com/mui/mui-x/pull/17166
+#### Breaking changes
 
 - The view selection process has been updated to make it clear across all Pickers.
   Pickers no longer automatically switch between **date** and **time views** or **start** and **end positions**.
@@ -77,10 +82,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0`, plus:
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/17304
-
-- 🎁 Animate gauge chart
-
 #### `@mui/x-charts@8.0.0`
 
 - [charts] Add `slotProps.legend.hidden` to migration docs (#17379) @bernardobelchior
@@ -99,7 +100,7 @@ From https://github.com/mui/mui-x/pull/17304
 - [charts] Remove unused code (#17310) @bernardobelchior
 - [charts] Remove unused files (#17242) @JCQuintas
 - [charts] Use `useEventCallback` to memoize `onZoomChange` without triggering a re-render (#17233) @JCQuintas
-- [charts] document series class name (#17362) @bernardobelchior
+- [charts] Document series class name (#17362) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
