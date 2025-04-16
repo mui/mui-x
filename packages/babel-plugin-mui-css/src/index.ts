@@ -5,7 +5,7 @@ import { transform as minifyCSS } from 'lightningcss';
 import { packageDirectorySync } from 'pkg-dir';
 import * as Babel from '@babel/core';
 import * as ts from 'typescript';
-import { stylesToString } from './css/stylesToString.ts';
+import { stylesToString } from './css/stylesToString.js';
 
 type BabelT = typeof Babel;
 
@@ -42,7 +42,7 @@ export default function transformCSS({ types: t }: BabelT) {
       } as State;
     },
 
-    async post(file) {
+    post(file) {
       const state = file.metadata.muiCSS as State;
       if (!state.enabled) {
         return;

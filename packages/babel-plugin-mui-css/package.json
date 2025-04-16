@@ -2,12 +2,13 @@
   "name": "babel-plugin-mui-css",
   "version": "1.0.0",
   "private": true,
-  "main": "src/index.ts",
+  "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "typescript": "tsc",
+    "typescript": "tsc -p tsconfig.json",
+    "build": "tsc",
     "test": "cross-env NODE_ENV=test mocha 'tests/**.test.*'",
-    "pretest": "pnpm run typescript"
+    "pretest": "pnpm run build"
   },
   "repository": {
     "type": "git",

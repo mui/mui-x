@@ -7,8 +7,6 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "build",
     "declaration": true
