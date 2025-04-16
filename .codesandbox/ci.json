@@ -1,7 +1,7 @@
 {
   "buildCommand": "build:codesandbox",
   "installCommand": "install:codesandbox",
-  "node": "20",
+  "node": "23",
   "packages": [
     "packages/x-license",
     "packages/x-telemetry",
