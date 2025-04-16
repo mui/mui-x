@@ -29,11 +29,11 @@ let testsBySuite: typeof import('./testsBySuite').testsBySuite;
 main();
 
 async function main() {
-  setupFakeClock();
+  // setupFakeClock();
 
   testsBySuite = (await import('./testsBySuite')).testsBySuite;
 
-  restoreFakeClock();
+  // restoreFakeClock();
 
   ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 }
