@@ -258,6 +258,8 @@ async function main() {
 
       await page.reload();
       console.log('reload');
+      await page.goto(`${baseUrl}${route}#no-dev`);
+      console.log('page goto');
       await navigateToTest(route);
       console.log('navigate');
 
