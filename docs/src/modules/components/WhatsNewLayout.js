@@ -18,6 +18,110 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v8',
+    description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
+    date: new Date(2025, 3, 17),
+    url: 'https://mui.com/blog/mui-x-v8/',
+    highlightList: [
+      {
+        title: 'Data Grid – Pivoting [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#pivoting',
+      },
+      {
+        title: 'Data Grid – Ask Your Table (AI Assistance) [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
+      },
+      {
+        title: 'Data Grid – List View [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#list-view',
+      },
+      {
+        title: 'Data Grid – Server-Side Aggregation & Lazy Loading [Premium/Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
+      },
+      {
+        title: 'Data Grid – Data Source with Support for Editing',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-with-support-for-editing',
+      },
+      {
+        title: 'Data Grid – Data Source on the Community Plan',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-on-the-community-plan',
+      },
+      {
+        title: 'Data Grid – Row Spanning',
+        url: 'https://mui.com/blog/mui-x-v8/#row-spanning',
+      },
+      {
+        title: 'Data Grid – New Toolbar',
+        url: 'https://mui.com/blog/mui-x-v8/#new-toolbar',
+      },
+      {
+        title: 'Data Grid – No Columns Overlay',
+        url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
+      },
+      {
+        title: 'Date & Time Pickers – Time Range Picker [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
+      },
+      {
+        title: 'Date & Time Pickers – New View-Switching Strategy',
+        url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
+      },
+      {
+        title: 'Date & Time Pickers – Clear `ownerState` for Slots',
+        url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
+      },
+      {
+        title: 'Date & Time Pickers – Accessible DOM Structure',
+        url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
+      },
+      {
+        title: 'Date & Time Pickers – Keyboard Editing on Mobile Pickers',
+        url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
+      },
+      {
+        title: 'Tree View – Lazy Loading Children [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#lazy-loading-children',
+      },
+      {
+        title: 'Tree View – Automatic Selection Propagation',
+        url: 'https://mui.com/blog/mui-x-v8/#automatic-selection-propagation',
+      },
+      {
+        title: 'Tree View – New Customization Hook',
+        url: 'https://mui.com/blog/mui-x-v8/#new-customization-hook',
+      },
+      {
+        title: 'Charts – Funnel Charts [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#funnel-charts',
+      },
+      {
+        title: 'Charts – Radar Charts',
+        url: 'https://mui.com/blog/mui-x-v8/#radar-charts',
+      },
+      {
+        title: 'Charts – New Animation Engine',
+        url: 'https://mui.com/blog/mui-x-v8/#new-animation-engine',
+      },
+      {
+        title: 'Charts – Server-Side Rendering for Charts',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-rendering-for-charts',
+      },
+      {
+        title: 'Charts – Refined Design and Interaction',
+        url: 'https://mui.com/blog/mui-x-v8/#refined-design-and-interaction',
+      },
+      {
+        title: 'Charts – HTML Legend for Charts',
+        url: 'https://mui.com/blog/mui-x-v8/#html-legend-for-charts',
+      },
+      {
+        title: 'Charts – Charts Composition',
+        url: 'https://mui.com/blog/mui-x-v8/#charts-composition',
+      },
+    ],
+  },
+  {
     title: 'MUI X v7.19',
     description: 'A roundup of all new features since v7.15.0.',
     date: new Date(2024, 9, 4),
