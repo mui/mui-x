@@ -58,6 +58,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   },
   disablePivoting: false,
   getPivotDerivedColumns: defaultGetPivotDerivedColumns,
+  aiAssistant: false,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
