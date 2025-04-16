@@ -400,7 +400,7 @@ It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
 
-> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart
