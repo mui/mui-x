@@ -24,22 +24,6 @@ const timeSensitiveSuites = [
 
 await main();
 
-function screenshotPrintDialogPreview(screenshotPath: string) {
-  return new Promise<void>((resolve, reject) => {
-    // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-    const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
-    const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
-
-    ffmpeg.on('close', (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`ffmpeg exited with code ${code}`));
-      }
-    });
-  });
-}
-
 async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
@@ -54,7 +38,7 @@ async function main() {
   });
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+  let page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
@@ -256,6 +240,18 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
+      console.log('before page close');
+      await page.close();
+      console.log('before new page');
+      // reuse viewport from `vrtest`
+      // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
+      page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+
+      console.log('before go to');
+      // Wait for all requests to finish.
+      // This should load shared resources such as fonts.
+      await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
+
       console.log('before navigate');
       await navigateToTest(route);
       console.log('navigate');
@@ -338,5 +334,21 @@ function isConsoleWarningIgnored(msg?: string) {
 function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
     setTimeout(resolve, timeoutMS);
+  });
+}
+
+function screenshotPrintDialogPreview(screenshotPath: string) {
+  return new Promise<void>((resolve, reject) => {
+    // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+    const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
+    const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+    ffmpeg.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`ffmpeg exited with code ${code}`));
+      }
+    });
   });
 }
