@@ -32,10 +32,6 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
       },
       {
-        title: 'Data Grid – List View [Pro]',
-        url: 'https://mui.com/blog/mui-x-v8/#list-view',
-      },
-      {
         title: 'Data Grid – Server-Side Aggregation & Lazy Loading [Premium/Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
       },
@@ -46,10 +42,6 @@ const entries = [
       {
         title: 'Data Grid – Data Source on the Community Plan',
         url: 'https://mui.com/blog/mui-x-v8/#data-source-on-the-community-plan',
-      },
-      {
-        title: 'Data Grid – Row Spanning',
-        url: 'https://mui.com/blog/mui-x-v8/#row-spanning',
       },
       {
         title: 'Data Grid – New Toolbar',
