@@ -8354,11 +8354,11 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [l10n] Improve Hebrew (he-IL) locale (#11056) (#11149) @MBilalShafi
 - [DataGrid] Remove unused utilities (#11156) @flaviendelangle
 
-#### `@mui/x-data-grid-pro@7.0.0-alpha.2` [![pro](https://v7.mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.0.0-alpha.2`.
 
-#### `@mui/x-data-grid-premium@7.0.0-alpha.2` [![premium](https://v7.mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
 
@@ -8427,7 +8427,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
 - [pickers] Rename the `dayPickerClasses` variable `dayCalendarClasses` (#11140) @flaviendelangle
 - [pickers] Replace `adapter.date` with the current `adapter.dateWithTimezone` (#10979) @flaviendelangle
 
-#### `@mui/x-date-pickers-pro@7.0.0-alpha.2` [![pro](https://v7.mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
 
@@ -8470,7 +8470,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.0.0-alpha.1` / `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://v7.mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers@7.0.0-alpha.1` / `@mui/x-date-pickers-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 #### Breaking changes
 
