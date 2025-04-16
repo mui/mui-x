@@ -165,6 +165,17 @@ Renames `LegendPosition` to `Position`.
 +import { Position } from '@mui/x-charts/models';
 ```
 
+## Replace `slotProps.legend.hidden` with `hideLegend` prop
+
+The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
+
+```diff
+ <BarChart
+-  slotProps={{ legend: { hidden: true } }}
++  hideLegend
+ />
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.

@@ -769,6 +769,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "baseCircularProgress",
       "description": "The custom CircularProgress component used in the grid.",
       "default": "CircularProgress",
@@ -862,12 +868,6 @@
       "name": "baseSwitch",
       "description": "The custom Switch component used in the grid.",
       "default": "Switch",
-      "class": null
-    },
-    {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
       "class": null
     },
     {
@@ -1140,6 +1140,90 @@
       "key": "aggregationRowOverlayWrapper",
       "className": "MuiDataGridPro-aggregationRowOverlayWrapper",
       "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanel",
+      "className": "MuiDataGridPro-aiAssistantPanel",
+      "description": "Styles applied to the root element of the AI assistant panel.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGridPro-aiAssistantPanelBody",
+      "description": "Styles applied to the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGridPro-aiAssistantPanelConversation",
+      "description": "Styles applied to the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGridPro-aiAssistantPanelConversationList",
+      "description": "Styles applied to the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationTitle",
+      "className": "MuiDataGridPro-aiAssistantPanelConversationTitle",
+      "description": "Styles applied to the AI assistant panel conversation title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGridPro-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGridPro-aiAssistantPanelFooter",
+      "description": "Styles applied to the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGridPro-aiAssistantPanelHeader",
+      "description": "Styles applied to the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGridPro-aiAssistantPanelTitle",
+      "description": "Styles applied to the AI assistant panel title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitleContainer",
+      "className": "MuiDataGridPro-aiAssistantPanelTitleContainer",
+      "description": "Styles applied to the AI assistant panel title container.",
       "isGlobal": false
     },
     {
@@ -1863,6 +1947,72 @@
       "isGlobal": false
     },
     {
+      "key": "prompt",
+      "className": "MuiDataGridPro-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGridPro-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPro-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGridPro-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggleIcon",
+      "className": "MuiDataGridPro-promptChangesToggleIcon",
+      "description": "Styles applied to the prompt changes toggle icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGridPro-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGridPro-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPro-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIcon",
+      "className": "MuiDataGridPro-promptIcon",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGridPro-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGridPro-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
       "key": "resizablePanelHandle",
       "className": "MuiDataGridPro-resizablePanelHandle",
       "description": "Styles applied to resizable panel handles.",
@@ -2079,36 +2229,6 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarPromptControl",
-      "className": "MuiDataGridPro-toolbarPromptControl",
-      "description": "Styles applied to the toolbar prompt control element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControl--recording",
-      "className": "MuiDataGridPro-toolbarPromptControl--recording",
-      "description": "Styles applied to the toolbar prompt control element when recording.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordButton",
-      "className": "MuiDataGridPro-toolbarPromptControlRecordButton",
-      "description": "Styles applied to the toolbar prompt control record button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordingIndicator",
-      "className": "MuiDataGridPro-toolbarPromptControlRecordingIndicator",
-      "description": "Styles applied to the toolbar prompt control recording indicator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlSendButton",
-      "className": "MuiDataGridPro-toolbarPromptControlSendButton",
-      "description": "Styles applied to the toolbar prompt control send button element.",
-      "isGlobal": false
-    },
-    {
       "key": "toolbarQuickFilter",
       "className": "MuiDataGridPro-toolbarQuickFilter",
       "description": "Styles applied to the toolbar quick filter root element.",
@@ -2185,6 +2305,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }
