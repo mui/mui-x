@@ -11,14 +11,14 @@ import {
   ZoomData,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
-import { useXAxes } from '@mui/x-charts/hooks';
+import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 import { ChartZoomBrushHandle } from './ChartZoomBrushHandle';
 
-const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
+const BackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
     fill: (theme.vars || theme).palette.grey[300],
     opacity: 0.8,
@@ -41,36 +41,42 @@ interface ChartZoomBrushProps {
    */
   axisId: AxisId;
   /**
+   * The direction of the axis.
+   */
+  axisDirection: 'x' | 'y';
+  /**
    * The size of the overview.
    * This represents the height if the axis is an x-axis, or the width if the axis is a y-axis.
    */
   size: number;
 }
 
-export function ChartZoomBrush({ size, axisId }: ChartZoomBrushProps) {
+export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushProps) {
   const store = useStore();
-  const xAxes = useXAxes();
   const drawingArea = useDrawingArea();
-  const bottomAxes = Object.values(xAxes.xAxis).filter((axis) => axis.position === 'bottom');
-  const bottomAxesHeight = bottomAxes.reduce((acc, axis) => acc + axis.height, 0);
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const { xAxis } = useXAxes();
+  const { yAxis } = useYAxes();
+  const axis = axisDirection === 'x' ? xAxis[axisId] : yAxis[axisId];
 
-  if (!zoomData) {
+  if (!zoomData || !axis) {
     return null;
   }
 
+  const axisSize = axisDirection === 'x' ? axis.height : axis.width;
+
   return (
     <g
-      transform={`translate(${drawingArea.left} ${drawingArea.top + drawingArea.height + bottomAxesHeight})`}
+      transform={`translate(${drawingArea.left} ${drawingArea.top + drawingArea.height + axis.offset + axisSize})`}
     >
-      <PreviewBackgroundRect height={size} width={drawingArea.width} />
+      <BackgroundRect height={size} width={drawingArea.width} />
       <ChartZoomBrushRange size={size} zoomData={zoomData} axisId={axisId} />
     </g>
   );
 }
 
 function ChartZoomBrushRange({
-  size = 30,
+  size,
   axisId,
   zoomData,
 }: {

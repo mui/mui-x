@@ -1,19 +1,39 @@
 import * as React from 'react';
-import { AxisId } from '@mui/x-charts/internals';
-import { ChartZoomBrush } from './ChartZoomBrush';
+import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { ChartAxisOverview } from './ChartAxisOverview';
 
-export interface ChartsOverviewProps {
-  /**
-   * The ID of the axis this overview refers to.
-   */
-  axisId: AxisId;
-  /**
-   * The size of the overview.
-   * This represents the height if the axis is an x-axis, or the width if the axis is a y-axis.
-   */
-  size?: number;
-}
+export function ChartsOverview() {
+  const { xAxisIds, xAxis: xAxes } = useXAxes();
+  const { yAxisIds, yAxis: yAxes } = useYAxes();
 
-export function ChartsOverview({ axisId, size = 40 }: ChartsOverviewProps) {
-  return <ChartZoomBrush size={size} axisId={axisId} />;
+  return (
+    <React.Fragment>
+      {xAxisIds.map((axisId) => {
+        const xAxis = xAxes[axisId];
+
+        const overview = xAxis?.zoom?.overview;
+
+        if (!overview?.enabled) {
+          return null;
+        }
+
+        return (
+          <ChartAxisOverview key={axisId} size={overview.size} axisId={axisId} axisDirection="x" />
+        );
+      })}
+      {yAxisIds.map((axisId) => {
+        const yAxis = yAxes[axisId];
+
+        const overview = yAxis?.zoom?.overview;
+
+        if (!overview?.enabled) {
+          return null;
+        }
+
+        return (
+          <ChartAxisOverview key={axisId} size={overview.size} axisId={axisId} axisDirection="y" />
+        );
+      })}
+    </React.Fragment>
+  );
 }
