@@ -53,7 +53,7 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
