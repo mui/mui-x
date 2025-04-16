@@ -32,23 +32,23 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
       },
       {
-        title: 'Data Grid – Server-Side Aggregation & Lazy Loading [Premium/Pro]',
+        title: 'Data Grid – Server-side aggregation & Lazy loading [Premium/Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
       },
       {
-        title: 'Data Grid – Data Source with Support for Editing',
+        title: 'Data Grid – Data source with support for editing',
         url: 'https://mui.com/blog/mui-x-v8/#data-source-with-support-for-editing',
       },
       {
-        title: 'Data Grid – Data Source on the Community Plan',
+        title: 'Data Grid – Data source on the community plan',
         url: 'https://mui.com/blog/mui-x-v8/#data-source-on-the-community-plan',
       },
       {
-        title: 'Data Grid – New Toolbar',
+        title: 'Data Grid – New toolbar',
         url: 'https://mui.com/blog/mui-x-v8/#new-toolbar',
       },
       {
-        title: 'Data Grid – No Columns Overlay',
+        title: 'Data Grid – No columns overlay',
         url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
       },
       {
@@ -56,59 +56,59 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
       },
       {
-        title: 'Date & Time Pickers – New View-Switching Strategy',
+        title: 'Date & Time Pickers – New view-switching strategy',
         url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
       },
       {
-        title: 'Date & Time Pickers – Clear `ownerState` for Slots',
+        title: 'Date & Time Pickers – Clear "ownerState" for slots',
         url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
       },
       {
-        title: 'Date & Time Pickers – Accessible DOM Structure',
+        title: 'Date & Time Pickers – Accessible DOM structure',
         url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
       },
       {
-        title: 'Date & Time Pickers – Keyboard Editing on Mobile Pickers',
+        title: 'Date & Time Pickers – Keyboard editing on mobile pickers',
         url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
       },
       {
-        title: 'Tree View – Lazy Loading Children [Pro]',
+        title: 'Tree View – Lazy loading children [Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#lazy-loading-children',
       },
       {
-        title: 'Tree View – Automatic Selection Propagation',
+        title: 'Tree View – Automatic selection propagation',
         url: 'https://mui.com/blog/mui-x-v8/#automatic-selection-propagation',
       },
       {
-        title: 'Tree View – New Customization Hook',
+        title: 'Tree View – New customization hook',
         url: 'https://mui.com/blog/mui-x-v8/#new-customization-hook',
       },
       {
-        title: 'Charts – Funnel Charts [Pro]',
+        title: 'Charts – Funnel charts [Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#funnel-charts',
       },
       {
-        title: 'Charts – Radar Charts',
+        title: 'Charts – Radar charts',
         url: 'https://mui.com/blog/mui-x-v8/#radar-charts',
       },
       {
-        title: 'Charts – New Animation Engine',
+        title: 'Charts – New animation engine',
         url: 'https://mui.com/blog/mui-x-v8/#new-animation-engine',
       },
       {
-        title: 'Charts – Server-Side Rendering for Charts',
+        title: 'Charts – Server-side rendering for charts',
         url: 'https://mui.com/blog/mui-x-v8/#server-side-rendering-for-charts',
       },
       {
-        title: 'Charts – Refined Design and Interaction',
+        title: 'Charts – Refined design and interaction',
         url: 'https://mui.com/blog/mui-x-v8/#refined-design-and-interaction',
       },
       {
-        title: 'Charts – HTML Legend for Charts',
+        title: 'Charts – HTML legend for Charts',
         url: 'https://mui.com/blog/mui-x-v8/#html-legend-for-charts',
       },
       {
-        title: 'Charts – Charts Composition',
+        title: 'Charts – Composition',
         url: 'https://mui.com/blog/mui-x-v8/#charts-composition',
       },
     ],
