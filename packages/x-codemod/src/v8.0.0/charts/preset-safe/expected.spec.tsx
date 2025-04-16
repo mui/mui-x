@@ -1,4 +1,6 @@
 // @ts-nocheck
+// eslint-disable-next-line
+/* eslint-disable */
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
@@ -27,13 +29,15 @@ function App() {
   <div>
   <PieChart
     slotProps={{
-      legend: { hidden: true }
-    }} />
+      legend: {}
+    }}
+    hideLegend={true} />
   <PieChart
     slotProps={{
       tooltip: { trigger: 'axis' },
-      legend: { hidden: true }
-    }} />
+      legend: {}
+    }}
+    hideLegend={true} />
   <ChartContainer onAxisClick={onAxisClickHandler}>
 
     <BarPlot />
