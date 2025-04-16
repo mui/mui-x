@@ -1,10 +1,10 @@
 import * as vm from 'node:vm';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, basename, join as joinPath } from 'node:path';
-import { transform as lightning } from 'lightningcss';
+import { transform as minifyCSS } from 'lightningcss';
 import { packageDirectorySync } from 'pkg-dir';
 import * as Babel from '@babel/core';
-import * as CSS from '@mui/x-internals/css';
+import { stylesToString } from './css/stylesToString.js';
 
 type BabelT = typeof Babel;
 
@@ -26,35 +26,6 @@ type ProjectConfig = {
 
 const configsByPath = new Map<string, ProjectConfig | null>();
 
-function getConfigPath(filepath: string) {
-  const configPath = joinPath(packageDirectorySync({ cwd: dirname(filepath) }), CONFIG_FILENAME);
-  return configPath;
-}
-
-function getConfig(filepath: string) {
-  const configPath = getConfigPath(filepath);
-  let config = configsByPath.get(configPath);
-  if (config !== undefined) {
-    return config;
-  }
-
-  if (!existsSync(configPath)) {
-    configsByPath.set(configPath, null);
-    return null
-  }
-
-  const data = JSON.parse(readFileSync(configPath).toString());
-  config = {
-    configPath,
-    data,
-    variablesCode: getCSSVariablesCode(
-      data.cssVariables ? joinPath(dirname(configPath), data.cssVariables) : undefined,
-    ),
-  };
-  configsByPath.set(configPath, config);
-  return config;
-}
-
 export default function transformCSS({ types: t }: BabelT) {
   return {
     name: PLUGIN_NAME,
@@ -68,7 +39,6 @@ export default function transformCSS({ types: t }: BabelT) {
         config,
         rules: [],
       } as State;
-      console.log(file.opts.filename, file.metadata.muiCSS)
     },
 
     async post(file) {
@@ -95,7 +65,7 @@ export default function transformCSS({ types: t }: BabelT) {
           let cssContent = '';
           cssContent = state.rules.map((r) => r.content).join('\n');
           if (state.options.cssMinify ?? true) {
-            const { code: cssMinified } = lightning({
+            const { code: cssMinified } = minifyCSS({
               filename: 'index.css',
               code: Buffer.from(cssContent),
               minify: true,
@@ -160,10 +130,10 @@ export default function transformCSS({ types: t }: BabelT) {
     return t.objectExpression(
       Object.keys(classes).map((className) => {
         const identifier = className;
-        const cssClassName = CSS.generateClassName(prefix, className);
+        const cssClassName = generateClassName(prefix, className);
         const cssStyles = classes[className];
 
-        const generatedCSS = CSS.stylesToString(`.${cssClassName}`, cssStyles as any)
+        const generatedCSS = stylesToString(`.${cssClassName}`, cssStyles as any)
           .map((c) => c.trim())
           .join('\n');
 
@@ -176,6 +146,43 @@ export default function transformCSS({ types: t }: BabelT) {
     );
   }
 }
+
+function generateClassName(prefix: string, className: string) {
+  if (className === 'root') {
+    return prefix;
+  }
+  return `${prefix}--${className}`;
+}
+
+function getConfigPath(filepath: string) {
+  const configPath = joinPath(packageDirectorySync({ cwd: dirname(filepath) }), CONFIG_FILENAME);
+  return configPath;
+}
+
+function getConfig(filepath: string) {
+  const configPath = getConfigPath(filepath);
+  let config = configsByPath.get(configPath);
+  if (config !== undefined) {
+    return config;
+  }
+
+  if (!existsSync(configPath)) {
+    configsByPath.set(configPath, null);
+    return null
+  }
+
+  const data = JSON.parse(readFileSync(configPath).toString());
+  config = {
+    configPath,
+    data,
+    variablesCode: getCSSVariablesCode(
+      data.cssVariables ? joinPath(dirname(configPath), data.cssVariables) : undefined,
+    ),
+  };
+  configsByPath.set(configPath, config);
+  return config;
+}
+
 
 function findSelf(plugins) {
   return plugins.find((p) => p.key === PLUGIN_NAME);
