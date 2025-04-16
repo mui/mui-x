@@ -101,7 +101,7 @@ export interface UseTreeViewItemsReorderingParameters {
   }) => void;
 }
 
-export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
+export type UseTreeViewItemsReorderingParametersWithDefaults = DefaultizedProps<
   UseTreeViewItemsReorderingParameters,
   'itemsReordering'
 >;
@@ -120,7 +120,7 @@ export interface UseTreeViewItemsReorderingState {
 
 export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsReorderingParameters;
-  defaultizedParams: UseTreeViewItemsReorderingDefaultizedParameters;
+  paramsWithDefaults: UseTreeViewItemsReorderingParametersWithDefaults;
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
   dependencies: [UseTreeViewItemsSignature];

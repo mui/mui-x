@@ -1,11 +1,11 @@
-import { TreeViewUsedDefaultizedParams } from '../../models';
+import { TreeViewUsedParamsWithDefaults } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 export const getExpansionTrigger = ({
   isItemEditable,
   expansionTrigger,
 }: Pick<
-  TreeViewUsedDefaultizedParams<UseTreeViewExpansionSignature>,
+  TreeViewUsedParamsWithDefaults<UseTreeViewExpansionSignature>,
   'isItemEditable' | 'expansionTrigger'
 >) => {
   if (expansionTrigger) {

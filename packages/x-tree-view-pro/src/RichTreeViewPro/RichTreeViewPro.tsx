@@ -204,14 +204,6 @@ RichTreeViewPro.propTypes = {
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
   /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
-  }),
-  /**
    * Used to determine the id of a given item.
    *
    * @template R

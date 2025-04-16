@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
-  UseTreeViewItemsDefaultizedParameters,
+  UseTreeViewItemsParametersWithDefaults,
   UseTreeViewItemsState,
   AddItemsParameters,
 } from './useTreeViewItems.types';
@@ -22,7 +22,7 @@ import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/use
 
 interface ProcessItemsLookupsParameters
   extends Pick<
-    UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
+    UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
   > {
   initialDepth?: number;
@@ -400,7 +400,7 @@ useTreeViewItems.getInitialState = (params) => ({
   },
 });
 
-useTreeViewItems.getDefaultizedParams = ({ params }) => ({
+useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',

@@ -155,7 +155,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
 const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
-useTreeViewExpansion.getDefaultizedParams = ({ params }) => ({
+useTreeViewExpansion.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });

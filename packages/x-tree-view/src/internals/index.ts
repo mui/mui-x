@@ -20,7 +20,6 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewState,
-  TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
   TreeViewItemPlugin,

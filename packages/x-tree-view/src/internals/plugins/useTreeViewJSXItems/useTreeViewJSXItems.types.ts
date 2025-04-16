@@ -32,11 +32,11 @@ export interface UseTreeViewItemsInstance {
 
 export interface UseTreeViewJSXItemsParameters {}
 
-export interface UseTreeViewItemsDefaultizedParameters {}
+export interface UseTreeViewItemsParametersWithDefaults {}
 
 export type UseTreeViewJSXItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewJSXItemsParameters;
-  defaultizedParams: UseTreeViewItemsDefaultizedParameters;
+  paramsWithDefaults: UseTreeViewItemsParametersWithDefaults;
   instance: UseTreeViewItemsInstance;
   dependencies: [UseTreeViewItemsSignature, UseTreeViewKeyboardNavigationSignature];
 }>;

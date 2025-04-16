@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
-  TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -137,7 +136,6 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
       slotProps?: TreeViewSlotProps & {
         item?: Partial<TreeItemProps>;
       };
-      experimentalFeatures?: TreeViewExperimentalFeatures<TSignatures>;
     },
 ) => DescribeTreeViewRendererReturnValue<TSignatures>;
 

@@ -2,5 +2,5 @@ export { useTreeViewExpansion } from './useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
   UseTreeViewExpansionParameters,
-  UseTreeViewExpansionDefaultizedParameters,
+  UseTreeViewExpansionParametersWithDefaults,
 } from './useTreeViewExpansion.types';
