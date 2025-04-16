@@ -8370,7 +8370,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
   The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
   Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
 
-  You can read more about the deprecation of this prop in [v6 migration guide](https://v7.mui.com//x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
+  You can read more about the deprecation of this prop in [v6 migration guide](https://v7.mui.com/x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
 
   ```diff
    <DateTimePicker
