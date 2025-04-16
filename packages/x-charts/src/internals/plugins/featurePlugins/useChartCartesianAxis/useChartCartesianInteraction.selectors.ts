@@ -138,3 +138,13 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
+
+type AxisIdentifier = { axisId: string; dataIndex: number };
+
+export function compareTooltipAxes(a: AxisIdentifier[], b: AxisIdentifier[]) {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  return a.every((_, i) => a[i].axisId === b[i].axisId && a[i].dataIndex === b[i].dataIndex);
+}

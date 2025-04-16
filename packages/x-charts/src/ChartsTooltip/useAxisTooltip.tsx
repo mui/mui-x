@@ -23,6 +23,7 @@ import {
 } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import {
+  compareTooltipAxes,
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
   UseChartCartesianAxisSignature,
@@ -115,10 +116,25 @@ export function useAxisTooltip(
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const tooltipXAxes = useSelector(store, selectorChartsInteractionTooltipXAxes);
-  const tooltipYAxes = useSelector(store, selectorChartsInteractionTooltipYAxes);
+  const tooltipXAxes = useSelector(
+    store,
+    selectorChartsInteractionTooltipXAxes,
+    [],
+    compareTooltipAxes,
+  );
+  const tooltipYAxes = useSelector(
+    store,
+    selectorChartsInteractionTooltipYAxes,
+    [],
+    compareTooltipAxes,
+  );
 
-  const tooltipRotationAxes = useSelector(store, selectorChartsInteractionTooltipRotationAxes);
+  const tooltipRotationAxes = useSelector(
+    store,
+    selectorChartsInteractionTooltipRotationAxes,
+    [],
+    compareTooltipAxes,
+  );
 
   const series = useSeries();
 
