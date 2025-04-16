@@ -130,7 +130,19 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          {
+            pathname: '/x/react-data-grid/pivoting-group',
+            title: 'Pivoting',
+            plan: 'premium',
+            newFeature: true,
+            children: [
+              { pathname: '/x/react-data-grid/pivoting', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/pivoting-explained',
+                title: 'Understanding pivoting',
+              },
+            ],
+          },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
@@ -166,6 +178,12 @@ const pages: MuiPage[] = [
               },
             ],
           },
+          {
+            pathname: '/x/react-data-grid/ai-assistant',
+            plan: 'premium',
+            newFeature: true,
+            title: 'AI Assistant',
+          },
         ],
       },
       {
@@ -178,6 +196,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/components/export', title: 'Export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
           {
+            pathname: '/x/react-data-grid/components/prompt-field',
+            title: 'Prompt Field',
+            plan: 'premium',
+          },
+          {
             pathname: '/x/react-data-grid/components/columns-panel',
             title: 'Columns Panel',
             planned: true,
@@ -186,6 +209,18 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/filter-panel',
             title: 'Filter Panel',
             planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/pivot-panel',
+            title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/ai-assistant-panel',
+            title: 'AI Assistant Panel',
+            planned: true,
+            plan: 'premium',
           },
         ],
       },

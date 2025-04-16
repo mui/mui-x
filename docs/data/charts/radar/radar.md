@@ -59,12 +59,6 @@ The radar chart displays a grid behind the series that can be configured with:
 
 {{"demo": "DemoRadar.js" }}
 
-## Interaction 🚧
-
-### Axis click 🚧
-
-### Item click 🚧
-
 ## Highlight
 
 ### Axis highlight
@@ -93,17 +87,49 @@ Otherwise, the other area would catch the pointer event, making it impossible to
 
 To remove highlight, set the `highlight` prop to `'none'`.
 
-## Tooltip 🚧
+## Tooltip
 
-## Composition 🚧
+Like other charts, the radar chart [tooltip](/x/react-charts/tooltip/) can be customized with slots.
+The `trigger` prop of the `tooltip` slot accepts the following values:
+
+- `'axis'`—the user's mouse position is associated with a metric. The tooltip displays data about all series along this specific metric.
+- `'item'`—when the user's mouse hovers over a radar area, the tooltip displays data about this series.
+- `'none'`—disable the tooltip.
+
+{{"demo": "RadarTooltip.js" }}
+
+## Composition
 
 For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
 
-Providing components for radar composition is still a work in progress.
-If you miss some element or explanation, please open an issue describing what you want to achieve, and what is missing.
+The `RadarGrid` and `RadarMetricLabels` components render the grid and the labels.
 
-In this example, we uses `RadarSeriesArea` and `RadarSeriesMarks` to modify the order of the elements:
-all the marks are on top of all the path.
-Additionally, we apply different properties based on the series id.
+The `RadarSeriesPlot` renders series (the area and the marks) on top of each other.
+The `RadarSeriesArea` and `RadarSeriesMarks` provide an alternative by rendering all series areas in the first component and all the marks in the second.
+The second approach allows rendering some elements on top of areas and below marks.
+
+The `RadarAxisHighlight` component displays the axis highlight.
 
 {{"demo": "CompositionExample.js" }}
+
+For info here is the composition of the `RadarChart` component.
+
+```jsx
+<RadarDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      {/* The background of the chart */}
+      <RadarGrid />
+      <RadarMetricLabels />
+      {/* The data with axis highlight on top of area and below marks */}
+      <RadarSeriesArea />
+      <RadarAxisHighlight />
+      <RadarSeriesMarks />
+      {/* Other components */}
+      <ChartsOverlay />
+      <Tooltip />
+    </ChartsSurface>
+  </ChartsWrapper>
+</RadarDataProvider>
+```

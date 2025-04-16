@@ -17,6 +17,11 @@ export interface PieArcClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type PieArcClassKey = keyof PieArcClasses;
@@ -38,6 +43,7 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {

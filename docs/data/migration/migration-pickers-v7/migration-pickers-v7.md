@@ -35,6 +35,14 @@ Changes that might impact such users are marked with a ⏩ emoji.
 You can skip them and come back to them later if you experience any issues after the migration.
 :::
 
+:::warning
+Some behavioral changes are marked with a ⚠️ emoji for better visibility.
+
+Make sure to double-check them to avoid unexpected changes in your flow.
+
+If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
+:::
+
 ## Package layout changes
 
 MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
@@ -44,6 +52,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-date-pickers': '@mui/x-date-pickers/modern',
+-      '@mui/x-date-pickers-pro': '@mui/x-date-pickers-pro/modern',
+     }
+   }
+ }
+```
 
 ## Run codemods
 
@@ -117,7 +139,34 @@ In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` an
 
 ## Components breaking changes
 
-### New DOM structure for the field
+### ⚠️ Updated view selection process
+
+The view selection process has been updated to make it clearer across all Pickers.
+Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to the end range position when the start value is selected.
+In essence, the automatic range position and view switching have been removed in favor of manual confirmation.
+The new default behavior for all other cases is as follows:
+
+- Selection on a given view has to be confirmed by clicking the "**Next**" action button if there are other selection steps.
+- The "**Next**" action is replaced with ""**OK**" if there is no next step.
+- The "**OK**" action has to be clicked to confirm the selection and close the Picker.
+
+Here are a few examples of how the new behavior works:
+
+- On `<DesktopDateTimePicker />`:
+
+  - Previously selecting a date and then selecting all time sections automatically closed the Picker.
+  - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
+
+- On `<DesktopDateTimeRangePicker />`:
+
+  - Previously selecting a start date and then selecting all time sections automatically switched to the end date selection step. After the last end time section was selected, the Picker closed.
+  - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
+
+- On `<MobileDateTimeRangePicker />`:
+  - Previously selecting a start date automatically switched to the start time selection step. After the last time section selection, the Picker switched to the end date step.
+  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switches the Picker to the end date step.
+
+### ⚠️ New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
 Unfortunately it presented accessibility limitations, which are impossible to resolve.

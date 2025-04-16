@@ -45,6 +45,8 @@ import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
+import GridPivotingInitialState from '../pivoting/GridPivotingInitialState';
+import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
 
 type Row = {
   id: number;
@@ -231,6 +233,25 @@ export const featuresSet: Row[] = [
     detailPage: '/filtering/#header-filters',
     demo: <HeaderFilteringDataGridPro />,
     linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
+  },
+  {
+    id: 20,
+    name: 'Pivoting',
+    description:
+      'Rearrange rows and columns to view data from multiple perspectives.',
+    plan: 'Premium',
+    detailPage: '/pivoting/',
+    demo: <GridPivotingInitialState />,
+    linkToCode: '/pivoting/#system-GridPivotingInitialState.tsx',
+  },
+  {
+    id: 21,
+    name: 'AI Assistant',
+    description: 'Translate natural language into a set of grid state updates.',
+    plan: 'Premium',
+    detailPage: '/ai-assistant/',
+    demo: <AssistantWithExamples />,
+    linkToCode: '/ai-assistant/#system-AssistantWithExamples.tsx',
   },
 ];
 
@@ -502,6 +523,9 @@ const columns: GridColDef[] = [
   },
 ];
 
+const mainDataGridCellClassName = 'main-data-grid-cell';
+const getCellClassName = () => mainDataGridCellClassName;
+
 export default function PopularFeaturesDemo() {
   const apiRef = useGridApiRef();
 
@@ -555,8 +579,8 @@ export default function PopularFeaturesDemo() {
         onRowClick={onRowClick}
         slots={{
           toolbar: CustomToolbar,
-          detailPanelExpandIcon: ArrowDown,
-          detailPanelCollapseIcon: ArrowUp,
+          detailPanelExpandIcon: ArrowDown as any,
+          detailPanelCollapseIcon: ArrowUp as any,
         }}
         showToolbar
         getDetailPanelContent={getDetailPanelContent}
@@ -567,10 +591,11 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',
           // Do not target cells in nested grids
-          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
+          [`.${gridClasses.cell}.${mainDataGridCellClassName}`]: {
             py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {

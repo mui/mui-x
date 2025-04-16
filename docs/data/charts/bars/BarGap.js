@@ -38,7 +38,6 @@ export default function BarGap() {
             {
               scaleType: 'band',
               dataKey: 'year',
-              // @ts-expect-error, issue with band scale types
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
             },
