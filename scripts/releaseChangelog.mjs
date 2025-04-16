@@ -434,7 +434,7 @@ yargs(hideBin(process.argv))
         })
         .option('release', {
           // #default-branch-switch
-          // to be done when we branch off to new major version branch (change comment?)
+          // to be done when we branch off v8.x
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
