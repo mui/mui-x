@@ -3,48 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.28.4
+## 7.29.0
 
 _Apr 16, 2025_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌍 Improve Swedish (sv-SE) locale
+- 🌍 Improve Hebrew (he-IL), Polish (pl-PL), and Swedish (sv-SE) locales on the Data Grid
+- 🌍 Improve Czech (cs-CZ) and Slovak (sk-SK) locales on the Date and Time Pickers
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@lubka272, @ptuukkan.
+@lubka272, @ptuukkan, @iddan, @sofortdagmbh
 
 Following are all team members who have contributed to this release:
-@michelengelen, @oliviertassinari, @michelengelen
+@michelengelen, @oliviertassinari, @michelengelen, @LukasTy.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.28.4`
+#### `@mui/x-data-grid@7.29.0`
 
 - [l10n] Improve Swedish (sv-SE) locale (#17306) @ptuukkan
+- [l10n] Improve Hebrew (he-IL) locale (#16516) @iddan
+- [l10n] Improve Polish (pl-PL) locale (#17306) @sofortdagmbh
 
-#### `@mui/x-data-grid-pro@7.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.28.4`.
+Same changes as in `@mui/x-data-grid@7.29.0`.
 
-#### `@mui/x-data-grid-premium@7.28.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.28.4`, plus:
+Same changes as in `@mui/x-data-grid-pro@7.29.0`, plus:
 
 - [DataGridPremium] Fix stale aggregation results after filtering (#17303) @cherniavskii
+- [DataGridPremium] Fix aggregated values sorting (#17382) @cherniavskii
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.28.4`
+#### `@mui/x-date-pickers@7.29.0`
 
 - [l10n] Improve Slovak (sk-SK) locale (#17204) @lubka272
+- [l10n] Improve Czech (cs-CZ) locale (#17205) @lubka272
 
-#### `@mui/x-date-pickers-pro@7.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.28.4`.
+Same changes as in `@mui/x-date-pickers@7.29.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.29.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.29.0`.
+
+### Core
+
+- [core] Cleanup `@mui` dependency versions (#17390) @LukasTy
 
 ### Docs
 
