@@ -22,35 +22,38 @@ Migration guides are available with a complete list of the breaking changes:
 Here are the highlights from alpha and beta releases included in this stable release:
 
 - ⚛️ React 19 support.
+- 🎁 `@mui/material@7` support – see the [Material UI v7 upgrade guide](https://mui.com/material-ui/migration/upgrade-to-v7/).
 
+- 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/).
+- 🤖 [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/).
 - 🛠️ New and improved Data Grid [Toolbar component](https://mui.com/x/react-data-grid/components/toolbar/).
 - 📦 Data Grid [data source](https://mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
 - 🚫 Add ["No columns" overlay](https://mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
 - 🍬 Improved design for Data Grid [Header filters](https://mui.com/x/react-data-grid/filtering/header-filters/).
 - 🔄 Add Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration).
 - 💫 Support [aggregation with server-side data](https://mui.com/x/react-data-grid/server-side-data/aggregation/).
-- 🎁 Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 🎁 Support [server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 📝 Support [editing with server-side Data Source](https://mui.com/x/react-data-grid/server-side-data/#updating-data)
 - 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching).
-- 🏎️ Improve Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
-- 🎨 Improve Data Grid theming and add default background color.
+- 🏎️ Improved Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
+- 🎨 Improved Data Grid theming and add default background color.
 
 - 📊 New Pro chart: [Funnel](https://mui.com/x/react-charts/funnel/).
 - 📊 New Community chart: [Radar](https://mui.com/x/react-charts/radar/) is available in preview for testing.
 - 📊 Charts legend is now an HTML element which can be styled more easily.
+- 📊 [Gauge charts](https://mui.com/x/react-charts/gauge/) animation.
 - 📊 Create [custom HTML components](https://mui.com/x/react-charts/components/#html-components) using chart data.
 - 📊 Refactor Charts [Tooltip customization](https://mui.com/x/react-charts/tooltip/#overriding-content).
-- 📊 Improve Charts [composition](https://mui.com/x/react-charts/composition/#overview).
+- 📊 Improved Charts [composition](https://mui.com/x/react-charts/composition/#overview).
 - 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering).
 - 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`)
+- 🚫 Removed `react-spring` dependency from `@mui/x-charts`.
+
+- 🚀 New [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component
 
 - 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
-- 🎁 [Gauge charts](https://mui.com/x/react-charts/gauge/) animation
-- 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/) in Data Grid
-- 🤖 [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/) for Data Grid
-- 📝 Data Grid [Data Source editing](https://mui.com/x/react-data-grid/server-side-data/#updating-data)
-- 🐞 Bugfixes
-- And much more in the [MUI X v8 announcement](https://mui.com/blog/mui-x-v8/)!
+Below are the changes since the last beta release:
 
 ### Data Grid
 
