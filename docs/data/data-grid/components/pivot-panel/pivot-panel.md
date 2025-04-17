@@ -1,12 +1,12 @@
 ---
-title: React Data Grid - Pivot panel component
+title: React Data Grid - Pivot Panel component
 productId: x-data-grid
 components: PivotPanelTrigger
 packageName: '@mui/x-data-grid-premium'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Pivot panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
+# Data Grid - Pivot Panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 <p class="description">Customize the Data Grid's pivot panel.</p>
 
