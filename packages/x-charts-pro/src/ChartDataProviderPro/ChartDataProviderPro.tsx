@@ -12,9 +12,8 @@ import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
 
 export type ChartDataProviderProProps<
