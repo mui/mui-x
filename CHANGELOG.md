@@ -64,6 +64,7 @@ Below are the changes since the last beta release:
 - [DataGrid] Data source with editing (#16045) @MBilalShafi
 - [DataGrid] Deprecate old toolbar components (#17294) @KenanYusuf
 - [DataGrid] Refactor: add typings to icons (#17291) @romgrk
+- [DataGrid] Prevent scrollbars from showing on top (#17405) @romgrk
 - [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @LukasTy
 - [l10n] Improve Swedish (sv-SE) locale (#17293) @ptuukkan
 
@@ -98,6 +99,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
 - [fields] Prevent focusing the field or any section when `disabled=true` (#17215) @flaviendelangle
 - [l10n] Improve Czech (cs-CZ) locale (#17205) @lubka272 (#17387) @LukasTy
 - [l10n] Improve Slovak (sk-SK) locale (#17249) @LukasTy
+- [pickers] Fix failing proptypes CI (#17413) @romgrk
 - [pickers] Fix to not process default prevented propagated events (#17312) @LukasTy
 - [pickers] Mark active range position field section with underline (#16938) @LukasTy
 - [pickers] Remove automatic switch between date and time or between range positions (#17166) @flaviendelangle
@@ -129,6 +131,8 @@ Same changes as in `@mui/x-date-pickers@8.0.0`, plus:
 - [charts] Remove unused files (#17242) @JCQuintas
 - [charts] Use `useEventCallback` to memoize `onZoomChange` without triggering a re-render (#17233) @JCQuintas
 - [charts] Document series class name (#17362) @bernardobelchior
+- [charts] Add default plugins in `ChartDataProvider` (#17403) @bernardobelchior
+- [charts] Fix chart direction in docs (#17419) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -161,6 +165,8 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 - [docs] Fix row spanning lab icon (#17278) @oliviertassinari
 - [docs] Fix header Sentence case consistency (#17274) @oliviertassinari
 - [docs] Flag experimental API (#17279) @oliviertassinari
+- [docs] Fix some 301 redirections @oliviertassinari
+- [docs] Update supported versions table (#17287) @joserodolfofreitas
 
 ### Core
 
@@ -170,6 +176,7 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 - [core] Remove modern bundles (#17359) @LukasTy
 - [core] Setup testing to work with CSS imports (#17214) @romgrk
 - [core] Testing setup fixes & lints (#17356) @romgrk
+- [core] Simplify the way `__RELEASE_INFO__` is managed (#17416) @LukasTy
 - [code-infra] Align build script with core to handle sideEffects (#17370) @Janpot
 - [code-infra] CI optimization: re-use ffmpeg (#17333) @romgrk
 - [code-infra] Charts `vitest` changes (#17247) @JCQuintas
