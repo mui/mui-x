@@ -8,7 +8,7 @@ import { useCompositeListItem } from '../../../composite/list/useCompositeListIt
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { useBaseCalendarMonthCell } from './useBaseCalendarMonthCell';
 import { useBaseCalendarMonthCollectionContext } from '../utils/BaseCalendarMonthCollectionContext';
-import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
+import { getFirstEnabledMonth, getLastEnabledMonth } from '../../../Calendar/utils/date';
 
 export function useBaseCalendarMonthCellWrapper(
   parameters: useBaseCalendarMonthCellWrapper.Parameters,

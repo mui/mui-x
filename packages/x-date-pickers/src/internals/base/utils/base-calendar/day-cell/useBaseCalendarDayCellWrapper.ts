@@ -5,8 +5,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import type { useBaseCalendarDayCell } from './useBaseCalendarDayCell';
-import { useBaseCalendarDayGridRowContext } from '../day-grid-row/BaseCalendarDayGridRowContext';
-import { useBaseCalendarDayGridBodyContext } from '../day-grid-body/BaseCalendarDayGridBodyContext';
+import { useCalendarDayGridRowContext } from '../../../Calendar/day-grid-row/CalendarDayGridRowContext';
+import { useCalendarDayGridBodyContext } from '../day-grid-body/CalendarDayGridBodyContext';
 import { PickerValidDate } from '../../../../../models';
 import { mergeDateAndTime } from '../../../../utils/date-utils';
 
@@ -15,8 +15,8 @@ export function useBaseCalendarDayCellWrapper(
 ): useBaseCalendarDayCellWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
-  const baseDayGridBodyContext = useBaseCalendarDayGridBodyContext();
-  const baseDayGridRowContext = useBaseCalendarDayGridRowContext();
+  const baseDayGridBodyContext = useCalendarDayGridBodyContext();
+  const baseDayGridRowContext = useCalendarDayGridRowContext();
   const ref = React.useRef<HTMLButtonElement>(null);
   const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, ref);

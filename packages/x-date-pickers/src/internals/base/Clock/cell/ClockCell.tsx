@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockCell } from './useClockCell';
 import { useClockCellWrapper } from './useClockCellWrapper';
 
 const InnerClockCell = React.forwardRef(function InnerClockCell(
-  props: InnerClockCellProps,
+  componentProps: InnerClockCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, value, ctx, ...otherProps } = props;
+  const { className, render, value, ctx, ...elementProps } = componentProps;
   const { getCellProps } = useClockCell({
     value,
     ctx,
@@ -24,13 +24,10 @@ const InnerClockCell = React.forwardRef(function InnerClockCell(
     [ctx.isSelected, ctx.isDisabled, ctx.isInvalid],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getCellProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('button', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getCellProps, elementProps],
   });
 
   return renderElement();

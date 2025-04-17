@@ -5,11 +5,11 @@ export { CalendarDayGrid as DayGrid } from './day-grid/CalendarDayGrid';
 export { CalendarDayGridHeader as DayGridHeader } from './day-grid-header/CalendarDayGridHeader';
 export { CalendarDayGridHeaderCell as DayGridHeaderCell } from './day-grid-header-cell/CalendarDayGridHeaderCell';
 export { CalendarDayGridBody as DayGridBody } from './day-grid-body/CalendarDayGridBody';
-export { CalendarDayGridRow as DayGridRow } from './days-grid-row/CalendarDayGridRow';
+export { CalendarDayGridRow as DayGridRow } from './day-grid-row/CalendarDayGridRow';
 export { CalendarDayCell as DayCell } from './day-cell/CalendarDayCell';
 
 // Months
-export { CalendarMonthList as MonthList } from './months-list/CalendarMonthList';
+export { CalendarMonthList as MonthList } from './month-list/CalendarMonthList';
 export { CalendarMonthGrid as MonthGrid } from './month-grid/CalendarMonthGrid';
 export { CalendarMonthCell as MonthCell } from './month-cell/CalendarMonthCell';
 

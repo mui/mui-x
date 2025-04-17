@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { BaseCalendarDayGridBodyContext } from '../../utils/base-calendar/day-grid-body/BaseCalendarDayGridBodyContext';
+import { useRenderElement } from '../../base-utils/useRenderElement';
+import { CalendarDayGridBodyContext } from '../../utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
 import { useBaseCalendarDayGridBody } from '../../utils/base-calendar/day-grid-body/useBaseCalendarDayGridBody';
 import { CompositeList } from '../../composite/list/CompositeList';
 
 const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
-  props: CalendarDayGridBody.Props,
+  componentProps: CalendarDayGridBody.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -19,8 +18,9 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     focusOnMount,
     offset,
     freezeMonth,
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getDayGridBodyProps, rowsRefs, context, scrollerRef } = useBaseCalendarDayGridBody({
     children,
     fixedWeekNumber,
@@ -28,22 +28,19 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     offset,
     freezeMonth,
   });
-  const ref = useForkRef(scrollerRef, forwardedRef);
+
   const state = React.useMemo(() => ({}), []);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayGridBodyProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getDayGridBodyProps, elementProps],
   });
 
   return (
-    <BaseCalendarDayGridBodyContext.Provider value={context}>
+    <CalendarDayGridBodyContext.Provider value={context}>
       <CompositeList elementsRef={rowsRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarDayGridBodyContext.Provider>
+    </CalendarDayGridBodyContext.Provider>
   );
 });
 

@@ -10,7 +10,7 @@ import {
 import { useTimeManager } from '../../../../managers';
 import { ExportedValidateTimeProps, ValidateTimeProps } from '../../../../validation/validateTime';
 import { FormProps, PickerValue } from '../../../models';
-import { useControlledValueWithTimezone } from '../../../hooks/useValueWithTimezone';
+import { useControlledValue } from '../../../hooks/useControlledValue';
 import { ClockSection } from '../utils/types';
 import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
@@ -47,7 +47,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   const manager = useTimeManager();
   const utils = useUtils();
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'Clock',
     timezone: timezoneProp,
     value: valueProp,

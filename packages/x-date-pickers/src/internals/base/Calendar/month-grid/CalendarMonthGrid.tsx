@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import { useBaseCalendarMonthGrid } from '../../utils/base-calendar/month-grid/useBaseCalendarMonthGrid';
+import { useCalendarMonthGrid } from './useCalendarMonthGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { CalendarMonthGridCssVars } from './CalendarMonthGridCssVars';
 import { BaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
@@ -17,7 +16,7 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarMonthGrid.State> = 
 };
 
 const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
-  props: CalendarMonthGrid.Props,
+  componentProps: CalendarMonthGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -28,10 +27,11 @@ const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
     focusOnMount,
     cellsPerRow,
     canChangeYear,
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getMonthGridProps, cellRefs, monthsListOrGridContext, scrollerRef } =
-    useBaseCalendarMonthGrid({
+    useCalendarMonthGrid({
       children,
       getItems,
       focusOnMount,
@@ -39,16 +39,13 @@ const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
       canChangeYear,
       cellsPerRowCssVar: CalendarMonthGridCssVars.calendarMonthGridCellsPerRow,
     });
-  const state = React.useMemo<CalendarMonthGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
-  const ref = useForkRef(forwardedRef, scrollerRef);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getMonthGridProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const state = React.useMemo<CalendarMonthGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
+
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getMonthGridProps, elementProps],
     customStyleHookMapping,
   });
 
@@ -69,7 +66,7 @@ export namespace CalendarMonthGrid {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useBaseCalendarMonthGrid.PublicParameters {}
+      useCalendarMonthGrid.PublicParameters {}
 }
 
 export { CalendarMonthGrid };

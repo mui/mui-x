@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockHour12List } from './useClockHour12List';
 import { ClockListContext } from '../utils/ClockListContext';
 import { CompositeList } from '../../composite/list/CompositeList';
 
 const ClockHour12List = React.forwardRef(function ClockHour12List(
-  props: ClockHour12List.Props,
+  componentProps: ClockHour12List.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -19,8 +18,8 @@ const ClockHour12List = React.forwardRef(function ClockHour12List(
     skipInvalidItems,
     focusOnMount,
     loop,
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
 
   const { getListProps, context, scrollerRef, cellsRef } = useClockHour12List({
     children,
@@ -31,15 +30,11 @@ const ClockHour12List = React.forwardRef(function ClockHour12List(
   });
 
   const state: ClockHour12List.State = React.useMemo(() => ({}), []);
-  const ref = useForkRef(forwardedRef, scrollerRef);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getListProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getListProps, elementProps],
   });
 
   return (

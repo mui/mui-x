@@ -1,25 +1,22 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { useBaseCalendarDayGridHeaderCell } from '../../utils/base-calendar/day-grid-header-cell/useBaseCalendarDayGridHeaderCell';
+import { useRenderElement } from '../../base-utils/useRenderElement';
+import { useCalendarDayGridHeaderCell } from './useCalendarDayGridHeaderCell';
 import { BaseUIComponentProps } from '../../base-utils/types';
 
 const CalendarDayGridHeaderCell = React.forwardRef(function CalendarDayGridHeaderCell(
-  props: CalendarDayGridHeaderCell.Props,
+  componentProps: CalendarDayGridHeaderCell.Props,
   forwardedRef: React.ForwardedRef<HTMLSpanElement>,
 ) {
-  const { className, render, value, formatter, ...otherProps } = props;
-  const { getDayGridHeaderCellProps } = useBaseCalendarDayGridHeaderCell({ value, formatter });
+  const { className, render, value, formatter, ...otherProps } = componentProps;
+  const { getDayGridHeaderCellProps } = useCalendarDayGridHeaderCell({ value, formatter });
 
   const state: CalendarDayGridHeaderCell.State = React.useMemo(() => ({}), []);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayGridHeaderCellProps,
-    render: render ?? 'span',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('span', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getDayGridHeaderCellProps, otherProps],
   });
 
   return renderElement();
@@ -29,7 +26,7 @@ export namespace CalendarDayGridHeaderCell {
   export interface State {}
 
   export interface Props
-    extends useBaseCalendarDayGridHeaderCell.Parameters,
+    extends useCalendarDayGridHeaderCell.Parameters,
       BaseUIComponentProps<'span', State> {}
 }
 

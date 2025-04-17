@@ -4,6 +4,7 @@ export type GenericHTMLProps = React.HTMLAttributes<any> & { ref?: React.Ref<any
 
 export type BaseUIEvent<E extends React.SyntheticEvent<Element, Event>> = E & {
   preventBaseUIHandler: () => void;
+  readonly baseUIHandlerPrevented?: boolean;
 };
 
 type WithPreventBaseUIHandler<T> = T extends (event: infer E) => any
@@ -40,7 +41,10 @@ export type BaseUIComponentProps<
   ElementType extends React.ElementType,
   State,
   RenderFunctionProps = GenericHTMLProps,
-> = Omit<WithBaseUIEvent<React.ComponentPropsWithoutRef<ElementType>>, 'className'> & {
+> = Omit<
+  WithBaseUIEvent<React.ComponentPropsWithoutRef<ElementType>>,
+  'className' | 'color' | 'defaultValue' | 'defaultChecked'
+> & {
   /**
    * CSS class applied to the element, or a function that
    * returns a class based on the component’s state.
@@ -56,3 +60,13 @@ export type BaseUIComponentProps<
     | ComponentRenderFn<RenderFunctionProps, State>
     | React.ReactElement<Record<string, unknown>>;
 };
+
+/**
+ * Simplifies the display of a type (without modifying it).
+ * Taken from https://effectivetypescript.com/2022/02/25/gentips-4-display/
+ */
+export type Simplify<T> = T extends Function ? T : { [K in keyof T]: T[K] };
+
+export type RequiredExcept<T, K extends keyof T> = Required<Omit<T, K>> & Pick<T, K>;
+
+export type Orientation = 'horizontal' | 'vertical';

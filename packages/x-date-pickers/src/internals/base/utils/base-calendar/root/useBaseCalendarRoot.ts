@@ -12,9 +12,8 @@ import { ValidateDateProps, validateDate } from '../../../../../validation/valid
 import { FormProps, PickerValidValue } from '../../../../models';
 import { SECTION_TYPE_GRANULARITY } from '../../../../utils/getDefaultReferenceDate';
 import { singleItemValueManager } from '../../../../utils/valueManagers';
-import { applyDefaultDate } from '../../../../utils/date-utils';
 import { useDefaultDates, useLocalizationContext, useUtils } from '../../../../hooks/useUtils';
-import { useControlledValueWithTimezone } from '../../../../hooks/useValueWithTimezone';
+import { useControlledValue } from '../../../../hooks/useControlledValue';
 import { BaseDateValidationProps } from '../../../../models/validation';
 import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavigation';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
@@ -61,7 +60,7 @@ export function useBaseCalendarRoot<
   const utils = useUtils();
   const adapter = useLocalizationContext();
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: '(Range)CalendarRoot',
     timezone: timezoneProp,
     value: valueProp,
@@ -86,6 +85,7 @@ export function useBaseCalendarRoot<
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [referenceDateProp, timezone],
   );
+  const initialReferenceDate = React.useRef(referenceDate).current;
 
   const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
     day: [],
@@ -121,7 +121,7 @@ export function useBaseCalendarRoot<
     name: '(Range)CalendarRoot',
     state: 'visibleDate',
     controlled: visibleDateProp,
-    default: defaultVisibleDate ?? referenceDate,
+    default: defaultVisibleDate ?? initialReferenceDate,
   });
 
   const handleVisibleDateChange = useEventCallback(

@@ -5,7 +5,7 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { CustomStyleHookMapping } from '@mui/x-date-pickers/internals/base/base-utils/getStyleHookProps';
 // eslint-disable-next-line no-restricted-imports
-import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
 import { useRangeCalendarMonthCell } from './useRangeCalendarMonthCell';
 import { useRangeCalendarMonthCellWrapper } from './useRangeCalendarMonthCellWrapper';
 import { RangeCellState, rangeCellStyleHookMapping, useRangeCellState } from '../utils/rangeCell';
@@ -15,21 +15,18 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarMonthCell.Stat
 };
 
 const InnerRangeCalendarMonthCell = React.forwardRef(function InnerRangeCalendarMonthCell(
-  props: InnerRangeCalendarMonthCellProps,
+  componentProps: InnerRangeCalendarMonthCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, value, format, ctx, ...otherProps } = props;
+  const { className, render, value, format, ctx, ...elementProps } = componentProps;
   const { getMonthCellProps } = useRangeCalendarMonthCell({ value, format, ctx });
 
   const state: RangeCalendarMonthCell.State = useRangeCellState(ctx);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getMonthCellProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('button', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getMonthCellProps, elementProps],
     customStyleHookMapping,
   });
 

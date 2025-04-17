@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { useBaseCalendarSetVisibleYear } from '../../utils/base-calendar/set-visible-year/useBaseCalendarSetVisibleYear';
+import { useRenderElement } from '../../base-utils/useRenderElement';
+import { useCalendarSetVisibleYear } from './useCalendarSetVisibleYear';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useBaseCalendarSetVisibleYearWrapper } from '../../utils/base-calendar/set-visible-year/useBaseCalendarSetVisibleYearWrapper';
+import { useCalendarSetVisibleYearWrapper } from './useCalendarSetVisibleYearWrapper';
 
 const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVisibleYear(
-  props: InnerCalendarSetVisibleYearProps,
+  componentProps: InnerCalendarSetVisibleYearProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, ctx, target, ...otherProps } = props;
-  const { getSetVisibleYearProps } = useBaseCalendarSetVisibleYear({ ctx, target });
+  const { className, render, ctx, target, ...elementProps } = componentProps;
+  const { getSetVisibleYearProps } = useCalendarSetVisibleYear({ ctx, target });
 
   const state: CalendarSetVisibleYear.State = React.useMemo(
     () => ({
@@ -19,13 +19,10 @@ const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVi
     [ctx.direction],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getSetVisibleYearProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('button', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getSetVisibleYearProps, elementProps],
   });
 
   return renderElement();
@@ -37,7 +34,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
   props: CalendarSetVisibleYear.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ctx, ref } = useBaseCalendarSetVisibleYearWrapper({ forwardedRef, target: props.target });
+  const { ctx, ref } = useCalendarSetVisibleYearWrapper({ forwardedRef, target: props.target });
 
   return <MemoizedInnerCalendarSetVisibleYear ref={ref} {...props} ctx={ctx} />;
 });
@@ -53,12 +50,12 @@ export namespace CalendarSetVisibleYear {
   }
 
   export interface Props
-    extends Omit<useBaseCalendarSetVisibleYear.Parameters, 'ctx'>,
+    extends Omit<useCalendarSetVisibleYear.Parameters, 'ctx'>,
       BaseUIComponentProps<'button', State> {}
 }
 
 interface InnerCalendarSetVisibleYearProps
-  extends useBaseCalendarSetVisibleYear.Parameters,
+  extends useCalendarSetVisibleYear.Parameters,
     BaseUIComponentProps<'button', CalendarSetVisibleYear.State> {}
 
 export { CalendarSetVisibleYear };

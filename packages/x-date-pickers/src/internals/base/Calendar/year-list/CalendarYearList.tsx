@@ -1,34 +1,29 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { useBaseCalendarYearList } from '../../utils/base-calendar/year-list/useBaseCalendarYearList';
+import { useCalendarYearList } from './useCalendarYearList';
 import { BaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 
 const CalendarYearList = React.forwardRef(function CalendarYearList(
-  props: CalendarYearList.Props,
+  componentProps: CalendarYearList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, getItems, focusOnMount, loop, ...otherProps } = props;
-  const { getYearListProps, cellRefs, yearsListOrGridContext, scrollerRef } =
-    useBaseCalendarYearList({
-      children,
-      getItems,
-      focusOnMount,
-      loop,
-    });
+  const { className, render, children, getItems, focusOnMount, loop, ...elementProps } =
+    componentProps;
+  const { getYearListProps, cellRefs, yearsListOrGridContext, scrollerRef } = useCalendarYearList({
+    children,
+    getItems,
+    focusOnMount,
+    loop,
+  });
   const state = React.useMemo(() => ({}), []);
-  const ref = useForkRef(forwardedRef, scrollerRef);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getYearListProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getYearListProps, elementProps],
   });
 
   return (
@@ -43,7 +38,7 @@ export namespace CalendarYearList {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useBaseCalendarYearList.Parameters {}
+      useCalendarYearList.Parameters {}
 }
 
 export { CalendarYearList };

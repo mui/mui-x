@@ -1,17 +1,16 @@
 'use client';
 import * as React from 'react';
-
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { useBaseCalendarSetVisibleMonth } from '../../utils/base-calendar/set-visible-month/useBaseCalendarSetVisibleMonth';
-import { useBaseCalendarSetVisibleMonthWrapper } from '../../utils/base-calendar/set-visible-month/useBaseCalendarSetVisibleMonthWrapper';
+import { useRenderElement } from '../../base-utils/useRenderElement';
+import { useCalendarSetVisibleMonth } from './useCalendarSetVisibleMonth';
+import { useCalendarSetVisibleMonthWrapper } from './useCalendarSetVisibleMonthWrapper';
 import { BaseUIComponentProps } from '../../base-utils/types';
 
 const InnerCalendarSetVisibleMonth = React.forwardRef(function InnerCalendarSetVisibleMonth(
-  props: InnerCalendarSetVisibleMonthProps,
+  componentProps: InnerCalendarSetVisibleMonthProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, ctx, target, ...otherProps } = props;
-  const { getSetVisibleMonthProps } = useBaseCalendarSetVisibleMonth({ ctx, target });
+  const { className, render, ctx, target, ...elementProps } = componentProps;
+  const { getSetVisibleMonthProps } = useCalendarSetVisibleMonth({ ctx, target });
 
   const state: CalendarSetVisibleMonth.State = React.useMemo(
     () => ({
@@ -20,13 +19,10 @@ const InnerCalendarSetVisibleMonth = React.forwardRef(function InnerCalendarSetV
     [ctx.direction],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getSetVisibleMonthProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('button', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getSetVisibleMonthProps, elementProps],
   });
 
   return renderElement();
@@ -38,7 +34,7 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
   props: CalendarSetVisibleMonth.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ref, ctx } = useBaseCalendarSetVisibleMonthWrapper({
+  const { ref, ctx } = useCalendarSetVisibleMonthWrapper({
     forwardedRef,
     target: props.target,
   });
@@ -56,12 +52,12 @@ export namespace CalendarSetVisibleMonth {
   }
 
   export interface Props
-    extends Omit<useBaseCalendarSetVisibleMonth.Parameters, 'ctx'>,
+    extends Omit<useCalendarSetVisibleMonth.Parameters, 'ctx'>,
       BaseUIComponentProps<'button', State> {}
 }
 
 interface InnerCalendarSetVisibleMonthProps
-  extends useBaseCalendarSetVisibleMonth.Parameters,
+  extends useCalendarSetVisibleMonth.Parameters,
     BaseUIComponentProps<'button', CalendarSetVisibleMonth.State> {}
 
 export { CalendarSetVisibleMonth };

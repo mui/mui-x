@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { useBaseCalendarDayCellWrapper } from '../../utils/base-calendar/day-cell/useBaseCalendarDayCellWrapper';
 import { useBaseCalendarDayCell } from '../../utils/base-calendar/day-cell/useBaseCalendarDayCell';
 import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';
@@ -32,10 +32,10 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarDayCell.State> = {
 };
 
 const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
-  props: InnerCalendarDayCellProps,
+  componentProps: InnerCalendarDayCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, value, ctx, ...otherProps } = props;
+  const { className, render, value, ctx, ...elementProps } = componentProps;
   const { getDayCellProps } = useBaseCalendarDayCell({ value, ctx });
 
   const state: CalendarDayCell.State = React.useMemo(
@@ -59,13 +59,10 @@ const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
     ],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayCellProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('button', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getDayCellProps, elementProps],
     customStyleHookMapping,
   });
 

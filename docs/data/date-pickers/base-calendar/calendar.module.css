@@ -141,17 +141,11 @@
 }
 
 .MonthGrid {
-  grid-template-columns: repeat(
-    var(--calendar-month-grid-cells-per-row, var(--range-calendar-month-grid-cells-per-row)),
-    1fr
-  );
+  grid-template-columns: repeat(var(--calendar-month-grid-cells-per-row), 1fr);
 }
 
 .YearGrid {
-  grid-template-columns: repeat(
-    var(--calendar-year-grid-cells-per-row, var(--range-calendar-year-grid-cells-per-row)),
-    1fr
-  );
+  grid-template-columns: repeat(var(--calendar-year-grid-cells-per-row), 1fr);
 }
 
 .MonthCell,

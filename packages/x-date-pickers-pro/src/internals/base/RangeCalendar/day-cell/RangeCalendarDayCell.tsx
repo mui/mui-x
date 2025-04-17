@@ -5,7 +5,7 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { CustomStyleHookMapping } from '@mui/x-date-pickers/internals/base/base-utils/getStyleHookProps';
 // eslint-disable-next-line no-restricted-imports
-import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
 import { RangeCalendarDayCellDataAttributes } from './RangeCalendarDayCellDataAttributes';
 import { useRangeCalendarDayCell } from './useRangeCalendarDayCell';
 import { useRangeCalendarDayCellWrapper } from './useRangeCalendarDayCellWrapper';
@@ -19,10 +19,10 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDayCell.State>
 };
 
 const InnerRangeCalendarDayCell = React.forwardRef(function RangeCalendarDayGrid(
-  props: InnerRangeCalendarDayCellProps,
+  componentProps: InnerRangeCalendarDayCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, value, ctx, ...otherProps } = props;
+  const { className, render, value, ctx, ...elementProps } = componentProps;
   const { getDayCellProps } = useRangeCalendarDayCell({ value, ctx });
 
   const cellState = useRangeCellState(ctx);
@@ -36,13 +36,10 @@ const InnerRangeCalendarDayCell = React.forwardRef(function RangeCalendarDayGrid
     [cellState, ctx.isStartOfWeek, ctx.isEndOfWeek, ctx.isOutsideCurrentMonth],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayCellProps,
-    render: render ?? 'button',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getDayCellProps, elementProps],
     customStyleHookMapping,
   });
 

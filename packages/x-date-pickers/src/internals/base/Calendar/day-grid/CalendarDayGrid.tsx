@@ -1,24 +1,21 @@
 'use client';
 import * as React from 'react';
-import { useBaseCalendarDayGrid } from '../../utils/base-calendar/day-grid/useBaseCalendarDayGrid';
+import { useCalendarDayGrid } from './useCalendarDayGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 
 const CalendarDayGrid = React.forwardRef(function CalendarDayGrid(
-  props: CalendarDayGrid.Props,
+  componentProps: CalendarDayGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, ...otherProps } = props;
-  const { getDayGridProps } = useBaseCalendarDayGrid();
+  const { className, render, ...elementProps } = componentProps;
+  const { getDayGridProps } = useCalendarDayGrid();
   const state = React.useMemo(() => ({}), []);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayGridProps,
-    render: render ?? 'div',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getDayGridProps, elementProps],
   });
 
   return renderElement();

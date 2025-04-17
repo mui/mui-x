@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockFullTimeList } from './useClockFullTimeList';
 import { ClockListContext } from '../utils/ClockListContext';
 import { CompositeList } from '../../composite/list/CompositeList';
 
 const ClockFullTimeList = React.forwardRef(function ClockFullTimeList(
-  props: ClockFullTimeList.Props,
+  componentProps: ClockFullTimeList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -20,14 +19,10 @@ const ClockFullTimeList = React.forwardRef(function ClockFullTimeList(
     loop,
     step,
     precision,
-    ...otherProps
-  } = props;
-  const {
-    getListProps: getOptionsProps,
-    context,
-    scrollerRef,
-    cellsRef,
-  } = useClockFullTimeList({
+    ...elementProps
+  } = componentProps;
+
+  const { getListProps, context, scrollerRef, cellsRef } = useClockFullTimeList({
     children,
     getItems,
     focusOnMount,
@@ -37,15 +32,11 @@ const ClockFullTimeList = React.forwardRef(function ClockFullTimeList(
   });
 
   const state: ClockFullTimeList.State = React.useMemo(() => ({}), []);
-  const ref = useForkRef(forwardedRef, scrollerRef);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getOptionsProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getListProps, elementProps],
   });
 
   return (

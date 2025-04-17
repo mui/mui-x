@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { DateValidationError } from '../../../../models';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { BaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
@@ -9,7 +9,7 @@ import { useCalendarRoot } from './useCalendarRoot';
 import { BaseCalendarRootVisibleDateContext } from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 const CalendarRoot = React.forwardRef(function CalendarRoot(
-  props: CalendarRoot.Props,
+  componentProps: CalendarRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -44,8 +44,9 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     shouldDisableMonth,
     shouldDisableYear,
     // Props forwarded to the DOM element
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getRootProps, baseContext, visibleDateContext, isEmpty } = useCalendarRoot({
     readOnly,
     disabled,
@@ -72,13 +73,10 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
 
   const state: CalendarRoot.State = React.useMemo(() => ({ empty: isEmpty }), [isEmpty]);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getRootProps,
-    render: render ?? 'div',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getRootProps, elementProps],
   });
 
   return (

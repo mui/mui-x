@@ -7,7 +7,7 @@ import { useBaseCalendarRoot } from '@mui/x-date-pickers/internals/base/utils/ba
 // eslint-disable-next-line no-restricted-imports
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
-import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
 // eslint-disable-next-line no-restricted-imports
 import { BaseCalendarRootVisibleDateContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 import { DateRangeValidationError } from '../../../../models';
@@ -15,7 +15,7 @@ import { RangeCalendarRootContext } from './RangeCalendarRootContext';
 import { useRangeCalendarRoot } from './useRangeCalendarRoot';
 
 const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
-  props: RangeCalendarRoot.Props,
+  componentProps: RangeCalendarRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -57,8 +57,9 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     disableHoverPreview,
 
     // Props forwarded to the DOM element
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getRootProps, context, baseContext, visibleDateContext, isEmpty } = useRangeCalendarRoot({
     readOnly,
     disabled,
@@ -93,13 +94,10 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     [isEmpty],
   );
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getRootProps,
-    render: render ?? 'div',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getRootProps, elementProps],
   });
 
   return (

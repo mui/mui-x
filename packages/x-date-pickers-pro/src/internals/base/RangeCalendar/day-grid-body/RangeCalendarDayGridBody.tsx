@@ -1,18 +1,17 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 // eslint-disable-next-line no-restricted-imports
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
-import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
 // eslint-disable-next-line no-restricted-imports
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
-import { BaseCalendarDayGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/BaseCalendarDayGridBodyContext';
+import { CalendarDayGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
 import { useRangeCalendarDayGridBody } from './useRangeCalendarDayGridBody';
 
 const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
-  props: RangeCalendarDayGridBody.Props,
+  componentProps: RangeCalendarDayGridBody.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -23,8 +22,9 @@ const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     focusOnMount,
     offset,
     freezeMonth,
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getDayGridBodyProps, rowsRefs, context, scrollerRef } = useRangeCalendarDayGridBody({
     children,
     fixedWeekNumber,
@@ -32,22 +32,19 @@ const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     offset,
     freezeMonth,
   });
-  const ref = useForkRef(scrollerRef, forwardedRef);
+
   const state = React.useMemo(() => ({}), []);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getDayGridBodyProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getDayGridBodyProps, elementProps],
   });
 
   return (
-    <BaseCalendarDayGridBodyContext.Provider value={context}>
+    <CalendarDayGridBodyContext.Provider value={context}>
       <CompositeList elementsRef={rowsRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarDayGridBodyContext.Provider>
+    </CalendarDayGridBodyContext.Provider>
   );
 });
 

@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockRoot } from './useClockRoot';
 import { ClockRootContext } from './ClockRootContext';
 
 const ClockRoot = React.forwardRef(function ClockRoot(
-  props: ClockRoot.Props,
+  componentProps: ClockRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -32,8 +32,9 @@ const ClockRoot = React.forwardRef(function ClockRoot(
     // Children
     children,
     // Props forwarded to the DOM element
-    ...otherProps
-  } = props;
+    ...elementProps
+  } = componentProps;
+
   const { getRootProps, context, isEmpty } = useClockRoot({
     readOnly,
     disabled,
@@ -53,13 +54,10 @@ const ClockRoot = React.forwardRef(function ClockRoot(
 
   const state: ClockRoot.State = React.useMemo(() => ({ empty: isEmpty }), [isEmpty]);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getRootProps,
-    render: render ?? 'div',
-    ref: forwardedRef,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef],
+    props: [getRootProps, elementProps],
   });
 
   return <ClockRootContext.Provider value={context}>{renderElement()}</ClockRootContext.Provider>;

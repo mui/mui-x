@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import { useBaseCalendarYearGrid } from '../../utils/base-calendar/year-grid/useBaseCalendarYearGrid';
+import { useCalendarYearGrid } from './useCalendarYearGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useRenderElement } from '../../base-utils/useRenderElement';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { BaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 import { CalendarYearGridCssVars } from './CalendarYearGridCssVars';
@@ -17,12 +16,13 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarYearGrid.State> = {
 };
 
 const CalendarYearGrid = React.forwardRef(function CalendarYearList(
-  props: CalendarYearGrid.Props,
+  componentProps: CalendarYearGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, cellsPerRow, getItems, focusOnMount, ...otherProps } = props;
+  const { className, render, children, cellsPerRow, getItems, focusOnMount, ...elementProps } =
+    componentProps;
   const { getYearGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef } =
-    useBaseCalendarYearGrid({
+    useCalendarYearGrid({
       children,
       getItems,
       focusOnMount,
@@ -30,15 +30,11 @@ const CalendarYearGrid = React.forwardRef(function CalendarYearList(
       cellsPerRowCssVar: CalendarYearGridCssVars.calendarYearGridCellsPerRow,
     });
   const state = React.useMemo<CalendarYearGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
-  const ref = useForkRef(forwardedRef, scrollerRef);
 
-  const { renderElement } = useComponentRenderer({
-    propGetter: getYearGridProps,
-    render: render ?? 'div',
-    ref,
-    className,
+  const renderElement = useRenderElement('div', componentProps, {
     state,
-    extraProps: otherProps,
+    ref: [forwardedRef, scrollerRef],
+    props: [getYearGridProps, elementProps],
     customStyleHookMapping,
   });
 
@@ -59,7 +55,7 @@ export namespace CalendarYearGrid {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useBaseCalendarYearGrid.PublicParameters {}
+      useCalendarYearGrid.PublicParameters {}
 }
 
 export { CalendarYearGrid };
