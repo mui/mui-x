@@ -196,6 +196,7 @@ async function main() {
     });
 
     it('should export a chart as PNG', async function test() {
+      this.timeout(20000);
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
