@@ -34,7 +34,7 @@ Here are the highlights from alpha and beta releases included in this stable rel
 - 🔄 Add Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration).
 - 💫 Support [aggregation with server-side data](https://mui.com/x/react-data-grid/server-side-data/aggregation/).
 - 🎁 Support [server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
-- 📝 Support [editing with server-side Data Source](https://mui.com/x/react-data-grid/server-side-data/#updating-data)
+- 📝 Support [editing with server-side Data Source](https://mui.com/x/react-data-grid/server-side-data/#updating-data).
 - 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching).
 - 🏎️ Improved Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
 - 🎨 Improved Data Grid theming and add default background color.
@@ -47,13 +47,13 @@ Here are the highlights from alpha and beta releases included in this stable rel
 - 📊 Refactor Charts [Tooltip customization](https://mui.com/x/react-charts/tooltip/#overriding-content).
 - 📊 Improved Charts [composition](https://mui.com/x/react-charts/composition/#overview).
 - 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering).
-- 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`)
+- 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`).
 - 🚫 Removed `react-spring` dependency from `@mui/x-charts`.
 
-- 🚀 New [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component
+- 🚀 New [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component.
 
 - 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
-- 🎛️ New [customization APIs](https://mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item) for the Tree Item component
+- 🎛️ New [customization APIs](https://mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item) for the Tree Item component.
 
 Below are the changes since the last beta release:
 
@@ -65,7 +65,7 @@ Below are the changes since the last beta release:
 - [DataGrid] Deprecate old toolbar components (#17294) @KenanYusuf
 - [DataGrid] Refactor: add typings to icons (#17291) @romgrk
 - [DataGrid] Prevent scrollbars from showing on top (#17405) @romgrk
-- [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @LukasTy
+- [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @sofortdagmbh
 - [l10n] Improve Swedish (sv-SE) locale (#17293) @ptuukkan
 
 #### `@mui/x-data-grid-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -97,8 +97,8 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
 - [fields] Fix the error message when a custom field with an `<input />` but the field expects the accessible DOM structure (#17237) @flaviendelangle
 - [fields] Fix to submit a form on `Enter` press with accessible DOM structure (#17328) @LukasTy
 - [fields] Prevent focusing the field or any section when `disabled=true` (#17215) @flaviendelangle
-- [l10n] Improve Czech (cs-CZ) locale (#17205) @lubka272 (#17387) @LukasTy
-- [l10n] Improve Slovak (sk-SK) locale (#17249) @LukasTy
+- [l10n] Improve Czech (cs-CZ) locale (#17387) @lubka272
+- [l10n] Improve Slovak (sk-SK) locale (#17249) @lubka272
 - [pickers] Fix failing proptypes CI (#17413) @romgrk
 - [pickers] Fix to not process default prevented propagated events (#17312) @LukasTy
 - [pickers] Mark active range position field section with underline (#16938) @LukasTy
@@ -184,7 +184,7 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 - [code-infra] Prepare argos script call for required arg (#17371) @Janpot
 - [code-infra] Remove more `clock=fake` from pickers tests (#17225) @JCQuintas
 - [code-infra] Tentative fix for datagrid flaky test (#17289) @JCQuintas
-- [code-infra] Update MUI Internal and slightly cleanup regressions test setup (#17182) @renovate[bot]
+- [code-infra] Update MUI Internal and slightly cleanup regressions test setup (#17182) @LukasTy
 - [infra] Update support label from 'priority' to 'unknown' (#17288) @michelengelen
 - [release] Major release preparation (#17319) @michelengelen
 - [test] Fix flaky data source aggregation test (#17307, #17311, #17316) @KenanYusuf @cherniavskii @LukasTy
