@@ -185,6 +185,7 @@ module.exports = function getBabelConfig(api) {
       /@babel[\\|/]runtime/,
       // Fix const foo = /{{(.+?)}}/gs; crashing.
       /prettier/,
+      './packages/babel-plugin-mui-css',
     ],
     env: {
       coverage: {
