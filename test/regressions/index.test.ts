@@ -196,7 +196,6 @@ async function main() {
     });
 
     it('should export a chart as PNG', async function test() {
-      this.timeout(20000);
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
@@ -204,7 +203,7 @@ async function main() {
       await navigateToTest(route);
 
       const downloadPromise = page.waitForEvent('download');
-      await page.getByRole('button', { name: 'Print' }).click();
+      await page.getByRole('button', { name: 'Export Image' }).click();
 
       const download = await downloadPromise;
 
