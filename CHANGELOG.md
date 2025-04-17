@@ -18,12 +18,12 @@ Migration guides are available with a complete list of the breaking changes:
 - [Date and Time Pickers](https://mui.com/x/migration/migration-pickers-v7/)
 - [Tree View](https://mui.com/x/migration/migration-tree-view-v7/)
 - [Charts](https://mui.com/x/migration/migration-charts-v7/)
-- [Material UI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+- [Material UI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
 
 Here are the highlights from alpha and beta releases included in this stable release:
 
 - ⚛️ React 19 support.
-- 🎁 `@mui/material@7` support – see the [Material UI v7 upgrade guide](https://mui.com/material-ui/migration/upgrade-to-v7/).
+- 🎁 `@mui/material@7` support – see the [Material UI v7 upgrade guide](https://mui.com/material-ui/migration/upgrade-to-v7/).
 
 - 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/).
 - 🤖 [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/).
@@ -154,12 +154,12 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 
 - [docs] Add intro section for Telemetry (#17244) @prakhargupta1
 - [docs] Add migration guide for the picker's `ownerState` changes (#17151) @flaviendelangle
-- [docs] Add whats-new section for MUI X v8 (#17397) @joserodolfofreitas
+- [docs] Add What's new section for MUI X v8 (#17397) @joserodolfofreitas
 - [docs] Fix ESM guide (#17280) @oliviertassinari
 - [docs] Fix Vale errors (#17281) @oliviertassinari
 - [docs] Fix country columns throwing on grouping (#17315) @cherniavskii
 - [docs] Fix paths in `ResponsiveChartContainer` migration guide (#17364) @MonstraG
-- [docs] Mention priority support on MUI X docs (#16467) @prakhargupta1
+- [docs] Mention priority support on MUI X docs (#16467) @prakhargupta1
 - [docs] Match title side nav @oliviertassinari
 - [docs] Fix incorrect mention of PDF export (#17277) @oliviertassinari
 - [docs] Fix row spanning lab icon (#17278) @oliviertassinari
