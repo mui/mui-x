@@ -213,6 +213,33 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
+    it('should position charts axis tooltip 8px away from the pointer', async () => {
+      const route = '/docs-charts-tooltip/Interaction';
+      const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
+      const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
+      await fse.ensureDir(path.dirname(axisScreenshotPath));
+      await fse.ensureDir(path.dirname(itemScreenshotPath));
+
+      await navigateToTest(route);
+
+      // Skip animations
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+
+      // Make sure demo got loaded
+      await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      const charts = await page.locator('svg').all();
+
+      await charts[0].click();
+      // Should also trigger the item in charts[1]. But did not succeed to trigger the react `onPointerEnter`
+
+      // Need to screenshot the body because the tooltip is outside of the testcase div
+      const body = await page.waitForSelector(`body`);
+      await body.screenshot({ path: axisScreenshotPath, type: 'png' });
+    });
+    
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
@@ -248,33 +275,6 @@ async function main() {
           }
         });
       });
-    });
-
-    it('should position charts axis tooltip 8px away from the pointer', async () => {
-      const route = '/docs-charts-tooltip/Interaction';
-      const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
-      const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
-      await fse.ensureDir(path.dirname(axisScreenshotPath));
-      await fse.ensureDir(path.dirname(itemScreenshotPath));
-
-      await navigateToTest(route);
-
-      // Skip animations
-      await page.emulateMedia({ reducedMotion: 'reduce' });
-
-      // Make sure demo got loaded
-      await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
-      const charts = await page.locator('svg').all();
-
-      await charts[0].click();
-      // Should also trigger the item in charts[1]. But did not succeed to trigger the react `onPointerEnter`
-
-      // Need to screenshot the body because the tooltip is outside of the testcase div
-      const body = await page.waitForSelector(`body`);
-      await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
     // describe('DateTimePicker', () => {
