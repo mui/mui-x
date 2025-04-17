@@ -1,12 +1,12 @@
 ---
-title: React Data Grid - Quick filter component
+title: React Data Grid - Quick Filter component
 productId: x-data-grid
 components: QuickFilter, QuickFilterControl, QuickFilterClear, QuickFilterTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Quick filter
+# Data Grid - Quick Filter
 
 <p class="description">Provide users with an expandable search field to filter data in the Data Grid.</p>
 
