@@ -13,7 +13,6 @@ import {
   RICH_TREE_VIEW_PRO_PLUGINS,
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -56,7 +55,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 
 /**
  *

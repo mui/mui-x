@@ -13,7 +13,6 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
-import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
@@ -29,7 +28,7 @@ const configuration: GridConfiguration = {
     useCellAggregationResult: () => null,
   },
 };
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(

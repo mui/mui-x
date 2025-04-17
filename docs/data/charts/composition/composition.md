@@ -230,14 +230,14 @@ The demos use the `slotProps.legend` object, but with composition, you can pass 
 <BarChart
   slotProps={{
     legend: {
-      direction: 'row',
+      direction: 'horizontal',
     }
   }}
 />
 
 // With composition
 <ChartContainer>
-  <ChartsLegend direction="row" />
+  <ChartsLegend direction="horizontal" />
 </ChartContainer>
 ```
 
