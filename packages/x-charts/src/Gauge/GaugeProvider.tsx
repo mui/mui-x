@@ -1,3 +1,4 @@
+'use client';
 // @ignore - do not document.
 import * as React from 'react';
 import { getPercentageValue } from '../internals/getPercentageValue';
