@@ -90,19 +90,19 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 ## Long-term support (LTS)
 
 Bug fixes, performance enhancements, and other improvements are delivered in new releases.
-However, we remain committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
+However, we remain committed to providing security updates and addressing regressions for **two years** after a version enters LTS.
 
 This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
 
 ### Supported versions
 
-| MUI X version | Release    | Supported                                                           |
-| ------------: | :--------- | :------------------------------------------------------------------ |
-|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support)                                |
-|        ^7.0.0 | 2024-03-23 | ⚠️ Long-term support (Support for security issues and regressions). |
-|        ^6.0.0 | 2023-03-03 | ❌                                                                  |
-|        ^5.0.0 | 2021-11-23 | ❌                                                                  |
-|        ^4.0.0 | 2021-09-28 | ❌                                                                  |
+| MUI X version | Release    | Supported                                                                       |
+| ------------: | :--------- | :------------------------------------------------------------------------------ |
+|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
+|        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
+|        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
+|        ^5.0.0 | 2021-11-23 | ❌                                                                              |
+|        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
 ## Community
 
