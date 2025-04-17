@@ -186,11 +186,11 @@ async function run() {
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
     return componentsWithPropTypes
-      .filter((filename) => {
-        return COMPONENTS_WITHOUT_PROPTYPES.every(
+      .filter((filename) =>
+        COMPONENTS_WITHOUT_PROPTYPES.every(
           (ignoredComponent) => !filename.includes(ignoredComponent),
-        );
-      })
+        ),
+      )
       .map<Promise<void>>(async (filename) => {
         try {
           await generateProptypes(project, filename);
