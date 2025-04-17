@@ -98,7 +98,7 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 | MUI X version | Release    | Supported                                                                       |
 | ------------: | :--------- | :------------------------------------------------------------------------------ |
-|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support)                                            |
+|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
 |        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
 |        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
 |        ^5.0.0 | 2021-11-23 | ❌                                                                              |
