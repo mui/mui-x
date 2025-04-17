@@ -195,6 +195,21 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
+    it('should export a chart as PNG', async function test() {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Print' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+    });
+
     describe('print preview', () => {
       /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
        * page after every test. */
@@ -266,58 +281,6 @@ async function main() {
           width: 490,
           height: 200,
         });
-      });
-    });
-
-    describe('charts', () => {
-      it('should take a screenshot of the print preview', async function test() {
-        this.timeout(20000);
-
-        const route = '/docs-charts-export/PrintChart';
-        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
-
-        // await navigateToTest(route);
-        await page.goto(`${baseUrl}${route}#no-dev`);
-
-        const printButton = page.getByRole('button', { name: 'Print' });
-
-        // Trigger the action async because window.print() is blocking the main thread
-        // like window.alert() is.
-        setTimeout(async () => {
-          await printButton.click();
-        });
-
-        await sleep(4000);
-
-        return new Promise((resolve, reject) => {
-          // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-          const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
-          const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
-
-          ffmpeg.on('close', (code) => {
-            if (code === 0) {
-              resolve();
-            } else {
-              reject(new Error(`ffmpeg exited with code ${code}`));
-            }
-          });
-        });
-      });
-
-      it('should export a chart as PNG', async function test() {
-        const route = '/docs-charts-export/ExportChartAsImage';
-        const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
-
-        await navigateToTest(route);
-
-        const downloadPromise = page.waitForEvent('download');
-        await page.getByRole('button', { name: 'Print' }).click();
-
-        const download = await downloadPromise;
-
-        await download.saveAs(screenshotPath);
       });
     });
 
