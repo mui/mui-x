@@ -1,12 +1,12 @@
 import path from 'path';
 import {
   createTypeScriptProject,
-  CreateTypeScriptProjectOptions,
-  TypeScriptProject,
+  type CreateTypeScriptProjectOptions,
+  type TypeScriptProject,
 } from '@mui/internal-docs-utils';
-import { getComponentFilesInFolder } from './utils';
+import { getComponentFilesInFolder } from './utils.ts';
 
-const workspaceRoot = path.resolve(__dirname, '../../');
+const workspaceRoot = path.resolve(import.meta.dirname, '../../');
 
 export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
   name: XProjectNames;

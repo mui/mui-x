@@ -1,5 +1,5 @@
-import * as path from 'path';
-import * as fse from 'fs-extra';
+import path from 'node:path';
+import fse from 'fs-extra';
 
 export const getComponentFilesInFolder = (folderPath: string): string[] => {
   const files = fse.readdirSync(folderPath, { withFileTypes: true });

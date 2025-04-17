@@ -1,14 +1,14 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import * as path from 'path';
-import * as fse from 'fs-extra';
-import * as prettier from 'prettier';
+import path from 'path';
+import fse from 'fs-extra';
+import prettier from 'prettier';
 import {
   getPropTypesFromFile,
   injectPropTypesInFile,
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
-import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+import { createXTypeScriptProjects, type XTypeScriptProject } from './createXTypeScriptProjects.ts';
 
 const COMPONENTS_WITHOUT_PROPTYPES = ['AnimatedBarElement'];
 
@@ -166,7 +166,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
   }
 
   const prettierConfig = await prettier.resolveConfig(process.cwd(), {
-    config: path.join(__dirname, '../../prettier.config.js'),
+    config: path.join(import.meta.dirname, '../../prettier.config.js'),
   });
 
   const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });
@@ -186,11 +186,11 @@ async function run() {
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
     return componentsWithPropTypes
-      .filter((filename) =>
-        COMPONENTS_WITHOUT_PROPTYPES.every(
+      .filter((filename) => {
+        return COMPONENTS_WITHOUT_PROPTYPES.every(
           (ignoredComponent) => !filename.includes(ignoredComponent),
-        ),
-      )
+        );
+      })
       .map<Promise<void>>(async (filename) => {
         try {
           await generateProptypes(project, filename);
