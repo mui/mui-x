@@ -15,7 +15,7 @@ type OwnerState = DataGridProcessedProps;
 const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'columnHeaderTitle',
-})<{ ownerState: OwnerState }>({});
+})<{ ownerState: OwnerState }>(null);
 
 const styles = css('MuiDataGrid-columnHeaderTitle', {
   root: {

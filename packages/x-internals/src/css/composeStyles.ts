@@ -23,11 +23,11 @@
  * // }
  * ```
  */
-export function composeStyles<ClassKey extends string>(
+export function composeStyles<T extends Record<string, string>>(
   componentName: string,
-  styles: Record<ClassKey, string>,
+  styles: T,
   classes: Record<string, string> | undefined = undefined,
-): Record<ClassKey, string> {
+): T {
   if (!classes) {
     return styles;
   }
@@ -39,7 +39,7 @@ export function composeStyles<ClassKey extends string>(
       const className = styles[name];
       const classesProp = className.slice(componentName.length + 1);
 
-      let buffer = className;
+      let buffer = className as string;
 
       const classesValue = classes[classesProp];
       if (classesValue) {

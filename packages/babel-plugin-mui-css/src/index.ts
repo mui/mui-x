@@ -55,7 +55,7 @@ export default function transformCSS({ types: t }: BabelT) {
 
           let cssContent = '';
           cssContent = state.rules.map((r) => r.content).join('\n');
-          if (state.config.data.cssMinify ?? true) {
+          if (state.options.cssMinify ?? false) {
             const { code: cssMinified } = minifyCSS({
               filename: 'index.css',
               code: Buffer.from(cssContent),
