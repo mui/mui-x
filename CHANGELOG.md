@@ -83,6 +83,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
 - [DataGridPremium] Fix cell display with custom renderers in pivot mode (#17323) @cherniavskii
 - [DataGridPremium] Fix stale aggregation results after filtering (#17296) @cherniavskii
 - [DataGridPremium] Pivoting (#9877) @cherniavskii
+- [DataGridPremium] Use `groupingValueGetter` for row grouping on the server (#17376) @cherniavskii
 
 ### Date and Time Pickers
 
