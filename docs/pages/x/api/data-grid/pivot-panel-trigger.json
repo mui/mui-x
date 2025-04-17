@@ -13,6 +13,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/components/pivotPanel/PivotPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/pivot-panel\">Data Grid - Pivot panel <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/pivot-panel\">Data Grid - Pivot Panel <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
   "cssComponent": false
 }
