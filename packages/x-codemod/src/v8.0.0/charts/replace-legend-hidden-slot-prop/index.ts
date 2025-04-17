@@ -24,7 +24,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             return;
           }
 
-          const slotProps = elementPath.node.openingElement.attributes?.find(
+          let chartProps = elementPath.value.openingElement.attributes;
+
+          const slotProps = chartProps?.find(
             (elementNode) =>
               elementNode.type === 'JSXAttribute' && elementNode.name.name === 'slotProps',
           ) as JSXAttribute | null;
@@ -58,11 +60,36 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
           legendSlotProps.properties.splice(hiddenIndex, 1);
 
-          const chartProps = elementPath.value.openingElement.attributes;
+          if (
+            slotProps.value?.type === 'JSXExpressionContainer' &&
+            legendSlotProps.properties.length === 0
+          ) {
+            const slotPropsObject = slotProps.value?.expression;
+
+            if (slotPropsObject.type === 'ObjectExpression') {
+              slotPropsObject.properties = slotPropsObject.properties.filter(
+                (prop) =>
+                  prop.type !== 'ObjectProperty' ||
+                  prop.key.type !== 'Identifier' ||
+                  prop.key.name !== 'legend',
+              );
+            }
+          }
+
+          if (
+            slotProps.value?.type === 'JSXExpressionContainer' &&
+            slotProps.value.expression.type === 'ObjectExpression' &&
+            slotProps.value.expression.properties.length === 0
+          ) {
+            chartProps = chartProps?.filter(
+              (attr) => attr.type !== 'JSXAttribute' || attr.name.name !== 'slotProps',
+            );
+          }
 
           chartProps?.push(
             j.jsxAttribute(j.jsxIdentifier('hideLegend'), j.jsxExpressionContainer(hidden)),
           );
+          elementPath.value.openingElement.attributes = chartProps;
         });
       });
     });

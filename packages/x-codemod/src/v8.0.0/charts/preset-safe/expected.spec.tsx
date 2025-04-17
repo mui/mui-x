@@ -28,14 +28,10 @@ function App() {
   // prettier-ignore
   <div>
   <PieChart
-    slotProps={{
-      legend: {}
-    }}
     hideLegend={true} />
   <PieChart
     slotProps={{
-      tooltip: { trigger: 'axis' },
-      legend: {}
+      tooltip: { trigger: 'axis' }
     }}
     hideLegend={true} />
   <ChartContainer onAxisClick={onAxisClickHandler}>

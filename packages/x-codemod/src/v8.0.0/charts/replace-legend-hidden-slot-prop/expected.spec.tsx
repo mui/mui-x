@@ -15,6 +15,12 @@ import { BarChart } from '@mui/x-charts/BarChart';
       position: { vertical: 'top' }
     } }}
     hideLegend={false} />
+  <BarChart hideLegend={true} />
+  <BarChart
+    slotProps={{ legend: {
+      ...rest
+    } }}
+    hideLegend={true} />
   <BarChart slotProps={{ legend: {} }} />
   <BarChart slotProps={{ }} />
   <BarChart />
