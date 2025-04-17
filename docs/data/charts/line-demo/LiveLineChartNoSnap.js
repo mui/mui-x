@@ -70,6 +70,7 @@ export default function LiveLineChartNoSnap() {
       <Button
         size="small"
         variant="outlined"
+        sx={{ marginLeft: 1.5 }}
         onClick={() => {
           setFirstData(initialFirstData);
           setSecondData(initialSecondData);
