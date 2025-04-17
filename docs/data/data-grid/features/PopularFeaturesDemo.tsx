@@ -46,6 +46,7 @@ import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
 import GridPivotingInitialState from '../pivoting/GridPivotingInitialState';
+import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
 
 type Row = {
   id: number;
@@ -242,6 +243,15 @@ export const featuresSet: Row[] = [
     detailPage: '/pivoting/',
     demo: <GridPivotingInitialState />,
     linkToCode: '/pivoting/#system-GridPivotingInitialState.tsx',
+  },
+  {
+    id: 21,
+    name: 'AI Assistant',
+    description: 'Translate natural language into a set of grid state updates.',
+    plan: 'Premium',
+    detailPage: '/ai-assistant/',
+    demo: <AssistantWithExamples />,
+    linkToCode: '/ai-assistant/#system-AssistantWithExamples.tsx',
   },
 ];
 
