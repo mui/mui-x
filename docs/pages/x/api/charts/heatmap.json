@@ -33,6 +33,7 @@
     },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",

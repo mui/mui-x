@@ -15,6 +15,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",

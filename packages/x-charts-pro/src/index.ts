@@ -15,6 +15,7 @@ export * from '@mui/x-charts/ChartsGrid';
 export * from '@mui/x-charts/ChartsText';
 export * from '@mui/x-charts/ChartsTooltip';
 export * from '@mui/x-charts/ChartsLegend';
+export * from '@mui/x-charts/ChartsLocalizationProvider';
 export * from '@mui/x-charts/ChartsAxisHighlight';
 export * from '@mui/x-charts/BarChart';
 export * from '@mui/x-charts/LineChart';

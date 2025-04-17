@@ -39,6 +39,7 @@
       "default": "'vertical'"
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",

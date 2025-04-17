@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { CommonOverlayProps } from './ChartsOverlay';
+import { useChartsLocalization } from '../hooks/useChartsLocalization';
 
 const StyledText = styled('text')(({ theme }) => ({
   ...theme.typography.body2,
@@ -16,10 +17,11 @@ const StyledText = styled('text')(({ theme }) => ({
 export function ChartsNoDataOverlay(props: CommonOverlayProps) {
   const { message, ...other } = props;
   const { top, left, height, width } = useDrawingArea();
+  const { localeText } = useChartsLocalization();
 
   return (
     <StyledText x={left + width / 2} y={top + height / 2} {...other}>
-      {message ?? 'No data to display'}
+      {message ?? localeText.noData}
     </StyledText>
   );
 }
