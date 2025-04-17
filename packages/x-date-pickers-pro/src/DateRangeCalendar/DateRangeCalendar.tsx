@@ -58,6 +58,8 @@ import {
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
+const releaseInfo = '__RELEASE_INFO__';
+
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
@@ -574,7 +576,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       ownerState={ownerState}
       {...other}
     >
-      <Watermark packageName="x-date-pickers-pro" releaseInfo="__RELEASE_INFO__" />
+      <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
         const labelId = `${id}-grid-${monthIndex}-label`;
