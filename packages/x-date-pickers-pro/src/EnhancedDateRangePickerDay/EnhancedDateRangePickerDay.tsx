@@ -93,9 +93,7 @@ const overridesResolver = (
 
 const SET_MARGIN = '2px'; // should be working with any given margin
 const highlightStyles = (theme: Theme) => ({
-  zIndex: 0,
   content: '""' /* Creates an empty element */,
-  position: 'absolute',
   width: '100%',
   height: '100%',
   backgroundColor: theme.vars
@@ -104,9 +102,7 @@ const highlightStyles = (theme: Theme) => ({
   boxSizing: 'content-box',
 });
 const previewStyles = (theme: Theme) => ({
-  zIndex: 0,
   content: '""' /* Creates an empty element */,
-  position: 'absolute',
   width: 'calc(100% - 2px)',
   height: 'calc(100% - 2px)',
   border: `1px dashed ${(theme.vars || theme).palette.divider}`,
@@ -136,6 +132,16 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
   marginRight: SET_MARGIN,
+  zIndex: 1,
+  // transform: 'translateZ(0)',
+  isolation: 'isolate',
+  position: 'relative',
+  '&::before, &::after': {
+    zIndex: -1,
+    position: 'absolute',
+    pointerEvents: 'none',
+    mixBlendMode: 'multiply',
+  },
   variants: [
     {
       props: { isDayDisabled: true },
@@ -177,17 +183,10 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       style: {
         '::after': {
           ...previewStyles(theme),
-          borderTopLeftRadius: '50%',
-          borderBottomLeftRadius: '50%',
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
           paddingRight: SET_MARGIN,
           left: 0,
-        },
-      },
-    },
-    {
-      props: { isDayPreviewStart: true, isDaySelectionEnd: false },
-      style: {
-        '::after': {
           borderLeftColor: (theme.vars || theme).palette.divider,
         },
       },
@@ -197,21 +196,16 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       style: {
         '::after': {
           ...previewStyles(theme),
-          borderTopRightRadius: '50%',
-          borderBottomRightRadius: '50%',
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
+          borderRightColor: (theme.vars || theme).palette.divider,
           paddingLeft: SET_MARGIN,
+          paddingRight: 0,
           right: 0,
         },
       },
     },
-    {
-      props: { isDayPreviewEnd: true, isDaySelectionStart: false },
-      style: {
-        '::after': {
-          borderRightColor: (theme.vars || theme).palette.divider,
-        },
-      },
-    },
+
     {
       props: { isDayInsidePreview: true },
       style: {
@@ -226,15 +220,20 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       props: { isDaySelected: true, isDayInsideSelection: false },
       style: {
         ...selectedDayStyles(theme),
+        '::after': {
+          content: '""',
+          borderRightColor: 'transparent',
+        },
       },
     },
     {
       props: { isDaySelectionStart: true },
+
       style: {
         '::before': {
           ...highlightStyles(theme),
-          borderTopLeftRadius: '50%',
-          borderBottomLeftRadius: '50%',
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
           paddingRight: SET_MARGIN,
           left: 0,
         },
@@ -245,10 +244,13 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       style: {
         '::before': {
           ...highlightStyles(theme),
-          borderTopRightRadius: '50%',
-          borderBottomRightRadius: '50%',
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
           paddingLeft: SET_MARGIN,
           right: 0,
+        },
+        '::after': {
+          borderLeftColor: 'transparent',
         },
       },
     },
@@ -268,15 +270,15 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       props: { isDayEndOfWeek: true },
       style: {
         '::after': {
-          borderTopRightRadius: '50%',
-          borderBottomRightRadius: '50%',
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
           borderRightColor: (theme.vars || theme).palette.divider,
           paddingRight: 0,
           right: 0,
         },
         '::before': {
-          borderTopRightRadius: '50%',
-          borderBottomRightRadius: '50%',
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
           paddingRight: 0,
           right: 0,
         },
@@ -288,15 +290,15 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       },
       style: {
         '::after': {
-          borderTopLeftRadius: '50%',
-          borderBottomLeftRadius: '50%',
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
           borderLeftColor: (theme.vars || theme).palette.divider,
           paddingLeft: 0,
           left: 0,
         },
         '::before': {
-          borderTopLeftRadius: '50%',
-          borderBottomLeftRadius: '50%',
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
           paddingLeft: 0,
           left: 0,
         },

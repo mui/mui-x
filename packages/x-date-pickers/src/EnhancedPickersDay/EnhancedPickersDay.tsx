@@ -63,7 +63,7 @@ export const defaultEnhancedDayStyle = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
-  borderRadius: '50%',
+  borderRadius: DAY_SIZE / 2,
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
