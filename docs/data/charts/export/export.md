@@ -27,4 +27,4 @@ As such, you need to ensure that the `ChartsWrapper` element is the root element
 
 If you want to use a custom wrapper element, you need to use the `useChartRootRef` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
 
-{{"demo": "ExportComposition.js"}}
+{{"demo": "ExportCompositionNoSnap.js"}}
