@@ -53,6 +53,7 @@ Here are the highlights from alpha and beta releases included in this stable rel
 - 🚀 New [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component
 
 - 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- 🎛️ New [customization APIs](https://mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item) for the Tree Item component
 
 Below are the changes since the last beta release:
 
@@ -63,7 +64,6 @@ Below are the changes since the last beta release:
 - [DataGrid] Data source with editing (#16045) @MBilalShafi
 - [DataGrid] Deprecate old toolbar components (#17294) @KenanYusuf
 - [DataGrid] Refactor: add typings to icons (#17291) @romgrk
-- [DataGrid] Skip flaky aggregation test (#17391) @MBilalShafi
 - [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @LukasTy
 - [l10n] Improve Swedish (sv-SE) locale (#17293) @ptuukkan
 
@@ -180,9 +180,8 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 - [code-infra] Update MUI Internal and slightly cleanup regressions test setup (#17182) @renovate[bot]
 - [infra] Update support label from 'priority' to 'unknown' (#17288) @michelengelen
 - [release] Major release preparation (#17319) @michelengelen
-- [test] Fix flaky data source aggregation test (#17307) @KenanYusuf
-- [test] Fix flaky data source aggregation test (take 2) (#17311) @cherniavskii
-- [test] Fix flaky data source aggregation test (take 3) (#17316) @LukasTy
+- [test] Fix flaky data source aggregation test (#17307, #17311, #17316) @KenanYusuf @cherniavskii @LukasTy
+- [test] Skip flaky aggregation test (#17391) @MBilalShafi
 
 ## 8.0.0-beta.3
 
