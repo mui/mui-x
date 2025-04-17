@@ -21,7 +21,7 @@ const ruleTester = new RuleTester({
       tsconfigRootDir: path.join(__dirname, '../fixtures'),
       project: './tsconfig.json',
     },
-  }
+  },
 });
 
 ruleTester.run('no-direct-state-access', rule, {
