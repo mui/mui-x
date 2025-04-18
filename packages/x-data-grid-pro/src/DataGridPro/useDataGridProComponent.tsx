@@ -149,7 +149,6 @@ export const useDataGridProComponent = (
   useGridRows(apiRef, props);
   useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
   useGridEditing(apiRef, props);
@@ -162,6 +161,7 @@ export const useDataGridProComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridDetailPanel(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
