@@ -25,8 +25,11 @@ const hyAMGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Ցուցադրել զտիչները',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'ակտիվ զտիչ';
-    if (count === 1) pluralForm = 'ակտիվ զտիչ';
-    else pluralForm = 'ակտիվ զտիչներ';
+    if (count === 1) {
+      pluralForm = 'ակտիվ զտիչ';
+    } else {
+      pluralForm = 'ակտիվ զտիչներ';
+    }
     return `${count} ${pluralForm}`;
   },
 
@@ -126,7 +129,9 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'ակտիվ զտիչներ';
-    if (count === 1) pluralForm = 'ակտիվ զտիչ';
+    if (count === 1) {
+      pluralForm = 'ակտիվ զտիչ';
+    }
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Ցուցադրել զտիչները',
@@ -135,8 +140,11 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'ընտրված տող';
-    if (count === 1) pluralForm = 'ընտրված տող';
-    else pluralForm = 'ընտրված տողեր';
+    if (count === 1) {
+      pluralForm = 'ընտրված տող';
+    } else {
+      pluralForm = 'ընտրված տողեր';
+    }
     return `${count} ${pluralForm}`;
   },
 
