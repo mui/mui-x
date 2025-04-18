@@ -37,11 +37,11 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
   !isEnabled
     ? []
     : packagesNames.map((packageName) => ({
-        files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
-        rules: {
-          'react-compiler/react-compiler': 'error',
-        },
-      }));
+      files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
+      rules: {
+        'react-compiler/react-compiler': 'error',
+      },
+    }));
 
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
@@ -92,25 +92,25 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
   ...(allowRootImports
     ? []
     : [
-        {
-          files: [
-            `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
-            `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
+      {
+        files: [
+          `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
+          `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
+        ],
+        excludedFiles: ['*.d.ts'],
+        rules: {
+          'no-restricted-imports': [
+            'error',
+            {
+              paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+                name,
+                message: 'Use deeper import instead',
+              })),
+            },
           ],
-          excludedFiles: ['*.d.ts'],
-          rules: {
-            'no-restricted-imports': [
-              'error',
-              {
-                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
-                  name,
-                  message: 'Use deeper import instead',
-                })),
-              },
-            ],
-          },
         },
-      ]),
+      },
+    ]),
 ];
 
 module.exports = {
@@ -147,11 +147,6 @@ module.exports = {
           }),
         ),
       },
-    ],
-    // TODO remove rule from here once it's merged in `@mui/monorepo/.eslintrc`
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: '^_' },
     ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
