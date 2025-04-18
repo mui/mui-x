@@ -399,6 +399,10 @@ You have to import it from `@mui/x-license` instead:
 - The icon slots now require material icons to be passed like `Icon as any`.
   Note: This is due to typing issues that might be resolved later.
 
+### Bundling
+
+The Data Grid now requires a bundler that can handle CSS imports.
+
 <!-- ### Editing
 
 TBD
