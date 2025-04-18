@@ -6,7 +6,7 @@ import { useCalendarSetVisibleYear } from './useCalendarSetVisibleYear';
 import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 import { useNullableBaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useCompositeListItem } from '../../base-utils/composite/list/useCompositeListItem';
 import { useBaseCalendarRootVisibleDateContext } from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 export function useCalendarSetVisibleYearWrapper(

@@ -1,9 +1,9 @@
 /* eslint-disable no-bitwise */
 'use client';
 import * as React from 'react';
-import { fastObjectShallowCompare } from '../../base-utils/fastObjectShallowCompare';
-import { useEnhancedEffect } from '../../base-utils/useEnhancedEffect';
+import PropTypes from 'prop-types';
 import { CompositeListContext } from './CompositeListContext';
+import { useEnhancedEffect } from '../../useEnhancedEffect';
 
 function sortByDocumentPosition(a: Node, b: Node) {
   const position = a.compareDocumentPosition(b);
@@ -24,29 +24,9 @@ function sortByDocumentPosition(a: Node, b: Node) {
 
 export type CompositeMetadata<CustomMetadata> = { index?: number | null } & CustomMetadata;
 
-function areMapsEqual<Metadata>(
-  map1: Map<Node, CompositeMetadata<Metadata> | null>,
-  map2: Map<Node, CompositeMetadata<Metadata> | null>,
-) {
-  if (map1.size !== map2.size) {
-    return false;
-  }
-  for (const [key, value] of map1.entries()) {
-    const value2 = map2.get(key);
-    // compare the index before comparing everything else
-    if (value?.index !== value2?.index) {
-      return false;
-    }
-    if (value2 !== undefined && !fastObjectShallowCompare(value, value2)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 /**
  * Provides context for a list of items in a composite component.
- * @ignore - internal component.
+ * @internal
  */
 function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
   const { children, elementsRef, labelsRef, onMapChange } = props;
@@ -65,26 +45,25 @@ function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
     });
   }, []);
 
-  useEnhancedEffect(() => {
-    const newMap = new Map(map);
+  const sortedMap = React.useMemo(() => {
+    const newMap = new Map<Node, CompositeMetadata<Metadata>>();
+    const sortedNodes = Array.from(map.keys()).sort(sortByDocumentPosition);
 
-    const nodes = Array.from(newMap.keys()).sort(sortByDocumentPosition);
-
-    nodes.forEach((node, index) => {
+    sortedNodes.forEach((node, index) => {
       const metadata = map.get(node) ?? ({} as CompositeMetadata<Metadata>);
-
       newMap.set(node, { ...metadata, index });
     });
 
-    if (!areMapsEqual(map, newMap)) {
-      setMap(newMap);
-      onMapChange?.(newMap);
-    }
-  }, [map, onMapChange]);
+    return newMap;
+  }, [map]);
+
+  useEnhancedEffect(() => {
+    onMapChange?.(sortedMap);
+  }, [sortedMap, onMapChange]);
 
   const contextValue = React.useMemo(
-    () => ({ register, unregister, map, elementsRef, labelsRef }),
-    [register, unregister, map, elementsRef, labelsRef],
+    () => ({ register, unregister, map: sortedMap, elementsRef, labelsRef }),
+    [register, unregister, sortedMap, elementsRef, labelsRef],
   );
 
   return (
@@ -92,7 +71,7 @@ function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
   );
 }
 
-export namespace CompositeList {
+namespace CompositeList {
   export interface Props<Metadata> {
     children: React.ReactNode;
     /**
@@ -110,3 +89,30 @@ export namespace CompositeList {
 }
 
 export { CompositeList };
+
+CompositeList.propTypes /* remove-proptypes */ = {
+  // ┌────────────────────────────── Warning ──────────────────────────────┐
+  // │ These PropTypes are generated from the TypeScript type definitions. │
+  // │ To update them, edit the TypeScript types and run `pnpm proptypes`. │
+  // └─────────────────────────────────────────────────────────────────────┘
+  /**
+   * @ignore
+   */
+  children: PropTypes.node,
+  /**
+   * A ref to the list of HTML elements, ordered by their index.
+   * `useListNavigation`'s `listRef` prop.
+   */
+  elementsRef: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  /**
+   * A ref to the list of element labels, ordered by their index.
+   * `useTypeahead`'s `listRef` prop.
+   */
+  labelsRef: PropTypes.shape({
+    current: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }),
+  /**
+   * @ignore
+   */
+  onMapChange: PropTypes.func,
+} as any;

@@ -6,7 +6,7 @@ import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 import { useCalendarSetVisibleMonth } from './useCalendarSetVisibleMonth';
 import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useNullableBaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useCompositeListItem } from '../../base-utils/composite/list/useCompositeListItem';
 import { useBaseCalendarRootVisibleDateContext } from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 export function useCalendarSetVisibleMonthWrapper(

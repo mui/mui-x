@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useEnhancedEffect } from '../../useEnhancedEffect';
 import { useCompositeListContext } from './CompositeListContext';
 
 export interface UseCompositeListItemParameters<Metadata> {

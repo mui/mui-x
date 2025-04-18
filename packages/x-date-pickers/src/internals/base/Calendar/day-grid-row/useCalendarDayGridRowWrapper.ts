@@ -2,7 +2,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useCalendarDayGridBodyContext } from '../../utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
 import type { useCalendarDayGridRow } from './useCalendarDayGridRow';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useCompositeListItem } from '../../base-utils/composite/list/useCompositeListItem';
 
 export function useCalendarDayGridRowWrapper(
   parameters: useCalendarDayGridRowWrapper.Parameters,

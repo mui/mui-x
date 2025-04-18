@@ -4,7 +4,7 @@ import { BaseUIComponentProps } from '../../base-utils/types';
 import { useRenderElement } from '../../base-utils/useRenderElement';
 import { CalendarDayGridBodyContext } from '../../utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
 import { useBaseCalendarDayGridBody } from '../../utils/base-calendar/day-grid-body/useBaseCalendarDayGridBody';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 
 const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
   componentProps: CalendarDayGridBody.Props,

@@ -4,7 +4,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { findClosestEnabledDate } from '../../../../utils/date-utils';
-import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
+import { useCompositeListItem } from '../../../base-utils/composite/list/useCompositeListItem';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { useBaseCalendarYearCell } from './useBaseCalendarYearCell';
 import { useBaseCalendarYearCollectionContext } from '../utils/BaseCalendarYearCollectionContext';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCalendarMonthList } from './useCalendarMonthList';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useRenderElement } from '../../base-utils/useRenderElement';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 import { BaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
 
 const CalendarMonthList = React.forwardRef(function CalendarMonthList(

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCalendarMonthGrid } from './useCalendarMonthGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useRenderElement } from '../../base-utils/useRenderElement';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 import { CalendarMonthGridCssVars } from './CalendarMonthGridCssVars';
 import { BaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
 import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';

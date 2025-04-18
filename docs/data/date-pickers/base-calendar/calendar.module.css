@@ -201,18 +201,6 @@
   box-sizing: border-box;
   border-radius: 4px;
 
-  &:not([data-selected]):hover::before {
-    background-color: var(--button-hover-bg-color);
-  }
-
-  &[data-selected]:not([data-outside-month]):not([data-inside-selection])::before {
-    background-color: var(--cell-selected-bg-color);
-  }
-
-  &:disabled {
-    pointer-events: none;
-  }
-
   &::before {
     content: '';
     position: absolute;
@@ -236,8 +224,22 @@
     right: 2px;
   }
 
-  &:not([data-outside-month]):focus-visible::after {
-    outline: 2px solid var(--button-focus-border-color);
+  &:not([data-outside-month]):focus-visible {
+    &::after {
+      outline: 2px solid var(--button-focus-border-color);
+    }
+  }
+
+  &:not([data-selected]):hover::before {
+    background-color: var(--button-hover-bg-color);
+  }
+
+  &[data-selected]:not([data-outside-month]):not([data-inside-selection])::before {
+    background-color: var(--cell-selected-bg-color);
+  }
+
+  &:disabled {
+    pointer-events: none;
   }
 
   &:not([data-outside-month]):disabled {

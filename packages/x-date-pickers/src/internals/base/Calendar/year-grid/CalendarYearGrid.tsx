@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCalendarYearGrid } from './useCalendarYearGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useRenderElement } from '../../base-utils/useRenderElement';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 import { BaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 import { CalendarYearGridCssVars } from './CalendarYearGridCssVars';
 import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';

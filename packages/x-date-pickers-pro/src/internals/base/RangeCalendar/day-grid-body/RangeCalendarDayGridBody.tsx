@@ -5,7 +5,7 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
 // eslint-disable-next-line no-restricted-imports
-import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
+import { CompositeList } from '@mui/x-date-pickers/internals/base/base-utils/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
 import { CalendarDayGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
 import { useRangeCalendarDayGridBody } from './useRangeCalendarDayGridBody';
