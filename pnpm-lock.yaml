@@ -497,9 +497,6 @@ importers:
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@stackblitz/sdk':
-        specifier: ^1.11.0
-        version: 1.11.0
       '@tanstack/query-core':
         specifier: ^5.74.0
         version: 5.74.0
@@ -4133,9 +4130,6 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
-
-  '@stackblitz/sdk@1.11.0':
-    resolution: {integrity: sha512-DFQGANNkEZRzFk1/rDP6TcFdM82ycHE+zfl9C/M/jXlH68jiqHWHFMQURLELoD8koxvu/eW5uhg94NSAZlYrUQ==}
 
   '@swc/core-darwin-arm64@1.11.11':
     resolution: {integrity: sha512-vJcjGVDB8cZH7zyOkC0AfpFYI/7GHKG0NSsH3tpuKrmoAXJyCYspKPGid7FT53EAlWreN7+Pew+bukYf5j+Fmg==}
@@ -13405,8 +13399,6 @@ snapshots:
       - debug
 
   '@socket.io/component-emitter@3.1.2': {}
-
-  '@stackblitz/sdk@1.11.0': {}
 
   '@swc/core-darwin-arm64@1.11.11':
     optional: true
