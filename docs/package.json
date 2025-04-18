@@ -27,7 +27,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.13.0",
-    "@mui/docs": "7.0.1",
+    "@mui/docs": "7.0.0-rc.0",
     "@mui/icons-material": "^5.16.13",
     "@mui/joy": "^5.0.0-beta.51",
     "@mui/lab": "^5.0.0-alpha.175",

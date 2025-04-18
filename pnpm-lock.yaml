@@ -90,8 +90,8 @@ importers:
         specifier: 1.0.18
         version: 1.0.18(@babel/core@7.25.8)
       '@mui/internal-markdown':
-        specifier: ^2.0.4
-        version: 2.0.4
+        specifier: ^2.0.2
+        version: 2.0.2
       '@mui/internal-test-utils':
         specifier: ^1.0.24
         version: 1.0.24(@babel/core@7.25.8)(@types/react-dom@19.0.2(@types/react@19.0.2))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -426,8 +426,8 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/docs':
-        specifier: 7.0.1
-        version: 7.0.1(mmytrcjsoe6rad3zypitgdphum)
+        specifier: 7.0.0-rc.0
+        version: 7.0.0-rc.0(mmytrcjsoe6rad3zypitgdphum)
       '@mui/icons-material':
         specifier: ^5.16.13
         version: 5.16.13(@mui/material@5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
@@ -3195,8 +3195,8 @@ packages:
   '@mui/core-downloads-tracker@5.16.13':
     resolution: {integrity: sha512-xe5RwI0Q2O709Bd2Y7l1W1NIwNmln0y+xaGk5VgX3vDJbkQEqzdfTFZ73e0CkEZgJwyiWgk5HY0l8R4nysOxjw==}
 
-  '@mui/docs@7.0.1':
-    resolution: {integrity: sha512-K15JKpQkLJWjTMgBs9ij1UpGdedjMM+1I/noglC+3SjsdY8dviPC3ITl+nUZ+HFz4e9YyUKK60iabez+o8q3EQ==}
+  '@mui/docs@7.0.0-rc.0':
+    resolution: {integrity: sha512-7qONT4d8+XI78EPUlr2YqNiAsRtHPoHXpJUuNDV2QdQx3XNBq1ahk/4lcwVB4LZ7RYwms0/A0eOwlJ26dVvf1A==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -3231,8 +3231,8 @@ packages:
   '@mui/internal-docs-utils@1.0.14':
     resolution: {integrity: sha512-jb8RyzoGkV8zvTJndB4An95WCasbDwmDiTibw2YQaUh3+4XiAX3jS2XUB9ab3BxMv3TDCCywL5g0viB1bxQVBw==}
 
-  '@mui/internal-markdown@2.0.4':
-    resolution: {integrity: sha512-b4QJ1G1qh4BBC0ezxYbWTzzQ4tCYjUdUTzFbv6WgXTSxmWETq583cPj6mXLXa1fS5u/9u7PX15hsNFNv2g0QDg==}
+  '@mui/internal-markdown@2.0.2':
+    resolution: {integrity: sha512-YIjKOUtT/R51pbu7MQsdyOuiwmu03BdDNazeodWqWyz9jDfcoer0vwdWb9rnoXyACH2vavvzZtMSPO1Iu3Tzig==}
 
   '@mui/internal-scripts@1.0.24':
     resolution: {integrity: sha512-omDYril4RiR8PSmPWkja16BjNyGkcj7N9sK1Ul9pSVpKSw8LF4BUxLOkF5NzAfDxNQgoZp+7DJPWBm9c/hmC+A==}
@@ -12556,12 +12556,12 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.13': {}
 
-  '@mui/docs@7.0.1(mmytrcjsoe6rad3zypitgdphum)':
+  '@mui/docs@7.0.0-rc.0(mmytrcjsoe6rad3zypitgdphum)':
     dependencies:
       '@babel/runtime': 7.27.0
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/icons-material': 5.16.13(@mui/material@5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
-      '@mui/internal-markdown': 2.0.4
+      '@mui/internal-markdown': 2.0.2
       '@mui/material': 5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/system': 5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.13.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       chai: 5.1.1
@@ -12593,7 +12593,7 @@ snapshots:
       rimraf: 6.0.1
       typescript: 5.6.3
 
-  '@mui/internal-markdown@2.0.4':
+  '@mui/internal-markdown@2.0.2':
     dependencies:
       '@babel/runtime': 7.27.0
       lodash: 4.17.21
