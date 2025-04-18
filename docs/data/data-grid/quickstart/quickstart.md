@@ -6,8 +6,6 @@
 
 Install the Data Grid package that best suits your needs—Community, Pro, or Premium:
 
-<!-- #default-branch-switch -->
-
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 :::success

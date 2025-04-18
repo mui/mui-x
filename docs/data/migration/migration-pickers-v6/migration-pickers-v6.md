@@ -56,8 +56,6 @@ You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
-
 ```bash
 # Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>

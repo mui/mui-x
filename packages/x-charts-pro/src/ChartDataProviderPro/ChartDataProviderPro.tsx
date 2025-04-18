@@ -10,11 +10,10 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
 
 export type ChartDataProviderProProps<
@@ -54,7 +53,10 @@ function ChartDataProviderPro<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProProps<TSeries, TSignatures>) {
-  const { children, chartProviderProps } = useChartDataProviderProProps(props);
+  const { children, chartProviderProps } = useChartDataProviderProProps({
+    ...props,
+    plugins: props.plugins ?? DEFAULT_PLUGINS,
+  });
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
