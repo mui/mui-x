@@ -9,7 +9,7 @@
     "docs:create-playground": "pnpm --filter docs create-playground",
     "docs:api": "NODE_OPTIONS=--max-old-space-size=4096 pnpm docs:api:build && pnpm docs:api:buildX",
     "docs:api:build": "tsx ./scripts/buildApiDocs/index.ts",
-    "docs:api:buildX": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts",
+    "docs:api:buildX": "tsx ./docs/scripts/api/buildApi.ts",
     "docs:link-check": "tsx ./docs/scripts/reportBrokenLinks.js",
     "docs:build": "pnpm --filter docs build",
     "docs:typescript:formatted": "pnpm --filter docs typescript:transpile",
