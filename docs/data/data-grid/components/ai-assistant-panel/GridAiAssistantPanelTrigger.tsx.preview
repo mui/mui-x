@@ -1,8 +1,8 @@
 <DataGridPremium
   {...data}
   loading={loading}
-  slots={{ toolbar: CustomToolbar }}
   aiAssistant
+  slots={{ toolbar: CustomToolbar, aiAssistantPanel: GridAiAssistantPanel }}
   onPrompt={mockPromptResolver}
   showToolbar
 />
