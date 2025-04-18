@@ -1,4 +1,4 @@
-export type HighlightOptions = 'none' | 'item' | 'series';
+export type HighlightOptions = 'none' | 'item' | 'series' | 'group';
 
 export type FadeOptions = 'none' | 'series' | 'global';
 
@@ -8,6 +8,7 @@ export type HighlightScope = {
    * - 'none': no highlight.
    * - 'item': only highlight the item.
    * - 'series': highlight all elements of the same series.
+   * - 'group': highlight all elements of the same group.
    * @default 'none'
    */
   highlight?: HighlightOptions;
