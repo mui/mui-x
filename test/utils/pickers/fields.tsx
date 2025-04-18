@@ -21,6 +21,11 @@ export type FieldSectionSelector = (
   index?: 'first' | 'last',
 ) => void;
 
+export type FieldSectionSelectorAsync = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => Promise<void>;
+
 export type FieldPressCharacter = (
   sectionIndex: number | undefined | null,
   character: string,
@@ -36,6 +41,7 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     selectSection: FieldSectionSelector;
+    selectSectionAsync: FieldSectionSelectorAsync;
     getSectionsContainer: () => HTMLDivElement;
     /**
      * Returns the contentEditable DOM node of the requested section.
@@ -173,6 +179,34 @@ export const buildFieldInteractions = <P extends {}>({
       });
     };
 
+    const selectSectionAsync: FieldSectionSelectorAsync = async (
+      selectedSection,
+      index = 'first',
+    ) => {
+      let sectionIndexToSelect: number;
+      if (selectedSection === undefined) {
+        sectionIndexToSelect = 0;
+      } else {
+        const sections = fieldRef.current!.getSections();
+        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
+          (section) => section.type === selectedSection,
+        );
+      }
+
+      await act(async () => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+        if (!props.enableAccessibleFieldDOMStructure) {
+          getTextbox().focus();
+        }
+      });
+
+      await act(async () => {
+        if (props.enableAccessibleFieldDOMStructure) {
+          getSection(sectionIndexToSelect).focus();
+        }
+      });
+    };
+
     const getActiveSection = (sectionIndex: number | undefined) => {
       const activeElement = document.activeElement! as HTMLSpanElement;
 
@@ -216,6 +250,7 @@ export const buildFieldInteractions = <P extends {}>({
 
     return {
       selectSection,
+      selectSectionAsync,
       getActiveSection,
       getSection,
       pressKey,

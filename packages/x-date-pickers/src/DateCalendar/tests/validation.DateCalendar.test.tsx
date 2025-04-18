@@ -47,8 +47,10 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       await user.click(screen.getByTitle('Next month'));
-      screen.getAllByTestId('day').forEach((day) => {
-        expect(day).not.to.have.attribute('disabled');
+      await waitFor(() => {
+        screen.getAllByTestId('day').forEach((day) => {
+          expect(day).not.to.have.attribute('disabled');
+        });
       });
     });
   });
@@ -71,8 +73,10 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       await user.click(screen.getByTitle('Next month'));
-      screen.getAllByTestId('day').forEach((day) => {
-        expect(day).to.have.attribute('disabled');
+      await waitFor(() => {
+        screen.getAllByTestId('day').forEach((day) => {
+          expect(day).to.have.attribute('disabled');
+        });
       });
     });
   });
