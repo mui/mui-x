@@ -98,6 +98,7 @@ ScatterChartPro.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsPrint: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
