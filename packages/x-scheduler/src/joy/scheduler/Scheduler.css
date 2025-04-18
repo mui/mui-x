@@ -1,0 +1,9 @@
+.Scheduler {
+  width: 300px;
+  height: 300px;
+  box-sizing: border-box;
+  border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
