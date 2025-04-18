@@ -267,9 +267,9 @@ export const getVisibleRowsLookup = ({
     }
   };
 
-  const nodes = Object.values(tree);
-  for (let i = 0; i < nodes.length; i += 1) {
-    const node = nodes[i];
+  // eslint-disable-next-line guard-for-in
+  for (const key in tree) {
+    const node = tree[key];
     if (node.depth === 0) {
       handleTreeNode(node, true);
     }
