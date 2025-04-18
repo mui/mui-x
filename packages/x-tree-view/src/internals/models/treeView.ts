@@ -30,11 +30,6 @@ export type TreeViewPublicAPI<
 > = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
 
-export type TreeViewExperimentalFeatures<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;
-
 export type TreeViewStateCacheKey = { id: number };
 
 export type TreeViewState<

@@ -13,19 +13,11 @@ import {
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
-export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAnyPluginSignature[]>({
-  plugins,
-  instance,
-  publicAPI,
-  store,
-  rootRef,
-}: {
-  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
-  instance: TreeViewInstance<TSignatures>;
-  publicAPI: TreeViewPublicAPI<TSignatures>;
-  store: TreeViewStore<TSignatures>;
-  rootRef: React.RefObject<HTMLUListElement | null>;
-}): TreeViewContextValue<TSignatures> => {
+export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  parameters: UseTreeViewBuildContextParameters<TSignatures>,
+): TreeViewContextValue<TSignatures> => {
+  const { plugins, instance, publicAPI, store, rootRef } = parameters;
+
   const runItemPlugins = React.useCallback<TreeViewItemPluginsRunner>(
     (itemPluginProps) => {
       let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
@@ -149,3 +141,13 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
     [runItemPlugins, wrapItem, wrapRoot, instance, publicAPI, store, rootRef],
   );
 };
+
+interface UseTreeViewBuildContextParameters<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> {
+  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
+  instance: TreeViewInstance<TSignatures>;
+  publicAPI: TreeViewPublicAPI<TSignatures>;
+  store: TreeViewStore<TSignatures>;
+  rootRef: React.RefObject<HTMLUListElement | null>;
+}

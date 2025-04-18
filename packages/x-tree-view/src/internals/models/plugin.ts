@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
-import { TreeViewExperimentalFeatures, TreeViewInstance } from './treeView';
+import { TreeViewInstance } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
@@ -16,8 +16,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   /**
    * The Tree View parameters after being processed with the default values.
    */
-  params: TreeViewUsedDefaultizedParams<TSignature>;
-  experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
+  params: TreeViewUsedParamsWithDefaults<TSignature>;
   /**
    * The store that can be used to access the state of other plugins.
    */
@@ -42,12 +41,11 @@ type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
 export type TreeViewPluginSignature<
   T extends {
     params?: {};
-    defaultizedParams?: {};
+    paramsWithDefaults?: {};
     instance?: {};
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
-    experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
     optionalDependencies?: readonly TreeViewAnyPluginSignature[];
   },
@@ -59,7 +57,7 @@ export type TreeViewPluginSignature<
   /**
    * The params after being processed with the default values.
    */
-  defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
+  paramsWithDefaults: T extends { paramsWithDefaults: {} } ? T['paramsWithDefaults'] : {};
   /**
    * An imperative api available for internal use.
    */
@@ -74,9 +72,6 @@ export type TreeViewPluginSignature<
    * The state is the mutable data that will actually be stored in the plugin state and can be accessed by other plugins.
    */
   state: T extends { state: {} } ? T['state'] : {};
-  experimentalFeatures: T extends { experimentalFeatures: string }
-    ? { [key in T['experimentalFeatures']]?: boolean }
-    : {};
   /**
    * Any plugins that this plugin depends on.
    */
@@ -93,11 +88,10 @@ export type TreeViewAnyPluginSignature = {
   state: any;
   instance: any;
   params: any;
-  defaultizedParams: any;
+  paramsWithDefaults: any;
   dependencies: any;
   optionalDependencies: any;
   events: any;
-  experimentalFeatures: any;
   publicAPI: any;
 };
 
@@ -116,8 +110,8 @@ type PluginPropertyWithDependencies<
 export type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'params'>;
 
-export type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
-  PluginPropertyWithDependencies<TSignature, 'defaultizedParams'>;
+export type TreeViewUsedParamsWithDefaults<TSignature extends TreeViewAnyPluginSignature> =
+  PluginPropertyWithDependencies<TSignature, 'paramsWithDefaults'>;
 
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'instance'> & {
@@ -130,12 +124,6 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
 export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = TreeViewStore<
   [TSignature, ...TSignature['dependencies']]
 >;
-
-type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
-  TreeViewExperimentalFeatures<
-    [TSignature, ...TSignature['dependencies']],
-    TSignature['optionalDependencies']
-  >;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'events'>;
@@ -161,22 +149,20 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    *
    * @param {TreeViewUsedParams<TSignature>} options The options object.
    * @param {TreeViewUsedParams<TSignature>['params']} options.params The parameters before being processed with the default values.
-   * @param {TreeViewUsedExperimentalFeatures<TSignature>} options.experimentalFeatures An object containing the experimental feature flags.
-   * @returns {TSignature['defaultizedParams']} The parameters after being processed with the default values.
+   * @returns {TSignature['paramsWithDefaults']} The parameters after being processed with the default values.
    */
-  getDefaultizedParams?: (options: {
+  applyDefaultValuesToParams?: (options: {
     params: TreeViewUsedParams<TSignature>;
-    experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
-  }) => TSignature['defaultizedParams'];
+  }) => TSignature['paramsWithDefaults'];
   /**
    * The initial state is computed after the default values are applied.
    * It sets up the state for the first render.
    * Other state modifications have to be done in effects and so could not be applied on the initial render.
    *
-   * @param {TreeViewUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
+   * @param {TreeViewUsedParamsWithDefaults<TSignature>} params The parameters after being processed with the default values.
    * @returns {TSignature['state']} The initial state of the plugin.
    */
-  getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
+  getInitialState?: (params: TreeViewUsedParamsWithDefaults<TSignature>) => TSignature['state'];
   /**
    * An object where each property used by the plugin is set to `true`.
    */

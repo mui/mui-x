@@ -16,7 +16,7 @@ import {
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
-import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
+import { useExtractPluginParamsFromProps } from './useExtractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
@@ -71,11 +71,13 @@ export const useTreeView = <
     [inPlugins],
   );
 
-  const { pluginParams, forwardedProps, apiRef, experimentalFeatures } =
-    extractPluginParamsFromProps<TSignatures, typeof props>({
-      plugins,
-      props,
-    });
+  const { pluginParams, forwardedProps, apiRef } = useExtractPluginParamsFromProps<
+    TSignatures,
+    typeof props
+  >({
+    plugins,
+    props,
+  });
 
   const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
   const instance = instanceRef.current as TreeViewInstance<TSignatures>;
@@ -115,7 +117,6 @@ export const useTreeView = <
     const pluginResponse = plugin({
       instance,
       params: pluginParams,
-      experimentalFeatures,
       rootRef: innerRootRef,
       plugins,
       store: storeRef.current as TreeViewStore<any>,

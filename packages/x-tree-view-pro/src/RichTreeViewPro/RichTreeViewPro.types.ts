@@ -4,7 +4,6 @@ import { SxProps } from '@mui/system/styleFunctionSx';
 import { SlotComponentProps } from '@mui/utils/types';
 import {
   TreeViewPublicAPI,
-  TreeViewExperimentalFeatures,
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
   TreeViewSlots,
@@ -63,10 +62,4 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: RichTreeViewProApiRef;
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures?: TreeViewExperimentalFeatures<RichTreeViewProPluginSignatures>;
 }

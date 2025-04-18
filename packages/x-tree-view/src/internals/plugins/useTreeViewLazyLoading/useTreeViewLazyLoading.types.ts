@@ -64,7 +64,7 @@ export interface UseTreeViewLazyLoadingParameters<R extends {}> {
   dataSource?: DataSource<R>;
   dataSourceCache?: DataSourceCache;
 }
-export type UseTreeViewLazyLoadingDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewLazyLoadingParametersWithDefaults<R extends {}> = DefaultizedProps<
   UseTreeViewLazyLoadingParameters<R>,
   'dataSource'
 >;
@@ -81,11 +81,10 @@ export interface UseTreeViewLazyLoadingState {
 
 export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   params: UseTreeViewLazyLoadingParameters<any>;
-  defaultizedParams: UseTreeViewLazyLoadingDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewLazyLoadingParametersWithDefaults<any>;
   publicAPI: UseTreeViewLazyLoadingPublicAPI;
   instance: UseTreeViewLazyLoadingInstance;
   state: UseTreeViewLazyLoadingState;
-  experimentalFeatures: 'lazyLoading';
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,

@@ -28,9 +28,6 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ lazyLoading?: bool }" }
-    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",

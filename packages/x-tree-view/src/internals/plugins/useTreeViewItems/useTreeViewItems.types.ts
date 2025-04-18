@@ -142,7 +142,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
+export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
@@ -193,7 +193,7 @@ export interface UseTreeViewItemsState<R extends {}> {
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
-  defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewItemsParametersWithDefaults<any>;
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;

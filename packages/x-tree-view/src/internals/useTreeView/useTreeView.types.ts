@@ -5,7 +5,6 @@ import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
   TreeViewPublicAPI,
-  TreeViewExperimentalFeatures,
 } from '../models';
 
 export interface UseTreeViewParameters<
@@ -19,7 +18,6 @@ export interface UseTreeViewParameters<
 
 export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   apiRef: React.RefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
-  experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
 }
 
 export interface UseTreeViewRootSlotProps

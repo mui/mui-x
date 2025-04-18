@@ -2,5 +2,5 @@ export { useTreeViewSelection } from './useTreeViewSelection';
 export type {
   UseTreeViewSelectionSignature,
   UseTreeViewSelectionParameters,
-  UseTreeViewSelectionDefaultizedParameters,
+  UseTreeViewSelectionParametersWithDefaults,
 } from './useTreeViewSelection.types';
