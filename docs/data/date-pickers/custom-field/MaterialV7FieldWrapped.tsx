@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -8,6 +7,7 @@ import {
 } from '@mui/x-date-pickers/PickersTextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '../_shared/DemoContainer';
 
 const MyPickersTextField = React.forwardRef(
   (props: PickersTextFieldProps, ref: React.Ref<HTMLDivElement>) => (

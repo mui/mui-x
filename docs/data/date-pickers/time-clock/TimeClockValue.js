@@ -1,9 +1,9 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 
 export default function TimeClockValue() {
   const [value, setValue] = React.useState(dayjs('2022-04-17T15:30'));
