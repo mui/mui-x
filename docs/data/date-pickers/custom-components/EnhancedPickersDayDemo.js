@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Stack from '@mui/material/Stack';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { getEnhancedCustomTheme } from './getEnhancedCustomTheme';
 
 export default function EnhancedPickersDayDemo() {
-  const theme = createTheme(getEnhancedCustomTheme('light'));
+  const currentTheme = useTheme();
+  const theme = createTheme(getEnhancedCustomTheme(currentTheme.palette.mode));
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+      <Box sx={{ display: 'flex', gap: 4 }}>
         <StaticDateRangePicker
           slotProps={{
             actionBar: {
@@ -21,7 +21,6 @@ export default function EnhancedPickersDayDemo() {
           enableEnhancedDaySlot
         />
         <ThemeProvider theme={theme}>
-          <CssBaseline />
           <StaticDateRangePicker
             slotProps={{
               actionBar: {
@@ -31,7 +30,7 @@ export default function EnhancedPickersDayDemo() {
             enableEnhancedDaySlot
           />
         </ThemeProvider>
-      </Stack>
+      </Box>
     </LocalizationProvider>
   );
 }

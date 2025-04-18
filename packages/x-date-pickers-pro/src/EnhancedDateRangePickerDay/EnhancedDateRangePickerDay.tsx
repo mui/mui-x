@@ -19,6 +19,9 @@ import {
   EnhancedDateRangePickerDayClassKey,
   getEnhancedDateRangePickerDayUtilityClass,
 } from './enhancedDateRangePickerDayClasses';
+import { boxSizing } from '@mui/system';
+import { positions } from '@mui/system';
+import { width } from '@mui/system';
 
 const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => {
   const {
@@ -99,16 +102,21 @@ const highlightStyles = (theme: Theme) => ({
   backgroundColor: theme.vars
     ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
     : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-  boxSizing: 'content-box',
+  boxSizing: 'border-box',
+  left: 0,
+  right: 0,
 });
 const previewStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
-  width: 'calc(100% - 2px)',
-  height: 'calc(100% - 2px)',
-  border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+  width: '100%',
+  height: '100%',
+  border: `1.2px dashed ${(theme.vars || theme).palette.divider}`,
   borderLeftColor: 'transparent',
   borderRightColor: 'transparent',
-  boxSizing: 'content-box',
+  boxSizing: 'border-box',
+  borderOffset: '-1px',
+  left: 0,
+  right: 0,
 });
 
 const selectedDayStyles = (theme: Theme) => ({
@@ -130,12 +138,9 @@ const selectedDayStyles = (theme: Theme) => ({
 
 const styleArg = ({ theme }: { theme: Theme }) => ({
   ...defaultEnhancedDayStyle({ theme }),
-  marginLeft: SET_MARGIN,
-  marginRight: SET_MARGIN,
   zIndex: 1,
-  // transform: 'translateZ(0)',
   isolation: 'isolate',
-  position: 'relative',
+  position: 'initial',
   '&::before, &::after': {
     zIndex: -1,
     position: 'absolute',
@@ -185,9 +190,9 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           ...previewStyles(theme),
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
-          paddingRight: SET_MARGIN,
-          left: 0,
           borderLeftColor: (theme.vars || theme).palette.divider,
+          left: `${SET_MARGIN}`,
+          width: `calc(100% - ${SET_MARGIN})`,
         },
       },
     },
@@ -199,9 +204,8 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
           borderRightColor: (theme.vars || theme).palette.divider,
-          paddingLeft: SET_MARGIN,
-          paddingRight: 0,
-          right: 0,
+          right: `${SET_MARGIN}`,
+          width: `calc(100% - ${SET_MARGIN})`,
         },
       },
     },
@@ -211,8 +215,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       style: {
         '::after': {
           ...previewStyles(theme),
-          paddingLeft: SET_MARGIN,
-          paddingRight: SET_MARGIN,
         },
       },
     },
@@ -220,10 +222,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       props: { isDaySelected: true, isDayInsideSelection: false },
       style: {
         ...selectedDayStyles(theme),
-        '::after': {
-          content: '""',
-          borderRightColor: 'transparent',
-        },
       },
     },
     {
@@ -234,8 +232,8 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           ...highlightStyles(theme),
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
-          paddingRight: SET_MARGIN,
-          left: 0,
+          left: `${SET_MARGIN}`,
+          width: `calc(100% - ${SET_MARGIN})`,
         },
       },
     },
@@ -246,8 +244,8 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           ...highlightStyles(theme),
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
-          paddingLeft: SET_MARGIN,
-          right: 0,
+          right: `${SET_MARGIN}`,
+          width: `calc(100% - ${SET_MARGIN})`,
         },
         '::after': {
           borderLeftColor: 'transparent',
@@ -261,8 +259,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       style: {
         '::before': {
           ...highlightStyles(theme),
-          paddingLeft: SET_MARGIN,
-          paddingRight: SET_MARGIN,
         },
       },
     },
@@ -273,14 +269,10 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
           borderRightColor: (theme.vars || theme).palette.divider,
-          paddingRight: 0,
-          right: 0,
         },
         '::before': {
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
-          paddingRight: 0,
-          right: 0,
         },
       },
     },
@@ -293,14 +285,10 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
           borderLeftColor: (theme.vars || theme).palette.divider,
-          paddingLeft: 0,
-          left: 0,
         },
         '::before': {
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
-          paddingLeft: 0,
-          left: 0,
         },
       },
     },
@@ -312,6 +300,15 @@ const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
   slot: 'Root',
   overridesResolver,
 })<{ ownerState: EnhancedDateRangePickerDayOwnerState }>(styleArg);
+
+const EnhancedDateRangePickerDayContainer = styled('div', {
+  name: 'MuiEnhancedDateRangePickerDay',
+  slot: 'Container',
+})({
+  paddingLeft: SET_MARGIN,
+  paddingRight: SET_MARGIN,
+  position: 'relative',
+});
 
 type EnhancedDateRangePickerDayComponent = ((
   props: EnhancedDateRangePickerDayProps & React.RefAttributes<HTMLButtonElement>,
@@ -433,25 +430,27 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
   };
 
   return (
-    <EnhancedDateRangePickerDayRoot
-      ref={handleRef}
-      centerRipple
-      data-testid="day"
-      disabled={disabled}
-      tabIndex={selected ? 0 : -1}
-      onKeyDown={(event) => onKeyDown(event, day)}
-      onFocus={(event) => onFocus(event, day)}
-      onBlur={(event) => onBlur(event, day)}
-      onMouseEnter={(event) => onMouseEnter(event, day)}
-      onClick={handleClick}
-      onMouseDown={handleMouseDown}
-      draggable={draggable}
-      {...other}
-      ownerState={ownerState}
-      className={clsx(classes.root, className)}
-    >
-      {!children ? utils.format(day, 'dayOfMonth') : children}
-    </EnhancedDateRangePickerDayRoot>
+    <EnhancedDateRangePickerDayContainer>
+      <EnhancedDateRangePickerDayRoot
+        ref={handleRef}
+        centerRipple
+        data-testid="day"
+        disabled={disabled}
+        tabIndex={selected ? 0 : -1}
+        onKeyDown={(event) => onKeyDown(event, day)}
+        onFocus={(event) => onFocus(event, day)}
+        onBlur={(event) => onBlur(event, day)}
+        onMouseEnter={(event) => onMouseEnter(event, day)}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        draggable={draggable}
+        {...other}
+        ownerState={ownerState}
+        className={clsx(classes.root, className)}
+      >
+        {!children ? utils.format(day, 'dayOfMonth') : children}
+      </EnhancedDateRangePickerDayRoot>
+    </EnhancedDateRangePickerDayContainer>
   );
 });
 

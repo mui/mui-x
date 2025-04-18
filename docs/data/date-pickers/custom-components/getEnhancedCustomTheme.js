@@ -45,6 +45,9 @@ export const getEnhancedCustomTheme = (mode) => ({
             borderColor: 'transparent',
             backgroundColor: gray[200],
             opacity: 0.2,
+            ...(mode === 'dark' && {
+              backgroundColor: gray[600],
+            }),
           },
         },
         previewStart: {
@@ -52,6 +55,9 @@ export const getEnhancedCustomTheme = (mode) => ({
             borderColor: 'transparent',
             backgroundColor: gray[200],
             opacity: 0.2,
+            ...(mode === 'dark' && {
+              backgroundColor: gray[600],
+            }),
           },
         },
         previewEnd: {
@@ -59,6 +65,9 @@ export const getEnhancedCustomTheme = (mode) => ({
             borderColor: 'transparent',
             backgroundColor: gray[200],
             opacity: 0.2,
+            ...(mode === 'dark' && {
+              backgroundColor: gray[600],
+            }),
           },
         },
         startOfWeek: {
