@@ -14,7 +14,7 @@ const barChartsParams = {
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series z' },
   ],
-  margin: { top: 10, right: 10 },
+  margin: { top: 20, right: 10 },
   height: 200,
   hideLegend: true,
 };
