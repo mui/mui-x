@@ -109,7 +109,12 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .map(
+        (axisId): AxisItemIdentifier => ({
+          axisId,
+          dataIndex: getAxisIndex(axes.axis[axisId], value),
+        }),
+      )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
 );
@@ -126,7 +131,12 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .map(
+        (axisId): AxisItemIdentifier => ({
+          axisId,
+          dataIndex: getAxisIndex(axes.axis[axisId], value),
+        }),
+      )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
 );
@@ -138,3 +148,13 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
+
+export type AxisItemIdentifier = { axisId: string; dataIndex: number };
+
+export function compareTooltipAxes(a: AxisItemIdentifier[], b: AxisItemIdentifier[]) {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  return a.every((_, i) => a[i].axisId === b[i].axisId && a[i].dataIndex === b[i].dataIndex);
+}
