@@ -101,18 +101,24 @@ export default function transformCSS({ types: t }: BabelT) {
         const prefix = prefixNode.extra.rawValue;
 
         const source = file.code.slice(classesNode.start, classesNode.end);
-        const result = vm.runInContext(
-          `
-          ${state.config.variablesCode};
-          const result = ${source};
-          result;
-        `,
-          vm.createContext({}),
-        );
 
-        const classes = result;
+        try {
+          const result = vm.runInContext(
+            `
+            ${state.config.variablesCode};
+            const result = ${source};
+            result;
+          `,
+            vm.createContext({}),
+          );
 
-        path.replaceWith(buildClassesNode(file.metadata.muiCSS, prefix, classes));
+          const classes = result;
+
+          path.replaceWith(buildClassesNode(file.metadata.muiCSS, prefix, classes));
+        } catch (error) {
+          error.message = `[mui-css] Failed to compile styles for ${formatLocation(file, path.node)}: ${error.message}`;
+          throw error;
+        }
       },
     },
   };
