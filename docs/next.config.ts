@@ -1,22 +1,19 @@
-// @ts-check
 import * as path from 'path';
-import * as url from 'url';
 import * as fs from 'fs';
+import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// const withTM from 'next-transpile-modules')(['@mui/monorepo'];
 // @ts-expect-error This expected error should be gone once we update the monorepo
-import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra.js';
-import { findPages } from './src/modules/utils/find.mjs';
-import {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IGNORE_PAGES,
-  LANGUAGES_IN_PROGRESS,
-} from './config.js';
-import constants from './constants.js';
+// eslint-disable-next-line no-restricted-imports
+import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
+import { findPages } from './src/modules/utils/find';
+import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
+import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
+
 const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
@@ -43,11 +40,7 @@ const WORKSPACE_ALIASES = {
   '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
 };
 
-/**
- * @param {string} pkgPath
- * @returns {{version: string}}
- */
-function loadPkg(pkgPath) {
+function loadPkg(pkgPath: string): { version: string } {
   const pkgContent = fs.readFileSync(path.resolve(WORKSPACE_ROOT, pkgPath, 'package.json'), 'utf8');
   return JSON.parse(pkgContent);
 }
@@ -60,7 +53,7 @@ const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 let localSettings = {};
 try {
-  // eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/extensions
   localSettings = require('./next.config.local.js');
 } catch (_) {
   // Ignore
@@ -77,8 +70,8 @@ export default withDocsInfra({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
-    SOURCE_CODE_REPO: constants.SOURCE_CODE_REPO,
-    SOURCE_GITHUB_BRANCH: constants.SOURCE_GITHUB_BRANCH,
+    SOURCE_CODE_REPO,
+    SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
     // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
@@ -210,7 +203,7 @@ export default withDocsInfra({
     return map;
   },
   // Used to signal we run build
-  ...(process.env.NODE_ENV === 'production'
+  ...(IS_PRODUCTION
     ? {
         output: 'export',
       }
