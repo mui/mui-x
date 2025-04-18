@@ -17,7 +17,7 @@ export const gray = {
 
 type PaletteMode = 'light' | 'dark';
 
-const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
+export const getEnhancedCustomTheme = (mode: PaletteMode): ThemeOptions => ({
   palette: {
     mode,
 
@@ -38,55 +38,48 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
     fontFamily: ['"Inter", "sans-serif"'].join(','),
     fontSize: 13,
   },
-});
+  components: {
+    MuiEnhancedDateRangePickerDay: {
+      styleOverrides: {
+        root: {
+          borderRadius: '4px',
+        },
+        insidePreviewing: {
+          // the ::after pseudo element is used to create the previewing effect on hover
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
+          },
+        },
+        previewStart: {
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
+          },
+        },
+        previewEnd: {
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
+          },
+        },
 
-export const getEnhancedCustomTheme = (mode: PaletteMode): ThemeOptions => {
-  const tokens: ThemeOptions = getDesignTokens(mode);
-  return {
-    ...tokens,
-    components: {
-      MuiEnhancedDateRangePickerDay: {
-        styleOverrides: {
-          root: {
-            borderRadius: '4px',
+        startOfWeek: {
+          '::before': {
+            borderTopLeftRadius: '4px',
+            borderBottomLeftRadius: '4px',
           },
-          insidePreviewing: {
-            // the ::after pseudo element is used to create the previewing effect on hover
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
-          },
-          previewStart: {
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
-          },
-          previewEnd: {
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
-          },
-
-          startOfWeek: {
-            '::before': {
-              borderTopLeftRadius: '4px',
-              borderBottomLeftRadius: '4px',
-            },
-          },
-          endOfWeek: {
-            '::before': {
-              borderTopRightRadius: '4px',
-              borderBottomRightRadius: '4px',
-            },
+        },
+        endOfWeek: {
+          '::before': {
+            borderTopRightRadius: '4px',
+            borderBottomRightRadius: '4px',
           },
         },
       },
     },
-  };
-};
+  },
+});

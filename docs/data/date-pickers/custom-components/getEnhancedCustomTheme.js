@@ -13,7 +13,7 @@ export const gray = {
   900: 'hsl(220, 30%, 5%)',
 };
 
-const getDesignTokens = (mode) => ({
+export const getEnhancedCustomTheme = (mode) => ({
   palette: {
     mode,
     primary: {
@@ -33,54 +33,47 @@ const getDesignTokens = (mode) => ({
     fontFamily: ['"Inter", "sans-serif"'].join(','),
     fontSize: 13,
   },
-});
-
-export const getEnhancedCustomTheme = (mode) => {
-  const tokens = getDesignTokens(mode);
-  return {
-    ...tokens,
-    components: {
-      MuiEnhancedDateRangePickerDay: {
-        styleOverrides: {
-          root: {
-            borderRadius: '4px',
+  components: {
+    MuiEnhancedDateRangePickerDay: {
+      styleOverrides: {
+        root: {
+          borderRadius: '4px',
+        },
+        insidePreviewing: {
+          // the ::after pseudo element is used to create the previewing effect on hover
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
           },
-          insidePreviewing: {
-            // the ::after pseudo element is used to create the previewing effect on hover
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
+        },
+        previewStart: {
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
           },
-          previewStart: {
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
+        },
+        previewEnd: {
+          '::after': {
+            borderColor: 'transparent',
+            backgroundColor: gray[200],
+            opacity: 0.2,
           },
-          previewEnd: {
-            '::after': {
-              borderColor: 'transparent',
-              backgroundColor: gray[200],
-              opacity: 0.2,
-            },
+        },
+        startOfWeek: {
+          '::before': {
+            borderTopLeftRadius: '4px',
+            borderBottomLeftRadius: '4px',
           },
-          startOfWeek: {
-            '::before': {
-              borderTopLeftRadius: '4px',
-              borderBottomLeftRadius: '4px',
-            },
-          },
-          endOfWeek: {
-            '::before': {
-              borderTopRightRadius: '4px',
-              borderBottomRightRadius: '4px',
-            },
+        },
+        endOfWeek: {
+          '::before': {
+            borderTopRightRadius: '4px',
+            borderBottomRightRadius: '4px',
           },
         },
       },
     },
-  };
-};
+  },
+});
