@@ -27,6 +27,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return false;
       }
 
+      if (state.editedItemId != null) {
+        return false;
+      }
+
       const isItemReorderable = params.isItemReorderable;
       if (isItemReorderable) {
         return isItemReorderable(itemId);
@@ -34,7 +38,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       return true;
     },
-    [params.itemsReordering, params.isItemReorderable],
+    [params.itemsReordering, params.isItemReorderable, state.editedItemId],
   );
 
   const getDroppingTargetValidActions = React.useCallback(
@@ -130,15 +134,21 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      setState((prevState) => ({
-        ...prevState,
-        itemsReordering: {
-          targetItemId: itemId,
-          draggedItemId: itemId,
-          action: null,
-          newPosition: null,
-        },
-      }));
+      setState((prevState) => {
+        if (prevState.editedItemId != null) {
+          return prevState;
+        }
+
+        return {
+          ...prevState,
+          itemsReordering: {
+            targetItemId: itemId,
+            draggedItemId: itemId,
+            action: null,
+            newPosition: null,
+          },
+        };
+      });
     },
     [setState],
   );
