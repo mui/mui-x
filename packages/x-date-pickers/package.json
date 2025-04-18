@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.0.0-beta.3",
+  "version": "8.0.0",
   "description": "The community edition of the Date and Time Picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -31,8 +31,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
@@ -46,7 +45,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.1",
+    "@mui/utils": "^7.0.2",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",
@@ -98,9 +97,9 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.4",
-    "@mui/material": "^7.0.1",
-    "@mui/system": "^7.0.1",
+    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.2",
     "@types/luxon": "^3.6.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",

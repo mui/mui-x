@@ -18,7 +18,7 @@ interface GetCirclePropsParams {
   color: string;
 }
 
-export function getCircleProps(params: GetCirclePropsParams) {
+export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
   const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
   const isItemHighlighted = isHighlighted({ seriesId });
   const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
@@ -30,6 +30,7 @@ export function getCircleProps(params: GetCirclePropsParams) {
     fill: color,
     stroke: color,
     opacity: fillArea && isItemFaded ? 0.5 : 1,
+    pointerEvents: 'none',
     className: clsx(
       classes.mark,
       (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),

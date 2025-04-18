@@ -5,7 +5,10 @@ const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
   const xColorScale = xAxis?.colorScale;
 
   if (yColorScale) {
-    return (dataIndex: number) => {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
       const value = series.data[dataIndex];
       const color = value === null ? series.color : yColorScale(value);
       if (color === null) {
@@ -15,7 +18,10 @@ const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
     };
   }
   if (xColorScale) {
-    return (dataIndex: number) => {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
       const value = xAxis.data?.[dataIndex];
       const color = value === null ? series.color : xColorScale(value);
       if (color === null) {

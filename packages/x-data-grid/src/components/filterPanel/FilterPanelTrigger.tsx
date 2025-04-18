@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useForkRef from '@mui/utils/useForkRef';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
   gridFilterActiveItemsSelector,
@@ -63,7 +63,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
     const filterCount = activeFilters.length;
     const state = { open, filterCount };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const { filterPanelTriggerRef } = useGridPanelContext();
     const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

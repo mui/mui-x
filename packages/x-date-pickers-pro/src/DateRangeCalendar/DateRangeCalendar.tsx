@@ -29,7 +29,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   DateRangeCalendarClasses,
   dateRangeCalendarClasses,
@@ -60,7 +59,7 @@ import {
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 import { EnhancedDateRangePickerDay } from '../EnhancedDateRangePickerDay/EnhancedDateRangePickerDay';
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
