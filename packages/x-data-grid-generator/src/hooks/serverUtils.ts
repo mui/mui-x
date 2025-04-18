@@ -520,9 +520,16 @@ export const processRowGroupingRows = (
 
   // add paths and generate parent rows based on `groupFields`
   const groupFields = queryOptions.groupFields;
+
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => String(row[field]));
+      const partialPath = groupFields.map((field) => {
+        const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
+        if (colDef?.groupingValueGetter) {
+          return colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef);
+        }
+        return String(row[field]);
+      });
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
