@@ -51,7 +51,6 @@ function getComponents() {
       srcLight: '/static/x/component-illustrations/radar-light.png',
       srcDark: '/static/x/component-illustrations/radar-dark.png',
       href: '/x/react-charts/radar/',
-      planned: true,
     },
     {
       title: 'Treemap',
