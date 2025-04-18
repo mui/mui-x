@@ -1,6 +1,4 @@
 // @ts-nocheck
-// eslint-disable-next-line
-/* eslint-disable */
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
