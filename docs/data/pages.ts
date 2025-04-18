@@ -540,6 +540,11 @@ const pages: MuiPage[] = [
                 title: 'Zoom and pan',
                 plan: 'pro',
               },
+              {
+                pathname: '/x/react-charts/export',
+                title: 'Export',
+                plan: 'pro',
+              },
             ],
           },
           {
