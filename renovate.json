@@ -57,12 +57,6 @@
       "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
-      "groupName": "@types/node",
-      "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0",
-      "automerge": true
-    },
-    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "every 6 months on the first day of the month"
