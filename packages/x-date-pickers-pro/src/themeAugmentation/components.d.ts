@@ -9,6 +9,10 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerDay'];
   };
+  MuiEnhancedDateRangePickerDay?: {
+    defaultProps?: ComponentsProps['MuiEnhancedDateRangePickerDay'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiEnhancedDateRangePickerDay'];
+  };
   MuiDateTimeRangePickerTabs?: {
     defaultProps?: ComponentsProps['MuiDateTimeRangePickerTabs'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerTabs'];

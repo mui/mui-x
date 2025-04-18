@@ -74,6 +74,10 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersDay'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersDay'];
   };
+  MuiEnhancedPickersDay?: {
+    defaultProps?: ComponentsProps['MuiEnhancedPickersDay'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiEnhancedPickersDay'];
+  };
   MuiPickersFadeTransitionGroup?: {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];

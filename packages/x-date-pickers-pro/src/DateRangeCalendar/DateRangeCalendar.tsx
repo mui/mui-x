@@ -57,6 +57,7 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { EnhancedDateRangePickerDay } from '../EnhancedDateRangePickerDay/EnhancedDateRangePickerDay';
 
 const releaseInfo = '__RELEASE_INFO__';
 
@@ -128,6 +129,7 @@ function useDateRangeCalendarDefaultizedProps(
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
+    enableEnhancedDaySlot: themeProps.enableEnhancedDaySlot ?? false,
   };
 }
 
@@ -208,6 +210,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
+    enableEnhancedDaySlot,
     ...other
   } = props;
 
@@ -481,7 +484,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   );
 
   const slotsForDayCalendar = {
-    day: DateRangePickerDay,
+    day: enableEnhancedDaySlot ? EnhancedDateRangePickerDay : DateRangePickerDay,
     ...slots,
   } as DayCalendarSlots;
 
@@ -712,6 +715,11 @@ DateRangeCalendar.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * If `true`, day slot will use the v8 version.
+   * @default false
+   */
+  enableEnhancedDaySlot: PropTypes.bool,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

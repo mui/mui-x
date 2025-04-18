@@ -32,6 +32,7 @@ import { PickerValidDate, TimezoneProps } from '../models';
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { FormProps } from '../internals/models/formProps';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+import { EnhancedPickersDay } from '../EnhancedPickersDay';
 
 export interface DayCalendarSlots {
   /**
@@ -75,6 +76,11 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
   fixedWeekNumber?: number;
+  /**
+   * If `true`, day slot will use the v8 version.
+   * @default false
+   */
+  enableEnhancedDaySlot?: boolean;
 }
 
 export interface DayCalendarProps
@@ -257,6 +263,7 @@ function WrappedDay({
     slots,
     slotProps,
     timezone,
+    enableEnhancedDaySlot,
   } = parentProps;
 
   const utils = useUtils();
@@ -286,7 +293,7 @@ function WrappedDay({
     showDaysOutsideCurrentMonth,
   });
 
-  const Day = slots?.day ?? PickersDay;
+  const Day = slots?.day ?? (enableEnhancedDaySlot ? EnhancedPickersDay : PickersDay);
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,

@@ -1,4 +1,5 @@
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
+import { EnhancedDateRangePickerDayProps } from '../EnhancedDateRangePickerDay';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
 import { DateRangePickerProps } from '../DateRangePicker';
 import { ExportedDateRangePickerToolbarProps } from '../DateRangePicker/DateRangePickerToolbar';
@@ -21,6 +22,7 @@ import { ExportedPickersRangeCalendarHeaderProps } from '../PickersRangeCalendar
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps;
   MuiDateRangePickerDay: DateRangePickerDayProps;
+  MuiEnhancedDateRangePickerDay: EnhancedDateRangePickerDayProps;
   MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: ExportedDateRangePickerToolbarProps;
   MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
