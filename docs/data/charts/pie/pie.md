@@ -122,3 +122,24 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 ```
 
 {{"demo": "PieAnimation.js"}}
+
+## Composition
+
+For composition, use the **ChartDataProvider** to provide `series` prop.
+
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the **PiePlot** component that renders the pie slices and their labels.
+
+For info here is the composition of the Pie Chart component.
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <PiePlot />
+      <ChartsOverlay />
+      <ChartsTooltip trigger="item" />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

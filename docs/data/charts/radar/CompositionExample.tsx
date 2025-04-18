@@ -18,6 +18,7 @@ export default function CompositionExample() {
         <ChartsLegend />
         <ChartsSurface>
           <RadarGrid divisions={5} />
+          <RadarMetricLabels />
           <RadarSeriesArea
             fillOpacity={0.4}
             strokeWidth={1}
@@ -30,9 +31,8 @@ export default function CompositionExample() {
             strokeDasharray="4, 4"
             strokeLinecap="round"
           />
-          <RadarSeriesMarks />
-          <RadarMetricLabels />
           <RadarAxisHighlight />
+          <RadarSeriesMarks />
         </ChartsSurface>
       </Stack>
     </RadarDataProvider>
