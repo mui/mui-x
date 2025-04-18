@@ -5,7 +5,7 @@ import { makeEventPreventable, mergeProps } from './mergeProps';
 import { useEnhancedEffect } from './useEnhancedEffect';
 import { useEventCallback } from './useEventCallback';
 import { useRootElementName } from './useRootElementName';
-import { useCompositeRootContext } from '../composite/root/CompositeRootContext';
+import { useCompositeRootContext } from './composite/root/CompositeRootContext';
 import { BaseUIEvent, GenericHTMLProps } from './types';
 
 export function useButton(parameters: useButton.Parameters = {}): useButton.ReturnValue {
