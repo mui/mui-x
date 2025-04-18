@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
