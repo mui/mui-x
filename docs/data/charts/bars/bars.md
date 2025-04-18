@@ -189,11 +189,11 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 ## Composition
 
-For composition, use the `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props.
+For composition, use the **ChartDataProvider** to provide `series`, `xAxis`, and `yAxis` props.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the `BarPlot` that renders the bars and their label.
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the **BarPlot** component that renders the bars and their labels.
 
-For info here is the composition of the `BarChart` component.
+Here's how the Bar Chart is composed:
 
 ```jsx
 <ChartDataProvider>
@@ -201,13 +201,13 @@ For info here is the composition of the `BarChart` component.
     <ChartsLegend />
     <ChartsSurface>
       <ChartsGrid />
-      <g clipPath={`url(#${clipPathId})`}> 
+      <g clipPath={`url(#${clipPathId})`}>
         <BarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
       <ChartsAxis />
-      <Tooltip />
+      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
   </ChartsWrapper>

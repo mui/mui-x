@@ -262,13 +262,16 @@ This will lead to strange behaviors.
 
 ## Composition
 
-For composition, use the `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props.
+For composition, use the **ChartDataProvider** to provide `series`, `xAxis`, and `yAxis` props.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the `AreaPlot`, `LinePlot`, and `MarkPlot` to renders different part of the chart.
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components:
 
-The `LineHighlightPlot` renders mark dots on the highlighted values.
+- **AreaPlot** renders the series areas.
+- **LinePlot** renders the series lines.
+- **MarkPlot** renders the series marks.
+- **LineHighlightPlot** renders larger mark dots on the highlighted values.
 
-For info here is the composition of the `LineChart` component.
+For info here is the composition of the Line Chart component.
 
 ```jsx
 <ChartDataProvider>
@@ -289,7 +292,7 @@ For info here is the composition of the `LineChart` component.
         <MarkPlot />
       </g>
       <LineHighlightPlot />
-      <Tooltip />
+      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
   </ChartsWrapper>
@@ -299,5 +302,5 @@ For info here is the composition of the `LineChart` component.
 :::info
 The `data-drawing-container` indicates that children of this element should be considered as part of the drawing are, even if they overflow.
 
-This is useful when mark elements are on the border of the drawing area like in [this issue](https://github.com/mui/mui-x/issues/13659).
+See the [clipping section](https://next.mui.com/x/react-charts/composition/#clipping) for more info.
 :::

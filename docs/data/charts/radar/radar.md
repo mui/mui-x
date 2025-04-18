@@ -100,21 +100,30 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 ## Composition
 
-For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
+For composition, use the **RadarDataProvider** to provide `series` and `radar` props.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components.
+In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components:
 
-The `RadarGrid` and `RadarMetricLabels` components render the grid and the labels.
+- For axes
+  - **RadarGrid**: renders the grid and stripes.
+  - **RadarMetricLabels**: renders metric labels around the grid.
+- For data
+  - **RadarSeriesPlot**: renders series (the area and the marks) on top of each other.
+  - **RadarSeriesArea**: renders series area.
+  - **RadarSeriesMarks**: renders series marks.
+- For interaction
+  - **RadarAxisHighlight**: renders line and marks along the highlighted axis.
 
-The `RadarSeriesPlot` renders series (the area and the marks) on top of each other.
-The `RadarSeriesArea` and `RadarSeriesMarks` provide an alternative by rendering all series areas in the first component and all the marks in the second.
-The second approach allows rendering some elements on top of areas and below marks.
+:::info
+The **RadarSeriesPlot** renders all series together, such that the area of the second series is on top of the marks of the the first one.
 
-The `RadarAxisHighlight` component displays the axis highlight.
+The **RadarSeriesArea** and **RadarSeriesMarks** allow to render all marks on top of all areas.
+Plus it allows to render some components between the areas and the marks.
+:::
 
 {{"demo": "CompositionExample.js" }}
 
-For info here is the composition of the `RadarChart` component.
+Here's how the Radar Chart is composed:
 
 ```jsx
 <RadarDataProvider>
@@ -130,7 +139,7 @@ For info here is the composition of the `RadarChart` component.
       <RadarSeriesMarks />
       {/* Other components */}
       <ChartsOverlay />
-      <Tooltip />
+      <ChartsTooltip />
     </ChartsSurface>
   </ChartsWrapper>
 </RadarDataProvider>
