@@ -12,11 +12,13 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 ### Data format
 
-To plot lines, a series must have a `data` property containing an array of numbers.
-This `data` array corresponds to y values.
+Line charts series should contain a `data` property containing an array of numbers.
+This `data` array corresponds to y-values.
 
-By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
-To modify the x values, you should provide a `xAxis` with data property.
+You can specify x-values with the `xAxis` prop.
+This axis can have any `scaleType` and its `data` should have the same length as your series.
+
+By default, those y-values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
 
 {{"demo": "BasicLineChart.js"}}
 

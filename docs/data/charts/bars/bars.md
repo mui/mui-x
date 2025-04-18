@@ -12,7 +12,7 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 Bar charts series should contain a `data` property containing an array of values.
 
-You can customize bar ticks with the `xAxis`.
+You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}

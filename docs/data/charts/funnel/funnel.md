@@ -10,7 +10,7 @@ components: FunnelChart, FunnelPlot
 
 ## Basics
 
-Funnel charts series should contain a data property containing an array of objects.
+Funnel charts series should contain a `data` property containing an array of objects.
 Each object corresponds to a section of the funnel.
 It must contain a property `value` and can have other optional properties, like `label` and `id`.
 
