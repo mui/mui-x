@@ -11,6 +11,8 @@ packageName: '@mui/x-charts'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
+{{"demo": "Test.js", "defaultCodeOpen": true}}
+
 ## Overview
 
 MUI X Charts is a library of production-ready components for rendering charts with React.
