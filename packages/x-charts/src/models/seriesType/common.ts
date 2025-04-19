@@ -67,5 +67,3 @@ export type StackableSeriesType = {
    */
   stackOrder?: StackOrderType;
 };
-
-export type DefaultizedCartesianSeriesType = Required<CartesianSeriesType>;

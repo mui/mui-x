@@ -1,3 +1,4 @@
+import { useChartAnimation } from './useChartAnimation';
 import { ConvertPluginsIntoSignatures } from '../models/helpers';
 import { useChartDimensions } from './useChartDimensions';
 import { useChartId, UseChartIdParameters } from './useChartId';
@@ -13,6 +14,7 @@ export const CHART_CORE_PLUGINS = [
   useChartDimensions,
   useChartSeries,
   useChartInteractionListener,
+  useChartAnimation,
 ] as const;
 
 export type ChartCorePluginSignatures = ConvertPluginsIntoSignatures<typeof CHART_CORE_PLUGINS>;

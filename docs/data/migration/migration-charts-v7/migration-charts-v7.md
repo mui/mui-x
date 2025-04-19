@@ -19,17 +19,19 @@ With the v8 you can now:
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `latest`.
 
 ```diff
--"@mui/x-charts": "^7.0.0",
-+"@mui/x-charts": "next",
+-"@mui/x-charts": "^7.x.x",
++"@mui/x-charts": "latest",
 
--"@mui/x-charts-pro": "^7.0.0",
-+"@mui/x-charts-pro": "next",
+-"@mui/x-charts-pro": "^7.x.x",
++"@mui/x-charts-pro": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Since `v8` is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 ## Package layout changes
 
@@ -40,6 +42,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-charts': '@mui/x-charts/modern',
+-      '@mui/x-charts-pro': '@mui/x-charts-pro/modern',
+     }
+   }
+ }
+```
 
 ## Breaking changes
 
@@ -149,6 +165,17 @@ Renames `LegendPosition` to `Position`.
 +import { Position } from '@mui/x-charts/models';
 ```
 
+## Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
+
+The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
+
+```diff
+ <BarChart
+-  slotProps={{ legend: { hidden: true } }}
++  hideLegend
+ />
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
@@ -225,8 +252,8 @@ You can now use `ChartContainer` as a responsive container which works now exact
 ```diff
 -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 -import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 
 -<ResponsiveChartContainer>
 +<ChartContainer>
@@ -373,7 +400,7 @@ It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
 
-> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart

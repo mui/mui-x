@@ -20,7 +20,7 @@ interface GetPathPropsParams {
   color: string;
 }
 
-export function getPathProps(params: GetPathPropsParams) {
+export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPathElement> {
   const { isHighlighted, isFaded, seriesId, classes, points, fillArea, color } = params;
   const isItemHighlighted = isHighlighted({ seriesId });
   const isItemFaded = !isItemHighlighted && isFaded({ seriesId });

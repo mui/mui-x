@@ -21,7 +21,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -56,6 +56,9 @@ export interface GridToolbarFilterButtonProps {
   };
 }
 
+/**
+ * @deprecated Use the {@link https://mui.com/x/react-data-grid/components/filter-panel/ Filter Panel Trigger} component instead. This component will be removed in a future major release.
+ */
 const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
     const { slotProps = {} } = props;
@@ -70,7 +73,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
-    const { filterPanelTriggerRef } = useGridPreferencePanelContext();
+    const { filterPanelTriggerRef } = useGridPanelContext();
     const handleRef = useForkRef(ref, filterPanelTriggerRef);
 
     const tooltipContentNode = React.useMemo(() => {

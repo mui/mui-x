@@ -33,8 +33,6 @@ You can run `v7.0.0/tree-view/preset-safe` targeting only Tree View or `v7.0.0/p
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
-
 ```bash
 # Tree View specific
 npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path>

@@ -102,6 +102,9 @@ const GridQuickFilterTextField = styled(
   transition: vars.transition(['width', 'opacity']),
 }));
 
+/**
+ * @deprecated Use the {@link https://mui.com/x/react-data-grid/components/quick-filter/ Quick Filter} component instead. This component will be removed in a future major release.
+ */
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
