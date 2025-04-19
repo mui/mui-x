@@ -40,7 +40,7 @@ const GridToolbarContainerRoot = styled(Toolbar, {
 });
 
 /**
- * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/toolbar/ Toolbar} component instead. This component will be removed in a future major release.
+ * @deprecated Use the {@link https://mui.com/x/react-data-grid/components/toolbar/ Toolbar} component instead. This component will be removed in a future major release.
  */
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
