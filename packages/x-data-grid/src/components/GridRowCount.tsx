@@ -25,7 +25,6 @@ type OwnerState = DataGridProcessedProps;
 const GridRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RowCount',
-  overridesResolver: (props, styles) => styles.rowCount,
 })<{ ownerState: OwnerState }>(null);
 
 const styles = css('MuiDataGrid-rowCount', {
