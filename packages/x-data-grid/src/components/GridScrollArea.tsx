@@ -2,13 +2,14 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
-import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
+import { css } from '@mui/x-internals/css';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { composeGridStyles } from '../utils/composeGridStyles';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass, gridClasses } from '../constants';
+import { gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridEvent } from '../hooks/utils/useGridEvent';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -33,16 +34,6 @@ interface ScrollAreaProps {
 
 type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { scrollDirection, classes } = ownerState;
-
-  const slots = {
-    root: ['scrollArea', `scrollArea--${scrollDirection}`],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
 const GridScrollAreaRawRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ScrollArea',
@@ -51,19 +42,23 @@ const GridScrollAreaRawRoot = styled('div', {
     { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
     styles.scrollArea,
   ],
-})<{ ownerState: OwnerState }>(() => ({
-  position: 'absolute',
-  top: 0,
-  zIndex: 101,
-  width: 20,
-  bottom: 0,
-  [`&.${gridClasses['scrollArea--left']}`]: {
+})<{ ownerState: OwnerState }>(null);
+
+const styles = css('MuiDataGrid-scrollArea', {
+  root: {
+    position: 'absolute',
+    top: 0,
+    zIndex: 101,
+    width: 20,
+    bottom: 0,
+  },
+  left: {
     left: 0,
   },
-  [`&.${gridClasses['scrollArea--right']}`]: {
+  right: {
     right: 0,
   },
-}));
+});
 
 const offsetSelector = createSelector(
   gridDimensionsSelector,
@@ -121,7 +116,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
 
   const rootProps = useGridRootProps();
   const ownerState = { ...rootProps, scrollDirection };
-  const classes = useUtilityClasses(ownerState);
+  const classes = composeGridStyles(styles, rootProps.classes);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
@@ -174,7 +169,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   return (
     <GridScrollAreaRawRoot
       ref={rootRef}
-      className={clsx(classes.root)}
+      className={clsx(classes.root, classes[scrollDirection])}
       ownerState={ownerState}
       onDragOver={handleDragOver}
       style={style}

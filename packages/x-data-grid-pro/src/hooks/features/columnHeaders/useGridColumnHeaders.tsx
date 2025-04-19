@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import {
   gridFocusColumnHeaderFilterSelector,
   useGridSelector,
@@ -58,6 +59,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     pinnedColumns,
     visibleColumns,
     columnPositions,
+    rowClasses,
     ...otherProps
   } = useGridColumnHeadersCommunity({
     ...props,
@@ -179,7 +181,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     return (
       <GridColumnHeaderRow
         ref={headerFiltersRef}
-        className={classes.headerFilterRow}
+        className={clsx(classes.headerFilterRow, rowClasses.root)}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
         ownerState={rootProps}

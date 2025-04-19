@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { css } from '@mui/x-internals/css';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { composeGridStyles } from '../utils/composeGridStyles';
 import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 
@@ -21,31 +21,24 @@ type GridSelectedRowCountProps = React.HTMLAttributes<HTMLDivElement> &
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['selectedRowCount'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
 const GridSelectedRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SelectedRowCount',
-  overridesResolver: (props, styles) => styles.selectedRowCount,
-})<{ ownerState: OwnerState }>({
-  alignItems: 'center',
-  display: 'flex',
-  margin: vars.spacing(0, 2),
-  visibility: 'hidden',
-  width: 0,
-  height: 0,
-  [vars.breakpoints.up('sm')]: {
-    visibility: 'visible',
-    width: 'auto',
-    height: 'auto',
+})<{ ownerState: OwnerState }>(null);
+
+const styles = css('MuiDataGrid-selectedRowCount', {
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    margin: vars.spacing(0, 2),
+    visibility: 'hidden',
+    width: 0,
+    height: 0,
+    [vars.breakpoints.up('sm')]: {
+      visibility: 'visible',
+      width: 'auto',
+      height: 'auto',
+    },
   },
 });
 
@@ -53,14 +46,14 @@ const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProp
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const ownerState = useGridRootProps();
-    const classes = useUtilityClasses(ownerState);
+    const rootProps = useGridRootProps();
+    const classes = composeGridStyles(styles, rootProps.classes);
     const rowSelectedText = apiRef.current.getLocaleText('footerRowSelected')(selectedRowCount);
 
     return (
       <GridSelectedRowCountRoot
         className={clsx(classes.root, className)}
-        ownerState={ownerState}
+        ownerState={rootProps}
         {...other}
         ref={ref}
       >

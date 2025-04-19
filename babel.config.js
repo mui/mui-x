@@ -105,6 +105,8 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
+  plugins.push(path.join(__dirname, './packages/babel-plugin-mui-css/build/index.js'));
+
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
     // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
@@ -183,6 +185,7 @@ module.exports = function getBabelConfig(api) {
       /@babel[\\|/]runtime/,
       // Fix const foo = /{{(.+?)}}/gs; crashing.
       /prettier/,
+      './packages/babel-plugin-mui-css',
     ],
     env: {
       coverage: {
