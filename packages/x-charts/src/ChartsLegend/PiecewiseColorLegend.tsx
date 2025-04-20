@@ -61,7 +61,6 @@ export interface PiecewiseColorLegendProps
 const RootElement = styled('ul', {
   name: 'MuiPiecewiseColorLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
   return {
     ...theme.typography.caption,
