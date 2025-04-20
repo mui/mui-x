@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   ChartPlugin,
   useSelector,
-  getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
   selectorChartZoomOptionsLookup,
@@ -35,41 +34,32 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    const panHandler = instance.addInteractionListener<readonly ZoomData[]>('drag', (state) => {
-      if (state.pinching) {
-        state.cancel();
-        return undefined;
-      }
-
-      if (!state.memo) {
-        state.memo = store.getSnapshot().zoom.zoomData;
-      }
-
-      const point = getSVGPoint(element, {
-        clientX: state.xy[0],
-        clientY: state.xy[1],
-      });
-      const originalPoint = getSVGPoint(element, {
-        clientX: state.initial[0],
-        clientY: state.initial[1],
-      });
-      const movementX = point.x - originalPoint.x;
-      const movementY = (point.y - originalPoint.y) * -1;
-      const newZoomData = translateZoom(
-        state.memo,
-        { x: movementX, y: movementY },
-        {
-          width: drawingArea.width,
-          height: drawingArea.height,
-        },
-        optionsLookup,
-      );
-
-      setZoomDataCallback(newZoomData);
-      return state.memo;
+    // Store the initial zoom data in the event detail
+    // This way we can simplify the logic by using the deltas for full calculation
+    // instead of always calculating the new zoom data based on the current zoom data
+    const panStartHandler = instance.addInteractionListener('panStart', (event) => {
+      event.detail.customData.zoomData = store.getSnapshot().zoom.zoomData;
     });
 
+    const panHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
+      'pan',
+      (event) => {
+        const newZoomData = translateZoom(
+          event.detail.customData.zoomData,
+          { x: event.detail.deltaX, y: -event.detail.deltaY },
+          {
+            width: drawingArea.width,
+            height: drawingArea.height,
+          },
+          optionsLookup,
+        );
+
+        setZoomDataCallback(newZoomData);
+      },
+    );
+
     return () => {
+      panStartHandler.cleanup();
       panHandler.cleanup();
     };
   }, [

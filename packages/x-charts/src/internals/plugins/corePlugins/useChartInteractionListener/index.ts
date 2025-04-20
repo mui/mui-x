@@ -6,5 +6,4 @@ export type {
   UseChartInteractionListenerInstance,
   UseChartInteractionListenerSignature,
   ChartInteraction,
-  ChartInteractionHandler,
 } from './useChartInteractionListener.types';

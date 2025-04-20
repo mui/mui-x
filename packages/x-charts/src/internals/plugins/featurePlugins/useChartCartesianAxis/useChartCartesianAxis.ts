@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import { PointerGestureEventData } from 'gesture-events';
 import { ChartPlugin } from '../../models';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -74,38 +75,30 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
-      if (!state.hovering) {
-        instance.cleanInteraction?.();
-      }
+    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
+      instance.cleanInteraction?.();
     });
 
-    // Move is mouse, Drag is both mouse and touch.
-    const setInteractionHandler = instance.addMultipleInteractionListeners(
-      ['move', 'drag'],
-      (state) => {
-        const target =
-          'targetTouches' in state.event
-            ? (state.event as any as TouchEvent).targetTouches[0]
-            : state.event;
-        const svgPoint = getSVGPoint(element, target);
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const target = event.detail.srcEvent;
+      const svgPoint = getSVGPoint(element, target);
+      const isPointInside = instance.isPointInside(svgPoint, {
+        targetElement: event.detail.srcEvent.target as SVGElement,
+      });
+      if (!isPointInside) {
+        instance.cleanInteraction?.();
+        return;
+      }
+      instance.setPointerCoordinate?.(svgPoint);
+    };
 
-        const isPointInside = instance.isPointInside(svgPoint, {
-          targetElement: state.event.target as SVGElement,
-        });
-
-        if (!isPointInside) {
-          instance.cleanInteraction?.();
-          return;
-        }
-
-        instance.setPointerCoordinate?.(svgPoint);
-      },
-    );
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
-      cleanInteractionHandler.cleanup();
-      setInteractionHandler.cleanup();
+      moveEndHandler.cleanup();
+      moveHandler.cleanup();
+      panHandler.cleanup();
     };
   }, [
     svgRef,
@@ -126,15 +119,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const axisClickHandler = instance.addInteractionListener('drag', (state) => {
-      if (!state.tap) {
-        return;
-      }
-
+    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSVGPoint(element, state.event);
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
@@ -167,7 +156,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           });
         });
 
-      onAxisClick(state.event, { dataIndex, axisValue, seriesValues });
+      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
     });
 
     return () => {

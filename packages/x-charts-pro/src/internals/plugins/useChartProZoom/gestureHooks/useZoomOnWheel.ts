@@ -36,20 +36,16 @@ export const useZoomOnWheel = (
       return () => {};
     }
 
-    const zoomOnWheelHandler = instance.addInteractionListener<readonly ZoomData[]>(
-      'wheel',
-      (state) => {
-        const point = getSVGPoint(element, state.event);
+    const zoomOnWheelHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
+      'turnWheel',
+      (event) => {
+        const point = getSVGPoint(element, event.detail.srcEvent);
 
         if (!instance.isPointInside(point)) {
           return;
         }
 
-        if (!state.memo) {
-          state.memo = store.getSnapshot().zoom.zoomData;
-        }
-
-        const newZoomData = state.memo.map((zoom) => {
+        const newZoomData = store.getSnapshot().zoom.zoomData.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
           if (!option) {
             return zoom;
@@ -59,7 +55,7 @@ export const useZoomOnWheel = (
               ? getHorizontalCenterRatio(point, drawingArea)
               : getVerticalCenterRatio(point, drawingArea);
 
-          const { scaleRatio, isZoomIn } = getWheelScaleRatio(state.event, option.step);
+          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
           if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {

@@ -1,138 +1,85 @@
 'use client';
 import * as React from 'react';
 import {
-  createUseGesture,
-  dragAction,
-  pinchAction,
-  wheelAction,
-  moveAction,
-  hoverAction,
-} from '@use-gesture/react';
+  GestureManager,
+  MoveGesture,
+  PanGesture,
+  PinchGesture,
+  TapGesture,
+  TurnWheelGesture,
+} from 'gesture-events';
 import { ChartPlugin } from '../../models';
 import {
   UseChartInteractionListenerSignature,
   AddInteractionListener,
-  AddMultipleInteractionListeners,
-  ChartInteraction,
-  ChartInteractionHandler,
 } from './useChartInteractionListener.types';
 
-type ListenerRef = Map<ChartInteraction, Set<ChartInteractionHandler<any, any>>>;
-
 const preventDefault = (event: Event) => event.preventDefault();
-
-// Create our own useGesture hook with the actions we need
-// Better for tree shaking
-const useGesture = createUseGesture([
-  dragAction,
-  pinchAction,
-  wheelAction,
-  moveAction,
-  hoverAction,
-]);
 
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   svgRef,
 }) => {
-  const listenersRef = React.useRef<ListenerRef>(new Map());
+  React.useEffect(() => {
+    const svg = svgRef.current;
 
-  const forwardEvent = React.useCallback((interaction: ChartInteraction, state: any) => {
-    const listeners = listenersRef.current.get(interaction);
-    const memo = !state.memo ? new Map<Function, any>() : state.memo;
-    state.interactionType = interaction;
-
-    if (listeners) {
-      listeners.forEach((callback) => {
-        const result = callback({ ...state, memo: memo.get(callback) });
-        if (result) {
-          memo.set(callback, result);
-        }
-      });
+    if (!svg) {
+      return undefined;
     }
 
-    return memo;
-  }, []);
+    const gestureManager = new GestureManager({
+      gestures: [
+        new PanGesture({
+          name: 'pan',
+          threshold: 5,
+          maxPointers: 1,
+        }),
+        new MoveGesture({
+          name: 'move',
+          preventIf: ['pan', 'pinch'], // Prevent move gesture when pan is active
+        }),
+        new PinchGesture({
+          name: 'pinch',
+          threshold: 5,
+          preventIf: ['pan'],
+        }),
+        new TurnWheelGesture({
+          name: 'turnWheel',
+          preventDefault: true, // Prevent default scroll behavior
+          sensitivity: 0.01,
+          initialDelta: 1,
+        }),
+        new TapGesture({
+          name: 'tap',
+          threshold: 10,
+          preventDefault: true,
+          preventIf: ['pan', 'pinch'],
+        }),
+      ],
+    });
 
-  useGesture(
-    {
-      onDrag: (state) => forwardEvent('drag', state),
-      onDragStart: (state) => forwardEvent('dragStart', state),
-      onDragEnd: (state) => forwardEvent('dragEnd', state),
-      onPinch: (state) => forwardEvent('pinch', state),
-      onPinchStart: (state) => forwardEvent('pinchStart', state),
-      onPinchEnd: (state) => forwardEvent('pinchEnd', state),
-      onWheel: (state) => forwardEvent('wheel', state),
-      onWheelStart: (state) => forwardEvent('wheelStart', state),
-      onWheelEnd: (state) => forwardEvent('wheelEnd', state),
-      onMove: (state) => forwardEvent('move', state),
-      onMoveStart: (state) => forwardEvent('moveStart', state),
-      onMoveEnd: (state) => forwardEvent('moveEnd', state),
-      onHover: (state) => forwardEvent('hover', state),
-      onPointerDown: (state) => forwardEvent('pointerDown', state),
-      onPointerEnter: (state) => forwardEvent('pointerEnter', state),
-      onPointerOver: (state) => forwardEvent('pointerOver', state),
-      onPointerMove: (state) => forwardEvent('pointerMove', state),
-      onPointerLeave: (state) => forwardEvent('pointerLeave', state),
-      onPointerOut: (state) => forwardEvent('pointerOut', state),
-      onPointerUp: (state) => forwardEvent('pointerUp', state),
-    },
-    {
-      target: svgRef,
-      eventOptions: {
-        passive: true,
-      },
-      drag: {
-        pointer: {
-          // We can allow customizing the number of pointers
-          buttons: 1,
-          // Disable using `setPointerCapture` when testing, as it doesn't work properly.
-          capture: process.env.NODE_ENV !== 'test',
-        },
-      },
-      pinch: {},
-      wheel: {
-        eventOptions: {
-          passive: false,
-        },
-        preventDefault: true,
-      },
-    },
-  );
+    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel'], svg);
+
+    return () => {
+      // Cleanup gesture manager
+      gestureManager.destroy();
+    };
+  }, [svgRef]);
 
   const addInteractionListener: AddInteractionListener = React.useCallback(
-    (interaction, callback) => {
-      let listeners = listenersRef.current.get(interaction);
+    (interaction, callback, options) => {
+      // Forcefully cast the svgRef to any, it is annoying to fix the types.
+      const svg = svgRef.current as any;
 
-      if (!listeners) {
-        listeners = new Set<ChartInteractionHandler<any, any>>();
-        listeners.add(callback);
-        listenersRef.current.set(interaction, listeners);
-      } else {
-        listeners.add(callback);
-      }
+      svg?.addEventListener(interaction, callback, options);
 
       return {
-        cleanup: () => listeners.delete(callback),
+        cleanup: () => svg?.removeEventListener(interaction, callback),
       };
     },
-    [],
-  );
-
-  const addMultipleInteractionListeners: AddMultipleInteractionListeners = React.useCallback(
-    (interactions, callback) => {
-      const cleanups = interactions.map((interaction) =>
-        // @ts-expect-error Overriding the type because the type of the callback is not inferred
-        addInteractionListener(interaction, callback),
-      );
-      return {
-        cleanup: () => cleanups.forEach((cleanup) => cleanup.cleanup()),
-      };
-    },
-    [addInteractionListener],
+    [svgRef],
   );
 
   React.useEffect(() => {
-    const ref = listenersRef.current;
     const svg = svgRef.current;
 
     // Disable gesture on safari
@@ -142,7 +89,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     svg?.addEventListener('gestureend', preventDefault);
 
     return () => {
-      ref.clear();
       svg?.removeEventListener('gesturestart', preventDefault);
       svg?.removeEventListener('gesturechange', preventDefault);
       svg?.removeEventListener('gestureend', preventDefault);
@@ -152,7 +98,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
   return {
     instance: {
       addInteractionListener,
-      addMultipleInteractionListeners,
     },
   };
 };

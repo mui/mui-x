@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { PointerGestureEventData } from 'gesture-events';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
@@ -86,18 +87,18 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   React.useEffect(() => {
     const update = rafThrottle(() => popperRef.current?.update());
 
-    const positionHandler = instance.addMultipleInteractionListeners(['move', 'drag'], (state) => {
-      if (state.interactionType === 'move' && state.dragging && state.moving) {
-        return;
-      }
-
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: state.event.clientX, y: state.event.clientY };
+      positionRef.current = { x: event.detail.centroid.x, y: event.detail.centroid.y };
       update();
-    });
+    };
+
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
-      positionHandler.cleanup();
+      moveHandler.cleanup();
+      panHandler.cleanup();
       update.clear();
     };
   }, [positionRef, instance]);

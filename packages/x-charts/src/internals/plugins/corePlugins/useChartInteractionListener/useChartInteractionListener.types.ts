@@ -1,91 +1,46 @@
-import { EventTypes, FullGestureState, GestureKey } from '@use-gesture/react';
+import { MoveEvent, PanEvent, PinchEvent, TapEvent, TurnWheelEvent } from 'gesture-events';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
-  | 'drag'
-  | 'dragStart'
-  | 'dragEnd'
+  | 'pan'
+  | 'panStart'
+  | 'panEnd'
   | 'pinch'
   | 'pinchStart'
   | 'pinchEnd'
-  | 'wheel'
-  | 'wheelStart'
-  | 'wheelEnd'
   | 'move'
   | 'moveStart'
   | 'moveEnd'
-  | 'hover'
-  | 'pointerDown'
-  | 'pointerEnter'
-  | 'pointerOver'
-  | 'pointerMove'
-  | 'pointerLeave'
-  | 'pointerOut'
-  | 'pointerUp';
-
-export type ChartInteractionHandler<
-  Memo extends any,
-  Key extends GestureKey,
-  EventType = EventTypes[Key],
-> = (
-  state: Omit<FullGestureState<Key>, 'event' | 'memo'> & {
-    event: EventType;
-    memo: Memo;
-    interactionType: ChartInteraction;
-  },
-) => any | void;
+  | 'turnWheel'
+  | 'tap';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
-  <Memo extends any>(
-    interaction: 'drag' | 'dragStart' | 'dragEnd',
-    callback: ChartInteractionHandler<Memo, 'drag', PointerEvent>,
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'pan' | 'panStart' | 'panEnd',
+    callback: (event: PanEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
-  <Memo extends any>(
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
-    callback: ChartInteractionHandler<Memo, 'pinch', PointerEvent>,
+    callback: (event: PinchEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
-  <Memo extends any>(
-    interaction: 'wheel' | 'wheelStart' | 'wheelEnd',
-    callback: ChartInteractionHandler<Memo, 'wheel', WheelEvent>,
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'turnWheel',
+    callback: (event: TurnWheelEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
-  <Memo extends any>(
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'move' | 'moveStart' | 'moveEnd',
-    callback: ChartInteractionHandler<Memo, 'move', PointerEvent>,
+    callback: (event: MoveEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
-  <Memo extends any>(
-    interaction: 'hover',
-    callback: ChartInteractionHandler<Memo, 'hover', PointerEvent>,
-  ): InteractionListenerResult;
-  <Memo extends any>(
-    interaction:
-      | 'pointerMove'
-      | 'pointerDown'
-      | 'pointerEnter'
-      | 'pointerOver'
-      | 'pointerLeave'
-      | 'pointerOut'
-      | 'pointerUp',
-    callback: ChartInteractionHandler<Memo, 'move', PointerEvent>,
-  ): InteractionListenerResult;
-};
-
-type InteractionMap<T extends ChartInteraction> = T extends 'wheel' | 'wheelStart' | 'wheelEnd'
-  ? WheelEvent
-  : PointerEvent;
-
-export type AddMultipleInteractionListeners = {
-  <
-    Memo extends any = {},
-    T extends ChartInteraction[] = any,
-    K = T,
-    I extends ChartInteraction[] = T,
-    D extends GestureKey = K extends (infer J)[] ? (J extends GestureKey ? J : never) : never,
-    E extends ChartInteraction = I extends (infer J)[] ? J : never,
-  >(
-    interactions: T,
-    callback: ChartInteractionHandler<Memo, D, InteractionMap<E>>,
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'tap',
+    callback: (event: TapEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
 };
 
@@ -104,13 +59,6 @@ export interface UseChartInteractionListenerInstance {
    * @param callback The callback to call when the interaction occurs.
    */
   addInteractionListener: AddInteractionListener;
-  /**
-   * Adds multiple interaction listeners to the SVG element.
-   *
-   * @param interactions The interactions to listen to.
-   * @param callback The callback to call when the interaction occurs.
-   */
-  addMultipleInteractionListeners: AddMultipleInteractionListeners;
 }
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{

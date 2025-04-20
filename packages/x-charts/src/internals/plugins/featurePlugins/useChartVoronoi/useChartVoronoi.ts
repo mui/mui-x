@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
+import { PointerGestureEventData } from 'gesture-events';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
@@ -163,46 +164,51 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
-      if (!state.hovering) {
+    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
+      instance.cleanInteraction?.();
+      instance.clearHighlight?.();
+    });
+
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
+
+      if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        return;
+      }
+
+      if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
+        instance.removeItemInteraction?.();
+        instance.clearHighlight?.();
+        return;
+      }
+
+      const { seriesId, dataIndex } = closestPoint;
+      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setHighlight?.({
+        seriesId,
+        dataIndex,
+      });
+    };
+
+    const tapHandler = instance.addInteractionListener('tap', (event) => {
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
+
+      if (typeof closestPoint !== 'string' && onItemClick) {
+        const { seriesId, dataIndex } = closestPoint;
+        onItemClick(event.detail.srcEvent, { type: 'scatter', seriesId, dataIndex });
       }
     });
 
-    const setInteractionHandler = instance.addMultipleInteractionListeners(
-      ['move', 'drag'],
-      (state) => {
-        const closestPoint = getClosestPoint(state.event);
-
-        if (closestPoint === 'outside-chart') {
-          instance.cleanInteraction?.();
-          instance.clearHighlight?.();
-          return;
-        }
-
-        if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-          instance.removeItemInteraction?.();
-          instance.clearHighlight?.();
-          return;
-        }
-
-        const { seriesId, dataIndex } = closestPoint;
-        instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
-        instance.setHighlight?.({
-          seriesId,
-          dataIndex,
-        });
-
-        if ('tap' in state && state.tap && onItemClick) {
-          onItemClick(state.event, { type: 'scatter', seriesId, dataIndex });
-        }
-      },
-    );
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
-      cleanInteractionHandler.cleanup();
-      setInteractionHandler.cleanup();
+      moveEndHandler.cleanup();
+      moveHandler.cleanup();
+      panHandler.cleanup();
+      tapHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 

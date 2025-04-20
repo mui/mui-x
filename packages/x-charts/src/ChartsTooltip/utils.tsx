@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { PointerGestureEventData } from 'gesture-events';
 import { useChartContext } from '../context/ChartProvider';
 
 type MousePosition = {
@@ -21,24 +22,25 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const outHandler = instance.addInteractionListener('pointerOut', () => {
+    const outHandler = instance.addInteractionListener('moveEnd', () => {
       setMousePosition(null);
     });
 
-    const positionHandler = instance.addMultipleInteractionListeners(
-      ['pointerMove', 'pointerDown'],
-      (state) => {
-        setMousePosition({
-          x: state.event.clientX,
-          y: state.event.clientY,
-          height: state.event.height,
-          pointerType: state.event.pointerType as MousePosition['pointerType'],
-        });
-      },
-    );
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      setMousePosition({
+        x: event.detail.centroid.x,
+        y: event.detail.centroid.y,
+        height: event.detail.srcEvent.height,
+        pointerType: event.detail.srcEvent.pointerType as MousePosition['pointerType'],
+      });
+    };
+
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
-      positionHandler.cleanup();
+      moveHandler.cleanup();
+      panHandler.cleanup();
       outHandler.cleanup();
     };
   }, [instance]);
@@ -54,29 +56,28 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const removePointerHandler = instance.addMultipleInteractionListeners(
-      ['pointerUp', 'pointerLeave'],
-      (state) => {
-        // Only close the tooltip on mobile.
-        if (state.event.pointerType !== 'mouse') {
-          setPointerType(null);
-        }
-      },
-    );
+    const endGestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      if (event.detail.srcEvent.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+    const moveEndHandler = instance.addInteractionListener('moveEnd', endGestureHandler);
+    const panEndHandler = instance.addInteractionListener('panEnd', endGestureHandler);
 
-    const setPointerHandler = instance.addMultipleInteractionListeners(
-      ['pointerEnter', 'pointerDown'],
-      (state) => {
-        setPointerType({
-          height: Math.max(state.event.height, 24),
-          pointerType: state.event.pointerType as PointerType['pointerType'],
-        });
-      },
-    );
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      setPointerType({
+        height: Math.max(event.detail.srcEvent.height, 24),
+        pointerType: event.detail.srcEvent.pointerType as PointerType['pointerType'],
+      });
+    };
+    const moveStartHandler = instance.addInteractionListener('moveStart', gestureHandler);
+    const panStartHandler = instance.addInteractionListener('panStart', gestureHandler);
 
     return () => {
-      removePointerHandler.cleanup();
-      setPointerHandler.cleanup();
+      moveEndHandler.cleanup();
+      panEndHandler.cleanup();
+      moveStartHandler.cleanup();
+      panStartHandler.cleanup();
     };
   }, [instance]);
 

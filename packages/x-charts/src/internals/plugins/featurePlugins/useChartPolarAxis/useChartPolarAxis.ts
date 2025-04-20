@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import { PointerGestureEventData } from 'gesture-events';
 import { ChartPlugin } from '../../models';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
@@ -105,55 +106,51 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const cleanInteractionHandler = instance.addInteractionListener('hover', (state) => {
-      if (!state.hovering) {
-        mousePosition.current.isInChart = false;
-        instance.cleanInteraction?.();
-      }
+    const cleanInteractionHandler = instance.addInteractionListener('moveEnd', () => {
+      mousePosition.current.isInChart = false;
+      instance.cleanInteraction?.();
     });
 
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const target = event.detail.srcEvent;
+      const svgPoint = getSVGPoint(element, target);
+
+      const isPointInside = instance.isPointInside(svgPoint, {
+        targetElement: event.detail.srcEvent.target as SVGElement,
+      });
+      // Test if it's in the drawing area
+      if (!isPointInside) {
+        if (mousePosition.current.isInChart) {
+          instance?.cleanInteraction();
+          mousePosition.current.isInChart = false;
+        }
+        return;
+      }
+
+      // Test if it's in the radar circle
+      const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
+      const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
+
+      if (radiusSquare > maxRadius ** 2) {
+        if (mousePosition.current.isInChart) {
+          instance?.cleanInteraction();
+          mousePosition.current.isInChart = false;
+        }
+        return;
+      }
+
+      mousePosition.current.isInChart = true;
+      instance.setPointerCoordinate?.(svgPoint);
+    };
+
     // Move is mouse, Drag is both mouse and touch.
-    const setInteractionHandler = instance.addMultipleInteractionListeners(
-      ['move', 'drag'],
-      (state) => {
-        const target =
-          'targetTouches' in state.event
-            ? (state.event as any as TouchEvent).targetTouches[0]
-            : state.event;
-        const svgPoint = getSVGPoint(element, target);
-
-        const isPointInside = instance.isPointInside(svgPoint, {
-          targetElement: state.event.target as SVGElement,
-        });
-        // Test if it's in the drawing area
-        if (!isPointInside) {
-          if (mousePosition.current.isInChart) {
-            instance?.cleanInteraction();
-            mousePosition.current.isInChart = false;
-          }
-          return;
-        }
-
-        // Test if it's in the radar circle
-        const radiusSquare = (center.cx - svgPoint.x) ** 2 + (center.cy - svgPoint.y) ** 2;
-        const maxRadius = radiusAxisWithScale[usedRadiusAxisId].scale.range()[1];
-
-        if (radiusSquare > maxRadius ** 2) {
-          if (mousePosition.current.isInChart) {
-            instance?.cleanInteraction();
-            mousePosition.current.isInChart = false;
-          }
-          return;
-        }
-
-        mousePosition.current.isInChart = true;
-        instance.setPointerCoordinate?.(svgPoint);
-      },
-    );
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
       cleanInteractionHandler.cleanup();
-      setInteractionHandler.cleanup();
+      moveHandler.cleanup();
+      panHandler.cleanup();
     };
   }, [
     svgRef,
