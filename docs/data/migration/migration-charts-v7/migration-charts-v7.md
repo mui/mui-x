@@ -1,4 +1,5 @@
 ---
+title: React Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
@@ -18,7 +19,7 @@ With the v8 you can now:
 - Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
 :::success
-This guide is also available in <a href="/static/md/migration-charts-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
 :::
 
 ## Start using the new release
