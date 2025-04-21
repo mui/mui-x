@@ -630,7 +630,7 @@ export const useGridRowSelection = (
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
       const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
 
-      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
+      if (canHaveMultipleSelection && selectedRowsCount > 1 && isMultipleSelectionDisabled) {
         apiRef.current.selectRow(id, true, resetSelection);
       } else {
         const isSelected = apiRef.current.isRowSelected(id);

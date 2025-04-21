@@ -305,6 +305,19 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
+    // Context: https://github.com/mui/mui-x/issues/17441
+    it('should deselect a row withing the range when clicking the row', async () => {
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
+      await user.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+      await user.click(getCell(1, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0, 2]);
+    });
+
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection disableVirtualization />);
       await user.click(getCell(0, 0).querySelector('input')!);
