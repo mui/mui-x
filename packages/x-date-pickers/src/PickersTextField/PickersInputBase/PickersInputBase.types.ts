@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
 import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 export interface PickersInputPropsUsedByField
   extends Pick<
@@ -39,7 +40,7 @@ export interface PickersInputPropsUsedByField
 export interface PickersInputBaseProps
   extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
     PickersInputPropsUsedByField {
-  ownerState?: any;
+  ownerState?: PickerTextFieldOwnerState;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
     disabled?: boolean;
