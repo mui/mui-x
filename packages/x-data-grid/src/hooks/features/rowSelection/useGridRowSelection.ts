@@ -645,7 +645,6 @@ export const useGridRowSelection = (
       const newSelectionState = shouldStaySelected || !isSelected;
 
       apiRef.current.selectRow(id, newSelectionState, resetSelection);
-      return;
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
