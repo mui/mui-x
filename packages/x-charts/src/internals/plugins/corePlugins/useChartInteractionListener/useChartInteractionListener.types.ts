@@ -1,4 +1,11 @@
-import { MoveEvent, PanEvent, PinchEvent, TapEvent, TurnWheelEvent } from '@web-gestures/core';
+import {
+  MoveEvent,
+  PanEvent,
+  PinchEvent,
+  PressEvent,
+  TapEvent,
+  TurnWheelEvent,
+} from '@web-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
@@ -11,6 +18,8 @@ export type ChartInteraction =
   | 'move'
   | 'moveStart'
   | 'moveEnd'
+  | 'quickPress'
+  | 'quickPressEnd'
   | 'turnWheel'
   | 'tap';
 
@@ -40,6 +49,11 @@ export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'tap',
     callback: (event: TapEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'quickPress' | 'quickPressEnd',
+    callback: (event: PressEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
 };

@@ -95,10 +95,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
     const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const quickPressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
       moveHandler.cleanup();
       panHandler.cleanup();
+      quickPressHandler.cleanup();
       update.clear();
     };
   }, [positionRef, instance]);

@@ -58,13 +58,21 @@ export function usePointerType(): null | PointerType {
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const endGestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
         setPointerType(null);
       }
-    };
-    const moveEndHandler = instance.addInteractionListener('moveEnd', endGestureHandler);
-    const panEndHandler = instance.addInteractionListener('panEnd', endGestureHandler);
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (event.detail.srcEvent.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    });
+    const quickPressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
+        setPointerType(null);
+      }
+    });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       setPointerType({
@@ -74,12 +82,15 @@ export function usePointerType(): null | PointerType {
     };
     const moveStartHandler = instance.addInteractionListener('moveStart', gestureHandler);
     const panStartHandler = instance.addInteractionListener('panStart', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
       moveEndHandler.cleanup();
       panEndHandler.cleanup();
       moveStartHandler.cleanup();
       panStartHandler.cleanup();
+      pressHandler.cleanup();
+      quickPressEndHandler.cleanup();
     };
   }, [instance]);
 

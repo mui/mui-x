@@ -205,11 +205,13 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
     const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
       moveEndHandler.cleanup();
       moveHandler.cleanup();
       panHandler.cleanup();
+      pressHandler.cleanup();
       tapHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);

@@ -5,6 +5,7 @@ import {
   MoveGesture,
   PanGesture,
   PinchGesture,
+  PressGesture,
   TapGesture,
   TurnWheelGesture,
 } from '@web-gestures/core';
@@ -50,14 +51,19 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         }),
         new TapGesture({
           name: 'tap',
-          threshold: 10,
+          maxDistance: 10,
           preventDefault: true,
           preventIf: ['pan', 'pinch'],
+        }),
+        new PressGesture({
+          name: 'quickPress',
+          duration: 50,
+          maxDistance: 10,
         }),
       ],
     });
 
-    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel'], svg);
+    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'quickPress'], svg);
 
     return () => {
       // Cleanup gesture manager

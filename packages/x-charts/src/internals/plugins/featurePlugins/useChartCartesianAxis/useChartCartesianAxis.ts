@@ -96,10 +96,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
     const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
       moveEndHandler.cleanup();
       moveHandler.cleanup();
+      pressHandler.cleanup();
       panHandler.cleanup();
     };
   }, [
