@@ -768,40 +768,35 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const input = getTextbox();
         await view.selectSectionAsync('month');
 
-        // Rename the variable to avoid eslint error.
-        // For some reason, these tests complain that a change was not inside an act() even though
-        // fireEvent should be wrapped in an act() already.
-        const event = fireEvent;
-
         // Start date
-        await act(() => event.change(input, { target: { value: '/15/2022 – 06/15/2023' } }));
+        fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(
           adapter.addYears(adapter.date(), 1),
         );
 
-        await act(() => event.keyDown(input, { key: 'ArrowRight' }));
-        await act(() => event.change(input, { target: { value: 'MM//2022 – 06/15/2023' } }));
+        await view.user.keyboard('{ArrowRight}');
+        fireEvent.change(input, { target: { value: 'MM//2022 – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
 
-        await act(() => event.keyDown(input, { key: 'ArrowRight' }));
-        await act(() => event.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } }));
+        await view.user.keyboard('{ArrowRight}');
+        fireEvent.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
 
         // End date
-        await act(() => event.keyDown(input, { key: 'ArrowRight' }));
-        await act(() => event.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } }));
+        await view.user.keyboard('{ArrowRight}');
+        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } });
         expect(onChangeV6.callCount).to.equal(2);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
 
-        await act(() => event.keyDown(input, { key: 'ArrowRight' }));
-        await act(() => event.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } }));
+        await view.user.keyboard('{ArrowRight}');
+        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });
         expect(onChangeV6.callCount).to.equal(2);
 
-        await act(() => event.keyDown(input, { key: 'ArrowRight' }));
-        await act(() => event.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } }));
+        await view.user.keyboard('{ArrowRight}');
+        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } });
         expect(onChangeV6.callCount).to.equal(2);
       });
 
