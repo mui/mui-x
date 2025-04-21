@@ -8,6 +8,7 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
@@ -28,6 +29,10 @@ export const useZoomOnWheel = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const isChangingRef = React.useRef(false);
+  const isChangingTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startedOutsideRef = React.useRef(false);
+  const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
@@ -36,41 +41,79 @@ export const useZoomOnWheel = (
       return () => {};
     }
 
-    const zoomOnWheelHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
-      'turnWheel',
-      (event) => {
-        const point = getSVGPoint(element, event.detail.srcEvent);
+    const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+      const point = getSVGPoint(element, event.detail.srcEvent);
 
-        if (!instance.isPointInside(point)) {
-          return;
+      // This prevents a zoom event from being triggered when the mouse is outside the chart area.
+      // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
+      // scrolling, then the zoom event is triggered.
+      if (!instance.isPointInside(point) || startedOutsideRef.current) {
+        startedOutsideRef.current = true;
+        if (startedOutsideTimeoutRef.current) {
+          clearTimeout(startedOutsideTimeoutRef.current);
+        }
+        startedOutsideTimeoutRef.current = setTimeout(() => {
+          startedOutsideRef.current = false;
+          startedOutsideTimeoutRef.current = null;
+        }, 100);
+        return;
+      }
+
+      const zoomData = store.getSnapshot().zoom.zoomData;
+
+      const newZoomData = zoomData.map((zoom) => {
+        const option = optionsLookup[zoom.axisId];
+        if (!option) {
+          return zoom;
+        }
+        const centerRatio =
+          option.axisDirection === 'x'
+            ? getHorizontalCenterRatio(point, drawingArea)
+            : getVerticalCenterRatio(point, drawingArea);
+
+        const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
+        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+
+        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
+          return zoom;
         }
 
-        const newZoomData = store.getSnapshot().zoom.zoomData.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-          const centerRatio =
-            option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+      });
 
-          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
-          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+      // This handles preventing the default behavior of the wheel event
+      // when the zoom data is changing.
+      const isEqual = isDeepEqual(zoomData, newZoomData);
+      if (!isEqual || isChangingTimeoutRef.current) {
+        isChangingRef.current = true;
+        if (isChangingTimeoutRef.current) {
+          clearTimeout(isChangingTimeoutRef.current);
+        }
+        isChangingTimeoutRef.current = setTimeout(() => {
+          isChangingRef.current = false;
+          isChangingTimeoutRef.current = null;
+        }, 100);
+      }
 
-          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
-          }
+      if (isChangingRef.current) {
+        event.detail.srcEvent.preventDefault();
+      }
 
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-        });
-
-        setZoomDataCallback(newZoomData);
-      },
-    );
+      setZoomDataCallback(newZoomData);
+    });
 
     return () => {
       zoomOnWheelHandler.cleanup();
+      if (isChangingTimeoutRef.current) {
+        clearTimeout(isChangingTimeoutRef.current);
+        isChangingTimeoutRef.current = null;
+      }
+      if (startedOutsideTimeoutRef.current) {
+        clearTimeout(startedOutsideTimeoutRef.current);
+        startedOutsideTimeoutRef.current = null;
+      }
+      isChangingRef.current = false;
+      startedOutsideRef.current = false;
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
 };
