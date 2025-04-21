@@ -82,6 +82,13 @@ export interface ZoomOverviewOptions {
    * If `true`, the overview will be shown.
    */
   enabled?: boolean;
+  /**
+   * The size of the overview.
+   * This is the height of the overview for the x-axis and the width of the overview for the y-axis.
+   *
+   * @default 30
+   */
+  size: number;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

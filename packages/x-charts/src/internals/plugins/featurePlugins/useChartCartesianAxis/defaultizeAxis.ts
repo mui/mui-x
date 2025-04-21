@@ -46,10 +46,11 @@ export function defaultizeXAxis(
     if (position !== 'none') {
       offsets[position] += sharedConfig.height;
 
-      const hasOverview = axisConfig?.zoom?.overview?.enabled;
+      const overview = typeof axisConfig.zoom === 'object' ? axisConfig?.zoom?.overview : undefined;
+      const hasOverview = overview?.enabled;
 
       if (hasOverview) {
-        offsets[position] += axisConfig?.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
+        offsets[position] += overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
       }
     }
 
@@ -104,10 +105,11 @@ export function defaultizeYAxis(
     if (position !== 'none') {
       offsets[position] += sharedConfig.width;
 
-      const hasOverview = axisConfig?.zoom?.overview?.enabled;
+      const overview = typeof axisConfig.zoom === 'object' ? axisConfig?.zoom?.overview : undefined;
+      const hasOverview = overview?.enabled;
 
       if (hasOverview) {
-        offsets[position] += axisConfig?.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
+        offsets[position] += overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
       }
     }
 
