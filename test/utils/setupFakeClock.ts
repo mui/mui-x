@@ -23,6 +23,7 @@ export function setupFakeClock(shouldAdvanceTime = true) {
     // We need to let time advance to use `useDemoData`, but on the pickers
     // test it makes the tests flaky
     shouldAdvanceTime,
+    shouldClearNativeTimers: true,
   });
 
   return restoreFakeClock;
