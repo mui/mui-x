@@ -199,7 +199,7 @@ PickersOutlinedInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([
