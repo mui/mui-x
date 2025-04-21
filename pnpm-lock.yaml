@@ -607,9 +607,6 @@ importers:
       react-hook-form:
         specifier: ^7.55.0
         version: 7.55.0(react@19.0.0)
-      react-is:
-        specifier: ^19.0.0
-        version: 19.1.0
       react-router:
         specifier: ^7.5.0
         version: 7.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
