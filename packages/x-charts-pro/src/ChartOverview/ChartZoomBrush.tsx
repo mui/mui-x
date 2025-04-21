@@ -5,6 +5,7 @@ import {
   DefaultizedZoomOptions,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
+  useChartContext,
   useDrawingArea,
   useSelector,
   useStore,
@@ -105,6 +106,7 @@ function ChartZoomBrushRange({
   axisDirection: 'x' | 'y';
   zoomData: ZoomData;
 }) {
+  const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
@@ -122,44 +124,16 @@ function ChartZoomBrushRange({
 
     // TODO: Do we want to raf this?
     const onPointerMove = (event: PointerEvent) => {
-      store.update((state) => {
-        const { height, width } = selectorChartDrawingArea(state);
-        const drawingAreaSize = axisDirection === 'x' ? width : height;
+      const { height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const drawingAreaSize = axisDirection === 'x' ? width : height;
 
-        const zoom = selectorChartAxisZoomData(state, axisId);
+      const current = axisDirection === 'x' ? event.clientX : event.clientY;
+      const delta = current - prev;
+      prev = current;
 
-        if (!zoom) {
-          return state;
-        }
+      const deltaZoom = delta / drawingAreaSize;
 
-        const zoomSpan = zoom.end - zoom.start;
-
-        const current = axisDirection === 'x' ? event.clientX : event.clientY;
-        const delta = current - prev;
-        prev = current;
-
-        const deltaZoom = delta / drawingAreaSize;
-
-        const newState = {
-          ...state,
-          zoom: {
-            ...state.zoom,
-            zoomData: state.zoom.zoomData.map((data) => {
-              if (data.axisId === axisId) {
-                return {
-                  ...data,
-                  start: Math.max(0, Math.min(100 - zoomSpan, zoom.start + deltaZoom * 100)),
-                  end: Math.min(100, Math.max(zoomSpan, zoom.end + deltaZoom * 100)),
-                };
-              }
-
-              return data;
-            }),
-          },
-        };
-
-        return newState;
-      });
+      instance.moveZoomRange(axisId, deltaZoom * 100);
     };
 
     const onPointerUp = () => {
@@ -182,7 +156,7 @@ function ChartZoomBrushRange({
     return () => {
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [axisDirection, axisId, store]);
+  }, [axisDirection, axisId, instance, store]);
 
   const onResizeStart = (delta: number) => {
     store.update((state) => {

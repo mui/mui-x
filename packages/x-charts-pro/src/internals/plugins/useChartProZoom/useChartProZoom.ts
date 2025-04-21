@@ -154,6 +154,98 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setZoomStart = React.useCallback(
+    (axisId: AxisId, value: number) => {
+      setZoomDataCallback((prevZoomData) => {
+        return prevZoomData.map((zoom) => {
+          if (zoom.axisId !== axisId) {
+            return zoom;
+          }
+
+          const options = optionsLookup[axisId];
+
+          if (!options) {
+            return zoom;
+          }
+
+          const start = Math.max(zoom.start + value, options.minStart);
+          const span = zoom.end - start;
+
+          if (span < options.minSpan || span > options.maxSpan) {
+            return zoom;
+          }
+
+          return { ...zoom, start };
+        });
+      });
+    },
+    [optionsLookup, setZoomDataCallback],
+  );
+
+  const setZoomEnd = React.useCallback(
+    (axisId: AxisId, value: number) => {
+      setZoomDataCallback((prevZoomData) => {
+        return prevZoomData.map((zoom) => {
+          if (zoom.axisId !== axisId) {
+            return zoom;
+          }
+
+          const options = optionsLookup[axisId];
+
+          if (!options) {
+            return zoom;
+          }
+
+          const end = Math.min(zoom.end + value, options.maxEnd);
+          const span = end - zoom.start;
+
+          if (span < options.minSpan || span > options.maxSpan) {
+            return zoom;
+          }
+
+          return { ...zoom, end };
+        });
+      });
+    },
+    [optionsLookup, setZoomDataCallback],
+  );
+
+  const moveZoomRange = React.useCallback(
+    (axisId: AxisId, by: number) => {
+      // FIXME: Since `setZoomDataCallback` is throttled, move zoom range will be out of sync with the mouse pointer.
+      // IMO, we should raf throttle the interaction, not the store update.
+      setZoomDataCallback((prevZoomData) => {
+        return prevZoomData.map((zoom) => {
+          if (zoom.axisId !== axisId) {
+            return zoom;
+          }
+
+          const options = optionsLookup[axisId];
+
+          if (!options) {
+            return zoom;
+          }
+
+          let start: number = zoom.start;
+          let end: number = zoom.end;
+
+          if (by > 0) {
+            const span = end - start;
+            end = Math.min(end + by, options.maxEnd);
+            start = end - span;
+          } else {
+            const span = end - start;
+            start = Math.max(start + by, options.minStart);
+            end = start + span;
+          }
+
+          return { ...zoom, start, end };
+        });
+      });
+    },
+    [optionsLookup, setZoomDataCallback],
+  );
+
   React.useEffect(() => {
     return () => {
       removeIsInteracting.clear();
@@ -457,6 +549,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setZoomStart,
+      setZoomEnd,
+      moveZoomRange,
     },
   };
 };
