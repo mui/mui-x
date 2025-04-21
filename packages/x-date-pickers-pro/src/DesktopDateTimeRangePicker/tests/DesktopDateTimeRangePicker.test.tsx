@@ -72,22 +72,26 @@ describe('<DesktopDateTimeRangePicker />', () => {
       expectFieldValueV7(sectionsContainer, '04/11/2022 02:15 PM – MM/DD/YYYY hh:mm aa');
     });
 
-    it('should cycle focused views among the visible step after selection', () => {
-      render(<DesktopDateTimeRangePicker />);
+    it('should cycle focused views among the visible step after selection', async () => {
+      const { user } = render(<DesktopDateTimeRangePicker />);
 
-      openPicker({ type: 'date-time-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-time-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       const day = screen.getByRole('gridcell', { name: '10' });
       expect(day).toHaveFocus();
-      fireEvent.click(day);
+      await user.click(day);
 
       const hours = screen.getByRole('option', { name: '12 hours' });
       expect(hours).toHaveFocus();
-      fireEvent.click(hours);
+      await user.click(hours);
 
       const minutes = screen.getByRole('option', { name: '0 minutes' });
       expect(minutes).toHaveFocus();
-      fireEvent.click(minutes);
+      await user.click(minutes);
 
       const meridiem = screen.getByRole('option', { name: 'AM' });
       expect(meridiem).toHaveFocus();
