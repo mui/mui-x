@@ -233,7 +233,7 @@ async function main() {
 
         await sleep(4000);
 
-        await screenshotPrintDialogPreview(screenshotPath);
+        await screenshotPrintDialogPreview(screenshotPath, { x: 70, y: 95, width: 800 });
       });
 
       it('should take a screenshot of the charts print preview', async function test() {
@@ -255,7 +255,7 @@ async function main() {
 
         await sleep(4000);
 
-        await screenshotPrintDialogPreview(screenshotPath, { width: 490 });
+        await screenshotPrintDialogPreview(screenshotPath, { width: 490, height: 200 });
       });
     });
 
@@ -326,11 +326,21 @@ function sleep(timeoutMS: number | undefined) {
 
 function screenshotPrintDialogPreview(
   screenshotPath: string,
-  { width = 460, height = 400 }: { width?: number; height?: number } = { width: 460, height: 400 },
+  {
+    x = 94,
+    y = 107,
+    width = 460,
+    height = 400,
+  }: { x?: number; y?: number; width?: number; height?: number } = {
+    x: 94,
+    y: 107,
+    width: 460,
+    height: 400,
+  },
 ) {
   return new Promise<void>((resolve, reject) => {
     // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-    const args = `-y -f x11grab -framerate 1 -video_size ${width}x${height} -i :99.0+94,107 -vframes 1 ${screenshotPath}`;
+    const args = `-y -f x11grab -framerate 1 -video_size ${width}x${height} -i :99.0+${x},${y} -vframes 1 ${screenshotPath}`;
     const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
 
     ffmpeg.on('close', (code) => {
