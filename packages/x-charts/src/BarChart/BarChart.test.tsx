@@ -51,6 +51,20 @@ describe('<BarChart />', () => {
     expect(screen.getByText('No data to display')).toBeVisible();
   });
 
+  it('should render "No data to display" when series are empty and axes are not empty arrays', () => {
+    render(
+      <BarChart
+        series={[]}
+        width={100}
+        height={100}
+        xAxis={[{ scaleType: 'band', data: ['A'] }]}
+        yAxis={[]}
+      />,
+    );
+
+    expect(screen.getByText('No data to display')).toBeVisible();
+  });
+
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
     <div style={{ width: 400, height: 400 }}>{children}</div>
   );

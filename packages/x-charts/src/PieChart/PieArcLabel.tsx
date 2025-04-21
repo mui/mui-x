@@ -18,6 +18,11 @@ export interface PieArcLabelClasses {
   faded: string;
   /** Styles applied to the root element when animation is not skipped. */
   animate: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${pieArcLabelClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
@@ -40,6 +45,7 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
   'highlighted',
   'faded',
   'animate',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
@@ -60,7 +66,6 @@ const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
 const PieArcLabelRoot = styled('text', {
   name: 'MuiPieArcLabel',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',

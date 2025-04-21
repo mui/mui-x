@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "skipLibCheck": true,
-    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "mocha", "node"]
+    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "mocha", "node", "vite/client"]
   },
   "include": ["src/**/*"]
 }

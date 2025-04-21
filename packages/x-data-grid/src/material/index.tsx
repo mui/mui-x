@@ -13,7 +13,7 @@ import MUIInputBase, { InputBaseProps as MUIInputBaseProps } from '@mui/material
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
-import MUIListItemText from '@mui/material/ListItemText';
+import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText';
 import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
@@ -34,7 +34,6 @@ import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -75,19 +74,23 @@ export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)({
+const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
-    marginRight: '-7px',
+    marginRight: theme.spacing(-0.75),
   },
-});
+}));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   margin: 0,
+  overflow: 'hidden',
   [`& .${formControlLabelClasses.label}`]: {
     fontSize: theme.typography.pxToRem(14),
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   variants: [
     {
@@ -111,6 +114,14 @@ const Checkbox = styled(MUICheckbox, {
     },
   ],
 }));
+
+const ListItemText = styled(MUIListItemText)({
+  [`& .${listItemTextClasses.primary}`]: {
+    overflowX: 'clip',
+    textOverflow: 'ellipsis',
+    maxWidth: '300px',
+  },
+});
 
 const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
@@ -294,6 +305,11 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   return <MUIButton {...rest} {...material} ref={ref} />;
 });
 
+const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
+  const { material, ...rest } = props;
+  return <MUIChip {...rest} {...material} ref={ref} />;
+});
+
 const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
   const { material, ...rest } = props;
   return <MUIIconButton {...rest} {...material} ref={ref} />;
@@ -310,8 +326,19 @@ const BaseSkeleton = forwardRef<any, P['baseSkeleton']>(function BaseSkeleton(pr
 });
 
 const BaseSwitch = forwardRef<any, P['baseSwitch']>(function BaseSwitch(props, ref) {
-  const { material, ...rest } = props;
-  return <MUISwitch {...rest} {...material} ref={ref} />;
+  const { material, label, className, ...rest } = props;
+
+  if (!label) {
+    return <MUISwitch {...rest} {...material} className={className} ref={ref} />;
+  }
+
+  return (
+    <FormControlLabel
+      className={className}
+      control={<MUISwitch {...rest} {...material} ref={ref} />}
+      label={label}
+    />
+  );
 });
 
 const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(props, ref) {
@@ -320,13 +347,13 @@ const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(pr
 });
 
 function BaseMenuItem(props: P['baseMenuItem']) {
-  const { inert, iconStart, iconEnd, children, ...other } = props;
+  const { inert, iconStart, iconEnd, children, material, ...other } = props;
   if (inert) {
     (other as any).disableRipple = true;
   }
-  return React.createElement(MUIMenuItem, other, [
+  return React.createElement(MUIMenuItem, { ...other, ...material }, [
     iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
-    <MUIListItemText key="2">{children}</MUIListItemText>,
+    <ListItemText key="2">{children}</ListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
 }
@@ -599,7 +626,6 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelDeleteIcon: GridCloseIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
-  columnUnsortedIcon: GridColumnUnsortedIcon,
   columnSortedAscendingIcon: GridArrowUpwardIcon,
   columnSortedDescendingIcon: GridArrowDownwardIcon,
   columnResizeIcon: GridSeparatorIcon,
@@ -635,6 +661,7 @@ const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
   baseBadge: BaseBadge,
   baseCheckbox: BaseCheckbox,
+  baseChip: BaseChip,
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,

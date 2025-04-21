@@ -8,7 +8,7 @@ import { chartsTooltipClasses } from './chartsTooltipClasses';
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
-  overridesResolver: (props, styles) => styles.paper,
+  overridesResolver: (props, styles) => styles.paper, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
@@ -22,9 +22,13 @@ export const ChartsTooltipPaper = styled('div', {
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
-  overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
+  [`& .${chartsTooltipClasses.markContainer}`]: {
+    display: 'inline-block',
+    width: `calc(20px + ${theme.spacing(1.5)})`,
+    verticalAlign: 'middle',
+  },
   '& caption': {
     borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
     padding: theme.spacing(0.5, 1.5),
@@ -42,7 +46,6 @@ export const ChartsTooltipTable = styled('table', {
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
-  overridesResolver: (props, styles) => styles.row,
 })(({ theme }) => ({
   'tr:first-of-type& td': {
     paddingTop: theme.spacing(0.5),
@@ -68,12 +71,6 @@ export const ChartsTooltipCell = styled(Typography, {
   },
   [`&.${chartsTooltipClasses.labelCell}`]: {
     fontWeight: theme.typography.fontWeightRegular,
-  },
-
-  [`& .${chartsTooltipClasses.markContainer}`]: {
-    display: 'inline-block',
-    width: `calc(20px + ${theme.spacing(1.5)})`,
-    verticalAlign: 'middle',
   },
   [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {
     color: (theme.vars || theme).palette.text.primary,

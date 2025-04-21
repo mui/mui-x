@@ -41,7 +41,7 @@ export interface RadarDataProviderProps
    * The series to display in the bar chart.
    * An array of [[RadarSeriesType]] objects.
    */
-  series: MakeOptional<RadarSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<RadarSeriesType, 'type'>>[];
   /**
    * The configuration of the radar scales.
    */
@@ -230,7 +230,7 @@ RadarDataProvider.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,

@@ -212,14 +212,14 @@ describe('<DateField /> - Editing Keyboard', () => {
   });
 
   describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
-    it('should clear the selected section when only this section is completed', () => {
+    it('should clear the selected section when only this section is completed', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       view.pressKey(0, 'j');
@@ -237,7 +237,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       fireEvent.change(input, {
@@ -258,7 +258,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should clear all the sections when all sections are selected and all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and all sections are completed', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -266,7 +266,7 @@ describe('<DateField /> - Editing Keyboard', () => {
         defaultValue: adapter.date(),
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -288,7 +288,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -297,14 +297,14 @@ describe('<DateField /> - Editing Keyboard', () => {
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
-    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       view.pressKey(0, 'j');
@@ -329,7 +329,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       fireEvent.change(input, {
@@ -344,19 +344,19 @@ describe('<DateField /> - Editing Keyboard', () => {
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
-    it('should not keep query after typing again on a cleared section', () => {
+    it('should not keep query after typing again on a cleared section', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.year,
       });
 
-      view.selectSection('year');
+      await view.selectSectionAsync('year');
 
       view.pressKey(0, '2');
       expectFieldValueV7(view.getSectionsContainer(), '0002');
 
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expectFieldValueV7(view.getSectionsContainer(), 'YYYY');
 
       view.pressKey(0, '2');
@@ -371,12 +371,12 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('year');
+      await view.selectSectionAsync('year');
 
       fireEvent.change(input, { target: { value: '2' } }); // press "2"
       expectFieldValueV6(input, '0002');
 
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expectFieldValueV6(input, 'YYYY');
 
       fireEvent.change(input, { target: { value: '2' } }); // press "2"
@@ -393,7 +393,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+    it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -403,7 +403,7 @@ describe('<DateField /> - Editing Keyboard', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -427,7 +427,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -436,7 +436,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first section', () => {
+    it('should call `onChange` when clearing the first section', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -447,15 +447,14 @@ describe('<DateField /> - Editing Keyboard', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+      await view.user.keyboard('[ArrowRight][Delete]');
 
-      fireUserEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
@@ -470,20 +469,17 @@ describe('<DateField /> - Editing Keyboard', () => {
         onChange: onChangeV6,
       });
 
-      const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV6.callCount).to.equal(1);
       expect(onChangeV6.lastCall.firstArg).to.equal(null);
 
-      fireUserEvent.keyPress(input, { key: 'ArrowRight' });
-
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[ArrowRight][Delete]');
       expect(onChangeV6.callCount).to.equal(1);
     });
 
-    it('should not call `onChange` if the section is already empty', () => {
+    it('should not call `onChange` if the section is already empty', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -494,12 +490,12 @@ describe('<DateField /> - Editing Keyboard', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV7.callCount).to.equal(1);
 
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
@@ -514,13 +510,12 @@ describe('<DateField /> - Editing Keyboard', () => {
         onChange: onChangeV6,
       });
 
-      const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV6.callCount).to.equal(1);
 
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expect(onChangeV6.callCount).to.equal(1);
     });
   });

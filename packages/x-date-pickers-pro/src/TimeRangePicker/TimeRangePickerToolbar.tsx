@@ -62,7 +62,6 @@ export interface ExportedTimeRangePickerToolbarProps
 const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: '12px 0px 8px 0px',
@@ -79,7 +78,6 @@ const TimeRangePickerToolbarContainer = styled('div', {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Container',
   shouldForwardProp: (prop) => prop !== 'pickerVariant',
-  overridesResolver: (_, styles) => styles.container,
 })<{ pickerVariant: PickerVariant }>({
   display: 'flex',
   flex: 1,
@@ -104,7 +102,6 @@ const TimeRangePickerToolbarContainer = styled('div', {
 const TimeRangePickerToolbarTimeContainer = styled('div', {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'TimeContainer',
-  overridesResolver: (_, styles) => styles.timeContainer,
 })({
   display: 'flex',
   justifyContent: 'space-around',
@@ -114,7 +111,6 @@ const TimeRangePickerToolbarTimeContainer = styled('div', {
 const TimeRangePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })({
   cursor: 'default',
 });

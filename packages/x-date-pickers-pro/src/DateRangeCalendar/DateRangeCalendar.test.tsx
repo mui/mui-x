@@ -22,7 +22,6 @@ import {
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { testSkipIf } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -37,14 +36,6 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 
 describe('<DateRangeCalendar />', () => {
   const { render } = createPickerRenderer();
-
-  beforeEach(() => {
-    vi.setSystemTime(new Date(2018, 0, 10));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
 
   describeConformance(<DateRangeCalendar />, () => ({
     classes,
@@ -69,7 +60,6 @@ describe('<DateRangeCalendar />', () => {
       await user.click(getPickerDay('1', 'January 2019'));
 
       const [visibleButton] = screen.getAllByRole('button', {
-        hidden: false,
         name: 'Next month',
       });
       await user.click(visibleButton);
@@ -487,7 +477,9 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      await expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+      await waitFor(() => {
+        expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+      });
     });
 
     it('should go to the month of the start date when changing both date from the outside', async () => {
@@ -563,6 +555,7 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
+          referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
             day: React.memo(RenderCount),
           }}
@@ -579,6 +572,7 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
+          referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
             day: React.memo(RenderCount),
           }}

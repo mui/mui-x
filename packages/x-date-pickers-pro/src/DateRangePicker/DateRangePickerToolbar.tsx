@@ -46,7 +46,6 @@ export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbar
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickerToolbarOwnerState;
 }>({});
@@ -54,7 +53,6 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
 const DateRangePickerToolbarContainer = styled('div', {
   name: 'MuiDateRangePickerToolbar',
   slot: 'Container',
-  overridesResolver: (_, styles) => styles.container,
 })({
   display: 'flex',
 });

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -14,13 +15,10 @@ import {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
 import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
-
-const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
@@ -36,7 +34,7 @@ export const useDesktopRangePicker = <
   steps,
   ...pickerParams
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
 
   const { slots, slotProps, inputRef, localeText } = props;
 
@@ -61,6 +59,7 @@ export const useDesktopRangePicker = <
     viewContainerRole,
     localeText,
     getStepNavigation,
+    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
   });
 
   const Field = slots.field;
@@ -69,6 +68,11 @@ export const useDesktopRangePicker = <
     elementType: Field,
     externalSlotProps: slotProps?.field,
     ownerState,
+    additionalProps: {
+      'data-active-range-position': providerProps.contextValue.open
+        ? rangePositionResponse.rangePosition
+        : undefined,
+    },
   });
 
   const Layout = slots?.layout ?? PickersLayout;

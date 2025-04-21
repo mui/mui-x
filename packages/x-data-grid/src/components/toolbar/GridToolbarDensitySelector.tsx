@@ -24,6 +24,9 @@ interface GridToolbarDensitySelectorProps {
   };
 }
 
+/**
+ * @deprecated See {@link https://mui.com/x/react-data-grid/accessibility/#set-the-density-programmatically Accessibility—Set the density programmatically} for an example of adding a density selector to the toolbar. This component will be removed in a future major release.
+ */
 const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDensitySelectorProps>(
   function GridToolbarDensitySelector(props, ref) {
     const { slotProps = {} } = props;

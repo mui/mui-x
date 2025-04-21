@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
 
 describe('<DateCalendar />', () => {
-  const { render } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
+  const { render } = createPickerRenderer();
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
@@ -127,27 +127,38 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
+
+    beforeEach(() => {
+      timer = useFakeTimers({ now: new Date(2019, 0, 2), toFake: ['Date'] });
+    });
+
+    afterEach(() => {
+      timer?.restore();
+    });
+
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
-      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
+      const { user } = render(
+        <DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />,
+      );
 
-      fireEvent.click(
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
-      fireEvent.click(screen.getByRole('radio', { name: '2020' }));
+      await user.click(screen.getByRole('radio', { name: '2020' }));
 
-      if (process.env.VITEST === 'true') {
-        await screen.findByRole('gridcell', { name: '1' });
-      }
+      await screen.findByRole('gridcell', { name: '1' });
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
-      fireEvent.click(
+      await user.click(screen.getByRole('gridcell', { name: '1' }));
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
       // select the current year with a date in the past to trigger "findClosestEnabledDate"
-      fireEvent.click(screen.getByRole('radio', { name: '2019' }));
+      await user.click(screen.getByRole('radio', { name: '2019' }));
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
     });
@@ -608,6 +619,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
+          referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
             day: React.memo(RenderCount),
           }}

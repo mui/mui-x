@@ -14,7 +14,7 @@ import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
@@ -143,6 +143,9 @@ const useAggregatedData = (): {
 
       return baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
+          if (currentSeriesData[dataIndex] == null) {
+            return null;
+          }
           const values = stackedData[dataIndex];
           const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
@@ -213,7 +216,6 @@ const useAggregatedData = (): {
 const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',

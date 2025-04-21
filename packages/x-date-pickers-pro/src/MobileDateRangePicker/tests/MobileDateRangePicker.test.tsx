@@ -7,6 +7,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   openPicker,
+  openPickerAsync,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
@@ -40,29 +41,41 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when focusing the start input (multi input field)', () => {
+    it('should open when focusing the start input (multi input field)', async () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />);
+      const { user } = render(
+        <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
+      );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'multi-input',
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should open when focusing the end input (multi input field)', () => {
+    it('should open when focusing the end input (multi input field)', async () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />);
+      const { user } = render(
+        <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
+      );
 
-      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'end',
+        fieldType: 'multi-input',
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', () => {
+    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -71,7 +84,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -81,7 +94,11 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -102,7 +119,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onChange with updated end date when opening from end input (multi input field)', () => {
+    it('should call onChange with updated end date when opening from end input (multi input field)', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -111,7 +128,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -122,7 +139,11 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'end',
+        fieldType: 'multi-input',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
