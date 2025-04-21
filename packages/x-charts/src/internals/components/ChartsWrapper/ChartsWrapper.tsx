@@ -55,7 +55,6 @@ const getAlign = (direction?: Direction, position?: Position) => {
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsWrapperProps }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),

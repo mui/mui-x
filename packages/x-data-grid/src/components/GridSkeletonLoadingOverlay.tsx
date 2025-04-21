@@ -30,7 +30,6 @@ import { attachPinnedStyle } from '../internals/utils';
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SkeletonLoadingOverlay',
-  overridesResolver: (props, styles) => styles.skeletonLoadingOverlay,
 })({
   minWidth: '100%',
   width: 'max-content', // prevents overflow: clip; cutting off the x axis

@@ -13,7 +13,6 @@ interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
 const OutlineRoot = styled('fieldset', {
   name: 'MuiPickersOutlinedInput',
   slot: 'NotchedOutline',
-  overridesResolver: (props, styles) => styles.notchedOutline,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
