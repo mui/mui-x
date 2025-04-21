@@ -37,7 +37,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe.only('<DataGrid /> - Row selection', () => {
+describe('<DataGrid /> - Row selection', () => {
   const { render } = createRenderer();
 
   const defaultData = getBasicGridData(4, 2);

@@ -27,7 +27,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe.only('<DataGridPro /> - Row selection', () => {
+describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
