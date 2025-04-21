@@ -24,8 +24,8 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      // Specifically selecting the button element to avoid the ripple effect triggering act warnings.
-      await user.click(screen.getByLabelText(/switch to year view/i, { selector: 'button' }));
+      // Parent element is used to avoid the ripple effect triggering act warnings.
+      await user.click(screen.getByLabelText(/switch to year view/i).parentElement!);
       expect(handleViewChange.callCount).to.equal(1);
       expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
       expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
