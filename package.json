@@ -129,7 +129,7 @@
     "concurrently": "^9.1.2",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
-    "danger": "^12.3.4",
+    "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "eslint": "^8.57.1",
