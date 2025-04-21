@@ -42,7 +42,6 @@ export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
 const ChartsTooltipRoot = styled(Popper, {
   name: 'MuiChartsTooltip',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
