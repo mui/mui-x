@@ -158,6 +158,11 @@ async function main() {
           });
         }
 
+        if (/^\/docs-charts-.*/.test(route)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
+        }
+
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
           await sleep(100);
         }
