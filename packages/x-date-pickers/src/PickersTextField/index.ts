@@ -1,5 +1,5 @@
 export { PickersTextField } from './PickersTextField';
-export type { PickersTextFieldProps } from './PickersTextField.types';
+export type { PickersTextFieldProps, PickerTextFieldOwnerState } from './PickersTextField.types';
 
 export {
   pickersTextFieldClasses,
