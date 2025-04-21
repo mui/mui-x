@@ -194,6 +194,7 @@
     "webpack-cli": "^6.0.1",
     "yargs": "^17.7.2"
   },
+  "resolutions": {},
   "packageManager": "pnpm@10.8.0",
   "engines": {
     "pnpm": "10.8.0"
