@@ -35,7 +35,6 @@ async function main() {
       // '--hide-scrollbars',
     ],
     headless: false,
-    logger: (name, severity, message) => console.log(`[${name}] [${severity}]: ${message}`),
   });
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
