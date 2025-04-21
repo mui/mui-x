@@ -408,11 +408,11 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      await user.click(input);
+      await user.pointer({ keys: '[MouseLeft>]', target: input });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(2);
+      expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker (multi input field)', async () => {
