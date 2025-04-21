@@ -1,4 +1,4 @@
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
@@ -315,6 +315,7 @@ describe('useAnimate', () => {
   it('stops animation when its ref is removed from the DOM', async () => {
     let calls = 0;
     let lastCall: number | null = null;
+    let callsAfterUnmount: number = NaN;
 
     function applyProps(element: SVGPathElement, props: { width: number }) {
       calls += 1;
@@ -331,7 +332,14 @@ describe('useAnimate', () => {
       return (
         <React.Fragment>
           <svg>{mountPath ? <path ref={ref} /> : null}</svg>
-          <button onClick={() => setMountPath(false)}>Unmount Path</button>
+          <button
+            onClick={() => {
+              callsAfterUnmount = calls;
+              setMountPath(false);
+            }}
+          >
+            Unmount Path
+          </button>
         </React.Fragment>
       );
     }
@@ -343,7 +351,6 @@ describe('useAnimate', () => {
     });
 
     expect(lastCall).to.be.lessThan(1000);
-    const numCallsBeforeUnmount = calls;
 
     await user.click(screen.getByRole('button'));
 
@@ -351,7 +358,7 @@ describe('useAnimate', () => {
     await waitTwoFrames();
 
     // Clicking the button is async, so at most one more call could have happened
-    expect(calls).to.lessThanOrEqual(numCallsBeforeUnmount + 1);
+    expect(calls).to.lessThanOrEqual(callsAfterUnmount + (reactMajor > 18 ? 1 : 2));
   });
 
   it('stops animation when the hook is unmounted', async () => {

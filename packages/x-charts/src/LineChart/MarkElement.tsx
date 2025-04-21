@@ -18,7 +18,6 @@ import { useStore } from '../internals/store/useStore';
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,

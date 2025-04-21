@@ -3,12 +3,13 @@ import {
   DataGridPro,
   GridDataSource,
   GridGetRowsParams,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function ServerSideLazyLoadingViewport() {
-  const { fetchRows, ...props } = useMockServer(
-    { rowLength: 100000 },
+  const { fetchRows, editRow, ...props } = useMockServer(
+    { rowLength: 100000, editable: true },
     { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
 
@@ -30,8 +31,12 @@ function ServerSideLazyLoadingViewport() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params: GridUpdateRowParams) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (

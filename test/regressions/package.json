@@ -1,0 +1,43 @@
+{
+  "name": "@mui-x-internal/test-regressions",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
+    "build": "cross-env TEST_BUILD=true vite build",
+    "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
+    "mocha": "mocha --config .mocharc.js '**/*.test.{js,ts,tsx}'",
+    "server": "serve . -p 5001"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.27.0",
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-charts-vendor": "workspace:*",
+    "@mui/x-data-grid": "workspace:*",
+    "@mui/x-data-grid-generator": "workspace:^",
+    "@mui/x-data-grid-premium": "workspace:^",
+    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-date-pickers-pro": "workspace:*",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-license": "workspace:*",
+    "@mui/x-tree-view": "workspace:*",
+    "@mui/x-tree-view-pro": "workspace:*",
+    "@playwright/test": "^1.51.1",
+    "@types/chai": "^4.3.20",
+    "@types/karma": "^6.3.9",
+    "@types/moment-jalaali": "^0.7.9",
+    "@types/react": "^19.0.10",
+    "@types/react-router": "^5.1.20",
+    "@types/semver": "^7.7.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "chai": "^4.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.5.0",
+    "react-transition-group": "^4.4.5",
+    "tsx": "^4.19.3"
+  }
+}

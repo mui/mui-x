@@ -1,6 +1,6 @@
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
@@ -66,13 +66,10 @@ import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
 
 export const useDataGridComponent = (
-  inputApiRef: RefObject<GridApiCommunity | null> | undefined,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
-  const apiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(
-    inputApiRef,
-    props,
-  );
+  useGridInitialization<GridPrivateApiCommunity>(apiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -131,6 +128,4 @@ export const useDataGridComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridDataSource(apiRef, props);
-
-  return apiRef;
 };
