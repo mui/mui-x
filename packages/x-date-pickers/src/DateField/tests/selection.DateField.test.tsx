@@ -74,7 +74,7 @@ describe('<DateField /> - Selection', () => {
       const input = getTextbox();
 
       await user.tab();
-      input.select();
+      await act(async () => input.select());
 
       await waitFor(() => {
         expectFieldValueV6(input, 'MM/DD/YYYY');
@@ -93,7 +93,7 @@ describe('<DateField /> - Selection', () => {
 
       // Simulate a <Tab> focus interaction on desktop
       await user.tab();
-      input.select();
+      await act(async () => input.select());
 
       await waitFor(() => {
         expectFieldValueV6(input, '- YYYY');

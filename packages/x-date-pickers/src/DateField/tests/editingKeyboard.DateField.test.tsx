@@ -356,7 +356,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       view.pressKey(0, '2');
       expectFieldValueV7(view.getSectionsContainer(), '0002');
 
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expectFieldValueV7(view.getSectionsContainer(), 'YYYY');
 
       view.pressKey(0, '2');
@@ -376,7 +376,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       fireEvent.change(input, { target: { value: '2' } }); // press "2"
       expectFieldValueV6(input, '0002');
 
-      fireUserEvent.keyPress(input, { key: 'Delete' });
+      await view.user.keyboard('[Delete]');
       expectFieldValueV6(input, 'YYYY');
 
       fireEvent.change(input, { target: { value: '2' } }); // press "2"

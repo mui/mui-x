@@ -813,10 +813,10 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         await view.selectSectionAsync('month');
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
         view.unmount();
