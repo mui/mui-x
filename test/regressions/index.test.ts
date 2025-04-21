@@ -159,8 +159,8 @@ async function main() {
         }
 
         if (/^\/docs-charts-.*/.test(route)) {
-          // Wait for two animation frames to ensure the chart is fully rendered.
-          await sleep(30);
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
         }
 
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {

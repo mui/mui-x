@@ -31,7 +31,7 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, isDataGridPivotTest, isChartTest, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, isPrintExportChartTest, path } = props;
 
   return (
     <React.Fragment>
@@ -61,7 +61,7 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={isDataGridTest || isChartTest}>
+      <MockTime shouldAdvanceTime={isDataGridTest || isPrintExportChartTest}>
         <LoadFont
           isDataGridTest={isDataGridTest}
           isDataGridPivotTest={isDataGridPivotTest}
