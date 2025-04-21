@@ -741,8 +741,8 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       '@web-gestures/core':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.0.3
+        version: 0.0.3
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -4580,8 +4580,8 @@ packages:
   '@vitest/utils@3.1.1':
     resolution: {integrity: sha512-1XIjflyaU2k3HMArJ50bwSh3wKWPD6Q47wz/NUSmRV0zNywPc4w79ARjg/i/aNINHwA+mIALhUVqD9/aUvZNgg==}
 
-  '@web-gestures/core@0.0.1':
-    resolution: {integrity: sha512-ENlchXGaaxRQxI4Ku2anhOIOQkMNw3+xIPCAEv87/pEtAHmIoNeFbNF54DLnEzjBWAmJVs/jdlrD4O59NOFIWQ==}
+  '@web-gestures/core@0.0.3':
+    resolution: {integrity: sha512-kxYyZQkC0PdndVff4aeqg7PE/25HR/TeLDPWPOgOdigh+uwii9Uyo9KAJ7E3dmm0vEcGXx3CI6q551OS0nNWaw==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -13783,7 +13783,7 @@ snapshots:
       loupe: 3.1.3
       tinyrainbow: 2.0.0
 
-  '@web-gestures/core@0.0.1': {}
+  '@web-gestures/core@0.0.3': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
