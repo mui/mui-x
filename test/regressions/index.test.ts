@@ -158,6 +158,12 @@ async function main() {
           });
         }
 
+        if (/^\/docs-charts-.*/.test(route)) {
+          // Wait for two animation frames to ensure the chart is fully rendered.
+          await waitForAnimationFrame();
+          await waitForAnimationFrame();
+        }
+
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
           await sleep(100);
         }
@@ -303,4 +309,18 @@ function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
     setTimeout(resolve, timeoutMS);
   });
+}
+
+function waitForAnimationFrame() {
+  let resolve: (_: void) => void;
+
+  const promise = new Promise((res) => {
+    resolve = res;
+  });
+
+  requestAnimationFrame(() => {
+    resolve();
+  });
+
+  return promise;
 }
