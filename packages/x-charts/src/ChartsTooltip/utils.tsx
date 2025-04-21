@@ -22,8 +22,10 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
-      setMousePosition(null);
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        setMousePosition(null);
+      }
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
@@ -57,7 +59,7 @@ export function usePointerType(): null | PointerType {
 
   React.useEffect(() => {
     const endGestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
-      if (event.detail.srcEvent.pointerType !== 'mouse') {
+      if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
         setPointerType(null);
       }
     };

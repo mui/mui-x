@@ -164,9 +164,11 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
-      instance.cleanInteraction?.();
-      instance.clearHighlight?.();
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {

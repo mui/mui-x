@@ -106,9 +106,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const cleanInteractionHandler = instance.addInteractionListener('moveEnd', () => {
-      mousePosition.current.isInChart = false;
-      instance.cleanInteraction?.();
+    const cleanInteractionHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction?.();
+      }
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {

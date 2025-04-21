@@ -75,8 +75,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
-      instance.cleanInteraction?.();
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
