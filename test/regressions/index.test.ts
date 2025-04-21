@@ -236,7 +236,7 @@ async function main() {
         await screenshotPrintDialogPreview(screenshotPath, {
           x: 72,
           y: 99,
-          width: 500,
+          width: 520,
           height: 400,
         });
       });
