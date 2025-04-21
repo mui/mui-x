@@ -88,6 +88,7 @@ function MockTime(
   React.useEffect(() => {
     if (props.shouldRunToFrame && ready) {
       fakeClock?.runToFrame();
+      fakeClock?.runToFrame();
     }
   }, [props.shouldRunToFrame, ready]);
 
