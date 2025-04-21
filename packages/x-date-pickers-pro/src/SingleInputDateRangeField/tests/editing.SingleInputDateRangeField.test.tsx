@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   expectFieldValueV6,
