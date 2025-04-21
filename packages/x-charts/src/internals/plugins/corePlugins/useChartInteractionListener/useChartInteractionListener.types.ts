@@ -1,4 +1,4 @@
-import { MoveEvent, PanEvent, PinchEvent, TapEvent, TurnWheelEvent } from 'gesture-events';
+import { MoveEvent, PanEvent, PinchEvent, TapEvent, TurnWheelEvent } from '@web-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =

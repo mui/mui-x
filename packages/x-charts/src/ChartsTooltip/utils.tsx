@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PointerGestureEventData } from 'gesture-events';
+import { PointerGestureEventData } from '@web-gestures/core';
 import { useChartContext } from '../context/ChartProvider';
 
 type MousePosition = {

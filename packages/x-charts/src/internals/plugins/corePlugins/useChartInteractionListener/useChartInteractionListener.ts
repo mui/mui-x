@@ -7,7 +7,7 @@ import {
   PinchGesture,
   TapGesture,
   TurnWheelGesture,
-} from 'gesture-events';
+} from '@web-gestures/core';
 import { ChartPlugin } from '../../models';
 import {
   UseChartInteractionListenerSignature,

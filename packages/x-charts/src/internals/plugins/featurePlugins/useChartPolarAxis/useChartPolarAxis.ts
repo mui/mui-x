@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from 'gesture-events';
+import { PointerGestureEventData } from '@web-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
