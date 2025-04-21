@@ -233,7 +233,12 @@ async function main() {
 
         await sleep(4000);
 
-        await screenshotPrintDialogPreview(screenshotPath, { x: 70, y: 95, width: 800 });
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 72,
+          y: 99,
+          width: 500,
+          height: 400,
+        });
       });
 
       it('should take a screenshot of the charts print preview', async function test() {
@@ -255,7 +260,12 @@ async function main() {
 
         await sleep(4000);
 
-        await screenshotPrintDialogPreview(screenshotPath, { width: 490, height: 200 });
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 94,
+          y: 107,
+          width: 490,
+          height: 200,
+        });
       });
     });
 
@@ -326,17 +336,7 @@ function sleep(timeoutMS: number | undefined) {
 
 function screenshotPrintDialogPreview(
   screenshotPath: string,
-  {
-    x = 94,
-    y = 107,
-    width = 460,
-    height = 400,
-  }: { x?: number; y?: number; width?: number; height?: number } = {
-    x: 94,
-    y: 107,
-    width: 460,
-    height: 400,
-  },
+  { x, y, width, height }: { x: number; y: number; width: number; height: number },
 ) {
   return new Promise<void>((resolve, reject) => {
     // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
