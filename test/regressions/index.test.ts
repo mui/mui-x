@@ -158,11 +158,6 @@ async function main() {
           });
         }
 
-        if (/^\/docs-charts-.*/.test(route)) {
-          // Run two animation frames to get the chart dimension
-          await sleep(15);
-        }
-
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
           await sleep(100);
         }
