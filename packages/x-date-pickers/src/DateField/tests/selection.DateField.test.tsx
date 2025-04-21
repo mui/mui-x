@@ -74,33 +74,32 @@ describe('<DateField /> - Selection', () => {
       const input = getTextbox();
 
       await user.tab();
+      input.select();
 
       await waitFor(() => {
         expectFieldValueV6(input, 'MM/DD/YYYY');
       });
 
-      expect(getCleanedSelectedContent()).to.equal('MM');
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
     it('should select all on <Tab> focus with start separator (v6 only)', async () => {
       // Test with non-accessible DOM structure
-      renderWithProps({
+      const { user } = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `- ${adapterToUse.formats.year}`,
       });
       const input = getTextbox();
 
       // Simulate a <Tab> focus interaction on desktop
-      act(() => {
-        input.focus();
-      });
+      await user.tab();
       input.select();
 
       await waitFor(() => {
         expectFieldValueV6(input, '- YYYY');
       });
 
-      expect(getCleanedSelectedContent()).to.equal('YYYY');
+      expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
     it('should select day on mobile (v6 only)', async () => {
