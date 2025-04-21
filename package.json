@@ -154,7 +154,7 @@
     "glob-gitignore": "^1.0.15",
     "globby": "^14.1.0",
     "html-webpack-plugin": "^5.6.3",
-    "jsdom": "26.0.0",
+    "jsdom": "26.1.0",
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",
     "jss-rtl": "^0.3.0",
