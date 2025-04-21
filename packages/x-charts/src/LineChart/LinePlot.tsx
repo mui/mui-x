@@ -43,7 +43,6 @@ export interface LinePlotProps
 const LinePlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${lineElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
