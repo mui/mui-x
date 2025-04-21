@@ -195,9 +195,9 @@
     "yargs": "^17.7.2"
   },
   "resolutions": {},
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@10.9.0",
   "engines": {
-    "pnpm": "10.8.0"
+    "pnpm": "10.9.0"
   },
   "pnpm": {
     "patchedDependencies": {
