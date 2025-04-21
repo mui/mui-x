@@ -28,7 +28,7 @@ export default function DetailPanelOneExpandedRow() {
     NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
   >((newIds) => {
     if (newIds.size > 1) {
-      const newSet = new Set();
+      const newSet = new Set<GridRowId>();
       const newIdsArray = Array.from(newIds);
       newSet.add(newIdsArray[newIdsArray.length - 1]);
       setDetailPanelExpandedRowIds(newSet);
