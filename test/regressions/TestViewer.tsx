@@ -61,7 +61,7 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={isDataGridTest || isChartTest}>
+      <MockTime shouldAdvanceTime={isDataGridTest || isChartTest} shouldRunToLast={isChartTest}>
         <LoadFont
           isDataGridTest={isDataGridTest}
           isDataGridPivotTest={isDataGridPivotTest}
@@ -74,7 +74,9 @@ function TestViewer(props: any) {
   );
 }
 
-function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
+function MockTime(
+  props: React.PropsWithChildren<{ shouldAdvanceTime: boolean; shouldRunToLast: boolean }>,
+) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
@@ -82,6 +84,12 @@ function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>
     setReady(true);
     return dispose;
   }, [props.shouldAdvanceTime]);
+
+  React.useEffect(() => {
+    if (props.shouldRunToLast && ready) {
+      fakeClock?.runToLast();
+    }
+  }, [props.shouldRunToLast, ready]);
 
   return ready ? props.children : null;
 }
