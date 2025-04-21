@@ -31,7 +31,7 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, isDataGridPivotTest, isPrintExportChartTest, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, isChartTest, path } = props;
 
   return (
     <React.Fragment>
@@ -61,7 +61,7 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={isDataGridTest || isPrintExportChartTest}>
+      <MockTime shouldAdvanceTime={isDataGridTest} disabled={isChartTest}>
         <LoadFont
           isDataGridTest={isDataGridTest}
           isDataGridPivotTest={isDataGridPivotTest}
@@ -74,14 +74,24 @@ function TestViewer(props: any) {
   );
 }
 
-function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
-  const [ready, setReady] = React.useState(false);
+function MockTime(
+  props: React.PropsWithChildren<{
+    disabled: boolean;
+    shouldAdvanceTime: boolean;
+  }>,
+) {
+  const [ready, setReady] = React.useState(props.disabled);
 
   React.useEffect(() => {
+    if (props.disabled) {
+      return;
+    }
+
     const dispose = setupFakeClock(props.shouldAdvanceTime);
     setReady(true);
+    // eslint-disable-next-line consistent-return
     return dispose;
-  }, [props.shouldAdvanceTime]);
+  }, [props.disabled, props.shouldAdvanceTime]);
 
   return ready ? props.children : null;
 }
