@@ -70,7 +70,6 @@ const useUtilityClasses = (
 const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>(({ theme }) => ({
   paddingLeft: 16,
@@ -107,7 +106,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
-  overridesResolver: (props, styles) => styles.dateContainer,
 })<{ ownerState: PickerToolbarOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -117,7 +115,6 @@ const DateTimePickerToolbarDateContainer = styled('div', {
 const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
-  overridesResolver: (props, styles) => styles.timeContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
@@ -166,7 +163,6 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
 const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
-  overridesResolver: (props, styles) => styles.timeDigitsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
@@ -187,7 +183,6 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   margin: '0 4px 0 2px',

@@ -33,7 +33,6 @@ export interface ChartsLabelMarkProps {
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelMarkProps }>(() => {
   return {
     display: 'flex',

@@ -46,7 +46,6 @@ const useUtilityClasses = (classes: Partial<ClockPointerClasses> | undefined) =>
 const ClockPointerRoot = styled('div', {
   name: 'MuiClockPointer',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
@@ -69,7 +68,6 @@ const ClockPointerRoot = styled('div', {
 const ClockPointerThumb = styled('div', {
   name: 'MuiClockPointer',
   slot: 'Thumb',
-  overridesResolver: (_, styles) => styles.thumb,
 })<{
   ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
