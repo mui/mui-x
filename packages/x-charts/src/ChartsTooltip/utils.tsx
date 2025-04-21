@@ -22,7 +22,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const outHandler = instance.addInteractionListener('moveEnd', () => {
+    const moveEndHandler = instance.addInteractionListener('moveEnd', () => {
       setMousePosition(null);
     });
 
@@ -41,7 +41,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
     return () => {
       moveHandler.cleanup();
       panHandler.cleanup();
-      outHandler.cleanup();
+      moveEndHandler.cleanup();
     };
   }, [instance]);
 
