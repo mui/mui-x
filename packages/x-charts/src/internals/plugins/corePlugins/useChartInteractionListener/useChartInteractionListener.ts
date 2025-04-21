@@ -52,7 +52,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         new TapGesture({
           name: 'tap',
           maxDistance: 10,
-          preventDefault: true,
           preventIf: ['pan', 'pinch'],
         }),
         new PressGesture({
@@ -63,7 +62,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       ],
     });
 
-    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'quickPress'], svg);
+    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress'], svg);
 
     return () => {
       // Cleanup gesture manager
