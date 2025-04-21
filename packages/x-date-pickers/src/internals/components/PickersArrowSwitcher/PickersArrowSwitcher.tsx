@@ -18,7 +18,6 @@ import { PickerOwnerState } from '../../../models';
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -28,7 +27,6 @@ const PickersArrowSwitcherRoot = styled('div', {
 const PickersArrowSwitcherSpacer = styled('div', {
   name: 'MuiPickersArrowSwitcher',
   slot: 'Spacer',
-  overridesResolver: (props, styles) => styles.spacer,
 })<{
   ownerState: PickerOwnerState;
 }>(({ theme }) => ({
@@ -38,7 +36,6 @@ const PickersArrowSwitcherSpacer = styled('div', {
 const PickersArrowSwitcherButton = styled(IconButton, {
   name: 'MuiPickersArrowSwitcher',
   slot: 'Button',
-  overridesResolver: (props, styles) => styles.button,
 })<{
   ownerState: PickerOwnerState;
 }>({

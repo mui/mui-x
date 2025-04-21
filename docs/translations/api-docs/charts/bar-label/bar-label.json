@@ -24,7 +24,11 @@
       "nodeName": "the root element",
       "conditions": "it is highlighted"
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": { "description": "Styles applied to the root element." },
+    "series": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${barLabelClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
+    }
   },
   "slotDescriptions": { "barLabel": "The component that renders the bar label." }
 }

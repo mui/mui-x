@@ -148,7 +148,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
         expect(() => {
           view.setProps({ selectedItems: undefined });
         }).toErrorDev(
-          'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
+          'MUI X: A component is changing the controlled selectedItems state of Tree View to be uncontrolled.',
         );
       });
 
@@ -162,7 +162,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           view.setProps({ defaultSelectedItems: ['2'] });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
         }).toErrorDev(
-          'MUI X: A component is changing the default selectedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+          'MUI X: A component is changing the default selectedItems state of an uncontrolled Tree View after being initialized. To suppress this warning opt to use a controlled Tree View.',
         );
       });
     });
