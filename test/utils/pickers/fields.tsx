@@ -40,7 +40,15 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       direction?: 'rtl' | 'ltr';
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
+    /**
+     * @deprecated use `selectSectionAsync` instead.
+     */
     selectSection: FieldSectionSelector;
+    /**
+     * Helper that simplifies selecting a section of the date field.
+     * @param {FieldSectionType | undefined} selectedSection The requested section to select.
+     * @param {'first' | 'last'} index The index of the section to select.
+     */
     selectSectionAsync: FieldSectionSelectorAsync;
     getSectionsContainer: () => HTMLDivElement;
     /**

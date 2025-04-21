@@ -15,6 +15,9 @@ export type OpenPickerParams =
       fieldType: 'single-input' | 'multi-input';
     };
 
+/**
+ * @deprecated use `openPickerAsync` instead
+ */
 export const openPicker = (params: OpenPickerParams) => {
   const isRangeType =
     params.type === 'date-range' ||
