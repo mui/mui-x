@@ -8,7 +8,7 @@ import { chartsTooltipClasses } from './chartsTooltipClasses';
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
-  overridesResolver: (props, styles) => styles.paper,
+  overridesResolver: (props, styles) => styles.paper, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
@@ -22,7 +22,6 @@ export const ChartsTooltipPaper = styled('div', {
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
-  overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
   [`& .${chartsTooltipClasses.markContainer}`]: {
@@ -47,7 +46,6 @@ export const ChartsTooltipTable = styled('table', {
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
-  overridesResolver: (props, styles) => styles.row,
 })(({ theme }) => ({
   'tr:first-of-type& td': {
     paddingTop: theme.spacing(0.5),

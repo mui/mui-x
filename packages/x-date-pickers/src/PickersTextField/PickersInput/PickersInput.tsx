@@ -28,7 +28,6 @@ interface PickerInputOwnerState extends PickerTextFieldOwnerState {
 const PickersInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';

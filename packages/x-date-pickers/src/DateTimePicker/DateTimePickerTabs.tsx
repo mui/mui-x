@@ -72,7 +72,6 @@ const useUtilityClasses = (classes: Partial<DateTimePickerTabsClasses> | undefin
 const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
