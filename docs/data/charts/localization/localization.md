@@ -126,7 +126,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-## RTL Support
+## Right-to-left support
 
 Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
 Follow [this guide](/material-ui/customization/right-to-left/) to use them.
