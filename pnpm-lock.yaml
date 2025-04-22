@@ -719,9 +719,6 @@ importers:
       babel-plugin-remove-import-export:
         specifier: ^1.1.1
         version: 1.1.1
-      lightningcss:
-        specifier: ^1.29.1
-        version: 1.29.3
       pkg-dir:
         specifier: ^8.0.0
         version: 8.0.0
@@ -17706,6 +17703,7 @@ snapshots:
       lightningcss-linux-x64-musl: 1.29.3
       lightningcss-win32-arm64-msvc: 1.29.3
       lightningcss-win32-x64-msvc: 1.29.3
+    optional: true
 
   lines-and-columns@1.2.4: {}
 
