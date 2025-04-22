@@ -10,7 +10,6 @@ export type StyleSlotMeta<C extends JSXElement> = {
   name: string;
   slot: string;
   overridesResolver?: any;
-  id?: string;
 };
 export type StyleSlot<Props, Classes extends string, C extends JSXElement> = {
   component: (
@@ -34,8 +33,6 @@ export function slot<C extends JSXElement, K extends string>(
     const { as: asProp, ownerState, ...rest } = props;
     return React.createElement(asProp ?? meta.as, rest);
   }
-
-  meta.id = `${meta.name}-${meta.slot}`;
 
   const result = {
     component: Component,
