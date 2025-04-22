@@ -424,6 +424,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
       placement,
       anchorEl: triggerElement,
       onKeyDown: handleKeyDown,
+      onExited: onPopperExited,
     },
     className: classes.root,
     ownerState,
