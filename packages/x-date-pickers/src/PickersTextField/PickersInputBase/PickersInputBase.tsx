@@ -24,7 +24,7 @@ import {
   PickersSectionElement,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 

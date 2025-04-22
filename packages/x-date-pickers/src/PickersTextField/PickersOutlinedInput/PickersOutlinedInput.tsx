@@ -15,7 +15,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;

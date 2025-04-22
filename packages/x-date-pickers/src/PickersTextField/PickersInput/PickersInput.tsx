@@ -11,7 +11,7 @@ import {
 } from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {

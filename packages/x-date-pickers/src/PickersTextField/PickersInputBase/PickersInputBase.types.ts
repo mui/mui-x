@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
 import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField
   extends Pick<

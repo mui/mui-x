@@ -23,7 +23,8 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
-import { pickersInputBaseClasses, PickerTextFieldOwnerState } from '../PickersTextField';
+import { pickersInputBaseClasses } from '../PickersTextField';
+import { PickerTextFieldOwnerState } from '../models/fields';
 
 createTheme({
   components: {
