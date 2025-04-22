@@ -4,6 +4,7 @@ import {
   Toolbar,
   ToolbarButton,
   AiAssistantPanelTrigger,
+  GridAiAssistantPanel,
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
@@ -33,8 +34,8 @@ export default function GridAiAssistantPanelTrigger() {
       <DataGridPremium
         {...data}
         loading={loading}
-        slots={{ toolbar: CustomToolbar }}
         aiAssistant
+        slots={{ toolbar: CustomToolbar, aiAssistantPanel: GridAiAssistantPanel }}
         onPrompt={mockPromptResolver}
         showToolbar
       />

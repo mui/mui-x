@@ -24,7 +24,6 @@ import {
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
-import { getReleaseInfo } from '../utils/releaseInfo';
 import { Sidebar } from '../components/sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
@@ -48,7 +47,7 @@ const configuration: GridConfiguration = {
     },
   },
 };
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
@@ -868,7 +867,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows: PropTypes.func,
   /**
@@ -1019,7 +1018,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -1229,7 +1228,7 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**

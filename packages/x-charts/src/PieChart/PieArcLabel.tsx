@@ -66,7 +66,6 @@ const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
 const PieArcLabelRoot = styled('text', {
   name: 'MuiPieArcLabel',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',

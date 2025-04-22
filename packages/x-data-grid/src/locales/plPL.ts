@@ -102,7 +102,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   headerFilterOperatorOnOrBefore: 'Jest w lub przed',
   headerFilterOperatorIsEmpty: 'Jest pusty',
   headerFilterOperatorIsNotEmpty: 'Nie jest pusty',
-  headerFilterOperatorIsAnyOf: 'Is any of',
+  headerFilterOperatorIsAnyOf: 'Jest jednym z',
   'headerFilterOperator=': 'Równa się',
   'headerFilterOperator!=': 'Nie równa się',
   'headerFilterOperator>': 'Większy niż',
@@ -118,7 +118,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Menu kolumny: ${columnName}`,
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
   columnMenuManageColumns: 'Zarządzaj kolumnami',
   columnMenuFilter: 'Filtr',

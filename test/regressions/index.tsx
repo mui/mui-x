@@ -94,8 +94,10 @@ function App() {
       path: '/',
       element: <Root />,
       children: Object.keys(testsBySuite).map((suite) => {
+        const isPrintExportChartTest =
+          suite.startsWith('docs-charts') && suite.includes('PrintChart');
         const isDataGridTest =
-          suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+          suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
         return {
           path: suite,
@@ -105,6 +107,7 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
+                isPrintExportChartTest={isPrintExportChartTest}
                 path={computePath(test)}
               >
                 <test.case />

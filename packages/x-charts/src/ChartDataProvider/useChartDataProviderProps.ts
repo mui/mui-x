@@ -5,7 +5,7 @@ import { ChartProviderProps } from '../context/ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartDataProviderProps = <
@@ -14,12 +14,12 @@ export const useChartDataProviderProps = <
 >(
   props: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
-  const { children, localeText, plugins, seriesConfig, ...other } = props;
+  const { children, localeText, plugins = DEFAULT_PLUGINS, seriesConfig, ...other } = props;
 
   const theme = useTheme();
 
   const chartProviderProps: ChartProviderProps<TSeries, TSignatures> = {
-    plugins,
+    plugins: plugins as ChartProviderProps<TSeries, TSignatures>['plugins'],
     seriesConfig,
     pluginParams: {
       theme: theme.palette.mode,

@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -30,7 +31,6 @@ const round = (value: number) => Math.round(value * 1e5) / 1e5;
 export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
@@ -53,7 +53,6 @@ export const PickersInputBaseRoot = styled('div', {
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
@@ -108,7 +107,6 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
 const PickersInputBaseSection = styled(PickersSectionListSection, {
   name: 'MuiPickersInputBase',
   slot: 'Section',
-  overridesResolver: (props, styles) => styles.section,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -121,7 +119,7 @@ const PickersInputBaseSection = styled(PickersSectionListSection, {
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
   name: 'MuiPickersInputBase',
   slot: 'SectionContent',
-  overridesResolver: (props, styles) => styles.content,
+  overridesResolver: (props, styles) => styles.content, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   lineHeight: '1.4375em', // 23px
@@ -133,7 +131,6 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
   name: 'MuiPickersInputBase',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })(() => ({
   whiteSpace: 'pre',
   letterSpacing: 'inherit',
@@ -142,7 +139,7 @@ const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparat
 const PickersInputBaseInput = styled('input', {
   name: 'MuiPickersInputBase',
   slot: 'Input',
-  overridesResolver: (props, styles) => styles.hiddenInput,
+  overridesResolver: (props, styles) => styles.hiddenInput, // FIXME: Inconsistent naming with slot
 })({
   ...visuallyHidden,
 });
@@ -150,7 +147,6 @@ const PickersInputBaseInput = styled('input', {
 const PickersInputBaseActiveBar = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'ActiveBar',
-  overridesResolver: (props, styles) => styles.activeBar,
 })<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
   display: 'none',
   position: 'absolute',
@@ -327,6 +323,25 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     handleInputFocus(event);
   };
 
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      // Do nothing if it's a multi input field
+      if (rootRef.current?.dataset.multiInput) {
+        return;
+      }
+      const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
+      const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
+      if (!closestForm || !submitTrigger) {
+        // do nothing if there is no form or no submit button (trigger)
+        return;
+      }
+      event.preventDefault();
+      // native input trigger submit with the `submitter` field set
+      closestForm.requestSubmit(submitTrigger);
+    }
+  };
+
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onBlur?.(event);
     onBlur?.(event);
@@ -394,7 +409,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         slots={{
           root: InputSectionsContainer,
           section: PickersInputBaseSection,
@@ -467,6 +482,7 @@ PickersInputBase.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
