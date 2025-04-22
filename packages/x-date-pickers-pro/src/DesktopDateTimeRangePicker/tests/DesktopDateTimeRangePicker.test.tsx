@@ -15,7 +15,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();
 
   beforeEach(() => {
-    vi.setSystemTime(new Date('2018-01-10T00:00:00'));
+    vi.setSystemTime(new Date(2018, 0, 10, 10, 16, 0));
   });
 
   afterEach(() => {

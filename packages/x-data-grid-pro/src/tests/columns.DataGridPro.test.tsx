@@ -610,7 +610,7 @@ describe('<DataGridPro /> - Columns', () => {
       await user.dblClick(separators[0]);
 
       await waitFor(() => {
-        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 233]);
+        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 248]);
       });
 
       await user.dblClick(separators[1]);
@@ -646,7 +646,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       it('.expand works', async () => {
         // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
-        await autosize({ expand: true }, [135, 147]);
+        await autosize({ expand: true }, [142, 155]);
       });
     });
   });

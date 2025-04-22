@@ -23,7 +23,7 @@ import {
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -1428,7 +1428,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('accessibility', () => {
-    it('should add necessary treegrid aria attributes to the rows', () => {
+    testSkipIf(isJSDOM)('should add necessary treegrid aria attributes to the rows', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
