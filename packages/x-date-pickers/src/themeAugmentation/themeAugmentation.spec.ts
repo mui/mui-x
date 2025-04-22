@@ -24,7 +24,6 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
 import { pickersInputBaseClasses } from '../PickersTextField';
-import { PickerTextFieldOwnerState } from '../models/fields';
 
 createTheme({
   components: {
@@ -637,7 +636,7 @@ createTheme({
         someRandomProp: true,
       },
       styleOverrides: {
-        root: ({ ownerState }: { ownerState: PickerTextFieldOwnerState }) => ({
+        root: ({ ownerState }) => ({
           backgroundColor: 'red',
           [`.${pickersInputBaseClasses.activeBar}`]: {
             backgroundColor: ownerState.isPickerReadOnly ? 'green' : 'blue',
