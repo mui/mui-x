@@ -1,4 +1,3 @@
 Broken links found by `docs:link-check` that exist:
 
-- https://mui.com/x/react-tree-view/quickstart/#rich-tree-view
-- https://mui.com/x/react-tree-view/quickstart/#simple-tree-view
+- https://mui.com/x/react-data-grid/row-grouping/#disable-the-row-grouping
