@@ -7,7 +7,7 @@ describe('ChartAxisZoomOverview', () => {
     it('should return minStart when newStart is too small', () => {
       const newStart = 5;
       const currentZoom: ZoomData = { axisId: 'x-axis', start: 10, end: 100 };
-      const options = { minStart: 20, minSpan: 10, maxSpan: 50 };
+      const options = { minStart: 20, minSpan: 10, maxSpan: 100 };
 
       const result = calculateZoomStart(newStart, currentZoom, options);
 
