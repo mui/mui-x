@@ -30,6 +30,7 @@ const keys = {
       muted: '--DataGrid-t-color-foreground-muted',
       accent: '--DataGrid-t-color-foreground-accent',
       disabled: '--DataGrid-t-color-foreground-disabled',
+      error: '--DataGrid-t-color-foreground-error',
     },
     background: {
       base: '--DataGrid-t-color-background-base',
@@ -64,6 +65,7 @@ const keys = {
     font: {
       body: '--DataGrid-t-typography-font-body',
       small: '--DataGrid-t-typography-font-small',
+      large: '--DataGrid-t-typography-font-large',
     },
     fontFamily: {
       base: '--DataGrid-t-typography-font-family-base',

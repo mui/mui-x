@@ -24,7 +24,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     emptyValue,
     assertRenderedValue,
     setNewValue,
-    clock,
     ...pickerParams
   } = options;
 
@@ -128,6 +127,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const newValue = setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          closeMobilePicker: true,
         });
 
         assertRenderedValue(newValue);
@@ -145,10 +145,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       it('should call onChange when updating a value defined with `props.value`', () => {
         const onChange = spy();
 
-        const useControlledElement = (props) => {
+        const useControlledElement = (props: any) => {
           const [value, setValue] = React.useState(props?.value || null);
           const handleChange = React.useCallback(
-            (newValue) => {
+            (newValue: any) => {
               setValue(newValue);
               props?.onChange(newValue);
             },
@@ -164,6 +164,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const newValue = setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          closeMobilePicker: true,
         });
 
         expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));

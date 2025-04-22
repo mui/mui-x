@@ -13,7 +13,6 @@ import {
   RICH_TREE_VIEW_PRO_PLUGINS,
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -22,17 +21,27 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      itemLabelInput: ['itemLabelInput'],
+      itemCheckbox: ['itemCheckbox'],
+      itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
+      itemErrorIcon: ['itemErrorIcon'],
+    };
 
-  return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+    return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
+  }, [classes]);
 };
 
 export const RichTreeViewProRoot = styled('ul', {
   name: 'MuiRichTreeViewPro',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: RichTreeViewProProps<any, any> }>({
   padding: 0,
   margin: 0,
@@ -45,7 +54,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 
 /**
  *
@@ -62,6 +71,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
+  const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -79,11 +89,10 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     {
       plugins: RICH_TREE_VIEW_PRO_PLUGINS,
       rootRef: ref,
-      props,
+      props: other,
     },
   );
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
@@ -96,7 +105,12 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
@@ -147,8 +161,8 @@ RichTreeViewPro.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   dataSource: PropTypes.shape({
-    getChildrenCount: PropTypes.func,
-    getTreeItems: PropTypes.func,
+    getChildrenCount: PropTypes.func.isRequired,
+    getTreeItems: PropTypes.func.isRequired,
   }),
   dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,

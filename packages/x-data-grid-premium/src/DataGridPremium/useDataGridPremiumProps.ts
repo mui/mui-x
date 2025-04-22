@@ -15,6 +15,7 @@ import {
 import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
+import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
@@ -55,6 +56,9 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     const text = pastedText.replace(/\r?\n$/, '');
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
+  disablePivoting: false,
+  getPivotDerivedColumns: defaultGetPivotDerivedColumns,
+  aiAssistant: false,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;

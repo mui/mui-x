@@ -84,7 +84,7 @@ async function main(argv) {
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
-      `Creating changelog for ${latestTaggedVersion}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
+      `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
@@ -434,13 +434,14 @@ yargs(hideBin(process.argv))
         })
         .option('release', {
           // #default-branch-switch
+          // to be done when we branch off v8.x
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         })
         .option('nextVersion', {
           describe:
-            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
+            'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

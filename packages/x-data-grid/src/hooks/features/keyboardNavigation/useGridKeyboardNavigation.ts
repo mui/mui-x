@@ -14,7 +14,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
@@ -57,18 +57,12 @@ export const useGridKeyboardNavigation = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'pagination'
-    | 'paginationMode'
-    | 'getRowId'
-    | 'experimentalFeatures'
-    | 'signature'
-    | 'headerFilters'
-    | 'unstable_listView'
+    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters' | 'listView'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const isRtl = useRtl();
-  const listView = props.unstable_listView;
+  const listView = props.listView;
 
   const getCurrentPageRows = React.useCallback(() => {
     return gridVisibleRowsWithPinnedRowsSelector(apiRef);
@@ -677,8 +671,8 @@ export const useGridKeyboardNavigation = (
 
   useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, 'headerFilterKeyDown', handleHeaderFilterKeyDown);
-  useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridEvent(apiRef, 'headerFilterKeyDown', handleHeaderFilterKeyDown);
+  useGridEvent(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
 };

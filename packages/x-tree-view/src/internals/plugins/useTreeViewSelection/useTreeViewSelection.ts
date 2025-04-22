@@ -10,53 +10,57 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import {
+  TreeViewSelectionValue,
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionParameters,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import {
-  convertSelectedItemsToArray,
   propagateSelection,
   getAddedAndRemovedItems,
   getLookupFromArray,
-  createSelectedItemsMap,
 } from './useTreeViewSelection.utils';
-import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import {
+  selectorIsItemSelected,
+  selectorIsMultiSelectEnabled,
+  selectorIsSelectionEnabled,
+  selectorSelectionModel,
+  selectorSelectionModelArray,
+} from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
+import { useAssertModelConsistency } from '../../utils/models';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   store,
   params,
-  models,
 }) => {
+  useAssertModelConsistency({
+    state: 'selectedItems',
+    controlled: params.selectedItems,
+    defaultValue: params.defaultSelectedItems,
+  });
+
   const lastSelectedItem = React.useRef<string | null>(null);
   const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
-
-  useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      selection: {
-        selectedItemsMap: createSelectedItemsMap(models.selectedItems.value),
-      },
-    }));
-  }, [store, models.selectedItems.value]);
 
   const setSelectedItems = (
     event: React.SyntheticEvent | null,
     newModel: typeof params.defaultSelectedItems,
     additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
+    const oldModel = selectorSelectionModel(store.value);
     let cleanModel: typeof newModel;
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
 
     if (
-      params.multiSelect &&
+      isMultiSelectEnabled &&
       (params.selectionPropagation.descendants || params.selectionPropagation.parents)
     ) {
       cleanModel = propagateSelection({
         store,
         selectionPropagation: params.selectionPropagation,
         newModel: newModel as string[],
-        oldModel: models.selectedItems.value as string[],
+        oldModel: oldModel as string[],
         additionalItemsToPropagate,
       });
     } else {
@@ -64,11 +68,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     }
 
     if (params.onItemSelectionToggle) {
-      if (params.multiSelect) {
+      if (isMultiSelectEnabled) {
         const changes = getAddedAndRemovedItems({
           store,
           newModel: cleanModel as string[],
-          oldModel: models.selectedItems.value as string[],
+          oldModel: oldModel as string[],
         });
 
         if (params.onItemSelectionToggle) {
@@ -80,9 +84,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
             params.onItemSelectionToggle!(event, itemId, false);
           });
         }
-      } else if (params.onItemSelectionToggle && cleanModel !== models.selectedItems.value) {
-        if (models.selectedItems.value != null) {
-          params.onItemSelectionToggle(event, models.selectedItems.value as string, false);
+      } else if (params.onItemSelectionToggle && cleanModel !== oldModel) {
+        if (oldModel != null) {
+          params.onItemSelectionToggle(event, oldModel as string, false);
         }
         if (cleanModel != null) {
           params.onItemSelectionToggle(event, cleanModel as string, true);
@@ -90,11 +94,14 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       }
     }
 
-    if (params.onSelectedItemsChange) {
-      params.onSelectedItemsChange(event, cleanModel);
+    if (params.selectedItems === undefined) {
+      store.update((prevState) => ({
+        ...prevState,
+        selection: { ...prevState.selection, selectedItems: cleanModel },
+      }));
     }
 
-    models.selectedItems.setControlledValue(cleanModel);
+    params.onSelectedItemsChange?.(event, cleanModel);
   };
 
   const setItemSelection: UseTreeViewSelectionInstance['setItemSelection'] = ({
@@ -103,20 +110,21 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     keepExistingSelection = false,
     shouldBeSelected,
   }) => {
-    if (params.disableSelection) {
+    if (!selectorIsSelectionEnabled(store.value)) {
       return;
     }
 
-    let newSelected: typeof models.selectedItems.value;
+    let newSelected: TreeViewSelectionValue<boolean>;
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
     if (keepExistingSelection) {
-      const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
+      const oldSelected = selectorSelectionModelArray(store.value);
       const isSelectedBefore = selectorIsItemSelected(store.value, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
-        newSelected = cleanSelectedItems.filter((id) => id !== itemId);
+        newSelected = oldSelected.filter((id) => id !== itemId);
       } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
-        newSelected = [itemId].concat(cleanSelectedItems);
+        newSelected = [itemId].concat(oldSelected);
       } else {
-        newSelected = cleanSelectedItems;
+        newSelected = oldSelected;
       }
     } else {
       // eslint-disable-next-line no-lonely-if
@@ -124,9 +132,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         shouldBeSelected === false ||
         (shouldBeSelected == null && selectorIsItemSelected(store.value, itemId))
       ) {
-        newSelected = params.multiSelect ? [] : null;
+        newSelected = isMultiSelectEnabled ? [] : null;
       } else {
-        newSelected = params.multiSelect ? [itemId] : itemId;
+        newSelected = isMultiSelectEnabled ? [itemId] : itemId;
       }
     }
 
@@ -142,11 +150,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {
-    if (params.disableSelection || !params.multiSelect) {
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
+    if (!isMultiSelectEnabled) {
       return;
     }
 
-    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+    let newSelectedItems = selectorSelectionModelArray(store.value).slice();
 
     // If the last selection was a range selection,
     // remove the items that were part of the last range from the model
@@ -180,7 +189,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const selectAllNavigableItems = (event: React.SyntheticEvent) => {
-    if (params.disableSelection || !params.multiSelect) {
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
+    if (!isMultiSelectEnabled) {
       return;
     }
 
@@ -195,11 +205,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentItem: string,
     nextItem: string,
   ) => {
-    if (params.disableSelection || !params.multiSelect) {
+    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
+    if (!isMultiSelectEnabled) {
       return;
     }
 
-    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+    let newSelectedItems = selectorSelectionModelArray(store.value).slice();
 
     if (Object.keys(lastSelectedRange.current).length === 0) {
       newSelectedItems.push(nextItem);
@@ -221,26 +232,32 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     setSelectedItems(event, newSelectedItems);
   };
 
-  const pluginContextValue = React.useMemo(
-    () => ({
+  useEnhancedEffect(() => {
+    store.update((prevState) => ({
+      ...prevState,
       selection: {
-        multiSelect: params.multiSelect,
-        checkboxSelection: params.checkboxSelection,
-        disableSelection: params.disableSelection,
+        selectedItems:
+          params.selectedItems === undefined
+            ? prevState.selection.selectedItems
+            : params.selectedItems,
+        isEnabled: !params.disableSelection,
+        isMultiSelectEnabled: params.multiSelect,
+        isCheckboxSelectionEnabled: params.checkboxSelection,
         selectionPropagation: {
           descendants: params.selectionPropagation.descendants,
           parents: params.selectionPropagation.parents,
         },
       },
-    }),
-    [
-      params.multiSelect,
-      params.checkboxSelection,
-      params.disableSelection,
-      params.selectionPropagation.descendants,
-      params.selectionPropagation.parents,
-    ],
-  );
+    }));
+  }, [
+    store,
+    params.selectedItems,
+    params.multiSelect,
+    params.checkboxSelection,
+    params.disableSelection,
+    params.selectionPropagation.descendants,
+    params.selectionPropagation.parents,
+  ]);
 
   return {
     getRootProps: () => ({
@@ -257,22 +274,16 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       selectRangeFromItemToEnd,
       selectItemFromArrowNavigation,
     },
-    contextValue: pluginContextValue,
   };
 };
 
 useTreeViewSelection.itemPlugin = useTreeViewSelectionItemPlugin;
 
-useTreeViewSelection.models = {
-  selectedItems: {
-    getDefaultValue: (params) => params.defaultSelectedItems,
-  },
-};
-
 const DEFAULT_SELECTED_ITEMS: string[] = [];
 
 const EMPTY_SELECTION_PROPAGATION: UseTreeViewSelectionParameters<true>['selectionPropagation'] =
   {};
+
 useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
@@ -285,17 +296,12 @@ useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
 
 useTreeViewSelection.getInitialState = (params) => ({
   selection: {
-    selectedItemsMap: createSelectedItemsMap(
+    selectedItems:
       params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
-    ),
-  },
-});
-
-useTreeViewSelection.getInitialState = (params) => ({
-  selection: {
-    selectedItemsMap: createSelectedItemsMap(
-      params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
-    ),
+    isEnabled: !params.disableSelection,
+    isMultiSelectEnabled: params.multiSelect,
+    isCheckboxSelectionEnabled: params.checkboxSelection,
+    selectionPropagation: params.selectionPropagation,
   },
 });
 

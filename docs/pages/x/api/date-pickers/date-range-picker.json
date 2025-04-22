@@ -36,7 +36,12 @@
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+    },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" } },

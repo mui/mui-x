@@ -79,6 +79,10 @@ module.exports = function setKarmaConfig(config) {
             loader: 'babel-loader',
             exclude: /node_modules\/.*\/node_modules\/(?!@mui\/monorepo)/,
           },
+          {
+            test: /\.css$/,
+            loader: 'null-loader',
+          },
         ],
       },
       resolve: {

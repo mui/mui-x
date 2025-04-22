@@ -10,7 +10,7 @@ import {
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
 import { GridSignature } from '../../../constants/signature';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -628,14 +628,15 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+      const isSelected = apiRef.current.isRowSelected(id);
       const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
 
-      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
-        apiRef.current.selectRow(id, true, resetSelection);
-      } else {
-        const isSelected = apiRef.current.isRowSelected(id);
-        apiRef.current.selectRow(id, !isSelected, resetSelection);
-      }
+      // Clicking on a row should toggle the selection except when a range of rows is already selected and the selection should reset
+      // In that case, we want to keep the current row selected (https://github.com/mui/mui-x/pull/15509#discussion_r1878082687)
+      const shouldStaySelected = selectedRowsCount > 1 && resetSelection;
+      const newSelectionState = shouldStaySelected || !isSelected;
+
+      apiRef.current.selectRow(id, newSelectionState, resetSelection);
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
@@ -857,33 +858,25 @@ export const useGridRowSelection = (
     apiRef.current.setRowSelectionModel(propRowSelectionModel);
   });
 
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'sortedRowsSet',
     runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     apiRef,
     'filteredRowsSet',
     runIfRowSelectionIsEnabled(() => removeOutdatedSelection()),
   );
-  useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
-  useGridApiEventHandler(
+  useGridEvent(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
+  useGridEvent(
     apiRef,
     'rowSelectionCheckboxChange',
     runIfRowSelectionIsEnabled(handleRowSelectionCheckboxChange),
   );
-  useGridApiEventHandler(
-    apiRef,
-    'headerSelectionCheckboxChange',
-    handleHeaderSelectionCheckboxChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'cellMouseDown',
-    runIfRowSelectionIsEnabled(preventSelectionOnShift),
-  );
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
+  useGridEvent(apiRef, 'headerSelectionCheckboxChange', handleHeaderSelectionCheckboxChange);
+  useGridEvent(apiRef, 'cellMouseDown', runIfRowSelectionIsEnabled(preventSelectionOnShift));
+  useGridEvent(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
   /*
    * EFFECTS

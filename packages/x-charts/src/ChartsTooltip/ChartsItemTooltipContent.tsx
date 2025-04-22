@@ -2,9 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useItemTooltip } from './useItemTooltip';
+import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -23,13 +24,42 @@ export interface ChartsItemTooltipContentProps {
 
 function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const { classes: propClasses, sx } = props;
-  const tooltipData = useItemTooltip();
+  const tooltipData = useInternalItemTooltip();
 
   const classes = useUtilityClasses(propClasses);
 
   if (!tooltipData) {
     return null;
   }
+
+  if ('values' in tooltipData) {
+    const { label: seriesLabel, color, markType } = tooltipData;
+    return (
+      <ChartsTooltipPaper sx={sx} className={classes.paper}>
+        <ChartsTooltipTable className={classes.table}>
+          <Typography component="caption">
+            <div className={classes.markContainer}>
+              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+            </div>
+            {seriesLabel}
+          </Typography>
+          <tbody>
+            {tooltipData.values.map(({ formattedValue, label }) => (
+              <ChartsTooltipRow key={label} className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+                  {label}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+                  {formattedValue}
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            ))}
+          </tbody>
+        </ChartsTooltipTable>
+      </ChartsTooltipPaper>
+    );
+  }
+
   const { color, label, formattedValue, markType } = tooltipData;
 
   return (
@@ -37,13 +67,13 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>
-            <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+              <div className={classes.markContainer}>
+                <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+              </div>
               {label}
             </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
               {formattedValue}
             </ChartsTooltipCell>
           </ChartsTooltipRow>

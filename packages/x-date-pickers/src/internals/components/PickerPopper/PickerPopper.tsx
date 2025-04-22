@@ -102,7 +102,6 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
@@ -110,7 +109,6 @@ const PickerPopperRoot = styled(MuiPopper, {
 const PickerPopperPaper = styled(MuiPaper, {
   name: 'MuiPickerPopper',
   slot: 'Paper',
-  overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickerPopperOwnerState;
 }>({
@@ -332,7 +330,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
-  const { dismissViews, getCurrentViewMode, triggerElement, viewContainerRole } =
+  const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
   React.useEffect(() => {
@@ -445,7 +443,15 @@ export function PickerPopper(inProps: PickerPopperProps) {
           isEnabled={() => true}
           {...slotProps?.desktopTrapFocus}
         >
-          <Transition {...TransitionProps} {...slotProps?.desktopTransition}>
+          <Transition
+            {...TransitionProps}
+            {...slotProps?.desktopTransition}
+            onExited={(event) => {
+              onPopperExited?.();
+              slotProps?.desktopTransition?.onExited?.(event);
+              TransitionProps?.onExited?.();
+            }}
+          >
             <PickerPopperPaperWrapper
               PaperComponent={Paper}
               ownerState={ownerState}

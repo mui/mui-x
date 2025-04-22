@@ -62,12 +62,12 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
   width: 56,
   padding: 0,
   overflow: 'hidden',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -103,7 +103,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
-  overridesResolver: (_, styles) => styles.item,
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',

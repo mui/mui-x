@@ -18,17 +18,27 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 ) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      item: ['item'],
+      itemContent: ['itemContent'],
+      itemGroupTransition: ['itemGroupTransition'],
+      itemIconContainer: ['itemIconContainer'],
+      itemLabel: ['itemLabel'],
+      // itemLabelInput: ['itemLabelInput'], => feature not available on this component
+      itemCheckbox: ['itemCheckbox'],
+      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+    };
 
-  return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+    return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
+  }, [classes]);
 };
 
 export const SimpleTreeViewRoot = styled('ul', {
   name: 'MuiSimpleTreeView',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: SimpleTreeViewProps<any> }>({
   padding: 0,
   margin: 0,
@@ -57,7 +67,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
-  const ownerState = props as SimpleTreeViewProps<any>;
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
@@ -75,10 +85,9 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   >({
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props: { ...props, items: EMPTY_ITEMS },
+    props: { ...other, items: EMPTY_ITEMS },
   });
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? SimpleTreeViewRoot;
@@ -87,11 +96,16 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     externalSlotProps: slotProps?.root,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState,
+    ownerState: props as SimpleTreeViewProps<any>,
   });
 
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps} />
     </TreeViewProvider>
   );

@@ -11,18 +11,14 @@ import {
 } from '@mui/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
-import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
-import {
-  findClosestEnabledDate,
-  applyDefaultDate,
-  mergeDateAndTime,
-} from '../internals/utils/date-utils';
+import { findClosestEnabledDate, mergeDateAndTime } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
@@ -32,6 +28,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
@@ -46,33 +43,28 @@ function useDateCalendarDefaultizedProps(
   props: DateCalendarProps,
   name: string,
 ): DateCalendarDefaultizedProps {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
   const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
     ...themeProps,
+    ...validationProps,
     loading: themeProps.loading ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    disableFuture: themeProps.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
 const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -82,7 +74,6 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
-  overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: PickerOwnerState }>({});
 
 type DateCalendarComponent = ((

@@ -8,7 +8,7 @@ import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 // We need `createObjectURL` to test the downloaded value
 describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
@@ -24,7 +24,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
   // eslint-disable-next-line mocha/no-top-level-hooks
@@ -36,7 +36,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     it('should export with the default csvOptions', async () => {
       render(<TestCase showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -47,7 +46,6 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     it('should apply custom csvOptions', async () => {
       render(<TestCase showToolbar slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -63,7 +61,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
@@ -88,7 +86,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
         </div>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -125,7 +123,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
         </div>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -139,7 +137,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     it('should export with the default csvOptions', async () => {
       render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -155,7 +153,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -173,7 +171,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });

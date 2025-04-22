@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
-import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
+import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import {
   BaseSingleInputFieldProps,
@@ -87,6 +87,10 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
+  /**
+   * If `true`, the `endSeparator` is a format separator (i.e. ":" or "/").
+   */
+  isEndFormatSeparator?: boolean;
 }
 
 // If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
@@ -173,7 +177,7 @@ export type PickerFieldSlotProps<
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = Omit<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
+  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
   | 'slots'
   | 'slotProps'
   | 'clearable'

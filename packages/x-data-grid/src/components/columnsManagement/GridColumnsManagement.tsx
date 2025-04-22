@@ -21,6 +21,10 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';
 import { GridShadowScrollArea } from '../GridShadowScrollArea';
+import {
+  gridPivotActiveSelector,
+  gridPivotInitialColumnsSelector,
+} from '../../hooks/features/pivoting/gridPivotingSelectors';
 
 export interface GridColumnsManagementProps {
   /*
@@ -85,7 +89,6 @@ const collator = new Intl.Collator();
 function GridColumnsManagement(props: GridColumnsManagementProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const initialColumnVisibilityModel = useGridSelector(
     apiRef,
     gridInitialColumnVisibilityModelSelector,
@@ -94,6 +97,13 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
   const classes = useUtilityClasses(rootProps);
+  const columnDefinitions = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const pivotInitialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+  const columns = React.useMemo(
+    () => (pivotActive ? Array.from(pivotInitialColumns.values()) : columnDefinitions),
+    [pivotActive, pivotInitialColumns, columnDefinitions],
+  );
 
   const {
     sort,
@@ -202,7 +212,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
 
   React.useEffect(() => {
     if (autoFocusSearchField) {
-      searchInputRef.current!.focus();
+      searchInputRef.current?.focus();
     } else if (firstSwitchRef.current && typeof firstSwitchRef.current.focus === 'function') {
       firstSwitchRef.current.focus();
     }
@@ -218,7 +228,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   };
   const handleSearchReset = React.useCallback(() => {
     setSearchValue('');
-    searchInputRef.current!.focus();
+    searchInputRef.current?.focus();
   }, []);
 
   return (
@@ -275,7 +285,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             <rootProps.slots.baseCheckbox
               key={column.field}
               className={classes.row}
-              disabled={column.hideable === false}
+              disabled={column.hideable === false || pivotActive}
               checked={columnVisibilityModel[column.field] !== false}
               onClick={toggleColumn}
               name={column.field}
@@ -297,7 +307,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
             <rootProps.slots.baseCheckbox
-              disabled={hideableColumns.length === 0}
+              disabled={hideableColumns.length === 0 || pivotActive}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
               onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
@@ -313,7 +323,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           {!disableResetButton ? (
             <rootProps.slots.baseButton
               onClick={() => apiRef.current.setColumnVisibilityModel(initialColumnVisibilityModel)}
-              disabled={isResetDisabled}
+              disabled={isResetDisabled || pivotActive}
               {...rootProps.slotProps?.baseButton}
             >
               {apiRef.current.getLocaleText('columnsManagementReset')}
@@ -355,59 +365,7 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
-  searchInputProps: PropTypes.shape({
-    autoComplete: PropTypes.string,
-    className: PropTypes.string,
-    color: PropTypes.oneOf(['error', 'primary']),
-    disabled: PropTypes.bool,
-    error: PropTypes.bool,
-    fullWidth: PropTypes.bool,
-    helperText: PropTypes.string,
-    id: PropTypes.string,
-    inputRef: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.shape({
-        current: PropTypes.object,
-      }),
-    ]),
-    label: PropTypes.node,
-    onChange: PropTypes.func,
-    onKeyDown: PropTypes.func,
-    placeholder: PropTypes.string,
-    role: PropTypes.string,
-    size: PropTypes.oneOf(['medium', 'small']),
-    slotProps: PropTypes.object,
-    style: PropTypes.object,
-    tabIndex: PropTypes.number,
-    type: PropTypes.oneOfType([
-      PropTypes.oneOf([
-        'button',
-        'checkbox',
-        'color',
-        'date',
-        'datetime-local',
-        'email',
-        'file',
-        'hidden',
-        'image',
-        'month',
-        'number',
-        'password',
-        'radio',
-        'range',
-        'reset',
-        'search',
-        'submit',
-        'tel',
-        'text',
-        'time',
-        'url',
-        'week',
-      ]),
-      PropTypes.object,
-    ]),
-    value: PropTypes.string,
-  }),
+  searchInputProps: PropTypes.object,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
@@ -432,7 +390,7 @@ const GridColumnsManagementScrollArea = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementScrollArea',
 })<{ ownerState: OwnerState }>({
-  maxHeight: 400,
+  maxHeight: 300,
 });
 
 const GridColumnsManagementHeader = styled('div', {

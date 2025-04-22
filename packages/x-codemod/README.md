@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next <codemod> <paths...>
+npx @mui/x-codemod@latest <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,8 +29,8 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@next v7.0.0/preset-safe src
-  npx @mui/x-codemod@next v6.0.0/component-rename-prop src --
+  npx @mui/x-codemod@latest v8.0.0/preset-safe src
+  npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
 
@@ -63,13 +63,13 @@ npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quo
 
 A combination of all important transformers for migrating v7 to v8.
 ⚠️ This codemod should be run only once.
-It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -88,7 +88,7 @@ The `preset-safe` codemods for Tree View.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -137,7 +137,7 @@ The `preset-safe` codemods for Charts.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -318,7 +318,7 @@ The `preset-safe` codemods for Data Grid.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -326,6 +326,10 @@ The list includes these transformers
 - [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
 - [`remove-props`](#remove-props)
 - [`rename-props`](#rename-props)
+- [`rename-imports`](#rename-imports)
+- [`reform-row-selection-model`](#reform-row-selection-model)
+- [`rename-package`](#rename-package)
+- [`add-showToolbar-prop`](#add-showToolbar-prop)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -342,7 +346,7 @@ Remove feature flags for stabilized `experimentalFeatures`.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 #### `remove-props`
@@ -353,18 +357,20 @@ The list includes these props:
 
 - `indeterminateCheckboxAction`
 - `rowPositionsDebounceMs`
+- `resetPageOnSortFilter`
 
 ```diff
  <DataGrid
 -  indeterminateCheckboxAction="deselect"
 -  rowPositionsDebounceMs={100}
+-  resetPageOnSortFilter
  />
 ```
 
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-props <path>
 ```
 
 #### `rename-props`
@@ -374,18 +380,114 @@ Rename props to the new ones.
 The list includes these props:
 
 - `unstable_rowSpanning` to `rowSpanning`
+- `unstable_dataSource` to `dataSource`
+- `unstable_dataSourceCache` to `dataSourceCache`
+- `unstable_lazyLoading` to `lazyLoading`
+- `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
+- `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
 
 ```diff
  <DataGrid
 -  unstable_rowSpanning
+-  unstable_dataSource={dataSource}
+-  unstable_dataSourceCache={dataSourceCache}
+-  unstable_lazyLoading
+-  unstable_lazyLoadingRequestThrottleMs={100}
+-  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
 +  rowSpanning
++  dataSource={dataSource}
++  dataSourceCache={dataSourceCache}
++  lazyLoading
++  lazyLoadingRequestThrottleMs={100}
++  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
  />
 ```
 
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-props <path>
+```
+
+#### `rename-imports`
+
+This codemod renames the imports of the Data Grid components. The list includes these imports:
+
+- `selectedGridRowsSelector` to `gridRowSelectionIdsSelector`
+- `selectedGridRowsCountSelector` to `gridRowSelectionCountSelector`
+
+```diff
+-import { selectedGridRowsSelector, selectedGridRowsCountSelector } from '@mui/x-data-grid';
++import { gridRowSelectionIdsSelector, gridRowSelectionCountSelector } from '@mui/x-data-grid';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-imports <path>
+```
+
+#### `reform-row-selection-model`
+
+Reforms the controlled `rowSelectionModel` prop value to the new one.
+
+```diff
+-const [rowSelectionModel, setRowSelectionModel] = React.useState([1, 2]);
++const [rowSelectionModel, setRowSelectionModel] = React.useState({
++  type: 'include',
++  ids: new Set([1, 2]),
++});
+
+ <DataGrid
+  rowSelectionModel={rowSelectionModel}
+  onRowSelectionModelChange={setRowSelectionModel}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/reform-row-selection-model <path>
+```
+
+#### `rename-package`
+
+Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`.
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-package <path>
+```
+
+#### `add-showToolbar-prop`
+
+Adds the `showToolbar` prop to the Data Grid components that are using `slots.toolbar` prop.
+
+```diff
+ <DataGridPremium
+  slots={{
+    toolbar: GridToolbar,
+  }}
++ showToolbar
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/add-showToolbar-prop <path>
 ```
 
 ### Pickers codemods
@@ -397,7 +499,7 @@ The `preset-safe` codemods for Pickers.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -432,7 +534,7 @@ The list includes these transformers
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-adapter-date-fns-imports <path>
 ```
 
 #### `rename-type-imports`
@@ -466,7 +568,7 @@ Renames:
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

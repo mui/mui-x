@@ -32,6 +32,12 @@ import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker'
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
+import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+
+const STEPS: PickerRangeStep[] = [
+  { views: null, rangePosition: 'start' },
+  { views: null, rangePosition: 'end' },
+];
 
 const rendererInterceptor = function RendererInterceptor(
   props: PickerRendererInterceptorProps<PickerRangeValue, TimeViewWithMeridiem, any>,
@@ -152,6 +158,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     valueType: 'time',
     validator: validateTimeRange,
     rendererInterceptor,
+    steps: STEPS,
   });
 
   return renderPicker();
@@ -209,6 +216,7 @@ DesktopTimeRangePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

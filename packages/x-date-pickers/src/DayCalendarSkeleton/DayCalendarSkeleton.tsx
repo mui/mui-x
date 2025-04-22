@@ -39,7 +39,6 @@ const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefi
 const DayCalendarSkeletonRoot = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   alignSelf: 'start',
 });
@@ -47,7 +46,6 @@ const DayCalendarSkeletonRoot = styled('div', {
 const DayCalendarSkeletonWeek = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Week',
-  overridesResolver: (props, styles) => styles.week,
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
@@ -57,7 +55,6 @@ const DayCalendarSkeletonWeek = styled('div', {
 const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
-  overridesResolver: (props, styles) => styles.daySkeleton,
 })({
   margin: `0 ${DAY_MARGIN}px`,
   '&[data-day-in-month="0"]': {

@@ -1,7 +1,19 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "height": { "description": "Height of the bar this label belongs to." },
+    "width": { "description": "Width of the bar this label belongs to." },
+    "x": { "description": "Position in the x-axis of the bar this label belongs to." },
+    "xOrigin": { "description": "The x-coordinate of the stack this bar label belongs to." },
+    "y": { "description": "Position in the y-axis of the bar this label belongs to." },
+    "yOrigin": { "description": "The y-coordinate of the stack this bar label belongs to." }
+  },
   "classDescriptions": {
+    "animate": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is animated"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -12,7 +24,11 @@
       "nodeName": "the root element",
       "conditions": "it is highlighted"
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": { "description": "Styles applied to the root element." },
+    "series": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${barLabelClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
+    }
   },
   "slotDescriptions": { "barLabel": "The component that renders the bar label." }
 }

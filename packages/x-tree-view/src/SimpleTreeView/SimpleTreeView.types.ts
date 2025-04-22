@@ -5,13 +5,15 @@ import { SxProps } from '@mui/system/styleFunctionSx';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import {
   SimpleTreeViewPluginParameters,
-  SimpleTreeViewPluginSlotProps,
-  SimpleTreeViewPluginSlots,
   SimpleTreeViewPluginSignatures,
 } from './SimpleTreeView.plugins';
 import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+} from '../internals/TreeViewProvider/TreeViewStyleContext';
 
-export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
+export interface SimpleTreeViewSlots extends TreeViewSlots {
   /**
    * Element rendered at the root.
    * @default SimpleTreeViewRoot
@@ -19,7 +21,7 @@ export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
   root?: React.ElementType;
 }
 
-export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
+export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 

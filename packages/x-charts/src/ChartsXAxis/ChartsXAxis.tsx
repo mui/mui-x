@@ -16,7 +16,7 @@ import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
+import { useDrawingArea, ChartDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -123,6 +123,7 @@ function shortenLabels(
   visibleLabels: Set<TickItemType>,
   drawingArea: Pick<ChartDrawingArea, 'left' | 'width' | 'right'>,
   maxHeight: number,
+  isRtl: boolean,
   tickLabelStyle: ChartsXAxisProps['tickLabelStyle'],
 ) {
   const shortenedLabels = new Map<TickItemType, string>();
@@ -145,6 +146,10 @@ function shortenLabels(
   }
 
   if (angle > 90 && angle < 270) {
+    [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
+  }
+
+  if (isRtl) {
     [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
   }
 
@@ -179,7 +184,6 @@ function shortenLabels(
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({});
 
 const defaultProps = {
@@ -334,7 +338,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   );
 
   const tickLabels = isHydrated
-    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, axisTickLabelProps.style)
+    ? shortenLabels(
+        visibleLabels,
+        drawingArea,
+        tickLabelsMaxHeight,
+        isRtl,
+        axisTickLabelProps.style,
+      )
     : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
