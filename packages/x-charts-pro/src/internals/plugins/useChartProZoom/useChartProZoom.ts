@@ -25,13 +25,32 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
+
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
-  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
-    axisId,
-    start,
-    end,
-  }));
+export function initializeZoomData(
+  options: Record<AxisId, DefaultizedZoomOptions>,
+  zoomData?: readonly ZoomData[],
+) {
+  const zoomDataMap = new Map<AxisId, ZoomData>();
+
+  zoomData?.forEach((zoom) => {
+    const option = options[zoom.axisId];
+    if (option) {
+      zoomDataMap.set(zoom.axisId, zoom);
+    }
+  });
+
+  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => {
+    if (zoomDataMap.has(axisId)) {
+      return zoomDataMap.get(axisId)!;
+    }
+
+    return {
+      axisId,
+      start,
+      end,
+    };
+  });
 }
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
@@ -461,15 +480,13 @@ useChartProZoom.getInitialState = (params) => {
     ...createZoomLookup('x')(defaultizedXAxis),
     ...createZoomLookup('y')(defaultizedYAxis),
   };
+  const userZoomData =
+    // eslint-disable-next-line no-nested-ternary
+    zoomData !== undefined ? zoomData : initialZoom !== undefined ? initialZoom : undefined;
+
   return {
     zoom: {
-      zoomData:
-        // eslint-disable-next-line no-nested-ternary
-        zoomData !== undefined
-          ? zoomData
-          : initialZoom !== undefined
-            ? initialZoom
-            : initializeZoomData(optionsLookup),
+      zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
     },
