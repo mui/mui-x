@@ -59,10 +59,6 @@ async function main() {
     if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
       errorConsole = msg.text();
     }
-
-    if (msg.type() === 'log') {
-      console.log(msg.text());
-    }
   });
 
   // Wait for all requests to finish.
@@ -84,9 +80,7 @@ async function main() {
       return (link as HTMLAnchorElement).href;
     });
   });
-  routes = routes
-    .map((route) => route.replace(baseUrl, ''))
-    .filter((route) => route.includes('docs-charts-styling/Margin'));
+  routes = routes.map((route) => route.replace(baseUrl, ''));
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
@@ -114,7 +108,7 @@ async function main() {
     });
 
     routes.forEach((route) => {
-      it.only(`creates screenshots of ${route}`, async function test() {
+      it(`creates screenshots of ${route}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
@@ -167,7 +161,6 @@ async function main() {
         if (/^\/docs-charts-.*/.test(route)) {
           // Run one tick of the clock to get the final animation state
           await page.evaluate(() => window.fakeClock.runToFrame());
-          await page.evaluate(() => window.fakeClock.runToFrame());
         }
 
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
@@ -176,6 +169,11 @@ async function main() {
 
         // Wait for the page to settle after taking the screenshot.
         await page.waitForLoadState();
+
+        if (/^\/docs-charts-.*/.test(route)) {
+          // Run one tick of the clock to get the final animation state
+          await page.evaluate(() => window.fakeClock.runToFrame());
+        }
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });

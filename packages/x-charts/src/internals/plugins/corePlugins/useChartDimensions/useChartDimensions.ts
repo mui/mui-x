@@ -23,7 +23,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const [innerHeight, setInnerHeight] = React.useState(0);
 
   const computeSize = React.useCallback(() => {
-    console.log('size computed');
     const mainEl = svgRef?.current;
 
     if (!mainEl) {
@@ -151,10 +150,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
     let animationFrame: number;
     const observer = new ResizeObserver(() => {
-      console.log('ResizeObserver triggered');
       // See https://github.com/mui/mui-x/issues/8733
       animationFrame = requestAnimationFrame(() => {
-        console.log('ResizeObserver animation frame triggered');
         computeSize();
       });
     });
