@@ -52,7 +52,7 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## Zoom overview
+## Zoom overview 🧪
 
 You can provide an overview of the zoomed area by setting the `zoom.overview.enabled` property on the axis config.
 
