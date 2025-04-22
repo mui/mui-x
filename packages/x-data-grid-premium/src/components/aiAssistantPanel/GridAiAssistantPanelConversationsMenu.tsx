@@ -81,7 +81,6 @@ function GridAiAssistantPanelConversationsMenu() {
               <rootProps.slots.baseMenuItem
                 key={`${conversation.id}-${sortedIndex}`}
                 selected={conversationIndex === activeConversationIndex}
-                material={{ dense: true }}
                 onClick={() => {
                   apiRef.current.aiAssistant.setActiveConversationIndex(conversationIndex);
                   handleClose();
