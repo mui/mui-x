@@ -16,7 +16,6 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 export const PickersSectionListRoot = styled('div', {
   name: 'MuiPickersSectionList',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   direction: 'ltr /*! @noflip */' as any,
   outline: 'none',
@@ -25,13 +24,11 @@ export const PickersSectionListRoot = styled('div', {
 export const PickersSectionListSection = styled('span', {
   name: 'MuiPickersSectionList',
   slot: 'Section',
-  overridesResolver: (props, styles) => styles.section,
 })({});
 
 export const PickersSectionListSectionSeparator = styled('span', {
   name: 'MuiPickersSectionList',
   slot: 'SectionSeparator',
-  overridesResolver: (props, styles) => styles.sectionSeparator,
 })({
   whiteSpace: 'pre',
 });
@@ -39,7 +36,6 @@ export const PickersSectionListSectionSeparator = styled('span', {
 export const PickersSectionListSectionContent = styled('span', {
   name: 'MuiPickersSectionList',
   slot: 'SectionContent',
-  overridesResolver: (props, styles) => styles.sectionContent,
 })({
   outline: 'none',
 });

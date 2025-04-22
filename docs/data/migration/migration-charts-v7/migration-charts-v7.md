@@ -165,7 +165,7 @@ Renames `LegendPosition` to `Position`.
 +import { Position } from '@mui/x-charts/models';
 ```
 
-## Replace `slotProps.legend.hidden` with `hideLegend` prop
+## Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
 
 The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
 
