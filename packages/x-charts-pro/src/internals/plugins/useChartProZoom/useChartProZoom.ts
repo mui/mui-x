@@ -111,37 +111,32 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [store],
   );
 
-  // This is throttled. We want to run it at most once per frame.
-  // By joining the two, we ensure that interacting and zooming are in sync.
-  const setZoomDataCallback = React.useMemo(
-    () =>
-      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-        store.update((prevState) => {
-          const newZoomData =
-            typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-          onZoomChange?.(newZoomData);
-          if (prevState.zoom.isControlled) {
-            return prevState;
-          }
+  const setZoomDataCallback = React.useCallback(
+    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+      store.update((prevState) => {
+        const newZoomData =
+          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+        onZoomChange?.(newZoomData);
+        if (prevState.zoom.isControlled) {
+          return prevState;
+        }
 
-          removeIsInteracting();
-          return {
-            ...prevState,
-            zoom: {
-              ...prevState.zoom,
-              isInteracting: true,
-              zoomData: newZoomData,
-            },
-          };
-        });
-      }),
-
+        removeIsInteracting();
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            isInteracting: true,
+            zoomData: newZoomData,
+          },
+        };
+      });
+    },
     [onZoomChange, store, removeIsInteracting],
   );
 
   React.useEffect(() => {
     return () => {
-      setZoomDataCallback.clear();
       removeIsInteracting.clear();
     };
   }, [setZoomDataCallback, removeIsInteracting]);
@@ -168,7 +163,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     if (element === null || !isPanEnabled) {
       return () => {};
     }
-    const handlePan = (event: PointerEvent) => {
+    const handlePan = rafThrottle((event: PointerEvent) => {
       if (element === null || !isDraggingRef.current || panningEventCacheRef.current.length > 1) {
         return;
       }
@@ -215,7 +210,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         };
       });
       setZoomDataCallback(newZoomData);
-    };
+    });
     const handleDown = (event: PointerEvent) => {
       panningEventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
@@ -254,6 +249,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       document.removeEventListener('pointerup', handleUp);
       document.removeEventListener('pointercancel', handleUp);
       document.removeEventListener('pointerleave', handleUp);
+      handlePan.clear();
     };
   }, [
     instance,
@@ -274,6 +270,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       return () => {};
     }
 
+    const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
+
     const wheelHandler = (event: WheelEvent) => {
       if (element === null) {
         return;
@@ -287,7 +285,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       event.preventDefault();
 
-      setZoomDataCallback((prevZoomData) => {
+      /*
+       * Need to throttle `setZoomDataCallback` instead of `wheelHandler` because we're calling `event.preventDefault()`.
+       * If we throttle the event, then some events' default behavior won't be prevented and the page will scroll while
+       * the user is trying to zoom in.
+       */
+      rafThrottledSetZoomData((prevZoomData) => {
         return prevZoomData.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
           if (!option) {
@@ -315,7 +318,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       zoomEventCacheRef.current.push(event);
     }
 
-    function pointerMoveHandler(event: PointerEvent) {
+    const pointerMoveHandler = rafThrottle(function pointerMoveHandler(event: PointerEvent) {
       if (element === null) {
         return;
       }
@@ -368,7 +371,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         eventPrevDiff.current = curDiff;
         return newZoomData;
       });
-    }
+    });
 
     function pointerUpHandler(event: PointerEvent) {
       zoomEventCacheRef.current.splice(
@@ -405,6 +408,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       element.removeEventListener('pointerleave', pointerUpHandler);
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
+
+      pointerMoveHandler.clear();
+      rafThrottledSetZoomData.clear();
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
