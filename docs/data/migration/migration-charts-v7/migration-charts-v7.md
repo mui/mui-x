@@ -1,4 +1,5 @@
 ---
+title: React Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
@@ -17,19 +18,25 @@ With the v8 you can now:
 - Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
 - Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `latest`.
 
 ```diff
--"@mui/x-charts": "^7.0.0",
-+"@mui/x-charts": "next",
+-"@mui/x-charts": "^7.x.x",
++"@mui/x-charts": "latest",
 
--"@mui/x-charts-pro": "^7.0.0",
-+"@mui/x-charts-pro": "next",
+-"@mui/x-charts-pro": "^7.x.x",
++"@mui/x-charts-pro": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Since `v8` is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 ## Package layout changes
 
@@ -161,6 +168,17 @@ Renames `LegendPosition` to `Position`.
 ```diff
 -import { LegendPosition } from '@mui/x-charts/ChartsLegend';
 +import { Position } from '@mui/x-charts/models';
+```
+
+## Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
+
+The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
+
+```diff
+ <BarChart
+-  slotProps={{ legend: { hidden: true } }}
++  hideLegend
+ />
 ```
 
 ## The `getSeriesToDisplay` function was removed
@@ -387,7 +405,7 @@ It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
 
-> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart

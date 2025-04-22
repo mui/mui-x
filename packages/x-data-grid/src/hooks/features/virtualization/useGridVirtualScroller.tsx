@@ -824,13 +824,6 @@ function computeRenderContext(
     lastColumnIndex: inputs.visibleColumns.length,
   };
 
-  if (inputs.listView) {
-    return {
-      ...renderContext,
-      lastColumnIndex: 1,
-    };
-  }
-
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
@@ -860,6 +853,13 @@ function computeRenderContext(
 
     renderContext.firstRowIndex = firstRowIndex;
     renderContext.lastRowIndex = lastRowIndex;
+  }
+
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
   }
 
   if (inputs.enabledForColumns) {
