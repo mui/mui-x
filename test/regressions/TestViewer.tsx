@@ -31,14 +31,7 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const {
-    children,
-    isDataGridTest,
-    isDataGridPivotTest,
-    isPrintExportChartTest,
-    isChartTest,
-    path,
-  } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, isPrintExportChartTest, path } = props;
 
   return (
     <React.Fragment>

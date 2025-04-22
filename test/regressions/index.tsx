@@ -108,7 +108,6 @@ function App() {
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
                 isPrintExportChartTest={isPrintExportChartTest}
-                isChartTest={suite.startsWith('docs-charts')}
                 path={computePath(test)}
               >
                 <test.case />
