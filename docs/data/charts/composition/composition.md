@@ -230,11 +230,10 @@ I must be inside the Data Provider to get the data, but outside the Surface sinc
 ```jsx
 <ChartDataProvider>
   <ChartsLegend />
-  <ChartsSurface>
-    {/* SVG components */}
-  </ChartsSurface>
+  <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
 ```
+
 :::
 
 See [HTML-components](/x/react-charts/components/#html-components) documentation for more information.

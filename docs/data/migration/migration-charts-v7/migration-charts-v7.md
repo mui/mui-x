@@ -140,7 +140,6 @@ I must be inside the Data Provider to get the data, but outside the Surface sinc
 
 See [HTML-components](/x/react-charts/components/#html-components) documentation for more information.
 
-
 ### Legend props propagation ✅
 
 The `legend` prop of charts single components has been removed.
