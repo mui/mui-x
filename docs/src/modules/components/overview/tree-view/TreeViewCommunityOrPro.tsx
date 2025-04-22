@@ -12,7 +12,7 @@ export default function TreeViewCommunityOrPro() {
           caption={'Community and Pro'}
           title={'Two packages for every need'}
           description={
-            'Start with the free-forever Community version, then upgrade to Pro when you\'re ready for additional features and components.'
+            'Start with the free-forever Community version, then upgrade to Pro when you&apos;re ready for additional features and components.'
           }
           communityDescription={
             'Free forever under MIT license. Includes core features such as expansion, selection, and label editing.'
