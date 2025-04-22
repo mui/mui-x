@@ -212,8 +212,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
-      // FIXME: Since `setZoomDataCallback` is throttled, move zoom range will be out of sync with the mouse pointer.
-      // IMO, we should raf throttle the interaction, not the store update.
       setZoomDataCallback((prevZoomData) => {
         return prevZoomData.map((zoom) => {
           if (zoom.axisId !== axisId) {

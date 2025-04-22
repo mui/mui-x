@@ -4,6 +4,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { chartZoomBrushHandleClasses, useUtilityClasses } from './chartZoomBrushHandleClasses';
 
 const Rect = styled('rect')(({ theme }) => ({
@@ -48,13 +49,13 @@ export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBr
 
       let prev = 0;
 
-      const onPointerMove = (event: PointerEvent) => {
+      const onPointerMove = rafThrottle((event: PointerEvent) => {
         const current = orientation === 'horizontal' ? event.clientX : event.clientY;
         const delta = current - prev;
         prev = current;
 
         onResizeEvent(delta);
-      };
+      });
 
       const onPointerUp = () => {
         document.removeEventListener('pointermove', onPointerMove);
@@ -76,6 +77,7 @@ export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBr
       // eslint-disable-next-line consistent-return
       return () => {
         handle.removeEventListener('pointerdown', onPointerDown);
+        onPointerMove.clear();
       };
     }, [onResizeEvent, orientation]);
 

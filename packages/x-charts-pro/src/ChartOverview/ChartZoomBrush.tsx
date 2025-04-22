@@ -13,6 +13,7 @@ import {
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -139,8 +140,7 @@ function ChartZoomBrushRange({
 
     let prev = 0;
 
-    // TODO: Do we want to raf this?
-    const onPointerMove = (event: PointerEvent) => {
+    const onPointerMove = rafThrottle((event: PointerEvent) => {
       const { height, width } = selectorChartDrawingArea(store.getSnapshot());
       const drawingAreaSize = axisDirection === 'x' ? width : height;
 
@@ -151,7 +151,7 @@ function ChartZoomBrushRange({
       const deltaZoom = delta / drawingAreaSize;
 
       instance.moveZoomRange(axisId, deltaZoom * 100);
-    };
+    });
 
     const onPointerUp = () => {
       document.removeEventListener('pointermove', onPointerMove);
@@ -172,6 +172,7 @@ function ChartZoomBrushRange({
     // eslint-disable-next-line consistent-return
     return () => {
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
+      onPointerMove.clear();
     };
   }, [axisDirection, axisId, instance, store]);
 
