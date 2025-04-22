@@ -22,14 +22,20 @@ import { ChartZoomBrushHandle } from './ChartZoomBrushHandle';
 
 const BackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
-    fill: (theme.vars || theme).palette.grey[300],
+    fill:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.grey[900]
+        : (theme.vars || theme).palette.grey[300],
     opacity: 0.8,
   },
 }));
 
 const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
   '&': {
-    fill: (theme.vars || theme).palette.grey[500],
+    fill:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.grey[800]
+        : (theme.vars || theme).palette.grey[500],
     opacity: 0.4,
     cursor: 'grab',
   },

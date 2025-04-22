@@ -9,7 +9,10 @@ import { chartZoomBrushHandleClasses, useUtilityClasses } from './chartZoomBrush
 
 const Rect = styled('rect')(({ theme }) => ({
   [`&.${chartZoomBrushHandleClasses.root}`]: {
-    fill: (theme.vars || theme).palette.grey[500],
+    fill:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.grey[700]
+        : (theme.vars || theme).palette.grey[500],
   },
   [`&.${chartZoomBrushHandleClasses.horizontal}`]: {
     cursor: 'ew-resize',
