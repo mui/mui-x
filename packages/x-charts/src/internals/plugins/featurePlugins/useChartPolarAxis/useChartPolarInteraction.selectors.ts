@@ -1,3 +1,4 @@
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { AxisId, ChartsAxisProps } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
 import type { AxisItemIdentifier } from '../useChartCartesianAxis/useChartCartesianInteraction.selectors';
@@ -99,6 +100,14 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelector(
     return axes.axisIds
       .map((axisId, axisIndex): AxisItemIdentifier => ({ axisId, dataIndex: indexes[axisIndex] }))
       .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
+  },
+  {
+    memoizeOptions: {
+      // Keep the same reference if array content is the same.
+      // If possible, avoid this pattern by creating selectors that
+      // uses string/number as arguments.
+      resultEqualityCheck: isDeepEqual,
+    },
   },
 );
 
