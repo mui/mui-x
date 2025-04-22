@@ -44,8 +44,7 @@ export default function ZoomBrush() {
         { id: 'y2', position: 'right', zoom: { overview: { enabled: true } } },
       ]}
       series={[{ data }, { data: series2Data, xAxisId: 'x2', yAxisId: 'y2' }]}
-      width={500}
-      height={300}
+      height={400}
       margin={{ bottom: 40 }}
     />
   );
