@@ -31,7 +31,14 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, isDataGridPivotTest, isPrintExportChartTest, path } = props;
+  const {
+    children,
+    isDataGridTest,
+    isDataGridPivotTest,
+    isPrintExportChartTest,
+    isChartTest,
+    path,
+  } = props;
 
   return (
     <React.Fragment>
@@ -61,7 +68,10 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={isDataGridTest || isPrintExportChartTest}>
+      <MockTime
+        shouldAdvanceTime={isDataGridTest || isPrintExportChartTest}
+        shouldRunToFrame={isChartTest}
+      >
         <LoadFont
           isDataGridTest={isDataGridTest}
           isDataGridPivotTest={isDataGridPivotTest}
@@ -74,7 +84,9 @@ function TestViewer(props: any) {
   );
 }
 
-function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
+function MockTime(
+  props: React.PropsWithChildren<{ shouldAdvanceTime: boolean; shouldRunToFrame?: boolean }>,
+) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
@@ -82,6 +94,16 @@ function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>
     setReady(true);
     return dispose;
   }, [props.shouldAdvanceTime]);
+
+  React.useEffect(() => {
+    if (props.shouldRunToFrame) {
+      console.log('running to frame');
+      fakeClock?.runToFrame();
+      console.log('ran to first frame');
+      fakeClock?.runToFrame();
+      console.log('ran to second frame');
+    }
+  });
 
   return ready ? props.children : null;
 }
