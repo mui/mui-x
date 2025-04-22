@@ -23,9 +23,7 @@ export default function ZoomBrush() {
           zoom: {
             filterMode: 'discard',
             minSpan: 10,
-            maxSpan: 50,
             panning: true,
-            step: 5,
             overview: { enabled: true },
           },
           valueFormatter: (v: number) => v.toLocaleString('en-US'),
