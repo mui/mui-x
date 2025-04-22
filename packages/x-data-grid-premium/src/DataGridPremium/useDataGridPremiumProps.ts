@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { getThemeProps, useTheme } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
+import { getThemeProps } from '@mui/system';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
