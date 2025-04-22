@@ -495,14 +495,14 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should go to the next section when pressing `2` in a 12-hours format', () => {
+    it('should go to the next section when pressing `2` in a 12-hours format', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
-      view.selectSection('hours');
+      await view.selectSectionAsync('hours');
 
       view.pressKey(0, '2');
       expectFieldValueV7(view.getSectionsContainer(), '02:mm aa');
@@ -517,7 +517,7 @@ describe('<TimeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('hours');
+      await view.selectSectionAsync('hours');
 
       // Press "2"
       fireEvent.change(input, { target: { value: '2:mm aa' } });
@@ -525,14 +525,14 @@ describe('<TimeField /> - Editing', () => {
       expect(getCleanedSelectedContent()).to.equal('mm');
     });
 
-    it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
-      view.selectSection('hours');
+      await view.selectSectionAsync('hours');
 
       view.pressKey(0, '1');
       expectFieldValueV7(view.getSectionsContainer(), '01:mm aa');
@@ -552,7 +552,7 @@ describe('<TimeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('hours');
+      await view.selectSectionAsync('hours');
 
       // Press "1"
       fireEvent.change(input, { target: { value: '1:mm aa' } });
@@ -634,7 +634,7 @@ describe('<TimeField /> - Editing', () => {
     'Do not loose missing section values ',
     TimeField,
     ({ adapter, renderWithProps }) => {
-      it('should not loose date information when a value is provided', () => {
+      it('should not loose date information when a value is provided', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -644,7 +644,7 @@ describe('<TimeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
@@ -661,13 +661,13 @@ describe('<TimeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
-      it('should not loose date information when cleaning the date then filling it again', () => {
+      it('should not loose date information when cleaning the date then filling it again', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -678,7 +678,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime24h,
         });
 
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
           keyCode: 65,
@@ -707,7 +707,7 @@ describe('<TimeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
         fireEvent.change(input, { target: { value: '' } });
         fireEvent.keyDown(input, { key: 'ArrowLeft' });
@@ -720,7 +720,7 @@ describe('<TimeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
       });
 
-      it('should not loose time information when using the hour format and value is provided', () => {
+      it('should not loose time information when using the hour format and value is provided', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -731,7 +731,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.hours24h,
         });
 
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
@@ -749,7 +749,7 @@ describe('<TimeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('hours');
+        await view.selectSectionAsync('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));

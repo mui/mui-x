@@ -32,7 +32,6 @@ export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
 const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersFilledInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerFilledInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
@@ -147,7 +146,6 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
 const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersFilledInput',
   slot: 'sectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'hiddenLabel',
 })<{ ownerState: PickerFilledInputOwnerState }>({
   paddingTop: 25,
@@ -269,6 +267,7 @@ PickersFilledInput.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.

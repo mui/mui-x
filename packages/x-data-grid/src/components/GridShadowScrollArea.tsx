@@ -1,5 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, keyframes } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 
 export interface GridShadowScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -22,6 +24,7 @@ const ShadowScrollArea = styled('div', {
   animation-fill-mode: none;
   box-sizing: border-box;
   overflow: auto;
+  scrollbar-width: thin;
   scroll-timeline: --scroll-timeline block;
 
   &::before,
@@ -61,7 +64,23 @@ const ShadowScrollArea = styled('div', {
 /**
  * Adds scroll shadows above and below content in a scrollable container.
  */
-export function GridShadowScrollArea(props: GridShadowScrollAreaProps) {
-  const { children, ...rest } = props;
-  return <ShadowScrollArea {...rest}>{children}</ShadowScrollArea>;
-}
+const GridShadowScrollArea = forwardRef<HTMLDivElement, GridShadowScrollAreaProps>(
+  function GridShadowScrollArea(props, ref) {
+    const { children, ...rest } = props;
+    return (
+      <ShadowScrollArea {...rest} ref={ref}>
+        {children}
+      </ShadowScrollArea>
+    );
+  },
+);
+
+GridShadowScrollArea.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { GridShadowScrollArea };

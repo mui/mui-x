@@ -1,4 +1,5 @@
 ---
+title: React Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -10,23 +11,25 @@ productId: x-tree-view
 
 This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
-In `package.json`, change the version of the Tree View package to `next`.
+In `package.json`, change the version of the Tree View package to `latest`.
 
 ```diff
 -"@mui/x-tree-view": "7.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "latest",
 
 -"@mui/x-tree-view-pro": "7.x.x",
-+"@mui/x-tree-view-pro": "next",
++"@mui/x-tree-view-pro": "latest",
 ```
-
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v7 to v8.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 ## Package layout changes
 
@@ -37,6 +40,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-tree-view': '@mui/x-tree-view/modern',
+-      '@mui/x-tree-view-pro': '@mui/x-tree-view-pro/modern',
+     }
+   }
+ }
+```
 
 ## Run codemods
 

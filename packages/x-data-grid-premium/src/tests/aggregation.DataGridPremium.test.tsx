@@ -204,6 +204,65 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
+    it('should update aggregation values after filtering', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category2'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '9', // Agg "Cat 1"
+        '6', // Agg "Cat 2"
+        '15', // Agg root
+      ]);
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '5', // Agg "Cat 1"
+        '5', // Agg root
+      ]);
+    });
+
+    it('should apply sorting on the aggregated values', async () => {
+      const { user } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal([
+        '10' /* Agg "Cat A" */,
+        '5' /* Agg "Cat B" */,
+        '15' /* Agg root */,
+      ]);
+
+      const header = getColumnHeaderCell(1);
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['5' /* Agg "Cat B" */, '10' /* Agg "Cat A" */, '15' /* Agg root */],
+        'sorted asc',
+      );
+
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['10' /* Agg "Cat A" */, '5' /* Agg "Cat B" */, '15' /* Agg root */],
+        'sorted desc',
+      );
+    });
+
     describe('prop: getAggregationPosition', () => {
       it('should not aggregate groups if props.getAggregationPosition returns null', () => {
         render(

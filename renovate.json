@@ -46,7 +46,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "typescript-eslint",
@@ -55,12 +55,6 @@
     {
       "groupName": "ESLint plugins",
       "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
-    },
-    {
-      "groupName": "@types/node",
-      "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0",
-      "automerge": true
     },
     {
       "groupName": "bundling fixtures",
@@ -98,10 +92,6 @@
     {
       "groupName": "MUI Internal",
       "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
-    },
-    {
-      "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],

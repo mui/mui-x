@@ -24,7 +24,6 @@ export interface PickersOutlinedInputProps extends PickersInputBaseProps {
 const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
@@ -76,7 +75,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
 const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: PickerTextFieldOwnerState }>({
   padding: '16.5px 0',
   variants: [
@@ -174,6 +172,7 @@ PickersOutlinedInput.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.

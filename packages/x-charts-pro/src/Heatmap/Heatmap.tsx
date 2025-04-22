@@ -225,7 +225,6 @@ Heatmap.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -299,7 +298,7 @@ Heatmap.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,

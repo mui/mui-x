@@ -30,7 +30,6 @@ const useUtilityClasses = (classes: Partial<PickersToolbarButtonClasses> | undef
 const PickersToolbarButtonRoot = styled(Button, {
   name: 'MuiPickersToolbarButton',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   padding: 0,
   minWidth: 16,
