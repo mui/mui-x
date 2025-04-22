@@ -713,12 +713,6 @@ importers:
 
   packages/babel-plugin-mui-css:
     dependencies:
-      '@babel/preset-typescript':
-        specifier: ^7.26.0
-        version: 7.27.0(@babel/core@7.26.10)
-      babel-plugin-remove-import-export:
-        specifier: ^1.1.1
-        version: 1.1.1
       pkg-dir:
         specifier: ^8.0.0
         version: 8.0.0
@@ -5070,9 +5064,6 @@ packages:
 
   babel-plugin-react-remove-properties@0.3.0:
     resolution: {integrity: sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==}
-
-  babel-plugin-remove-import-export@1.1.1:
-    resolution: {integrity: sha512-XBhHk/NDQQbNZcf1/ZbSG0M4ylz9cIz83EqzjyUlYUoSQW5GT7s847BJQV8xyEh6SjAvpJo0QBEuI4G5deMp1g==}
 
   babel-plugin-replace-imports@1.0.2:
     resolution: {integrity: sha512-v+9S4FBg9wYit3c+bDxhRHv/pnhBhhneZOPvqT1c293SSjUuUy1MPK76TsJ9038fp/SD2/TNcqG5PUBoG9/ByQ==}
@@ -14450,8 +14441,6 @@ snapshots:
       require-from-string: 2.0.2
 
   babel-plugin-react-remove-properties@0.3.0: {}
-
-  babel-plugin-remove-import-export@1.1.1: {}
 
   babel-plugin-replace-imports@1.0.2(patch_hash=779d8690d607924781aaf4f896bfbd209a78755ddd5b9ebbea5ebce3b2919ba0):
     dependencies:
