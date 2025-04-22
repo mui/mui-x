@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useId from '@mui/utils/useId';
+import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
@@ -158,6 +160,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     className,
     ...other
   } = props;
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
     showHighlight && plotType === 'bar' ? { x: 'band' } : { x: 'none' };
@@ -217,16 +221,18 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
+      <g clipPath={`url(#${clipPathId})`}>
+        {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
-      {plotType === 'line' && (
-        <React.Fragment>
-          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
-          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
-          <LineHighlightPlot slots={slots} slotProps={slotProps} />
-        </React.Fragment>
-      )}
-
+        {plotType === 'line' && (
+          <React.Fragment>
+            <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+            <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
+            <LineHighlightPlot slots={slots} slotProps={slotProps} />
+          </React.Fragment>
+        )}
+      </g>
+      <ChartsClipPath id={clipPathId} />
       <ChartsAxisHighlight {...axisHighlight} />
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
 
