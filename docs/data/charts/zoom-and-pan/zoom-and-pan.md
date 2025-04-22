@@ -52,6 +52,12 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
+## Zoom brush
+
+You can enable a zoom brush by setting the `zoom.overview` prop on the axis config.
+
+{{"demo": "ZoomBrush.js"}}
+
 ## Zoom management
 
 ### External zoom management

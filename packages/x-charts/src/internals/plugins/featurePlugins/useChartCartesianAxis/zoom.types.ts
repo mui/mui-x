@@ -88,7 +88,7 @@ export interface ZoomOverviewOptions {
    *
    * @default 30
    */
-  size: number;
+  size?: number;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
