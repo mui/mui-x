@@ -92,8 +92,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#e3d807e35a1b410dfb0d5240e72b8a8846768c03
-        version: https://codeload.github.com/mui/material-ui/tar.gz/e3d807e35a1b410dfb0d5240e72b8a8846768c03(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
+        specifier: github:mui/material-ui#adb0a76b09080d02f899789266336b297850d86b
+        version: https://codeload.github.com/mui/material-ui/tar.gz/adb0a76b09080d02f899789266336b297850d86b(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^7.0.2
         version: 7.0.2(@types/react@19.0.12)(react@19.0.0)
@@ -260,8 +260,8 @@ importers:
         specifier: ^7.37.5
         version: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-compiler:
-        specifier: 19.0.0-beta-e993439-20250405
-        version: 19.0.0-beta-e993439-20250405(eslint@8.57.1)
+        specifier: 19.0.0-beta-ebf51a3-20250411
+        version: 19.0.0-beta-ebf51a3-20250411(eslint@8.57.1)
       eslint-plugin-react-hooks:
         specifier: ^5.2.0
         version: 5.2.0(eslint@8.57.1)
@@ -3372,8 +3372,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e3d807e35a1b410dfb0d5240e72b8a8846768c03':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/e3d807e35a1b410dfb0d5240e72b8a8846768c03}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/adb0a76b09080d02f899789266336b297850d86b':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/adb0a76b09080d02f899789266336b297850d86b}
     version: 7.0.2
     engines: {pnpm: 10.8.1}
 
@@ -6242,8 +6242,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250405:
-    resolution: {integrity: sha512-8ZQU4qGc8NOfsM7u7tf7gXmZ+d4tSK+7BFb+Fvs4s9ItQ12m/G6ttSGxompH/Jq7nXgnJ20EqQRshwVG6GwUdA==}
+  eslint-plugin-react-compiler@19.0.0-beta-ebf51a3-20250411:
+    resolution: {integrity: sha512-R7ncuwbCPFAoeMlS56DGGSJFxmRtlWafYH/iWyep5Ks0RaPqTCL4k5gA87axUBBcITsaIgUGkbqAxDxl8Xfm5A==}
     engines: {node: ^14.17.0 || ^16.0.0 || >= 18.0.0}
     peerDependencies:
       eslint: '>=7'
@@ -12458,7 +12458,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e3d807e35a1b410dfb0d5240e72b8a8846768c03(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/adb0a76b09080d02f899789266336b297850d86b(@babel/core@7.26.10)(@types/express@5.0.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.6.0(encoding@0.1.13)
       '@netlify/functions': 3.0.4
@@ -15715,7 +15715,7 @@ snapshots:
       '@types/eslint': 8.56.12
       eslint-config-prettier: 10.1.2(eslint@8.57.1)
 
-  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250405(eslint@8.57.1):
+  eslint-plugin-react-compiler@19.0.0-beta-ebf51a3-20250411(eslint@8.57.1):
     dependencies:
       '@babel/core': 7.26.10
       '@babel/parser': 7.27.0
