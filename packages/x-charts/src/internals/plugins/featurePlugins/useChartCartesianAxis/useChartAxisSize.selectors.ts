@@ -1,4 +1,4 @@
-import { DEFAULT_ZOOM_BRUSH_SIZE } from '../../../../constants';
+import { DEFAULT_ZOOM_OVERVIEW_SIZE } from '../../../../constants';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -12,7 +12,7 @@ export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis],
         ? acc +
           (axis.width || 0) +
           (typeof axis.zoom === 'object' && axis.zoom.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE)
+            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
             : 0)
         : acc,
     0,
@@ -26,7 +26,7 @@ export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis]
         ? acc +
           (axis.width || 0) +
           (typeof axis.zoom === 'object' && axis.zoom.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE)
+            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
             : 0)
         : acc,
     0,
@@ -40,7 +40,7 @@ export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], 
         ? acc +
           (axis.height || 0) +
           (typeof axis.zoom === 'object' && axis.zoom.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE)
+            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
             : 0)
         : acc,
     0,
@@ -54,7 +54,7 @@ export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis
         ? acc +
           (axis.height || 0) +
           (typeof axis.zoom === 'object' && axis.zoom.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE)
+            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
             : 0)
         : acc,
     0,

@@ -1,4 +1,4 @@
-import { DEFAULT_ZOOM_BRUSH_SIZE } from '../../../../constants';
+import { DEFAULT_ZOOM_OVERVIEW_SIZE } from '../../../../constants';
 import { AxisId } from '../../../../models/axis';
 import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ZoomOptions } from './zoom.types';
@@ -11,7 +11,7 @@ const defaultZoomOptions = {
   maxSpan: 100,
   panning: true,
   filterMode: 'keep',
-  overview: { enabled: false, size: DEFAULT_ZOOM_BRUSH_SIZE },
+  overview: { enabled: false, size: DEFAULT_ZOOM_OVERVIEW_SIZE },
 } satisfies Omit<DefaultizedZoomOptions, 'axisId' | 'axisDirection'>;
 
 export const defaultizeZoom = (

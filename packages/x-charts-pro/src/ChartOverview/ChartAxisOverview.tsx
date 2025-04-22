@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { AxisId } from '@mui/x-charts/internals';
-import { DEFAULT_ZOOM_BRUSH_SIZE } from '@mui/x-charts/constants';
+import { DEFAULT_ZOOM_OVERVIEW_SIZE } from '@mui/x-charts/constants';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ChartZoomBrush } from './ChartZoomBrush';
+import { ChartAxisZoomOverview } from './ChartAxisZoomOverview';
 
 export interface ChartAxisOverviewProps {
   /**
@@ -27,7 +27,7 @@ export interface ChartAxisOverviewProps {
 export function ChartAxisOverview({
   axisId,
   axisDirection,
-  size = DEFAULT_ZOOM_BRUSH_SIZE,
+  size = DEFAULT_ZOOM_OVERVIEW_SIZE,
 }: ChartAxisOverviewProps) {
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
@@ -38,5 +38,7 @@ export function ChartAxisOverview({
     return null;
   }
 
-  return <ChartZoomBrush key={axisId} size={size} axisId={axisId} axisDirection={axisDirection} />;
+  return (
+    <ChartAxisZoomOverview key={axisId} size={size} axisId={axisId} axisDirection={axisDirection} />
+  );
 }

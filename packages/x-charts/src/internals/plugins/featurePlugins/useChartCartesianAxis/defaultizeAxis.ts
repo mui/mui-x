@@ -4,7 +4,7 @@ import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
-  DEFAULT_ZOOM_BRUSH_SIZE,
+  DEFAULT_ZOOM_OVERVIEW_SIZE,
 } from '../../../../constants';
 import { XAxis, YAxis } from '../../../../models';
 import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
@@ -50,7 +50,7 @@ export function defaultizeXAxis(
       const hasOverview = overview?.enabled;
 
       if (hasOverview) {
-        offsets[position] += overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
+        offsets[position] += overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
       }
     }
 
@@ -109,7 +109,7 @@ export function defaultizeYAxis(
       const hasOverview = overview?.enabled;
 
       if (hasOverview) {
-        offsets[position] += overview?.size ?? DEFAULT_ZOOM_BRUSH_SIZE;
+        offsets[position] += overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
       }
     }
 

@@ -18,7 +18,7 @@ import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
-import { ChartZoomBrushHandle } from './ChartZoomBrushHandle';
+import { ChartAxisZoomOverviewHandle } from './ChartAxisZoomOverviewHandle';
 
 const BackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
@@ -43,7 +43,7 @@ const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
 
 const PREVIEW_HANDLE_WIDTH = 4;
 
-interface ChartZoomBrushProps {
+interface ChartZoomOverviewProps {
   /**
    * The ID of the axis this overview refers to.
    */
@@ -60,10 +60,10 @@ interface ChartZoomBrushProps {
 }
 
 /**
- * Renders the zoom brush for a specific axis.
+ * Renders the zoom overview for a specific axis.
  * @internal
  */
-export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushProps) {
+export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoomOverviewProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
@@ -113,7 +113,7 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
         height={axisDirection === 'x' ? size : drawingArea.height}
         width={axisDirection === 'x' ? drawingArea.width : size}
       />
-      <ChartZoomBrushRange
+      <ChartAxisZoomOverviewSpan
         size={size}
         zoomData={zoomData}
         axisId={axisId}
@@ -123,7 +123,7 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
   );
 }
 
-function ChartZoomBrushRange({
+function ChartAxisZoomOverviewSpan({
   size,
   axisId,
   axisDirection,
@@ -265,7 +265,7 @@ function ChartZoomBrushRange({
       {
         // TODO: In RTL languages, should we start from the right?
       }
-      <ChartZoomBrushHandle
+      <ChartAxisZoomOverviewHandle
         x={
           axisDirection === 'x'
             ? (zoomData.start / 100) * drawingArea.width - previewHandleWidth / 2
@@ -281,7 +281,7 @@ function ChartZoomBrushRange({
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onResize={onResizeStart}
       />
-      <ChartZoomBrushHandle
+      <ChartAxisZoomOverviewHandle
         x={
           axisDirection === 'x'
             ? (zoomData.end / 100) * drawingArea.width - previewHandleWidth / 2

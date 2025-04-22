@@ -56,9 +56,9 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 You can provide an overview of the zoomed area by setting the `zoom.overview.enabled` property on the axis config.
 
-{{"demo": "ZoomBrush.js"}}
+{{"demo": "ZoomOverview.js"}}
 
-Optionally, you can set the `zoom.overview.size` property to customize the zoom brush's size, i.e., the height on a x-axis and the width on a y-axis.
+Optionally, you can set the `zoom.overview.size` property to customize the zoom overview's size, i.e., the height on a x-axis and the width on a y-axis.
 
 ### Composition
 

@@ -143,7 +143,7 @@
   { "name": "DEFAULT_ROTATION_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_X_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_Y_AXIS_KEY", "kind": "Variable" },
-  { "name": "DEFAULT_ZOOM_BRUSH_SIZE", "kind": "Variable" },
+  { "name": "DEFAULT_ZOOM_OVERVIEW_SIZE", "kind": "Variable" },
   { "name": "DefaultizedBarSeriesType", "kind": "Interface" },
   { "name": "DefaultizedCartesianSeriesType", "kind": "TypeAlias" },
   { "name": "DefaultizedLineSeriesType", "kind": "Interface" },

@@ -13,7 +13,7 @@ const series2Data = Array.from({ length: dataLength }).map((_, i) => ({
 
 const xData = data.map((d) => d.x);
 
-export default function ZoomBrush() {
+export default function ZoomOverview() {
   return (
     <ScatterChartPro
       xAxis={[
@@ -26,7 +26,7 @@ export default function ZoomBrush() {
             panning: true,
             overview: { enabled: true },
           },
-          valueFormatter: (v) => v.toLocaleString('en-US'),
+          valueFormatter: (v: number) => v.toLocaleString('en-US'),
         },
         {
           id: 'x2',
