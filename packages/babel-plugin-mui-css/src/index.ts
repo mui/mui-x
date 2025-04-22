@@ -63,10 +63,7 @@ export default function transformCSS({ types: t }: BabelT) {
         },
       },
 
-      // const styles = css('prefix', {
-      //   class1: { ... },
-      // });
-      CallExpression(path, { file }) {
+      CallExpression(path: Babel.NodePath, { file }) {
         const state = file.metadata.muiCSS as State;
         if (!state.enabled) {
           return;
@@ -74,23 +71,58 @@ export default function transformCSS({ types: t }: BabelT) {
         const {
           callee: { name: calleeName },
           arguments: args,
-        } = path.node;
+        } = path.node as any;
 
-        if (calleeName !== 'css') {
+        let prefix: string;
+        let sourceNode: Babel.types.ObjectExpression;
+
+        if (calleeName === 'css') {
+          // const styles = css('prefix', {
+          //   class1: { ... },
+          // });
+          const [prefixNode, classesNode] = args;
+
+          if (!t.isStringLiteral(prefixNode)) {
+            throw new Error(`Invalid CSS prefix: ${formatLocation(file, path.node)}`);
+          }
+          if (!t.isObjectExpression(classesNode)) {
+            throw new Error(`Invalid CSS styles: ${formatLocation(file, path.node)}`);
+          }
+
+          prefix = prefixNode.extra.rawValue as string;
+          sourceNode = classesNode;
+        } else if (calleeName === 'slot') {
+          // const slotN = slot({ name: 'Grid', slot: 'label' }, {
+          //   class1: { ... },
+          // });
+          const [metaNode, classesNode] = args;
+
+          if (!t.isObjectExpression(metaNode)) {
+            throw new Error(`Invalid slot metadata: ${formatLocation(file, path.node)}`);
+          }
+          if (!t.isObjectExpression(classesNode)) {
+            throw new Error(`Invalid CSS styles: ${formatLocation(file, path.node)}`);
+          }
+
+          const nameNode = metaNode.properties.find(
+            (p) =>
+              p.type === 'ObjectProperty' && p.key.type === 'Identifier' && p.key.name === 'name',
+          );
+          const slotNode = metaNode.properties.find(
+            (p) =>
+              p.type === 'ObjectProperty' && p.key.type === 'Identifier' && p.key.name === 'slot',
+          );
+
+          const name = (nameNode as any).value.value;
+          const slot = (slotNode as any).value.value;
+
+          prefix = `${name}-${slot}`;
+          sourceNode = classesNode;
+        } else {
           return;
         }
-        if (!t.isStringLiteral(args[0])) {
-          throw new Error(`Invalid CSS prefix: ${formatLocation(file, path.node)}`);
-        }
-        if (!t.isObjectExpression(args[1])) {
-          throw new Error(`Invalid CSS styles: ${formatLocation(file, path.node)}`);
-        }
 
-        const [prefixNode, classesNode] = args;
-
-        const prefix = prefixNode.extra.rawValue;
-
-        const source = file.code.slice(classesNode.start, classesNode.end);
+        const source = file.code.slice(sourceNode.start, sourceNode.end);
 
         try {
           const result = vm.runInContext(
@@ -104,7 +136,17 @@ export default function transformCSS({ types: t }: BabelT) {
 
           const classes = result;
 
-          path.replaceWith(buildClassesNode(file.metadata.muiCSS, prefix, classes));
+          switch (calleeName) {
+            case 'css': {
+              path.replaceWith(buildClassesNode(file.metadata.muiCSS, prefix, classes));
+              break;
+            }
+            case 'slot': {
+              args[1] = buildClassesNode(file.metadata.muiCSS, prefix, classes);
+              break;
+            }
+            default:
+          }
         } catch (error) {
           error.message = `[mui-css] Failed to compile styles for ${formatLocation(file, path.node)}: ${error.message}`;
           throw error;

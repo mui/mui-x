@@ -1,31 +1,29 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
-import { css } from '@mui/x-internals/css';
+import { slot } from '@mui/x-internals/css';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isOverflown } from '../../utils/domUtils';
-import { composeGridStyles } from '../../utils/composeGridStyles';
 import { vars } from '../../constants/cssVariables';
+import { useGridSlot } from '../../hooks/utils/useGridSlot';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = DataGridProcessedProps;
-
-const GridColumnHeaderTitleRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'columnHeaderTitle',
-})<{ ownerState: OwnerState }>(null);
-
-const styles = css('MuiDataGrid-columnHeaderTitle', {
-  root: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    fontWeight: vars.typography.fontWeight.medium,
-    lineHeight: 'normal',
+const slotColumnHeaderTitle = slot(
+  {
+    as: 'div',
+    name: 'MuiDataGrid',
+    slot: 'columnHeaderTitle',
   },
-});
+  {
+    root: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      fontWeight: vars.typography.fontWeight.medium,
+      lineHeight: 'normal',
+    },
+  },
+);
 
 const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function ColumnHeaderInnerTitle(props, ref) {
@@ -33,12 +31,12 @@ const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<H
     // See https://github.com/mui/mui-x/pull/14482
     const { className, 'aria-label': ariaLabel, ...other } = props;
     const rootProps = useGridRootProps();
-    const classes = composeGridStyles(styles, rootProps.classes);
+    const columnHeaderTitle = useGridSlot(rootProps, slotColumnHeaderTitle);
 
     return (
-      <GridColumnHeaderTitleRoot
-        className={clsx(classes.root, className)}
+      <columnHeaderTitle.component
         ownerState={rootProps}
+        className={clsx(columnHeaderTitle.classes.root, className)}
         {...other}
         ref={ref}
       />

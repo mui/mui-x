@@ -3,29 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRoot } from '../components';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
-import { useMaterialCSSVariables } from '../material/variables';
-import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
+import { configuration, setupMaterialStyleSlots } from './configuration';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
-
-const configuration: GridConfiguration = {
-  hooks: {
-    useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
-    useCellAggregationResult: () => null,
-  },
-};
 
 const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -37,6 +25,8 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
     props,
   );
   useDataGridComponent(privateApiRef, props);
+
+  setupMaterialStyleSlots();
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);

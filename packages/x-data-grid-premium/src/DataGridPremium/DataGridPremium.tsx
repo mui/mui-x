@@ -13,10 +13,9 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
-  GridConfiguration,
   useGridApiInitialization,
+  setupMaterialStyleSlots,
 } from '@mui/x-data-grid-pro/internals';
-import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -26,27 +25,13 @@ import {
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
 import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
+import { configuration } from './configuration';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
-  hooks: {
-    useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
-    useCellAggregationResult: (id, field) => {
-      const apiRef = useGridApiContext();
-      return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
-    },
-  },
-};
 const releaseInfo = '__RELEASE_INFO__';
 const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
@@ -68,6 +53,8 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
 
   const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
+
+  setupMaterialStyleSlots();
 
   const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
 

@@ -16,6 +16,7 @@ export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColum
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
+export * from '../DataGrid/configuration';
 
 export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
