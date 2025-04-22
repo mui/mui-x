@@ -13,7 +13,7 @@ The default locale of MUI X is English (United States). If you want to use othe
 ## Translation keys
 
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/constants/defaultLocale.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/locales/enUS.ts)
 in the GitHub repository.
 In the following example, the labels of the loading overlay are customized.
 

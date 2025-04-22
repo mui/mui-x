@@ -42,7 +42,7 @@ const packagesWithL10n = [
   {
     key: 'charts',
     reportName: '📊 Charts',
-    constantsRelativePath: 'packages/x-charts/src/constants/defaultLocale.ts',
+    constantsRelativePath: 'packages/x-charts/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-charts/src/locales',
     documentationReportPath: 'docs/data/charts/localization/data.json',
   },

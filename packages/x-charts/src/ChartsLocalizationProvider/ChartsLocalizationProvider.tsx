@@ -2,8 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsLocaleText } from '../locales';
-import { CHARTS_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocale';
+import type { ChartsLocaleText } from '../locales/utils/chartsLocaleTextApi';
+import { DEFAULT_LOCALE } from '../locales/enUS';
 
 export interface ChartsLocalizationContextValue {
   localeText: ChartsLocaleText;
@@ -52,7 +52,7 @@ function ChartsLocalizationProvider(inProps: ChartsLocalizationProviderProps) {
 
   const localeText = React.useMemo(
     () => ({
-      ...CHARTS_DEFAULT_LOCALE_TEXT,
+      ...DEFAULT_LOCALE,
       ...themeLocaleText,
       ...parentLocaleText,
       ...inLocaleText,
