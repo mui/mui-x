@@ -98,8 +98,10 @@ function MockTime(
   React.useEffect(() => {
     if (props.shouldRunToFrame) {
       console.log('running to frame');
+      fakeClock?.tick(16);
       fakeClock?.runToFrame();
       console.log('ran to first frame');
+      fakeClock?.tick(16);
       fakeClock?.runToFrame();
       console.log('ran to second frame');
     }
