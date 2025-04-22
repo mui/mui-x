@@ -23,7 +23,6 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.26.0",
     "babel-plugin-remove-import-export": "^1.1.1",
-    "lightningcss": "^1.29.1",
     "pkg-dir": "^8.0.0",
     "typescript": "^5.8.3"
   },
