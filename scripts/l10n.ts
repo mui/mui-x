@@ -79,7 +79,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|Charts)/.test(node.id.name)) {
+          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|LocalText)/.test(node.id.name)) {
             visitorPath.skip();
             return;
           }
