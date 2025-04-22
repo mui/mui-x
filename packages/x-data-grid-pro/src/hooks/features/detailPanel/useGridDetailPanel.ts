@@ -89,7 +89,6 @@ export const useGridDetailPanel = (
     | 'onDetailPanelExpandedRowIdsChange'
   >,
 ): void => {
-  const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
 
   const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
@@ -283,7 +282,8 @@ export const useGridDetailPanel = (
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
-      if (!expandedRowIds || expandedRowIds.size === 0 || !expandedRowIds.has(row.id)) {
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef);
+      if (!expandedRowIds || !expandedRowIds.has(row.id)) {
         initialValue.detail = 0;
         return initialValue;
       }
@@ -295,7 +295,7 @@ export const useGridDetailPanel = (
       initialValue.detail = heightCache[row.id].height ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
       return initialValue;
     },
-    [apiRef, expandedRowIds, updateCachesIfNeeded],
+    [apiRef, updateCachesIfNeeded],
   );
 
   const enabled = props.getDetailPanelContent !== undefined;
