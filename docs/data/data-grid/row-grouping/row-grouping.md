@@ -232,7 +232,7 @@ const columns: GridColDef[] = [
 If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
 :::
 
-### Rows with missing groups
+## Rows with missing groups
 
 If a grouping criterion's key is `null` or `undefined` for a given row, the Data Grid will treat that row as if it doesn't have a value and exclude it from grouping.
 
