@@ -306,7 +306,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // Context: https://github.com/mui/mui-x/issues/17441
-    it('should deselect a row withing the range when clicking the row', async () => {
+    it('should deselect a row within the range when clicking the row', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection />);
       await user.click(getCell(0, 1));
       expect(getSelectedRowIds()).to.deep.equal([0]);
