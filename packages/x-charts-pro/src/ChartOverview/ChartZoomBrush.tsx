@@ -297,11 +297,10 @@ function ChartZoomBrushRange({
   );
 }
 
-// TODO: Test
-function calculateZoomStart(
+export function calculateZoomStart(
   newStart: number,
   currentZoom: ZoomData,
-  options: DefaultizedZoomOptions,
+  options: Pick<DefaultizedZoomOptions, 'minStart' | 'minSpan' | 'maxSpan'>,
 ) {
   const { minStart, minSpan, maxSpan } = options;
 
@@ -312,7 +311,11 @@ function calculateZoomStart(
   );
 }
 
-function calculateZoomEnd(newEnd: number, currentZoom: ZoomData, options: DefaultizedZoomOptions) {
+export function calculateZoomEnd(
+  newEnd: number,
+  currentZoom: ZoomData,
+  options: Pick<DefaultizedZoomOptions, 'maxEnd' | 'minSpan' | 'maxSpan'>,
+) {
   const { maxEnd, minSpan, maxSpan } = options;
 
   return Math.min(
