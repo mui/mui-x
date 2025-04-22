@@ -1,7 +1,7 @@
 import { type StyleSlot } from '@mui/x-internals/css';
 import { composeGridStyles } from '../../utils/composeGridStyles';
-import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridConfiguration } from './useGridConfiguration';
 
 export function useGridSlot<S extends StyleSlot<any, any, any>>(
   rootProps: DataGridProcessedProps,

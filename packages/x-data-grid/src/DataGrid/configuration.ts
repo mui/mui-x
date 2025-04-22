@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { StyleSlot, STYLE_SLOT_REGISTRY } from '@mui/x-internals/css';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
@@ -14,8 +14,8 @@ export function setupMaterialStyleSlots() {
   }
   didSetup = true;
 
+  // eslint-disable-next-line guard-for-in
   for (const key in STYLE_SLOT_REGISTRY) {
-    // eslint-disable-line guard-for-in
     const slot = STYLE_SLOT_REGISTRY[key] as StyleSlot<any, any, any>;
     const materialSlot = {
       ...slot,

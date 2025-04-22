@@ -37,11 +37,12 @@ export function slot<C extends JSXElement, K extends string>(
 
   meta.id = `${meta.name}-${meta.slot}`;
 
-  const slot = (STYLE_SLOT_REGISTRY[meta.slot] = {
+  const result = {
     component: Component,
     meta,
     classes,
-  });
+  };
+  STYLE_SLOT_REGISTRY[meta.slot] = result;
 
-  return slot;
+  return result;
 }
