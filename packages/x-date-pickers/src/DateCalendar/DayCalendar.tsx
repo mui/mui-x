@@ -8,7 +8,8 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
+import { PickersDay, PickerDayOwnerState, PickersDayProps } from '../PickersDay';
+import { ExportedPickersDayProps } from '../PickersDay/PickersDay.types';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -27,10 +28,10 @@ import {
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
-import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { PickerValidDate, TimezoneProps } from '../models';
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { FormProps } from '../internals/models/formProps';
+import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {
   /**
@@ -43,12 +44,6 @@ export interface DayCalendarSlots {
 
 export interface DayCalendarSlotProps {
   day?: SlotComponentPropsFromProps<PickersDayProps, {}, PickerDayOwnerState>;
-}
-
-export interface PickerDayOwnerState extends PickerOwnerState {
-  isDaySelected: boolean;
-  isDayDisabled: boolean;
-  day: PickerValidDate;
 }
 
 export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
@@ -141,13 +136,11 @@ const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 const PickersCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({});
 
 const PickersCalendarDayHeader = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Header',
-  overridesResolver: (_, styles) => styles.header,
 })({
   display: 'flex',
   justifyContent: 'center',
@@ -157,7 +150,6 @@ const PickersCalendarDayHeader = styled('div', {
 const PickersCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
-  overridesResolver: (_, styles) => styles.weekDayLabel,
 })(({ theme }) => ({
   width: 36,
   height: 40,
@@ -172,7 +164,6 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
 const PickersCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
-  overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
   width: 36,
   height: 40,
@@ -181,20 +172,19 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  color: theme.palette.text.disabled,
+  color: (theme.vars || theme).palette.text.disabled,
 }));
 
 const PickersCalendarWeekNumber = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumber',
-  overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
   padding: 0,
   margin: `0 ${DAY_MARGIN}px`,
-  color: theme.palette.text.disabled,
+  color: (theme.vars || theme).palette.text.disabled,
   fontSize: '0.75rem',
   alignItems: 'center',
   justifyContent: 'center',
@@ -204,7 +194,6 @@ const PickersCalendarWeekNumber = styled(Typography, {
 const PickersCalendarLoadingContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'LoadingContainer',
-  overridesResolver: (_, styles) => styles.loadingContainer,
 })({
   display: 'flex',
   justifyContent: 'center',
@@ -215,7 +204,6 @@ const PickersCalendarLoadingContainer = styled('div', {
 const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
-  overridesResolver: (_, styles) => styles.slideTransition,
 })({
   minHeight: weeksContainerHeight,
 });
@@ -223,13 +211,11 @@ const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
 const PickersCalendarWeekContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'MonthContainer',
-  overridesResolver: (_, styles) => styles.monthContainer,
 })({ overflow: 'hidden' });
 
 const PickersCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'WeekContainer',
-  overridesResolver: (_, styles) => styles.weekContainer,
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
@@ -266,17 +252,30 @@ function WrappedDay({
 
   const utils = useUtils();
   const now = useNow(timezone);
-  const { ownerState } = usePickerPrivateContext();
 
   const isFocusableDay = focusedDay != null && utils.isSameDay(day, focusedDay);
   const isFocusedDay = isViewFocused && isFocusableDay;
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
-
   const isDisabled = React.useMemo(
     () => disabled || isDateDisabled(day),
     [disabled, isDateDisabled, day],
   );
+  const isOutsideCurrentMonth = React.useMemo(
+    () => utils.getMonth(day) !== currentMonthNumber,
+    [utils, day, currentMonthNumber],
+  );
+
+  const ownerState = usePickerDayOwnerState({
+    day,
+    selected: isSelected,
+    disabled: isDisabled,
+    today: isToday,
+    outsideCurrentMonth: isOutsideCurrentMonth,
+    disableMargin: undefined, // This prop can only be defined using slotProps.day so the ownerState for useSlotProps cannot have its value.
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
+  });
 
   const Day = slots?.day ?? PickersDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
@@ -294,11 +293,6 @@ function WrappedDay({
     },
     ownerState: { ...ownerState, day, isDayDisabled: isDisabled, isDaySelected: isSelected },
   });
-
-  const outsideCurrentMonth = React.useMemo(
-    () => utils.getMonth(day) !== currentMonthNumber,
-    [utils, day, currentMonthNumber],
-  );
 
   const isFirstVisibleCell = React.useMemo(() => {
     const startOfMonth = utils.startOfMonth(utils.setMonth(day, currentMonthNumber));
@@ -321,9 +315,9 @@ function WrappedDay({
       {...dayProps}
       day={day}
       disabled={isDisabled}
-      autoFocus={!outsideCurrentMonth && isFocusedDay}
+      autoFocus={!isOutsideCurrentMonth && isFocusedDay}
       today={isToday}
-      outsideCurrentMonth={outsideCurrentMonth}
+      outsideCurrentMonth={isOutsideCurrentMonth}
       isFirstVisibleCell={isFirstVisibleCell}
       isLastVisibleCell={isLastVisibleCell}
       selected={isSelected}

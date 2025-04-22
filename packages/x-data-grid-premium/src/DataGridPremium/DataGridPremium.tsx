@@ -2,12 +2,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridRoot,
+  GridContextProvider,
+  GridValidRowModel,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  GridConfiguration,
+  useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -17,20 +24,30 @@ import {
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
-import { getReleaseInfo } from '../utils/releaseInfo';
+import { Sidebar } from '../components/sidebar';
+import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
+import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: (id, field) => {
+      const apiRef = useGridApiContext();
+      return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
+    },
   },
 };
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
@@ -43,13 +60,27 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   inProps: DataGridPremiumProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDataGridPremiumProps(inProps);
-  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const initialProps = useDataGridPremiumProps(inProps);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiPremium, GridApiPremium>(
+    initialProps.apiRef,
+    initialProps,
+  );
+
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
+
+  const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
+  const sidePanel =
+    isPivotingAvailable(props) && pivotSettingsOpen ? (
+      <Sidebar>
+        <GridPivotPanel />
+      </Sidebar>
+    ) : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -59,6 +90,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sx={props.sx}
         {...props.slotProps?.root}
         ref={ref}
+        sidePanel={sidePanel}
       >
         {watermark}
       </GridRoot>
@@ -88,17 +120,65 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: PropTypes.bool,
+  /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex: PropTypes.number,
+  /**
+   * The conversations with the AI Assistant.
+   */
+  aiAssistantConversations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      prompts: PropTypes.arrayOf(
+        PropTypes.shape({
+          createdAt: PropTypes.instanceOf(Date).isRequired,
+          helperText: PropTypes.string,
+          response: PropTypes.shape({
+            aggregation: PropTypes.object.isRequired,
+            conversationId: PropTypes.string.isRequired,
+            filterOperator: PropTypes.oneOf(['and', 'or']),
+            filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+            grouping: PropTypes.arrayOf(PropTypes.object).isRequired,
+            pivoting: PropTypes.object.isRequired,
+            select: PropTypes.number.isRequired,
+            sorting: PropTypes.arrayOf(PropTypes.object).isRequired,
+          }),
+          value: PropTypes.string.isRequired,
+          variant: PropTypes.oneOf(['error', 'processing', 'success']),
+        }),
+      ).isRequired,
+      title: PropTypes.string,
+    }),
+  ),
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+    }),
+  ),
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling: PropTypes.bool,
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -160,6 +240,7 @@ DataGridPremiumRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -310,6 +391,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleRowSelection: PropTypes.bool,
   /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: PropTypes.bool,
+  /**
    * If `true`, the row grouping is disabled.
    * @default false
    */
@@ -374,7 +460,7 @@ DataGridPremiumRaw.propTypes = {
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default (groupNode) => groupNode == null ? 'footer' : 'inline'
+   * @default (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')
    */
   getAggregationPosition: PropTypes.func,
   /**
@@ -404,6 +490,15 @@ DataGridPremiumRaw.propTypes = {
    * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
    */
   getEstimatedRowHeight: PropTypes.func,
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
@@ -528,6 +623,12 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
+  /**
    * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
@@ -539,6 +640,21 @@ DataGridPremiumRaw.propTypes = {
    * @default 500
    */
   lazyLoadingRequestThrottleMs: PropTypes.number,
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listViewColumn`.
+   */
+  listView: PropTypes.bool,
+  /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
+  listViewColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -574,6 +690,16 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange: PropTypes.func,
+  /**
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
+   */
+  onAiAssistantConversationsChange: PropTypes.func,
   /**
    * Callback fired before the clipboard paste operation starts.
    * Use it to confirm or cancel the paste operation.
@@ -741,7 +867,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows: PropTypes.func,
   /**
@@ -782,6 +908,21 @@ DataGridPremiumRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
+   * Callback fired when the pivot active state changes.
+   * @param {boolean} isPivotActive Whether the data grid is in pivot mode.
+   */
+  onPivotActiveChange: PropTypes.func,
+  /**
+   * Callback fired when the pivot model changes.
+   * @param {GridPivotModel} pivotModel The new pivot model.
+   */
+  onPivotModelChange: PropTypes.func,
+  /**
+   * Callback fired when the pivot side panel open state changes.
+   * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   */
+  onPivotPanelOpenChange: PropTypes.func,
+  /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
@@ -800,6 +941,14 @@ DataGridPremiumRaw.propTypes = {
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt: PropTypes.func,
   /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
@@ -869,7 +1018,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -936,6 +1085,62 @@ DataGridPremiumRaw.propTypes = {
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  /**
+   * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
+   * @default false
+   */
+  pivotActive: PropTypes.bool,
+  /**
+   * The column definition overrides for the columns generated by the pivoting feature.
+   * @param {string} originalColumnField The field of the original column.
+   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
+   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * @default undefined
+   */
+  pivotingColDef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      align: PropTypes.oneOf(['center', 'left', 'right']),
+      cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      description: PropTypes.string,
+      display: PropTypes.oneOf(['flex', 'text']),
+      flex: PropTypes.number,
+      headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+      headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      headerName: PropTypes.string,
+      maxWidth: PropTypes.number,
+      minWidth: PropTypes.number,
+      resizable: PropTypes.bool,
+      sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+      width: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The pivot model of the grid.
+   * Will be used to generate the pivot data.
+   * In case of `pivotActive` being `false`, the pivot model is still used to populate the pivot panel.
+   */
+  pivotModel: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+    rows: PropTypes.arrayOf(
+      PropTypes.shape({
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
+    values: PropTypes.arrayOf(
+      PropTypes.shape({
+        aggFunc: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
+  }),
+  /**
+   * If `true`, the pivot side panel is visible.
+   * @default false
+   */
+  pivotPanelOpen: PropTypes.bool,
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
@@ -1023,7 +1228,7 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
@@ -1097,6 +1302,7 @@ DataGridPremiumRaw.propTypes = {
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: PropTypes.func,
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -1116,21 +1322,6 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
-   */
-  unstable_listColumn: PropTypes.shape({
-    align: PropTypes.oneOf(['center', 'left', 'right']),
-    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    display: PropTypes.oneOf(['flex', 'text']),
-    field: PropTypes.string.isRequired,
-    renderCell: PropTypes.func,
-  }),
-  /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
-   */
-  unstable_listView: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

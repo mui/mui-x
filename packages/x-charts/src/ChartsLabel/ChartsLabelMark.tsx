@@ -33,19 +33,14 @@ export interface ChartsLabelMarkProps {
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelMarkProps }>(() => {
   return {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
     width: 14,
     height: 14,
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
       height: 'unset',
-      display: 'flex',
       alignItems: 'center',
       [`.${labelMarkClasses.mask}`]: {
         height: 4,

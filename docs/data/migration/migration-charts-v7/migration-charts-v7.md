@@ -19,17 +19,43 @@ With the v8 you can now:
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `latest`.
 
 ```diff
--"@mui/x-charts": "^7.0.0",
-+"@mui/x-charts": "next",
+-"@mui/x-charts": "^7.x.x",
++"@mui/x-charts": "latest",
 
--"@mui/x-charts-pro": "^7.0.0",
-+"@mui/x-charts-pro": "next",
+-"@mui/x-charts-pro": "^7.x.x",
++"@mui/x-charts-pro": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Since `v8` is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from `v7` to `v8`.
+
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-charts': '@mui/x-charts/modern',
+-      '@mui/x-charts-pro': '@mui/x-charts-pro/modern',
+     }
+   }
+ }
+```
 
 ## Breaking changes
 
@@ -139,6 +165,17 @@ Renames `LegendPosition` to `Position`.
 +import { Position } from '@mui/x-charts/models';
 ```
 
+## Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
+
+The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
+
+```diff
+ <BarChart
+-  slotProps={{ legend: { hidden: true } }}
++  hideLegend
+ />
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
@@ -158,8 +195,54 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 
 Some helpers are provided to create your custom tooltip:
 
-- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxesTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
+
+## Update Tooltip DOM structure
+
+The DOM structure of the tooltip content was modified as follows.
+If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
+
+### Axis tooltip
+
+The data relative to the axis value are moved from the `header` to the `caption` of the table.
+The series label cell is now a header cell `th` instead of `td`.
+
+```diff
+  <table>
+-   <header>
+-     <tr>
+-       <td colspan='3'>The formatted x-axis value</td>
+-     </tr>
+-   <header>
++   <caption>The formatted x-axis value</caption>
+    <tbody>
+      <tr>
+-       <td><Mark color='red'/></td>
+-       <td>Series A</td>
++       <th><Mark color='red'/>Series A</th>
+        <td>55</td>
+      </tr>
+    <tbody>
+  </table>
+```
+
+### Item tooltip
+
+DOM modification is similar to the axis tooltip in the previous section.
+
+```diff
+  <table>
+    <tbody>
+      <tr>
+-       <td><Mark color='red'/></td>
+-       <td>Series A</td>
++       <th><Mark color='red'/>Series A</th>
+        <td>55</td>
+      </tr>
+    <tbody>
+  </table>
+```
 
 ## Removing ResponsiveChartContainer ✅
 
@@ -169,8 +252,8 @@ You can now use `ChartContainer` as a responsive container which works now exact
 ```diff
 -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 -import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 
 -<ResponsiveChartContainer>
 +<ChartContainer>
@@ -317,7 +400,7 @@ It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
 
-> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart

@@ -47,14 +47,6 @@ module.exports = {
           cacheDirectory: true,
         },
       },
-      {
-        test: /\.(ts|tsx)$/,
-        loader: 'string-replace-loader',
-        options: {
-          search: '__RELEASE_INFO__',
-          replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
-        },
-      },
     ],
   },
 };

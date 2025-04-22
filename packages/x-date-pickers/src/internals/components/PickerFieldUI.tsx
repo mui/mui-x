@@ -13,12 +13,12 @@ import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFi
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
-import type { UseFieldResponse } from '../hooks/useField';
+import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<
-    UseFieldResponse<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+    UseFieldReturnValue<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
     'onClear' | 'clearable'
   >,
 >({
@@ -93,7 +93,10 @@ export const PickerFieldUIContext = React.createContext<PickerFieldUIContextValu
  * Adds the button to open the Picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
-export function PickerFieldUI(props: PickerFieldUIProps) {
+export function PickerFieldUI<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+>(props: PickerFieldUIProps<TEnableAccessibleFieldDOMStructure, TProps>) {
   const { slots, slotProps, fieldResponse, defaultOpenPickerIcon } = props;
 
   const translations = usePickerTranslations();
@@ -305,7 +308,10 @@ export interface ExportedPickerFieldUIProps {
   openPickerButtonPosition?: 'start' | 'end';
 }
 
-export interface PickerFieldUIProps {
+export interface PickerFieldUIProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+> {
   /**
    * Overridable component slots.
    * @default {}
@@ -319,7 +325,7 @@ export interface PickerFieldUIProps {
   /**
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
-  fieldResponse: UseFieldResponse<any, any>;
+  fieldResponse: UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TProps>;
   /**
    * The component to use to render the Picker opening icon if none is provided in the Picker's slots.
    */
@@ -363,7 +369,7 @@ export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
+    Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
     {},
     FieldOwnerState
   >;
@@ -454,7 +460,7 @@ interface UseFieldTextFieldPropsParameters {
   slotProps:
     | {
         textField?: SlotComponentPropsFromProps<
-          PickersTextFieldProps | TextFieldProps,
+          Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
           {},
           FieldOwnerState
         >;

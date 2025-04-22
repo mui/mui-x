@@ -18,8 +18,14 @@
 - [QuickFilter](/x/api/data-grid/quick-filter/)
 - [QuickFilterControl](/x/api/data-grid/quick-filter-control/)
 - [QuickFilterClear](/x/api/data-grid/quick-filter-clear/)
+- [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger/)
 - [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
 - [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
+- [AiAssistantPanelTrigger](/x/api/data-grid/ai-assistant-panel-trigger/)
+- [PromptField](/x/api/data-grid/prompt-field/)
+- [PromptFieldRecord](/x/api/data-grid/prompt-field-record/)
+- [PromptFieldControl](/x/api/data-grid/prompt-field-control/)
+- [PromptFieldSend](/x/api/data-grid/prompt-field-send/)
 
 ## Interfaces
 
@@ -28,7 +34,7 @@
 - [GridColDef](/x/api/data-grid/grid-col-def/)
 - [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def/)
 - [GridActionsColDef](/x/api/data-grid/grid-actions-col-def/)
-- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
+- [GridListViewColDef](/x/api/data-grid/grid-list-view-col-def/)
 - [GridExportStateParams](/x/api/data-grid/grid-export-state-params/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)

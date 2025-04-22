@@ -1,5 +1,5 @@
 {
-  "interfaceDescription": "",
+  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code>, <code>YAxis</code>, <code>RotationAxis</code> or <code>RadiusAxis</code>.",
   "propertiesDescriptions": {
     "id": { "description": "Id used to identify the axis." },
     "scaleType": { "description": "" },
@@ -19,6 +19,9 @@
     "fill": { "description": "The fill color of the axis text." },
     "height": { "description": "The height of the axis." },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
+    "ignoreTooltip": {
+      "description": "If <code>true</code>, the axis will be ignored by the tooltip with <code>trigger=&#39;axis&#39;</code>."
+    },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
     "max": {

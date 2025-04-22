@@ -8,7 +8,7 @@ import {
   removeLocalizedDigits,
 } from './useField.utils';
 
-interface BuildSectionsFromFormatParams {
+interface BuildSectionsFromFormatParameters {
   utils: MuiPickersAdapter;
   format: string;
   formatDensity: 'dense' | 'spacious';
@@ -22,7 +22,7 @@ interface BuildSectionsFromFormatParams {
 
 type FormatEscapedParts = { start: number; end: number }[];
 
-const expandFormat = ({ utils, format }: BuildSectionsFromFormatParams) => {
+const expandFormat = ({ utils, format }: BuildSectionsFromFormatParameters) => {
   // Expand the provided format
   let formatExpansionOverflow = 10;
   let prevFormat = format;
@@ -44,7 +44,7 @@ const expandFormat = ({ utils, format }: BuildSectionsFromFormatParams) => {
 const getEscapedPartsFromFormat = ({
   utils,
   expandedFormat,
-}: BuildSectionsFromFormatParams & { expandedFormat: string }) => {
+}: BuildSectionsFromFormatParameters & { expandedFormat: string }) => {
   const escapedParts: FormatEscapedParts = [];
   const { start: startChar, end: endChar } = utils.escapedCharacters;
   const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
@@ -121,7 +121,7 @@ const createSection = ({
   now,
   token,
   startSeparator,
-}: BuildSectionsFromFormatParams & {
+}: BuildSectionsFromFormatParameters & {
   now: PickerValidDate;
   token: string;
   startSeparator: string;
@@ -154,7 +154,7 @@ const createSection = ({
     } else {
       if (sectionConfig.maxLength == null) {
         throw new Error(
-          `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+          `MUI X: The token ${token} should have a 'maxLength' property on it's adapter`,
         );
       }
 
@@ -184,12 +184,12 @@ const createSection = ({
 };
 
 const buildSections = (
-  params: BuildSectionsFromFormatParams & {
+  parameters: BuildSectionsFromFormatParameters & {
     expandedFormat: string;
     escapedParts: FormatEscapedParts;
   },
 ) => {
-  const { utils, expandedFormat, escapedParts } = params;
+  const { utils, expandedFormat, escapedParts } = parameters;
 
   const now = utils.date(undefined);
   const sections: FieldSection[] = [];
@@ -222,7 +222,7 @@ const buildSections = (
       while (word.length > 0) {
         const firstWord = regExpFirstTokenInWord.exec(word)![1];
         word = word.slice(firstWord.length);
-        sections.push(createSection({ ...params, now, token: firstWord, startSeparator }));
+        sections.push(createSection({ ...parameters, now, token: firstWord, startSeparator }));
         startSeparator = '';
       }
 
@@ -244,6 +244,7 @@ const buildSections = (
           startSeparator += char;
         } else {
           sections[sections.length - 1].endSeparator += char;
+          sections[sections.length - 1].isEndFormatSeparator = true;
         }
       }
 
@@ -274,7 +275,7 @@ const postProcessSections = ({
   isRtl,
   formatDensity,
   sections,
-}: BuildSectionsFromFormatParams & {
+}: BuildSectionsFromFormatParameters & {
   sections: FieldSection[];
 }) => {
   return sections.map((section) => {
@@ -298,14 +299,14 @@ const postProcessSections = ({
   });
 };
 
-export const buildSectionsFromFormat = (params: BuildSectionsFromFormatParams) => {
-  let expandedFormat = expandFormat(params);
-  if (params.isRtl && params.enableAccessibleFieldDOMStructure) {
+export const buildSectionsFromFormat = (parameters: BuildSectionsFromFormatParameters) => {
+  let expandedFormat = expandFormat(parameters);
+  if (parameters.isRtl && parameters.enableAccessibleFieldDOMStructure) {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 
-  const escapedParts = getEscapedPartsFromFormat({ ...params, expandedFormat });
-  const sections = buildSections({ ...params, expandedFormat, escapedParts });
+  const escapedParts = getEscapedPartsFromFormat({ ...parameters, expandedFormat });
+  const sections = buildSections({ ...parameters, expandedFormat, escapedParts });
 
-  return postProcessSections({ ...params, sections });
+  return postProcessSections({ ...parameters, sections });
 };

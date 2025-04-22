@@ -25,15 +25,14 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
-export default function ListViewAdvanced(props) {
+export default function ListViewAdvanced({ window }) {
   // This is used only for the example - renders the drawer inside the container
-  const containerRef = React.useRef(null);
-  const container = () => containerRef.current;
+  const container = window !== undefined ? window().document.body : undefined;
 
   const theme = useTheme();
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
-  const isDocsDemo = props.window !== undefined;
+  const isDocsDemo = window !== undefined;
   const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
@@ -212,7 +211,7 @@ export default function ListViewAdvanced(props) {
     [handleDelete, apiRef],
   );
 
-  const listColDef = React.useMemo(
+  const listViewColDef = React.useMemo(
     () => ({
       field: 'listCell',
       renderCell: (params) => (
@@ -264,7 +263,6 @@ export default function ListViewAdvanced(props) {
     <React.Fragment>
       <CSSBaseline />
       <div
-        ref={containerRef}
         style={{
           maxWidth: '100%',
           height: 600,
@@ -288,8 +286,8 @@ export default function ListViewAdvanced(props) {
               variant: 'linear-progress',
             },
           }}
-          unstable_listView={isListView}
-          unstable_listColumn={listColDef}
+          listView={isListView}
+          listViewColumn={listViewColDef}
           pagination
           pageSizeOptions={[10]}
           initialState={{

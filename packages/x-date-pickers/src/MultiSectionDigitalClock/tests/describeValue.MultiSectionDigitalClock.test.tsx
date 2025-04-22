@@ -10,11 +10,10 @@ import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigita
 import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<MultiSectionDigitalClock /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'multi-section-digital-clock'>(MultiSectionDigitalClock, () => ({
     render,
-    clock,
     componentFamily: 'multi-section-digital-clock',
     type: 'time',
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],

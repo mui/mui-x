@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
 import { TimeRangePickerProps } from './TimeRangePicker.types';
@@ -31,7 +32,7 @@ const TimeRangePicker = React.forwardRef(function TimeRangePicker<
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
@@ -101,6 +102,7 @@ TimeRangePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

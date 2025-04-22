@@ -6,7 +6,6 @@ import {
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../../constants/cssVariables';
@@ -27,6 +26,10 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import {
+  gridPivotActiveSelector,
+  gridPivotInitialColumnsSelector,
+} from '../../../hooks/features/pivoting';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -145,7 +148,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
-  overridesResolver: (props, styles) => styles.filterForm,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   gap: vars.spacing(1.5),
@@ -154,7 +156,6 @@ const GridFilterFormRoot = styled('div', {
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
-  overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
   display: 'flex',
@@ -165,7 +166,6 @@ const FilterFormDeleteIcon = styled('div', {
 const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })<{ ownerState: OwnerState }>({
   minWidth: 75,
   justifyContent: 'end',
@@ -174,19 +174,16 @@ const FilterFormLogicOperatorInput = styled('div', {
 const FilterFormColumnInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormColumnInput',
-  overridesResolver: (_, styles) => styles.filterFormColumnInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormOperatorInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
-  overridesResolver: (_, styles) => styles.filterFormValueInput,
 })<{ ownerState: OwnerState }>({ width: 190 });
 
 const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
@@ -250,6 +247,9 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
+    const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+    const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
 
@@ -260,6 +260,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (selectedNonFilterableColumn) {
         return {
           filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
+      if (pivotActive) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) => initialColumns.get(column.field) !== undefined,
+          ),
           selectedField: itemField,
         };
       }
@@ -284,7 +293,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
+    }, [
+      item.field,
+      columnLookup,
+      pivotActive,
+      filterColumns,
+      filterableColumns,
+      filterModel?.items,
+      initialColumns,
+    ]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -314,7 +331,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const field = event.target.value as string;
         const column = apiRef.current.getColumn(field)!;
 
@@ -367,7 +384,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const operator = event.target.value as string;
 
         const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
@@ -386,7 +403,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const changeLogicOperator = React.useCallback(
-      (event: SelectChangeEvent<any>) => {
+      (event: React.ChangeEvent<any>) => {
         const logicOperator =
           (event.target.value as string) === GridLogicOperator.And.toString()
             ? GridLogicOperator.And

@@ -1,5 +1,10 @@
 packages:
-  - 'packages/*'
-  - 'docs'
-  - 'test'
-  - 'test/performance-charts'
+  - packages/*
+  - docs
+  - test
+  - test/e2e
+  - test/regressions
+  - test/performance-charts
+ignoredBuiltDependencies:
+  - '@mui/monorepo'
+  - msw

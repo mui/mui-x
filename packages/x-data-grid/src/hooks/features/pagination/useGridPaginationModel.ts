@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -11,13 +12,7 @@ import {
   gridFilterActiveItemsSelector,
 } from '../filter/gridFilterSelector';
 import { gridDensityFactorSelector } from '../density';
-import {
-  useGridLogger,
-  useGridSelector,
-  useGridApiMethod,
-  useGridApiEventHandler,
-} from '../../utils';
-import { isDeepEqual } from '../../../utils/utils';
+import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
@@ -303,11 +298,11 @@ export const useGridPaginationModel = (
     [apiRef, navigateToStart],
   );
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
-  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
-  useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridApiEventHandler(apiRef, 'sortModelChange', navigateToStart);
-  useGridApiEventHandler(apiRef, 'filterModelChange', handleFilterModelChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
+  useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
+  useGridEvent(apiRef, 'sortModelChange', navigateToStart);
+  useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**
    * EFFECTS

@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  TreeViewItemId,
-  TreeViewSelectionPropagation,
-  TreeViewCancellableEvent,
-} from '../../../models';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin, TreeViewState } from '../../models';
 import {
@@ -12,21 +9,25 @@ import {
 } from './useTreeViewSelection.types';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { selectorItemOrderedChildrenIds } from '../useTreeViewItems/useTreeViewItems.selectors';
-import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import {
+  selectorIsCheckboxSelectionEnabled,
+  selectorIsItemSelected,
+  selectorIsItemSelectionEnabled,
+  selectorSelectionPropagationRules,
+} from './useTreeViewSelection.selectors';
 import { useSelector } from '../../hooks/useSelector';
 
 function selectorItemCheckboxStatus(
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
-  {
-    itemId,
-    selectionPropagation,
-  }: {
-    itemId: TreeViewItemId;
-    selectionPropagation: TreeViewSelectionPropagation;
-  },
+  itemId: TreeViewItemId,
 ) {
+  const isCheckboxSelectionEnabled = selectorIsCheckboxSelectionEnabled(state);
+  const isSelectionEnabledForItem = selectorIsItemSelectionEnabled(state, itemId);
+
   if (selectorIsItemSelected(state, itemId)) {
     return {
+      disabled: !isSelectionEnabledForItem,
+      visible: isCheckboxSelectionEnabled,
       indeterminate: false,
       checked: true,
     };
@@ -35,6 +36,8 @@ function selectorItemCheckboxStatus(
   const children = selectorItemOrderedChildrenIds(state, itemId);
   if (children.length === 0) {
     return {
+      disabled: !isSelectionEnabledForItem,
+      visible: isCheckboxSelectionEnabled,
       indeterminate: false,
       checked: false,
     };
@@ -58,27 +61,26 @@ function selectorItemCheckboxStatus(
   traverseDescendants(itemId);
 
   return {
-    indeterminate: (hasSelectedDescendant && hasUnSelectedDescendant) || !hasUnSelectedDescendant,
-    checked: selectionPropagation.parents ? hasSelectedDescendant : false,
+    disabled: !isSelectionEnabledForItem,
+    visible: isCheckboxSelectionEnabled,
+    indeterminate: hasSelectedDescendant && hasUnSelectedDescendant,
+    checked: selectorSelectionPropagationRules(state).parents
+      ? hasSelectedDescendant && !hasUnSelectedDescendant
+      : false,
   };
 }
 
 export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
 
-  const {
-    store,
-    selection: { disableSelection, checkboxSelection, selectionPropagation },
-  } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
+  const { store } =
+    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
   const checkboxStatus = useSelector(
     store,
     selectorItemCheckboxStatus,
-    {
-      itemId,
-      selectionPropagation,
-    },
-    (a, b) => a.checked === b.checked && a.indeterminate === b.indeterminate,
+    itemId,
+    fastObjectShallowCompare,
   );
 
   return {
@@ -86,7 +88,6 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
       checkbox: ({
         externalEventHandlers,
         interactions,
-        status,
       }): UseTreeItemCheckboxSlotPropsFromSelection => {
         const handleChange = (
           event: React.ChangeEvent<HTMLInputElement> & TreeViewCancellableEvent,
@@ -96,7 +97,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
             return;
           }
 
-          if (disableSelection || status.disabled) {
+          if (!selectorIsItemSelectionEnabled(store.value, itemId)) {
             return;
           }
 
@@ -104,8 +105,6 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
         };
 
         return {
-          visible: checkboxSelection,
-          disabled: disableSelection || status.disabled,
           tabIndex: -1,
           onChange: handleChange,
           ...checkboxStatus,
