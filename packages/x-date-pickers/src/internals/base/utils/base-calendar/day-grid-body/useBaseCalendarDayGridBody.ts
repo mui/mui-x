@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { mergeProps } from '../../../base-utils/mergeProps';
-import { GenericHTMLProps } from '../../../base-utils/types';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { CalendarDayGridBodyContext } from './CalendarDayGridBodyContext';
 import { useRegisterSection } from '../utils/useRegisterSection';
@@ -96,13 +95,16 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
   }, [children, daysGrid]);
 
   const getDayGridBodyProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        ref,
-        role: 'rowgroup',
-        children: resolvedChildren,
-        onKeyDown: baseRootContext.applyDayGridKeyboardNavigation,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          ref,
+          role: 'rowgroup',
+          children: resolvedChildren,
+          onKeyDown: baseRootContext.applyDayGridKeyboardNavigation,
+        },
+        externalProps,
+      );
     },
     [baseRootContext.applyDayGridKeyboardNavigation, resolvedChildren],
   );

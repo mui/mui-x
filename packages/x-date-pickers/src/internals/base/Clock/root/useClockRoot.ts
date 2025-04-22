@@ -12,7 +12,6 @@ import { ExportedValidateTimeProps, ValidateTimeProps } from '../../../../valida
 import { FormProps, PickerValue } from '../../../models';
 import { useControlledValue } from '../../../hooks/useControlledValue';
 import { ClockSection } from '../utils/types';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 import { ClockRootContext } from './ClockRootContext';
 import { useValidation } from '../../../../validation';
@@ -114,8 +113,8 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   }, [children]);
 
   const getRootProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, { children: resolvedChildren });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps({ children: resolvedChildren }, externalProps);
     },
     [resolvedChildren],
   );

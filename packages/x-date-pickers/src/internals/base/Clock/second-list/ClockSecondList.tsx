@@ -4,7 +4,7 @@ import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockSecondList } from './useClockSecondList';
 import { ClockListContext } from '../utils/ClockListContext';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 
 const ClockSecondList = React.forwardRef(function ClockSecondList(
   componentProps: ClockSecondList.Props,

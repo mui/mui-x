@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 import { useUtils } from '../../../hooks/useUtils';
 
@@ -18,12 +17,15 @@ export function useCalendarDayGridHeaderCell(parameters: useCalendarDayGridHeade
   const ariaLabel = React.useMemo(() => utils.format(value, 'weekday'), [utils, value]);
 
   const getDayGridHeaderCellProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        role: 'columnheader',
-        'aria-label': ariaLabel,
-        children: formattedValue,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
+      return mergeProps(
+        {
+          role: 'columnheader',
+          'aria-label': ariaLabel,
+          children: formattedValue,
+        },
+        externalProps,
+      );
     },
     [formattedValue, ariaLabel],
   );

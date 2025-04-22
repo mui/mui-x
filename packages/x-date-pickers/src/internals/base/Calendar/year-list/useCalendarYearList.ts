@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 import { navigateInList } from '../../utils/base-calendar/utils/keyboardNavigation';
 import { useYearCells } from '../utils/useYearCells';
@@ -24,12 +23,15 @@ export function useCalendarYearList(parameters: useCalendarYearList.Parameters) 
   });
 
   const getYearListProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        role: 'radiogroup',
-        children: resolvedChildren,
-        onKeyDown,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          role: 'radiogroup',
+          children: resolvedChildren,
+          onKeyDown,
+        },
+        externalProps,
+      );
     },
     [resolvedChildren, onKeyDown],
   );

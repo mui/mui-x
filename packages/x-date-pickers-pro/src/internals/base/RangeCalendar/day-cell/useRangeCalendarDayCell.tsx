@@ -2,8 +2,6 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarDayCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-cell/useBaseCalendarDayCell';
 // eslint-disable-next-line no-restricted-imports
-import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
-// eslint-disable-next-line no-restricted-imports
 import { mergeProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeProps';
 import { useRangeCell } from '../utils/useRangeCell';
 
@@ -13,8 +11,8 @@ export function useRangeCalendarDayCell(parameters: useRangeCalendarDayCell.Para
   const rangeCellProps = useRangeCell({ ctx, value, section: 'day' });
 
   const getDayCellProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, rangeCellProps, getBaseDayCellProps(externalProps));
+    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
+      return mergeProps(rangeCellProps, getBaseDayCellProps(externalProps), externalProps);
     },
     [rangeCellProps, getBaseDayCellProps],
   );

@@ -4,7 +4,7 @@ import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockHour24List } from './useClockHour24List';
 import { ClockListContext } from '../utils/ClockListContext';
-import { CompositeList } from '../../composite/list/CompositeList';
+import { CompositeList } from '../../base-utils/composite/list/CompositeList';
 
 const ClockHour24List = React.forwardRef(function ClockHour24List(
   componentProps: ClockHour24List.Props,

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { getWeekdays } from '../../../utils/date-utils';
 import { useUtils } from '../../../hooks/useUtils';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useCalendarDayGridHeader(parameters: useCalendarDayGridHeader.Parameters) {
@@ -20,11 +19,14 @@ export function useCalendarDayGridHeader(parameters: useCalendarDayGridHeader.Pa
   }, [children, days]);
 
   const getDayGridHeaderProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        role: 'row',
-        children: resolvedChildren,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          role: 'row',
+          children: resolvedChildren,
+        },
+        externalProps,
+      );
     },
     [resolvedChildren],
   );

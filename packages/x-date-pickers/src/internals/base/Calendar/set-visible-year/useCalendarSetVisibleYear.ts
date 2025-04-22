@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useCalendarSetVisibleYear(parameters: useCalendarSetVisibleYear.Parameters) {
   const { ctx } = parameters;
 
   const getSetVisibleYearProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        type: 'button' as const,
-        disabled: ctx.isDisabled,
-        onClick: ctx.setTarget,
-        tabIndex: ctx.isTabbable ? 0 : -1,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
+      return mergeProps(
+        {
+          type: 'button' as const,
+          disabled: ctx.isDisabled,
+          onClick: ctx.setTarget,
+          tabIndex: ctx.isTabbable ? 0 : -1,
+        },
+        externalProps,
+      );
     },
     [ctx.isDisabled, ctx.setTarget, ctx.isTabbable],
   );

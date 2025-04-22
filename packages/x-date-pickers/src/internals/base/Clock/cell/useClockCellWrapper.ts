@@ -5,7 +5,7 @@ import { PickerValidDate } from '../../../../models';
 import { useClockCell } from './useClockCell';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { useClockListContext } from '../utils/ClockListContext';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useCompositeListItem } from '../../base-utils/composite/list/useCompositeListItem';
 
 export function useClockCellWrapper(
   parameters: useClockCellWrapper.Parameters,

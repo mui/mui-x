@@ -2,7 +2,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
-import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeProps } from '../../../base-utils/mergeProps';
 
 export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Parameters) {
@@ -19,17 +18,20 @@ export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Para
   });
 
   const getYearCellProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        type: 'button' as const,
-        role: 'radio',
-        'aria-checked': ctx.isSelected,
-        'aria-current': ctx.isCurrent ? 'date' : undefined,
-        disabled: ctx.isDisabled,
-        tabIndex: ctx.isTabbable ? 0 : -1,
-        children: formattedValue,
-        onClick,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
+      return mergeProps(
+        {
+          type: 'button' as const,
+          role: 'radio',
+          'aria-checked': ctx.isSelected,
+          'aria-current': ctx.isCurrent ? 'date' : undefined,
+          disabled: ctx.isDisabled,
+          tabIndex: ctx.isTabbable ? 0 : -1,
+          children: formattedValue,
+          onClick,
+        },
+        externalProps,
+      );
     },
     [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, ctx.isCurrent],
   );

@@ -15,7 +15,6 @@ import {
   isSameSecond,
 } from '../../utils/future-adapter-methods';
 import { navigateInList } from './keyboardNavigation';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useClockList(parameters: useClockList.Parameters) {
@@ -213,12 +212,15 @@ export function useClockList(parameters: useClockList.Parameters) {
   );
 
   const getListProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        role: 'listbox',
-        children: resolvedChildren,
-        onKeyDown,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          role: 'listbox',
+          children: resolvedChildren,
+          onKeyDown,
+        },
+        externalProps,
+      );
     },
     [resolvedChildren, onKeyDown],
   );

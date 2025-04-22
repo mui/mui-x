@@ -5,7 +5,6 @@ import { ExportedValidateDateProps, ValidateDateProps } from '../../../../valida
 import { useUtils } from '../../../hooks/useUtils';
 import { PickerValue } from '../../../models';
 import { mergeProps } from '../../base-utils/mergeProps';
-import { GenericHTMLProps } from '../../base-utils/types';
 import {
   useAddDefaultsToBaseDateValidationProps,
   useBaseCalendarRoot,
@@ -88,8 +87,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   }, [children, visibleDateContext.visibleDate]);
 
   const getRootProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, { children: resolvedChildren });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps({ children: resolvedChildren }, externalProps);
     },
     [resolvedChildren],
   );

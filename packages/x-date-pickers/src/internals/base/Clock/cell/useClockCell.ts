@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../../../hooks/useUtils';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 import { PickerValidDate } from '../../../../models';
 
@@ -14,16 +13,19 @@ export function useClockCell(parameters: useClockCell.Parameters) {
   });
 
   const getCellProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        role: 'option',
-        // TODO: Add aria-disabled / aria-readonly
-        'aria-selected': ctx.isSelected,
-        children: utils.formatByString(value, ctx.format),
-        disabled: ctx.isDisabled,
-        tabIndex: ctx.isTabbable ? 0 : -1,
-        onClick,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
+      return mergeProps(
+        {
+          role: 'option',
+          // TODO: Add aria-disabled / aria-readonly
+          'aria-selected': ctx.isSelected,
+          children: utils.formatByString(value, ctx.format),
+          disabled: ctx.isDisabled,
+          tabIndex: ctx.isTabbable ? 0 : -1,
+          onClick,
+        },
+        externalProps,
+      );
     },
     [utils, value, onClick, ctx.format, ctx.isTabbable, ctx.isDisabled, ctx.isSelected],
   );

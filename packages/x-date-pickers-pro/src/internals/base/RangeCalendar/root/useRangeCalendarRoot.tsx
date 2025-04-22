@@ -18,8 +18,6 @@ import {
 } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/useBaseCalendarRoot';
 // eslint-disable-next-line no-restricted-imports
 import { mergeProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeProps';
-// eslint-disable-next-line no-restricted-imports
-import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 import { DateRangeValidationError } from '../../../../models';
 import { useDateRangeManager } from '../../../../managers';
 import {
@@ -48,7 +46,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     disableFuture,
     shouldDisableDate,
     // Children
-    children: childrenProp,
+    children,
     // Range position props
     rangePosition: rangePositionProp,
     defaultRangePosition,
@@ -208,17 +206,19 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
       }),
   });
 
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ visibleDate: visibleDateContext.visibleDate });
+    }
+
+    return children;
+  }, [children, visibleDateContext.visibleDate]);
+
   const getRootProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      let children: React.ReactNode;
-      if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {
-        children = childrenProp({ visibleDate: visibleDateContext.visibleDate });
-      } else {
-        children = childrenProp;
-      }
-      return mergeProps(externalProps, { children });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps({ children: resolvedChildren }, externalProps);
     },
-    [childrenProp, visibleDateContext.visibleDate],
+    [resolvedChildren],
   );
 
   const isEmpty = value[0] == null && value[1] == null;

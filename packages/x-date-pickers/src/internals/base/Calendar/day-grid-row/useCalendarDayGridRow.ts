@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 import { CalendarDayGridRowContext } from './CalendarDayGridRowContext';
 
@@ -17,13 +16,16 @@ export function useCalendarDayGridRow(parameters: useCalendarDayGridRow.Paramete
   }, [children, ctx.days]);
 
   const getDayGridRowProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        ref,
-        role: 'row',
-        'aria-rowindex': ctx.rowIndex + 1,
-        children: resolvedChildren,
-      });
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          ref,
+          role: 'row',
+          'aria-rowindex': ctx.rowIndex + 1,
+          children: resolvedChildren,
+        },
+        externalProps,
+      );
     },
     [ctx.rowIndex, resolvedChildren],
   );

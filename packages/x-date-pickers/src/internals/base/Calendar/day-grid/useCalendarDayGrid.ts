@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useCalendarDayGrid() {
-  const getDayGridProps = React.useCallback((externalProps: GenericHTMLProps) => {
-    return mergeProps(externalProps, {
-      role: 'grid',
-    });
-  }, []);
+  const getDayGridProps = React.useCallback(
+    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
+      return mergeProps(
+        {
+          role: 'grid',
+        },
+        externalProps,
+      );
+    },
+    [],
+  );
 
   return React.useMemo(() => ({ getDayGridProps }), [getDayGridProps]);
 }
