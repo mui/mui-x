@@ -58,26 +58,43 @@ export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushPr
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
-  const axis = axisDirection === 'x' ? xAxis[axisId] : yAxis[axisId];
 
-  if (!zoomData || !axis) {
+  if (!zoomData) {
     return null;
   }
 
-  const axisSize = axisDirection === 'x' ? axis.height : axis.width;
+  let x: number;
+  let y: number;
 
-  const x =
-    axisDirection === 'x'
-      ? drawingArea.left
-      : axis.position === 'right'
+  if (axisDirection === 'x') {
+    const axis = xAxis[axisId];
+
+    if (!axis) {
+      return null;
+    }
+
+    const axisSize = axis.height;
+
+    x = drawingArea.left;
+    y =
+      axis.position === 'bottom'
+        ? drawingArea.top + drawingArea.height + axis.offset + axisSize
+        : drawingArea.top - axis.offset - axisSize - size;
+  } else {
+    const axis = yAxis[axisId];
+
+    if (!axis) {
+      return null;
+    }
+
+    const axisSize = axis.width;
+
+    x =
+      axis.position === 'right'
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize
         : drawingArea.left - axis.offset - axisSize - size;
-  const y =
-    axisDirection === 'x'
-      ? axis.position === 'bottom'
-        ? drawingArea.top + drawingArea.height + axis.offset + axisSize
-        : drawingArea.top - axis.offset - axisSize - size
-      : drawingArea.top;
+    y = drawingArea.top;
+  }
 
   return (
     <g transform={`translate(${x} ${y})`}>
