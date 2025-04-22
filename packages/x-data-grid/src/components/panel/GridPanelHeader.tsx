@@ -23,7 +23,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelHeader',
-  overridesResolver: (props, styles) => styles.panelHeader,
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(1),
 });

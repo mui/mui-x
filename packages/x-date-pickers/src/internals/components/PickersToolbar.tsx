@@ -28,7 +28,6 @@ const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) 
 const PickersToolbarRoot = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -52,7 +51,6 @@ const PickersToolbarRoot = styled('div', {
 const PickersToolbarContent = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Content',
-  overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'landscapeDirection',
 })<{
   ownerState: PickerToolbarOwnerState;

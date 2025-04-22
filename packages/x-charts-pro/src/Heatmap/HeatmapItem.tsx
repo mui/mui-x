@@ -52,7 +52,7 @@ export interface HeatmapItemOwnerState {
 const HeatmapCell = styled('rect', {
   name: 'MuiHeatmap',
   slot: 'Cell',
-  overridesResolver: (_, styles) => styles.arc,
+  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
 })<{ ownerState: HeatmapItemOwnerState }>(({ ownerState }) => ({
   filter:
     (ownerState.isHighlighted && 'saturate(120%)') ||
