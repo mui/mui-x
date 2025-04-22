@@ -11,13 +11,6 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
-const columnHeaderStyles = {
-  [`& .${c.menuIcon}`]: {
-    width: 'auto',
-    visibility: 'visible',
-  },
-};
-
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -440,7 +433,10 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: {
-        ...columnHeaderStyles,
+        [`& .${c.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
         [`& .${c.iconButtonContainer}`]: {
           visibility: 'visible',
           width: 'auto',
@@ -454,7 +450,10 @@ export const GridRootStyles = styled('div', {
         },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader} .${c.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
