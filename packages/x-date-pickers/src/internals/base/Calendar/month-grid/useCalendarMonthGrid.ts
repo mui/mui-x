@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
@@ -75,7 +75,7 @@ export function useCalendarMonthGrid(parameters: useCalendarMonthGrid.Parameters
 
   const getMonthGridProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'radiogroup',
         children: resolvedChildren,
         onKeyDown,

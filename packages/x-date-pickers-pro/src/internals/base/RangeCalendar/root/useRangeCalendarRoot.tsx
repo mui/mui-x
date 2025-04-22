@@ -17,7 +17,7 @@ import {
   useBaseCalendarRoot,
 } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/useBaseCalendarRoot';
 // eslint-disable-next-line no-restricted-imports
-import { mergeReactProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeReactProps';
+import { mergeProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeProps';
 // eslint-disable-next-line no-restricted-imports
 import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 import { DateRangeValidationError } from '../../../../models';
@@ -216,7 +216,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
       } else {
         children = childrenProp;
       }
-      return mergeReactProps(externalProps, { children });
+      return mergeProps(externalProps, { children });
     },
     [childrenProp, visibleDateContext.visibleDate],
   );

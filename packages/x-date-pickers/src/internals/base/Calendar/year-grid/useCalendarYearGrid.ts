@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import { navigateInGrid } from '../../utils/base-calendar/utils/keyboardNavigation';
 import { useYearCells } from '../utils/useYearCells';
 
@@ -43,7 +43,7 @@ export function useCalendarYearGrid(parameters: useCalendarYearGrid.Parameters) 
 
   const getYearGridProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'radiogroup',
         children: resolvedChildren,
         onKeyDown,

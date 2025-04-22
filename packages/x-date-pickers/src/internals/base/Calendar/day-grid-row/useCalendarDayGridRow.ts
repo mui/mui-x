@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import { CalendarDayGridRowContext } from './CalendarDayGridRowContext';
 
 export function useCalendarDayGridRow(parameters: useCalendarDayGridRow.Parameters) {
@@ -18,7 +18,7 @@ export function useCalendarDayGridRow(parameters: useCalendarDayGridRow.Paramete
 
   const getDayGridRowProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         ref,
         role: 'row',
         'aria-rowindex': ctx.rowIndex + 1,

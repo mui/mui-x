@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 // eslint-disable-next-line no-restricted-imports
-import { mergeReactProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeReactProps';
+import { mergeProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeProps';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarDayGridBody } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/useBaseCalendarDayGridBody';
 // eslint-disable-next-line no-restricted-imports
@@ -21,7 +21,7 @@ export function useRangeCalendarDayGridBody(parameters: useRangeCalendarDayGridB
 
   const getDayGridBodyProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, getBaseDayGridBodyProps(externalProps), {
+      return mergeProps(externalProps, getBaseDayGridBodyProps(externalProps), {
         onMouseLeave,
       });
     },

@@ -3,7 +3,7 @@ import { PickerValidDate } from '../../../../models';
 import { getWeekdays } from '../../../utils/date-utils';
 import { useUtils } from '../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useCalendarDayGridHeader(parameters: useCalendarDayGridHeader.Parameters) {
   const { children } = parameters;
@@ -21,7 +21,7 @@ export function useCalendarDayGridHeader(parameters: useCalendarDayGridHeader.Pa
 
   const getDayGridHeaderProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'row',
         children: resolvedChildren,
       });

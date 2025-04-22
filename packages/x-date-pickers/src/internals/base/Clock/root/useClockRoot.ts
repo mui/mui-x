@@ -13,7 +13,7 @@ import { FormProps, PickerValue } from '../../../models';
 import { useControlledValue } from '../../../hooks/useControlledValue';
 import { ClockSection } from '../utils/types';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import { ClockRootContext } from './ClockRootContext';
 import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
@@ -115,7 +115,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
 
   const getRootProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, { children: resolvedChildren });
+      return mergeProps(externalProps, { children: resolvedChildren });
     },
     [resolvedChildren],
   );

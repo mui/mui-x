@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../../base-utils/types';
-import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { mergeProps } from '../../../base-utils/mergeProps';
 
 export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Parameters) {
   const utils = useUtils();
@@ -20,7 +20,7 @@ export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Pa
 
   const getMonthCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,

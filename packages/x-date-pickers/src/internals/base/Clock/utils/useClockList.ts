@@ -16,7 +16,7 @@ import {
 } from '../../utils/future-adapter-methods';
 import { navigateInList } from './keyboardNavigation';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useClockList(parameters: useClockList.Parameters) {
   const {
@@ -214,7 +214,7 @@ export function useClockList(parameters: useClockList.Parameters) {
 
   const getListProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'listbox',
         children: resolvedChildren,
         onKeyDown,

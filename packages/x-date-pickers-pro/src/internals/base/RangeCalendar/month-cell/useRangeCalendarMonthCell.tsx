@@ -4,7 +4,7 @@ import { useBaseCalendarMonthCell } from '@mui/x-date-pickers/internals/base/uti
 // eslint-disable-next-line no-restricted-imports
 import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
-import { mergeReactProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeReactProps';
+import { mergeProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeProps';
 import { useRangeCell } from '../utils/useRangeCell';
 
 export function useRangeCalendarMonthCell(parameters: useRangeCalendarMonthCell.Parameters) {
@@ -14,7 +14,7 @@ export function useRangeCalendarMonthCell(parameters: useRangeCalendarMonthCell.
 
   const getMonthCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, rangeCellProps, getBaseMonthCellProps(externalProps));
+      return mergeProps(externalProps, rangeCellProps, getBaseMonthCellProps(externalProps));
     },
     [rangeCellProps, getBaseMonthCellProps],
   );

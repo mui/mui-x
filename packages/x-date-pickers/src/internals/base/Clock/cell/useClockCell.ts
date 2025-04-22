@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import { PickerValidDate } from '../../../../models';
 
 export function useClockCell(parameters: useClockCell.Parameters) {
@@ -15,7 +15,7 @@ export function useClockCell(parameters: useClockCell.Parameters) {
 
   const getCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'option',
         // TODO: Add aria-disabled / aria-readonly
         'aria-selected': ctx.isSelected,

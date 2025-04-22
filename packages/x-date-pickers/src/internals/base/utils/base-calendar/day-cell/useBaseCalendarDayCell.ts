@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../../base-utils/types';
-import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { mergeProps } from '../../../base-utils/mergeProps';
 
 export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parameters) {
   const utils = useUtils();
@@ -20,7 +20,7 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
 
   const getDayCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'gridcell',
         'aria-selected': ctx.isSelected,
         'aria-current': ctx.isCurrent ? 'date' : undefined,

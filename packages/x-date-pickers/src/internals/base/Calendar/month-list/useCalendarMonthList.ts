@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import {
   applyInitialFocusInList,
   navigateInList,
@@ -51,7 +51,7 @@ export function useCalendarMonthList(parameters: useCalendarMonthList.Parameters
 
   const getMonthListProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'radiogroup',
         children: resolvedChildren,
         onKeyDown,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { mergeProps } from '../../base-utils/mergeProps';
 import { useUtils } from '../../../hooks/useUtils';
 
 export function useCalendarDayGridHeaderCell(parameters: useCalendarDayGridHeaderCell.Parameters) {
@@ -19,7 +19,7 @@ export function useCalendarDayGridHeaderCell(parameters: useCalendarDayGridHeade
 
   const getDayGridHeaderCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
+      return mergeProps(externalProps, {
         role: 'columnheader',
         'aria-label': ariaLabel,
         children: formattedValue,
