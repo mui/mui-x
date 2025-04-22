@@ -71,6 +71,9 @@ export default chartsApiPages;
       'x-charts/src/LineChart/CircleMarkElement.tsx',
       'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
+      'x-charts-pro/src/ChartOverview/ChartZoomBrushHandle.tsx',
+      'x-charts-pro/src/ChartOverview/ChartZoomBrush.tsx',
+      'x-charts-pro/src/ChartOverview/ChartAxisOverview.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

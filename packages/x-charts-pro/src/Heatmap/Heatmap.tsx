@@ -418,6 +418,10 @@ Heatmap.propTypes = {
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
           minStart: PropTypes.number,
+          overview: PropTypes.shape({
+            enabled: PropTypes.bool,
+            size: PropTypes.number,
+          }),
           panning: PropTypes.bool,
           step: PropTypes.number,
         }),
@@ -510,6 +514,10 @@ Heatmap.propTypes = {
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
           minStart: PropTypes.number,
+          overview: PropTypes.shape({
+            enabled: PropTypes.bool,
+            size: PropTypes.number,
+          }),
           panning: PropTypes.bool,
           step: PropTypes.number,
         }),

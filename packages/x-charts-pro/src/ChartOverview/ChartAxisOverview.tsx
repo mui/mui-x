@@ -20,6 +20,10 @@ export interface ChartAxisOverviewProps {
   size?: number;
 }
 
+/**
+ * Renders the overview for a specific axis that has an overview enabled.
+ * @internal
+ */
 export function ChartAxisOverview({
   axisId,
   axisDirection,

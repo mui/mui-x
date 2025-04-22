@@ -11,7 +11,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ChartsOverview } from '../ChartOverview';
+import { ChartOverview } from '../ChartOverview';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -77,7 +77,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsOverview />
+          <ChartOverview />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
@@ -350,6 +350,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -436,6 +440,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -513,6 +521,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -590,6 +602,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -667,6 +683,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -744,6 +764,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -821,6 +845,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -898,6 +926,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -994,6 +1026,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1079,6 +1115,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1155,6 +1195,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1231,6 +1275,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1307,6 +1355,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1383,6 +1435,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1459,6 +1515,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1535,6 +1595,10 @@ ScatterChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),

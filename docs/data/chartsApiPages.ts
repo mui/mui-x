@@ -57,6 +57,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/chart-overview',
+    title: 'ChartOverview',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },

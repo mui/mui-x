@@ -2,7 +2,10 @@ import * as React from 'react';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ChartAxisOverview } from './ChartAxisOverview';
 
-export function ChartsOverview() {
+/**
+ * Renders the overview for all x and y axes that have an overview enabled.
+ */
+export function ChartOverview() {
   const { xAxisIds, xAxis: xAxes } = useXAxes();
   const { yAxisIds, yAxis: yAxes } = useYAxes();
 

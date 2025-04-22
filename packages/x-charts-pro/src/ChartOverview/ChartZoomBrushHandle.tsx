@@ -31,6 +31,10 @@ export interface ChartZoomBrushHandleProps
   extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'>,
     ChartZoomBrushHandleOwnerState {}
 
+/**
+ * Renders the zoom brush handle, which is responsible for resizing the zoom range.
+ * @internal
+ */
 export const ChartZoomBrushHandle = React.forwardRef<SVGRectElement, ChartZoomBrushHandleProps>(
   function ChartPreviewHandle(
     { x, y, width, height, onResize, orientation, rx = 2, ry = 2 },

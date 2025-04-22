@@ -1,7 +1,7 @@
 ---
 title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartOverview
 ---
 
 # Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -52,13 +52,19 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## Zoom brush
+## Zoom overview
 
-You can enable a zoom brush by setting the `zoom.overview.enabled` property on the axis config.
+You can provide an overview of the zoomed area by setting the `zoom.overview.enabled` property on the axis config.
 
 {{"demo": "ZoomBrush.js"}}
 
 Optionally, you can set the `zoom.overview.size` property to customize the zoom brush's size, i.e., the height on a x-axis and the width on a y-axis.
+
+### Composition
+
+When using composition, you can render the axes overviews by rendering the `ChartOverview` component.
+
+{{"demo": "ZoomOverviewComposition.js"}}
 
 ## Zoom management
 

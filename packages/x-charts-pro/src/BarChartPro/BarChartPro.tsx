@@ -12,7 +12,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsOverview } from '../ChartOverview';
+import { ChartOverview } from '../ChartOverview';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -85,7 +85,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsOverview />
+          <ChartOverview />
           {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
@@ -360,6 +360,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -446,6 +450,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -523,6 +531,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -600,6 +612,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -677,6 +693,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -754,6 +774,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -831,6 +855,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -908,6 +936,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1004,6 +1036,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1089,6 +1125,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1165,6 +1205,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1241,6 +1285,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1317,6 +1365,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1393,6 +1445,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1469,6 +1525,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),
@@ -1545,6 +1605,10 @@ BarChartPro.propTypes = {
             maxSpan: PropTypes.number,
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
+            overview: PropTypes.shape({
+              enabled: PropTypes.bool,
+              size: PropTypes.number,
+            }),
             panning: PropTypes.bool,
             step: PropTypes.number,
           }),

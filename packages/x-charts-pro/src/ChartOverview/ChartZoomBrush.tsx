@@ -59,6 +59,10 @@ interface ChartZoomBrushProps {
   size: number;
 }
 
+/**
+ * Renders the zoom brush for a specific axis.
+ * @internal
+ */
 export function ChartZoomBrush({ size, axisDirection, axisId }: ChartZoomBrushProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
