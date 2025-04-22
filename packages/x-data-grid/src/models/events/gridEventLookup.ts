@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
 import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
@@ -18,7 +19,6 @@ import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
-import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
