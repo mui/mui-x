@@ -35,6 +35,7 @@ While the `ChartsSurface` renders the SVG elements.
   width={500}
   height={300}
 >
+  <ChartsLegend />
   <ChartsSurface
     // Ref needs to be directly on the ChartsSurface
     ref={mySvgRef}
@@ -71,7 +72,7 @@ It can be used instead of them when there is no need to customize anything outsi
 ### Graphical components
 
 These are any component that render the graphical elements of the chart.
-They are the children of the **Structural components** shown above.
+They are the children of the **SrtsDataProvider, and thus a customized legend. Before, in v7, it was possible to use ChatsLegend inside ChartContainer with together with multiple Line/BarPlots, unfortunately this page as no indication/help/example for that scenario. All graphs rendered here hatructural components** shown above.
 There are many of them, so they won't all be listed here.
 You can even [create your own components](/x/react-charts/components/).
 
@@ -217,6 +218,26 @@ If `axisId` is not provided it will pick the first one.
 To add a grid, you can use the `<ChartsGrid />` component.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+### LegendGrid
+
+To add a a legend, you can use the `<ChartsLegend />` component.
+
+:::warning
+The Legend is an HTML element since v8.
+I must be inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+
+```jsx
+<ChartDataProvider>
+  <ChartsLegend />
+  <ChartsSurface>
+    {/* SVG components */}
+  </ChartsSurface>
+</ChartDataProvider>
+```
+:::
+
+See [HTML-components](/x/react-charts/components/#html-components) documentation for more information.
 
 ### Additional information
 
