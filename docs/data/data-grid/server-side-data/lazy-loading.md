@@ -23,7 +23,7 @@ The value of the total row count determines when the next page's data is loaded:
 You can provide the row count through one of the following ways:
 
 - Pass it as the [`rowCount`](/x/api/data-grid/data-grid/#data-grid-prop-rowCount) prop
-- Return `rowCount` in the `getRows()` method of the [data source](/x/react-data-grid/server-side-data/#data-source)
+- Return `rowCount` in the `getRows()` method of the [Data Source](/x/react-data-grid/server-side-data/#data-source)
 - Set the `rowCount` using the [`setRowCount()`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API method
 
 These options are presented in order of precedence, which means if the row count is set using the API, that value is overridden once a new value is returned by the `getRows()` method unless it's `undefined`.
@@ -42,7 +42,7 @@ The demo below shows how viewport loading mode works:
 {{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
 
 :::info
-The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.

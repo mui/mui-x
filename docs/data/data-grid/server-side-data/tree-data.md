@@ -4,15 +4,15 @@ title: React Data Grid - Server-side tree data
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Tree data lazy-loading with server-side data source.</p>
+<p class="description">Learn how to implement lazy-loading tree data with a server-side data source.</p>
 
-To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
+To dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
 :::info
 If you are looking for tree data on the client-side, see [client-side tree data](/x/react-data-grid/tree-data/).
 :::
 
-The data source also requires some additional props to handle tree data:
+The Data Source also requires some additional props to handle tree data:
 
 - `getGroupKey()`: Returns the group key for the row.
 - `getChildrenCount()`: Returns the number of children for the row. If the children count is not available for some reason, but there are some children, returns `-1`.
@@ -59,7 +59,7 @@ It also caches the data by default.
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The data source demos use a `useMockServer()` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
@@ -67,7 +67,7 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Error handling
 
-For each row group expansion, the data source is called to fetch the children.
+For each row group expansion, the Data Source is called to fetch the children.
 If an error occurs during the fetch, the grid will display an error message in the row group cell.
 `onDataSourceError()` is also triggered with the error object containing the params as mentioned in the [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling) section.
 
@@ -87,11 +87,11 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all level
 
 ## Custom cache
 
-The data source uses a cache by default to store the fetched data.
+The Data Source uses a cache by default to store the fetched data.
 Use the `dataSourceCache` prop to provide a custom cache if necessary.
 See [Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
-The following demo uses `QueryClient` from `@tanstack/react-core` as a data source cache.
+The following demo uses `QueryClient` from `@tanstack/react-core` as a Data Source cache.
 
 {{"demo": "ServerSideTreeDataCustomCache.js", "bg": "inline"}}
 

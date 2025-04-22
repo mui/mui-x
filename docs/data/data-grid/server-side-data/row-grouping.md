@@ -4,12 +4,12 @@ title: React Data Grid - Server-side row grouping
 
 # Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Lazy-loaded row grouping with server-side data source.</p>
+<p class="description">Learn how to implement lazy-loading row grouping with a server-side data source.</p>
 
-To dynamically load row grouping data from the server, including lazy-loading of children, create a data source and pass the `dataSource` prop to the Data Grid, as mentioned in the [overview](/x/react-data-grid/server-side-data/) section.
+To dynamically load row grouping data from the server, including lazy-loading of children, create a Data Source and pass the `dataSource` prop to the Data Grid, as mentioned in the [overview](/x/react-data-grid/server-side-data/) section.
 
 :::info
-If you are looking for row grouping on the client-side, see [client-side row grouping](/x/react-data-grid/row-grouping/).
+For row grouping on the client side, see [client-side row grouping](/x/react-data-grid/row-grouping/).
 :::
 
 Similar to the [tree data](/x/react-data-grid/server-side-data/tree-data/), you need to pass some additional properties to enable the data source row grouping feature:
