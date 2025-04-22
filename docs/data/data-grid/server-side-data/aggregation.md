@@ -4,7 +4,7 @@ title: React Data Grid - Server-side aggregation
 
 # Data Grid - Server-side aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Implement the Data Grid's aggregation features with server-side data sources.</p>
+<p class="description">Implement the Data Grid's aggregation features with a server-side data source.</p>
 
 The Data Grid Premium provides tools to give end users the ability to aggregate and compare row values.
 These features are fully documented in the [primary Aggregation doc](/x/react-data-grid/aggregation/) which covers client-side implementation.
@@ -12,7 +12,7 @@ The information that follows here is specifically for implementing aggregation o
 
 ## Prerequisites
 
-To dynamically load tree data from the server, you must create a data source and pass the `dataSource` prop to the Data Grid as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
+To dynamically load tree data from the server, you must create a Data Source and pass the `dataSource` prop to the Data Grid as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementing server-side aggregation
 
