@@ -10,6 +10,7 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': '"test"',
     'process.env.VITEST': '"true"',
+    LICENSE_DISABLE_CHECK: 'false',
   },
   resolve: {
     alias: [
