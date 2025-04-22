@@ -42,7 +42,7 @@
     "@mui/utils": "^7.0.2",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
-    "@web-gestures/core": "^0.0.3",
+    "@web-gestures/core": "^0.0.5",
     "bezier-easing": "^2.1.0",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
