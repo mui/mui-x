@@ -166,8 +166,8 @@ async function main() {
 
         if (/^\/docs-charts-.*/.test(route)) {
           // Run one tick of the clock to get the final animation state
-          await sleep(10);
-          console.log('slept');
+          await page.evaluate(() => window.fakeClock.runToFrame());
+          await page.evaluate(() => window.fakeClock.runToFrame());
         }
 
         if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
