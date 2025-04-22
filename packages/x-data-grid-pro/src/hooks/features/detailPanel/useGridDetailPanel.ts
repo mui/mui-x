@@ -155,6 +155,7 @@ export const useGridDetailPanel = (
         newIds.add(id);
       }
       apiRef.current.setExpandedDetailPanels(newIds);
+      apiRef.current.requestPipeProcessorsApplication('rowHeight');
     },
     [apiRef, contentCache, props.getDetailPanelContent],
   );
