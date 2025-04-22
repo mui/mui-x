@@ -42,7 +42,6 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 export const RichTreeViewProRoot = styled('ul', {
   name: 'MuiRichTreeViewPro',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: RichTreeViewProProps<any, any> }>({
   padding: 0,
   margin: 0,

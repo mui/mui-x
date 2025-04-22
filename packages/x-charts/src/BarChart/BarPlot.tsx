@@ -216,7 +216,6 @@ const useAggregatedData = (): {
 const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
