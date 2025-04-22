@@ -161,17 +161,14 @@ function transform(opts) {
     }),
   );
 
+  // prettier-ignore
   const args = [
     '--verbose',
-    '--extensions',
-    '".js"',
+    '--extensions', '".js"',
     resolve(RUNTIME_DIR, 'src'),
-    '--config-file',
-    INPUT_BABEL,
-    '--out-dir',
-    OUTPUT_DIR,
-    '--ignore',
-    '*.ts',
+    '--config-file', INPUT_BABEL,
+    '--out-dir', OUTPUT_DIR,
+    '--ignore', '*.ts',
   ];
 
   const command = `cd "${RUNTIME_DIR}" && pnpm exec babel ${args.join(' ')}`;
