@@ -179,12 +179,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: '페이지 당 행:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
       return `${from}–${to} of ${count !== -1 ? count : `${to} 이상`}`;
     }
@@ -270,8 +265,10 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Prompt changes
   promptChangeGroupDescription: (column: string) => `${column} 값으로 그룹 생성`,
-  promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  promptChangeAggregationDescription: (column: string, aggregation: string) => `${column} (${aggregation}) 집계`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation}) 집계`,
   // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
   //   if (operator === 'is any of') {
   //     return `${column} is any of: ${value}`;
@@ -284,14 +281,17 @@ const koKRGrid: Partial<GridLocaleText> = {
   //   }
   //   return `Filter where ${column} ${operator} ${value}`;
   // },
-  promptChangeSortDescription: (column: string, direction: string) => `${column} (${direction}) 기준으로 정렬`,
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `${column} (${direction}) 기준으로 정렬`,
   promptChangePivotEnableLabel: '피벗',
   promptChangePivotEnableDescription: '피벗 활성화',
   promptChangePivotColumnsLabel: (count: number) => `(${count}) 개의 열`,
-  promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
   promptChangePivotRowsLabel: (count: number) => `(${count}) 개의 행`,
   promptChangePivotValuesLabel: (count: number) => `(${count}) 개의 값`,
-  promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);
