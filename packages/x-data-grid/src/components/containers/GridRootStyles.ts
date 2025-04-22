@@ -17,27 +17,6 @@ import { GridStateCommunity } from '../../models/gridStateCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
-function getBorderColor(theme: Theme) {
-  if (theme.vars) {
-    return theme.vars.palette.TableCell.border;
-  }
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
-    width: 'auto',
-  },
-  [`& .${c.menuIcon}`]: {
-    width: 'auto',
-    visibility: 'visible',
-  },
-};
-
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -466,13 +445,28 @@ export const GridRootStyles = styled('div', {
       width: 'var(--DataGrid-rowWidth)',
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
-        opacity: 0.5,
+      [`& .${c.columnHeader}:hover`]: {
+        [`& .${c.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
+        [`& .${c.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
       },
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
+        {
+          opacity: 0.5,
+        },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader} .${c.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
