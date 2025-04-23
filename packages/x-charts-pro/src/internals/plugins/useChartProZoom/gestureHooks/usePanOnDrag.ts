@@ -43,19 +43,21 @@ export const usePanOnDrag = (
       event.detail.customData.zoomData = store.getSnapshot().zoom.zoomData;
     });
 
-    const rafThrottledCallback = rafThrottle((event: PanEvent) => {
-      const newZoomData = translateZoom(
-        event.detail.customData.zoomData,
-        { x: event.detail.deltaX, y: -event.detail.deltaY },
-        {
-          width: drawingArea.width,
-          height: drawingArea.height,
-        },
-        optionsLookup,
-      );
+    const rafThrottledCallback = rafThrottle(
+      (event: PanEvent<{ zoomData: readonly ZoomData[] }>) => {
+        const newZoomData = translateZoom(
+          event.detail.customData.zoomData,
+          { x: event.detail.deltaX, y: -event.detail.deltaY },
+          {
+            width: drawingArea.width,
+            height: drawingArea.height,
+          },
+          optionsLookup,
+        );
 
-      setZoomDataCallback(newZoomData);
-    });
+        setZoomDataCallback(newZoomData);
+      },
+    );
 
     const panHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
       'pan',
