@@ -3,7 +3,15 @@ import { createExportIframe, loadStyleSheets } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
 
 export const getDrawDocument = async () => {
-  const module = await import('rasterizehtml');
+  let module;
+  try {
+    module = await import('rasterizehtml');
+  } catch (error) {
+    throw new Error(
+      `MUI X: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
+      { cause: error },
+    );
+  }
 
   return module.drawDocument;
 };
