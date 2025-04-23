@@ -25,7 +25,6 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.1.0`
 
 - [DataGridPro] Fix locales.ts export (#17433) @lhilgert9
-- [docs][data grid] Revise the Row Grouping doc (#16217) @mapache-salvaje
 - [DataGrid] Allow row deselection with multiple rows selected (#17473) @arminmeh
 - [DataGrid] Fix column title truncation on touch devices (#17375) @KenanYusuf
 - [DataGrid] Remove internal usage of `material` prop (#17513) @KenanYusuf
@@ -66,7 +65,6 @@ Same changes as in `@mui/x-date-pickers@8.1.0`.
 - [charts] Advance time in charts regression tests (#17420) @bernardobelchior
 - [charts] Fix charts visuals flakiness (#17472) @bernardobelchior
 - [charts] Move `rafThrottle` on event handlers instead of setter (#17489) @bernardobelchior
-- [charts][docs] Fix ellipsis in the demo (#17476) @oliviertassinari
 
 #### `@mui/x-charts-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -93,6 +91,9 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [docs] Remove ad on paid docs pages (#17373) @oliviertassinari
 - [docs] Serve migration guides in raw markdown format (#17210) @cherniavskii
 - [docs] Fix heading structure (#17495) @oliviertassinari
+- [docs] Revise the Row Grouping doc (#16217) @mapache-salvaje
+- [docs] Fix ellipsis in the demo (#17476) @oliviertassinari
+- [docs] Add docs information for Legend HTML (#17502) @alexfauquette
 
 ### Core
 
@@ -100,7 +101,6 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [core] Remove `react-is` dependency (#17470) @LukasTy
 - [core] Remove redundant `overridesResolver` in `styled` components (#17466) @romgrk
 - [core] Update support table (#17425) @joserodolfofreitas
-- [docs][chart] Add docs information for Legend HTML (#17502) @alexfauquette
 - [code-infra] Ditch `@babel/node` (#17446) @LukasTy
 - [code-infra] Further remove `clock=fake` from pickers (#17253) @JCQuintas
 
