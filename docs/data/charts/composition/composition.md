@@ -72,6 +72,7 @@ It can be used instead of them when there is no need to customize anything outsi
 ### Graphical components
 
 These are any component that render the graphical elements of the chart.
+They are the children of the **Structural components** shown above.
 There are many of them, so they won't all be listed here.
 You can even [create your own components](/x/react-charts/components/).
 
