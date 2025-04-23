@@ -11,12 +11,11 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - 🐞 Bugfixes
 
-
 Special thanks go out to the community contributors who have helped make this release possible:
 @lhilgert9
 
 Following are all team members who have contributed to this release:
-@arminmeh, @cherniavskii, @flaviendelangle, @LukasTy,  @romgrk.
+@arminmeh, @cherniavskii, @flaviendelangle, @LukasTy, @romgrk.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
