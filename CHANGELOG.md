@@ -24,7 +24,6 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.1.0`
 
-- [DataGridPro] Fix locales.ts export (#17433) @lhilgert9
 - [DataGrid] Allow row deselection with multiple rows selected (#17473) @arminmeh
 - [DataGrid] Fix column title truncation on touch devices (#17375) @KenanYusuf
 - [DataGrid] Remove internal usage of `material` prop (#17513) @KenanYusuf
@@ -33,6 +32,7 @@ Following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@8.1.0`, plus:
 
+- [DataGridPro] Fix locales.ts export (#17433) @lhilgert9
 - [DataGridPro] Avoid proptypes warnings with header filters in React 17 (#17482) @cherniavskii
 - [DataGridPro] Fix expandable rows detail content height updates (#17394) @arminmeh
 
