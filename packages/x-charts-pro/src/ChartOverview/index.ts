@@ -1,2 +1,6 @@
 export * from './ChartOverview';
-export * from './chartAxisZoomOverviewHandleClasses';
+export {
+  ChartAxisZoomOverviewHandleClasses,
+  ChartAxisZoomOverviewHandleClassKey,
+  chartAxisZoomOverviewHandleClasses,
+} from './chartAxisZoomOverviewHandleClasses';
