@@ -69,7 +69,9 @@ Internal changes.
 
 #### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@7.29.1`.
+Same changes as in `@mui/x-tree-view@7.29.1`, plus:
+
+- [RichTreeViewPro] Fix drag and drop issue with label editing (#17415) @flaviendelangle
 
 ### Docs
 
