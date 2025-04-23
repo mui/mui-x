@@ -290,7 +290,7 @@ export const useGridDetailPanel = (
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
-      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef);
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
       if (!expandedRowIds || expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         initialValue.detail = 0;
         return initialValue;
