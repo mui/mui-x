@@ -158,7 +158,7 @@ function ChartAxisZoomOverviewSpan({
       const delta = current - prev;
       prev = current;
 
-      const deltaZoom = delta / drawingAreaSize;
+      const deltaZoom = ((axisDirection === 'x' ? 1 : -1) * delta) / drawingAreaSize;
 
       instance.moveZoomRange(axisId, deltaZoom * 100);
     });
@@ -166,7 +166,6 @@ function ChartAxisZoomOverviewSpan({
     const onPointerUp = () => {
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
-      prev = 0;
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -199,7 +198,7 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (delta / drawingAreaSize) * 100;
+              const deltaZoom = (axisDirection === 'x' ? 1 : -1) * (delta / drawingAreaSize) * 100;
 
               return {
                 ...zoom,
@@ -230,7 +229,7 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (delta / drawingAreaSize) * 100;
+              const deltaZoom = (axisDirection === 'x' ? 1 : -1) * (delta / drawingAreaSize) * 100;
 
               return {
                 ...zoom,
@@ -252,7 +251,9 @@ function ChartAxisZoomOverviewSpan({
       <ZoomRangePreviewRect
         ref={activePreviewRectRef}
         x={axisDirection === 'x' ? (zoomData.start / 100) * drawingArea.width : 0}
-        y={axisDirection === 'x' ? 0 : (zoomData.start / 100) * drawingArea.height}
+        y={
+          axisDirection === 'x' ? 0 : drawingArea.height - (zoomData.end / 100) * drawingArea.height
+        }
         width={
           axisDirection === 'x' ? (drawingArea.width * (zoomData.end - zoomData.start)) / 100 : size
         }
@@ -274,7 +275,9 @@ function ChartAxisZoomOverviewSpan({
         y={
           axisDirection === 'x'
             ? (size - previewHandleHeight) / 2
-            : (zoomData.start / 100) * drawingArea.height - previewHandleHeight / 2
+            : drawingArea.height -
+              (zoomData.start / 100) * drawingArea.height -
+              previewHandleHeight / 2
         }
         width={previewHandleWidth}
         height={previewHandleHeight}
@@ -290,7 +293,9 @@ function ChartAxisZoomOverviewSpan({
         y={
           axisDirection === 'x'
             ? (size - previewHandleHeight) / 2
-            : (zoomData.end / 100) * drawingArea.height - previewHandleHeight / 2
+            : drawingArea.height -
+              (zoomData.end / 100) * drawingArea.height -
+              previewHandleHeight / 2
         }
         width={previewHandleWidth}
         height={previewHandleHeight}

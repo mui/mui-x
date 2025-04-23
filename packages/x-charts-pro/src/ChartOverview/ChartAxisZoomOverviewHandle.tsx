@@ -61,18 +61,20 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
 
     let prev = 0;
 
-    const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const current = orientation === 'horizontal' ? event.clientX : event.clientY;
-      const delta = current - prev;
+    const rafThrottledPointerMove = rafThrottle((current: number, previous: number) => {
+      const delta = current - previous;
       prev = current;
 
       onResizeEvent(delta);
     });
+    const onPointerMove = (event: PointerEvent) => {
+      const current = orientation === 'horizontal' ? event.clientX : event.clientY;
+      rafThrottledPointerMove(current, prev);
+    };
 
     const onPointerUp = () => {
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
-      prev = 0;
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -89,7 +91,7 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
     // eslint-disable-next-line consistent-return
     return () => {
       handle.removeEventListener('pointerdown', onPointerDown);
-      onPointerMove.clear();
+      rafThrottledPointerMove.clear();
     };
   }, [onResizeEvent, orientation]);
 
