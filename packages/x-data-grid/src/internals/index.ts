@@ -18,6 +18,7 @@ export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
 export * from '../DataGrid/configuration';
 
+export { useGridSlot } from '../hooks/utils/useGridSlot';
 export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
@@ -198,6 +199,7 @@ export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
+export * from '../utils/composeGridStyles';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
 export type { GridInfiniteLoaderPrivateApi } from '../models/api/gridInfiniteLoaderApi';
 export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';

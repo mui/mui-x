@@ -158,9 +158,8 @@ export default function transformCSS({ types: t }: BabelT) {
   function buildClassesNode(state: State, prefix: string, classes: Record<string, object>) {
     return t.objectExpression(
       Object.keys(classes).map((className) => {
-        const identifier = className;
-        const cssClassName = generateClassName(prefix, className);
         const cssStyles = classes[className];
+        const cssClassName = generateClassName(prefix, className, cssStyles);
 
         const generatedCSS = stylesToString(`.${cssClassName}`, cssStyles as any)
           .map((c) => c.trim())
@@ -170,13 +169,18 @@ export default function transformCSS({ types: t }: BabelT) {
           content: generatedCSS,
         });
 
-        return t.objectProperty(t.stringLiteral(identifier), t.stringLiteral(cssClassName));
+        return t.objectProperty(t.stringLiteral(className), t.stringLiteral(cssClassName));
       }),
     );
   }
 }
 
-function generateClassName(prefix: string, className: string) {
+function generateClassName(prefix: string, className: string, cssStyles: Record<string, any>) {
+  /* eslint-disable no-underscore-dangle */
+  if (cssStyles.__class__) {
+    return cssStyles.__class__;
+  }
+  /* eslint-enable no-underscore-dangle */
   if (className === 'root') {
     return prefix;
   }

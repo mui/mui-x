@@ -1,6 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { CSSInterpolation } from '@mui/system';
 import { styled } from '@mui/material/styles';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
@@ -799,6 +800,17 @@ export const GridRootStyles = styled('div', {
         {
           display: 'none',
         },
+    },
+
+    /* Material touch-ups (to be moved to /material) */
+
+    [`.${c.columnHeaderFilterInput} .${inputBaseClasses.input}`]: {
+      fontSize: '14px',
+    },
+    [`&.${c['root--densityCompact']} .${c.columnHeaderFilterInput} .${inputBaseClasses.input}`]: {
+      paddingTop: vars.spacing(0.5),
+      paddingBottom: vars.spacing(0.5),
+      height: 23,
     },
   };
 

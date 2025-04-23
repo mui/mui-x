@@ -116,7 +116,6 @@ describe('babel-plugin-mui-css', () => {
           };
         `,
         css: css`
-          .MuiDataGrid-panel {  }
           .MuiDataGrid-panel #id { color:black; }
           .MuiDataGrid-panel .class-a { color:black; }
           .MuiDataGrid-panel.class-b { color:black; }

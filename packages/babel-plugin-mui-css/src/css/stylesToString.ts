@@ -3,9 +3,10 @@ import unitLessProperties from './unitLessProperties.js';
 
 /* eslint-disable prefer-template */
 
-const DASH_CHAR_CODE = '-'.charCodeAt(0);
+const DASH_CODE = '-'.charCodeAt(0);
+const UNDERSCORE_CODE = '_'.charCodeAt(0);
 
-const SPECIAL_CHAR = /--|#|\.|\s|>|&|:/;
+const SPECIAL_CHAR = /__|--|#|\.|\s|>|&|:/;
 const UPPERCASE_LETTERS = /[A-Z]/g;
 
 const stack = [] as any[];
@@ -21,7 +22,7 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
     const nested = stack.pop();
     const selector = transformSelector(nested, parents);
 
-    let output = `${selector} { `;
+    let content = '';
 
     for (const key in styles) {
       if (isSpecial(key)) {
@@ -29,7 +30,9 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
           const cssKey = key;
           const cssValue = styles[key];
 
-          output += cssKey + ':' + cssValue + ';';
+          content += cssKey + ':' + cssValue + ';';
+        } else if (isMeta(key)) {
+          /* ignore */
         } /* nested selector */ else {
           stack.unshift(key, styles[key], selector);
         }
@@ -37,13 +40,13 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
         const cssKey = key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase);
         const cssValue = transformValue(cssKey, styles[key]);
 
-        output += cssKey + ':' + cssValue + ';';
+        content += cssKey + ':' + cssValue + ';';
       }
     }
 
-    output += ' } ';
-
-    rules.push(output);
+    if (content !== '') {
+      rules.push(`${selector} { ${content} }`);
+    }
   }
 
   return rules;
@@ -82,5 +85,9 @@ function isSpecial(key: string) {
 }
 
 function isVariable(cssKey: string) {
-  return cssKey.charCodeAt(0) === DASH_CHAR_CODE && cssKey.charCodeAt(1) === DASH_CHAR_CODE;
+  return cssKey.charCodeAt(0) === DASH_CODE && cssKey.charCodeAt(1) === DASH_CODE;
+}
+
+function isMeta(cssKey: string) {
+  return cssKey.charCodeAt(0) === UNDERSCORE_CODE && cssKey.charCodeAt(1) === UNDERSCORE_CODE;
 }

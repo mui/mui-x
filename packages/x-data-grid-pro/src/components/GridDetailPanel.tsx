@@ -1,24 +1,28 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import { GridRowId } from '@mui/x-data-grid';
-import { vars } from '@mui/x-data-grid/internals';
+import { slot } from '@mui/x-internals/css';
+import { vars, useGridSlot } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
-type OwnerState = DataGridProProcessedProps;
-
-const DetailPanel = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'DetailPanel',
-})<{ ownerState: OwnerState }>({
-  width:
-    'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-  backgroundColor: vars.colors.background.base,
-  overflow: 'auto',
-});
+const slotDetailPanel = slot(
+  {
+    name: 'MuiDataGrid',
+    slot: 'detailPanel',
+    as: 'div',
+  },
+  {
+    root: {
+      width:
+        'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
+      backgroundColor: vars.colors.background.base,
+      overflow: 'auto',
+    },
+  },
+);
 
 interface GridDetailPanelProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {
@@ -37,6 +41,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
   const rootProps = useGridRootProps();
+  const detailPanel = useGridSlot(rootProps, slotDetailPanel);
   const ownerState = rootProps;
   const hasAutoHeight = height === 'auto';
 
@@ -62,15 +67,15 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   );
 
   return (
-    <DetailPanel
+    <detailPanel.component
       ref={ref}
       ownerState={ownerState}
       role="presentation"
       style={{ height }}
-      className={className}
+      className={clsx(className, detailPanel.classes.root)}
     >
       {children}
-    </DetailPanel>
+    </detailPanel.component>
   );
 }
 
