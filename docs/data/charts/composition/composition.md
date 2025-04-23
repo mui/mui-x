@@ -218,13 +218,13 @@ To add a grid, use the `<ChartsGrid />` component.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
-### LegendGrid
+### Legend
 
 To add a legend, use the `<ChartsLegend />` component.
 
 :::warning
-The Legend is an HTML element since v8.
-I must be inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+The Charts Legend is an HTML element since v8.
+It must be rendered inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
 
 ```jsx
 <ChartDataProvider>
@@ -235,7 +235,7 @@ I must be inside the Data Provider to get the data, but outside the Surface sinc
 
 :::
 
-See [HTML-components](/x/react-charts/components/#html-components) documentation for more information.
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
 
 ### Additional information
 

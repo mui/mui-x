@@ -123,9 +123,9 @@ The impacted properties are:
 ### Legend is now an HTML element
 
 The `ChartsLegend` is now an HTML component.
-This make it simpler to customize but prevent from using the `ChartContainer`.
+This make it simpler to customize but it can't be used as a children of the `ChartContainer`.
 
-It must be inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+It must be rendered inside the Data Provider to get the data, but outside the Chart Surface since it's not an SVG element.
 
 ```diff
 -<ChartContainer>
@@ -138,7 +138,7 @@ It must be inside the Data Provider to get the data, but outside the Surface sin
 -</ChartContainer>
 ```
 
-See [HTML-components](/x/react-charts/components/#html-components) documentation for more information.
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
 
 ### Legend props propagation ✅
 
