@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.1
+
+<!-- generated comparing v7.29.0..v7.x -->
+
+_Apr 23, 2025_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+Following are all team members who have contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @LukasTy.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.1`
+
+- [DataGrid] Prevent scrollbars from showing on top (#17410) @romgrk
+
+#### `@mui/x-data-grid-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.1`, plus:
+
+- [DataGridPro] Avoid proptypes warnings with header filters in React 17 (#17492) @cherniavskii
+- [DataGridPro] Fix expandable rows detail content height updates (#17509) @arminmeh
+- [DataGridPro] Fix row virtualization not working in list view (#17404) @cherniavskii
+- [DataGridPro] Move locales re-export to allow proper tree shaking (#17438) @lhilgert9
+
+#### `@mui/x-data-grid-premium@7.29.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.1`, plus:
+
+- [DataGridPremium] Use `groupingValueGetter` for row grouping on the server (#17423) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.29.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.29.1`.
+
+### Docs
+
+- [docs] Use MUI X v7 packages in CodeSandbox and StackBlitz (#17516) @cherniavskii
+
+### Core
+
+- [core] Bump monorepo (#17437) @LukasTy
+
 ## 7.29.0
 
 _Apr 16, 2025_
