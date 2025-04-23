@@ -125,7 +125,7 @@ The impacted properties are:
 The `ChartsLegend` is now an HTML component.
 This make it simpler to customize but prevent from using the `ChartContainer`.
 
-I must be inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+It must be inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
 
 ```diff
 -<ChartContainer>

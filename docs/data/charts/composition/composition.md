@@ -72,7 +72,6 @@ It can be used instead of them when there is no need to customize anything outsi
 ### Graphical components
 
 These are any component that render the graphical elements of the chart.
-They are the children of the **SrtsDataProvider, and thus a customized legend. Before, in v7, it was possible to use ChatsLegend inside ChartContainer with together with multiple Line/BarPlots, unfortunately this page as no indication/help/example for that scenario. All graphs rendered here hatructural components** shown above.
 There are many of them, so they won't all be listed here.
 You can even [create your own components](/x/react-charts/components/).
 
@@ -208,20 +207,20 @@ It's important to generate unique IDs for clip paths, especially when dealing wi
 
 ### Axis
 
-To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
+To add axes, use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
 
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
 If `axisId` is not provided it will pick the first one.
 
 ### Grid
 
-To add a grid, you can use the `<ChartsGrid />` component.
+To add a grid, use the `<ChartsGrid />` component.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
 ### LegendGrid
 
-To add a a legend, you can use the `<ChartsLegend />` component.
+To add a legend, use the `<ChartsLegend />` component.
 
 :::warning
 The Legend is an HTML element since v8.
