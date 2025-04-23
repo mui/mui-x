@@ -41,8 +41,6 @@ export async function exportImage(
     const exportDoc = iframe.contentDocument!;
     const elementClone = element.cloneNode(true) as HTMLElement;
     const container = document.createElement('div');
-    // TODO: Handle disabling animations.
-    elementClone.classList.add('skipAnimation');
     container.appendChild(elementClone);
     exportDoc.body.innerHTML = container.innerHTML;
     exportDoc.body.style.margin = '0px';
