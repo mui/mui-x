@@ -7,7 +7,6 @@ import {
   ZoomData,
   createZoomLookup,
 } from '@mui/x-charts/internals';
-import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
 import { useEventCallback } from '@mui/material/utils';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -16,12 +15,30 @@ import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
-  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
-    axisId,
-    start,
-    end,
-  }));
+export function initializeZoomData(
+  options: Record<AxisId, DefaultizedZoomOptions>,
+  zoomData?: readonly ZoomData[],
+) {
+  const zoomDataMap = new Map<AxisId, ZoomData>();
+
+  zoomData?.forEach((zoom) => {
+    const option = options[zoom.axisId];
+    if (option) {
+      zoomDataMap.set(zoom.axisId, zoom);
+    }
+  });
+
+  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => {
+    if (zoomDataMap.has(axisId)) {
+      return zoomDataMap.get(axisId)!;
+    }
+
+    return {
+      axisId,
+      start,
+      end,
+    };
+  });
 }
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
@@ -98,37 +115,32 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [store],
   );
 
-  // This is throttled. We want to run it at most once per frame.
-  // By joining the two, we ensure that interacting and zooming are in sync.
-  const setZoomDataCallback = React.useMemo(
-    () =>
-      rafThrottle((zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-        store.update((prevState) => {
-          const newZoomData =
-            typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-          onZoomChange?.(newZoomData);
-          if (prevState.zoom.isControlled) {
-            return prevState;
-          }
+  const setZoomDataCallback = React.useCallback(
+    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+      store.update((prevState) => {
+        const newZoomData =
+          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+        onZoomChange?.(newZoomData);
+        if (prevState.zoom.isControlled) {
+          return prevState;
+        }
 
-          removeIsInteracting();
-          return {
-            ...prevState,
-            zoom: {
-              ...prevState.zoom,
-              isInteracting: true,
-              zoomData: newZoomData,
-            },
-          };
-        });
-      }),
-
+        removeIsInteracting();
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            isInteracting: true,
+            zoomData: newZoomData,
+          },
+        };
+      });
+    },
     [onZoomChange, store, removeIsInteracting],
   );
 
   React.useEffect(() => {
     return () => {
-      setZoomDataCallback.clear();
       removeIsInteracting.clear();
     };
   }, [setZoomDataCallback, removeIsInteracting]);
@@ -171,15 +183,13 @@ useChartProZoom.getInitialState = (params) => {
     ...createZoomLookup('x')(defaultizedXAxis),
     ...createZoomLookup('y')(defaultizedYAxis),
   };
+  const userZoomData =
+    // eslint-disable-next-line no-nested-ternary
+    zoomData !== undefined ? zoomData : initialZoom !== undefined ? initialZoom : undefined;
+
   return {
     zoom: {
-      zoomData:
-        // eslint-disable-next-line no-nested-ternary
-        zoomData !== undefined
-          ? zoomData
-          : initialZoom !== undefined
-            ? initialZoom
-            : initializeZoomData(optionsLookup),
+      zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
     },

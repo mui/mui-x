@@ -50,7 +50,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   return mousePosition;
 }
 
-type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+type PointerType = Pick<MousePosition, 'pointerType'>;
 
 export function usePointerType(): null | PointerType {
   const { instance } = useChartContext();
@@ -76,7 +76,6 @@ export function usePointerType(): null | PointerType {
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       setPointerType({
-        height: Math.max(event.detail.srcEvent.height, 24),
         pointerType: event.detail.srcEvent.pointerType as PointerType['pointerType'],
       });
     };
