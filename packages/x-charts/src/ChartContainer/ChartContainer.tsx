@@ -13,6 +13,8 @@ export type ChartContainerProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 > = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
+export type ChartApi = NonNullable<NonNullable<ChartContainerProps['apiRef']>['current']>;
+
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
