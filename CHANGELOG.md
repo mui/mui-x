@@ -75,7 +75,7 @@ Same changes as in `@mui/x-tree-view@7.29.1`, plus:
 
 ### Docs
 
-- [docs] Use MUI X v7 packages in CodeSandbox and StackBlitz (#17516) @cherniavskii
+- [docs] Use MUI X v7 packages in CodeSandbox and StackBlitz (#17516) @cherniavskii
 
 ### Core
 
