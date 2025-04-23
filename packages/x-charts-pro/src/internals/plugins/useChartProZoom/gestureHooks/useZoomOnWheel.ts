@@ -9,6 +9,7 @@ import {
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
@@ -40,6 +41,8 @@ export const useZoomOnWheel = (
     if (element === null || !isZoomEnabled) {
       return () => {};
     }
+
+    const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
       const point = getSVGPoint(element, event.detail.srcEvent);
@@ -99,7 +102,7 @@ export const useZoomOnWheel = (
         event.detail.srcEvent.preventDefault();
       }
 
-      setZoomDataCallback(newZoomData);
+      rafThrottledSetZoomData(newZoomData);
     });
 
     return () => {
@@ -114,6 +117,7 @@ export const useZoomOnWheel = (
       }
       isChangingRef.current = false;
       startedOutsideRef.current = false;
+      rafThrottledSetZoomData.clear();
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
 };
