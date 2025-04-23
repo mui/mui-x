@@ -76,6 +76,7 @@ export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoom
 
   let x: number;
   let y: number;
+  let reverse: boolean;
 
   if (axisDirection === 'x') {
     const axis = xAxis[axisId];
@@ -91,6 +92,7 @@ export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoom
       axis.position === 'bottom'
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize
         : drawingArea.top - axis.offset - axisSize - size;
+    reverse = axis.reverse ?? false;
   } else {
     const axis = yAxis[axisId];
 
@@ -105,6 +107,7 @@ export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoom
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize
         : drawingArea.left - axis.offset - axisSize - size;
     y = drawingArea.top;
+    reverse = axis.reverse ?? false;
   }
 
   return (
@@ -118,6 +121,7 @@ export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoom
         zoomData={zoomData}
         axisId={axisId}
         axisDirection={axisDirection}
+        reverse={reverse}
       />
     </g>
   );
@@ -128,11 +132,13 @@ function ChartAxisZoomOverviewSpan({
   axisId,
   axisDirection,
   zoomData,
+  reverse,
 }: {
   size: number;
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   zoomData: ZoomData;
+  reverse: boolean;
 }) {
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
@@ -158,7 +164,8 @@ function ChartAxisZoomOverviewSpan({
       const delta = current - prev;
       prev = current;
 
-      const deltaZoom = ((axisDirection === 'x' ? 1 : -1) * delta) / drawingAreaSize;
+      const deltaZoom =
+        ((reverse ? -1 : 1) * ((axisDirection === 'x' ? 1 : -1) * delta)) / drawingAreaSize;
 
       instance.moveZoomRange(axisId, deltaZoom * 100);
     });
@@ -183,7 +190,7 @@ function ChartAxisZoomOverviewSpan({
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [axisDirection, axisId, instance, store]);
+  }, [axisDirection, axisId, instance, reverse, store]);
 
   const onResizeStart = (delta: number) => {
     store.update((state) => {
@@ -198,7 +205,11 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (axisDirection === 'x' ? 1 : -1) * (delta / drawingAreaSize) * 100;
+              const deltaZoom =
+                (reverse ? -1 : 1) *
+                (axisDirection === 'x' ? 1 : -1) *
+                (delta / drawingAreaSize) *
+                100;
 
               return {
                 ...zoom,
@@ -229,7 +240,11 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom = (axisDirection === 'x' ? 1 : -1) * (delta / drawingAreaSize) * 100;
+              const deltaZoom =
+                (reverse ? -1 : 1) *
+                (axisDirection === 'x' ? 1 : -1) *
+                (delta / drawingAreaSize) *
+                100;
 
               return {
                 ...zoom,
@@ -246,61 +261,86 @@ function ChartAxisZoomOverviewSpan({
     });
   };
 
+  let previewX: number;
+  let previewY: number;
+  let previewWidth: number;
+  let previewHeight: number;
+  let startHandleX: number;
+  let startHandleY: number;
+  let endHandleX: number;
+  let endHandleY: number;
+
+  if (axisDirection === 'x') {
+    previewX = (zoomData.start / 100) * drawingArea.width;
+    previewY = 0;
+    previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / 100;
+    previewHeight = size;
+
+    startHandleX = (zoomData.start / 100) * drawingArea.width;
+    startHandleY = (size - previewHandleHeight) / 2;
+    endHandleX = (zoomData.end / 100) * drawingArea.width;
+    endHandleY = (size - previewHandleHeight) / 2;
+
+    if (reverse) {
+      previewX = drawingArea.width - previewX - previewWidth;
+
+      startHandleX = drawingArea.width - startHandleX;
+      endHandleX = drawingArea.width - endHandleX;
+    }
+
+    startHandleX -= previewHandleWidth / 2;
+    endHandleX -= previewHandleWidth / 2;
+  } else {
+    previewX = 0;
+    previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    previewWidth = size;
+    previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
+
+    startHandleX = (size - previewHandleWidth) / 2;
+    startHandleY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
+    endHandleX = (size - previewHandleWidth) / 2;
+    endHandleY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+
+    if (reverse) {
+      previewY = drawingArea.height - previewY - previewHeight;
+
+      startHandleY = drawingArea.height - startHandleY;
+      endHandleY = drawingArea.height - endHandleY;
+    }
+
+    startHandleY -= previewHandleHeight / 2;
+    endHandleY -= previewHandleHeight / 2;
+  }
+
   return (
     <React.Fragment>
       <ZoomRangePreviewRect
         ref={activePreviewRectRef}
-        x={axisDirection === 'x' ? (zoomData.start / 100) * drawingArea.width : 0}
-        y={
-          axisDirection === 'x' ? 0 : drawingArea.height - (zoomData.end / 100) * drawingArea.height
-        }
-        width={
-          axisDirection === 'x' ? (drawingArea.width * (zoomData.end - zoomData.start)) / 100 : size
-        }
-        height={
-          axisDirection === 'x'
-            ? size
-            : (drawingArea.height * (zoomData.end - zoomData.start)) / 100
-        }
+        x={previewX}
+        y={previewY}
+        width={previewWidth}
+        height={previewHeight}
       />
       {
         // TODO: In RTL languages, should we start from the right?
       }
       <ChartAxisZoomOverviewHandle
-        x={
-          axisDirection === 'x'
-            ? (zoomData.start / 100) * drawingArea.width - previewHandleWidth / 2
-            : (size - previewHandleWidth) / 2
-        }
-        y={
-          axisDirection === 'x'
-            ? (size - previewHandleHeight) / 2
-            : drawingArea.height -
-              (zoomData.start / 100) * drawingArea.height -
-              previewHandleHeight / 2
-        }
+        x={startHandleX}
+        y={startHandleY}
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onResize={onResizeStart}
+        placement="start"
       />
       <ChartAxisZoomOverviewHandle
-        x={
-          axisDirection === 'x'
-            ? (zoomData.end / 100) * drawingArea.width - previewHandleWidth / 2
-            : (size - previewHandleWidth) / 2
-        }
-        y={
-          axisDirection === 'x'
-            ? (size - previewHandleHeight) / 2
-            : drawingArea.height -
-              (zoomData.end / 100) * drawingArea.height -
-              previewHandleHeight / 2
-        }
+        x={endHandleX}
+        y={endHandleY}
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onResize={onResizeEnd}
+        placement="end"
       />
     </React.Fragment>
   );

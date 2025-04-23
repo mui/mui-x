@@ -54,6 +54,10 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 ## Zoom overview 🧪
 
+:::warning
+This feature is unstable and its API, visuals and/or behavior may change in future minor or patch releases.
+:::
+
 You can provide an overview of the zoomed area by setting the `zoom.overview.enabled` property on the axis config.
 
 {{"demo": "ZoomOverview.js"}}

@@ -28,6 +28,7 @@ const Rect = styled('rect')(({ theme }) => ({
 export interface ChartZoomOverviewHandleOwnerState {
   onResize: (delta: number) => void;
   orientation: 'horizontal' | 'vertical';
+  placement: 'start' | 'end';
 }
 
 export interface ChartZoomOverviewHandleProps
@@ -42,10 +43,10 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
   SVGRectElement,
   ChartZoomOverviewHandleProps
 >(function ChartPreviewHandle(
-  { x, y, width, height, onResize, orientation, rx = 2, ry = 2 },
+  { x, y, width, height, onResize, orientation, placement, rx = 2, ry = 2 },
   forwardedRef,
 ) {
-  const classes = useUtilityClasses({ onResize, orientation });
+  const classes = useUtilityClasses({ onResize, orientation, placement });
 
   const handleRef = React.useRef<SVGRectElement>(null);
   const ref = useForkRef(handleRef, forwardedRef);
