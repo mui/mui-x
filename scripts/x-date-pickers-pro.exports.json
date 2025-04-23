@@ -353,6 +353,7 @@
   { "name": "PickersTextFieldProps", "kind": "TypeAlias" },
   { "name": "PickersTimezone", "kind": "TypeAlias" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
+  { "name": "PickerTextFieldOwnerState", "kind": "Interface" },
   { "name": "PickerValidDate", "kind": "TypeAlias" },
   { "name": "PickerValidDateLookup", "kind": "Interface" },
   { "name": "PickerValueType", "kind": "TypeAlias" },
