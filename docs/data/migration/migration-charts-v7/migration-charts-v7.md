@@ -118,7 +118,29 @@ The impacted properties are:
 - The `xAxisKey`, `yAxisKey`, and `zAxisKey` have been renamed `xAxisId`, `yAxisId`, and `zAxisId`.
 - The `highlighted` and `faded` properties of `series.highlightScope` have been renamed `highlight` and `fade`.
 
-## Legend props propagation ✅
+## Legend modification
+
+### Legend is now an HTML element
+
+The `ChartsLegend` is now an HTML component.
+This make it simpler to customize but it can't be used as a children of the `ChartContainer`.
+
+It must be rendered inside the Data Provider to get the data, but outside the Chart Surface since it's not an SVG element.
+
+```diff
+-<ChartContainer>
++<ChartDataProvider>
+   <ChartsLegend />
++  <ChartSurface>
+     <BarPlot />
++  </ChartSurface>
++<ChartDataProvider>
+-</ChartContainer>
+```
+
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
+
+### Legend props propagation ✅
 
 The `legend` prop of charts single components has been removed.
 To pass props to the legend, use the `slotProps.legend`.
@@ -128,7 +150,7 @@ To pass props to the legend, use the `slotProps.legend`.
 +<PieChart slotProps={{ legend: { ... } }} />
 ```
 
-## Legend direction value change ✅
+### Legend direction value change ✅
 
 The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
 
@@ -143,7 +165,7 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
  />
 ```
 
-## Legend position value change ✅
+### Legend position value change ✅
 
 Replace `"left" | "middle" | "right"` values with `"start" | "center" | "end"` respectively.
 This is to align with the CSS values and reflect the RTL ability of the legend component.
@@ -161,7 +183,7 @@ This is to align with the CSS values and reflect the RTL ability of the legend c
  />
 ```
 
-## Rename `LegendPosition` type to `Position` ✅
+### Rename `LegendPosition` type to `Position` ✅
 
 Renames `LegendPosition` to `Position`.
 
@@ -170,7 +192,7 @@ Renames `LegendPosition` to `Position`.
 +import { Position } from '@mui/x-charts/models';
 ```
 
-## Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
+### Replace `slotProps.legend.hidden` with `hideLegend` prop ✅
 
 The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend` prop.
 
@@ -181,11 +203,14 @@ The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend`
  />
 ```
 
-## The `getSeriesToDisplay` function was removed
+### The `getSeriesToDisplay` function was removed
 
-The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook.
+You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
 
-## Renaming tooltip slots and props
+## Tooltip
+
+### Renaming tooltip slots and props
 
 The slots `popper`, `axisContent`, and `itemContent` have been replaced by the `tooltip` slot, which is now the single entry point to customize the tooltip.
 
@@ -203,12 +228,12 @@ Some helpers are provided to create your custom tooltip:
 - To override the **tooltip content**, use the `useItemTooltip` or `useAxesTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
-## Update Tooltip DOM structure
+### Update Tooltip DOM structure
 
 The DOM structure of the tooltip content was modified as follows.
 If you have tests on your tooltip content, or customized it with CSS selectors, you might be impacted by those modifications.
 
-### Axis tooltip
+#### Axis tooltip
 
 The data relative to the axis value are moved from the `header` to the `caption` of the table.
 The series label cell is now a header cell `th` instead of `td`.
@@ -232,7 +257,7 @@ The series label cell is now a header cell `th` instead of `td`.
   </table>
 ```
 
-### Item tooltip
+#### Item tooltip
 
 DOM modification is similar to the axis tooltip in the previous section.
 
@@ -396,7 +421,9 @@ npx @mui/x-codemod@latest v8.0.0/charts/rename-sparkline-colors-to-color <path>
 
 For more complex cases, you may need to adjust the code manually. To aid you in finding these cases, the codemod adds a comment prefixed by `mui-x-codemod`, which you can search for in your codebase.
 
-## Replace `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` props by `position` in the axis config
+## Axes
+
+### Replace `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` props by `position` in the axis config
 
 The following props have been removed `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
@@ -421,7 +448,7 @@ If you were previously disabling an axis by setting it to `null`, you should now
  />
 ```
 
-## Remove `position` prop from `ChartsXAxis` and `ChartsYAxis`
+### Remove `position` prop from `ChartsXAxis` and `ChartsYAxis`
 
 The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` components. Configure it directly in the axis config.
 
@@ -439,7 +466,7 @@ The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` co
  </ChartContainer>
 ```
 
-## Rework spacing between tick labels
+### Rework spacing between tick labels
 
 The spacing between tick labels has been reworked to be more predictable.
 
@@ -449,7 +476,7 @@ Now, the minimum spacing is consistent and is set by a new `minTickLabelGap` pro
 A consequence of this improved spacing is that tick labels may render differently than before.
 It is, therefore, recommended that you verify that your charts have the desired appearance after upgrading.
 
-## Styling and position changes for axes labels of cartesian charts
+### Styling and position changes for axes labels of cartesian charts
 
 Cartesian axes now have a size: `height` for x-axes and `width` for y-axes.
 In order to provide the most space for tick labels, the label of a cartesian axis will now be positioned as close to its outermost bound as possible.
