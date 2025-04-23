@@ -62,10 +62,14 @@ function ExportParamsSelector({
           label="Quality"
           value={rawQuality}
           onChange={(event) => setRawQuality(event.target.value)}
+          disabled={type === 'image/png'}
           helperText="Only applicable to lossy formats."
         />
       </FormControl>
-      <Button onClick={() => apiRef.current?.exportAsImage({ type, quality })}>
+      <Button
+        variant="outlined"
+        onClick={() => apiRef.current?.exportAsImage({ type, quality })}
+      >
         Export Image
       </Button>
     </Stack>

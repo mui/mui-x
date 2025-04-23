@@ -3,23 +3,23 @@ import { createExportIframe, loadStyleSheets } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
 
 export const getDrawDocument = async () => {
-  let module;
   try {
-    module = await import('rasterizehtml');
+    const module = await import('rasterizehtml');
+
+    return module.drawDocument;
   } catch (error) {
     throw new Error(
       `MUI X: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
       { cause: error },
     );
   }
-
-  return module.drawDocument;
 };
 
 export async function exportImage(
   element: HTMLElement | SVGElement,
-  { fileName, type, quality }: ChartImageExportOptions = { type: 'image/png', quality: 0.9 },
+  params?: ChartImageExportOptions,
 ) {
+  const { fileName, type = 'image/png', quality = 0.9 } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const { width, height } = element.getBoundingClientRect();
   const doc = ownerDocument(element);
@@ -69,10 +69,17 @@ export async function exportImage(
   });
   canvas.toBlob((blob) => resolveBlobPromise(blob), type, quality);
 
-  const blob = await blobPromise;
+  let blob: Blob | null;
+
+  try {
+    blob = await blobPromise;
+  } catch (error) {
+    throw new Error('MUI X: Failed to create blob from canvas.', { cause: error });
+  }
 
   if (!blob) {
-    throw new Error('Failed to create blob from canvas');
+    throw new Error('MUI X: Failed to create blob from canvas.');
+    return;
   }
 
   const url = URL.createObjectURL(blob);

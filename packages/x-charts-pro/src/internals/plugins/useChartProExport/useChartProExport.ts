@@ -50,6 +50,8 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
         await exportImage(chartRoot, options);
+      } catch (error) {
+        console.error('MUI X: Error exporting chart as image:', error);
       } finally {
         enableAnimation();
       }
