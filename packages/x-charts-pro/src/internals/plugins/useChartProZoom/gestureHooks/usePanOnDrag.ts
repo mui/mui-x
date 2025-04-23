@@ -7,6 +7,8 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { PanEvent } from '@web-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 
@@ -41,26 +43,29 @@ export const usePanOnDrag = (
       event.detail.customData.zoomData = store.getSnapshot().zoom.zoomData;
     });
 
+    const rafThrottledCallback = rafThrottle((event: PanEvent) => {
+      const newZoomData = translateZoom(
+        event.detail.customData.zoomData,
+        { x: event.detail.deltaX, y: -event.detail.deltaY },
+        {
+          width: drawingArea.width,
+          height: drawingArea.height,
+        },
+        optionsLookup,
+      );
+
+      setZoomDataCallback(newZoomData);
+    });
+
     const panHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
       'pan',
-      (event) => {
-        const newZoomData = translateZoom(
-          event.detail.customData.zoomData,
-          { x: event.detail.deltaX, y: -event.detail.deltaY },
-          {
-            width: drawingArea.width,
-            height: drawingArea.height,
-          },
-          optionsLookup,
-        );
-
-        setZoomDataCallback(newZoomData);
-      },
+      rafThrottledCallback,
     );
 
     return () => {
       panStartHandler.cleanup();
       panHandler.cleanup();
+      rafThrottledCallback.clear();
     };
   }, [
     instance,

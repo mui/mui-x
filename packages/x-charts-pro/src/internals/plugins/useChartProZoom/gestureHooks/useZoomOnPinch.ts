@@ -8,6 +8,8 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import { PinchEvent } from '@web-gestures/core';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
@@ -35,7 +37,7 @@ export const useZoomOnPinch = (
       return () => {};
     }
 
-    const zoomHandler = instance.addInteractionListener('pinch', (event) => {
+    const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
       const newZoomData = store.getSnapshot().zoom.zoomData.map((zoom) => {
         const option = optionsLookup[zoom.axisId];
         if (!option) {
@@ -70,8 +72,11 @@ export const useZoomOnPinch = (
       setZoomDataCallback(newZoomData);
     });
 
+    const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
+
     return () => {
       zoomHandler.cleanup();
+      rafThrottledCallback.clear();
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
 };
