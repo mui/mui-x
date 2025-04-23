@@ -105,7 +105,7 @@ export default function CustomLegend() {
             labelMarkType: LineWithMark,
           },
         ]}
-        xAxis={[{ dataKey: 'month', scaleType: 'band', id: 'x-axis' }]}
+        xAxis={[{ dataKey: 'month', id: 'x-axis' }]}
         sx={{
           [`& .MuiLineElement-series-avg`]: {
             strokeDasharray: '10 5',

@@ -55,7 +55,6 @@ export default function AxisFormatter() {
     <BarChart
       xAxis={[
         {
-          scaleType: 'band',
           dataKey: 'code',
           valueFormatter: (code, context) =>
             context.location === 'tick'

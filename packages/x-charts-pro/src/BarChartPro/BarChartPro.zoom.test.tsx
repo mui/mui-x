@@ -18,7 +18,6 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ],
     xAxis: [
       {
-        scaleType: 'band',
         data: ['A', 'B', 'C', 'D'],
         zoom: true,
         height: 30,

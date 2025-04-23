@@ -102,7 +102,6 @@ export default function FormatterDemo() {
       dataset={dataset}
       xAxis={[
         {
-          scaleType: 'band',
           dataKey: 'month',
           valueFormatter: (month, context) =>
             context.location === 'tick'

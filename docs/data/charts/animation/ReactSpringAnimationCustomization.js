@@ -11,7 +11,7 @@ export default function ReactSpringAnimationCustomization() {
     <Stack>
       <BarChart
         key={key}
-        xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
+        xAxis={[{ data: ['A', 'B', 'C'] }]}
         series={[
           {
             type: 'bar',
