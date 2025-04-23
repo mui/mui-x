@@ -95,6 +95,13 @@ export const useBarChartProps = (props: BarChartProps) => {
       })),
     [hasHorizontalSeries, series],
   );
+
+  const defaultXAxis = hasHorizontalSeries ? undefined : defaultBandXAxis;
+  const processedXAxis = React.useMemo(
+    () => (xAxis ? xAxis.map((axis) => ({ scaleType: 'band' as const, ...axis })) : defaultXAxis),
+    [defaultXAxis, xAxis],
+  );
+
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
     series: seriesWithDefault,
@@ -103,7 +110,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     margin,
     colors,
     dataset,
-    xAxis: xAxis ?? (hasHorizontalSeries ? undefined : defaultBandXAxis),
+    xAxis: processedXAxis,
     yAxis: yAxis ?? (hasHorizontalSeries ? defaultBandYAxis : undefined),
     highlightedItem,
     onHighlightChange,
