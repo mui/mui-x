@@ -12,6 +12,8 @@ _Apr 23, 2025_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint`.
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 Special thanks go out to the community members for their valuable contributions:
 @lhilgert9.
