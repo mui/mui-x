@@ -155,6 +155,7 @@ export type {
   InferNonNullablePickerValue,
   PickerValidValue,
 } from './models/value';
+export type { ComponentsOverrides } from './models/helpers';
 
 export { createStepNavigation } from './utils/createStepNavigation';
 export {
