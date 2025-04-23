@@ -22,6 +22,8 @@ The print dialog allows you to print the chart or save it as a PDF, as well as c
 
 The `apiRef` prop also exposes a `exportAsImage` function that can be used to export the chart as an image.
 
+For it to work, you need to add `rasterizehtml` as a dependency in your project's `package.json`.
+
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
 - `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
