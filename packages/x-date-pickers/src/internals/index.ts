@@ -31,6 +31,7 @@ export type {
   PickerPopperSlots,
   PickerPopperSlotProps,
 } from './components/PickerPopper/PickerPopper';
+export { pickerPopperClasses } from './components/PickerPopper/pickerPopperClasses';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
