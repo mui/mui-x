@@ -24,7 +24,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.1.0`
 
-- [data grid] Export `locales.ts` properly for pro and premium package (#17433) @lhilgert9
+- [DataGridPro] Fix locales.ts export (#17433) @lhilgert9
 - [docs][data grid] Revise the Row Grouping doc (#16217) @mapache-salvaje
 - [DataGrid] Allow row deselection with multiple rows selected (#17473) @arminmeh
 - [DataGrid] Fix column title truncation on touch devices (#17375) @KenanYusuf
@@ -58,16 +58,14 @@ Same changes as in `@mui/x-date-pickers@8.1.0`.
 #### `@mui/x-charts@8.1.0`
 
 - [charts] Add a localization provider (#17325) @alexfauquette
-- [charts] Add basic export as PDF/print functionality (#17285) @bernardobelchior
 - [charts] Add codemod for replacing legend's hidden slot prop (#17392) @bernardobelchior
-- [charts] Fix axis zoom being disabled when not specified in initialZoom (#17500) @bernardobelchior
 - [charts] Fix chart visual tests flakiness (#17469) @bernardobelchior
 - [charts] Fix tooltip position (#17440) @alexfauquette
 - [charts] Improve axis tooltip performances (#17398) @alexfauquette
 - [charts] Move radar from under development to preview (#17418) @alexfauquette
-- [charts] advance time in charts regression tests (#17420) @bernardobelchior
-- [charts] fix charts visuals flakiness (#17472) @bernardobelchior
-- [charts] rafThrottle event handlers instead of setter (#17489) @bernardobelchior
+- [charts] Advance time in charts regression tests (#17420) @bernardobelchior
+- [charts] Fix charts visuals flakiness (#17472) @bernardobelchior
+- [charts] Move `rafThrottle` on event handlers instead of setter (#17489) @bernardobelchior
 - [charts][docs] Fix ellipsis in the demo (#17476) @oliviertassinari
 
 #### `@mui/x-charts-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -94,7 +92,7 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [docs] Improve StackOverflow links (#17483) @oliviertassinari
 - [docs] Remove ad on paid docs pages (#17373) @oliviertassinari
 - [docs] Serve migration guides in raw markdown format (#17210) @cherniavskii
-- [tree view][docs] Fix heading structure (#17495) @oliviertassinari
+- [docs] Fix heading structure (#17495) @oliviertassinari
 
 ### Core
 
