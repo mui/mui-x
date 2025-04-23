@@ -11,6 +11,9 @@ _Apr 23, 2025_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
+- 🐞 Bugfixes
+
+
 Special thanks go out to the community contributors who have helped make this release possible:
 @lhilgert9
 
