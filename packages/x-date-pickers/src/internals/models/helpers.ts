@@ -10,6 +10,9 @@ export type ExtendMui<C, Removals extends keyof C = never> = Omit<
   'classes' | 'theme' | Removals
 >;
 
+// This and `ComponentsOverrides` are extracted from the `@mui/material/styles` package
+// with the addition of supporting explicit `OwnerState` type.
+// https://github.com/mui/material-ui/blob/master/packages/mui-material/src/styles/overrides.ts
 type OverridesStyleRules<
   ClassKey extends string = string,
   ComponentName = keyof ComponentsPropsList,
