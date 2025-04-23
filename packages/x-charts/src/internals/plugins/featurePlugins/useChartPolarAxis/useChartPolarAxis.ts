@@ -145,7 +145,6 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       instance.setPointerCoordinate?.(svgPoint);
     };
 
-    // Move is mouse, Drag is both mouse and touch.
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
     const panHandler = instance.addInteractionListener('pan', gestureHandler);
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
