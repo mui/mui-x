@@ -62,6 +62,7 @@ export function useCharts<
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
+  const innerChartRootRef = React.useRef<HTMLDivElement>(null);
   const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<ChartStore<TSignaturesWithCorePluginSignatures> | null>(null);
@@ -91,6 +92,7 @@ export function useCharts<
       plugins: plugins as ChartPlugin<ChartAnyPluginSignature>[],
       store: storeRef.current as ChartStore<any>,
       svgRef: innerSvgRef,
+      chartRootRef: innerChartRootRef,
       seriesConfig,
       models,
     });
@@ -113,6 +115,7 @@ export function useCharts<
       publicAPI,
       instance,
       svgRef: innerSvgRef,
+      chartRootRef: innerChartRootRef,
     }),
     [instance, publicAPI],
   );

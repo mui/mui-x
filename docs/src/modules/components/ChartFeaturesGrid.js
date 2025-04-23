@@ -11,6 +11,7 @@ import LineAxisRoundedIcon from '@mui/icons-material/LineAxisRounded';
 import StackedBarChartRoundedIcon from '@mui/icons-material/StackedBarChartRounded';
 import StyleRoundedIcon from '@mui/icons-material/StyleRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomIn';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const content = [
   {
@@ -62,6 +63,11 @@ const content = [
     title: 'Zoom and pan',
     link: '/x/react-charts/zoom-and-pan/',
     icon: <ZoomInRoundedIcon fontSize="small" color="primary" />,
+  },
+  {
+    title: 'Export',
+    link: '/x/react-charts/export/',
+    icon: <FileDownloadIcon fontSize="small" color="primary" />,
   },
 ];
 
