@@ -9,8 +9,7 @@ import {
   PickersFadeTransitionGroupClasses,
 } from './pickersFadeTransitionGroupClasses';
 
-export interface PickersFadeTransitionGroupProps {
-  children: React.ReactElement<any>;
+export interface ExportedPickersFadeTransitionGroupProps {
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
@@ -18,6 +17,10 @@ export interface PickersFadeTransitionGroupProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersFadeTransitionGroupClasses>;
+}
+
+export interface PickersFadeTransitionGroupProps extends ExportedPickersFadeTransitionGroupProps {
+  children: React.ReactElement<any>;
 }
 
 const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> | undefined) => {
@@ -31,7 +34,7 @@ const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> |
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
   slot: 'Root',
-})({
+})<{ ownerState: ExportedPickersFadeTransitionGroupProps }>({
   display: 'block',
   position: 'relative',
 });
@@ -41,7 +44,8 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
  */
 export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersFadeTransitionGroup' });
-  const { children, className, reduceAnimations, transKey, classes: classesProp } = props;
+  const { className, reduceAnimations, transKey, classes: classesProp } = props;
+  const { children, ...other } = props;
   const classes = useUtilityClasses(classesProp);
   const theme = useTheme();
 
@@ -50,7 +54,10 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
   }
 
   return (
-    <PickersFadeTransitionGroupRoot className={clsx(classes.root, className)}>
+    <PickersFadeTransitionGroupRoot
+      className={clsx(classes.root, className)}
+      ownerState={{ ...other }}
+    >
       <Fade
         appear={false}
         mountOnEnter

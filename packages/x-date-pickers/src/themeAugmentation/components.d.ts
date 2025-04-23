@@ -13,6 +13,7 @@ import { PickerPopperOwnerState } from '../internals/components/PickerPopper/Pic
 import { PickerLayoutOwnerState } from '../PickersLayout';
 import { PickerInputOwnerState } from '../PickersTextField/PickersInput/PickersInput';
 import { PickerFilledInputOwnerState } from '../PickersTextField/PickersFilledInput/PickersFilledInput';
+import { PickerSlideTransitionOwnerState } from '../DateCalendar/PickersSlideTransition';
 
 export interface PickerComponents<Theme = unknown> {
   MuiClock?: {
@@ -104,7 +105,10 @@ export interface PickerComponents<Theme = unknown> {
   };
   MuiPickersSlideTransition?: {
     defaultProps?: ComponentsProps['MuiPickersSlideTransition'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersSlideTransition'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      PickerSlideTransitionOwnerState
+    >['MuiPickersSlideTransition'];
   };
   MuiPickersToolbar?: {
     defaultProps?: ComponentsProps['MuiPickersToolbar'];
