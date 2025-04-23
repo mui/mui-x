@@ -100,24 +100,6 @@ export const useFieldState = <
     valueRef.current = value;
   }, [value]);
 
-  const { hasValidationError } = useValidation({
-    props: internalPropsWithDefaults,
-    validator,
-    timezone,
-    value,
-    onError: internalPropsWithDefaults.onError,
-  });
-
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
   const sectionsValueBoundaries = React.useMemo(
@@ -209,6 +191,30 @@ export const useFieldState = <
     () => state.sections.every((section) => section.value === ''),
     [state.sections],
   );
+
+  const isPartiallyFilled = React.useMemo(() => {
+    const filledSectionCount = state.sections.filter((section) => section.value !== '').length;
+    return filledSectionCount > 0 && filledSectionCount < state.sections.length;
+  }, [state.sections]);
+
+  const { hasValidationError } = useValidation({
+    props: internalPropsWithDefaults,
+    validator,
+    timezone,
+    value,
+    isPartiallyFilled,
+    onError: internalPropsWithDefaults.onError,
+  });
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {

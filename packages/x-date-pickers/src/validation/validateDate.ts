@@ -35,7 +35,12 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
   value,
   timezone,
   adapter,
+  isPartiallyFilled,
 }): DateValidationError => {
+  if (isPartiallyFilled) {
+    return 'partiallyFilledDate';
+  }
+
   if (value === null) {
     return null;
   }
