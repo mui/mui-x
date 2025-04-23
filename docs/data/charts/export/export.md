@@ -12,7 +12,7 @@ Export is available on the **Pro**[<span class="plan-pro"></span>](/x/introducti
 
 ## Print/Export as PDF
 
-The `apiRef` prop on exposes a `print` method that can be used to open the browser's print dialog.
+The `apiRef` prop exposes a `exportAsPrint` method that can be used to open the browser's print dialog.
 
 The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
 
@@ -20,7 +20,7 @@ The print dialog allows you to print the chart or save it as a PDF, as well as c
 
 ## Composition
 
-As detailed in the [Composition](/x/react-charts/composition/) section, charts alternatively be composed of more focused components.
+As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
 
 When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
 As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
