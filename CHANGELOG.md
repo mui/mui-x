@@ -5,8 +5,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.29.1
 
-<!-- generated comparing v7.29.0..v7.x -->
-
 _Apr 23, 2025_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
