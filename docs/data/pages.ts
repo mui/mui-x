@@ -541,6 +541,11 @@ const pages: MuiPage[] = [
                 title: 'Zoom and pan',
                 plan: 'pro',
               },
+              {
+                pathname: '/x/react-charts/export',
+                title: 'Export',
+                plan: 'pro',
+              },
             ],
           },
           {
@@ -606,7 +611,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/editing',
+            title: 'Label editing',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
