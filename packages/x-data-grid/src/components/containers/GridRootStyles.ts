@@ -593,7 +593,7 @@ export const GridRootStyles = styled('div', {
         borderTop: 'none',
       },
     },
-    [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
+    [`&.${c['root--disableUserSelection']}`]: {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
@@ -653,13 +653,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
       opacity: 1,
-      userSelect: "none"
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
       display: 'flex',
       alignItems: 'stretch',
-      userSelect: "none"
     },
     [`.${c.withBorderColor}`]: {
       borderColor: vars.colors.border.base,
