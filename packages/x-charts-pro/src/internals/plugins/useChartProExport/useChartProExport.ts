@@ -34,6 +34,8 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
         printChart(chartRoot, options);
+      } catch (error) {
+        console.error('MUI X: Error exporting chart as print:', error);
       } finally {
         enableAnimation();
       }
