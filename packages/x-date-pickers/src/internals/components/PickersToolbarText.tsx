@@ -31,7 +31,6 @@ const useUtilityClasses = (classes: Partial<PickersToolbarTextClasses> | undefin
 const PickersToolbarTextRoot = styled(Typography, {
   name: 'MuiPickersToolbarText',
   slot: 'Root',
-  overridesResolver: (_, styles) => [styles.root],
 })<{
   component?: React.ElementType;
 }>(({ theme }) => ({

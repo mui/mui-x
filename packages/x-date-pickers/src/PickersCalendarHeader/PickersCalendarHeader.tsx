@@ -40,7 +40,6 @@ const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | unde
 const PickersCalendarHeaderRoot = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -58,7 +57,6 @@ const PickersCalendarHeaderRoot = styled('div', {
 const PickersCalendarHeaderLabelContainer = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'LabelContainer',
-  overridesResolver: (_, styles) => styles.labelContainer,
 })<{
   ownerState: PickerOwnerState;
 }>(({ theme }) => ({
@@ -74,7 +72,6 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
 const PickersCalendarHeaderLabel = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Label',
-  overridesResolver: (_, styles) => styles.label,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -84,7 +81,6 @@ const PickersCalendarHeaderLabel = styled('div', {
 const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewButton',
-  overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -104,7 +100,6 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
-  overridesResolver: (_, styles) => styles.switchViewIcon,
 })<{
   ownerState: PickerOwnerState;
 }>(({ theme }) => ({

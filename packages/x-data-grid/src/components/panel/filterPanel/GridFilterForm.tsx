@@ -148,7 +148,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
-  overridesResolver: (props, styles) => styles.filterForm,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   gap: vars.spacing(1.5),
@@ -157,7 +156,6 @@ const GridFilterFormRoot = styled('div', {
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
-  overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
   display: 'flex',
@@ -168,7 +166,6 @@ const FilterFormDeleteIcon = styled('div', {
 const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })<{ ownerState: OwnerState }>({
   minWidth: 75,
   justifyContent: 'end',
@@ -177,19 +174,16 @@ const FilterFormLogicOperatorInput = styled('div', {
 const FilterFormColumnInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormColumnInput',
-  overridesResolver: (_, styles) => styles.filterFormColumnInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormOperatorInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
-  overridesResolver: (_, styles) => styles.filterFormValueInput,
 })<{ ownerState: OwnerState }>({ width: 190 });
 
 const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {

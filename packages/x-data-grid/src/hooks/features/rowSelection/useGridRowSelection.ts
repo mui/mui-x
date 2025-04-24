@@ -628,14 +628,15 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+      const isSelected = apiRef.current.isRowSelected(id);
       const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
 
-      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
-        apiRef.current.selectRow(id, true, resetSelection);
-      } else {
-        const isSelected = apiRef.current.isRowSelected(id);
-        apiRef.current.selectRow(id, !isSelected, resetSelection);
-      }
+      // Clicking on a row should toggle the selection except when a range of rows is already selected and the selection should reset
+      // In that case, we want to keep the current row selected (https://github.com/mui/mui-x/pull/15509#discussion_r1878082687)
+      const shouldStaySelected = selectedRowsCount > 1 && resetSelection;
+      const newSelectionState = shouldStaySelected || !isSelected;
+
+      apiRef.current.selectRow(id, newSelectionState, resetSelection);
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );

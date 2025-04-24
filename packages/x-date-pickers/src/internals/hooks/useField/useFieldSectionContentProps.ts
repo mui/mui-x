@@ -192,9 +192,6 @@ export function useFieldSectionContentProps(
         spellCheck: isEditable ? false : undefined,
         autoCapitalize: isEditable ? 'off' : undefined,
         autoCorrect: isEditable ? 'off' : undefined,
-        [parseInt(React.version, 10) >= 17 ? 'enterKeyHint' : 'enterkeyhint']: isEditable
-          ? 'next'
-          : undefined,
         children: section.value || section.placeholder,
         inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
       };
