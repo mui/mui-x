@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.1.0
 
-_Apr 23, 2025_
+_Apr 24, 2025_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
@@ -90,6 +90,7 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [docs] Fix AI Assistant Panel Trigger demo (#17426) @KenanYusuf
 - [docs] Fix DataGrid's master-detail demo for one expanded detail panel at a time (#17471) @arminmeh
 - [docs] Improve StackOverflow links (#17483) @oliviertassinari
+- [docs] Refine charts demos (#17417) @alexfauquette
 - [docs] Remove ad on paid docs pages (#17373) @oliviertassinari
 - [docs] Serve migration guides in raw markdown format (#17210) @cherniavskii
 - [docs] Fix heading structure (#17495) @oliviertassinari
