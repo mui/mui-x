@@ -185,17 +185,17 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 15, y: 300 },
+          coords: { x: 15, y: 85 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
           target: svg,
-          coords: { x: 300, y: 5 },
+          coords: { x: 300, y: -200 },
         },
         {
           keys: `[/${pointerName}]`,
           target: svg,
-          coords: { x: 300, y: 5 },
+          coords: { x: 300, y: -200 },
         },
       ]);
       // Wait the animation frame
