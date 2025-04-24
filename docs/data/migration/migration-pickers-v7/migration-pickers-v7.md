@@ -65,8 +65,8 @@ If you've configured aliases for these bundles, you must remove them now.
      alias: {
 -      '@mui/x-date-pickers': '@mui/x-date-pickers/modern',
 -      '@mui/x-date-pickers-pro': '@mui/x-date-pickers-pro/modern',
-     }
-   }
+     },
+   },
  }
 ```
 
@@ -200,7 +200,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
     enableAccessibleFieldDOMStructure={false}
-   />
+  />
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
   />
@@ -215,7 +215,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
     enableAccessibleFieldDOMStructure={false}
-   />
+  />
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
   />
@@ -736,12 +736,12 @@ If the updated values do not fit your use case, you can [override them](/x/react
 - The component passed to the `field` slot no longer receives a `ref`.
   You can use the `usePickerContext` hook instead:
 
-  ```tsx
+  ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
   -const CustomField = React.forwardRef(function CustomField(props, ref) {
   -  return <input ref={ref} />;
-  -})
+  -});
   +function CustomField(props) {
   +  const { rootRef } = usePickerContext();
   +  return <input ref={rootRef} />;
@@ -1255,22 +1255,22 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
    });
 
 -  const fieldResponse = useMultiInputDateRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useDateRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useDateRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1305,24 +1305,23 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
      ownerState: { ...props, position: 'end' },
    });
 
-
 -  const fieldResponse = useMultiInputTimeRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useTimeRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useTimeRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1357,24 +1356,23 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
      ownerState: { ...props, position: 'end' },
    });
 
-
 -  const fieldResponse = useMultiInputDateTimeRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useDateTimeRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useDateTimeRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1409,7 +1407,7 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
   If you want to prevent the default behavior, you now have to do it manually:
 
   ```diff
-     <div
+   <div
      onKeyDown={(event) => {
        if (event.key === 'Escape') {
   -      pickerContext.onClose();
@@ -1727,13 +1725,13 @@ However, consider looking into your usage to see if you really need those types.
     +import { TimePickerFieldProps } from '@mui/x-date-pickers/TimePicker';
 
     -interface CustomTimeFieldProps
-    - extends UseTimeFieldProps<Dayjs, true>,
-    - BaseSingleInputFieldProps<
-    -      Dayjs | null,
-    -      Dayjs,
-    -      FieldSection,
-    -      true,
-    -      TimeValidationError
+    -  extends UseTimeFieldProps<Dayjs, true>,
+    -  BaseSingleInputFieldProps<
+    -    Dayjs | null,
+    -    Dayjs,
+    -    FieldSection,
+    -    true,
+    -    TimeValidationError
     - > {}
     +interface CustomTimeFieldProps extends TimePickerFieldProps {}
     ```
