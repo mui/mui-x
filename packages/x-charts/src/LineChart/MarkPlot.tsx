@@ -80,107 +80,111 @@ function MarkPlot(props: MarkPlotProps) {
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
-  return (
-    <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.map((seriesId) => {
-          const {
-            xAxisId = defaultXAxisId,
-            yAxisId = defaultYAxisId,
-            stackedData,
-            data,
-            showMark = true,
-            shape = 'circle',
-          } = series[seriesId];
+  const children = [];
 
-          if (showMark === false) {
-            return null;
-          }
+  for (const stackingGroup of stackingGroups) {
+    const groupIds = stackingGroup.ids;
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
-          const yScale = yAxis[yAxisId].scale;
-          const xData = xAxis[xAxisId].data;
+    for (const seriesId of groupIds) {
+      const {
+        xAxisId = defaultXAxisId,
+        yAxisId = defaultYAxisId,
+        stackedData,
+        data,
+        showMark = true,
+        shape = 'circle',
+      } = series[seriesId];
 
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+      if (showMark === false) {
+        continue;
+      }
+
+      const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+      const yScale = yAxis[yAxisId].scale;
+      const xData = xAxis[xAxisId].data;
+
+      if (xData === undefined) {
+        throw new Error(
+          `MUI X Charts: ${
+            xAxisId === DEFAULT_X_AXIS_KEY ? 'The first `xAxis`' : `The x-axis with id "${xAxisId}"`
+          } should have data property to be able to display a line plot.`,
+        );
+      }
+
+      const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
+
+      const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+
+      const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
+
+      const isSeriesHighlighted = isHighlighted({ seriesId });
+      const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+
+      const points: Array<{
+        x: number;
+        y: number;
+        position: number;
+        value: number;
+        index: number;
+      }> = [];
+
+      for (let index = 0; index < xData.length; index += 1) {
+        const x = xData[index];
+        const value = data[index] == null ? null : stackedData[index][1];
+        const y = value === null ? null : yScale(value)!;
+
+        if (value === null || y === null) {
+          // Remove missing data point
+          continue;
+        }
+
+        const point = {
+          x: xScale(x),
+          y,
+          position: x,
+          value,
+          index,
+        };
+
+        if (!instance.isPointInside(point)) {
+          // Remove out of range
+          continue;
+        }
+
+        if (showMark === true || showMark(point)) {
+          points.push(point);
+        }
+      }
+
+      children.push(
+        <g key={seriesId} clipPath={`url(#${clipId})`}>
+          {points.map(({ x, y, index }) => {
+            return (
+              <Mark
+                key={`${seriesId}-${index}`}
+                id={seriesId}
+                dataIndex={index}
+                shape={shape}
+                color={colorGetter(index)}
+                x={x}
+                y={y}
+                skipAnimation={skipAnimation}
+                onClick={
+                  onItemClick &&
+                  ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
+                }
+                isHighlighted={xAxisInteractionIndex === index || isSeriesHighlighted}
+                isFaded={isSeriesFaded}
+                {...slotProps?.mark}
+              />
             );
-          }
+          })}
+        </g>,
+      );
+    }
+  }
 
-          const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
-
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
-
-          const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
-
-          const isSeriesHighlighted = isHighlighted({ seriesId });
-          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
-
-          return (
-            <g key={seriesId} clipPath={`url(#${clipId})`}>
-              {xData
-                ?.map((x, index) => {
-                  const value = data[index] == null ? null : stackedData[index][1];
-                  return {
-                    x: xScale(x),
-                    y: value === null ? null : yScale(value)!,
-                    position: x,
-                    value,
-                    index,
-                  };
-                })
-                .filter(({ x, y, index, position, value }) => {
-                  if (value === null || y === null) {
-                    // Remove missing data point
-                    return false;
-                  }
-                  if (!instance.isPointInside({ x, y })) {
-                    // Remove out of range
-                    return false;
-                  }
-                  if (showMark === true) {
-                    return true;
-                  }
-                  return showMark({
-                    x,
-                    y,
-                    index,
-                    position,
-                    value,
-                  });
-                })
-                .map(({ x, y, index }) => {
-                  return (
-                    <Mark
-                      key={`${seriesId}-${index}`}
-                      id={seriesId}
-                      dataIndex={index}
-                      shape={shape}
-                      color={colorGetter(index)}
-                      x={x}
-                      y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      skipAnimation={skipAnimation}
-                      onClick={
-                        onItemClick &&
-                        ((event) =>
-                          onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
-                      }
-                      isHighlighted={xAxisInteractionIndex === index || isSeriesHighlighted}
-                      isFaded={isSeriesFaded}
-                      {...slotProps?.mark}
-                    />
-                  );
-                })}
-            </g>
-          );
-        });
-      })}
-    </g>
-  );
+  return <g {...other}>{children}</g>;
 }
 
 MarkPlot.propTypes = {
