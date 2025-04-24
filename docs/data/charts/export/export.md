@@ -12,11 +12,11 @@ Export is available on the **Pro**[<span class="plan-pro"></span>](/x/introducti
 
 ## Print/Export as PDF
 
-The `apiRef` prop exposes a `exportAsPrint` method that can be used to open the browser's print dialog.
+The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
 
 The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
 
-{{"demo": "PrintChart.js"}}
+{{"demo": "PrintChartNoSnap.js"}}
 
 ## Export as image
 
@@ -24,7 +24,7 @@ The `apiRef` prop also exposes a `exportAsImage()` method to export the chart as
 
 ### Dependency
 
-For `exportAsImage()` to work, you need to add `rasterizehtml` as a dependency in your project.
+For `exportAsImage()` to work, you need to add the`rasterizehtml` npm dependency in your project.
 
 <codeblock storageKey="package-manager">
 
@@ -63,6 +63,6 @@ As detailed in the [Composition](/x/react-charts/composition/) section, charts c
 When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
 As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
 
-If you want to use a custom wrapper element, you need to use the `useChartRootRef` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
+If you want to use a custom wrapper element, you need to use the `useChartRootRef()` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
 
 {{"demo": "ExportCompositionNoSnap.js"}}

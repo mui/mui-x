@@ -1,0 +1,8 @@
+<Button
+  onClick={() => apiRef.current!.exportAsPrint()}
+  variant="contained"
+  sx={{ mb: 1 }}
+>
+  Print
+</Button>
+<ScatterChartPro apiRef={apiRef} height={300} series={series} />
