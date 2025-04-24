@@ -15,7 +15,7 @@ const CalendarDayGridHeaderCell = React.forwardRef(function CalendarDayGridHeade
 
   const renderElement = useRenderElement('span', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getDayGridHeaderCellProps, otherProps],
   });
 

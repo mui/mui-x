@@ -21,7 +21,7 @@ const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVi
 
   const renderElement = useRenderElement('button', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getSetVisibleYearProps, elementProps],
   });
 

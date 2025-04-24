@@ -56,7 +56,7 @@ const ClockRoot = React.forwardRef(function ClockRoot(
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getRootProps, elementProps],
   });
 

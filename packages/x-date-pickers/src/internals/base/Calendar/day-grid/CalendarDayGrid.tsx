@@ -14,7 +14,7 @@ const CalendarDayGrid = React.forwardRef(function CalendarDayGrid(
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getDayGridProps, elementProps],
   });
 

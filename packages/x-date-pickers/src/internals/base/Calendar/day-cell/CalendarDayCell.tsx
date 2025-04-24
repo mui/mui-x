@@ -61,7 +61,7 @@ const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
 
   const renderElement = useRenderElement('button', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getDayCellProps, elementProps],
     customStyleHookMapping,
   });

@@ -38,7 +38,7 @@ const InnerRangeCalendarDayCell = React.forwardRef(function RangeCalendarDayGrid
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getDayCellProps, elementProps],
     customStyleHookMapping,
   });

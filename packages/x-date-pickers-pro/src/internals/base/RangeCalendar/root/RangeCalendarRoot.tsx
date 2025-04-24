@@ -96,7 +96,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getRootProps, elementProps],
   });
 

@@ -26,7 +26,7 @@ const InnerClockCell = React.forwardRef(function InnerClockCell(
 
   const renderElement = useRenderElement('button', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getCellProps, elementProps],
   });
 

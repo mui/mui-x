@@ -20,7 +20,7 @@ const InnerCalendarDayGridRow = React.forwardRef(function InnerCalendarDayGridRo
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getDayGridRowProps, elementProps],
   });
 

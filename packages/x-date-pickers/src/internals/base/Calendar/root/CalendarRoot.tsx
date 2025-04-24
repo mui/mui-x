@@ -75,7 +75,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getRootProps, elementProps],
   });
 

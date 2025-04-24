@@ -25,7 +25,7 @@ const InnerRangeCalendarYearCell = React.forwardRef(function InnerRangeCalendarY
 
   const renderElement = useRenderElement('button', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: forwardedRef,
     props: [getYearCellProps, elementProps],
     customStyleHookMapping,
   });
