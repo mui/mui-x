@@ -9,14 +9,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 24, 2025_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint`.
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
 Special thanks go out to the community members for their valuable contributions:
-@lhilgert9.
+@lhilgert9, @ArturAghakaryan.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @joserodolfofreitas, @KenanYusuf, @LukasTy, @mapache-salvaje, @oliviertassinari, @romgrk.
 
@@ -29,6 +29,8 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Allow row deselection with multiple rows selected (#17473) @arminmeh
 - [DataGrid] Fix column title truncation on touch devices (#17375) @KenanYusuf
 - [DataGrid] Remove internal usage of `material` prop (#17513) @KenanYusuf
+- [DataGrid] Fix apiRef not being passed on onCellClick params (#17335) @sai6855
+- [DataGrid] Add Armenian (hy-AM) locale (#17527) @ArturAghakaryan
 
 #### `@mui/x-data-grid-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -97,6 +99,8 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [docs] Revise the Row Grouping doc (#16217) @mapache-salvaje
 - [docs] Fix ellipsis in the demo (#17476) @oliviertassinari
 - [docs] Add docs information for Legend HTML (#17502) @alexfauquette
+- [docs] Refine charts demos (#17417) @alexfauquette
+- [tree view][docs] Copyedit the Tree View Overview page (#17498) @mapache-salvaje
 
 ### Core
 
