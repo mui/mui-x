@@ -100,7 +100,9 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
-                isPrintExportChartTest={test.path.includes('PrintChart')}
+                shouldAdvanceTime={
+                  test.path.includes('PrintChart') || test.path.includes('Interaction')
+                }
                 path={computePath(test)}
               >
                 <test.case />
