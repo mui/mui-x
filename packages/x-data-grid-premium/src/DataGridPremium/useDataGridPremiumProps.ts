@@ -62,9 +62,11 @@ const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   const theme = useTheme();
-  const themedProps = React.useMemo(
-    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
-    [theme, inProps],
+  const themedProps = useProps(
+    React.useMemo(
+      () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+      [theme, inProps],
+    ),
   );
 
   const localeText = React.useMemo(

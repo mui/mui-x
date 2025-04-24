@@ -30,9 +30,11 @@ const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
   const theme = useTheme();
-  const themedProps = React.useMemo(
-    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
-    [theme, inProps],
+  const themedProps = useProps(
+    React.useMemo(
+      () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+      [theme, inProps],
+    ),
   );
 
   const localeText = React.useMemo(
