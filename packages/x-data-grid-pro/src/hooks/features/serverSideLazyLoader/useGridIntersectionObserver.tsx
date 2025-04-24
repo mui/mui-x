@@ -46,7 +46,7 @@ export const useGridIntersectionObserver = (
       observer.current?.disconnect();
       // do not observe this node anymore
       triggerElement.current = null;
-      apiRef.current.publishEvent('onIntersection');
+      apiRef.current.publishEvent('rowsScrollEndIntersection');
     }
   });
 

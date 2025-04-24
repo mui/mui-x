@@ -577,7 +577,7 @@ export interface GridEventLookup
    * Used to trigger infinite loading.
    * @ignore - do not document.
    */
-  onIntersection: {};
+  rowsScrollEndIntersection: {};
 
   // Selection
   /**

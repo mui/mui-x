@@ -254,11 +254,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
     });
 
-    it('should call make a new data source request when there is not enough rows to cover the viewport height', async () => {
+    it('should make a new data source request when there is not enough rows to cover the viewport height', async () => {
       render(
         <TestDataSourceLazyLoader
           initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: 2 }, rowCount: undefined },
+            pagination: { paginationModel: { page: 0, pageSize: 2 } },
           }}
         />,
       );
@@ -270,12 +270,12 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(lastSearchParams.get('end')).to.equal('5'); // 6th row
     });
 
-    it('should call stop making data source requests if the new rows were not added on the last call', async () => {
+    it('should stop making data source requests if the new rows were not added on the last call', async () => {
       render(
         <TestDataSourceLazyLoader
           mockServerRowCount={2}
           initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: 2 }, rowCount: undefined },
+            pagination: { paginationModel: { page: 0, pageSize: 2 } },
           }}
         />,
       );
@@ -344,7 +344,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   describe('Row count updates', () => {
     it('should add skeleton rows once the rowCount becomes known', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      transformGetRowsResponse = (response) => ({ ...response });
       const { setProps } = render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -363,7 +363,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should reset the grid if the rowCount becomes unknown', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      transformGetRowsResponse = (response) => ({ ...response });
       const { setProps } = render(<TestDataSourceLazyLoader rowCount={100} />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -380,7 +380,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should reset the grid if the rowCount becomes smaller than the actual row count', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      transformGetRowsResponse = (response) => ({ ...response });
       render(
         <TestDataSourceLazyLoader rowCount={100} paginationModel={{ page: 0, pageSize: 30 }} />,
       );
@@ -405,7 +405,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should allow setting the row count via API', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      transformGetRowsResponse = (response) => ({ ...response });
       render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);

@@ -4,6 +4,7 @@ import {
   useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
   useGridEvent,
+  GridEventListener,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows, runIf } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -28,16 +29,18 @@ export const useGridInfiniteLoader = (
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
-  const handleLoadMoreRows = useEventCallback(() => {
-    const viewportPageSize = apiRef.current.getViewportPageSize();
-    const rowScrollEndParams: GridRowScrollEndParams = {
-      visibleColumns,
-      viewportPageSize,
-      visibleRowsCount: currentPage.rows.length,
-    };
-    apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
-  });
+  const handleLoadMoreRows: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
+    () => {
+      const viewportPageSize = apiRef.current.getViewportPageSize();
+      const rowScrollEndParams: GridRowScrollEndParams = {
+        visibleColumns,
+        viewportPageSize,
+        visibleRowsCount: currentPage.rows.length,
+      };
+      apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
+    },
+  );
 
   useGridEventPriority(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
-  useGridEvent(apiRef, 'onIntersection', runIf(isEnabled, handleLoadMoreRows));
+  useGridEvent(apiRef, 'rowsScrollEndIntersection', runIf(isEnabled, handleLoadMoreRows));
 };

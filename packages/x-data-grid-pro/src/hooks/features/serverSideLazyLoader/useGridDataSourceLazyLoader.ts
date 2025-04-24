@@ -347,32 +347,33 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
   }, [privateApiRef, updateLoadingTrigger, addSkeletonRows]);
 
-  const handleIntersection: GridEventListener<'onIntersection'> = React.useCallback(() => {
-    if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
-      return;
-    }
+  const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> =
+    React.useCallback(() => {
+      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+        return;
+      }
 
-    const renderContext = gridRenderContextSelector(privateApiRef);
-    if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
-      return;
-    }
+      const renderContext = gridRenderContextSelector(privateApiRef);
+      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
+        return;
+      }
 
-    previousLastRowIndex.current = renderContext.lastRowIndex;
+      previousLastRowIndex.current = renderContext.lastRowIndex;
 
-    const paginationModel = gridPaginationModelSelector(privateApiRef);
-    const sortModel = gridSortModelSelector(privateApiRef);
-    const filterModel = gridFilterModelSelector(privateApiRef);
-    const getRowsParams: GridGetRowsParams = {
-      start: renderContext.lastRowIndex,
-      end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
-      sortModel,
-      filterModel,
-    };
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const sortModel = gridSortModelSelector(privateApiRef);
+      const filterModel = gridFilterModelSelector(privateApiRef);
+      const getRowsParams: GridGetRowsParams = {
+        start: renderContext.lastRowIndex,
+        end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+        sortModel,
+        filterModel,
+      };
 
-    privateApiRef.current.setLoading(true);
+      privateApiRef.current.setLoading(true);
 
-    fetchRows(adjustRowParams(getRowsParams));
-  }, [privateApiRef, adjustRowParams, fetchRows]);
+      fetchRows(adjustRowParams(getRowsParams));
+    }, [privateApiRef, adjustRowParams, fetchRows]);
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -504,7 +505,7 @@ export const useGridDataSourceLazyLoader = (
   );
   useGridEvent(
     privateApiRef,
-    'onIntersection',
+    'rowsScrollEndIntersection',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleIntersection),
   );
   useGridEvent(
