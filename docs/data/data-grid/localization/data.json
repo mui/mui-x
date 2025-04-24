@@ -8,6 +8,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/arSD.ts"
   },
   {
+    "languageTag": "hy-AM",
+    "importName": "hyAM",
+    "localeName": "Armenian",
+    "missingKeysCount": 67,
+    "totalKeysCount": 191,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/hyAM-copy.ts"
+  },
+  {
     "languageTag": "bn-BD",
     "importName": "bnBD",
     "localeName": "Bangla",
