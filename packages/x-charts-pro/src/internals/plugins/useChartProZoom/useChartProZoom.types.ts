@@ -56,8 +56,23 @@ export interface UseChartProZoomPublicApi {
 }
 
 export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
+  /**
+   * Set the zoom start value for a specific axis.
+   * @param {AxisId} axisId The id of the axis to set the zoom start value for.
+   * @param {number} value The new zoom start value. Ranges from 0 to 100.
+   */
   setZoomStart: (axisId: AxisId, value: number) => void;
+  /**
+   * Set the zoom end value for a specific axis.
+   * @param {AxisId} axisId The id of the axis to set the zoom end value for.
+   * @param {number} value The new zoom end value. Ranges from 0 to 100.
+   */
   setZoomEnd: (axisId: AxisId, value: number) => void;
+  /**
+   * Translate the zoom range (i.e., both start and end) for a specific axis.
+   * @param {AxisId} axisId The id of the axis to move the zoom range for.
+   * @param {number} by The amount to move the zoom range by. Ranges from 0 to 100.
+   */
   moveZoomRange: (axisId: AxisId, by: number) => void;
 }
 

@@ -324,7 +324,6 @@ function ChartAxisZoomOverviewSpan({
     store.update((state) => {
       const { left, bottom, width, height } = selectorChartDrawingArea(state);
 
-      // TODO: What about non-cartesian axes? Are these the only ones that can be zoomed?
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
       const newState = {
