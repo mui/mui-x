@@ -10,7 +10,7 @@
     "outDir": "build/esm",
     "rootDir": "./src",
     "types": [
-      "node",
+      "../../extends.d.ts",
       "@mui/material/themeCssVarsAugmentation",
       "dayjs/plugin/utc.d.ts",
       "dayjs/plugin/timezone.d.ts",

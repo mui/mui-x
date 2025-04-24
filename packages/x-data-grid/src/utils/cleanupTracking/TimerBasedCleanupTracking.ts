@@ -14,7 +14,7 @@ export class TimerBasedCleanupTracking implements CleanupTracking {
 
   register(object: any, unsubscribe: UnsubscribeFn, unregisterToken: UnregisterToken): void {
     if (!this.timeouts) {
-      this.timeouts = new Map<number, NodeJS.Timeout>();
+      this.timeouts = new Map<number, ReturnType<typeof setTimeout>>();
     }
 
     const timeout = setTimeout(() => {

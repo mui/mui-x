@@ -9,7 +9,12 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "@mui/types"]
+    "types": [
+      "../../extends.d.ts",
+      "@mui/material/themeCssVarsAugmentation",
+      "@emotion/styled",
+      "@mui/types"
+    ]
   },
   "references": [{ "path": "../x-internals/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],
