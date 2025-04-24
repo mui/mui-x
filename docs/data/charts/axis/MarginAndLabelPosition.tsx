@@ -24,6 +24,7 @@ export default function MarginAndLabelPosition() {
       <BarChart
         xAxis={[
           {
+            scaleType: 'band',
             dataKey: 'code',
             valueFormatter: (value, context) =>
               context.location === 'tick'
