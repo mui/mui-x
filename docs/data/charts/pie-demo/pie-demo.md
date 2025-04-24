@@ -16,10 +16,6 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 {{"demo": "StraightAnglePieChart.js"}}
 
-## TwoSimplePieChart
-
-{{"demo": "TwoSimplePieChart.js"}}
-
 ## PieChartWithCustomizedLabel
 
 {{"demo": "PieChartWithCustomizedLabel.js"}}
