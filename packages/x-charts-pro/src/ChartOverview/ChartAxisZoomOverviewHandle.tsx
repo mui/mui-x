@@ -26,7 +26,7 @@ const Rect = styled('rect')(({ theme }) => ({
 }));
 
 export interface ChartZoomOverviewHandleOwnerState {
-  onResize: (delta: number) => void;
+  onResize: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
   placement: 'start' | 'end';
 }
@@ -36,7 +36,7 @@ export interface ChartZoomOverviewHandleProps
     ChartZoomOverviewHandleOwnerState {}
 
 /**
- * Renders the zoom voerview handle, which is responsible for resizing the zoom range.
+ * Renders the zoom overview handle, which is responsible for resizing the zoom range.
  * @internal
  */
 export const ChartAxisZoomOverviewHandle = React.forwardRef<
@@ -60,18 +60,9 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
       return;
     }
 
-    let prev = 0;
-
-    const rafThrottledPointerMove = rafThrottle((current: number, previous: number) => {
-      const delta = current - previous;
-      prev = current;
-
-      onResizeEvent(delta);
+    const onPointerMove = rafThrottle((event: PointerEvent) => {
+      onResizeEvent(event);
     });
-    const onPointerMove = (event: PointerEvent) => {
-      const current = orientation === 'horizontal' ? event.clientX : event.clientY;
-      rafThrottledPointerMove(current, prev);
-    };
 
     const onPointerUp = () => {
       document.removeEventListener('pointermove', onPointerMove);
@@ -82,7 +73,6 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
       // Prevent text selection when dragging the handle
       event.preventDefault();
       event.stopPropagation();
-      prev = orientation === 'horizontal' ? event.clientX : event.clientY;
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointermove', onPointerMove);
     };
@@ -92,7 +82,7 @@ export const ChartAxisZoomOverviewHandle = React.forwardRef<
     // eslint-disable-next-line consistent-return
     return () => {
       handle.removeEventListener('pointerdown', onPointerDown);
-      rafThrottledPointerMove.clear();
+      onPointerMove.clear();
     };
   }, [onResizeEvent, orientation]);
 

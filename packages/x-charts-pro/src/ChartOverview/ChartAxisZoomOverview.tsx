@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   AxisId,
   DefaultizedZoomOptions,
+  getSVGPoint,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   useChartContext,
@@ -140,7 +141,7 @@ function ChartAxisZoomOverviewSpan({
   zoomData: ZoomData;
   reverse: boolean;
 }) {
-  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
@@ -154,20 +155,43 @@ function ChartAxisZoomOverviewSpan({
       return;
     }
 
-    let prev = 0;
+    let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const { height, width } = selectorChartDrawingArea(store.getSnapshot());
-      const drawingAreaSize = axisDirection === 'x' ? width : height;
+      const { top, left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
+      const element = svgRef.current;
 
-      const current = axisDirection === 'x' ? event.clientX : event.clientY;
-      const delta = current - prev;
-      prev = current;
+      if (!axisZoomData || !element) {
+        return;
+      }
 
-      const deltaZoom =
-        ((reverse ? -1 : 1) * ((axisDirection === 'x' ? 1 : -1) * delta)) / drawingAreaSize;
+      const point = getSVGPoint(element, event);
 
-      instance.moveZoomRange(axisId, deltaZoom * 100);
+      if (
+        !instance.isPointInside({
+          x: axisDirection === 'x' ? point.x : left,
+          y: axisDirection === 'x' ? top : point.y,
+        })
+      ) {
+        return;
+      }
+
+      let pointerZoom: number;
+      if (axisDirection === 'x') {
+        pointerZoom = ((point.x - left) / width) * 100;
+      } else {
+        pointerZoom = ((point.y - bottom) / height) * 100;
+      }
+
+      if (reverse) {
+        pointerZoom = 100 - pointerZoom;
+      }
+
+      const deltaZoom = pointerZoom - prevPointerZoom;
+      prevPointerZoom = pointerZoom;
+
+      instance.moveZoomRange(axisId, deltaZoom);
     });
 
     const onPointerUp = () => {
@@ -176,9 +200,42 @@ function ChartAxisZoomOverviewSpan({
     };
 
     const onPointerDown = (event: PointerEvent) => {
-      // Prevent text selection when dragging the handle
+      // Prevent text selection when dragging
       event.preventDefault();
-      prev = axisDirection === 'x' ? event.clientX : event.clientY;
+
+      const { top, left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
+      const element = svgRef.current;
+
+      if (!axisZoomData || !element) {
+        return;
+      }
+
+      const point = getSVGPoint(element, event);
+
+      if (
+        !instance.isPointInside({
+          x: axisDirection === 'x' ? point.x : left,
+          y: axisDirection === 'x' ? top : point.y,
+        })
+      ) {
+        return;
+      }
+
+      // The corresponding value of zoom where the pointer was pressed
+      let pointerDownZoom: number;
+      if (axisDirection === 'x') {
+        pointerDownZoom = ((point.x - left) / width) * 100;
+      } else {
+        pointerDownZoom = ((point.y - bottom) / height) * 100;
+      }
+
+      if (reverse) {
+        pointerDownZoom = 100 - pointerDownZoom;
+      }
+
+      prevPointerZoom = pointerDownZoom;
+
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointermove', onPointerMove);
     };
@@ -190,12 +247,28 @@ function ChartAxisZoomOverviewSpan({
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [axisDirection, axisId, instance, reverse, store]);
+  }, [axisDirection, axisId, instance, reverse, store, svgRef]);
 
-  const onResizeStart = (delta: number) => {
+  const onResizeStart = (event: PointerEvent) => {
+    const element = svgRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const point = getSVGPoint(element, event);
+
+    if (
+      !instance.isPointInside({
+        x: axisDirection === 'x' ? point.x : drawingArea.left,
+        y: axisDirection === 'x' ? drawingArea.top : point.y,
+      })
+    ) {
+      return;
+    }
+
     store.update((state) => {
-      const { width, height } = selectorChartDrawingArea(state);
-      const drawingAreaSize = axisDirection === 'x' ? width : height;
+      const { left, bottom, width, height } = selectorChartDrawingArea(state);
 
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
@@ -205,15 +278,21 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom =
-                (reverse ? -1 : 1) *
-                (axisDirection === 'x' ? 1 : -1) *
-                (delta / drawingAreaSize) *
-                100;
+              let newStart: number;
+
+              if (axisDirection === 'x') {
+                newStart = ((point.x - left) / width) * 100;
+              } else {
+                newStart = ((point.y - bottom) / height) * 100;
+              }
+
+              if (reverse) {
+                newStart = 100 - newStart;
+              }
 
               return {
                 ...zoom,
-                start: calculateZoomStart(zoom.start + deltaZoom, zoom, zoomOptions),
+                start: calculateZoomStart(newStart, zoom, zoomOptions),
               };
             }
 
@@ -226,10 +305,26 @@ function ChartAxisZoomOverviewSpan({
     });
   };
 
-  const onResizeEnd = (delta: number) => {
+  const onResizeEnd = (event: PointerEvent) => {
+    const element = svgRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const point = getSVGPoint(element, event);
+
+    if (
+      !instance.isPointInside({
+        x: axisDirection === 'x' ? point.x : drawingArea.left,
+        y: axisDirection === 'x' ? drawingArea.top : point.y,
+      })
+    ) {
+      return;
+    }
+
     store.update((state) => {
-      const { width, height } = selectorChartDrawingArea(state);
-      const drawingAreaSize = axisDirection === 'x' ? width : height;
+      const { left, bottom, width, height } = selectorChartDrawingArea(state);
 
       // TODO: What about non-cartesian axes? Are these the only ones that can be zoomed?
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
@@ -240,15 +335,21 @@ function ChartAxisZoomOverviewSpan({
           ...state.zoom,
           zoomData: state.zoom.zoomData.map((zoom) => {
             if (zoom.axisId === axisId) {
-              const deltaZoom =
-                (reverse ? -1 : 1) *
-                (axisDirection === 'x' ? 1 : -1) *
-                (delta / drawingAreaSize) *
-                100;
+              let newEnd: number;
+
+              if (axisDirection === 'x') {
+                newEnd = ((point.x - left) / width) * 100;
+              } else {
+                newEnd = ((point.y - bottom) / height) * 100;
+              }
+
+              if (reverse) {
+                newEnd = 100 - newEnd;
+              }
 
               return {
                 ...zoom,
-                end: calculateZoomEnd(zoom.end + deltaZoom, zoom, zoomOptions),
+                end: calculateZoomEnd(newEnd, zoom, zoomOptions),
               };
             }
 
