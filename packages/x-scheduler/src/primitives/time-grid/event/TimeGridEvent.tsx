@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useEventGridCell } from './useEventGridCell';
+import { useTimeGridEvent } from './useTimeGridEvent';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
-const EventGridCell = React.forwardRef(function CalendarCell(
-  componentProps: EventGridCell.Props,
+const TimeGridEvent = React.forwardRef(function CalendarCell(
+  componentProps: TimeGridEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -19,23 +19,23 @@ const EventGridCell = React.forwardRef(function CalendarCell(
     ...elementProps
   } = componentProps;
 
-  const { getCellProps } = useEventGridCell({ start, end });
+  const { getEventProps } = useTimeGridEvent({ start, end });
 
-  const state: EventGridCell.State = React.useMemo(() => ({}), []);
+  const state: TimeGridEvent.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [getCellProps, elementProps],
+    props: [getEventProps, elementProps],
   });
 
   return renderElement();
 });
 
-export namespace EventGridCell {
+export namespace TimeGridEvent {
   export interface State {}
 
-  export interface Props extends useEventGridCell.Parameters, BaseUIComponentProps<'div', State> {}
+  export interface Props extends useTimeGridEvent.Parameters, BaseUIComponentProps<'div', State> {}
 }
 
-export { EventGridCell };
+export { TimeGridEvent };

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useEventGridRoot } from './useEventGridRoot';
+import { useTimeGridRoot } from './useTimeGridRoot';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
-const EventGridRoot = React.forwardRef(function CalendarRoot(
-  componentProps: EventGridRoot.Props,
+const TimeGridRoot = React.forwardRef(function CalendarRoot(
+  componentProps: TimeGridRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -16,9 +16,9 @@ const EventGridRoot = React.forwardRef(function CalendarRoot(
     ...elementProps
   } = componentProps;
 
-  const { getRootProps } = useEventGridRoot({});
+  const { getRootProps } = useTimeGridRoot({});
 
-  const state: EventGridRoot.State = React.useMemo(() => ({}), []);
+  const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
@@ -29,10 +29,10 @@ const EventGridRoot = React.forwardRef(function CalendarRoot(
   return renderElement();
 });
 
-export namespace EventGridRoot {
+export namespace TimeGridRoot {
   export interface State {}
 
-  export interface Props extends useEventGridRoot.Parameters, BaseUIComponentProps<'div', State> {}
+  export interface Props extends useTimeGridRoot.Parameters, BaseUIComponentProps<'div', State> {}
 }
 
-export { EventGridRoot };
+export { TimeGridRoot };

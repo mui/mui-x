@@ -16,7 +16,9 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
-    "./joy/scheduler": "./src/joy/scheduler/index.ts"
+    "./joy/scheduler": "./src/joy/scheduler/index.ts",
+    "./primitives": "./src/primitives/index.ts",
+    "./primitives/time-grid": "./src/primitives/TimeGrid/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -50,11 +52,14 @@
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "luxon": "^3.0.2"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.4",
+    "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
+    "luxon": "^3.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"

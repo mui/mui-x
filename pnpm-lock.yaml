@@ -1457,9 +1457,15 @@ importers:
       '@mui/internal-test-utils':
         specifier: ^2.0.4
         version: 2.0.7(@babel/core@7.26.10)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@types/luxon':
+        specifier: ^3.6.2
+        version: 3.6.2
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14
+      luxon:
+        specifier: ^3.6.1
+        version: 3.6.1
       react:
         specifier: ^19.0.0
         version: 19.0.0
