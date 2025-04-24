@@ -82,11 +82,20 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
-      const target = event.detail.srcEvent;
-      const svgPoint = getSVGPoint(element, target);
+      const srvEvent = event.detail.srcEvent;
+      const target = event.detail.srcEvent.target as SVGElement | undefined;
+      const svgPoint = getSVGPoint(element, srvEvent);
       const isPointInside = instance.isPointInside(svgPoint, {
-        targetElement: event.detail.srcEvent.target as SVGElement,
+        targetElement: target,
       });
+      // Release the pointer capture if we are panning, as this would cause the tooltip to
+      // be locked to the first "section" it touches.
+      if (
+        event.detail.srcEvent.buttons >= 1 &&
+        target?.hasPointerCapture(event.detail.srcEvent.pointerId)
+      ) {
+        target?.releasePointerCapture(event.detail.srcEvent.pointerId);
+      }
       if (!isPointInside) {
         instance.cleanInteraction?.();
         return;
