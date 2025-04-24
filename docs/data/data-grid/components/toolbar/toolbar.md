@@ -79,11 +79,11 @@ The component follows the WAI-ARIA authoring practices.
 The Toolbar component supports keyboard navigation.
 It implements the roving tabindex pattern.
 
-|                                                    Keys | Description                              |
-| ------------------------------------------------------: | :--------------------------------------- |
-|                              <kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
-| <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
-|                             <kbd class="key">Left</kbd> | Moves focus to the previous button.      |
-|                            <kbd class="key">Right</kbd> | Moves focus to the next button.          |
-|                             <kbd class="key">Home</kbd> | Moves focus to the first button.         |
-|                              <kbd class="key">End</kbd> | Moves focus to the last button.          |
+|                                                               Keys | Description                              |
+| -----------------------------------------------------------------: | :--------------------------------------- |
+|                                         <kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
+| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> | Moves focus into and out of the toolbar. |
+|                                        <kbd class="key">Left</kbd> | Moves focus to the previous button.      |
+|                                       <kbd class="key">Right</kbd> | Moves focus to the next button.          |
+|                                        <kbd class="key">Home</kbd> | Moves focus to the first button.         |
+|                                         <kbd class="key">End</kbd> | Moves focus to the last button.          |
