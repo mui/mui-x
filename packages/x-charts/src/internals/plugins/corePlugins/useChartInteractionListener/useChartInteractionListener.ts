@@ -45,7 +45,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         }),
         new TurnWheelGesture({
           name: 'turnWheel',
-          preventDefault: true, // Prevent default scroll behavior
           sensitivity: 0.01,
           initialDelta: 1,
         }),
