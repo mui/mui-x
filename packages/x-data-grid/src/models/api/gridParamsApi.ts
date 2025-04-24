@@ -46,7 +46,7 @@ export interface GridParamsApi {
    * Gets the [[GridCellParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
-   * @returns {GridCellParams} The cell params or null if the row is not found.
+   * @returns {GridCellParams | null} The cell params or null if the row is not found.
    */
   getCellParams: <
     R extends GridValidRowModel = any,
