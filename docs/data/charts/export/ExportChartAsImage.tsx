@@ -1,14 +1,14 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 
 function ExportParamsSelector({
   apiRef,
