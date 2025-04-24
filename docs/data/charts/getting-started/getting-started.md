@@ -22,15 +22,15 @@ If you are not already using it in your project, you can install it with:
 <codeblock storageKey="package-manager">
 
 ```bash npm
-npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/material@^7.0.0 @emotion/react @emotion/styled
 ```
 
 ```bash pnpm
-pnpm add @mui/material @emotion/react @emotion/styled
+pnpm add @mui/material@^7.0.0 @emotion/react @emotion/styled
 ```
 
 ```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
+yarn add @mui/material@^7.0.0 @emotion/react @emotion/styled
 ```
 
 </codeblock>
