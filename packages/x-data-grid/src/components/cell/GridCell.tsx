@@ -296,7 +296,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         }
 
         const params = apiRef.current.getCellParams(rowId!, field || '');
-        apiRef.current.publishEvent(eventName, params, event as any);
+        if (params) {
+          apiRef.current.publishEvent(eventName, params, event as any);
+        }
 
         if (propHandler) {
           propHandler(event);
