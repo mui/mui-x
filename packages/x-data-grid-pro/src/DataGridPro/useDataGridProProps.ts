@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { getThemeProps } from '@mui/system';
 import {
   GRID_DEFAULT_LOCALE_TEXT,
   DATA_GRID_PROPS_DEFAULT_VALUES,
@@ -61,12 +62,10 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const themedProps = useProps(
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    }),
+  const theme = useTheme();
+  const themedProps = React.useMemo(
+    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+    [theme, inProps],
   );
 
   const localeText = React.useMemo(
