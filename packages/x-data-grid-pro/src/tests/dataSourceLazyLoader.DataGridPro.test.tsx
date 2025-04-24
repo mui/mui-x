@@ -344,7 +344,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   describe('Row count updates', () => {
     it('should add skeleton rows once the rowCount becomes known', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response });
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
       const { setProps } = render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -363,7 +363,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should reset the grid if the rowCount becomes unknown', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response });
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
       const { setProps } = render(<TestDataSourceLazyLoader rowCount={100} />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -380,7 +380,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should reset the grid if the rowCount becomes smaller than the actual row count', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response });
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
       render(
         <TestDataSourceLazyLoader rowCount={100} paginationModel={{ page: 0, pageSize: 30 }} />,
       );
@@ -405,7 +405,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should allow setting the row count via API', async () => {
       // override rowCount
-      transformGetRowsResponse = (response) => ({ ...response });
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
       render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
