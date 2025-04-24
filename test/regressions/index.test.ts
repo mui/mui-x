@@ -226,7 +226,7 @@ async function main() {
       const body = await page.waitForSelector(`body`);
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
-    
+
     describe('print preview', () => {
       /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
        * page after every test. */
