@@ -155,10 +155,13 @@ function ChartAxisZoomOverviewSpan({
       return;
     }
 
+    /* min and max values of zoom to ensure the pointer anchor in the slider is maintained  */
+    let pointerZoomMin: number;
+    let pointerZoomMax: number;
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const { top, left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const { left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
       const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
       const element = svgRef.current;
 
@@ -167,15 +170,6 @@ function ChartAxisZoomOverviewSpan({
       }
 
       const point = getSVGPoint(element, event);
-
-      if (
-        !instance.isPointInside({
-          x: axisDirection === 'x' ? point.x : left,
-          y: axisDirection === 'x' ? top : point.y,
-        })
-      ) {
-        return;
-      }
 
       let pointerZoom: number;
       if (axisDirection === 'x') {
@@ -187,6 +181,8 @@ function ChartAxisZoomOverviewSpan({
       if (reverse) {
         pointerZoom = 100 - pointerZoom;
       }
+
+      pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
 
       const deltaZoom = pointerZoom - prevPointerZoom;
       prevPointerZoom = pointerZoom;
@@ -235,6 +231,8 @@ function ChartAxisZoomOverviewSpan({
       }
 
       prevPointerZoom = pointerDownZoom;
+      pointerZoomMin = pointerDownZoom - axisZoomData.start;
+      pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointermove', onPointerMove);
