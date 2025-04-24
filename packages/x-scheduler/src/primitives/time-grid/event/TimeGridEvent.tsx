@@ -19,21 +19,19 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
     ...elementProps
   } = componentProps;
 
-  const { getEventProps } = useTimeGridEvent({ start, end });
-
-  const state: TimeGridEvent.State = React.useMemo(() => ({}), []);
+  const { props, state } = useTimeGridEvent({ start, end });
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [getEventProps, elementProps],
+    props: [props, elementProps],
   });
 
   return renderElement();
 });
 
 export namespace TimeGridEvent {
-  export interface State {}
+  export interface State extends useTimeGridEvent.State {}
 
   export interface Props extends useTimeGridEvent.Parameters, BaseUIComponentProps<'div', State> {}
 }

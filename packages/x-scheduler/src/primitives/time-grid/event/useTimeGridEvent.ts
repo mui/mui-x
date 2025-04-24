@@ -1,41 +1,70 @@
 import * as React from 'react';
-import { mergeProps } from '../../../base-ui-copy/merge-props';
-import { GenericHTMLProps } from '../../../base-ui-copy/utils/types';
 import { PickerValidDate } from '../../utils/adapter/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
+import { useTimeGridColumnContext } from '../column/TImeGridColumnContext';
+import { useInterval } from '../../utils/useInterval';
 
 const adapter = getAdapter();
 
+const MINUTES_IN_DAY = 24 * 60;
+
 export function useTimeGridEvent(parameters: useTimeGridEvent.Parameters) {
   const { start, end } = parameters;
+  const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
-  const yPosition = React.useMemo(() => {
-    const percentage =
-      ((adapter.getHours(start) * 60 + adapter.getMinutes(start)) / (24 * 60)) * 100;
-    return `${percentage}%`;
-  }, [start]);
+  const style = React.useMemo(() => {
+    const isStartingBeforeColumnStart = adapter.isBefore(start, columnStart);
+    const isEndingAfterColumnEnd = adapter.isAfter(end, columnEnd);
+    const startTime = isStartingBeforeColumnStart
+      ? 0
+      : adapter.getHours(start) * 60 + adapter.getMinutes(start);
+    const endTime = isEndingAfterColumnEnd
+      ? MINUTES_IN_DAY
+      : adapter.getHours(end) * 60 + adapter.getMinutes(end);
 
-  const height = React.useMemo(() => {
-    // TODO: Use adapter
-    const percentage = (end.diff(start, 'minutes').minutes / (24 * 60)) * 100;
+    const yPositionInt = isStartingBeforeColumnStart ? 0 : (startTime / MINUTES_IN_DAY) * 100;
 
-    return `${percentage}%`;
-  }, [start, end]);
+    const heightInt = isEndingAfterColumnEnd
+      ? 100 - yPositionInt
+      : ((endTime - startTime) / MINUTES_IN_DAY) * 100;
 
-  const getEventProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeProps(externalProps, {
-        style: {
-          [TimeGridEventCssVars.yPosition]: yPosition,
-          [TimeGridEventCssVars.height]: height,
-        },
-      });
-    },
-    [yPosition, height],
-  );
+    return {
+      [TimeGridEventCssVars.yPosition]: `${yPositionInt}%`,
+      [TimeGridEventCssVars.height]: `${heightInt}%`,
+    } as React.CSSProperties;
+  }, [columnStart, columnEnd, start, end]);
 
-  return React.useMemo(() => ({ getEventProps }), [getEventProps]);
+  const props = React.useMemo(() => ({ style }), [style]);
+
+  const [{ started, ended }, setStartedAndEnded] = React.useState(() => {
+    const currentDate = adapter.date();
+    return {
+      started: adapter.isBefore(start, currentDate),
+      ended: adapter.isBefore(end, currentDate),
+    };
+  });
+
+  // TODO: Update at the beginning of each minute.
+  useInterval(() => {
+    setStartedAndEnded((prevState) => {
+      const currentDate = adapter.date();
+      const newState = {
+        started: adapter.isBefore(start, currentDate),
+        ended: adapter.isBefore(end, currentDate),
+      };
+
+      if (newState.started === started && newState.ended === ended) {
+        return prevState;
+      }
+
+      return newState;
+    });
+  }, 60 * 1000);
+
+  const state = React.useMemo(() => ({ started, ended }), [started, ended]);
+
+  return { props, state };
 }
 
 export namespace useTimeGridEvent {
@@ -48,5 +77,16 @@ export namespace useTimeGridEvent {
      * The time at which the event ends.
      */
     end: PickerValidDate;
+  }
+
+  export interface State {
+    /**
+     * Whether the event start date and time is in the past.
+     */
+    started: boolean;
+    /**
+     * Whether the event end date and time is in the past.
+     */
+    ended: boolean;
   }
 }

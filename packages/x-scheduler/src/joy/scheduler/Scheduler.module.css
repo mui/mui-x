@@ -1,0 +1,70 @@
+.Container {
+  --border-color: oklch(87.1% 0.006 286.286);
+  --event-work-bg-color: oklch(82.8% 0.111 230.318);
+  --event-personal-bg-color: oklch(81% 0.117 11.638);
+}
+
+:global(.mode-dark) .Container {
+  --border-color: oklch(44.2% 0.017 285.786);
+  --event-work-bg-color: oklch(50% 0.134 242.749);
+  --event-personal-bg-color: oklch(45.5% 0.188 13.697);
+}
+
+.Container {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.Root {
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  display: flex;
+}
+
+.HeaderCell {
+  width: 256px;
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+}
+
+.Body {
+  flex: 1;
+  max-height: 600px;
+  height: 600px;
+  overflow-y: auto;
+}
+
+.ScrollableContent {
+  display: flex;
+  height: 1000px;
+}
+
+.Column {
+  width: 256px;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.Event {
+  position: absolute;
+  left: 0px;
+  right: 8px;
+  top: var(--y-position);
+  bottom: calc(100% - var(--y-position) - var(--height));
+
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 12px;
+
+  &[data-agenda='work'] {
+    background-color: var(--event-work-bg-color);
+  }
+
+  &[data-agenda='personal'] {
+    background-color: var(--event-personal-bg-color);
+  }
+}

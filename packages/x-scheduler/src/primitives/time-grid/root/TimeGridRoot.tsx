@@ -16,14 +16,14 @@ const TimeGridRoot = React.forwardRef(function CalendarRoot(
     ...elementProps
   } = componentProps;
 
-  const { getRootProps } = useTimeGridRoot({});
+  const { props } = useTimeGridRoot({});
 
   const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [getRootProps, elementProps],
+    props: [props, elementProps],
   });
 
   return renderElement();

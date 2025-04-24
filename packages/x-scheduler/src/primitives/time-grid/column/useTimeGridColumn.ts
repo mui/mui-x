@@ -1,20 +1,25 @@
 import * as React from 'react';
-import { mergeProps } from '../../../base-ui-copy/merge-props';
-import { GenericHTMLProps } from '../../../base-ui-copy/utils/types';
 import { PickerValidDate } from '../../utils/adapter/types';
+import { TimeGridColumnContext } from './TImeGridColumnContext';
+import { getAdapter } from '../../utils/adapter/getAdapter';
+
+const adapter = getAdapter();
 
 export function useTimeGridColumn(parameters: useTimeGridColumn.Parameters) {
   const { value } = parameters;
 
-  const getColumnProps = React.useCallback((externalProps: GenericHTMLProps) => {
-    return mergeProps(externalProps, { children: 'TODO' });
-  }, []);
+  const contextValue: TimeGridColumnContext = React.useMemo(
+    () => ({ start: adapter.startOfDay(value), end: adapter.endOfDay(value) }),
+    [value],
+  );
 
-  return React.useMemo(() => ({ getColumnProps }), [getColumnProps]);
+  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
+
+  return { props, contextValue };
 }
 
 export namespace useTimeGridColumn {
   export interface Parameters {
-    value: PickerValidDate; // TODO: Use the correct date type
+    value: PickerValidDate;
   }
 }

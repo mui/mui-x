@@ -15,9 +15,13 @@ This package is not published yet.
 
 ## Primitives
 
-### Event Time Grid
+### Time Grid
 
 {{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false}}
+
+### Day Grid
+
+TODO
 
 ## Joy UI
 

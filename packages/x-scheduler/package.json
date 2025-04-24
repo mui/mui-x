@@ -18,7 +18,7 @@
     "./joy": "./src/joy/index.ts",
     "./joy/scheduler": "./src/joy/scheduler/index.ts",
     "./primitives": "./src/primitives/index.ts",
-    "./primitives/time-grid": "./src/primitives/TimeGrid/index.ts"
+    "./primitives/time-grid": "./src/primitives/time-grid/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

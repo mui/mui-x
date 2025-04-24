@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useTimeGridColumn } from './useTimeGridColumn';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
+import { TimeGridColumnContext } from './TImeGridColumnContext';
 
 const TimeGridColumn = React.forwardRef(function CalendarCell(
   componentProps: TimeGridColumn.Props,
@@ -18,17 +19,21 @@ const TimeGridColumn = React.forwardRef(function CalendarCell(
     ...elementProps
   } = componentProps;
 
-  const { getColumnProps } = useTimeGridColumn({ value });
+  const { props, contextValue } = useTimeGridColumn({ value });
 
   const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [getColumnProps, elementProps],
+    props: [props, elementProps],
   });
 
-  return renderElement();
+  return (
+    <TimeGridColumnContext.Provider value={contextValue}>
+      {renderElement()}
+    </TimeGridColumnContext.Provider>
+  );
 });
 
 export namespace TimeGridColumn {

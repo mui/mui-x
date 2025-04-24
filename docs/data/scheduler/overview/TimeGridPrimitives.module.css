@@ -1,11 +1,13 @@
 .Container {
   --border-color: oklch(87.1% 0.006 286.286);
-  --event-bg-color: oklch(82.8% 0.111 230.318);
+  --event-work-bg-color: oklch(82.8% 0.111 230.318);
+  --event-personal-bg-color: oklch(81% 0.117 11.638);
 }
 
 :global(.mode-dark) .Container {
   --border-color: oklch(44.2% 0.017 285.786);
-  --event-bg-color: oklch(50% 0.134 242.749);
+  --event-work-bg-color: oklch(50% 0.134 242.749);
+  --event-personal-bg-color: oklch(45.5% 0.188 13.697);
 }
 
 .Container {
@@ -24,9 +26,11 @@
 }
 
 .HeaderCell {
-  width: 256px;
-  border: 1px solid var(--border-color);
+  width: 156px;
+  border-inline: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 4px 8px;
+  margin-bottom: -1px;
 }
 
 .Body {
@@ -39,11 +43,12 @@
 .ScrollableContent {
   display: flex;
   height: 1000px;
+  position: relative;
 }
 
 .Column {
-  width: 256px;
-  border: 1px solid var(--border-color);
+  width: 156px;
+  border-inline-start: 1px solid var(--border-color);
   position: relative;
 }
 
@@ -54,8 +59,65 @@
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
 
-  background-color: var(--event-bg-color);
   border-radius: 4px;
   padding: 4px;
   font-size: 12px;
+  background-color: var(--event-bg-color);
+
+  &[data-agenda='work'] {
+    --event-bg-color: var(--event-work-bg-color);
+  }
+
+  &[data-agenda='personal'] {
+    --event-bg-color: var(--event-personal-bg-color);
+  }
+
+  &[data-ended] {
+    background-color: color-mix(in oklab, var(--event-bg-color) 50%, #222 50%);
+    color: color-mix(in oklab, currentColor 80%, #222 20%);
+  }
+}
+
+.EventInformation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.EventTitle {
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+
+.EventStartTime {
+  font-size: 10px;
+  color: var(--text-color);
+  text-wrap: nowrap;
+}
+
+.TimeAxis {
+  display: flex;
+  flex-direction: column;
+}
+
+.TimeAxisCell {
+  height: calc(100% / 24);
+  line-height: calc(100% / 24);
+  font-size: 12px;
+  padding-inline-start: 4px;
+
+  &::after {
+    content: '';
+    border-bottom: 1px solid var(--border-color);
+    position: absolute;
+    right: 0;
+    left: 48px;
+    top: calc((100% / 24) * var(--hour));
+  }
+}
+
+.TimeAxisHeaderCell,
+.TimeAxisCell {
+  width: 60px;
 }

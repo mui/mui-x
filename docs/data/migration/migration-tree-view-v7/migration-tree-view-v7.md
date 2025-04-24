@@ -1,4 +1,5 @@
 ---
+title: React Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -9,6 +10,10 @@ productId: x-tree-view
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
+
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
 
 ## Start using the new release
 
