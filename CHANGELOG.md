@@ -9,14 +9,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 24, 2025_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint`.
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
 Special thanks go out to the community members for their valuable contributions:
-@lhilgert9, @ArturAghakaryan.
+@lhilgert9, @ArturAghakaryan, @sai6855.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @joserodolfofreitas, @KenanYusuf, @LukasTy, @mapache-salvaje, @oliviertassinari, @romgrk.
 
