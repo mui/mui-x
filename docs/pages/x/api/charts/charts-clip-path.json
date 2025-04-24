@@ -1,5 +1,13 @@
 {
-  "props": {},
+  "props": {
+    "id": { "type": { "name": "string" }, "required": true },
+    "offset": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    }
+  },
   "name": "ChartsClipPath",
   "imports": [
     "import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';",

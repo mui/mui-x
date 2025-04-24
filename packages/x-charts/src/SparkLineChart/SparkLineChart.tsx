@@ -121,6 +121,24 @@ export interface SparkLineChartProps
    * @default rainbowSurgePalette[0]
    */
   color?: ChartsColor;
+
+  /**
+   * When `true`, the chart's drawing area will not be clipped and elements within can visually overflow the chart.
+   *
+   * @default false
+   */
+  disableClipping?: boolean;
+
+  /**
+   * Offset the clipped area by this amount in pixels on each side.
+   *
+   * This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges.
+   * This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will
+   * have half the stroke width clipped.
+   *
+   * @default { top: 1, right: 1, bottom: 1, left: 1 }
+   */
+  clipAreaOffset?: { top?: number; right?: number; bottom?: number; left?: number };
 }
 
 const SPARK_LINE_DEFAULT_MARGIN = 5;
@@ -158,10 +176,18 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     area,
     curve = 'linear',
     className,
+    disableClipping,
+    clipAreaOffset,
     ...other
   } = props;
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const clipPathOffset = {
+    top: clipAreaOffset?.top ?? 1,
+    right: clipAreaOffset?.right ?? 1,
+    bottom: clipAreaOffset?.bottom ?? 1,
+    left: clipAreaOffset?.left ?? 1,
+  };
 
   const defaultXHighlight: { x: 'band' | 'none' } =
     showHighlight && plotType === 'bar' ? { x: 'band' } : { x: 'none' };
@@ -232,7 +258,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           </React.Fragment>
         )}
       </g>
-      <ChartsClipPath id={clipPathId} />
+      {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
       <ChartsAxisHighlight {...axisHighlight} />
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
 
@@ -261,6 +287,21 @@ SparkLineChart.propTypes = {
   }),
   children: PropTypes.node,
   className: PropTypes.string,
+  /**
+   * Offset the clipped area by this amount in pixels on each side.
+   *
+   * This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges.
+   * This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will
+   * have half the stroke width clipped.
+   *
+   * @default { top: 1, right: 1, bottom: 1, left: 1 }
+   */
+  clipAreaOffset: PropTypes.shape({
+    bottom: PropTypes.number,
+    left: PropTypes.number,
+    right: PropTypes.number,
+    top: PropTypes.number,
+  }),
   /**
    * Color used to colorize the sparkline.
    * @default rainbowSurgePalette[0]
@@ -296,6 +337,12 @@ SparkLineChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * When `true`, the chart's drawing area will not be clipped and elements within can visually overflow the chart.
+   *
+   * @default false
+   */
+  disableClipping: PropTypes.bool,
   /**
    * If true, the voronoi interaction are ignored.
    */

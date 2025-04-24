@@ -4,6 +4,9 @@
     "area": {
       "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
     },
+    "clipAreaOffset": {
+      "description": "Offset the clipped area by this amount in pixels on each side.<br>This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges. This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will have half the stroke width clipped."
+    },
     "color": { "description": "Color used to colorize the sparkline." },
     "data": { "description": "Data to plot." },
     "dataset": {
@@ -11,6 +14,9 @@
     },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "disableClipping": {
+      "description": "When <code>true</code>, the chart&#39;s drawing area will not be clipped and elements within can visually overflow the chart."
     },
     "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "height": {

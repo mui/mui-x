@@ -1,1 +1,10 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "id": { "description": "The id of the clip path." },
+    "offset": {
+      "description": "Offset, in pixels, of the clip path rectangle from the drawing area.<br>A positive value will move the rectangle outside the drawing area."
+    }
+  },
+  "classDescriptions": {}
+}

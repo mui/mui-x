@@ -5,12 +5,20 @@
       "required": true
     },
     "area": { "type": { "name": "bool" }, "default": "false" },
+    "clipAreaOffset": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "{ top: 1, right: 1, bottom: 1, left: 1 }"
+    },
     "color": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "rainbowSurgePalette[0]"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableClipping": { "type": { "name": "bool" }, "default": "false" },
     "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
