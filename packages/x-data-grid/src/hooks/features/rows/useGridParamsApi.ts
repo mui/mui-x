@@ -93,7 +93,7 @@ export function useGridParamsApi(
       const rowNode = gridRowNodeSelector(apiRef, id);
 
       if (!row || !rowNode) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
+        return null;
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);
