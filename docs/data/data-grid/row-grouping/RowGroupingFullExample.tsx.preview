@@ -4,8 +4,6 @@
   loading={loading}
   disableRowSelectionOnClick
   initialState={initialState}
-  groupingColDef={{
-    leafField: 'traderEmail',
-  }}
+  groupingColDef={groupingColDef}
   experimentalFeatures={{ ariaV8: true }}
 />

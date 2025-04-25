@@ -8,6 +8,10 @@ import {
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 
+const groupingColDef = {
+  width: 250,
+};
+
 export default function ServerSideRowGroupingFullDataGrid() {
   const apiRef = useGridApiRef();
 
@@ -73,9 +77,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
               showQuickFilter: true,
             },
           }}
-          groupingColDef={{
-            width: 250,
-          }}
+          groupingColDef={groupingColDef}
         />
       </div>
     </div>

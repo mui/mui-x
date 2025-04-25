@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -26,6 +28,15 @@ export default function RowGroupingFilteringSingleGroupingColDef() {
       },
     },
   });
+
+  const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> =
+  React.useMemo(
+    () => ({
+      mainGroupingCriteria:
+        mainGroupingCriteria === 'undefined' ? undefined : mainGroupingCriteria,
+    }),
+    [mainGroupingCriteria],
+  );
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -55,12 +66,7 @@ export default function RowGroupingFilteringSingleGroupingColDef() {
           disableRowSelectionOnClick
           defaultGroupingExpansionDepth={-1}
           initialState={initialState}
-          groupingColDef={{
-            mainGroupingCriteria:
-              mainGroupingCriteria === 'undefined'
-                ? undefined
-                : mainGroupingCriteria,
-          }}
+          groupingColDef={groupingColDef}
         />
       </Box>
     </Box>
