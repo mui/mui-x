@@ -1,5 +1,6 @@
 import type { GridRowId, GridRowModel } from '../gridRows';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
+import { GridControlledStateReasonLookup } from '../events';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
@@ -36,8 +37,12 @@ export interface GridRowSelectionApi {
    * ⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.
    * Pass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.
    * @param {gridRowSelectionModel} rowSelectionModel The new row selection model
+   * @param {string} reason The reason for the state change.
    */
-  setRowSelectionModel: (rowSelectionModel: GridRowSelectionModel) => void;
+  setRowSelectionModel: (
+    rowSelectionModel: GridRowSelectionModel,
+    reason?: GridControlledStateReasonLookup['rowSelection'],
+  ) => void;
 }
 
 export interface GridRowMultiSelectionApi {

@@ -160,7 +160,7 @@ export const useGridRowSelection = (
    * API METHODS
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
-    (model) => {
+    (model, reason) => {
       if (
         props.signature === GridSignature.DataGrid &&
         !canHaveMultipleSelection &&
@@ -176,10 +176,14 @@ export const useGridRowSelection = (
       const currentModel = gridRowSelectionStateSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        apiRef.current.setState((state) => ({
-          ...state,
-          rowSelection: props.rowSelection ? model : emptyModel,
-        }));
+        apiRef.current.setState(
+          (state) => ({
+            ...state,
+            rowSelection: props.rowSelection ? model : [],
+          }),
+          reason,
+        );
+        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
@@ -250,7 +254,7 @@ export const useGridRowSelection = (
           }
         }
 
-        apiRef.current.setRowSelectionModel(newSelectionModel);
+        apiRef.current.setRowSelectionModel(newSelection, 'singleRowSelection');
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
@@ -297,7 +301,7 @@ export const useGridRowSelection = (
           (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
           canHaveMultipleSelection;
         if (isSelectionValid) {
-          apiRef.current.setRowSelectionModel(newSelectionModel);
+          apiRef.current.setRowSelectionModel(Array.from(newSelection), 'singleRowSelection');
         }
       }
     },
@@ -406,7 +410,7 @@ export const useGridRowSelection = (
         (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
         canHaveMultipleSelection;
       if (isSelectionValid) {
-        apiRef.current.setRowSelectionModel(newSelectionModel);
+        apiRef.current.setRowSelectionModel(Array.from(newSelection), 'multipleRowsSelection');
       }
     },
     [
