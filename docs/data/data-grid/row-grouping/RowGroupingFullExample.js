@@ -7,6 +7,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+const groupingColDef = {
+  leafField: 'traderEmail',
+};
+
 export default function RowGroupingFullExample() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
@@ -37,9 +41,7 @@ export default function RowGroupingFullExample() {
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          leafField: 'traderEmail',
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );
