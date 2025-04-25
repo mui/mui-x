@@ -39,7 +39,7 @@ export default function ChartsXHighlight(props: {
     if (isError) {
       console.error(
         [
-          `MUI X: The position value provided for the axis is not valid for the current scale.`,
+          `MUI X Charts: The position value provided for the axis is not valid for the current scale.`,
           `This probably means something is wrong with the data passed to the chart.`,
           `The ChartsAxisHighlight component will not be displayed.`,
         ].join('\n'),

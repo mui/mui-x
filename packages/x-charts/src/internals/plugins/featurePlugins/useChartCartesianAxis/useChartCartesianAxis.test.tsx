@@ -16,7 +16,7 @@ describe('useChartCartesianAxis', () => {
   // tried try-catch + error boundary + window onError preventDefault
   testSkipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
     const expectedError = [
-      'MUI X: The following axis ids are duplicated: qwerty.',
+      'MUI X Charts: The following axis ids are duplicated: qwerty.',
       'Please make sure that each axis has a unique id.',
     ].join('\n');
 
@@ -41,7 +41,7 @@ describe('useChartCartesianAxis', () => {
     'should throw an error when axis have duplicate ids across different directions (x,y)',
     () => {
       const expectedError = [
-        'MUI X: The following axis ids are duplicated: qwerty.',
+        'MUI X Charts: The following axis ids are duplicated: qwerty.',
         'Please make sure that each axis has a unique id.',
       ].join('\n');
 
