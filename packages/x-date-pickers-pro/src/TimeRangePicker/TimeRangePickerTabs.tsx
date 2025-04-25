@@ -47,7 +47,6 @@ const useUtilityClasses = (classes: Partial<TimeRangePickerTabsClasses> | undefi
 const TimeRangePickerTabsRoot = styled(Tabs, {
   name: 'MuiTimeRangePickerTabs',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
@@ -62,7 +61,6 @@ const TimeRangePickerTabsRoot = styled(Tabs, {
 const TimeRangePickerTab = styled(Tab, {
   name: 'MuiTimeRangePickerTabs',
   slot: 'Tab',
-  overridesResolver: (_, styles) => styles.tab,
 })(({ theme }) => ({
   minHeight: '48px',
   gap: theme.spacing(1),

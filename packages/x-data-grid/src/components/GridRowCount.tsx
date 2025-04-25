@@ -35,7 +35,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RowCount',
-  overridesResolver: (props, styles) => styles.rowCount,
 })<{ ownerState: OwnerState }>({
   alignItems: 'center',
   display: 'flex',

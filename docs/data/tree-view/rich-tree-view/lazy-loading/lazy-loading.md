@@ -1,13 +1,13 @@
 ---
 productId: x-tree-view
-title: Rich Tree View Pro - Lazy Loading Children
+title: Rich Tree View - Lazy loading
 components: RichTreeViewPro, TreeItem
 packageName: '@mui/x-tree-view-pro'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Rich Tree View - Lazy Loading Children
+# Rich Tree View - Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Lazy load the data from your Tree View.</p>
 

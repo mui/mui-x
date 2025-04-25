@@ -1,5 +1,12 @@
 import { DateOrTimeViewWithMeridiem } from '../models';
 
+export const DEFAULT_STEP_NAVIGATION = {
+  hasNextStep: false,
+  hasSeveralSteps: false,
+  goToNextStep: () => {},
+  areViewsInSameStep: () => true,
+};
+
 /**
  * Create an object that determines whether there is a next step and allows to go to the next step.
  * @param {CreateStepNavigationParameters<TStep>} parameters The parameters of the createStepNavigation function
@@ -8,18 +15,15 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 export function createStepNavigation<TStep extends {}>(
   parameters: CreateStepNavigationParameters<TStep>,
 ): CreateStepNavigationReturnValue {
-  const { steps, isCurrentViewMatchingStep, onStepChange } = parameters;
+  const { steps, isViewMatchingStep, onStepChange } = parameters;
 
   return (parametersBis) => {
     if (steps == null) {
-      return {
-        hasNextStep: false,
-        goToNextStep: () => {},
-      };
+      return DEFAULT_STEP_NAVIGATION;
     }
 
     const currentStepIndex = steps.findIndex((step) =>
-      isCurrentViewMatchingStep(parametersBis.view, step),
+      isViewMatchingStep(parametersBis.view, step),
     );
 
     const nextStep =
@@ -29,6 +33,7 @@ export function createStepNavigation<TStep extends {}>(
 
     return {
       hasNextStep: nextStep != null,
+      hasSeveralSteps: steps.length > 1,
       goToNextStep: () => {
         if (nextStep == null) {
           return;
@@ -36,13 +41,18 @@ export function createStepNavigation<TStep extends {}>(
 
         onStepChange({ ...parametersBis, step: nextStep });
       },
+      areViewsInSameStep: (viewA, viewB) => {
+        const stepA = steps.find((step) => isViewMatchingStep(viewA, step));
+        const stepB = steps.find((step) => isViewMatchingStep(viewB, step));
+        return stepA === stepB;
+      },
     };
   };
 }
 
 interface CreateStepNavigationParameters<TStep extends {}> {
   steps: TStep[] | null;
-  isCurrentViewMatchingStep: (view: DateOrTimeViewWithMeridiem, step: TStep) => boolean;
+  isViewMatchingStep: (view: DateOrTimeViewWithMeridiem, step: TStep) => boolean;
   onStepChange: (parameters: UseRangePickerStepNavigationOnStepChangeParameters<TStep>) => void;
 }
 
@@ -54,13 +64,27 @@ export type CreateStepNavigationReturnValue = (
    */
   hasNextStep: boolean;
   /**
+   * Whether there are several steps.
+   */
+  hasSeveralSteps: boolean;
+  /**
    * Go to the next step if any.
    */
   goToNextStep: () => void;
+  /**
+   * Whether the two views are in the same step.
+   * @param {DateOrTimeViewWithMeridiem} viewA The first view to compare.
+   * @param {DateOrTimeViewWithMeridiem} viewB The second view to compare.
+   * @returns {boolean} Whether the two views are in the same step.
+   */
+  areViewsInSameStep: (
+    viewA: DateOrTimeViewWithMeridiem,
+    viewB: DateOrTimeViewWithMeridiem,
+  ) => boolean;
 };
 
 export interface CreateStepNavigationReturnValueParameters {
-  initialView: DateOrTimeViewWithMeridiem;
+  defaultView: DateOrTimeViewWithMeridiem;
   view: DateOrTimeViewWithMeridiem;
   views: readonly DateOrTimeViewWithMeridiem[];
   setView: (view: any) => void;

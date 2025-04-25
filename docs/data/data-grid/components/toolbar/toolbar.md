@@ -58,7 +58,7 @@ The demo below shows how to display active filter chips on the toolbar.
 
 Use the `render` prop to replace default elements. See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details.
 
-The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
+The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
 {{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true}}
 
