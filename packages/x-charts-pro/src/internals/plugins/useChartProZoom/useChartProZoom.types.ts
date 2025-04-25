@@ -53,6 +53,14 @@ export interface UseChartProZoomPublicApi {
    * @returns {void}
    */
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Zoom in the chart.
+   */
+  zoomIn: () => void;
+  /**
+   * Zoom out the chart.
+   */
+  zoomOut: () => void;
 }
 
 export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
