@@ -863,7 +863,7 @@ describe('<DataGrid /> - Row selection', () => {
       );
       await user.click(getColumnHeaderCell(0).querySelector('input')!);
       expect(onRowSelectionModelChange.lastCall.args[1].reason).to.deep.equal(
-        'multipleRowSelection',
+        'multipleRowsSelection',
       );
     });
 
