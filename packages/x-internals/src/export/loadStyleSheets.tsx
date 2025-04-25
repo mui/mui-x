@@ -16,7 +16,6 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot)
 
       if (sheet) {
         let styleCSS = '';
-        // NOTE: for-of is not supported by IE
         for (let j = 0; j < sheet.cssRules.length; j += 1) {
           if (typeof sheet.cssRules[j].cssText === 'string') {
             styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
