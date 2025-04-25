@@ -307,6 +307,22 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    {
+      files: [
+        'packages/x-data-grid/**/*{.tsx,.jsx}',
+        'packages/x-data-grid-pro/**/*{.tsx,.jsx}',
+        'packages/x-data-grid-premium/**/*{.tsx,.jsx}',
+      ],
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'JSXAttribute[name.name="material"]',
+            message: 'Do not pass the restricted prop `material` to Data Grid components.',
+          },
+        ],
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
