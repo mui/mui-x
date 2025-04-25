@@ -25,7 +25,7 @@
     {
       "name": "setRowSelectionModel",
       "description": "Sets the new row selection model.<br>⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically. Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation.",
-      "type": "(rowSelectionModel: GridRowSelectionModel) => void"
+      "type": "(rowSelectionModel: GridRowSelectionModel, reason?: GridControlledStateReasonLookup['rowSelection']) => void"
     }
   ]
 }
