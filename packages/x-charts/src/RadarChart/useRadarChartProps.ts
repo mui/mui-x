@@ -6,8 +6,6 @@ import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
-import { defaultizeMargin } from '../internals/defaultizeMargin';
-import { RadarAxisHighlightProps } from './RadarAxisHighlight';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -35,7 +33,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     hideLegend,
     divisions,
     shape,
-    axisHighlightShape,
+    stripeColor,
     highlight = 'axis',
     ...other
   } = props;
@@ -46,7 +44,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     highlight,
     width,
     height,
-    margin: defaultizeMargin(margin, { top: 30, bottom: 30, left: 50, right: 50 }),
+    margin,
     colors,
     highlightedItem,
     onHighlightChange,
@@ -68,11 +66,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     sx,
   };
 
-  const radarGrid: RadarGridProps = { divisions, shape };
-
-  const radarAxisHighlight: RadarAxisHighlightProps = {
-    axisHighlightShape: axisHighlightShape ?? (series.length > 1 ? 'points' : 'slice'),
-  };
+  const radarGrid: RadarGridProps = { divisions, shape, stripeColor };
 
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 
@@ -82,7 +76,6 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
-    radarAxisHighlight,
     overlayProps,
     legendProps,
     children,

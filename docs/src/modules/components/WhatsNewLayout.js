@@ -18,6 +18,102 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v8',
+    description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
+    date: new Date(2025, 3, 17),
+    url: 'https://mui.com/blog/mui-x-v8/',
+    highlightList: [
+      {
+        title: 'Data Grid – Pivoting [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#pivoting',
+      },
+      {
+        title: 'Data Grid – Ask Your Table (AI Assistance) [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
+      },
+      {
+        title: 'Data Grid – Server-side aggregation & Lazy loading [Premium/Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
+      },
+      {
+        title: 'Data Grid – Data source with support for editing',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-with-support-for-editing',
+      },
+      {
+        title: 'Data Grid – Data source on the community plan',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-on-the-community-plan',
+      },
+      {
+        title: 'Data Grid – New toolbar',
+        url: 'https://mui.com/blog/mui-x-v8/#new-toolbar',
+      },
+      {
+        title: 'Data Grid – No columns overlay',
+        url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
+      },
+      {
+        title: 'Date & Time Pickers – Time Range Picker [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
+      },
+      {
+        title: 'Date & Time Pickers – New view-switching strategy',
+        url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
+      },
+      {
+        title: 'Date & Time Pickers – Clear "ownerState" for slots',
+        url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
+      },
+      {
+        title: 'Date & Time Pickers – Accessible DOM structure',
+        url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
+      },
+      {
+        title: 'Date & Time Pickers – Keyboard editing on mobile pickers',
+        url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
+      },
+      {
+        title: 'Tree View – Lazy loading children [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#lazy-loading-children',
+      },
+      {
+        title: 'Tree View – Automatic selection propagation',
+        url: 'https://mui.com/blog/mui-x-v8/#automatic-selection-propagation',
+      },
+      {
+        title: 'Tree View – New customization hook',
+        url: 'https://mui.com/blog/mui-x-v8/#new-customization-hook',
+      },
+      {
+        title: 'Charts – Funnel charts [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#funnel-charts',
+      },
+      {
+        title: 'Charts – Radar charts',
+        url: 'https://mui.com/blog/mui-x-v8/#radar-charts',
+      },
+      {
+        title: 'Charts – New animation engine',
+        url: 'https://mui.com/blog/mui-x-v8/#new-animation-engine',
+      },
+      {
+        title: 'Charts – Server-side rendering for charts',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-rendering-for-charts',
+      },
+      {
+        title: 'Charts – Refined design and interaction',
+        url: 'https://mui.com/blog/mui-x-v8/#refined-design-and-interaction',
+      },
+      {
+        title: 'Charts – HTML legend for Charts',
+        url: 'https://mui.com/blog/mui-x-v8/#html-legend-for-charts',
+      },
+      {
+        title: 'Charts – Composition',
+        url: 'https://mui.com/blog/mui-x-v8/#charts-composition',
+      },
+    ],
+  },
+  {
     title: 'MUI X v7.19',
     description: 'A roundup of all new features since v7.15.0.',
     date: new Date(2024, 9, 4),
@@ -28,8 +124,8 @@ const entries = [
         url: '/x/react-data-grid/row-spanning/',
       },
       {
-        title: 'Data Grid – Automatic parents and children selection',
-        url: '/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection',
+        title: 'Data Grid – Automatic parent and child selection',
+        url: '/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection',
       },
       {
         title: 'Date and Time Pickers – Support date-fns v4',

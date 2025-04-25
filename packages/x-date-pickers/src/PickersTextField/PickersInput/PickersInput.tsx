@@ -11,7 +11,7 @@ import {
 } from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
@@ -28,7 +28,6 @@ interface PickerInputOwnerState extends PickerTextFieldOwnerState {
 const PickersInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
@@ -181,16 +180,13 @@ PickersInput.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.
@@ -217,7 +213,7 @@ PickersInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

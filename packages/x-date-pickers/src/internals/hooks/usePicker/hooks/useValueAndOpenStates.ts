@@ -3,7 +3,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
 import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
-import { useValueWithTimezone } from '../../useValueWithTimezone';
+import { useControlledValue } from '../../useControlledValue';
 import { useUtils } from '../../useUtils';
 import { InferError, PickerChangeHandlerContext } from '../../../../models';
 import { SetValueActionOptions } from '../../../components/PickerProvider';
@@ -33,7 +33,6 @@ export function useValueAndOpenStates<
   const { current: defaultValue } = React.useRef(defaultValueProp);
   const { current: isValueControlled } = React.useRef(valueProp !== undefined);
   const { current: isOpenControlled } = React.useRef(openProp !== undefined);
-  const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
   const utils = useUtils();
 
   if (process.env.NODE_ENV !== 'production') {
@@ -78,11 +77,8 @@ export function useValueAndOpenStates<
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-  const {
-    timezone,
-    value: valuePropWithTimezoneToRender,
-    handleValueChange,
-  } = useValueWithTimezone({
+  const { timezone, value, handleValueChange } = useControlledValue({
+    name: 'a picker component',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
@@ -91,45 +87,21 @@ export function useValueAndOpenStates<
     valueManager,
   });
 
-  const [state, setState] = React.useState<UsePickerState<TValue>>(() => {
-    let initialValue: TValue;
-    if (valuePropWithTimezoneToRender !== undefined) {
-      initialValue = valuePropWithTimezoneToRender;
-    } else if (defaultValue !== undefined) {
-      initialValue = defaultValue;
-    } else {
-      initialValue = valueManager.emptyValue;
-    }
-
-    return {
-      open: false,
-      draft: initialValue,
-      lastPublishedValue: initialValue,
-      lastCommittedValue: initialValue,
-      lastControlledValue: valueProp,
-      hasBeenModifiedSinceMount: false,
-    };
-  });
+  const [state, setState] = React.useState<UsePickerState<TValue>>(() => ({
+    open: false,
+    lastExternalValue: value,
+    clockShallowValue: undefined,
+    lastCommittedValue: value,
+    hasBeenModifiedSinceMount: false,
+  }));
 
   const { getValidationErrorForNewValue } = useValidation({
     props,
     validator,
     timezone,
-    value: state.draft,
+    value,
     onError: props.onError,
   });
-
-  const timezoneFromDraftValue = valueManager.getTimezone(utils, state.draft);
-  if (previousTimezoneProp !== timezoneProp) {
-    setPreviousTimezoneProp(timezoneProp);
-
-    if (timezoneProp && timezoneFromDraftValue && timezoneProp !== timezoneFromDraftValue) {
-      setState((prev) => ({
-        ...prev,
-        draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
-      }));
-    }
-  }
 
   const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
     const newOpen = typeof action === 'function' ? action(state.open) : action;
@@ -141,8 +113,8 @@ export function useValueAndOpenStates<
       onOpen();
     }
 
-    if (!newOpen && onClose) {
-      onClose();
+    if (!newOpen) {
+      onClose?.();
     }
   });
 
@@ -155,25 +127,25 @@ export function useValueAndOpenStates<
       shouldClose = changeImportance === 'accept',
     } = options ?? {};
 
-    let shouldPublish: boolean;
-    let shouldCommit: boolean;
+    let shouldFireOnChange: boolean;
+    let shouldFireOnAccept: boolean;
     if (!skipPublicationIfPristine && !isValueControlled && !state.hasBeenModifiedSinceMount) {
       // If the value is not controlled and the value has never been modified before,
       // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange` and `onAccept`
-      shouldPublish = true;
-      shouldCommit = changeImportance === 'accept';
+      shouldFireOnChange = true;
+      shouldFireOnAccept = changeImportance === 'accept';
     } else {
-      shouldPublish = !valueManager.areValuesEqual(utils, newValue, state.lastPublishedValue);
-      shouldCommit =
+      shouldFireOnChange = !valueManager.areValuesEqual(utils, newValue, value);
+      shouldFireOnAccept =
         changeImportance === 'accept' &&
         !valueManager.areValuesEqual(utils, newValue, state.lastCommittedValue);
     }
 
-    setState((prev) => ({
-      ...prev,
-      draft: newValue,
-      lastPublishedValue: shouldPublish ? newValue : prev.lastPublishedValue,
-      lastCommittedValue: shouldCommit ? newValue : prev.lastCommittedValue,
+    setState((prevState) => ({
+      ...prevState,
+      // We reset the shallow value whenever we fire onChange.
+      clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
+      lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
 
@@ -193,11 +165,11 @@ export function useValueAndOpenStates<
       return cachedContext;
     };
 
-    if (shouldPublish) {
+    if (shouldFireOnChange) {
       handleValueChange(newValue, getContext());
     }
 
-    if (shouldCommit && onAccept) {
+    if (shouldFireOnAccept && onAccept) {
       onAccept(newValue, getContext());
     }
 
@@ -206,36 +178,26 @@ export function useValueAndOpenStates<
     }
   });
 
-  if (state.lastControlledValue !== valueProp) {
-    const isUpdateComingFromPicker = valueManager.areValuesEqual(
-      utils,
-      state.draft,
-      valuePropWithTimezoneToRender,
-    );
-
-    setState((prev) => ({
-      ...prev,
-      lastControlledValue: valueProp,
-      ...(isUpdateComingFromPicker
-        ? {}
-        : {
-            lastCommittedValue: valuePropWithTimezoneToRender,
-            lastPublishedValue: valuePropWithTimezoneToRender,
-            draft: valuePropWithTimezoneToRender,
-            hasBeenModifiedSinceMount: true,
-          }),
+  // If `prop.value` changes, we update the state to reflect the new value
+  if (value !== state.lastExternalValue) {
+    setState((prevState) => ({
+      ...prevState,
+      lastExternalValue: value,
+      clockShallowValue: undefined,
+      hasBeenModifiedSinceMount: true,
     }));
   }
 
   const setValueFromView = useEventCallback(
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
-      // TODO: Expose a new method (private?) like `setView` that only updates the draft value.
+      // TODO: Expose a new method (private?) like `setView` that only updates the clock shallow value.
       if (selectionState === 'shallow') {
         setState((prev) => ({
           ...prev,
-          draft: newValue,
+          clockShallowValue: newValue,
           hasBeenModifiedSinceMount: true,
         }));
+        return;
       }
 
       setValue(newValue, {
@@ -256,7 +218,16 @@ export function useValueAndOpenStates<
     }
   }, [isOpenControlled, openProp]);
 
-  return { timezone, state, setValue, setValueFromView, setOpen };
+  const viewValue = React.useMemo(
+    () =>
+      valueManager.cleanValue(
+        utils,
+        state.clockShallowValue === undefined ? value : state.clockShallowValue,
+      ),
+    [utils, valueManager, state.clockShallowValue, value],
+  );
+
+  return { timezone, state, setValue, setValueFromView, setOpen, value, viewValue };
 }
 
 interface UsePickerDateStateParameters<

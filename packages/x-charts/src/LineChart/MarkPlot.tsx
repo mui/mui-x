@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
@@ -13,6 +13,7 @@ import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -58,7 +59,8 @@ export interface MarkPlotProps
  */
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
@@ -185,7 +187,6 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**

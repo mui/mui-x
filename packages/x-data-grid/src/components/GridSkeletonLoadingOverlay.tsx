@@ -12,7 +12,7 @@ import {
   gridDimensionsSelector,
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridSelector,
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
@@ -30,7 +30,6 @@ import { attachPinnedStyle } from '../internals/utils';
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SkeletonLoadingOverlay',
-  overridesResolver: (props, styles) => styles.skeletonLoadingOverlay,
 })({
   minWidth: '100%',
   width: 'max-content', // prevents overflow: clip; cutting off the x axis
@@ -270,7 +269,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     }
   };
 
-  useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
+  useGridEvent(apiRef, 'columnResize', handleColumnResize);
 
   return (
     <SkeletonOverlay className={classes.root} {...rest} ref={handleRef}>

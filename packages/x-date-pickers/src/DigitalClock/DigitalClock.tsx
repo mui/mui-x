@@ -18,7 +18,7 @@ import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types'
 import { useViews } from '../internals/hooks/useViews';
 import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
@@ -37,10 +37,10 @@ const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) =>
 const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -60,7 +60,6 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-  overridesResolver: (props, styles) => styles.list,
 })({
   padding: 0,
 });
@@ -69,7 +68,6 @@ export const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
   shouldForwardProp: (prop) => prop !== 'itemValue' && prop !== 'formattedValue',
-  overridesResolver: (props, styles) => styles.item,
 })(({ theme }) => ({
   padding: '8px 16px',
   margin: '2px 4px',
@@ -160,7 +158,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'DigitalClock',
     timezone: timezoneProp,
     value: valueProp,

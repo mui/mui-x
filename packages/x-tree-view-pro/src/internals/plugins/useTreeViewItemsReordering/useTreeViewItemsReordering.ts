@@ -1,6 +1,8 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   TreeViewPlugin,
+  selectorIsItemBeingEdited,
   selectorItemIndex,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -18,7 +20,7 @@ import {
   moveItemInTree,
 } from './useTreeViewItemsReordering.utils';
 import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
-import { selectorItemsReordering } from './useTreeViewItemsReordering.selectors';
+import { selectorCurrentItemReordering } from './useTreeViewItemsReordering.selectors';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -42,20 +44,23 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
-      const itemsReordering = selectorItemsReordering(store.value);
-      if (!itemsReordering) {
+      const currentReorder = selectorCurrentItemReordering(store.value);
+      if (!currentReorder) {
         throw new Error('There is no ongoing reordering.');
       }
 
-      if (itemId === itemsReordering.draggedItemId) {
+      if (itemId === currentReorder.draggedItemId) {
         return {};
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
       const targetItemMeta = selectorItemMeta(store.value, itemId)!;
       const targetItemIndex = selectorItemIndex(store.value, targetItemMeta.id);
-      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId)!;
+      const draggedItemMeta = selectorItemMeta(store.value, currentReorder.draggedItemId)!;
       const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
+      const isTargetLastSibling =
+        targetItemIndex ===
+        selectorItemOrderedChildrenIds(store.value, targetItemMeta.parentId).length - 1;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -72,7 +77,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           isValid = false;
         } else if (canMoveItemToNewPosition) {
           isValid = canMoveItemToNewPosition({
-            itemId: itemsReordering.draggedItemId,
+            itemId: currentReorder.draggedItemId,
             oldPosition,
             newPosition: positionAfterAction,
           });
@@ -96,16 +101,17 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
               ? targetItemIndex - 1
               : targetItemIndex,
         },
-        'reorder-below': targetItemMeta.expandable
-          ? null
-          : {
-              parentId: targetItemMeta.parentId,
-              index:
-                targetItemMeta.parentId === draggedItemMeta.parentId &&
-                targetItemIndex > draggedItemIndex
-                  ? targetItemIndex
-                  : targetItemIndex + 1,
-            },
+        'reorder-below':
+          !targetItemMeta.expandable || isTargetLastSibling
+            ? {
+                parentId: targetItemMeta.parentId,
+                index:
+                  targetItemMeta.parentId === draggedItemMeta.parentId &&
+                  targetItemIndex > draggedItemIndex
+                    ? targetItemIndex
+                    : targetItemIndex + 1,
+              }
+            : null,
         'move-to-parent':
           targetItemMeta.parentId == null
             ? null
@@ -130,47 +136,63 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      store.update((prevState) => ({
-        ...prevState,
-        itemsReordering: {
-          targetItemId: itemId,
-          draggedItemId: itemId,
-          action: null,
-          newPosition: null,
-        },
-      }));
+      store.update((prevState) => {
+        const isItemBeingEditing = selectorIsItemBeingEdited(prevState, itemId);
+        if (isItemBeingEditing) {
+          return prevState;
+        }
+
+        return {
+          ...prevState,
+          itemsReordering: {
+            ...prevState.itemsReordering,
+            currentReorder: {
+              targetItemId: itemId,
+              draggedItemId: itemId,
+              action: null,
+              newPosition: null,
+            },
+          },
+        };
+      });
     },
     [store],
   );
 
   const stopDraggingItem = React.useCallback(
     (itemId: string) => {
-      const itemsReordering = selectorItemsReordering(store.value);
-      if (itemsReordering == null || itemsReordering.draggedItemId !== itemId) {
+      const currentReorder = selectorCurrentItemReordering(store.value);
+      if (currentReorder == null || currentReorder.draggedItemId !== itemId) {
         return;
       }
 
       if (
-        itemsReordering.draggedItemId === itemsReordering.targetItemId ||
-        itemsReordering.action == null ||
-        itemsReordering.newPosition == null
+        currentReorder.draggedItemId === currentReorder.targetItemId ||
+        currentReorder.action == null ||
+        currentReorder.newPosition == null
       ) {
-        store.update((prevState) => ({ ...prevState, itemsReordering: null }));
+        store.update((prevState) => ({
+          ...prevState,
+          itemsReordering: { ...prevState.itemsReordering, currentReorder: null },
+        }));
         return;
       }
 
-      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId)!;
+      const draggedItemMeta = selectorItemMeta(store.value, currentReorder.draggedItemId)!;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
         index: selectorItemIndex(store.value, draggedItemMeta.id),
       };
 
-      const newPosition = itemsReordering.newPosition;
+      const newPosition = currentReorder.newPosition;
 
       store.update((prevState) => ({
         ...prevState,
-        itemsReordering: null,
+        itemsReordering: {
+          ...prevState.itemsReordering,
+          currentReorder: null,
+        },
         items: moveItemInTree({
           itemToMoveId: itemId,
           newPosition,
@@ -194,8 +216,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   >(
     ({ itemId, validActions, targetHeight, cursorY, cursorX, contentElement }) => {
       store.update((prevState) => {
-        const prevSubState = prevState.itemsReordering;
-        if (prevSubState == null || isAncestor(store, itemId, prevSubState.draggedItemId)) {
+        const prevItemReorder = prevState.itemsReordering.currentReorder;
+        if (prevItemReorder == null || isAncestor(store, itemId, prevItemReorder.draggedItemId)) {
           return prevState;
         }
         const action = chooseActionToApply({
@@ -211,10 +233,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         const newPosition = action == null ? null : validActions[action]!;
 
         if (
-          prevSubState.targetItemId === itemId &&
-          prevSubState.action === action &&
-          prevSubState.newPosition?.parentId === newPosition?.parentId &&
-          prevSubState.newPosition?.index === newPosition?.index
+          prevItemReorder.targetItemId === itemId &&
+          prevItemReorder.action === action &&
+          prevItemReorder.newPosition?.parentId === newPosition?.parentId &&
+          prevItemReorder.newPosition?.index === newPosition?.index
         ) {
           return prevState;
         }
@@ -222,10 +244,13 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return {
           ...prevState,
           itemsReordering: {
-            ...prevSubState,
-            targetItemId: itemId,
-            newPosition,
-            action,
+            ...prevState.itemsReordering,
+            currentReorder: {
+              ...prevItemReorder,
+              targetItemId: itemId,
+              newPosition,
+              action,
+            },
           },
         };
       });
@@ -233,15 +258,17 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [store, params.itemChildrenIndentation],
   );
 
-  const pluginContextValue = React.useMemo(
-    () => ({
+  useEnhancedEffect(() => {
+    store.update((prevState) => ({
+      ...prevState,
       itemsReordering: {
-        enabled: params.itemsReordering,
-        isItemReorderable: params.isItemReorderable,
+        ...prevState.itemsReordering,
+        isItemReorderable: params.itemsReordering
+          ? (params.isItemReorderable ?? (() => true))
+          : () => false,
       },
-    }),
-    [params.itemsReordering, params.isItemReorderable],
-  );
+    }));
+  }, [store, params.itemsReordering, params.isItemReorderable]);
 
   return {
     instance: {
@@ -251,7 +278,6 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       stopDraggingItem,
       setDragTargetItem,
     },
-    contextValue: pluginContextValue,
   };
 };
 
@@ -262,7 +288,14 @@ useTreeViewItemsReordering.getDefaultizedParams = ({ params }) => ({
   itemsReordering: params.itemsReordering ?? false,
 });
 
-useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
+useTreeViewItemsReordering.getInitialState = (params) => ({
+  itemsReordering: {
+    currentReorder: null,
+    isItemReorderable: params.itemsReordering
+      ? (params.isItemReorderable ?? (() => true))
+      : () => false,
+  },
+});
 
 useTreeViewItemsReordering.params = {
   itemsReordering: true,

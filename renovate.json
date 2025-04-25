@@ -46,7 +46,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "typescript-eslint",
@@ -55,12 +55,6 @@
     {
       "groupName": "ESLint plugins",
       "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
-    },
-    {
-      "groupName": "@types/node",
-      "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0",
-      "automerge": true
     },
     {
       "groupName": "bundling fixtures",
@@ -90,20 +84,14 @@
         "@mui/lab",
         "@mui/material",
         "@mui/material-nextjs",
-        "@mui/styles",
         "@mui/system",
         "@mui/types",
         "@mui/utils"
-      ],
-      "allowedVersions": "< 6.0.0"
+      ]
     },
     {
       "groupName": "MUI Internal",
       "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
-    },
-    {
-      "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
@@ -127,6 +115,20 @@
       "groupName": "recast",
       "matchPackageNames": ["recast"],
       "allowedVersions": "< 0.23.10"
+    },
+    {
+      "groupName": "Tanstack query",
+      "matchPackageNames": ["@tanstack/*query*"]
+    },
+    {
+      "groupName": "fingerprintjs",
+      "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
+      "allowedVersions": "< 4.0.0"
+    },
+    {
+      "groupName": "conf",
+      "matchPackageNames": ["conf"],
+      "allowedVersions": "< 12.0.0"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

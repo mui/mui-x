@@ -1,4 +1,5 @@
 ---
+title: React Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -10,23 +11,49 @@ productId: x-tree-view
 
 This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
-In `package.json`, change the version of the Tree View package to `next`.
+In `package.json`, change the version of the Tree View package to `latest`.
 
 ```diff
 -"@mui/x-tree-view": "7.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "latest",
 
 -"@mui/x-tree-view-pro": "7.x.x",
-+"@mui/x-tree-view-pro": "next",
++"@mui/x-tree-view-pro": "latest",
 ```
-
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v7 to v8.
+Described below are the steps needed to migrate from `v7` to `v8`.
+
+## Package layout changes
+
+MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
+
+MUI X v8 packages are compatible with Material UI v7 out of the box.
+We encourage upgrading to Material UI v7 to take advantage of better ESM support.
+
+Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
+Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-tree-view': '@mui/x-tree-view/modern',
+-      '@mui/x-tree-view-pro': '@mui/x-tree-view-pro/modern',
+     },
+   },
+ }
+```
 
 ## Run codemods
 
@@ -273,32 +300,32 @@ If you were using `publicAPI` methods to access other information than the tree 
 
 ### Rename `publicAPI.selectItem()`
 
-The `selectItem` method has been renamed `setItemSelection`:
+The `selectItem()` method has been renamed `setItemSelection()`:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleSelectItem() {
--  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
-+  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true });
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true });
  }
 ```
 
 ## Change `pubicAPI.setItemExpansion()` signature
 
-The `setItemExpansion` method now receives a single object instead of a list of parameters:
+The `setItemExpansion()` method now receives a single object instead of a list of parameters:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleExpandItem() {
--  publicAPI.setItemExpansion(event, props.itemId, true)
-+  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+-  publicAPI.setItemExpansion(event, props.itemId, true);
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true });
  }
 ```
 
 :::success
-The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
+The `setItemExpansion()` now toggles the expansion when `shouldBeExpanded` is not provided.
 :::
 
 ## Apply the indentation on the item content instead of it's parent's group

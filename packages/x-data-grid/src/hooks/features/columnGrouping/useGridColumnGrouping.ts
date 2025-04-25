@@ -16,7 +16,7 @@ import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
@@ -52,7 +52,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 };
 
 export const columnGroupsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
+  Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
   if (!props.columnGroupingModel) {
     return state;
@@ -174,11 +174,11 @@ export const useGridColumnGrouping = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
-  useGridApiEventHandler(apiRef, 'columnsChange', () => {
+  useGridEvent(apiRef, 'columnIndexChange', handleColumnIndexChange);
+  useGridEvent(apiRef, 'columnsChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
   });
-  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+  useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
   });
 

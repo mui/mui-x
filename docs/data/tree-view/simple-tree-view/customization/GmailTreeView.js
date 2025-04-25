@@ -1,6 +1,5 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { styled, useTheme, alpha } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import MailIcon from '@mui/icons-material/Mail';
@@ -24,25 +23,31 @@ import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 
-const CustomTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
-  color: theme.palette.text.secondary,
+const CustomTreeItemRoot = styled(TreeItemRoot)(({ theme, ownerState }) => ({
+  '--tree-view-color': ownerState.color,
+  '--tree-view-bg-color': ownerState.bgColor,
+  color: (theme.vars || theme).palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    '--tree-view-color': ownerState.colorForDarkMode,
+    '--tree-view-bg-color': ownerState.bgColorForDarkMode,
+  }),
 }));
 
 const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   marginBottom: theme.spacing(0.3),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   borderRadius: theme.spacing(2),
   paddingRight: theme.spacing(1),
   paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   fontWeight: theme.typography.fontWeightMedium,
-  '&.expanded': {
+  '&[data-expanded]': {
     fontWeight: theme.typography.fontWeightRegular,
   },
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
-  '&.focused, &.selected, &.selected.focused': {
-    backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
+  '&[data-focused], &[data-selected], &[data-selected][data-focused]': {
+    backgroundColor: `var(--tree-view-bg-color, ${(theme.vars || theme).palette.action.selected})`,
     color: 'var(--tree-view-color)',
   },
 }));
@@ -52,7 +57,6 @@ const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) =>
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const theme = useTheme();
   const {
     id,
     itemId,
@@ -78,24 +82,20 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const style = {
-    '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,
-    '--tree-view-bg-color':
-      theme.palette.mode !== 'dark' ? bgColor : bgColorForDarkMode,
+  const treeItemRootOwnerState = {
+    color,
+    bgColor,
+    colorForDarkMode,
+    bgColorForDarkMode,
   };
 
   return (
     <TreeItemProvider {...getContextProviderProps()}>
-      <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
-        <CustomTreeItemContent
-          {...getContentProps({
-            className: clsx('content', {
-              expanded: status.expanded,
-              selected: status.selected,
-              focused: status.focused,
-            }),
-          })}
-        >
+      <CustomTreeItemRoot
+        {...getRootProps(other)}
+        ownerState={treeItemRootOwnerState}
+      >
+        <CustomTreeItemContent {...getContentProps()}>
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </CustomTreeItemIconContainer>

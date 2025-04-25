@@ -10,6 +10,13 @@ export interface MarkElementClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /** Styles applied to the root element when animation is not skipped. */
+  animate: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type MarkElementClassKey = keyof MarkElementClasses;
@@ -20,6 +27,7 @@ export interface MarkElementOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<MarkElementClasses>;
+  skipAnimation?: boolean;
 }
 
 export function getMarkElementUtilityClass(slot: string) {
@@ -30,12 +38,20 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'animate',
+  'series',
 ]);
 
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+      skipAnimation ? undefined : 'animate',
+    ],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);

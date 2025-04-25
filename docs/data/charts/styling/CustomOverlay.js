@@ -45,7 +45,7 @@ function LoadingOverlay() {
         );
       })}
       <LoadingText x={left + width / 2} y={top + height / 2}>
-        Loading data ...
+        Loading data…
       </LoadingText>
     </g>
   );

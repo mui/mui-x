@@ -14,6 +14,13 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "aiAssistant": {
+      "type": {
+        "description": "{<br />  /**<br />   * Calls the `onPrompt()` callback to evaluate the prompt and get the necessary updates to the grid state.<br />   * Adds the prompt to the current conversation.<br />   * Updates the grid state based on the prompt response.<br />   * @param {string} value The prompt to process<br />   * @returns {Promise&lt;PromptResponse | Error&gt;} The grid state updates or a processing error<br />   */<br />  processPrompt: (value: string) =&gt; Promise&lt;PromptResponse | Error&gt;<br />  /**<br />   * Sets the conversations.<br />   * @param {Conversation[] | ((prevConversations: Conversation[]) =&gt; Conversation[])} conversations The new conversations.<br />   */<br />  setConversations: (conversations: Conversation[] | ((prevConversations: Conversation[]) =&gt; Conversation[])) =&gt; void<br />  /**<br />   * Sets the active conversation index.<br />   * @param {number} index The index of the conversation that should become active.<br />   * @returns {Conversation} The active conversation.<br />   * @throws {Error} If the conversation index does not exist.<br />   */<br />  setActiveConversationIndex: (index: number) =&gt; Conversation<br />}"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "applySorting": { "type": { "description": "() =&gt; void" }, "required": true },
     "autosizeColumns": {
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
@@ -130,6 +137,13 @@
     },
     "getPinnedColumns": {
       "type": { "description": "() =&gt; GridPinnedColumnFields" },
+      "required": true,
+      "isProPlan": true
+    },
+    "getPropagatedRowSelectionModel": {
+      "type": {
+        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+      },
       "required": true,
       "isProPlan": true
     },
@@ -365,6 +379,23 @@
       "required": true,
       "isProPlan": true
     },
+    "setPivotActive": {
+      "type": { "description": "(active: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setPivotModel": {
+      "type": {
+        "description": "(model: GridPivotModel | ((prev: GridPivotModel) =&gt; GridPivotModel)) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setPivotPanelOpen": {
+      "type": { "description": "(open: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setQuickFilterValues": {
       "type": { "description": "(values: any[]) =&gt; void" },
       "required": true
@@ -394,7 +425,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: GridRowSelectionModel) =&gt; void" },
+      "type": { "description": "(rowSelectionModel: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {

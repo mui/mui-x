@@ -125,6 +125,12 @@ export function getColumnValues(colIndex: number) {
   ).map((node) => node!.textContent);
 }
 
+export function getRowValues(rowIndex: number) {
+  return Array.from(
+    document.querySelectorAll(`[data-rowindex="${rowIndex}"] [role="gridcell"]`),
+  ).map((node) => node!.textContent);
+}
+
 export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
   const headerRowSelector =
     rowIndex === undefined ? '' : `[role="row"][aria-rowindex="${rowIndex + 1}"] `;

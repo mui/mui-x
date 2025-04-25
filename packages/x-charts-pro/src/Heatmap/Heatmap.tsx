@@ -27,7 +27,7 @@ import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro'
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
@@ -142,7 +142,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const defaultizedXAxis = React.useMemo(
+  const xAxisWithDefault = React.useMemo(
     () =>
       (xAxis && xAxis.length > 0 ? xAxis : [{ id: DEFAULT_X_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
@@ -153,7 +153,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     [series, xAxis],
   );
 
-  const defaultizedYAxis = React.useMemo(
+  const yAxisWithDefault = React.useMemo(
     () =>
       (yAxis && yAxis.length > 0 ? yAxis : [{ id: DEFAULT_Y_AXIS_KEY }]).map((axis) => ({
         scaleType: 'band' as const,
@@ -164,7 +164,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     [series, yAxis],
   );
 
-  const defaultizedZAxis = React.useMemo(
+  const zAxisWithDefault = React.useMemo(
     () =>
       zAxis ?? [
         {
@@ -192,9 +192,9 @@ const Heatmap = React.forwardRef(function Heatmap(
       width={width}
       height={height}
       margin={margin}
-      xAxis={defaultizedXAxis}
-      yAxis={defaultizedYAxis}
-      zAxis={defaultizedZAxis}
+      xAxis={xAxisWithDefault}
+      yAxis={yAxisWithDefault}
+      zAxis={zAxisWithDefault}
       colors={colors}
       dataset={dataset}
       sx={sx}
@@ -225,7 +225,6 @@ Heatmap.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -266,6 +265,10 @@ Heatmap.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -299,7 +302,7 @@ Heatmap.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,
@@ -376,6 +379,7 @@ Heatmap.propTypes = {
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -467,6 +471,7 @@ Heatmap.propTypes = {
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),

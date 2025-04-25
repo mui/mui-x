@@ -5,68 +5,39 @@ import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { RadarSeriesType } from '@mui/x-charts/models';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
 
 export default function DemoRadarAxisHighlight() {
-  const [showMark, setShowMark] = React.useState(true);
-  const [shape, setShape] = React.useState<'points' | 'slice' | 'default'>(
-    'default',
-  );
+  const [hideMark, setHideMark] = React.useState(true);
 
-  const withShowMark = (series: RadarSeriesType[]) =>
-    series.map((item) => ({ ...item, showMark }));
+  const withHideMark = (series: RadarSeriesType[]) =>
+    series.map((item) => ({ ...item, hideMark }));
 
-  const axisHighlightShape = shape === 'default' ? undefined : shape;
   return (
-    <div>
+    <Box sx={{ width: '100%' }}>
       <Stack sx={{ width: '100%', mb: 2 }} direction="row" flexWrap="wrap" gap={2}>
         <FormControlLabel
-          checked={showMark}
+          checked={!hideMark}
           control={
-            <Checkbox onChange={(event) => setShowMark(event.target.checked)} />
+            <Checkbox onChange={(event) => setHideMark(!event.target.checked)} />
           }
           label="with mark"
           labelPlacement="end"
         />
-
-        <ToggleButtonGroup
-          value={shape}
-          exclusive
-          onChange={(_, newValue) => setShape(newValue)}
-          aria-label="axis highlight shape"
-          size="small"
-        >
-          {['default', 'points', 'slice'].map((type) => (
-            <ToggleButton key={type} value={type} aria-label={type}>
-              {type}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
       </Stack>
-
       <Stack
         sx={{ width: '100%' }}
         direction="row"
         flexWrap="wrap"
         justifyContent="space-around"
       >
-        <Box sx={{ maxWidth: 300 }}>
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
           <RadarChart
             {...commonSettings}
-            axisHighlightShape={axisHighlightShape}
-            series={withShowMark([lisaGrades])}
-          />
-        </Box>
-        <Box sx={{ maxWidth: 300 }}>
-          <RadarChart
-            {...commonSettings}
-            axisHighlightShape={axisHighlightShape}
-            series={withShowMark([lisaGrades, bartGrades])}
+            series={withHideMark([lisaGrades, bartGrades])}
           />
         </Box>
       </Stack>
-    </div>
+    </Box>
   );
 }
 
@@ -81,11 +52,11 @@ const lisaGrades: RadarSeriesType = {
   type: 'radar',
   label: 'Lisa',
   data: [120, 98, 86, 99, 85, 65],
-  showMark: true,
+  hideMark: false,
 };
 const bartGrades: RadarSeriesType = {
   type: 'radar',
   label: 'Bart',
   data: [25, 34, 51, 16, 90, 20],
-  showMark: true,
+  hideMark: false,
 };

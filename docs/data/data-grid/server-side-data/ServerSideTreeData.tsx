@@ -12,13 +12,15 @@ const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
   dataSet: 'Employee' as const,
   rowLength: 1000,
+  editable: true,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
 
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, columns, initialState } = useMockServer(dataSetOptions);
+  const { fetchRows, editRow, columns, initialState } =
+    useMockServer(dataSetOptions);
 
   const initialStateWithPagination: GridInitialState = React.useMemo(
     () => ({
@@ -50,10 +52,14 @@ export default function ServerSideTreeData() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (
@@ -71,7 +77,6 @@ export default function ServerSideTreeData() {
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
           showToolbar
-          slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>
     </div>

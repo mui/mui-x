@@ -4,20 +4,22 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useXAxis } from '../hooks';
+import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsInteractionItemIsDefined,
-  selectorChartsInteractionXAxisIsDefined,
-  selectorChartsInteractionYAxisIsDefined,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+  selectorChartsInteractionAxisTooltip,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+import { useAxisSystem } from '../hooks/useAxisSystem';
+
+const noAxis = () => false;
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -38,13 +40,10 @@ export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
 const ChartsTooltipRoot = styled(Popper, {
   name: 'MuiChartsTooltip',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
 }));
-
-const axisHasData = (axis: AxisDefaultized) => axis?.data !== undefined && axis.data.length !== 0;
 
 /**
  * Demos:
@@ -64,19 +63,19 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
-  const xAxis = useXAxis();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const store = useStore();
+  const axisSystem = useAxisSystem();
+
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const isOpen = useSelector(
     store,
-    // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
-      ? axisHasData(xAxis)
-        ? selectorChartsInteractionXAxisIsDefined
-        : selectorChartsInteractionYAxisIsDefined
+      ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
+          (axisSystem === 'cartesian' && selectorChartsInteractionAxisTooltip) ||
+          noAxis
       : selectorChartsInteractionItemIsDefined,
   );
 
@@ -123,17 +122,24 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       {
         name: 'offset',
         options: {
-          offset: ({ placement }: { placement: PopperPlacementType }) => {
+          offset: () => {
             if (pointerType?.pointerType !== 'touch') {
-              return [0, 0];
+              return [0, 8];
             }
-
-            const isBottom = placement.startsWith('bottom');
-            const placementOffset = isBottom ? 32 : 8;
-            return [0, pointerType.height + placementOffset];
+            return [0, 64];
           },
         },
       },
+      ...(pointerType?.pointerType === 'mouse'
+        ? [] // Keep default behavior
+        : [
+            {
+              name: 'flip',
+              options: {
+                fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
+              },
+            },
+          ]),
     ],
     [pointerType],
   );
@@ -148,9 +154,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         <ChartsTooltipRoot
           className={classes?.root}
           open={popperOpen}
-          placement={
-            pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const)
-          }
+          placement={pointerType?.pointerType === 'mouse' ? 'right-start' : 'top'}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
@@ -195,6 +199,8 @@ ChartsTooltipContainer.propTypes = {
   /**
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -202,6 +208,8 @@ ChartsTooltipContainer.propTypes = {
   }),
   /**
    * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({

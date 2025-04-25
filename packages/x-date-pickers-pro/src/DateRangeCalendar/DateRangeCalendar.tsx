@@ -11,26 +11,24 @@ import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
 import {
-  applyDefaultDate,
   BaseDateValidationProps,
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
   useReduceAnimations,
   useCalendarState,
-  useDefaultDates,
   useUtils,
   PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  useControlledValueWithTimezone,
+  useControlledValue,
   useViews,
   PickerRangeValue,
   usePickerPrivateContext,
   areDatesEqual,
+  useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   DateRangeCalendarClasses,
   dateRangeCalendarClasses,
@@ -60,12 +58,11 @@ import {
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DateRangeCalendarOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
@@ -74,7 +71,7 @@ const DateRangeCalendarRoot = styled('div', {
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Container',
-  overridesResolver: (_, styles) => styles.monthContainer,
+  overridesResolver: (_, styles) => styles.monthContainer, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -111,26 +108,22 @@ function useDateRangeCalendarDefaultizedProps(
   props: DateRangeCalendarProps,
   name: string,
 ): DateRangeCalendarDefaultizedProps {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
   const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
     ...themeProps,
+    ...validationProps,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations,
     loading: props.loading ?? false,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['day'],
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
@@ -219,7 +212,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const rangePositionContext = useNullablePickerRangePositionContext();
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
+  const { value, handleValueChange, timezone } = useControlledValue<
     PickerRangeValue,
     NonNullable<typeof onChange>
   >({

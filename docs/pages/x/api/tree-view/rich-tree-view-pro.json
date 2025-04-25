@@ -183,16 +183,71 @@
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
-      "class": null
+      "class": "MuiRichTreeViewPro-item"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeViewPro-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiRichTreeViewPro-itemContent",
+      "description": "Styles applied to the item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemDragAndDropOverlay",
+      "className": "MuiRichTreeViewPro-itemDragAndDropOverlay",
+      "description": "Styles applied to the item's drag and drop overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemErrorIcon",
+      "className": "MuiRichTreeViewPro-itemErrorIcon",
+      "description": "Styles applied to the item's error icon element",
+      "isGlobal": false
+    },
+    {
+      "key": "itemGroupTransition",
+      "className": "MuiRichTreeViewPro-itemGroupTransition",
+      "description": "Styles applied to the item's transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemIconContainer",
+      "className": "MuiRichTreeViewPro-itemIconContainer",
+      "description": "Styles applied to the item's icon container element icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabel",
+      "className": "MuiRichTreeViewPro-itemLabel",
+      "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabelInput",
+      "className": "MuiRichTreeViewPro-itemLabelInput",
+      "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLoadingIcon",
+      "className": "MuiRichTreeViewPro-itemLoadingIcon",
+      "description": "Styles applied to the item's loading icon element",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeViewPro",
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view-pro/src/RichTreeViewPro/RichTreeViewPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy Loading Children</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

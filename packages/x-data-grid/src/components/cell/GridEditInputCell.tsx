@@ -31,7 +31,7 @@ const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
 })<{ ownerState: OwnerState }>({
-  ...vars.typography.body,
+  font: vars.typography.font.body,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',
@@ -89,10 +89,6 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.value;
 
-      if (onValueChange) {
-        await onValueChange(event, newValue);
-      }
-
       const column = apiRef.current.getColumn(field);
 
       let parsedValue = newValue;
@@ -105,6 +101,10 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
         { id, field, value: parsedValue, debounceMs, unstable_skipValueParser: true },
         event,
       );
+
+      if (onValueChange) {
+        await onValueChange(event, newValue);
+      }
     },
     [apiRef, debounceMs, field, id, onValueChange],
   );

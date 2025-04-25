@@ -17,9 +17,10 @@ import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -42,7 +43,6 @@ export interface LinePlotProps
 const LinePlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${lineElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
@@ -177,7 +177,8 @@ const useAggregatedData = () => {
  */
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
   return (

@@ -39,8 +39,8 @@ export default function XAxisAnchorBaselineDefaults() {
       hideLegend
       yAxis={[
         {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          width: 40,
+          valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
+          width: 60,
         },
       ]}
     />

@@ -28,6 +28,7 @@ import { useViews } from '../useViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
+import type { PickersActionBarAction } from '../../../PickersActionBar';
 
 export const usePicker = <
   TValue extends PickerValidValue,
@@ -40,10 +41,12 @@ export const usePicker = <
   valueType,
   variant,
   validator,
+  onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
   localeText,
   viewContainerRole,
+  getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
 
@@ -57,6 +60,7 @@ export const usePicker = <
     reduceAnimations: reduceAnimationsProp,
     orientation: orientationProp,
     disableOpenPicker,
+    closeOnSelect,
     // Form props
     disabled,
     readOnly,
@@ -93,21 +97,32 @@ export const usePicker = <
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
-  const { timezone, state, setOpen, setValue, setValueFromView } = useValueAndOpenStates<
-    TValue,
-    TView,
-    TExternalProps
-  >({ props, valueManager, validator });
-
-  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
-    useViews({
-      view: viewProp,
-      views,
-      openTo,
-      onChange: setValueFromView,
-      onViewChange,
-      autoFocus: autoFocusView,
+  const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
+    useValueAndOpenStates<TValue, TView, TExternalProps>({
+      props,
+      valueManager,
+      validator,
     });
+
+  const {
+    view,
+    setView,
+    defaultView,
+    focusedView,
+    setFocusedView,
+    setValueAndGoToNextView,
+    goToNextStep,
+    hasNextStep,
+    hasSeveralSteps,
+  } = useViews({
+    view: viewProp,
+    views,
+    openTo,
+    onChange: setValueFromView,
+    onViewChange,
+    autoFocus: autoFocusView,
+    getStepNavigation,
+  });
 
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
@@ -115,22 +130,17 @@ export const usePicker = <
     setValue(valueManager.getTodayValue(utils, timezone, valueType)),
   );
 
-  const acceptValueChanges = useEventCallback(() => setValue(state.lastPublishedValue));
+  const acceptValueChanges = useEventCallback(() => setValue(value));
 
   const cancelValueChanges = useEventCallback(() =>
     setValue(state.lastCommittedValue, { skipPublicationIfPristine: true }),
   );
 
   const dismissViews = useEventCallback(() => {
-    setValue(state.lastPublishedValue, {
+    setValue(value, {
       skipPublicationIfPristine: true,
     });
   });
-
-  const valueWithoutError = React.useMemo(
-    () => valueManager.cleanValue(utils, state.draft),
-    [utils, valueManager, state.draft],
-  );
 
   const { hasUIView, viewModeLookup, timeViewsCount } = React.useMemo(
     () =>
@@ -208,23 +218,14 @@ export const usePicker = <
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
-      isPickerValueEmpty: valueManager.areValuesEqual(utils, state.draft, valueManager.emptyValue),
+      isPickerValueEmpty: valueManager.areValuesEqual(utils, value, valueManager.emptyValue),
       isPickerOpen: state.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
     }),
-    [
-      utils,
-      valueManager,
-      state.draft,
-      state.open,
-      orientation,
-      variant,
-      props.disabled,
-      props.readOnly,
-    ],
+    [utils, valueManager, value, state.open, orientation, variant, props.disabled, props.readOnly],
   );
 
   const triggerStatus = React.useMemo(() => {
@@ -239,6 +240,16 @@ export const usePicker = <
     return 'enabled';
   }, [disableOpenPicker, hasUIView, disabled, readOnly]);
 
+  const wrappedGoToNextStep = useEventCallback(goToNextStep);
+
+  const defaultActionBarActions = React.useMemo<PickersActionBarAction[]>(() => {
+    if (closeOnSelect && !hasSeveralSteps) {
+      return [];
+    }
+
+    return ['cancel', 'nextOrAccept'];
+  }, [closeOnSelect, hasSeveralSteps]);
+
   const actionsContextValue = React.useMemo<PickerActionsContextValue<TValue, TView, TError>>(
     () => ({
       setValue,
@@ -248,6 +259,7 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      goToNextStep: wrappedGoToNextStep,
     }),
     [
       setValue,
@@ -257,13 +269,14 @@ export const usePicker = <
       acceptValueChanges,
       cancelValueChanges,
       setView,
+      wrappedGoToNextStep,
     ],
   );
 
   const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
       ...actionsContextValue,
-      value: state.draft,
+      value,
       timezone,
       open: state.open,
       views,
@@ -278,6 +291,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      hasNextStep,
       fieldFormat: format ?? '',
       name,
       label,
@@ -287,7 +301,7 @@ export const usePicker = <
     }),
     [
       actionsContextValue,
-      state.draft,
+      value,
       rootRef,
       variant,
       orientation,
@@ -300,6 +314,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
+      hasNextStep,
       timezone,
       state.open,
       popperView,
@@ -319,6 +334,8 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
+      onPopperExited,
     }),
     [
       dismissViews,
@@ -328,6 +345,8 @@ export const usePicker = <
       labelId,
       triggerElement,
       viewContainerRole,
+      defaultActionBarActions,
+      onPopperExited,
     ],
   );
 
@@ -373,7 +392,7 @@ export const usePicker = <
       ...propsToForwardToView,
       views,
       timezone,
-      value: valueWithoutError,
+      value: viewValue,
       onChange: setValueAndGoToNextView,
       view: popperView,
       onViewChange: setView,

@@ -18,6 +18,7 @@ import {
 } from '../hooks/useNullableFieldPrivateContext';
 import { PickerContext } from '../../hooks/usePickerContext';
 import type { PickersShortcutsItemContext } from '../../PickersShortcuts';
+import type { PickersActionBarAction } from '../../PickersActionBar';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<
   any,
@@ -41,6 +42,8 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   getCurrentViewMode: () => 'UI',
   triggerElement: null,
   viewContainerRole: null,
+  defaultActionBarActions: [],
+  onPopperExited: undefined,
 });
 
 /**
@@ -177,6 +180,10 @@ export interface PickerContextValue<
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
+   * Whether the Picker has any value picking steps left.
+   */
+  hasNextStep: boolean;
+  /**
    * The ref to attach to the popup's outermost element that contains the view, if any.
    * When using a built-in popup component, this property is automatically attached to the appropriate element.
    */
@@ -275,6 +282,11 @@ export interface PickerActionsContextValue<
    * The value will be reset to the last accepted value.
    */
   cancelValueChanges: () => void;
+  /**
+   * Go to the next step in the value picking process.
+   * For example, on the Mobile Date Time Picker, if the user is editing the date, it will switch to editing the time.
+   */
+  goToNextStep: () => void;
 }
 
 export interface SetValueActionOptions<TError = string | null> {
@@ -349,4 +361,12 @@ export interface PickerPrivateContextValue {
    * It is always equal to null if the component you are accessing the context from is not wrapped with a Picker.
    */
   viewContainerRole: 'dialog' | 'tooltip' | null;
+  /**
+   * The actions to render in the action bar if the user doesn't provide any.
+   */
+  defaultActionBarActions: PickersActionBarAction[];
+  /**
+   * The function to call when the Popper is closing animation is finished.
+   */
+  onPopperExited: (() => void) | undefined;
 }
