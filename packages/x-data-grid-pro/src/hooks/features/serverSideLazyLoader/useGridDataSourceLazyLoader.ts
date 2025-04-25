@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
-import { unstable_debounce as debounce } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
   gridSortModelSelector,
@@ -347,8 +348,8 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
   }, [privateApiRef, updateLoadingTrigger, addSkeletonRows]);
 
-  const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> =
-    React.useCallback(() => {
+  const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
+    () => {
       if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
         return;
       }
@@ -373,7 +374,8 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
 
       fetchRows(adjustRowParams(getRowsParams));
-    }, [privateApiRef, adjustRowParams, fetchRows]);
+    },
+  );
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>

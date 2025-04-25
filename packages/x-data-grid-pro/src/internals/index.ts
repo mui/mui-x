@@ -44,7 +44,7 @@ export {
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
-export { useGridIntersectionObserver } from '../hooks/features/serverSideLazyLoader/useGridIntersectionObserver';
+export { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
 export { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourcePro';
 export { useGridDataSourceBasePro } from '../hooks/features/dataSource/useGridDataSourceBasePro';
 export {

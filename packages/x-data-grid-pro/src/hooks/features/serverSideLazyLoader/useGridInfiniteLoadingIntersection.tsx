@@ -21,7 +21,7 @@ const InfiniteLoadingTriggerElement = styled('div')({
 /**
  * @requires useGridDimensions (method) - can be after
  */
-export const useGridIntersectionObserver = (
+export const useGridInfiniteLoadingIntersection = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
