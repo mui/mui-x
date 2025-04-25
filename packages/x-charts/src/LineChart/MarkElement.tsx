@@ -6,7 +6,6 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import {
   UseChartCartesianAxisSignature,
   selectorChartsInteractionXAxisIndex,
@@ -44,6 +43,14 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     */
+    isFaded: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     */
+    isHighlighted: boolean;
   };
 
 /**
@@ -67,13 +74,12 @@ function MarkElement(props: MarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded,
+    isHighlighted,
     ...other
   } = props;
 
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
@@ -116,6 +122,14 @@ MarkElement.propTypes = {
    */
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If `true`, the marker is faded.
+   */
+  isFaded: PropTypes.bool.isRequired,
+  /**
+   * If `true`, the marker is highlighted.
+   */
+  isHighlighted: PropTypes.bool.isRequired,
   /**
    * The shape of the marker.
    */

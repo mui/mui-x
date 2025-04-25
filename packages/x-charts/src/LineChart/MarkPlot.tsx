@@ -12,7 +12,7 @@ import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
-import { useXAxes, useYAxes } from '../hooks';
+import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface MarkPlotSlots {
@@ -68,6 +68,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const chartId = useChartId();
   const { instance } = useChartContext();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   if (seriesData === undefined) {
     return null;
@@ -112,6 +113,9 @@ function MarkPlot(props: MarkPlotProps) {
           const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
 
           const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
+
+          const isSeriesHighlighted = isHighlighted({ seriesId });
+          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
@@ -162,6 +166,8 @@ function MarkPlot(props: MarkPlotProps) {
                         ((event) =>
                           onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                       }
+                      isHighlighted={isSeriesHighlighted}
+                      isFaded={isSeriesFaded}
                       {...slotProps?.mark}
                     />
                   );

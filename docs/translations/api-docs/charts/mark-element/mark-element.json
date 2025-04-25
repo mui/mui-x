@@ -2,6 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {
     "dataIndex": { "description": "The index to the element in the series&#39; data array." },
+    "isFaded": { "description": "If <code>true</code>, the marker is faded." },
+    "isHighlighted": { "description": "If <code>true</code>, the marker is highlighted." },
     "shape": { "description": "The shape of the marker." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },

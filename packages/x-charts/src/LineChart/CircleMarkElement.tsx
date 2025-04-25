@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
 import {
@@ -24,6 +23,14 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     */
+    isFaded: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     */
+    isHighlighted: boolean;
   };
 
 const Circle = styled('circle')({
@@ -56,14 +63,13 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded,
+    isHighlighted,
     ...other
   } = props;
 
   const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);

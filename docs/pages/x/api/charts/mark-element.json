@@ -1,6 +1,8 @@
 {
   "props": {
     "dataIndex": { "type": { "name": "number" }, "required": true },
+    "isFaded": { "type": { "name": "bool" }, "required": true },
+    "isHighlighted": { "type": { "name": "bool" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
