@@ -14,6 +14,7 @@ import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro/ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -112,6 +113,8 @@ ScatterChartPro.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
+      zoomIn: PropTypes.func.isRequired,
+      zoomOut: PropTypes.func.isRequired,
     }),
   }),
   /**

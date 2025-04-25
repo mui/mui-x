@@ -15,6 +15,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro/ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -114,6 +115,8 @@ BarChartPro.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
+      zoomIn: PropTypes.func.isRequired,
+      zoomOut: PropTypes.func.isRequired,
     }),
   }),
   /**

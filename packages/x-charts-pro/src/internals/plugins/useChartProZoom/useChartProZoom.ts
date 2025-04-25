@@ -491,7 +491,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     (step: number) => {
       setZoomDataCallback((prev) =>
         prev.map((zoomData) => {
-          const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), zoomData.axisId);
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(
+            store.getSnapshot(),
+            zoomData.axisId,
+          );
 
           return calculateZoom(zoomData, step, zoomOptions);
         }),
@@ -506,6 +509,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      zoomIn,
+      zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
