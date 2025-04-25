@@ -21,9 +21,8 @@ By default, the toolbar displays all the available export formats, according to 
 - [Print](#print-export)
 - [CSV](#csv-export)
 - [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') (🚧 Not delivered yet)
 
-You can customize their respective behavior by passing an options object either to `slots.toolbar` or to the Export trigger itself if you have a custom toolbar:
+You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
 ```tsx
 // Default toolbar:
