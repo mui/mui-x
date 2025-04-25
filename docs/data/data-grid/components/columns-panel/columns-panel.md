@@ -1,5 +1,4 @@
 ---
-title: Data Grid - Columns Panel component
 productId: x-data-grid
 components: ColumnsPanelTrigger
 packageName: '@mui/x-data-grid'
