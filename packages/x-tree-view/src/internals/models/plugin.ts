@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
-import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
+import { TreeViewExperimentalFeatures, TreeViewInstance } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
@@ -19,11 +19,6 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   params: TreeViewUsedDefaultizedParams<TSignature>;
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   /**
-   * The store of controlled properties.
-   * If they are not controlled by the user, they will be initialized by the plugin.
-   */
-  models: TreeViewUsedModels<TSignature>;
-  /**
    * The store that can be used to access the state of other plugins.
    */
   store: TreeViewUsedStore<TSignature>;
@@ -36,14 +31,6 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
    */
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
-
-type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = {
-  [TControlled in keyof TSignature['models']]: {
-    getDefaultValue: (
-      params: TSignature['defaultizedParams'],
-    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
-  };
-};
 
 type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
   getRootProps?: <TOther extends EventHandlers = {}>(
@@ -60,8 +47,6 @@ export type TreeViewPluginSignature<
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
-    cache?: {};
-    modelNames?: keyof T['defaultizedParams'];
     experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
     optionalDependencies?: readonly TreeViewAnyPluginSignature[];
@@ -89,18 +74,6 @@ export type TreeViewPluginSignature<
    * The state is the mutable data that will actually be stored in the plugin state and can be accessed by other plugins.
    */
   state: T extends { state: {} } ? T['state'] : {};
-  cache: T extends { cache: {} } ? T['cache'] : {};
-  /**
-   * A helper for controlled properties.
-   * Properties defined here can be controlled by the user. If they are not controlled, they will be initialized by the plugin.
-   */
-  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
-    ? {
-        [TControlled in T['modelNames']]-?: TreeViewModel<
-          Exclude<T['defaultizedParams'][TControlled], undefined>
-        >;
-      }
-    : {};
   experimentalFeatures: T extends { experimentalFeatures: string }
     ? { [key in T['experimentalFeatures']]?: boolean }
     : {};
@@ -117,7 +90,6 @@ export type TreeViewPluginSignature<
 };
 
 export type TreeViewAnyPluginSignature = {
-  cache: any;
   state: any;
   instance: any;
   params: any;
@@ -125,7 +97,6 @@ export type TreeViewAnyPluginSignature = {
   dependencies: any;
   optionalDependencies: any;
   events: any;
-  models: any;
   experimentalFeatures: any;
   publicAPI: any;
 };
@@ -165,14 +136,6 @@ type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignat
     [TSignature, ...TSignature['dependencies']],
     TSignature['optionalDependencies']
   >;
-
-type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
-  [K in keyof Models]: Omit<Models[K], 'setValue'>;
-};
-
-export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['models'] &
-    RemoveSetValue<MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'models'>>;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'events'>;
@@ -214,12 +177,6 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @returns {TSignature['state']} The initial state of the plugin.
    */
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
-  getInitialCache?: () => TSignature['cache'];
-  /**
-   * The configuration of properties that can be controlled by the user.
-   * If they are not controlled, they will be initialized by the plugin.
-   */
-  models?: TreeViewModelsInitializer<TSignature>;
   /**
    * An object where each property used by the plugin is set to `true`.
    */

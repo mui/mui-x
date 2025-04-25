@@ -6,15 +6,22 @@ export interface TelemetryContextType {
     isInitialized: boolean;
   };
   traits: Record<string, any> & {
+    // A hash of value that is meant to be stable between different machine boots.
+    // In practice, it's more of an OS installation ID than a machine ID.
+    machineId?: string | null;
+    // A hash of a value that is meant to be stable between different machine boots.
+    // Similar to machineId, but computed differently.
     fingerprint?: {
       fullHash?: string | null;
       coreHash?: string | null;
       components?: Record<string, any> | null;
     } | null;
-    machineId?: string | null;
+    // A hash of a value that is meant to be stable between different component uses inside the same code project.
     projectId?: string | null;
-    sessionId?: string | null;
+    // A random ID stored in localStorage.
     anonymousId?: string | null;
+    // A random ID stored in sessionStorage.
+    sessionId?: string | null;
     isDocker?: boolean;
     isCI?: boolean;
   };

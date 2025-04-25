@@ -1,4 +1,5 @@
 ---
+title: React Date Pickers - Migration from v7 to v8
 productId: x-date-pickers
 ---
 
@@ -10,29 +11,39 @@ productId: x-date-pickers
 
 This is a reference guide for upgrading `@mui/x-date-pickers` from v7 to v8.
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `latest`.
 
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "latest",
 
 -"@mui/x-date-pickers-pro": "7.x.x",
-+"@mui/x-date-pickers-pro": "next",
++"@mui/x-date-pickers-pro": "latest",
 ```
-
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v7 to v8.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 :::success
 The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
 
 Changes that might impact such users are marked with a ⏩ emoji.
 You can skip them and come back to them later if you experience any issues after the migration.
+:::
+
+:::warning
+Some behavioral changes are marked with a ⚠️ emoji for better visibility.
+
+Make sure to double-check them to avoid unexpected changes in your flow.
+
+If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
 :::
 
 ## Package layout changes
@@ -44,6 +55,20 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-date-pickers': '@mui/x-date-pickers/modern',
+-      '@mui/x-date-pickers-pro': '@mui/x-date-pickers-pro/modern',
+     },
+   },
+ }
+```
 
 ## Run codemods
 
@@ -117,7 +142,34 @@ In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` an
 
 ## Components breaking changes
 
-### New DOM structure for the field
+### ⚠️ Updated view selection process
+
+The view selection process has been updated to make it clearer across all Pickers.
+Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` maintain the previous behavior of closing after the selection is complete and switching to the end range position when the start value is selected.
+In essence, the automatic range position and view switching have been removed in favor of manual confirmation.
+The new default behavior for all other cases is as follows:
+
+- Selection on a given view has to be confirmed by clicking the "**Next**" action button if there are other selection steps.
+- The "**Next**" action is replaced with ""**OK**" if there is no next step.
+- The "**OK**" action has to be clicked to confirm the selection and close the Picker.
+
+Here are a few examples of how the new behavior works:
+
+- On `<DesktopDateTimePicker />`:
+
+  - Previously selecting a date and then selecting all time sections automatically closed the Picker.
+  - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
+
+- On `<DesktopDateTimeRangePicker />`:
+
+  - Previously selecting a start date and then selecting all time sections automatically switched to the end date selection step. After the last end time section was selected, the Picker closed.
+  - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
+
+- On `<MobileDateTimeRangePicker />`:
+  - Previously selecting a start date automatically switched to the start time selection step. After the last time section selection, the Picker switched to the end date step.
+  - Now, the user has to click "**Next**" to confirm the start date selection to get to the start time selection step. Clicking "**Next**" while on the start time step switches the Picker to the end date step.
+
+### ⚠️ New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
 Unfortunately it presented accessibility limitations, which are impossible to resolve.
@@ -148,7 +200,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
     enableAccessibleFieldDOMStructure={false}
-   />
+  />
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
   />
@@ -163,7 +215,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
     enableAccessibleFieldDOMStructure={false}
-   />
+  />
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
   />
@@ -684,12 +736,12 @@ If the updated values do not fit your use case, you can [override them](/x/react
 - The component passed to the `field` slot no longer receives a `ref`.
   You can use the `usePickerContext` hook instead:
 
-  ```tsx
+  ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
   -const CustomField = React.forwardRef(function CustomField(props, ref) {
   -  return <input ref={ref} />;
-  -})
+  -});
   +function CustomField(props) {
   +  const { rootRef } = usePickerContext();
   +  return <input ref={rootRef} />;
@@ -1203,22 +1255,22 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
    });
 
 -  const fieldResponse = useMultiInputDateRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useDateRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useDateRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1253,24 +1305,23 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
      ownerState: { ...props, position: 'end' },
    });
 
-
 -  const fieldResponse = useMultiInputTimeRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useTimeRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useTimeRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1305,24 +1356,23 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
      ownerState: { ...props, position: 'end' },
    });
 
-
 -  const fieldResponse = useMultiInputDateTimeRangeField({
--     sharedProps: internalProps,
--     startTextFieldProps,
--     endTextFieldProps,
--     unstableStartFieldRef: internalProps.unstableStartFieldRef,
--     unstableEndFieldRef: internalProps.unstableEndFieldRef,
--   });
+-    sharedProps: internalProps,
+-    startTextFieldProps,
+-    endTextFieldProps,
+-    unstableStartFieldRef: internalProps.unstableStartFieldRef,
+-    unstableEndFieldRef: internalProps.unstableEndFieldRef,
+-  });
 
-+   const manager = useDateTimeRangeManager(props);
-+   const fieldResponse = useMultiInputRangeField({
-+     manager,
-+     internalProps,
-+     startForwardedProps: startTextFieldProps,
-+     endForwardedProps: endTextFieldProps,
-+   });
++  const manager = useDateTimeRangeManager(props);
++  const fieldResponse = useMultiInputRangeField({
++    manager,
++    internalProps,
++    startForwardedProps: startTextFieldProps,
++    endForwardedProps: endTextFieldProps,
++  });
 
-   return ( /** Your UI */ )
+   return (/** Your UI */);
  }
 ```
 
@@ -1357,7 +1407,7 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
   If you want to prevent the default behavior, you now have to do it manually:
 
   ```diff
-     <div
+   <div
      onKeyDown={(event) => {
        if (event.key === 'Escape') {
   -      pickerContext.onClose();
@@ -1675,13 +1725,13 @@ However, consider looking into your usage to see if you really need those types.
     +import { TimePickerFieldProps } from '@mui/x-date-pickers/TimePicker';
 
     -interface CustomTimeFieldProps
-    - extends UseTimeFieldProps<Dayjs, true>,
-    - BaseSingleInputFieldProps<
-    -      Dayjs | null,
-    -      Dayjs,
-    -      FieldSection,
-    -      true,
-    -      TimeValidationError
+    -  extends UseTimeFieldProps<Dayjs, true>,
+    -  BaseSingleInputFieldProps<
+    -    Dayjs | null,
+    -    Dayjs,
+    -    FieldSection,
+    -    true,
+    -    TimeValidationError
     - > {}
     +interface CustomTimeFieldProps extends TimePickerFieldProps {}
     ```

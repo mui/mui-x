@@ -1,5 +1,5 @@
 {
-  "interfaceDescription": "",
+  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code>, <code>YAxis</code>, <code>RotationAxis</code> or <code>RadiusAxis</code>.",
   "propertiesDescriptions": {
     "id": { "description": "Id used to identify the axis." },
     "scaleType": { "description": "" },

@@ -11,22 +11,28 @@ productId: x-data-grid
 
 This is a reference guide for upgrading `@mui/x-data-grid` from v7 to v8.
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-data-grid-v7/migration-data-grid-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
-In `package.json`, change the version of the Data Grid package to `next`.
+In `package.json`, change the version of the Data Grid package to `latest`.
 
 ```diff
 -"@mui/x-data-grid": "^7.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "latest",
 
 -"@mui/x-data-grid-pro": "^7.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "latest",
 
 -"@mui/x-data-grid-premium": "^7.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "latest",
 ```
 
-Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+Since `v8` is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from `v7` to `v8`.
 
 ## Package layout changes
 
@@ -37,6 +43,21 @@ We encourage upgrading to Material UI v7 to take advantage of better ESM suppor
 
 Material UI v6 and v5 can still be used but require some additional steps if you are importing the packages in a Node.js environment.
 Follow the instructions in the [Usage with Material UI v5/v6](/x/migration/usage-with-material-ui-v5-v6/) guide.
+
+Modern bundles have also been removed, as the potential for a smaller bundle size is no longer significant.
+If you've configured aliases for these bundles, you must remove them now.
+
+```diff
+ {
+   resolve: {
+     alias: {
+-      '@mui/x-data-grid': '@mui/x-data-grid/modern',
+-      '@mui/x-data-grid-pro': '@mui/x-data-grid-pro/modern',
+-      '@mui/x-data-grid-premium': '@mui/x-data-grid-premium/modern',
+     },
+   },
+ }
+```
 
 ## Run codemods
 
@@ -120,7 +141,10 @@ You have to import it from `@mui/x-license` instead:
 
   ```diff
   -const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
-  +const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+  +const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({
+  +  type: 'include',
+  +  ids: new Set(),
+  +});
   ```
 
   This change also impacts the `gridRowSelectionStateSelector` selector.
@@ -196,8 +220,8 @@ You have to import it from `@mui/x-license` instead:
 - The data source API is now stable.
 
   ```diff
-  - apiRef.current.unstable_dataSource.getRows()
-  + apiRef.current.dataSource.getRows()
+  -apiRef.current.unstable_dataSource.getRows();
+  +apiRef.current.dataSource.getRows();
   ```
 
 - The list view feature and its related props are now stable.
@@ -296,15 +320,15 @@ You have to import it from `@mui/x-license` instead:
 - The selectors signature has been updated. They are only accepting `apiRef` as a first argument. Some selectors support additional arguments.
 
   ```diff
-  -mySelector(state, instanceId)
-  +mySelector(apiRef)
+  -mySelector(state, instanceId);
+  +mySelector(apiRef);
   ```
 
   or
 
   ```diff
-  -mySelector(state, instanceId)
-  +mySelector(apiRef, arguments)
+  -mySelector(state, instanceId);
+  +mySelector(apiRef, arguments);
   ```
 
 - The `useGridSelector()` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
@@ -319,7 +343,9 @@ You have to import it from `@mui/x-license` instead:
 
   ```diff
    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  -const filteredRowIds = Object.keys(filteredRowsLookup).filter((rowId) => filteredRowsLookup[rowId] === true);
+  -const filteredRowIds = Object.keys(filteredRowsLookup).filter(
+  -  (rowId) => filteredRowsLookup[rowId] === true,
+  -);
   +const rowIds = gridDataRowIdsSelector(apiRef);
   +const filteredRowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
   ```
@@ -378,7 +404,6 @@ You have to import it from `@mui/x-license` instead:
 - The `baseInputAdornment` slot was removed.
 - The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
-
-<!-- ### Editing
-
-TBD
+- The `columnUnsortedIcon` slot was removed.
+- The icon slots now require material icons to be passed like `Icon as any`.
+  Note: This is due to typing issues that might be resolved later.

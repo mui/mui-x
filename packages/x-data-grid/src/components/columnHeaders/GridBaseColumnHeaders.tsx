@@ -22,7 +22,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnHeadersRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaders',
-  overridesResolver: (props, styles) => styles.columnHeaders,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',

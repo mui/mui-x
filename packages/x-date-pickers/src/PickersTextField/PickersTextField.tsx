@@ -14,12 +14,13 @@ import {
   getPickersTextFieldUtilityClass,
   PickersTextFieldClasses,
 } from './pickersTextFieldClasses';
-import { PickerTextFieldOwnerState, PickersTextFieldProps } from './PickersTextField.types';
+import { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerTextFieldOwnerStateContext } from './usePickerTextFieldOwnerState';
+import { PickerTextFieldOwnerState } from '../models/fields';
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,
@@ -30,7 +31,6 @@ const VARIANT_COMPONENT = {
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerTextFieldOwnerState }>({});
 
 const useUtilityClasses = (
@@ -99,6 +99,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     // Props used by InputLabel
     label,
     InputLabelProps,
+    // @ts-ignore
+    'data-active-range-position': dataActiveRangePosition,
     ...other
   } = props;
 
@@ -193,6 +195,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           aria-labelledby={inputLabelId}
           aria-describedby={helperTextId}
           aria-live={helperTextId ? 'polite' : undefined}
+          data-active-range-position={dataActiveRangePosition}
           {...InputProps}
         />
         {helperText && (

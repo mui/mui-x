@@ -7,6 +7,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
   noColumnsOverlayLabel: 'Žádné sloupce',
   noColumnsOverlayManageColumns: 'Spravovat sloupce',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zobrazení',
@@ -39,24 +40,18 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Napište požadavek…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Napište nebo nahrajte požadavek…',
-  toolbarPromptControlRecordingPlaceholder: 'Naslouchám požadavku…',
-  toolbarPromptControlLabel: 'Vstup požadavku',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nahrát',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zastavit nahrávání',
-  toolbarPromptControlSendActionLabel: 'Odeslat',
-  toolbarPromptControlSendActionAriaLabel: 'Odeslat požadavek',
-  toolbarPromptControlErrorMessage:
-    'Při zpracování požadavku došlo k chybě. Zkuste to prosím znovu s jiným požadavkem.',
-
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stáhnout jako CSV',
   toolbarExportPrint: 'Vytisknout',
   toolbarExportExcel: 'Stáhnout jako Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Hledat sloupce',
@@ -139,6 +134,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Zrušit filtry',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -246,6 +242,83 @@ const csCZGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'počet',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Vstup požadavku',
+  promptFieldPlaceholder: 'Napište požadavek…',
+  promptFieldPlaceholderWithRecording: 'Napište nebo nahrajte požadavek…',
+  promptFieldPlaceholderListening: 'Naslouchám požadavku…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Odeslat',
+  promptFieldRecord: 'Nahrát',
+  promptFieldStopRecording: 'Zastavit nahrávání',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid);
