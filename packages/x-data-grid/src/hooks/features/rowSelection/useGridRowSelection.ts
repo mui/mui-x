@@ -179,11 +179,10 @@ export const useGridRowSelection = (
         apiRef.current.setState(
           (state) => ({
             ...state,
-            rowSelection: props.rowSelection ? model : [],
+            rowSelection: props.rowSelection ? model : emptyModel,
           }),
           reason,
         );
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
@@ -254,7 +253,7 @@ export const useGridRowSelection = (
           }
         }
 
-        apiRef.current.setRowSelectionModel(newSelection, 'singleRowSelection');
+        apiRef.current.setRowSelectionModel(newSelectionModel, 'singleRowSelection');
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
@@ -301,7 +300,7 @@ export const useGridRowSelection = (
           (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
           canHaveMultipleSelection;
         if (isSelectionValid) {
-          apiRef.current.setRowSelectionModel(Array.from(newSelection), 'singleRowSelection');
+          apiRef.current.setRowSelectionModel(newSelectionModel, 'singleRowSelection');
         }
       }
     },
@@ -410,7 +409,7 @@ export const useGridRowSelection = (
         (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
         canHaveMultipleSelection;
       if (isSelectionValid) {
-        apiRef.current.setRowSelectionModel(Array.from(newSelection), 'multipleRowsSelection');
+        apiRef.current.setRowSelectionModel(newSelectionModel, 'multipleRowsSelection');
       }
     },
     [
@@ -605,7 +604,7 @@ export const useGridRowSelection = (
             apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
           }
         } else {
-          apiRef.current.setRowSelectionModel(newSelectionModel);
+          apiRef.current.setRowSelectionModel(newSelectionModel, 'multipleRowsSelection');
         }
       }
     },
@@ -632,15 +631,14 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-      const isSelected = apiRef.current.isRowSelected(id);
       const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
 
-      // Clicking on a row should toggle the selection except when a range of rows is already selected and the selection should reset
-      // In that case, we want to keep the current row selected (https://github.com/mui/mui-x/pull/15509#discussion_r1878082687)
-      const shouldStaySelected = selectedRowsCount > 1 && resetSelection;
-      const newSelectionState = shouldStaySelected || !isSelected;
-
-      apiRef.current.selectRow(id, newSelectionState, resetSelection);
+      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
+        apiRef.current.selectRow(id, true, resetSelection);
+      } else {
+        const isSelected = apiRef.current.isRowSelected(id);
+        apiRef.current.selectRow(id, !isSelected, resetSelection);
+      }
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
