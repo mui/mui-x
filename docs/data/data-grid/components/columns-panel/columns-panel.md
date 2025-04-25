@@ -1,12 +1,12 @@
 ---
-title: React Data Grid - Columns Panel component
+title: Data Grid - Columns Panel component
 productId: x-data-grid
 components: ColumnsPanelTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Columns Panel 🚧
+# Data Grid - Columns Panel component 🚧
 
 <p class="description">Customize the Data Grid's columns panel.</p>
 

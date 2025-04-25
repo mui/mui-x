@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Toolbar component
 productId: x-data-grid
 components: Toolbar, ToolbarButton
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Toolbar
+# Data Grid - Toolbar component
 
 <p class="description">Add custom actions and controls to the Data Grid.</p>
 
@@ -87,3 +86,11 @@ It implements the roving tabindex pattern.
 |                                       <kbd class="key">Right</kbd> | Moves focus to the next button.          |
 |                                        <kbd class="key">Home</kbd> | Moves focus to the first button.         |
 |                                         <kbd class="key">End</kbd> | Moves focus to the last button.          |
+
+## Legacy Toolbar
+
+:::warning
+Deprecated API.
+:::
+
+The components above replaced the [Legacy Toolbar](/x/react-data-grid/components/#legacy-toolbar), e.g. `<GridToolbarContainer>`.
