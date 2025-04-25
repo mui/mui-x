@@ -56,7 +56,7 @@ Pass the `showToolbar` prop to the `<DataGrid />` component to enable the defaul
 
 You can also compose your own toolbar using the [Toolbar component](/x/react-data-grid/components/toolbar/).
 
-### Legacy Toolbar
+### Legacy toolbar
 
 :::warning
 
