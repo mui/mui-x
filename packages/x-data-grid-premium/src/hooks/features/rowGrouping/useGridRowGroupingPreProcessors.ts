@@ -52,6 +52,9 @@ export const useGridRowGroupingPreProcessors = (
     | 'dataSource'
   >,
 ) => {
+  // Keep the prop in ref to keep `getGroupingColDefs` stable if the prop reference changes by passing the definition object or function directly
+  const lastGroupingColDefRef = React.useRef(props.groupingColDef);
+
   const getGroupingColDefs = React.useCallback(
     (columnsState: GridHydrateColumnsValue) => {
       if (props.disableRowGrouping) {
@@ -61,8 +64,6 @@ export const useGridRowGroupingPreProcessors = (
       const strategy = props.dataSource
         ? RowGroupingStrategy.DataSource
         : RowGroupingStrategy.Default;
-
-      const groupingColDefProp = props.groupingColDef;
 
       // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
       const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter(
@@ -79,7 +80,11 @@ export const useGridRowGroupingPreProcessors = (
             createGroupingColDefForAllGroupingCriteria({
               apiRef,
               rowGroupingModel,
-              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel, strategy),
+              colDefOverride: getColDefOverrides(
+                lastGroupingColDefRef.current,
+                rowGroupingModel,
+                strategy,
+              ),
               columnsLookup: columnsState.lookup,
               strategy,
             }),
@@ -90,7 +95,7 @@ export const useGridRowGroupingPreProcessors = (
           return rowGroupingModel.map((groupingCriteria) =>
             createGroupingColDefForOneGroupingCriteria({
               groupingCriteria,
-              colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
+              colDefOverride: getColDefOverrides(lastGroupingColDefRef.current, [groupingCriteria]),
               groupedByColDef: columnsState.lookup[groupingCriteria],
               columnsLookup: columnsState.lookup,
               strategy,
@@ -103,13 +108,7 @@ export const useGridRowGroupingPreProcessors = (
         }
       }
     },
-    [
-      apiRef,
-      props.groupingColDef,
-      props.rowGroupingColumnMode,
-      props.disableRowGrouping,
-      props.dataSource,
-    ],
+    [apiRef, props.rowGroupingColumnMode, props.disableRowGrouping, props.dataSource],
   );
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -273,4 +272,11 @@ export const useGridRowGroupingPreProcessors = (
       isFirstRender.current = false;
     }
   }, [apiRef, props.disableRowGrouping, props.dataSource]);
+
+  React.useEffect(() => {
+    // It is initialized with the prop, so skip it here
+    if (!isFirstRender.current) {
+      lastGroupingColDefRef.current = props.groupingColDef;
+    }
+  }, [props.groupingColDef]);
 };
