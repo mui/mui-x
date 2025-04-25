@@ -71,6 +71,7 @@ export default function ReverseExample() {
           series={series}
           xAxis={[
             {
+              scaleType: 'band',
               dataKey: 'month',
               label: 'Month',
               reverse: reverseX,
