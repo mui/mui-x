@@ -5,12 +5,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/store/useSelector';
-import {
-  UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
@@ -71,13 +65,10 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
-
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
     skipAnimation,

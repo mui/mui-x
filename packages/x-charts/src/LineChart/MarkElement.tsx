@@ -6,13 +6,7 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import {
-  UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
@@ -81,13 +75,10 @@ function MarkElement(props: MarkElementProps) {
 
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
-
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
     skipAnimation,

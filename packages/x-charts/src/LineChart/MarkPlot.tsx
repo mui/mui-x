@@ -1,6 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { selectorChartsInteractionXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianInteraction.selectors';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
@@ -14,6 +15,7 @@ import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useSelector } from '../internals/store/useSelector';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -67,8 +69,9 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance } = useChartContext();
+  const { instance, store } = useChartContext();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   if (seriesData === undefined) {
     return null;
@@ -166,7 +169,7 @@ function MarkPlot(props: MarkPlotProps) {
                         ((event) =>
                           onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                       }
-                      isHighlighted={isSeriesHighlighted}
+                      isHighlighted={xAxisInteractionIndex === index || isSeriesHighlighted}
                       isFaded={isSeriesFaded}
                       {...slotProps?.mark}
                     />
