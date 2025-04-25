@@ -78,7 +78,7 @@ To override properties for specific grouping columns, or to apply different over
 The callback is called for each grouping column, and it receives the respective column's fields as parameters.
 
 :::warning
-`groupingColDef` prop, same as `columns` prop should keep the same reference between two renders.
+The `groupingColDef` prop, same as `columns` prop, should keep the same reference between two renders.
 Otherwise, the grouping column processing can happen multiple times and outside of the required order, resulting in a wrong column placement.
 :::
 
