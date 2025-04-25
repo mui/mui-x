@@ -862,7 +862,9 @@ describe('<DataGrid /> - Row selection', () => {
         />,
       );
       await user.click(getColumnHeaderCell(0).querySelector('input')!);
-      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.deep.equal('multipleRowSelection');
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.deep.equal(
+        'multipleRowSelection',
+      );
     });
 
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', async () => {
