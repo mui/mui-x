@@ -839,6 +839,22 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([]));
     });
 
+    it('should call onRowSelectionModelChange with an empty array if no row is selectable in the current page when turning off checkboxSelection', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps, user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getCell(0, 0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([0]));
+      console.log(onRowSelectionModelChange.lastCall);
+    });
+
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', async () => {
       const onRowSelectionModelChange = spy();
       const { setProps, user } = render(
