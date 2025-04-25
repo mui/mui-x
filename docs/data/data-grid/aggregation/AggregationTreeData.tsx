@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridRowsProp,
   DataGridPremiumProps,
+  GridGroupingColDefOverride,
 } from '@mui/x-data-grid-premium';
 
 interface File {
@@ -140,6 +141,11 @@ const getTreeDataPath: DataGridPremiumProps<File>['getTreeDataPath'] = (row) =>
 const getRowId: DataGridPremiumProps<File>['getRowId'] = (row) =>
   row.hierarchy.join('/');
 
+const groupingColDef: GridGroupingColDefOverride<File> = {
+  headerName: 'Files',
+  width: 350,
+};
+
 export default function AggregationTreeData() {
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -149,7 +155,7 @@ export default function AggregationTreeData() {
         columns={columns}
         getTreeDataPath={getTreeDataPath}
         getRowId={getRowId}
-        groupingColDef={{ headerName: 'Files', width: 350 }}
+        groupingColDef={groupingColDef}
         initialState={{
           aggregation: {
             model: {

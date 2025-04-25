@@ -31,7 +31,7 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, isDataGridPivotTest, isChartTest, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, isChartExportTest, path } = props;
 
   return (
     <React.Fragment>
@@ -61,7 +61,7 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={isDataGridTest || isChartTest} shouldRunToFrame={isChartTest}>
+      <MockTime shouldAdvanceTime={isDataGridTest || isChartExportTest}>
         <LoadFont
           isDataGridTest={isDataGridTest}
           isDataGridPivotTest={isDataGridPivotTest}
@@ -74,9 +74,7 @@ function TestViewer(props: any) {
   );
 }
 
-function MockTime(
-  props: React.PropsWithChildren<{ shouldAdvanceTime: boolean; shouldRunToFrame: boolean }>,
-) {
+function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
@@ -84,13 +82,6 @@ function MockTime(
     setReady(true);
     return dispose;
   }, [props.shouldAdvanceTime]);
-
-  React.useEffect(() => {
-    if (props.shouldRunToFrame && ready) {
-      fakeClock?.runToFrame();
-      fakeClock?.runToFrame();
-    }
-  }, [props.shouldRunToFrame, ready]);
 
   return ready ? props.children : null;
 }

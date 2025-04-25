@@ -6,6 +6,10 @@ title: Usage with Material UI v5 and v6
 
 <p class="description">This guide describes the changes needed to use MUI X v8 with Material UI v5/v6.</p>
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/usage-with-material-ui-v5-v6/usage-with-material-ui-v5-v6.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Package layout changes
 
 MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material UI v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).

@@ -170,6 +170,18 @@ describe('<DataGridPro /> - Row selection', () => {
     );
   }
 
+  // Context: https://github.com/mui/mui-x/pull/15509#discussion_r1878082687
+  it('should keep the selection on the clicked row if selection range is deselected', async () => {
+    const { user } = render(<TestDataGridSelection />);
+    await user.click(getCell(0, 1));
+    await user.keyboard('{Shift>}');
+    await user.click(getCell(2, 1));
+    await user.keyboard('{/Shift}');
+    expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    await user.click(getCell(1, 1));
+    expect(getSelectedRowIds()).to.deep.equal([1]);
+  });
+
   it('should keep the previously selected tree data parent selected if it becomes leaf after filtering', async () => {
     const { user } = render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 

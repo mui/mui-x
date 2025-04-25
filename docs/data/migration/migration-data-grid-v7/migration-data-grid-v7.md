@@ -11,6 +11,10 @@ productId: x-data-grid
 
 This is a reference guide for upgrading `@mui/x-data-grid` from v7 to v8.
 
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-data-grid-v7/migration-data-grid-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
+
 ## Start using the new release
 
 In `package.json`, change the version of the Data Grid package to `latest`.
@@ -50,8 +54,8 @@ If you've configured aliases for these bundles, you must remove them now.
 -      '@mui/x-data-grid': '@mui/x-data-grid/modern',
 -      '@mui/x-data-grid-pro': '@mui/x-data-grid-pro/modern',
 -      '@mui/x-data-grid-premium': '@mui/x-data-grid-premium/modern',
-     }
-   }
+     },
+   },
  }
 ```
 
@@ -137,7 +141,10 @@ You have to import it from `@mui/x-license` instead:
 
   ```diff
   -const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
-  +const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+  +const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({
+  +  type: 'include',
+  +  ids: new Set(),
+  +});
   ```
 
   This change also impacts the `gridRowSelectionStateSelector` selector.
@@ -213,8 +220,8 @@ You have to import it from `@mui/x-license` instead:
 - The data source API is now stable.
 
   ```diff
-  - apiRef.current.unstable_dataSource.getRows()
-  + apiRef.current.dataSource.getRows()
+  -apiRef.current.unstable_dataSource.getRows();
+  +apiRef.current.dataSource.getRows();
   ```
 
 - The list view feature and its related props are now stable.
@@ -313,15 +320,15 @@ You have to import it from `@mui/x-license` instead:
 - The selectors signature has been updated. They are only accepting `apiRef` as a first argument. Some selectors support additional arguments.
 
   ```diff
-  -mySelector(state, instanceId)
-  +mySelector(apiRef)
+  -mySelector(state, instanceId);
+  +mySelector(apiRef);
   ```
 
   or
 
   ```diff
-  -mySelector(state, instanceId)
-  +mySelector(apiRef, arguments)
+  -mySelector(state, instanceId);
+  +mySelector(apiRef, arguments);
   ```
 
 - The `useGridSelector()` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
@@ -336,7 +343,9 @@ You have to import it from `@mui/x-license` instead:
 
   ```diff
    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  -const filteredRowIds = Object.keys(filteredRowsLookup).filter((rowId) => filteredRowsLookup[rowId] === true);
+  -const filteredRowIds = Object.keys(filteredRowsLookup).filter(
+  -  (rowId) => filteredRowsLookup[rowId] === true,
+  -);
   +const rowIds = gridDataRowIdsSelector(apiRef);
   +const filteredRowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
   ```
@@ -398,7 +407,3 @@ You have to import it from `@mui/x-license` instead:
 - The `columnUnsortedIcon` slot was removed.
 - The icon slots now require material icons to be passed like `Icon as any`.
   Note: This is due to typing issues that might be resolved later.
-
-<!-- ### Editing
-
-TBD
