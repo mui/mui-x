@@ -3,6 +3,7 @@ import {
   DefaultizedProps,
   TreeViewPluginSignature,
   UseTreeViewItemsSignature,
+  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
   TreeViewItemId,
@@ -135,6 +136,7 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewItemsReorderingContextValue;
   experimentalFeatures: 'itemsReordering';
   dependencies: [UseTreeViewItemsSignature];
+  optionalDependencies: [UseTreeViewLabelSignature];
 }>;
 
 export interface UseTreeItem2RootSlotPropsFromItemsReordering {
