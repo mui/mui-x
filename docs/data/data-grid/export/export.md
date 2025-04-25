@@ -16,13 +16,14 @@ See the [Export component](/x/react-data-grid/components/export/) for examples o
 
 ## Export options
 
-By default, the toolbar displays all the available export formats, according to your license, which are
+Following are the available export options:
 
 - [Print](#print-export)
 - [CSV](#csv-export)
+- [Clipboard](#clipboard)
 - [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
+Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
 ```tsx
 // Default toolbar:
