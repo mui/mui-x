@@ -25,6 +25,32 @@ export default function RowGroupingCustomGroupingColDefCallback() {
 
   const rowGroupingModelStr = rowGroupingModel.join('-');
 
+  const groupingColDef = React.useCallback(
+    (params) => {
+      const override = {};
+      if (params.fields.includes('director')) {
+        return {
+          headerName: 'Director',
+          valueFormatter: (value, row) => {
+            const rowId = apiRef.current?.getRowId(row);
+            if (!rowId) {
+              return undefined;
+            }
+
+            const rowNode = apiRef.current?.getRowNode(rowId);
+            if (rowNode?.type === 'group' && rowNode?.groupingField === 'director') {
+              return `by ${rowNode.groupingKey ?? ''}`;
+            }
+            return undefined;
+          },
+        };
+      }
+
+      return override;
+    },
+    [apiRef],
+  );
+
   return (
     <div style={{ width: '100%' }}>
       <Stack
@@ -53,31 +79,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           disableRowSelectionOnClick
           rowGroupingModel={rowGroupingModel}
           initialState={initialState}
-          groupingColDef={(params) => {
-            const override = {};
-            if (params.fields.includes('director')) {
-              return {
-                headerName: 'Director',
-                valueFormatter: (value, row) => {
-                  const rowId = apiRef.current?.getRowId(row);
-                  if (!rowId) {
-                    return undefined;
-                  }
-
-                  const rowNode = apiRef.current?.getRowNode(rowId);
-                  if (
-                    rowNode?.type === 'group' &&
-                    rowNode?.groupingField === 'director'
-                  ) {
-                    return `by ${rowNode.groupingKey ?? ''}`;
-                  }
-                  return undefined;
-                },
-              };
-            }
-
-            return override;
-          }}
+          groupingColDef={groupingColDef}
         />
       </Box>
     </div>
