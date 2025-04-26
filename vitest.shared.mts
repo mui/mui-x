@@ -12,6 +12,10 @@ export default defineConfig({
     'process.env.VITEST': '"true"',
     LICENSE_DISABLE_CHECK: 'false',
   },
+  esbuild: {
+    minifyIdentifiers: false,
+    keepNames: true,
+  },
   resolve: {
     alias: [
       // Generates resolver aliases for all packages and their plans.
