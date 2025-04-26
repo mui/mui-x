@@ -87,7 +87,7 @@ It implements the roving tabindex pattern.
 |                                        <kbd class="key">Home</kbd> | Moves focus to the first button.         |
 |                                         <kbd class="key">End</kbd> | Moves focus to the last button.          |
 
-## Legacy Toolbar
+## Legacy toolbar
 
 :::warning
 Deprecated API.
