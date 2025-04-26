@@ -490,8 +490,11 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = grid('virtualScroller')!;
-      virtualScroller.scrollTop = 1000000; // scroll to the bottom
-      await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => {
+        // scrollTo doesn't seem to work in this case
+        virtualScroller.scrollTop = 1000000;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
 
       await waitFor(() => {
         const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
