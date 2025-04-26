@@ -490,23 +490,28 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = grid('virtualScroller')!;
-      const renderingZone = grid('virtualScrollerRenderZone')!;
-      await act(async () =>
-        // scroll to the bottom
-        virtualScroller.scrollTo({ top: 2000 }),
-      );
-
-      const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
+      virtualScroller.scrollTop = 1000000; // scroll to the bottom
+      await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
 
       await waitFor(() => {
+        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('995');
       });
-      expect(renderingZone.children.length).to.equal(Math.floor(innerHeight / rowHeight) + n);
+
+      await waitFor(() => {
+        const renderingZone = grid('virtualScrollerRenderZone')!;
+        expect(renderingZone.children.length).to.equal(
+          Math.floor(innerHeight / rowHeight) + n,
+          'children should have the correct length',
+        );
+      });
       const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
+      const renderingZone = grid('virtualScrollerRenderZone')!;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
-      expect(gridOffsetTop()).to.equal(distanceToFirstRow);
+      expect(gridOffsetTop()).to.equal(distanceToFirstRow, 'gridOffsetTop should be correct');
       expect(virtualScroller.scrollHeight - scrollbarSize - headerHeight).to.equal(
         nbRows * rowHeight,
+        'scrollHeight should be correct',
       );
     });
 
