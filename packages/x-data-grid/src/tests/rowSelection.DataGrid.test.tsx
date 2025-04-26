@@ -305,6 +305,19 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
+    // Context: https://github.com/mui/mui-x/issues/17441
+    it('should deselect a row within the range when clicking the row', async () => {
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
+      await user.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+      await user.click(getCell(1, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0, 2]);
+    });
+
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection disableVirtualization />);
       await user.click(getCell(0, 0).querySelector('input')!);
@@ -485,9 +498,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([2]);
       await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-
-      await user.click(getCell(3, 1));
-      await user.keyboard('{ArrowDown}');
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]); // Already on the last row
     });
 
@@ -553,6 +564,22 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(cell11);
       await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+    });
+
+    it('should remove a row from the selection when pressing Shift+Space while the row is selected', async () => {
+      const { user } = render(
+        <TestDataGridSelection checkboxSelection disableRowSelectionOnClick />,
+      );
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      const cell21 = getCell(2, 1);
+      await user.click(cell21);
+      await user.keyboard('{Shift>}[Space]{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([2]);
+
+      await user.keyboard('{Shift>}[Space]{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
     // HTMLElement.focus() only scrolls to the element on a real browser

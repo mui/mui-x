@@ -10,7 +10,6 @@ import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterCell',
-  overridesResolver: (_, styles) => styles.footerCell,
 })<{ ownerState: OwnerState }>({
   fontWeight: vars.typography.fontWeight.medium,
   color: vars.colors.foreground.accent,

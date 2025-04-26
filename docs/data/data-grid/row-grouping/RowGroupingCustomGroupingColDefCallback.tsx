@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GridGroupingColDefOverride,
+  GridGroupingColDefOverrideParams,
+  GridRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -25,6 +27,32 @@ export default function RowGroupingCustomGroupingColDefCallback() {
   });
 
   const rowGroupingModelStr = rowGroupingModel.join('-');
+
+  const groupingColDef = React.useCallback(
+    (params: GridGroupingColDefOverrideParams) => {
+      const override: GridGroupingColDefOverride = {};
+      if (params.fields.includes('director')) {
+        return {
+          headerName: 'Director',
+          valueFormatter: (value: string, row: GridRowModel) => {
+            const rowId = apiRef.current?.getRowId(row);
+            if (!rowId) {
+              return undefined;
+            }
+
+            const rowNode = apiRef.current?.getRowNode(rowId);
+            if (rowNode?.type === 'group' && rowNode?.groupingField === 'director') {
+              return `by ${rowNode.groupingKey ?? ''}`;
+            }
+            return undefined;
+          },
+        };
+      }
+
+      return override;
+    },
+    [apiRef],
+  );
 
   return (
     <div style={{ width: '100%' }}>
@@ -54,31 +82,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           disableRowSelectionOnClick
           rowGroupingModel={rowGroupingModel}
           initialState={initialState}
-          groupingColDef={(params) => {
-            const override: GridGroupingColDefOverride = {};
-            if (params.fields.includes('director')) {
-              return {
-                headerName: 'Director',
-                valueFormatter: (value, row) => {
-                  const rowId = apiRef.current?.getRowId(row);
-                  if (!rowId) {
-                    return undefined;
-                  }
-
-                  const rowNode = apiRef.current?.getRowNode(rowId);
-                  if (
-                    rowNode?.type === 'group' &&
-                    rowNode?.groupingField === 'director'
-                  ) {
-                    return `by ${rowNode.groupingKey ?? ''}`;
-                  }
-                  return undefined;
-                },
-              };
-            }
-
-            return override;
-          }}
+          groupingColDef={groupingColDef}
         />
       </Box>
     </div>

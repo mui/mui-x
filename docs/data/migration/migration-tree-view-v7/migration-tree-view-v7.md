@@ -1,4 +1,5 @@
 ---
+title: React Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -9,6 +10,10 @@ productId: x-tree-view
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
+
+:::success
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+:::
 
 ## Start using the new release
 
@@ -45,8 +50,8 @@ If you've configured aliases for these bundles, you must remove them now.
      alias: {
 -      '@mui/x-tree-view': '@mui/x-tree-view/modern',
 -      '@mui/x-tree-view-pro': '@mui/x-tree-view-pro/modern',
-     }
-   }
+     },
+   },
  }
 ```
 
@@ -295,32 +300,32 @@ If you were using `publicAPI` methods to access other information than the tree 
 
 ### Rename `publicAPI.selectItem()`
 
-The `selectItem` method has been renamed `setItemSelection`:
+The `selectItem()` method has been renamed `setItemSelection()`:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleSelectItem() {
--  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
-+  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true });
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true });
  }
 ```
 
 ## Change `pubicAPI.setItemExpansion()` signature
 
-The `setItemExpansion` method now receives a single object instead of a list of parameters:
+The `setItemExpansion()` method now receives a single object instead of a list of parameters:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleExpandItem() {
--  publicAPI.setItemExpansion(event, props.itemId, true)
-+  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+-  publicAPI.setItemExpansion(event, props.itemId, true);
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true });
  }
 ```
 
 :::success
-The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
+The `setItemExpansion()` now toggles the expansion when `shouldBeExpanded` is not provided.
 :::
 
 ## Apply the indentation on the item content instead of it's parent's group

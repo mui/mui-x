@@ -119,15 +119,13 @@ You can provide the axes data to display them while loading the data.
 
 ### Custom overlay
 
-To modify the overlay message, you can use the `message` props as follows:
+To modify the default overlay message or translate it, use the `noData` or `loading` key in the [localization](/x/react-charts/localization/).
 
 ```jsx
 <BarChart
-  slotProps={{
-    // Custom loading message
-    loadingOverlay: { message: 'Data should be available soon.' },
-    // Custom message for empty chart
-    noDataOverlay: { message: 'Select some data to display.' },
+  localeText={{
+    loading: 'Data should be available soon.',
+    noData: 'Select some data to display.',
   }}
 />
 ```
