@@ -49,7 +49,7 @@ export default function CustomPaginationGrid() {
         loading={loading}
         pagination
         slots={{
-          pagination: CustomPagination,
+          basePagination: CustomPagination,
         }}
         {...data}
         initialState={{
