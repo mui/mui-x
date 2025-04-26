@@ -93,4 +93,4 @@ It implements the roving tabindex pattern.
 Deprecated API.
 :::
 
-The components above replaced the [Legacy Toolbar](/x/react-data-grid/components/#legacy-toolbar), e.g. `<GridToolbarContainer>`.
+The components above replaced the [legacy toolbar](/x/react-data-grid/components/#legacy-toolbar), e.g. `<GridToolbarContainer>`.
