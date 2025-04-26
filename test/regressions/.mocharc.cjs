@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   extension: ['js', 'ts', 'tsx'],
   recursive: true,
   slow: 500,
