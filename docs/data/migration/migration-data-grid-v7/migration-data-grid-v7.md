@@ -468,6 +468,14 @@ export default {
 };
 ```
 
+#### Node.js
+
+If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
+
+```js
+require.extensions['.css'] = () => null;
+```
+
 <!-- ### Editing
 
 TBD
