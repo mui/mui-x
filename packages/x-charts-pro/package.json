@@ -44,7 +44,7 @@
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@web-gestures/core": "^0.0.8",
+    "@web-gestures/core": "^0.0.10",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1"
   },
