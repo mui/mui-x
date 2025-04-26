@@ -501,11 +501,7 @@ describe('<DataGridPro /> - Filter', () => {
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
     const input = getSelectInput(
-      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-        // https://github.com/testing-library/dom-testing-library/issues/846
-        // This error doesn't happen in vitest
-        isJSDOM && process.env.VITEST !== 'true' ? 1 : 0
-      ],
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[0],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
@@ -1364,11 +1360,8 @@ describe('<DataGridPro /> - Filter', () => {
         },
       };
       render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
-      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[
-        // For JSDom, the first hidden combo is also found which we are not interested in
-        // This error doesn't happen in vitest
-        isJSDOM && process.env.VITEST !== 'true' ? 1 : 0
-      ];
+      // For JSDom, the first hidden combo is also found which we are not interested in
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

@@ -180,7 +180,7 @@ describe('<DataGrid /> - Slots', () => {
       'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
       reactMajor < 19 &&
         'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay)> component',
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay2)> component',
     ]);
   });
 
