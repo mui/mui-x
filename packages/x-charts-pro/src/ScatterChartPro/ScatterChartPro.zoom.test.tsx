@@ -155,13 +155,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
       expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
 
-      await user.pointer([
-        {
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-
       // we drag one position
       await user.pointer([
         {
@@ -225,13 +218,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
     const svg = document.querySelector('svg')!;
-
-    await user.pointer([
-      {
-        target: svg,
-        coords: { x: 50, y: 50 },
-      },
-    ]);
 
     await user.pointer([
       {
