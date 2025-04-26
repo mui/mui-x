@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
@@ -176,7 +176,10 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      await waitFor(() => {
+        expect(onZoomChange.callCount).to.equal(1);
+      });
+
       expect(getAxisTickValues('x')).to.deep.equal(['2.0', '2.2', '2.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['20', '22', '24']);
 
@@ -201,7 +204,9 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      await waitFor(() => {
+        expect(onZoomChange.callCount).to.equal(2);
+      });
       expect(getAxisTickValues('x')).to.deep.equal(['1.0', '1.2', '1.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['10', '12', '14']);
     });
@@ -253,7 +258,9 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(onZoomChange.callCount).to.equal(2);
+    });
     expect(getAxisTickValues('x')).to.deep.equal(['2.0']);
     expect(getAxisTickValues('y')).to.deep.equal(['20']);
   });

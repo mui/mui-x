@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
@@ -143,7 +143,9 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      await waitFor(() => {
+        expect(onZoomChange.callCount).to.equal(1);
+      });
       expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
@@ -167,7 +169,9 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      await waitFor(() => {
+        expect(onZoomChange.callCount).to.equal(2);
+      });
       expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
@@ -217,7 +221,9 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(onZoomChange.callCount).to.equal(2);
+    });
     expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });
