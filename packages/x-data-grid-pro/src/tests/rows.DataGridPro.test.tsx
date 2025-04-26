@@ -491,8 +491,10 @@ describe('<DataGridPro /> - Rows', () => {
 
       const virtualScroller = grid('virtualScroller')!;
       const renderingZone = grid('virtualScrollerRenderZone')!;
-      virtualScroller.scrollTop = 10e6; // scroll to the bottom
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () =>
+        // scroll to the bottom
+        virtualScroller.scrollTo({ top: 2000 }),
+      );
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
 
@@ -534,8 +536,7 @@ describe('<DataGridPro /> - Rows', () => {
       const firstRow = getRow(0);
       expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.scrollLeft = 301;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => virtualScroller.scrollTo({ left: 301 }));
       await waitFor(() => {
         expect($$(firstRow, '[role="gridcell"]')).to.have.length(
           n + 1 + Math.floor(width / columnWidth) + n,
@@ -551,8 +552,7 @@ describe('<DataGridPro /> - Rows', () => {
       const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
       let firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
-      virtualScroller.scrollTop = rowThresholdPx;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => virtualScroller.scrollTo({ top: rowThresholdPx }));
       firstRow = renderingZone.firstChild;
       await waitFor(() => {
         expect(firstRow).to.have.attr('data-rowindex', '1');
@@ -568,8 +568,7 @@ describe('<DataGridPro /> - Rows', () => {
       const firstRow = $(renderingZone, '[role="row"]:first-child')!;
       let firstColumn = $$(firstRow, '[role="gridcell"]')[0];
       expect(firstColumn).to.have.attr('data-colindex', '0');
-      virtualScroller.scrollLeft = columnThresholdPx;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      await act(async () => virtualScroller.scrollTo({ left: columnThresholdPx }));
       firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
       await waitFor(() => {
         expect(firstColumn).to.have.attr('data-colindex', '1');
@@ -577,7 +576,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     describe('Pagination', () => {
-      it('should render only the pageSize', () => {
+      it('should render only the pageSize', async () => {
         const rowHeight = 50;
         const nbRows = 32;
         render(
@@ -589,8 +588,8 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        virtualScroller.scrollTop = 10e6; // scroll to the bottom
-        act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+        // scroll to the bottom
+        await act(async () => virtualScroller.scrollTo({ top: 2000 }));
 
         const dimensions = apiRef.current!.state.dimensions;
         const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
@@ -600,7 +599,7 @@ describe('<DataGridPro /> - Rows', () => {
         );
       });
 
-      it('should not virtualize the last page if smaller than viewport', () => {
+      it('should not virtualize the last page if smaller than viewport', async () => {
         render(
           <TestCaseVirtualization
             pagination
@@ -611,10 +610,7 @@ describe('<DataGridPro /> - Rows', () => {
         );
         const virtualScroller = grid('virtualScroller')!;
 
-        act(() => {
-          virtualScroller.scrollTop = 10e6; // scroll to the bottom
-          virtualScroller.dispatchEvent(new Event('scroll'));
-        });
+        await act(async () => virtualScroller.scrollTo({ top: 2000 }));
 
         const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('99');
@@ -641,7 +637,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
+      it('should scroll correctly when the given rowIndex is partially visible at the bottom', async () => {
         const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
@@ -656,11 +652,11 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 4, colIndex: 0 }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 4, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(rowHeight - offset);
       });
 
-      it('should scroll correctly when the given index is partially visible at the top', () => {
+      it('should scroll correctly when the given index is partially visible at the top', async () => {
         const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
@@ -675,19 +671,17 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        act(() => {
-          virtualScroller.scrollTop = offset;
-          virtualScroller.dispatchEvent(new Event('scroll')); // Simulate browser behavior
-        });
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 2, colIndex: 0 }));
+        // Simulate browser behavior
+        await act(async () => virtualScroller.scrollTo({ top: offset }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 2, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(offset);
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 1, colIndex: 0 }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 1, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(offset);
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 0 }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(0);
       });
 
-      it('should scroll correctly when the given colIndex is partially visible at the right', () => {
+      it('should scroll correctly when the given colIndex is partially visible at the right', async () => {
         const width = 300;
         const border = 1;
         const columnWidth = 120;
@@ -701,11 +695,11 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
       });
 
-      it('should not scroll when going back', () => {
+      it('should not scroll when going back', async () => {
         const width = 300;
         const border = 1;
         const columnWidth = 120;
@@ -719,10 +713,10 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
-        act(() => virtualScroller.dispatchEvent(new Event('scroll'))); // Simulate browser behavior
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
+        await act(async () => virtualScroller.dispatchEvent(new Event('scroll'))); // Simulate browser behavior
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
-        act(() => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 1 }));
+        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: 1 }));
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
@@ -753,7 +747,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(document.querySelectorAll('[role="gridcell"]')).to.have.length(10 * 10);
     });
 
-    it('should render the correct rows when changing pages', () => {
+    it('should render the correct rows when changing pages', async () => {
       render(
         <TestCase
           initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
@@ -762,7 +756,7 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
-      act(() => {
+      await act(async () => {
         apiRef.current?.setPage(1);
       });
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
@@ -906,7 +900,7 @@ describe('<DataGridPro /> - Rows', () => {
       const cell = getCell(0, 0);
 
       await user.pointer([{ keys: '[MouseLeft>]', target: cell }]);
-      await act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      await act(async () => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
       // cleanup
       await user.pointer([{ keys: '[/MouseLeft]', target: cell }]);
     });
