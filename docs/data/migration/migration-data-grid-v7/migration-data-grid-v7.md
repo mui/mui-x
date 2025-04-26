@@ -412,6 +412,61 @@ You have to import it from `@mui/x-license` instead:
 
 The Data Grid now requires a bundler that can handle CSS imports.
 
+#### Webpack
+
+Update your config to add the `style-loader` and `css-loader`.
+
+```ts title="webpack.config.js"
+export default {
+  // other webpack config
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ]
+  },
+};
+```
+
+#### Vite
+
+Nothing to do, CSS imports should work out of the box.
+
+#### Vitest
+
+Add the Data Grid packages to `test.deps.inline`.
+
+```ts title="vitest.config.ts"
+export default defineConfig({
+  test: {
+    deps: {
+      inline: [
+        '@mui/x-data-grid',
+        '@mui/x-data-grid-pro',
+        '@mui/x-data-grid-premium',
+      ],
+    },
+  }
+})
+```
+
+#### Next.js
+
+If you're using the App Router, CSS imports should work out of the box.
+
+If you're using the Pages Router, you need to add the Data Grid packages to `transpilePackages`.
+
+```ts title="next.config.ts"
+export default {
+  transpilePackages: [
+    '@mui/x-data-grid',
+    '@mui/x-data-grid-pro',
+    '@mui/x-data-grid-premium',
+  ],
+};
+```
 
 <!-- ### Editing
 
