@@ -8,7 +8,6 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
@@ -30,8 +29,6 @@ export const useZoomOnWheel = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
-  const isChangingRef = React.useRef(false);
-  const isChangingTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -84,38 +81,17 @@ export const useZoomOnWheel = (
         return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
       });
 
-      // This handles preventing the default behavior of the wheel event
-      // when the zoom data is changing.
-      const isEqual = isDeepEqual(zoomData, newZoomData);
-      if (!isEqual || isChangingTimeoutRef.current) {
-        isChangingRef.current = true;
-        if (isChangingTimeoutRef.current) {
-          clearTimeout(isChangingTimeoutRef.current);
-        }
-        isChangingTimeoutRef.current = setTimeout(() => {
-          isChangingRef.current = false;
-          isChangingTimeoutRef.current = null;
-        }, 100);
-      }
-
-      if (isChangingRef.current) {
-        event.detail.srcEvent.preventDefault();
-      }
+      event.detail.srcEvent.preventDefault();
 
       rafThrottledSetZoomData(newZoomData);
     });
 
     return () => {
       zoomOnWheelHandler.cleanup();
-      if (isChangingTimeoutRef.current) {
-        clearTimeout(isChangingTimeoutRef.current);
-        isChangingTimeoutRef.current = null;
-      }
       if (startedOutsideTimeoutRef.current) {
         clearTimeout(startedOutsideTimeoutRef.current);
         startedOutsideTimeoutRef.current = null;
       }
-      isChangingRef.current = false;
       startedOutsideRef.current = false;
       rafThrottledSetZoomData.clear();
     };
