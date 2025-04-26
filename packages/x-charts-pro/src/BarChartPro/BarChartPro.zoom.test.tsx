@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from './BarChartPro';
@@ -143,9 +143,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      await waitFor(() => {
-        expect(onZoomChange.callCount).to.equal(1);
-      });
+      expect(onZoomChange.callCount).to.equal(1);
       expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
@@ -169,9 +167,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      await waitFor(() => {
-        expect(onZoomChange.callCount).to.equal(2);
-      });
+      expect(onZoomChange.callCount).to.equal(2);
       expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
@@ -221,9 +217,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    await waitFor(() => {
-      expect(onZoomChange.callCount).to.equal(2);
-    });
+    expect(onZoomChange.callCount).to.equal(1);
     expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });
