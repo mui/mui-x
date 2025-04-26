@@ -171,4 +171,53 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
+
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+    const svg = document.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[TouchA>]',
+        target: svg,
+        coords: { x: 55, y: 45 },
+      },
+      {
+        keys: '[TouchB>]',
+        target: svg,
+        coords: { x: 45, y: 55 },
+      },
+      {
+        pointerName: 'TouchA',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        pointerName: 'TouchB',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+      {
+        keys: '[/TouchA]',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        keys: '[/TouchB]',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(1);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+  });
 });
