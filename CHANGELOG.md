@@ -11,7 +11,7 @@ _Apr 24, 2025_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint`.
+- 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint()`.
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -56,7 +56,7 @@ Same changes as in `@mui/x-date-pickers@8.1.0`.
 
 ### Charts
 
-- Add API to print a chart or export it as PDF: `apiRef.exportAsPrint`.
+- Add API to print a chart or export it as PDF: `apiRef.exportAsPrint()`.
 
 #### `@mui/x-charts@8.1.0`
 
