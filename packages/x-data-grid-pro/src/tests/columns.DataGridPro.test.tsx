@@ -625,7 +625,9 @@ describe('<DataGridPro /> - Columns', () => {
         await act(async () =>
           apiRef.current?.autosizeColumns({ includeHeaders: false, ...options }),
         );
-        expect(getWidths()).to.deep.equal(widths);
+        await waitFor(() => {
+          expect(getWidths()).to.deep.equal(widths);
+        });
       };
 
       it('.columns works', async () => {
