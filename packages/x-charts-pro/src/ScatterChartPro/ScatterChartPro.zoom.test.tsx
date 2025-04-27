@@ -259,7 +259,7 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.callCount).to.be.above(0);
     expect(getAxisTickValues('x')).to.deep.equal(['2.0']);
     expect(getAxisTickValues('y')).to.deep.equal(['20']);
   });

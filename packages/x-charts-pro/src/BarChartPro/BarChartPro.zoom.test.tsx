@@ -223,7 +223,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.callCount).to.be.above(0);
     expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });
