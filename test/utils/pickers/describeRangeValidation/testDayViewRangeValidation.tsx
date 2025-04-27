@@ -66,7 +66,7 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         testDisabledDate('11', [true, true], !isDesktop || includesTimeView);
       });
 
-      it.only('should apply disablePast', () => {
+      it('should apply disablePast', () => {
         const { render } = getOptions();
 
         let now;
@@ -101,7 +101,7 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         );
       });
 
-      it.only('should apply disableFuture', () => {
+      it('should apply disableFuture', () => {
         const { render } = getOptions();
 
         let now;
