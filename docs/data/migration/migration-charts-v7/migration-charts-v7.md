@@ -1,5 +1,5 @@
 ---
-title: React Charts - Migration from v7 to v8
+title: Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
