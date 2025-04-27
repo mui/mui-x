@@ -1,21 +1,36 @@
-import moment, { Moment } from 'moment';
+import moment, { Moment } from 'moment-hijri';
 import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import {
   createPickerRenderer,
   expectFieldValueV7,
   describeHijriAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import 'moment/locale/ar';
+import 'moment/locale/ar-sa';
+import { beforeAll } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<AdapterMomentHijri />', () => {
+  beforeAll(() => {
+    if (!isJSDOM) {
+      // Vitest browser mode does not correctly load the locale
+      // This is the minimal amount of locale data needed to run the tests
+      moment.updateLocale('ar-sa', {
+        weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
+        weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
+        meridiem: (hour) => (hour < 12 ? 'ص' : 'م'),
+        postformat: (input) =>
+          input.replace(/\d/g, (match) => '٠١٢٣٤٥٦٧٨٩'[match]).replace(/,/g, '،'),
+      });
+    }
+  });
+
   describeHijriAdapter(AdapterMomentHijri, {
     before: () => {
-      moment.locale('ar-SA');
+      moment.locale('ar-sa');
     },
     after: () => {
       moment.locale('en');
@@ -23,7 +38,7 @@ describe('<AdapterMomentHijri />', () => {
   });
 
   describe('Adapter localization', () => {
-    testSkipIf(!isJSDOM)('Formatting', () => {
+    it('Formatting', () => {
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
@@ -79,7 +94,7 @@ describe('<AdapterMomentHijri />', () => {
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
-        testSkipIf(!isJSDOM)('should have well formatted value', () => {
+        it('should have well formatted value', () => {
           const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
