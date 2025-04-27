@@ -32,14 +32,9 @@
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
-    "tc": "node test/cli.js",
-    "test": "node scripts/test.mjs",
-    "test:coverage": "cross-env NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=test TZ=UTC BABEL_ENV=coverage nyc mocha 'packages/**/*.test.{js,ts,tsx}' 'docs/**/*.test.{js,ts,tsx}' && nyc report -r lcovonly",
-    "test:coverage:html": "cross-env NODE_ENV=test TZ=UTC BABEL_ENV=coverage nyc mocha 'packages/**/*.test.{js,ts,tsx}' 'docs/**/*.test.{js,ts,tsx}' && nyc report --reporter=html",
-    "test:coverage:inspect": "cross-env NODE_ENV=test TZ=UTC BABEL_ENV=coverage mocha --inspect-brk",
-    "test:karma": "cross-env NODE_ENV=test TZ=UTC karma start test/karma.conf.js",
-    "test:karma:parallel": "cross-env NODE_ENV=test TZ=UTC PARALLEL=true karma start test/karma.conf.js",
-    "test:unit": "cross-env NODE_ENV=test TZ=UTC mocha -n expose_gc 'packages/**/*.test.{js,ts,tsx}' 'docs/**/*.test.{js,ts,tsx}'",
+    "test": "cross-env NODE_ENV=test TZ=UTC vitest",
+    "test:browser": "cross-env NODE_ENV=test TZ=UTC BROWSER=true vitest",
+    "test:unit": "cross-env NODE_ENV=test TZ=UTC JSDOM=true vitest",
     "test:e2e": "pnpm run release:build && cd test/e2e && pnpm run start",
     "test:e2e-website": "npx playwright test test/e2e-website --config test/e2e-website/playwright.config.ts",
     "test:e2e-website:dev": "PLAYWRIGHT_TEST_BASE_URL=http://localhost:3001 npx playwright test test/e2e-website --config test/e2e-website/playwright.config.ts",
@@ -61,8 +56,7 @@
     "release:tag": "node scripts/releaseTag.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
-    "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo",
-    "vitest": "cross-env TZ=UTC vitest"
+    "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",

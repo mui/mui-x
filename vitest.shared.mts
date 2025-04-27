@@ -43,12 +43,10 @@ export default defineConfig({
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
       },
-      // TODO: move to charts only
       {
         find: '@mui/x-charts-vendor',
         replacement: new URL('./packages/x-charts-vendor/es', import.meta.url).pathname,
       },
-      // TODO: move to pickers only
       {
         find: 'moment/locale',
         replacement: 'moment/dist/locale',
