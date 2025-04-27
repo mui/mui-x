@@ -27,6 +27,14 @@ export default function RowGroupingFilteringSingleGroupingColDef() {
     },
   });
 
+  const groupingColDef = React.useMemo(
+    () => ({
+      mainGroupingCriteria:
+        mainGroupingCriteria === 'undefined' ? undefined : mainGroupingCriteria,
+    }),
+    [mainGroupingCriteria],
+  );
+
   return (
     <Box sx={{ width: '100%' }}>
       <FormControl fullWidth>
@@ -55,12 +63,7 @@ export default function RowGroupingFilteringSingleGroupingColDef() {
           disableRowSelectionOnClick
           defaultGroupingExpansionDepth={-1}
           initialState={initialState}
-          groupingColDef={{
-            mainGroupingCriteria:
-              mainGroupingCriteria === 'undefined'
-                ? undefined
-                : mainGroupingCriteria,
-          }}
+          groupingColDef={groupingColDef}
         />
       </Box>
     </Box>

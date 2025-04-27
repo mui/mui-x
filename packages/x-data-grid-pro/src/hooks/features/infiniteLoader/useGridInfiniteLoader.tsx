@@ -1,30 +1,16 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
-  useGridApiMethod,
-  gridDimensionsSelector,
+  useGridEvent,
+  GridEventListener,
 } from '@mui/x-data-grid';
-import {
-  useGridVisibleRows,
-  GridInfiniteLoaderPrivateApi,
-  useTimeout,
-  gridHorizontalScrollbarHeightSelector,
-} from '@mui/x-data-grid/internals';
+import { useGridVisibleRows, runIf } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/system';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-
-const InfiniteLoadingTriggerElement = styled('div')({
-  position: 'sticky',
-  left: 0,
-  width: 0,
-  height: 0,
-});
 
 /**
  * @requires useGridColumns (state)
@@ -35,23 +21,16 @@ export const useGridInfiniteLoader = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
+    'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
   >,
 ): void => {
-  const isReady = useGridSelector(apiRef, gridDimensionsSelector).isReady;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
-  const observer = React.useRef<IntersectionObserver>(null);
-  const updateTargetTimeout = useTimeout();
-  const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
-  const handleLoadMoreRows = useEventCallback(([entry]: IntersectionObserverEntry[]) => {
-    const currentRatio = entry.intersectionRatio;
-    const isIntersecting = entry.isIntersecting;
-
-    if (isIntersecting && currentRatio === 1) {
+  const handleLoadMoreRows: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
+    () => {
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const rowScrollEndParams: GridRowScrollEndParams = {
         visibleColumns,
@@ -59,86 +38,9 @@ export const useGridInfiniteLoader = (
         visibleRowsCount: currentPage.rows.length,
       };
       apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParams);
-      observer.current?.disconnect();
-      // do not observe this node anymore
-      triggerElement.current = null;
-    }
-  });
-
-  React.useEffect(() => {
-    const virtualScroller = apiRef.current.virtualScrollerRef.current;
-    if (!isEnabled || !isReady || !virtualScroller) {
-      return;
-    }
-    observer.current?.disconnect();
-
-    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
-    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
-
-    observer.current = new IntersectionObserver(handleLoadMoreRows, {
-      threshold: 1,
-      root: virtualScroller,
-      rootMargin: `0px 0px ${marginBottom}px 0px`,
-    });
-    if (triggerElement.current) {
-      observer.current.observe(triggerElement.current);
-    }
-  }, [apiRef, isReady, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
-
-  const updateTarget = (node: HTMLElement | null) => {
-    if (triggerElement.current !== node) {
-      observer.current?.disconnect();
-
-      triggerElement.current = node;
-      if (triggerElement.current) {
-        observer.current?.observe(triggerElement.current);
-      }
-    }
-  };
-
-  const triggerRef = React.useCallback(
-    (node: HTMLElement | null) => {
-      // Prevent the infite loading working in combination with lazy loading
-      if (!isEnabled) {
-        return;
-      }
-
-      // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
-      // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
-      // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
-      // https://www.w3.org/TR/intersection-observer/#event-loop
-      // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
-      // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
-      // Related to
-      // https://github.com/mui/mui-x/issues/14116
-      updateTargetTimeout.start(0, () => updateTarget(node));
     },
-    [isEnabled, updateTargetTimeout],
   );
 
-  const getInfiniteLoadingTriggerElement = React.useCallback<
-    NonNullable<GridInfiniteLoaderPrivateApi['getInfiniteLoadingTriggerElement']>
-  >(
-    ({ lastRowId }) => {
-      if (!isEnabled) {
-        return null;
-      }
-      return (
-        <InfiniteLoadingTriggerElement
-          ref={triggerRef}
-          // Force rerender on last row change to start observing the new trigger
-          key={`trigger-${lastRowId}`}
-          role="presentation"
-        />
-      );
-    },
-    [isEnabled, triggerRef],
-  );
-
-  const infiniteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
-    getInfiniteLoadingTriggerElement,
-  };
-
-  useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
   useGridEventPriority(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
+  useGridEvent(apiRef, 'rowsScrollEndIntersection', runIf(isEnabled, handleLoadMoreRows));
 };

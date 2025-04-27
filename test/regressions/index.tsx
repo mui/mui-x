@@ -105,7 +105,9 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
-                isPrintExportChartTest={test.path.includes('PrintChart')}
+                isChartExportTest={
+                  test.path.includes('PrintChart') || test.path.includes('ExportChartAsImage')
+                }
                 path={computePath(test)}
               >
                 <test.case />
