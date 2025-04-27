@@ -121,14 +121,7 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
       expect(onClick.callCount).to.equal(0);
-
-      let button;
-      // I can see the button in the debug, but it's not found by the test...
-      if (process.env.VITEST) {
-        button = screen.getByTestId('FilterAltIcon');
-      } else {
-        button = screen.getByRole('button', { name: /show filters/i });
-      }
+      const button = screen.getByRole('button', { name: /show filters/i, hidden: true });
       fireEvent.click(button);
       expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
       expect(onClick.lastCall.args[1]).to.have.property('target', button);

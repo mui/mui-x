@@ -1,5 +1,5 @@
 ---
-title: React Data Grid - Migration from v7 to v8
+title: Data Grid - Migration from v7 to v8
 productId: x-data-grid
 ---
 

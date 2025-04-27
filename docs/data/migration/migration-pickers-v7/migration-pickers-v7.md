@@ -1,5 +1,5 @@
 ---
-title: React Date Pickers - Migration from v7 to v8
+title: Date Pickers - Migration from v7 to v8
 productId: x-date-pickers
 ---
 

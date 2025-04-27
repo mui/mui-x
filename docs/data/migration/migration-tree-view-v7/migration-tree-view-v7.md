@@ -1,5 +1,5 @@
 ---
-title: React Tree View - Migration from v7 to v8
+title: Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 

@@ -2484,6 +2484,8 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 ### Docs
 
+<!-- vale MUI.CorrectRererenceCased = NO -->
+
 - [docs] Fix 404 links (#15575) @oliviertassinari
 - [docs] Fix bash comments (#15571) @oliviertassinari
 - [docs] Fix Pickers theme augmentation example (#15672) @LukasTy
@@ -2492,6 +2494,8 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 - [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
 - [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
 - [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+<!-- vale MUI.CorrectRererenceCased = YES -->
 
 ### Core
 
@@ -7020,7 +7024,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
    />
   ```
 
-- The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
+- The headless field hooks (for example `useDateField()`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
   This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure.
   Learn more about this new accessible DOM structure in the [v8 migration guide](https://v7.mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
 
