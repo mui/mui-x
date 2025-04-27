@@ -136,9 +136,7 @@ As any component slot, every icon can be customized. However, it is not yet poss
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
 
 :::warning
-
-Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
-
+Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
 :::
 
 ### Overlays
