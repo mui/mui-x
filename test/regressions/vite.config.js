@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   root: path.join(process.cwd(), 'test/regressions'),
+  optimizeDeps: {
+    include: ['prismjs'],
+  },
   build: {
     outDir: 'build',
   },
@@ -61,7 +64,9 @@ export default defineConfig({
       name: 'replace-code',
       enforce: 'post',
       async transform(code) {
-        return code.replaceAll('DISABLE_CHANCE_RANDOM', 'true');
+        return code
+          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
+          .replaceAll('LICENSE_DISABLE_CHECK', 'true');
       },
     },
     {
