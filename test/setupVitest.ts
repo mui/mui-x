@@ -30,7 +30,6 @@ beforeAll(() => {
 
 beforeEach(() => {
   setupTestLicenseKey(licenseKey);
-  clearWarningsCache();
   config.disabled = true;
 });
 
@@ -39,6 +38,7 @@ afterEach(() => {
   unstable_resetCleanupTrackingDataGridPro();
   unstable_resetCleanupTrackingTreeView();
   unstable_cleanupDOMCharts();
+  clearWarningsCache();
 
   // Restore Sinon default sandbox to avoid memory leak
   // See https://github.com/sinonjs/sinon/issues/1866
