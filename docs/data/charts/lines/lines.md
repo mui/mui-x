@@ -273,7 +273,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<MarkPlot />` renders the series marks.
 - `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
 
-Here is how the Line Chart is composed.
+Here's how the Line Chart is composed:
 
 ```jsx
 <ChartDataProvider>
@@ -304,5 +304,5 @@ Here is how the Line Chart is composed.
 :::info
 The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
 
-See the [clipping section](/x/react-charts/composition/#clipping) for more info.
+See [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
 :::
