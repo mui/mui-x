@@ -6,5 +6,5 @@ export function css<T extends Record<string, CSSObject>>(
 ): {
   [K in keyof T]: string;
 } {
-  throw new Error(`The \`css()\` utility should never be called.`);
+  throw new Error(`This function body should never be called. \`css()\` calls are transpiled by \`babel-plugin-mui-css\` both in runtime and build time.`);
 }
