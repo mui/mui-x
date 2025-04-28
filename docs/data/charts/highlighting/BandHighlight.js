@@ -9,12 +9,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const barChartsParams = {
-  xAxis: [
-    {
-      data: ['page A', 'page B', 'page C', 'page D', 'page E'],
-      scaleType: 'band',
-    },
-  ],
+  xAxis: [{ data: ['page A', 'page B', 'page C', 'page D', 'page E'] }],
   series: [
     { data: [2, 5, 3, 4, 1], stack: '1', label: 'Series x' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
