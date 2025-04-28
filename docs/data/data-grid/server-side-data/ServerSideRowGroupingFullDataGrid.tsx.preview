@@ -7,8 +7,6 @@
     apiRef={apiRef}
     initialState={initialState}
     showToolbar
-    groupingColDef={{
-      width: 250,
-    }}
+    groupingColDef={groupingColDef}
   />
 </div>

@@ -184,7 +184,6 @@ function shortenLabels(
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({});
 
 const defaultProps = {

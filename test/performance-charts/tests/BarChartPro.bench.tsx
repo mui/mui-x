@@ -20,7 +20,7 @@ describe('BarChartPro', () => {
     async () => {
       const { findByText } = render(
         <BarChartPro
-          xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
+          xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
           series={[
             {

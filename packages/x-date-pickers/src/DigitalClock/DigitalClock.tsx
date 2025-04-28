@@ -37,7 +37,6 @@ const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) =>
 const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
@@ -61,7 +60,6 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-  overridesResolver: (props, styles) => styles.list,
 })({
   padding: 0,
 });
@@ -70,7 +68,6 @@ export const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
   shouldForwardProp: (prop) => prop !== 'itemValue' && prop !== 'formattedValue',
-  overridesResolver: (props, styles) => styles.item,
 })(({ theme }) => ({
   padding: '8px 16px',
   margin: '2px 4px',

@@ -12,7 +12,7 @@ export default function GridDemo() {
   return (
     <BarChart
       dataset={dataset}
-      xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+      xAxis={[{ dataKey: 'month' }]}
       series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
       grid={{ horizontal: true }}
       sx={{

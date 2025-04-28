@@ -47,14 +47,12 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     {
       name,
       slot: 'Root',
-      overridesResolver: (props, styles) => styles.root,
     },
   )({});
 
   const MultiInputRangeFieldSeparator = styled(Typography, {
     name,
     slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
   })({
     lineHeight: '1.4375em', // 23px
   });

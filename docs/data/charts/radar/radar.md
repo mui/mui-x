@@ -8,18 +8,12 @@ components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSerie
 
 <p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
 
-:::warning
-🚧 This component is under development 🚧
-
-Not all the feature are implemented and its API might change in the future if needed to integrate the upcoming features.
-:::
-
 ## Basics
 
-A radar chart is defined by two main props:
+Radar charts series should contain a `data` property containing an array of values.
 
-- The `series` prop which provides the values to display thanks to the `data` property.
-- The `radar` prop which defines the radar axes.
+Radar charts also require a `radar` prop with a `metrics` property containing an array of string or objects.
+Each item of this array define a metric of the radar.
 
 {{"demo": "BasicRadar.js"}}
 
@@ -35,7 +29,7 @@ Radar series support `hideMark` and `fillArea` parameter to modify the rendering
 
 {{"demo": "DemoRadarVisualisation.js"}}
 
-## Axis
+## Metrics
 
 The `metrics` property of `radar` takes an array with one item per corner of the radar.
 This item can either be:
