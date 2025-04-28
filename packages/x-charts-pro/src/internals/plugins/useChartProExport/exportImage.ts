@@ -1,5 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { createExportIframe, loadStyleSheets } from './common';
+import { loadStyleSheets } from '@mui/x-internals/export';
+import { createExportIframe } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
 
 export const getDrawDocument = async () => {
@@ -45,7 +46,11 @@ export async function exportImage(
     exportDoc.body.innerHTML = container.innerHTML;
     exportDoc.body.style.margin = '0px';
 
-    await loadStyleSheets(exportDoc, element);
+    const rootCandidate = element.getRootNode();
+    const root =
+      rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
+
+    await Promise.all(loadStyleSheets(exportDoc, root));
 
     resolve();
   };
