@@ -67,8 +67,6 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 
-<!-- #default-branch-switch -->
-
 ```bash
 pnpm docs:deploy
 ```

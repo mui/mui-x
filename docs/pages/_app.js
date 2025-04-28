@@ -45,7 +45,7 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
+    // #npm-tag-reference
     // TODO: Do we really need this? The condition does not make that much sense tbh!
     // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
     newDeps['@mui/material'] =
