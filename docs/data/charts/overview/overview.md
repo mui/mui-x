@@ -9,11 +9,6 @@ packageName: '@mui/x-charts'
 
 <p class="description">A collection of React chart components for data visualization.</p>
 
-{{"component": "modules/components/overview/charts/mainDemo/MainDemo.tsx"}}
-{{"component": "modules/components/overview/charts/featuresHighlight/FeaturesHighlight.tsx"}}
-
-## old overview below
-
 It uses [D3.js](https://d3js.org/) for data manipulation and SVGs for rendering.
 
 The components provide a high level of customization, with beautiful defaults as well as extensive configuration props and flexible composition options.
