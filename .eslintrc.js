@@ -318,7 +318,7 @@ module.exports = {
           'error',
           {
             selector: 'JSXAttribute[name.name="material"]',
-            message: 'Do not pass the restricted prop `material` to Data Grid components.',
+            message: 'Do not pass the restricted `material` prop to Data Grid components.',
           },
         ],
       },
