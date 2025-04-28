@@ -15,7 +15,6 @@ import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInte
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
-import { useChartModels } from './useChartModels';
 
 let globalId = 0;
 
@@ -58,7 +57,6 @@ export function useCharts<
   });
   pluginParams.id = pluginParams.id ?? chartId;
 
-  const models = useChartModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
@@ -94,7 +92,6 @@ export function useCharts<
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
       seriesConfig,
-      models,
     });
 
     if (pluginResponse.publicAPI) {

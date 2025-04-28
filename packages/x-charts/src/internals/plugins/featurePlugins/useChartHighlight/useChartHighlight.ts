@@ -1,31 +1,35 @@
+import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { ChartPlugin } from '../../models';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({
-  store,
-  params,
-  models,
-}) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+  useAssertModelConsistency({
+    componentName: 'Chart',
+    propName: 'highlightedItem',
+    controlled: params.highlightedItem,
+    defaultValue: null,
+  });
+
   useEnhancedEffect(() => {
     store.update((prevState) => ({
       ...prevState,
       highlight: {
         ...prevState.highlight,
-        item: models.highlightedItem.value,
+        item: params.highlightedItem,
       },
     }));
-  }, [store, models.highlightedItem.value]);
+  }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    models.highlightedItem.setControlledValue(null);
+    store.update((prev) => ({ ...prev, highlight: { item: null } }));
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
     params.onHighlightChange?.(newItem);
-    models.highlightedItem.setControlledValue(newItem);
+    store.update((prev) => ({ ...prev, highlight: { item: newItem } }));
   });
 
   return {
@@ -34,12 +38,6 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({
       setHighlight,
     },
   };
-};
-
-useChartHighlight.models = {
-  highlightedItem: {
-    getDefaultValue: () => null,
-  },
 };
 
 useChartHighlight.getInitialState = (params) => ({

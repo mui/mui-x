@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
@@ -28,14 +29,14 @@ import {
   selectorSelectionModelArray,
 } from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
-import { useAssertModelConsistency } from '../../utils/models';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   store,
   params,
 }) => {
   useAssertModelConsistency({
-    state: 'selectedItems',
+    componentName: 'Tree View',
+    propName: 'selectedItems',
     controlled: params.selectedItems,
     defaultValue: params.defaultSelectedItems,
   });
