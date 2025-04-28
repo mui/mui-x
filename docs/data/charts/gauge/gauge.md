@@ -149,7 +149,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<GaugeValueArc />` renders the value arc.
 - `<GaugeValueText />` renders the text at the center.
 
-Here is how the Gauge Chart is composed.
+Here is how the Gauge is composed.
 
 ```jsx
 <GaugeContainer>
