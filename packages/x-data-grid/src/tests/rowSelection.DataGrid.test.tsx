@@ -849,7 +849,7 @@ describe('<DataGrid /> - Row selection', () => {
         />,
       );
       await user.click(getCell(0, 0).querySelector('input')!);
-      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.deep.equal('singleRowSelection');
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('singleRowSelection');
     });
 
     it('should call onRowSelectionModelChange with the correct reason when clicking on the header checkbox', async () => {
@@ -862,9 +862,7 @@ describe('<DataGrid /> - Row selection', () => {
         />,
       );
       await user.click(getColumnHeaderCell(0).querySelector('input')!);
-      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.deep.equal(
-        'multipleRowsSelection',
-      );
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('multipleRowsSelection');
     });
 
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', async () => {
