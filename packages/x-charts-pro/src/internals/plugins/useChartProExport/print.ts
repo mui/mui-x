@@ -1,5 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { createExportIframe, loadStyleSheets } from './common';
+import { loadStyleSheets } from '@mui/x-internals/export';
+import { createExportIframe } from './common';
 import { ChartPrintExportOptions } from './useChartProExport.types';
 
 export function printChart(
@@ -16,7 +17,11 @@ export function printChart(
     container.appendChild(elementClone);
     printDoc.body.innerHTML = container.innerHTML;
 
-    await loadStyleSheets(printDoc, element);
+    const rootCandidate = element.getRootNode();
+    const root =
+      rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
+
+    await Promise.all(loadStyleSheets(printDoc, root));
 
     printWindow.contentWindow!.print();
 

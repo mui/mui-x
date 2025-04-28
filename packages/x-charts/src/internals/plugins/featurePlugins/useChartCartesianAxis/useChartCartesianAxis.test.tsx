@@ -19,8 +19,8 @@ describe('useChartCartesianAxis', () => {
       render(
         <BarChart
           xAxis={[
-            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
-            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
+            { id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
+            { id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
           ]}
           series={[{ data: [1, 2, 3] }]}
           height={100}
@@ -43,7 +43,7 @@ describe('useChartCartesianAxis', () => {
       expect(() =>
         render(
           <BarChart
-            xAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
+            xAxis={[{ id: 'qwerty', data: ['a', 'b', 'c'] }]}
             yAxis={[{ id: 'qwerty' }]}
             series={[{ data: [1, 2, 3] }]}
             height={100}

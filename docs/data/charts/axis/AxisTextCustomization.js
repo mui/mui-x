@@ -33,7 +33,6 @@ export default function AxisTextCustomization() {
             dataset={dataset}
             xAxis={[
               {
-                scaleType: 'band',
                 dataKey: 'month',
                 label: 'months',
                 height: 60,

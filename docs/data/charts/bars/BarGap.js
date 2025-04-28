@@ -36,7 +36,6 @@ export default function BarGap() {
           height={300}
           xAxis={[
             {
-              scaleType: 'band',
               dataKey: 'year',
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,

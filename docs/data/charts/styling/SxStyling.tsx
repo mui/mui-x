@@ -41,7 +41,7 @@ export default function SxStyling(): React.JSX.Element {
             'linear-gradient(rgba(255,255,255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255, 0.1) 1px, transparent 1px)',
         }),
       })}
-      xAxis={[{ scaleType: 'band', data: labels }]}
+      xAxis={[{ data: labels }]}
       series={[
         { data: lData, label: 'l', id: 'l_id' },
         { data: rData, label: 'r', id: 'r_id' },
