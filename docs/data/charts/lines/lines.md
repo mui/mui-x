@@ -261,3 +261,48 @@ This will lead to strange behaviors.
 ```
 
 {{"demo": "LineAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- `<AreaPlot />` renders the series areas.
+- `<LinePlot />` renders the series lines.
+- `<MarkPlot />` renders the series marks.
+- `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+
+Here's how the Line Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        {/* Elements clipped inside the drawing area. */}
+        <AreaPlot />
+        <LinePlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <MarkPlot />
+      </g>
+      <LineHighlightPlot />
+      <ChartsTooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

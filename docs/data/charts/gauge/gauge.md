@@ -138,3 +138,23 @@ For example, a battery level indicator is better with an hour-long duration.
   aria-valuetext="50% (6 hours) remaining"
 />
 ```
+
+## Composition
+
+Use the `<GaugeContainer />` to provide all the parameters as props: `value`, `valueMin`, `valueMax`, `startAngle`, `endAngle`, etc.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- `<GaugeReferenceArc />` renders the reference arc.
+- `<GaugeValueArc />` renders the value arc.
+- `<GaugeValueText />` renders the text at the center.
+
+Here's how the Gauge is composed:
+
+```jsx
+<GaugeContainer>
+  <GaugeReferenceArc />
+  <GaugeValueArc skipAnimation={skipAnimation} />
+  <GaugeValueText text={text} />
+</GaugeContainer>
+```
