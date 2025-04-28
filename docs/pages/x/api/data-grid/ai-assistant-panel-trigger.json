@@ -13,6 +13,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/components/aiAssistantPanel/AiAssistantPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/ai-assistant-panel\">Data Grid - AI Assistant Panel <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/ai-assistant-panel\">Data Grid - AI Assistant Panel component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
   "cssComponent": false
 }

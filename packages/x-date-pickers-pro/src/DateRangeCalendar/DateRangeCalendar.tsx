@@ -64,7 +64,6 @@ const releaseInfo = '__RELEASE_INFO__';
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DateRangeCalendarOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
@@ -73,7 +72,7 @@ const DateRangeCalendarRoot = styled('div', {
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Container',
-  overridesResolver: (_, styles) => styles.monthContainer,
+  overridesResolver: (_, styles) => styles.monthContainer, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,

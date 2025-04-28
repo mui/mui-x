@@ -31,7 +31,6 @@ const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> |
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   display: 'block',
   position: 'relative',

@@ -34,7 +34,6 @@ const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -44,7 +43,6 @@ const TimeClockRoot = styled(PickerViewRoot, {
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
-  overridesResolver: (props, styles) => styles.arrowSwitcher,
 })<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,

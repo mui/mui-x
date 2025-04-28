@@ -5,13 +5,7 @@ export default function ZoomBarChart() {
   return (
     <BarChartPro
       height={300}
-      xAxis={[
-        {
-          scaleType: 'band',
-          data: data.map((v, i) => i),
-          zoom: true,
-        },
-      ]}
+      xAxis={[{ data: data.map((v, i) => i), zoom: true }]}
       series={series}
     />
   );

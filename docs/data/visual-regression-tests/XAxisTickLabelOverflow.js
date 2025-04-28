@@ -4,7 +4,6 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { usAirportPassengersData } from './airportData';
 
 const defaultXAxis = {
-  scaleType: 'band',
   dataKey: 'code',
   height: 80,
   valueFormatter: (value) =>
