@@ -180,6 +180,7 @@ export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridData
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
 export * from '../utils/rtlFlipSide';
+export { NotRendered } from '../utils/assert';
 export {
   createSelector,
   createRootSelector,
@@ -219,3 +220,5 @@ export type { GridConfiguration } from '../models/configuration/gridConfiguratio
 export * from '../hooks/features/pivoting';
 
 export { createSvgIcon } from '../material/icons/createSvgIcon';
+
+export { useGridPanelContext } from '../components/panel/GridPanelContext';

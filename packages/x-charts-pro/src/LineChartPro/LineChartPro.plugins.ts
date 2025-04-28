@@ -9,6 +9,10 @@ import {
   UseChartHighlightSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
+import {
+  useChartProExport,
+  UseChartProExportSignature,
+} from '../internals/plugins/useChartProExport';
 import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 export type LineChartProPluginsSignatures = [
@@ -17,6 +21,7 @@ export type LineChartProPluginsSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProZoomSignature,
+  UseChartProExportSignature,
 ];
 
 export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPluginsSignatures> = [
@@ -25,4 +30,5 @@ export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPl
   useChartInteraction,
   useChartHighlight,
   useChartProZoom,
+  useChartProExport,
 ];

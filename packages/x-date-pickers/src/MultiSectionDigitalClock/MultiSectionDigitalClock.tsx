@@ -42,7 +42,6 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   flexDirection: 'row',
   width: '100%',
